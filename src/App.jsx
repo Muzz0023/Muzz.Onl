@@ -7432,6 +7432,133 @@ const REH_BREAKDOWN = {
         { title: 'Actrol Engineering Team',              tag: 'EXPERTISE',     location: 'HVAC-R business',   summary: 'Actrol (Reece\u2019s HVAC-R business) expands its refrigeration-engineer team, supporting customers across the project lifecycle. Backed by "The Virtual Engineer" digital platform. Helps small/medium businesses navigate complex refrigerant regulations.', quote: 'We use Actrol Engineers because they\u2019re the best of the best. Without them nothing gets done. \u2014 Actrol customer' },
         { title: 'Fortiline Emergency Response',         tag: 'QUALITY',       location: 'Lake Worth, Florida', summary: 'Reece\u2019s US subsidiary Fortiline Waterworks responded to a damaged 36-inch sewer line threatening to spill millions of gallons of wastewater. Supplied HDPE pipe, a fusion machine, and a qualified technician; repair completed within 72 hours, working through the night.', quote: 'Their collective efforts have been nothing short of phenomenal. \u2014 Sam Heady, Director, Lake Worth Utility District' },
       ],
+
+      // FY24 regional operating performance
+      regionalPerformance: {
+        asOf: 'FY24',
+        regions: [
+          {
+            name: 'United States', flag: '🇺🇸',
+            revenue: 'US$3,452m', revenueNote: '+3% (FY23: US$3,342m) \u00b7 +5% in AUD on favourable FX',
+            ebitda: 'US$293m', ebitdaNote: '+9% YoY (FY23: US$269m)',
+            ebit: 'US$178m', ebitNote: '+7% (FY23: US$166m)',
+            branches: '243', branchesNote: '+12 net (from 231 in FY23)',
+            highlights: ['Opened a new distribution centre in Texas', 'Completed 4 branch refurbishments', 'Reece brand rollout across US expected complete by end of calendar 2024', 'Continued cultural integration & leadership development under "The Reece Way"'],
+          },
+          {
+            name: 'Australia & New Zealand', flag: '🇦🇺',
+            revenue: 'A$3,846m', revenueNote: '\u22120.2% (FY23: A$3,853m) \u2014 flat amid softer housing',
+            ebitda: 'A$560m', ebitdaNote: '+1% YoY (FY23: A$557m)',
+            ebit: 'A$410m', ebitNote: '\u22123% (FY23: A$421m) \u2014 cost inflation + higher D&A from capital investment',
+            branches: '661', branchesNote: '+6 net (from 655 in FY23)',
+            highlights: ['Opened a new distribution centre in Auckland (tripled regional storage)', 'Completed 15 refurbishments & store upgrades', 'Maintained long-term network investment despite housing-market softness'],
+          },
+        ],
+      },
+
+      // Ownership & shareholder structure (as at 2 Aug 2024)
+      ownership: {
+        asOf: '2 August 2024',
+        totalHolders: 6620,
+        votingRights: 'All issued shares are ordinary shares; each shareholder is entitled to one vote per share.',
+        familyControl: 'The Wilson family controls Reece through a web of holding entities. The 20 largest shareholders together hold 91.37% of issued capital \u2014 an extraordinarily concentrated register dominated by Wilson-family vehicles (L.T. Wilson Pty Ltd alone holds 24.33%, plus L.T.W. Holdings, Warramunda, J.G.W., W.A.L., Austral Hardware and others). This concentration is the structural backbone of the family-control thesis \u2014 minority holders own a thin free float.',
+        substantialShareholders: [
+          { name: 'John Gay Wilson',                shares: 363013785, family: true },
+          { name: 'Leslie Alan Wilson',             shares: 359709180, family: true },
+          { name: 'Bruce Walter Campbell Wilson',   shares: 334665823, family: true },
+          { name: 'Wilaust Holdings Pty Ltd',       shares: 313050000, family: true },
+          { name: 'Two Hills Holding Pty Ltd',      shares: 120168788, family: true },
+          { name: 'AustralianSuper Pty Ltd',        shares: 47545591,  family: false },
+        ],
+        substantialNote: 'Many of these substantial shareholdings relate to the same shares (cross-held through family entities).',
+        topShareholders: [
+          { name: 'L.T. Wilson Pty Ltd',                                          shares: 157200000, pct: 24.33, family: true },
+          { name: 'J P Morgan Nominees Australia Limited',                        shares: 72668414,  pct: 11.25, family: false },
+          { name: 'L.T.W. Holdings Pty Ltd',                                      shares: 60000000,  pct: 9.29,  family: true },
+          { name: 'HSBC Custody Nominees (Australia) Limited',                    shares: 57908931,  pct: 8.96,  family: false },
+          { name: 'Warramunda Investments Pty Ltd',                              shares: 48645000,  pct: 7.53,  family: true },
+          { name: 'Geronimo Custodian Pty Ltd',                                   shares: 26580080,  pct: 4.11,  family: false },
+          { name: 'Glentemp Custodian Pty Ltd',                                   shares: 25820366,  pct: 4.00,  family: false },
+          { name: 'Citicorp Nominees Pty Ltd',                                    shares: 18715916,  pct: 2.90,  family: false },
+          { name: 'HSBC Custody Nominees (Australia) Limited \u2013 Florizel',     shares: 16801600,  pct: 2.60,  family: false },
+          { name: 'J.G.W. Investments Pty Ltd',                                   shares: 16801600,  pct: 2.60,  family: true },
+          { name: 'W.A.L. Investments Pty Ltd',                                   shares: 16801600,  pct: 2.60,  family: true },
+          { name: 'Austral Hardware Pty Ltd',                                     shares: 14925000,  pct: 2.31,  family: true },
+          { name: 'Austral Hardware (Healesville) Pty Ltd',                       shares: 12000000,  pct: 1.86,  family: true },
+          { name: 'Addawarra Nominees Pty Ltd',                                   shares: 11550000,  pct: 1.79,  family: false },
+          { name: 'Wilaust Holdings Pty Ltd',                                     shares: 8730000,   pct: 1.35,  family: true },
+          { name: 'Australian Foundation Investment Company Limited',             shares: 5940000,   pct: 0.92,  family: false },
+          { name: 'BNP Paribas Nominees Pty Ltd (Agency Lending DRP A/C)',        shares: 5875591,   pct: 0.91,  family: false },
+          { name: 'Argo Investments Ltd',                                         shares: 5114741,   pct: 0.79,  family: false },
+          { name: 'John G. Wilson',                                               shares: 4671819,   pct: 0.72,  family: true },
+          { name: 'BNP Paribas Nominees Pty Ltd',                                 shares: 3480611,   pct: 0.54,  family: false },
+        ],
+        topShareholdersNote: 'The 20 largest shareholders together hold 91.37% of issued capital.',
+        distribution: [
+          { range: '1 \u2013 1,000',        holders: 3490 },
+          { range: '1,001 \u2013 5,000',    holders: 2094 },
+          { range: '5,001 \u2013 10,000',   holders: 492 },
+          { range: '10,001 \u2013 100,000', holders: 446 },
+          { range: 'Over 100,000',          holders: 98 },
+        ],
+        subsidiaries: {
+          note: '36 controlled entities as at 30 June 2024 \u2014 all wholly-owned unless stated. Reece, Inc. and Reece Supply, LLC were previously MORSCO entities (renamed in FY24). Laddr Finance was divested during FY24 (0% in 2024). The Employee Share Trust is deemed controlled but not a subsidiary.',
+          entities: [
+            { name: 'Reece Australia Pty Ltd',            country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Plumbing World Pty Ltd',             country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Reece Project Supply Pty Ltd',       country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Reece International Pty Ltd',         country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Reece New Zealand Limited',          country: 'New Zealand',   own2024: '100%', own2023: '100%' },
+            { name: 'Actrol Parts Holdings Pty Ltd',      country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Actrol Parts Finance Pty Ltd',       country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Actrol Parts Pty Ltd',               country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'A.C. Components Pty Ltd',            country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Metalflex Pty Ltd',                  country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Metalflex Regional Pty Ltd',         country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Metalflex (S.A.) Pty Ltd',           country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Metalflex (W.A.) Pty Ltd',           country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Air Plus Pty Ltd',                   country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'The Creative Plane Pty Ltd',         country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Viadux Holdco Pty Ltd',              country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Viadux Bidco Pty Ltd',               country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Viadux Pty Ltd',                     country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Laddr Finance Pty Ltd',              country: 'Australia',     own2024: '0%',   own2023: '100%', note: 'Divested during FY24' },
+            { name: 'International Quadratics Pty Ltd',    country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Dontek Electronics Pty Ltd',         country: 'Australia',     own2024: '100%', own2023: '100%' },
+            { name: 'Hamilton Holdco, LLC',               country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Patriot Supply Holdings, LLC',       country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Patriot Supply Intermediate, Inc.',  country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Reece, Inc. (prev. MORSCO, Inc.)',   country: 'United States', own2024: '100%', own2023: '100%', note: 'Renamed FY24' },
+            { name: 'Reece Supply, LLC (prev. MORSCO Supply)', country: 'United States', own2024: '100%', own2023: '100%', note: 'Renamed FY24' },
+            { name: 'Fortiline, LLC',                     country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Fortiline, Inc.',                    country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'MORSCO Properties, LLC',             country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'MORSCO Properties OK, LLC',          country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Reece Mexico 1, Inc.',               country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Reece Mexico 99, Inc.',              country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'RMx Dev S. de R.L. de C.V.',         country: 'Mexico',        own2024: '100%', own2023: '100%' },
+            { name: 'Barsco, Inc.',                       country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'DKJ Family Equipment, LLC',          country: 'United States', own2024: '100%', own2023: '100%' },
+            { name: 'Reece Limited Employee Share Trust', country: 'Australia',     own2024: 'N/A',  own2023: 'N/A',  note: 'Deemed controlled; not a subsidiary' },
+          ],
+        },
+      },
+
+      // Long-Term Incentive plan
+      lti: {
+        planName: 'Reece Limited Long-Term Incentive (LTI) 2021 Plan',
+        summary: 'Reece\u2019s 2021 LTI ties executive reward directly to EPS growth and capital efficiency (ROCE) over a three-year period. Rights are granted at no cost, carry no votes until vesting, and are purely performance-based. FY24 saw 684k new rights granted and the final vesting of legacy FY20 options.',
+        details: [
+          { label: 'Purpose',             value: 'Align executive/employee performance with sustained shareholder returns \u2014 long-term value creation and retention.' },
+          { label: 'Approved',            value: 'By shareholders at the AGM on 30 October 2021; all grants since FY22 are under this plan (replaced the previous share-option plan).' },
+          { label: 'Instrument',          value: 'Performance Rights \u2014 one ordinary share per right on vesting.' },
+          { label: 'Vesting period',      value: '3 years (reduced from 4 years in FY23).' },
+          { label: 'Performance hurdles', value: 'Two equally-weighted tests: 50% EPS CAGR + 50% Average ROCE (Return on Capital Employed).' },
+          { label: 'Grant basis',         value: 'Face-value methodology based on the 20-day VWAP immediately after annual results.' },
+          { label: 'Rights characteristics', value: 'Granted for no cash consideration; carry no voting rights until converted; convert to ordinary shares only if hurdles are met after vesting.' },
+          { label: 'FY24 activity',       value: '684,133 performance rights granted; none exercised or expired. P. Wilson: 304,286 legacy FY20 share options vested 30 Jun 2024. A. Cowlishaw\u2019s rights forfeited on ceasing employment.' },
+        ],
+      },
     },
 
     leadership: {
@@ -7471,6 +7598,165 @@ const REH_BREAKDOWN = {
         ],
         verdict: 'Reece is a family-controlled company \u2014 the Wilson family holds the CEO role and three of seven board seats, and is consolidating control further with Peter Wilson becoming Chairman & CEO. In the Buffett framework this is a double-edged sword: genuine owner-alignment and decades-long thinking (a real plus that most listed companies lack), but reduced board independence and minority holders who are along for the ride on the family\u2019s terms. Independent directors (Poole as Chair, Penrose on finance/risk, Quinn on consumer) provide governance ballast, but the family\u2019s grip is firm and deliberate.',
       },
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // RISKS — enterprise risk framework (FY24)
+  // ════════════════════════════════════════════════════════════════
+  risks: {
+    riskSummary: {
+      preamble: 'Reece maintains a well-developed enterprise risk framework covering both operational and strategic exposures. Each risk is mapped to its key drivers and the mitigation measures in place. The ten categories below are drawn from the FY24 risk summary.',
+      categories: [
+        {
+          num: '01', name: 'Macroeconomic & Competitor Landscape',
+          description: 'Exposure to changing global and local macroeconomic, geopolitical, and competitive conditions. Trade tensions, inflation, and evolving customer preferences can affect demand and margins.',
+          drivers: ['Changes in global or domestic economic conditions', 'Geopolitical risks and international disputes', 'Market competition and new entrants', 'Shifts in customer strategies and product innovation'],
+          mitigations: ['Active monitoring of key macroeconomic indicators', 'Agile business continuity planning', 'Ongoing focus on innovation and diversification of products/services', 'Scenario-based planning for market volatility'],
+        },
+        {
+          num: '02', name: 'IT Resilience & Cyber Security',
+          description: 'Cyberattacks and system outages could materially disrupt operations, financial data, or customer trust. Risks include ransomware, denial-of-service attacks, and malicious hacking.',
+          drivers: ['Growing IT complexity and third-party technology reliance', 'Rising frequency and sophistication of cyberattacks', 'Increased use of cloud-based systems'],
+          mitigations: ['Dedicated cyber security team and strategy', 'Regular monitoring, patching, and testing of IT systems', 'Formal incident response procedures', 'Screening and auditing of critical suppliers\u2019 cyber environments'],
+          emerging: true,
+        },
+        {
+          num: '03', name: 'Data & Information Privacy',
+          description: 'Reece manages large volumes of customer and employee data. Breaches could lead to regulatory penalties, reputational damage, and customer distrust.',
+          drivers: ['Increasing data volumes and complexity', 'Evolving privacy regulations', 'Human error or malicious data exposure', 'Heightened customer and regulator expectations'],
+          mitigations: ['Dedicated privacy governance council', 'Enterprise-wide privacy roadmap and data governance framework', 'Mandatory privacy and data protection training', 'Tested data breach response protocols'],
+        },
+        {
+          num: '04', name: 'Supply Chain & Transportation Disruption',
+          description: 'Reece\u2019s global sourcing and distribution depend on reliable access to suppliers, logistics partners, and key trade routes. Disruptions can delay inventory and affect sales.',
+          drivers: ['Supplier concentration or single-source dependencies', 'Geopolitical tensions or global conflicts', 'Extreme weather and freight delays', 'Rising transportation costs'],
+          mitigations: ['Diversification of supplier base and geographies', 'Multi-warehouse distribution footprint', 'Robust contractual safeguards and service-level agreements', 'Regular supply chain risk reviews'],
+        },
+        {
+          num: '05', name: 'People & Talent',
+          description: 'Reece\u2019s success depends on retaining skilled employees and leaders with deep industry expertise. Labour shortages and competition for talent pose ongoing challenges.',
+          drivers: ['Tight labour markets and rising wage pressure', 'Leadership succession gaps', 'Shifts in employee expectations and work models'],
+          mitigations: ['Comprehensive talent and succession planning', 'Leadership development programs and capability training', 'Regular remuneration benchmarking and performance reviews', 'Active culture-building and engagement initiatives'],
+          emerging: true,
+        },
+        {
+          num: '06', name: 'Health, Safety & Wellbeing',
+          description: 'Safety of employees, contractors, and customers is core to Reece\u2019s culture. Physical and psychological safety risks remain inherent across its large operational network.',
+          drivers: ['Physical hazards in warehouses and branches', 'Use of heavy equipment and large vehicle fleets', 'Psychosocial and harassment risks'],
+          mitigations: ['Dedicated Group Safety Department', 'Robust incident management systems', 'Targeted mental health and harassment prevention programs', 'Continuous training and safety audits'],
+        },
+        {
+          num: '07', name: 'Product Quality & Safety',
+          description: 'Dependable, safe products underpin Reece\u2019s brand. Product failures, recalls, or supplier quality issues can cause injury, reputational harm, or liability exposure.',
+          drivers: ['Supplier quality variation', 'Complex specifications and installations', 'Product recalls or compliance failures'],
+          mitigations: ['Stringent quality assurance and testing programs', 'Comprehensive supplier audits', 'Product warranties and insurance coverage', 'Training programs to ensure correct installation and handling'],
+        },
+        {
+          num: '08', name: 'Environmental, Social & Governance (ESG)',
+          description: 'Reece faces transitional and physical risks linked to climate change, sustainability regulation, and social responsibility expectations.',
+          drivers: ['Regulatory tightening on climate and emissions reporting', 'Increased stakeholder expectations', 'Physical risks (floods, fires, extreme weather)'],
+          mitigations: ['ESG governance framework and working groups', 'In-house ESG expertise', 'Climate adaptation strategies and insurance coverage', 'Cross-functional ESG transformation program for disclosure, monitoring, and reporting'],
+          emerging: true,
+        },
+        {
+          num: '09', name: 'Technological Disruption & Transformation',
+          description: 'Rapid technological change (AI, automation, robotics) could disrupt traditional operations and customer interactions. Reece must adapt to remain competitive.',
+          drivers: ['Emergence of artificial intelligence and robotics', 'Data science and predictive analytics developments', 'Legacy infrastructure limitations'],
+          mitigations: ['Strategic technology roadmap', 'Dedicated innovation programs', 'Continuous investment in IT infrastructure', 'Exploration of emerging technologies to enhance productivity'],
+        },
+        {
+          num: '10', name: 'Legal & Compliance Landscape',
+          description: 'As Reece expands geographically and into new verticals, legal and regulatory complexity grows. Compliance failures could result in fines or business interruption.',
+          drivers: ['Expanding international operations and bespoke contracts', 'Heightened regulatory scrutiny (e.g., employment law, awards compliance)', 'Growth in contractual volume and complexity'],
+          mitigations: ['Centralised compliance and legal framework', 'In-house legal, risk, and procurement teams', 'Regular external legal reviews', 'Mandatory compliance training for all staff', 'Proactive breach management and reporting protocols'],
+        },
+      ],
+      summaryInsight: 'Reece maintains a well-developed enterprise risk framework covering both operational and strategic exposures. The most significant emerging risks in FY24 relate to cybersecurity resilience, talent retention, and ESG compliance \u2014 reflecting the company\u2019s growing digital scale and global footprint.',
+    },
+
+    // Contingencies (REH narrative shape)
+    contingencies: {
+      statements: [
+        'The Group may be involved in legal claims, administrative actions and proceedings related to the normal conduct of business \u2014 including general liability, commercial, employment, intellectual property and products liability matters.',
+        'Based on existing information, it is not possible to predict with certainty the outcome or cost of current legal claims, actions and proceedings.',
+        'The Directors believe current matters of which they are aware should not significantly affect the operations, results, or state of affairs of the Group in subsequent periods.',
+        'The Directors are not aware of any material contingent liabilities at balance date or arising since 30 June 2024.',
+      ],
+      verdict: 'Clean. No material contingent liabilities disclosed \u2014 consistent with a conservatively-run, low-litigation distribution business.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // MOAT — competitive analysis (Buffett-style)
+  // ════════════════════════════════════════════════════════════════
+  moat: {
+    preamble: 'Reece\u2019s competitive advantage is a tale of two markets: a deep, decades-in-the-making distribution moat in Australia & New Zealand, and a much earlier-stage position in the United States where it competes against entrenched incumbents. The analysis below is drawn from the investment memorandum.',
+    reece: {
+      economicMoat: {
+        anz: 'Reece\u2019s moat in Australia and New Zealand is substantial \u2014 built on distribution density, trusted service, and brand familiarity. Every plumber and trade apprentice encounters Reece early in their career. This creates habit and trust, forming a local "plumbing ecosystem" that would take decades and billions to replicate.',
+        us: 'In the U.S., Reece is still earning its stripes \u2014 it faces deep-rooted incumbents like Ferguson and Winsupply. Its strategy is to expand deliberately, transplanting its customer-centric culture rather than chasing quick scale.',
+        rating: 'Wide (ANZ) · Narrow & widening (US)',
+      },
+      competitors: [
+        { name: 'Ferguson', region: 'United States', note: 'The dominant US plumbing & HVAC distributor (NYSE/LSE listed). Deeply entrenched incumbent \u2014 the scale benchmark Reece is measured against.' },
+        { name: 'Winsupply', region: 'United States', note: 'Large US distribution network with a local-ownership model. A deep-rooted incumbent competing for the same trade customers.' },
+      ],
+      managementQuality: {
+        body: 'The Wilson family manages conservatively, maintaining alignment with shareholders. Their capital allocation shows discipline \u2014 low leverage, consistent reinvestment, and a focus on service over short-term margin. Buffett would describe Peter Wilson as a "manager-owner who plays a very long game." Succession planning through internal promotion (Sasha Nikolic, James Healy) reflects a culture of stewardship rather than empire-building.',
+        points: [
+          'Conservative, owner-aligned management with skin in the game',
+          'Capital-allocation discipline: low leverage, consistent reinvestment',
+          'Service over short-term margin \u2014 a long-game orientation',
+          'Internal-promotion succession culture (stewardship, not empire-building)',
+        ],
+      },
+      financialStrength: {
+        body: 'Balance-sheet strength is a hallmark. Debt levels are low relative to equity; ROIC and tangible ROIC remain robust. The business converts earnings into cash effectively across cycles, with CapEx typically well below operating cash flow. This gives flexibility to keep expanding in the U.S. without taking undue risk.',
+        points: [
+          'Low debt relative to equity',
+          'Robust ROIC and tangible ROIC',
+          'Strong earnings-to-cash conversion across cycles',
+          'CapEx typically well below operating cash flow \u2014 self-funding expansion',
+        ],
+      },
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // THESIS — investment memorandum (valuation + Buffett verdict)
+  // ════════════════════════════════════════════════════════════════
+  thesis: {
+    reece: {
+      verdict: {
+        headline: '"You\u2019re not buying a story, you\u2019re buying a system of service and culture that plumbers trust. It\u2019s the kind of boring, necessary business that keeps compounding quietly."',
+        body: 'Reece wouldn\u2019t excite Wall Street, but it would suit Omaha\u2019s temperament perfectly \u2014 a quality franchise available at a fair price. If you\u2019re patient, this one will keep compounding in the background while others chase excitement.',
+      },
+      growthOutlook: {
+        anz: 'Australia/NZ will likely grow modestly (low-single-digit) through network optimisation and steady demand.',
+        us: 'The U.S. expansion is the long-term lever: even a small share of that $100bn+ market could double Reece\u2019s size. Management\u2019s deliberate pace \u2014 emphasising culture, systems, and branch productivity \u2014 means returns may come slowly but durably.',
+      },
+      valuation: {
+        rows: [
+          { label: 'Historical multiple', value: '~29\u201331\u00d7 earnings' },
+          { label: 'Current multiple',    value: '~24\u00d7', highlight: true },
+          { label: 'Discount to intrinsic value', value: '15\u201320%', highlight: true },
+          { label: 'FY24 EPS',             value: 'A$0.65' },
+          { label: 'Fair value (normal conditions)', value: 'A$18\u201319 / share', highlight: true },
+        ],
+        note: 'Market pessimism about housing and U.S. expansion offers a window for patient investors.',
+      },
+      returnOutlook: {
+        base: 'If Reece compounds owner-earnings per share by 2\u20133% annually and the market re-rates to its historical multiple, a 5\u20136% annualised return (plus ~2% dividend) is realistic.',
+        bull: 'Higher growth from U.S. operations could lift that to 7\u20139% annualised.',
+      },
+      summary: [
+        { label: 'Australia / NZ',  text: 'Deep moat, reliable cash generator.' },
+        { label: 'U.S.',            text: 'Long runway, disciplined entry.' },
+        { label: 'Balance Sheet',   text: 'Strong.' },
+        { label: 'Valuation',       text: 'Below historical norm \u2014 attractive for long-term holders.' },
+        { label: 'Buffett Verdict', text: 'If you\u2019re patient, this one will keep compounding in the background while others chase excitement.' },
+      ],
     },
   },
 };
@@ -18578,6 +18864,170 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 </>
                               )}
+
+                              {/* FY24 REGIONAL PERFORMANCE */}
+                              {reece.regionalPerformance && reece.regionalPerformance.regions && (
+                                <>
+                                  <SectionHeading>// FY24 REGIONAL PERFORMANCE</SectionHeading>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                    {reece.regionalPerformance.regions.map((r, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px'}}>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'10px'}}>
+                                          <span style={{fontSize:'15px'}}>{r.flag}</span>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.name}</span>
+                                        </div>
+                                        {[{k:'REVENUE',v:r.revenue,n:r.revenueNote},{k:'ADJ. EBITDA',v:r.ebitda,n:r.ebitdaNote},{k:'ADJ. EBIT',v:r.ebit,n:r.ebitNote},{k:'BRANCHES',v:r.branches,n:r.branchesNote}].map((m, j) => (
+                                          <div key={j} style={{padding:'6px 0',borderBottom: j<3 ? `0.5px solid ${amberGlow}` : 'none'}}>
+                                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'8px'}}>
+                                              <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{m.k}</span>
+                                              <span style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{m.v}</span>
+                                            </div>
+                                            {m.n && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'2px'}}>{m.n}</div>}
+                                          </div>
+                                        ))}
+                                        {r.highlights && (
+                                          <ul style={{listStyle:'none',padding:0,margin:'8px 0 0 0',display:'flex',flexDirection:'column',gap:'3px'}}>
+                                            {r.highlights.map((h, j) => (
+                                              <li key={j} style={{display:'flex',gap:'6px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.3px'}}>
+                                                <span style={{color:amberDim,flexShrink:0}}>›</span><span>{h}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* OWNERSHIP & SHAREHOLDER STRUCTURE */}
+                              {reece.ownership && (
+                                <>
+                                  <SectionHeading>// OWNERSHIP & SHAREHOLDER STRUCTURE · {reece.ownership.asOf}</SectionHeading>
+                                  {reece.ownership.familyControl && (
+                                    <div style={{background:'linear-gradient(160deg, rgba(239,68,68,0.06) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(239,68,68,0.35)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>⚠ FAMILY CONTROL</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.ownership.familyControl}</div>
+                                    </div>
+                                  )}
+
+                                  {/* Substantial shareholders */}
+                                  {reece.ownership.substantialShareholders && (
+                                    <details open style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'6px'}}>
+                                      <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>Substantial Shareholders</span>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                        {reece.ownership.substantialShareholders.map((s, i) => (
+                                          <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',padding:'5px 0',borderBottom: i < reece.ownership.substantialShareholders.length-1 ? '0.5px solid rgba(245,158,11,0.06)' : 'none'}}>
+                                            <span style={{fontSize:'10px',color: s.family ? amber : 'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight: s.family ? 700 : 500,letterSpacing:'0.3px'}}>{s.family && '★ '}{s.name}</span>
+                                            <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:600,whiteSpace:'nowrap'}}>{(s.shares/1000000).toFixed(1)}M</span>
+                                          </div>
+                                        ))}
+                                        {reece.ownership.substantialNote && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'8px',fontStyle:'italic'}}>{reece.ownership.substantialNote}</div>}
+                                      </div>
+                                    </details>
+                                  )}
+
+                                  {/* Top 20 shareholders */}
+                                  {reece.ownership.topShareholders && (
+                                    <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'6px'}}>
+                                      <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>Top 20 Shareholders · 91.37% of capital</span>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                        {reece.ownership.topShareholders.map((s, i) => (
+                                          <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',padding:'4px 0',borderBottom: i < reece.ownership.topShareholders.length-1 ? '0.5px solid rgba(245,158,11,0.06)' : 'none'}}>
+                                            <span style={{display:'flex',alignItems:'baseline',gap:'6px',minWidth:0}}>
+                                              <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',minWidth:'18px'}}>{i+1}.</span>
+                                              <span style={{fontSize:'9.5px',color: s.family ? amber : 'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight: s.family ? 700 : 500,letterSpacing:'0.3px'}}>{s.family && '★ '}{s.name}</span>
+                                            </span>
+                                            <span style={{fontSize:'10px',color: s.family ? amber : 'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700,whiteSpace:'nowrap'}}>{s.pct}%</span>
+                                          </div>
+                                        ))}
+                                        {reece.ownership.topShareholdersNote && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'8px',fontStyle:'italic'}}>{reece.ownership.topShareholdersNote} ★ = Wilson-family entity.</div>}
+                                      </div>
+                                    </details>
+                                  )}
+
+                                  {/* Distribution + subsidiaries side by side */}
+                                  {reece.ownership.distribution && (
+                                    <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'6px'}}>
+                                      <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>Distribution of Holdings · {reece.ownership.totalHolders.toLocaleString()} holders</span>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                        {reece.ownership.distribution.map((d, i) => (
+                                          <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',padding:'4px 0',borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                            <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{d.range}</span>
+                                            <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:600}}>{d.holders.toLocaleString()}</span>
+                                          </div>
+                                        ))}
+                                        {reece.ownership.votingRights && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'8px',fontStyle:'italic'}}>{reece.ownership.votingRights}</div>}
+                                      </div>
+                                    </details>
+                                  )}
+
+                                  {/* Subsidiaries */}
+                                  {reece.ownership.subsidiaries && reece.ownership.subsidiaries.entities && (
+                                    <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'8px'}}>
+                                      <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>Controlled Entities · {reece.ownership.subsidiaries.entities.length}</span>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                        <div style={{overflowX:'auto'}}>
+                                          <table style={{width:'100%',minWidth:'360px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'9.5px'}}>
+                                            <thead>
+                                              <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                                <th style={{textAlign:'left',padding:'4px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'8px'}}>ENTITY</th>
+                                                <th style={{textAlign:'left',padding:'4px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'8px'}}>COUNTRY</th>
+                                                <th style={{textAlign:'right',padding:'4px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'8px'}}>2024</th>
+                                                <th style={{textAlign:'right',padding:'4px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'8px'}}>2023</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {reece.ownership.subsidiaries.entities.map((e, i) => (
+                                                <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
+                                                  <td style={{padding:'4px 6px',color:'#e0eaff',fontWeight:500,letterSpacing:'0.2px'}}>{e.name}{e.note && <span style={{color:amberDim,fontStyle:'italic'}}> · {e.note}</span>}</td>
+                                                  <td style={{padding:'4px 6px',color:'rgba(224,234,255,0.65)',letterSpacing:'0.2px'}}>{e.country}</td>
+                                                  <td style={{padding:'4px 6px',textAlign:'right',color: e.own2024 === '0%' ? 'rgba(239,68,68,0.9)' : 'rgba(224,234,255,0.8)',fontWeight:600}}>{e.own2024}</td>
+                                                  <td style={{padding:'4px 6px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{e.own2023}</td>
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        {reece.ownership.subsidiaries.note && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'8px',fontStyle:'italic'}}>{reece.ownership.subsidiaries.note}</div>}
+                                      </div>
+                                    </details>
+                                  )}
+                                </>
+                              )}
+
+                              {/* LONG-TERM INCENTIVE PLAN */}
+                              {reece.lti && reece.lti.details && (
+                                <>
+                                  <SectionHeading>// LONG-TERM INCENTIVE PLAN</SectionHeading>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                    <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{reece.lti.planName}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                      {reece.lti.details.map((d, i) => (
+                                        <div key={i} style={{display:'grid',gridTemplateColumns:'120px 1fr',gap:'10px',alignItems:'baseline'}}>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>{d.label.toUpperCase()}</span>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.value}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    {reece.lti.summary && (
+                                      <div style={{padding:'8px 10px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.lti.summary}</div>
+                                    )}
+                                  </div>
+                                </>
+                              )}
                             </>
                           )}
 
@@ -20651,7 +21101,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -20700,6 +21150,91 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
+                          {/* REH ENTERPRISE RISK FRAMEWORK (riskSummary shape) */}
+                          {riskSummary && riskSummary.categories && (
+                            <>
+                              <SectionHeading>// ENTERPRISE RISK FRAMEWORK · {riskSummary.categories.length} CATEGORIES</SectionHeading>
+                              {riskSummary.preamble && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{riskSummary.preamble}</div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {riskSummary.categories.map((c, i) => (
+                                  <details key={i} style={{
+                                    background: c.emerging ? 'linear-gradient(160deg, rgba(239,68,68,0.07) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${c.emerging ? 'rgba(239,68,68,0.4)' : amberGlow}`,
+                                    borderLeft:`2px solid ${c.emerging ? 'rgba(239,68,68,0.85)' : amber}`,
+                                    borderRadius:'3px',overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',flex:1,minWidth:0}}>
+                                        <span style={{fontSize:'13px',color: c.emerging ? 'rgba(239,68,68,0.95)' : amberDim,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{c.num}</span>
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                        {c.emerging && <span style={{padding:'1px 6px',background:'rgba(239,68,68,0.12)',border:'0.5px solid rgba(239,68,68,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>FY24 EMERGING</span>}
+                                      </span>
+                                      <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{c.description}</div>
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'8px'}}>
+                                        {c.drivers && c.drivers.length > 0 && (
+                                          <div style={{padding:'8px 10px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>⚠ KEY DRIVERS</div>
+                                            <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                              {c.drivers.map((d, j) => (
+                                                <li key={j} style={{display:'flex',gap:'6px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.3px'}}>
+                                                  <span style={{color:'rgba(239,68,68,0.7)',flexShrink:0}}>›</span><span>{d}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+                                        {c.mitigations && c.mitigations.length > 0 && (
+                                          <div style={{padding:'8px 10px',background:'rgba(34,197,94,0.04)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>✓ MITIGATION MEASURES</div>
+                                            <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                              {c.mitigations.map((m, j) => (
+                                                <li key={j} style={{display:'flex',gap:'6px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.3px'}}>
+                                                  <span style={{color:'rgba(34,197,94,0.7)',flexShrink:0}}>›</span><span>{m}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+                              {riskSummary.summaryInsight && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ SUMMARY INSIGHT</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{riskSummary.summaryInsight}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* REH CONTINGENCIES (statements shape) */}
+                          {contingencies && contingencies.statements && (
+                            <>
+                              <SectionHeading>// CONTINGENCIES</SectionHeading>
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'6px'}}>
+                                  {contingencies.statements.map((s, i) => (
+                                    <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                      <span style={{color:amberDim,flexShrink:0}}>›</span><span>{s}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                                {contingencies.verdict && (
+                                  <div style={{marginTop:'10px',padding:'8px 10px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                    <span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>✓ </span>{contingencies.verdict}
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
                           {/* RISK FACTORS — expandable rows grouped by category */}
                           {riskFactors && riskFactors.categories && riskFactors.categories[0] && riskFactors.categories[0].items && (
                             <>
@@ -23376,7 +23911,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -23531,6 +24066,88 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
+                          {/* REH MOAT ANALYSIS (reece shape) */}
+                          {reece && (
+                            <>
+                              {preamble && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{preamble}</div>
+                              )}
+
+                              {/* ECONOMIC MOAT — two markets */}
+                              {reece.economicMoat && (
+                                <>
+                                  <SectionHeading>// ECONOMIC MOAT{reece.economicMoat.rating ? ` · ${reece.economicMoat.rating}` : ''}</SectionHeading>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                    <div style={{background:'linear-gradient(160deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.4)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'4px',padding:'12px 14px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🇦🇺 ANZ · WIDE MOAT</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.economicMoat.anz}</div>
+                                    </div>
+                                    <div style={{background:'linear-gradient(160deg, rgba(245,158,11,0.08) 0%, rgba(0,0,0,0.4) 100%)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🇺🇸 US · EARLY-STAGE</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.economicMoat.us}</div>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* US COMPETITORS */}
+                              {reece.competitors && reece.competitors.length > 0 && (
+                                <>
+                                  <SectionHeading>// US COMPETITIVE LANDSCAPE</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+                                    {reece.competitors.map((c, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:'2px solid rgba(239,68,68,0.7)',borderRadius:'3px',padding:'10px 12px'}}>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'4px'}}>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.5px'}}>{c.region}</span>
+                                        </div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.note}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* MANAGEMENT QUALITY */}
+                              {reece.managementQuality && (
+                                <>
+                                  <SectionHeading>// MANAGEMENT QUALITY</SectionHeading>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom: reece.managementQuality.points ? '10px' : 0}}>{reece.managementQuality.body}</div>
+                                    {reece.managementQuality.points && (
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                        {reece.managementQuality.points.map((p, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>✓</span><span>{p}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* FINANCIAL STRENGTH */}
+                              {reece.financialStrength && (
+                                <>
+                                  <SectionHeading>// FINANCIAL STRENGTH</SectionHeading>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'10px'}}>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom: reece.financialStrength.points ? '10px' : 0}}>{reece.financialStrength.body}</div>
+                                    {reece.financialStrength.points && (
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                        {reece.financialStrength.points.map((p, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>✓</span><span>{p}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
+
                           {pricingPower && pricingPower.products && (
                             <>
                               <SectionHeading>// PRICING POWER</SectionHeading>
@@ -24078,10 +24695,101 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === THESIS TAB ===
                     const renderThesisTab = () => {
                       if (!bd.thesis) return null;
-                      const { vision, strategicImperatives, bigPicture, acquisitions, sustainability } = bd.thesis;
+                      const { vision, strategicImperatives, bigPicture, acquisitions, sustainability, reece } = bd.thesis;
 
                       return (
                         <div>
+                          {/* REH INVESTMENT MEMORANDUM (reece shape) */}
+                          {reece && (
+                            <>
+                              {/* BUFFETT VERDICT */}
+                              {reece.verdict && (
+                                <>
+                                  <SectionHeading>// BUFFETT / MUNGER VERDICT</SectionHeading>
+                                  <div style={{background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.5)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'4px',padding:'16px 18px',marginBottom:'12px',position:'relative'}}>
+                                    <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.5)',borderLeft:'1px solid rgba(34,197,94,0.5)'}}/>
+                                    <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.5)',borderRight:'1px solid rgba(34,197,94,0.5)'}}/>
+                                    <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',textAlign:'center',fontStyle:'italic',marginBottom:'10px'}}>{reece.verdict.headline}</div>
+                                    {reece.verdict.body && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',textAlign:'center'}}>{reece.verdict.body}</div>}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* VALUATION */}
+                              {reece.valuation && reece.valuation.rows && (
+                                <>
+                                  <SectionHeading>// VALUATION</SectionHeading>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {reece.valuation.rows.map((r, i) => (
+                                        <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',padding:'6px 8px',background: r.highlight ? 'rgba(245,158,11,0.06)' : 'transparent',border: r.highlight ? `0.5px solid ${amberGlow}` : '0.5px solid transparent',borderRadius:'2px'}}>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{r.label}</span>
+                                          <span style={{fontSize:'12px',color: r.highlight ? amber : '#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.value}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    {reece.valuation.note && (
+                                      <div style={{marginTop:'8px',padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{reece.valuation.note}</div>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* RETURN OUTLOOK */}
+                              {reece.returnOutlook && (
+                                <>
+                                  <SectionHeading>// INTRINSIC VALUE & RETURN OUTLOOK</SectionHeading>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                    {reece.returnOutlook.base && (
+                                      <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BASE CASE · 5\u20136%</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.returnOutlook.base}</div>
+                                      </div>
+                                    )}
+                                    {reece.returnOutlook.bull && (
+                                      <div style={{background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',padding:'10px 12px'}}>
+                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BULL CASE · 7\u20139%</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.returnOutlook.bull}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* GROWTH OUTLOOK */}
+                              {reece.growthOutlook && (
+                                <>
+                                  <SectionHeading>// GROWTH OUTLOOK</SectionHeading>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                    <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>🇦🇺 AUSTRALIA / NZ</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.growthOutlook.anz}</div>
+                                    </div>
+                                    <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>🇺🇸 UNITED STATES</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.growthOutlook.us}</div>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* SUMMARY */}
+                              {reece.summary && reece.summary.length > 0 && (
+                                <>
+                                  <SectionHeading>// SUMMARY</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'8px'}}>
+                                    {reece.summary.map((s, i) => (
+                                      <div key={i} style={{display:'flex',gap:'10px',alignItems:'baseline',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'8px 12px'}}>
+                                        <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',minWidth:'110px'}}>{s.label}</span>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{s.text}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
+
                           {/* VISION */}
                           {vision && (
                             <>
