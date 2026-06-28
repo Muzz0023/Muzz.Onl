@@ -3910,6 +3910,51 @@ const HSY_BREAKDOWN = {
         summary: '10 of 11 directors are independent. A Lead Independent Director is appointed to strengthen independent oversight. Key committees are composed entirely of independent directors, ensuring checks & balances on management, including the CEO.',
       },
     },
+    // Derivatives — hedging mechanism (insurance against cost volatility)
+    derivatives: {
+      summary: 'Hershey uses derivatives like a form of insurance policy against unpredictable costs in debt, foreign sales, and raw materials (especially cocoa). They are structured conservatively, NOT speculatively, and primarily help protect Hershey\u2019s margins and cash flow stability.',
+      risksHedged: [
+        {
+          name: 'Interest Rate Risk',
+          icon: '📊',
+          description: 'HSY borrows in long-term debt to fund operations and capital returns. Rate movements affect financing costs.',
+          instruments: 'Interest rate swap agreements',
+          purpose: 'Stabilise financing costs by converting fixed-rate debt to floating (or vice versa) depending on market conditions. Keeps borrowing costs predictable.',
+        },
+        {
+          name: 'Foreign Currency Exchange Risk',
+          icon: '🌍',
+          description: 'HSY sells internationally (Mexico, Brazil, India, Malaysia, exports). USD strength/weakness affects translated earnings.',
+          instruments: 'Forward exchange contracts',
+          purpose: 'Hedge exposure to foreign sales, purchases, or cash flows. Protects against USD strengthening or weakening.',
+        },
+        {
+          name: 'Commodity Price Risk',
+          icon: '🌾',
+          description: 'COCOA is the single largest commodity input. Sugar, dairy, energy, and transportation also matter. Cocoa volatility especially has been brutal in 2023\u20132024.',
+          instruments: 'Futures contracts, options contracts, other hedges',
+          purpose: 'Lock in prices for raw materials, energy, and transportation. Prevents sharp cost spikes from commodity volatility.',
+        },
+      ],
+      hedgeTypes: [
+        { name: 'Economic Hedges Only',          description: 'Hershey uses derivatives to REDUCE risk, not for speculation or trading profits.' },
+        { name: 'No Leverage / No Prepayment',   description: 'These aren\u2019t high-risk financial engineering tools \u2014 just straightforward hedges.' },
+        { name: 'Counterparty Risk Controlled',  description: 'Uses exchange-traded contracts with collateral posting. Performs financial checks on counterparties. Maintains a diversified pool to avoid overexposure.' },
+        { name: 'Management Expectation',        description: 'Management does not expect significant losses from counterparty defaults.' },
+      ],
+      pros: [
+        'Reduces volatility in financing costs, translated earnings, and raw material prices',
+        'Structured conservatively \u2014 no leverage, no prepayment features',
+        'Counterparty risk actively managed (exchange-traded, collateralised, diversified)',
+        'Protects margins and cash flow stability \u2014 critical for cocoa-dependent business',
+      ],
+      cons: [
+        'Hedges aren\u2019t perfect \u2014 timing mismatches can create accounting noise',
+        'Heavy cocoa exposure means hedging gains/losses can swing reported COGS materially',
+        'Adds complexity \u2014 investors need to read footnotes to understand realised vs unrealised positions',
+      ],
+      bigPicture: 'For a cocoa-dependent confectioner, commodity hedging isn\u2019t optional \u2014 it\u2019s essential infrastructure. HSY runs a conservative, insurance-style program (not speculation), which fits the long-term, controlled-shareholder identity of the company. The Trust would never tolerate proprietary trading risk on top of cocoa price risk.',
+    },
   },
   thesis: {
     vision: 'To be a leading snacking powerhouse, meeting evolving consumer snacking needs while strengthening growth capabilities.',
@@ -20983,6 +21028,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'8px 12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.2)',borderLeft:'2px solid rgba(34,197,94,0.6)',borderRadius:'4px',flexWrap:'wrap'}}>
                   <span style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// NOTE</span>
                   <span style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px'}}>All market caps shown in USD. Captured on the date listed beside each figure.</span>
+                </div>
+
+                {/* Do Your Own Research disclaimer */}
+                <div style={{
+                  padding:'12px 14px',
+                  background:'linear-gradient(160deg, rgba(245,158,11,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                  border:`0.5px solid ${amber}`,
+                  borderLeft:`2px solid ${amber}`,
+                  borderRadius:'4px',
+                  position:'relative',
+                }}>
+                  <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                  <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                  <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                  <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>⚠ DO YOUR OWN RESEARCH</div>
+                  <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'8px'}}>
+                    The information shown here reflects Muzz's personal research notes. It is not financial advice and may contain errors, omissions, or outdated figures.
+                  </div>
+                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                    Before making any investment decision, please <span style={{color:amber,fontWeight:700}}>do your own research</span> &mdash; read the company's <span style={{color:amber,fontWeight:700}}>10-K filings</span>, <span style={{color:amber,fontWeight:700}}>proxy statements</span>, and stay current with <span style={{color:amber,fontWeight:700}}>recent news</span>. Verify all financial data against primary sources (SEC EDGAR, company investor relations pages).
+                  </div>
                 </div>
 
                 {/* Breadcrumb */}
