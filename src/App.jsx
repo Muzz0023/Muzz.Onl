@@ -3953,6 +3953,58 @@ const KO_BREAKDOWN = {
         },
       ],
     },
+    // Raw Materials — diverse inputs across water, sweeteners, juice, dairy, coffee, tea, packaging
+    rawMaterialsCategories: {
+      description: 'Coca-Cola\u2019s raw materials are diverse but exposed to commodity price volatility, climate/weather risks, and supplier concentration (especially orange juice, milk, and sucralose). The company mitigates risks through multiple sourcing, partnerships (e.g., Cutrale, CCBSS), certification programs, and packaging innovation.',
+      categories: [
+        { name: 'Water',                   keyMaterials: 'Main ingredient in nearly all products',                                                                                                       sources: 'Local sources worldwide',                                                                                                                                risks: 'Scarcity, quality, sustainability concerns; community impact' },
+        { name: 'Nutritive Sweeteners',    keyMaterials: 'HFCS (U.S.) · Sucrose / sugar (outside U.S.)',                                                                                                  sources: 'HFCS via Coca-Cola Bottlers\u2019 Sales & Services Co. (CCBSS) from U.S./Canada; sucrose widely sourced globally',                                          risks: 'Price volatility; weather impact on corn & sugar crops' },
+        { name: 'Non-Nutritive Sweeteners', keyMaterials: 'Aspartame · Acesulfame Potassium · Sucralose · Saccharin · Cyclamate · Steviol Glycosides',                                                    sources: 'Multiple suppliers globally; sucralose mainly from U.S. & China',                                                                                       risks: 'Supply chain concentration (sucralose critical); potential regulation shifts', highlight: true },
+        { name: 'Juice & Concentrates',    keyMaterials: 'Orange juice/concentrate, other fruit juices',                                                                                                 sources: 'U.S. (Florida) & Brazil via Cutrale Citrus Juices',                                                                                                     risks: 'Weather volatility (freezes, hurricanes, droughts), citrus greening disease, higher grower costs', highlight: true },
+        { name: 'Dairy',                   keyMaterials: 'Milk',                                                                                                                                          sources: 'Sourced by fairlife from dairy cooperatives',                                                                                                            risks: 'Supplier concentration risk; rising farmer costs' },
+        { name: 'Coffee & Tea',            keyMaterials: 'Coffee beans (Costa), tea leaves',                                                                                                              sources: 'Certified suppliers (e.g., Rainforest Alliance) across multiple geographies',                                                                            risks: 'Climate change \u2192 yield fluctuations; reliance on certification supply chains' },
+        { name: 'Packaging',               keyMaterials: 'PET (bio-based & recycled), glass, aluminum cans, closures, cartons, aseptic fibre, beverage gases (CO\u2082, nitrogen)',                       sources: 'Multiple suppliers globally; aluminum cans from limited sources',                                                                                        risks: 'Packaging shortages (aluminum risk); recycling/regulatory pressure; input cost inflation' },
+      ],
+    },
+    // Headquarters
+    headquarters: {
+      location: 'Atlanta, Georgia',
+      sizeAcres: 35,
+      description: 'Worldwide headquarters on a 35-acre complex in Atlanta. The complex includes several office buildings used by Corporate employees and North America operating segment employees, plus technical and engineering facilities and a reception centre.',
+    },
+    // Facility Matrix (Properties) — by segment × site type, owned vs leased, as of Dec 31 2024
+    facilityMatrix: {
+      asOf: 'Dec 31, 2024',
+      columns: [
+        { id: 'concentrate',  label: 'Concentrate / Syrup Plants',     short: 'CONCENTRATE'  },
+        { id: 'bottling',     label: 'Beverage Manufacturing / Bottling', short: 'BOTTLING'  },
+        { id: 'distribution', label: 'Distribution & Storage Facilities', short: 'DISTRIBUTION' },
+        { id: 'retail',       label: 'Retail Stores',                  short: 'RETAIL'      },
+      ],
+      segments: [
+        { name: 'Europe, Middle East & Africa',  concentrate: { owned: 5,  leased: 0 },  bottling: { owned: 2,  leased: 0 },  distribution: { owned: 7,   leased: 27 },  retail: { owned: 0, leased: 13 } },
+        { name: 'Latin America',                  concentrate: { owned: 5,  leased: 0 },  bottling: { owned: 0,  leased: 0 },  distribution: { owned: 2,   leased: 5 },   retail: { owned: 0, leased: 0 } },
+        { name: 'North America',                  concentrate: { owned: 10, leased: 0 },  bottling: { owned: 6,  leased: 3 },  distribution: { owned: 0,   leased: 29 },  retail: { owned: 0, leased: 5 } },
+        { name: 'Asia Pacific',                   concentrate: { owned: 6,  leased: 1 },  bottling: { owned: 3,  leased: 0 },  distribution: { owned: 3,   leased: 4 },   retail: { owned: 0, leased: 0 } },
+        { name: 'Global Ventures',                concentrate: { owned: 1,  leased: 0 },  bottling: { owned: 2,  leased: 0 },  distribution: { owned: 0,   leased: 8 },   retail: { owned: 0, leased: 1508 }, highlight: 'retail' },
+        { name: 'Bottling Investments',           concentrate: { owned: 0,  leased: 0 },  bottling: { owned: 61, leased: 4 },  distribution: { owned: 51,  leased: 79 },  retail: { owned: 0, leased: 0 },     highlight: 'bottling' },
+        { name: 'Corporate',                      concentrate: { owned: 3,  leased: 0 },  bottling: { owned: 0,  leased: 0 },  distribution: { owned: 0,   leased: 5 },   retail: { owned: 0, leased: 0 } },
+      ],
+      totals: {
+        concentrate:  { owned: 30, leased: 1 },
+        bottling:     { owned: 74, leased: 7 },
+        distribution: { owned: 63, leased: 157 },
+        retail:       { owned: 0,  leased: 1526 },
+      },
+      insights: [
+        'Bottling Investments carries the bulk of bottling (61 owned, 4 leased) and distribution (51 owned, 79 leased).',
+        'Global Ventures accounts for virtually all retail stores (1,508 leased) \u2014 Costa Coffee\u2019s company-run shops.',
+        'North America has the most concentrate plants (10 owned).',
+        'EMEA and North America lean heavily on leased warehouses (27 and 29 respectively).',
+      ],
+      capitalStrategy: 'Own the core production assets (concentrate, many bottlers) but lease logistics and retail for flexibility.',
+      capacityNote: 'Management believes facilities are suitable and adequate, with sufficient production capacity for present intended purposes. Additional capacity can be achieved by adding personnel, capital equipment, or shifts \u2014 except for certain dairy products that require specialised equipment, where capacity expansion is in progress.',
+    },
   },
   brands: {
     // Official 10-K 4-category structure (high-level)
@@ -4097,6 +4149,53 @@ const KO_BREAKDOWN = {
   },
 
   // ════════════════════════════════════════════════════════════════
+  // MOAT — Pricing power + capital allocation discipline
+  // ════════════════════════════════════════════════════════════════
+  moat: {
+    // Pricing Power — 100-year can price history
+    pricingPower: {
+      label: 'Coca-Cola Can Price · 1925 \u2192 2025',
+      description: 'Coca-Cola famously held the 5-cent price for 73 years (1886\u20131959). Since 1959 the company has demonstrated steady, gradual pricing power.',
+      milestones: [
+        { period: '1886\u20131959', price: '$0.05',         note: '5-cent flagship bottle. Held for 73 years. The price was advertised heavily in branding, and bottlers had little flexibility to raise prices.', highlight: true },
+        { period: '1925',         price: '$0.05',         note: '6.5 oz glass bottle. Held since 1886.' },
+        { period: '1960s',        price: '$0.10\u2013$0.15', note: 'Introduction of cans. Prices began rising post-1959 once the 5-cent era ended.' },
+        { period: '1970s',        price: '$0.20\u2013$0.30', note: 'Inflation drove gradual price increases.' },
+        { period: '1980s',        price: '$0.35\u2013$0.50', note: 'Continued steady growth in pricing.' },
+        { period: '1990s',        price: '$0.50\u2013$0.75', note: 'Prices varied by region and packaging.' },
+        { period: '2000s',        price: '$0.75\u2013$1.00', note: 'Various can sizes and multipacks introduced.' },
+        { period: '2010s',        price: '$1.00\u2013$1.50', note: 'Prices influenced by global economic factors.' },
+        { period: '2025',         price: '~$1.09',        note: 'Based on Australia: $1.67 AUD per can \u2192 \u2248$1.09 USD (30-pack, 375ml cans).', current: true },
+      ],
+      takeaway: 'From 5¢ (1886) to ~$1.09 (2025) = ~22x nominal price increase over 139 years. The 73-year price freeze (1886\u20131959) is unparalleled in consumer branding history.',
+    },
+    // Acquisition Strategy — funding discipline + history
+    acquisitionStrategy: {
+      summary: 'Coca-Cola\u2019s acquisitions have been funded almost entirely by internal cash flow and low-cost debt \u2014 they\u2019ve virtually never diluted shareholders.',
+      fundingMethods: [
+        { type: 'Cash',   emoji: '💵', usage: 'Very common',     note: 'KO generates very strong free cash flow, typically funds smaller and bolt-on deals directly with cash.', frequency: 'common' },
+        { type: 'Debt',   emoji: '💳', usage: 'Used occasionally', note: 'For larger deals, KO taps the debt market given its AAA-like credit profile. Low cost of capital makes debt attractive.', frequency: 'occasional' },
+        { type: 'Equity', emoji: '🧾', usage: 'Rare',            note: 'KO strongly avoids issuing shares for M&A \u2014 equity dilution is very minimal historically.', frequency: 'rare' },
+      ],
+      majorAcquisitions: [
+        { name: 'Costa Coffee',                year: 2018, price: '$5.1B',           funding: 'Cash + Debt', country: 'UK',     featured: true },
+        { name: 'BodyArmor (remaining stake)', year: 2021, price: '$5.6B',           funding: 'Cash',         country: 'USA',    featured: true },
+        { name: 'fairlife (remaining stake)',  year: 2020, price: 'Undisclosed',     funding: 'Cash',         country: 'USA' },
+        { name: 'AdeS (plant-based)',          year: 2017, price: '~$575M',          funding: 'Cash',         country: 'LatAm (from Unilever)' },
+        { name: 'Chi Ltd (juice/dairy)',       year: 2019, price: '~$240M',          funding: 'Cash',         country: 'Nigeria' },
+        { name: 'Zico Coconut Water (full)',   year: 2013, price: '~$129M',          funding: 'Cash',         country: 'USA' },
+        { name: 'Honest Tea',                  year: 2011, price: '~$400M',          funding: 'Cash',         country: 'USA' },
+        { name: 'Odwalla',                     year: 2001, price: '~$181M',          funding: 'Cash',         country: 'USA' },
+      ],
+      buffettQuote: {
+        text: 'Coca-Cola has never abused its shareholders through dilution. They\u2019ve grown intelligently, using their cash machine wisely.',
+        attribution: 'Warren Buffett (paraphrased over multiple annual meetings)',
+      },
+      bottomLine: 'KO funds acquisitions through its cash-generating machine and AAA-rated debt market access \u2014 shareholders rarely diluted. Bolt-on focus (functional beverages, plant-based, dairy, hot drinks) rather than transformative megadeals.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
   // RISKS — Governmental & regulatory exposure
   // ════════════════════════════════════════════════════════════════
   risks: {
@@ -4171,6 +4270,87 @@ const KO_BREAKDOWN = {
           ],
         },
       ],
+    },
+    // Commitments & Contingencies — guarantees, IRS dispute, self-insurance
+    commitmentsAndContingencies: {
+      summary: 'Coca-Cola backs some partner debts ($766M), but payout risk is low. Legal cases (besides tax) aren\u2019t material. The big risk is the IRS transfer pricing case: they already prepaid $6B but may recover it if they win on appeal. If they lose fully, future taxes could balloon by another $12B.',
+      categories: [
+        {
+          name: 'Guarantees',
+          definition: 'A contractual promise to take responsibility for another party\u2019s debt/obligation if they fail to pay.',
+          kosCase: '$766M of third-party debt guaranteed (customers, bottlers, vendors). $82M relates to VIEs. Management considers likelihood of payout remote.',
+        },
+        {
+          name: 'Concentration of Credit Risk',
+          definition: 'The risk that large exposure to a single borrower/region could cause significant loss.',
+          kosCase: 'Limited exposure due to broad geographic diversification.',
+        },
+        {
+          name: 'Legal Contingencies',
+          definition: 'Pending lawsuits or proceedings. Reserves are set up when losses are probable and estimable.',
+          kosCase: 'Management expects no material adverse impact from current legal proceedings (excluding tax audits).',
+        },
+        {
+          name: 'Indemnifications',
+          definition: 'A contractual promise (usually during acquisitions/divestitures) to cover specific liabilities for the counterparty.',
+          kosCase: 'Not expected to materially impact Coca-Cola\u2019s financials.',
+        },
+        {
+          name: 'IRS Transfer Pricing Audit',
+          definition: 'Review by tax authorities that may lead to additional liabilities.',
+          kosCase: 'IRS reallocated $9B of income for 2007\u20132009 \u2192 $3.3B additional tax assessed (+ interest \u2192 $6.0B total). Coca-Cola paid the deposit to stop interest accrual. Company strongly disagrees and is appealing.',
+          critical: true,
+          stats: [
+            { label: 'Years',                   value: '2007\u20132009' },
+            { label: 'Reallocated income',      value: '$9B' },
+            { label: 'Tax assessed',            value: '$3.3B' },
+            { label: 'Total (incl. interest)',  value: '$6.0B (already prepaid)' },
+          ],
+        },
+        {
+          name: 'Tax Reserve',
+          definition: 'A liability recorded for uncertain tax positions (per ASC 740).',
+          kosCase: 'Reserve of $474M as of Dec 2024, based on probability analysis, despite expecting to prevail on appeal.',
+        },
+        {
+          name: 'Potential Future Liability',
+          definition: 'Exposure if courts uphold IRS "Tax Court Methodology."',
+          kosCase: 'Could face ~$12B additional taxes + interest for 2010\u20132024. Would also increase effective tax rate by ~3.5% annually going forward.',
+          critical: true,
+          stats: [
+            { label: 'Additional tax exposure', value: '~$12B' },
+            { label: 'Years at risk',           value: '2010\u20132024' },
+            { label: 'Future ETR impact',       value: '+3.5% annually' },
+          ],
+        },
+        {
+          name: 'Risk Management Programs',
+          definition: 'Insurance/self-insurance to manage losses. Reserves are set aside for expected claims.',
+          kosCase: 'Global insurance programs in place. Self-insured reserves = $168M (2024) vs $197M (2023). Coverage against catastrophic losses purchased commercially.',
+        },
+      ],
+    },
+    // Contractual Obligations — bill schedule for future payments
+    contractualObligations: {
+      asOf: 'Dec 31, 2024',
+      unit: 'M USD',
+      description: 'A bill schedule for all the money Coca-Cola has already promised to pay in the future, broken down by category and time period.',
+      totalCommitted: 105906,
+      categories: [
+        { name: 'Commercial paper borrowings',             total: 1139,   y2025: 1139,   y2627: 0,    y2829: 0,    yLater: 0,     definition: 'Very short-term (typically under 1 year) unsecured debt used to fund daily liquidity needs.' },
+        { name: 'Lines of credit + short-term borrowings', total: 360,    y2025: 360,    y2627: 0,    y2829: 0,    yLater: 0,     definition: 'Revolving credit facilities or small short-term loans the company can draw on for cash.' },
+        { name: 'Current maturities of long-term debt',    total: 648,    y2025: 648,    y2627: 0,    y2829: 0,    yLater: 0,     definition: 'The portion of long-term debt that comes due within the next 12 months.' },
+        { name: 'Long-term debt, net of current maturities', total: 46176, y2025: 0,     y2627: 6925, y2829: 5693, yLater: 33558, definition: 'Bonds and loans Coca-Cola owes that are due after more than 1 year (beyond 2025 here).', highlight: true },
+        { name: 'Estimated interest payments',             total: 18643,  y2025: 1115,   y2627: 1835, y2829: 1581, yLater: 14112, definition: 'Future interest expense Coca-Cola expects to pay on its outstanding debt.' },
+        { name: 'Accrued income taxes',                    total: 1414,   y2025: 1387,   y2627: 27,   y2829: 0,    yLater: 0,     definition: 'Income taxes owed but not yet paid, usually related to timing differences between tax filings and accounting recognition.' },
+        { name: 'Purchase obligations',                    total: 25745,  y2025: 15287,  y2627: 6383, y2829: 2593, yLater: 1482,  definition: 'Commitments to buy goods/services in the future (e.g., raw materials, ingredients, packaging).', highlight: true },
+        { name: 'Marketing obligations',                   total: 3401,   y2025: 2237,   y2627: 706,  y2829: 298,  yLater: 160,   definition: 'Contractual commitments for advertising, sponsorships, and promotional spending Coca-Cola is locked into.' },
+        { name: 'Lease obligations',                       total: 2198,   y2025: 424,    y2627: 655,  y2829: 428,  yLater: 691,   definition: 'Payments for operating leases on buildings, warehouses, equipment, or vehicles.' },
+        { name: 'Acquisition obligations',                 total: 6172,   y2025: 6172,   y2627: 0,    y2829: 0,    yLater: 0,     definition: 'Agreed but not yet completed payments related to acquisitions (e.g., earn-outs, deferred purchase price).' },
+        { name: 'Held-for-sale and related obligations',   total: 10,     y2025: 10,     y2627: 0,    y2829: 0,    yLater: 0,     definition: 'Obligations linked to assets/liabilities classified as "held-for-sale" (businesses Coca-Cola is planning to divest).' },
+      ],
+      totals: { total: 105906, y2025: 28779, y2627: 16531, y2829: 10593, yLater: 50003 },
+      takeaway: 'A snapshot of KO\u2019s future financial commitments \u2014 obligations they cannot avoid paying. Long-term debt ($46.2B) and Purchase obligations ($25.7B) dominate.',
     },
   },
 
@@ -14870,7 +15050,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -15504,6 +15684,192 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+
+                          {/* RAW MATERIALS CATEGORIES — KO's diverse inputs */}
+                          {rawMaterialsCategories && (
+                            <>
+                              <SectionHeading>// RAW MATERIALS · {rawMaterialsCategories.categories.length} CATEGORIES</SectionHeading>
+                              {rawMaterialsCategories.description && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterialsCategories.description}</div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {rawMaterialsCategories.categories.map((c, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${c.highlight ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                  }}>
+                                    <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{c.name}</div>
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'6px'}}>
+                                      <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// KEY MATERIALS</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.keyMaterials}</div>
+                                      </div>
+                                      <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// SOURCES &amp; NOTES</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.sources}</div>
+                                      </div>
+                                      <div style={{padding:'6px 9px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.25)',borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>⚠ RISKS / CHALLENGES</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.risks}</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* HEADQUARTERS */}
+                          {headquarters && (
+                            <>
+                              <SectionHeading>// WORLDWIDE HEADQUARTERS</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:`0.5px solid ${amber}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{display:'flex',alignItems:'baseline',gap:'14px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                  <div>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'2px'}}>// LOCATION</div>
+                                    <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{headquarters.location}</div>
+                                  </div>
+                                  {headquarters.sizeAcres && (
+                                    <div>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'2px'}}>// SIZE</div>
+                                      <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{headquarters.sizeAcres}-acre complex</div>
+                                    </div>
+                                  )}
+                                </div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{headquarters.description}</div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* FACILITY MATRIX — principal facilities by segment × type */}
+                          {facilityMatrix && (
+                            <>
+                              <SectionHeading>// PRINCIPAL FACILITIES · {facilityMatrix.asOf}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Headcount of Coca-Cola\u2019s physical footprint by operating segment and site type. "Principal" = significant sites only; owned vs leased reflects capital strategy.</div>
+
+                              {/* Capital strategy callout */}
+                              {facilityMatrix.capitalStrategy && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// CAPITAL STRATEGY</div>
+                                  <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{facilityMatrix.capitalStrategy}</div>
+                                </div>
+                              )}
+
+                              {/* Totals header */}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'6px',marginBottom:'12px'}}>
+                                {facilityMatrix.columns.map((col, i) => {
+                                  const totals = facilityMatrix.totals[col.id];
+                                  const grand = totals.owned + totals.leased;
+                                  return (
+                                    <div key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'3px',
+                                      padding:'10px',
+                                    }}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// {col.short}</div>
+                                      <div style={{fontSize:'20px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'4px'}}>{grand.toLocaleString()}</div>
+                                      <div style={{display:'flex',gap:'8px',fontSize:'9px',fontFamily:'monospace'}}>
+                                        <span style={{color:'rgba(34,197,94,0.85)'}}>{totals.owned.toLocaleString()} owned</span>
+                                        <span style={{color:'rgba(148,163,184,0.7)'}}>{totals.leased.toLocaleString()} leased</span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Per-segment breakdown table */}
+                              <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                <table style={{width:'100%',minWidth:'700px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                      <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>SEGMENT</th>
+                                      {facilityMatrix.columns.map((col, i) => (
+                                        <th key={i} colSpan={2} style={{textAlign:'center',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>{col.short}</th>
+                                      ))}
+                                    </tr>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                      <th style={{padding:'4px 10px'}}></th>
+                                      {facilityMatrix.columns.map((col, i) => (
+                                        <React.Fragment key={i}>
+                                          <th style={{textAlign:'right',padding:'4px 6px',color:'rgba(34,197,94,0.65)',letterSpacing:'0.5px',fontWeight:600,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>OWN</th>
+                                          <th style={{textAlign:'right',padding:'4px 6px',color:'rgba(148,163,184,0.5)',letterSpacing:'0.5px',fontWeight:600,fontSize:'8px'}}>LEASE</th>
+                                        </React.Fragment>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {facilityMatrix.segments.map((seg, i) => (
+                                      <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                        <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{seg.name}</td>
+                                        {facilityMatrix.columns.map((col, j) => {
+                                          const cell = seg[col.id];
+                                          const isHighlight = seg.highlight === col.id;
+                                          return (
+                                            <React.Fragment key={j}>
+                                              <td style={{textAlign:'right',padding:'6px',color: cell.owned > 0 ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.3)',fontWeight: cell.owned > 0 ? 600 : 400,borderLeft:`0.5px solid ${amberGlow}`,background: isHighlight ? 'rgba(245,158,11,0.06)' : 'transparent'}}>{cell.owned > 0 ? cell.owned.toLocaleString() : '—'}</td>
+                                              <td style={{textAlign:'right',padding:'6px',color: cell.leased > 0 ? 'rgba(224,234,255,0.75)' : 'rgba(148,163,184,0.3)',fontWeight: cell.leased > 0 ? 500 : 400,background: isHighlight ? 'rgba(245,158,11,0.06)' : 'transparent'}}>{cell.leased > 0 ? cell.leased.toLocaleString() : '—'}</td>
+                                            </React.Fragment>
+                                          );
+                                        })}
+                                      </tr>
+                                    ))}
+                                    {/* Total row */}
+                                    <tr style={{borderTop:`0.5px solid ${amber}`,background:'rgba(245,158,11,0.06)'}}>
+                                      <td style={{padding:'8px 10px',color:amber,fontWeight:700,letterSpacing:'0.5px',fontSize:'10px'}}>TOTAL</td>
+                                      {facilityMatrix.columns.map((col, j) => {
+                                        const t = facilityMatrix.totals[col.id];
+                                        return (
+                                          <React.Fragment key={j}>
+                                            <td style={{textAlign:'right',padding:'8px 6px',color:'rgba(34,197,94,0.95)',fontWeight:700,borderLeft:`0.5px solid ${amberGlow}`}}>{t.owned > 0 ? t.owned.toLocaleString() : '—'}</td>
+                                            <td style={{textAlign:'right',padding:'8px 6px',color:'#e0eaff',fontWeight:700}}>{t.leased > 0 ? t.leased.toLocaleString() : '—'}</td>
+                                          </React.Fragment>
+                                        );
+                                      })}
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              {/* Insights */}
+                              {facilityMatrix.insights && facilityMatrix.insights.length > 0 && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// QUICK READS</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {facilityMatrix.insights.map((insight, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                        <span>{insight}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Capacity note */}
+                              {facilityMatrix.capacityNote && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                  {facilityMatrix.capacityNote}
+                                </div>
+                              )}
+                            </>
+                          )}
                         </div>
                       );
                     };
@@ -15517,7 +15883,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -15983,6 +16349,147 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </details>
                                 ))}
                               </div>
+                            </>
+                          )}
+
+                          {/* COMMITMENTS & CONTINGENCIES — guarantees, IRS dispute, self-insurance */}
+                          {commitmentsAndContingencies && (
+                            <>
+                              <SectionHeading>// COMMITMENTS &amp; CONTINGENCIES · {commitmentsAndContingencies.categories.length} AREAS</SectionHeading>
+                              {commitmentsAndContingencies.summary && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// IN SIMPLE TERMS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{commitmentsAndContingencies.summary}</div>
+                                </div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {commitmentsAndContingencies.categories.map((cat, i) => (
+                                  <div key={i} style={{
+                                    background: cat.critical ? 'rgba(239,68,68,0.04)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${cat.critical ? 'rgba(239,68,68,0.4)' : amberGlow}`,
+                                    borderLeft:`2px solid ${cat.critical ? 'rgba(239,68,68,0.85)' : amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                    position:'relative',
+                                  }}>
+                                    {cat.critical && (
+                                      <span style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>⚠ CRITICAL</span>
+                                    )}
+                                    <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'6px',paddingRight: cat.critical ? '90px' : 0}}>{cat.name}</div>
+                                    <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'6px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// DEFINITION</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cat.definition}</div>
+                                    </div>
+                                    <div style={{padding:'7px 10px',background: cat.critical ? 'rgba(239,68,68,0.05)' : 'rgba(245,158,11,0.05)',border:`0.5px solid ${cat.critical ? 'rgba(239,68,68,0.3)' : amberGlow}`,borderRadius:'2px',marginBottom: cat.stats ? '6px' : 0}}>
+                                      <div style={{fontSize:'9px',color: cat.critical ? 'rgba(239,68,68,0.95)' : amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// COCA-COLA\u2019S CASE</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cat.kosCase}</div>
+                                    </div>
+                                    {cat.stats && cat.stats.length > 0 && (
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'5px',marginTop:'6px'}}>
+                                        {cat.stats.map((s, j) => (
+                                          <div key={j} style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${cat.critical ? 'rgba(239,68,68,0.3)' : amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color: cat.critical ? 'rgba(239,68,68,0.85)' : amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>{s.label.toUpperCase()}</div>
+                                            <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{s.value}</div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* CONTRACTUAL OBLIGATIONS — bill schedule by category × time period */}
+                          {contractualObligations && (
+                            <>
+                              <SectionHeading>// CONTRACTUAL OBLIGATIONS · {contractualObligations.asOf}</SectionHeading>
+                              {contractualObligations.description && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{contractualObligations.description}</div>
+                              )}
+
+                              {/* Total committed headline */}
+                              {contractualObligations.totalCommitted && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'center',gap:'14px',flexWrap:'wrap'}}>
+                                  <div>
+                                    <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'2px'}}>// TOTAL COMMITTED</div>
+                                    <div style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>${(contractualObligations.totalCommitted / 1000).toFixed(1)}B</div>
+                                  </div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',flex:1,minWidth:'200px'}}>Future financial commitments KO cannot avoid paying \u2014 every category × period combined.</div>
+                                </div>
+                              )}
+
+                              {/* Bill schedule table */}
+                              <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                <table style={{width:'100%',minWidth:'700px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                      <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>CATEGORY</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px'}}>TOTAL</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2025</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2026\u201327</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2028\u201329</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2030+</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {contractualObligations.categories.map((c, i) => (
+                                      <tr key={i} style={{
+                                        borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                        background: c.highlight ? 'rgba(245,158,11,0.04)' : 'transparent',
+                                      }}>
+                                        <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight: c.highlight ? 700 : 500,letterSpacing:'0.3px'}}>{c.name}</td>
+                                        <td style={{padding:'7px 10px',textAlign:'right',color: c.highlight ? amber : '#e0eaff',fontWeight:700}}>{c.total > 0 ? '$' + c.total.toLocaleString() : '—'}</td>
+                                        <td style={{padding:'7px 10px',textAlign:'right',color: c.y2025 > 0 ? 'rgba(224,234,255,0.75)' : 'rgba(148,163,184,0.3)',fontWeight:500}}>{c.y2025 > 0 ? '$' + c.y2025.toLocaleString() : '—'}</td>
+                                        <td style={{padding:'7px 10px',textAlign:'right',color: c.y2627 > 0 ? 'rgba(224,234,255,0.75)' : 'rgba(148,163,184,0.3)',fontWeight:500}}>{c.y2627 > 0 ? '$' + c.y2627.toLocaleString() : '—'}</td>
+                                        <td style={{padding:'7px 10px',textAlign:'right',color: c.y2829 > 0 ? 'rgba(224,234,255,0.75)' : 'rgba(148,163,184,0.3)',fontWeight:500}}>{c.y2829 > 0 ? '$' + c.y2829.toLocaleString() : '—'}</td>
+                                        <td style={{padding:'7px 10px',textAlign:'right',color: c.yLater > 0 ? 'rgba(224,234,255,0.75)' : 'rgba(148,163,184,0.3)',fontWeight:500}}>{c.yLater > 0 ? '$' + c.yLater.toLocaleString() : '—'}</td>
+                                      </tr>
+                                    ))}
+                                    {/* Totals row */}
+                                    <tr style={{borderTop:`0.5px solid ${amber}`,background:'rgba(245,158,11,0.08)'}}>
+                                      <td style={{padding:'9px 10px',color:amber,fontWeight:700,letterSpacing:'0.5px'}}>TOTAL</td>
+                                      <td style={{padding:'9px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700}}>${contractualObligations.totals.total.toLocaleString()}</td>
+                                      <td style={{padding:'9px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700}}>${contractualObligations.totals.y2025.toLocaleString()}</td>
+                                      <td style={{padding:'9px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700}}>${contractualObligations.totals.y2627.toLocaleString()}</td>
+                                      <td style={{padding:'9px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700}}>${contractualObligations.totals.y2829.toLocaleString()}</td>
+                                      <td style={{padding:'9px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700}}>${contractualObligations.totals.yLater.toLocaleString()}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              {/* Category definitions accordion */}
+                              <div style={{marginBottom:'10px'}}>
+                                <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// CATEGORY DEFINITIONS · {contractualObligations.categories.length}</div>
+                                <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                  {contractualObligations.categories.map((c, i) => (
+                                    <details key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amberDim}`,
+                                      borderRadius:'3px',
+                                      overflow:'hidden',
+                                    }}>
+                                      <summary style={{padding:'8px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c.name}</span>
+                                        <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700}}>${c.total.toLocaleString()}M ›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        {c.definition}
+                                      </div>
+                                    </details>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Takeaway */}
+                              {contractualObligations.takeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{contractualObligations.takeaway}</div>
+                                </div>
+                              )}
                             </>
                           )}
                         </div>
@@ -16816,7 +17323,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower } = bd.moat;
+                      const { pricingPower, acquisitionStrategy } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -16992,6 +17499,137 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
                                 <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>Hershey has compounded retail prices over 25 years across its flagship products — classic pricing-power evidence. Note the flat stretch since 2022–2024 — consumer cost-fatigue is testing how much further the moat can be pressed without volume loss.</div>
                               </div>
+                            </>
+                          )}
+
+                          {/* PRICING POWER — milestone timeline (KO shape: 100-year can price) */}
+                          {pricingPower && pricingPower.milestones && pricingPower.milestones.length > 0 && (
+                            <>
+                              <SectionHeading>// {pricingPower.label.toUpperCase()}</SectionHeading>
+                              {pricingPower.description && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{pricingPower.description}</div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {pricingPower.milestones.map((m, i) => (
+                                  <div key={i} style={{
+                                    background: m.highlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${m.highlight || m.current ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'10px 12px',
+                                    position:'relative',
+                                  }}>
+                                    {m.current && (
+                                      <span style={{position:'absolute',top:'8px',right:'10px',display:'inline-flex',alignItems:'center',gap:'4px',padding:'2px 6px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>● TODAY</span>
+                                    )}
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'14px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                      <span style={{fontSize:'11px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,minWidth:'80px'}}>{m.period}</span>
+                                      <span style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{m.price}</span>
+                                    </div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',paddingRight: m.current ? '80px' : 0}}>{m.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {pricingPower.takeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{pricingPower.takeaway}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ACQUISITION STRATEGY — funding philosophy + history */}
+                          {acquisitionStrategy && (
+                            <>
+                              <SectionHeading>// ACQUISITION STRATEGY · CAPITAL ALLOCATION</SectionHeading>
+                              {acquisitionStrategy.summary && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitionStrategy.summary}</div>
+                              )}
+
+                              {/* Funding methods */}
+                              {acquisitionStrategy.fundingMethods && acquisitionStrategy.fundingMethods.length > 0 && (
+                                <>
+                                  <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FUNDING METHODS</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'8px',marginBottom:'14px'}}>
+                                    {acquisitionStrategy.fundingMethods.map((m, i) => {
+                                      const color = m.frequency === 'common' ? 'rgba(34,197,94,0.95)' : (m.frequency === 'occasional' ? amber : 'rgba(148,163,184,0.75)');
+                                      const bg = m.frequency === 'common' ? 'rgba(34,197,94,0.06)' : (m.frequency === 'occasional' ? 'rgba(245,158,11,0.06)' : 'rgba(148,163,184,0.05)');
+                                      const border = m.frequency === 'common' ? 'rgba(34,197,94,0.4)' : (m.frequency === 'occasional' ? amber : 'rgba(148,163,184,0.3)');
+                                      return (
+                                        <div key={i} style={{
+                                          background: bg,
+                                          border:`0.5px solid ${border}`,
+                                          borderLeft:`2px solid ${color}`,
+                                          borderRadius:'3px',
+                                          padding:'12px',
+                                        }}>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'6px'}}>
+                                            {m.emoji && <span style={{fontSize:'16px'}}>{m.emoji}</span>}
+                                            <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{m.type}</span>
+                                          </div>
+                                          <div style={{padding:'2px 7px',display:'inline-block',background: bg,border:`0.5px solid ${border}`,borderRadius:'2px',fontSize:'9px',color: color,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',marginBottom:'6px'}}>{m.usage.toUpperCase()}</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{m.note}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Major acquisitions table */}
+                              {acquisitionStrategy.majorAcquisitions && acquisitionStrategy.majorAcquisitions.length > 0 && (
+                                <>
+                                  <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// MAJOR ACQUISITIONS · {acquisitionStrategy.majorAcquisitions.length}</div>
+                                  <div style={{overflowX:'auto',marginBottom:'14px'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>ACQUISITION</th>
+                                          <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                          <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PRICE</th>
+                                          <th style={{textAlign:'center',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>FUNDING</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {acquisitionStrategy.majorAcquisitions.map((a, i) => (
+                                          <tr key={i} style={{
+                                            borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                            background: a.featured ? 'rgba(245,158,11,0.04)' : 'transparent',
+                                          }}>
+                                            <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight: a.featured ? 700 : 600,letterSpacing:'0.3px'}}>
+                                              {a.name}
+                                              {a.country && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',marginLeft:'8px',fontWeight:400}}>· {a.country}</span>}
+                                            </td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color:'rgba(224,234,255,0.75)',fontWeight:500}}>{a.year}</td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color: a.featured ? amber : 'rgba(224,234,255,0.85)',fontWeight:700}}>{a.price}</td>
+                                            <td style={{padding:'7px 10px',textAlign:'center'}}>
+                                              <span style={{padding:'2px 7px',background:'rgba(34,197,94,0.08)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'2px',fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{a.funding}</span>
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Buffett quote */}
+                              {acquisitionStrategy.buffettQuote && (
+                                <div style={{padding:'14px 16px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🔑 BUFFETT'S VIEW</div>
+                                  <div style={{fontSize:'12px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'6px'}}>&ldquo;{acquisitionStrategy.buffettQuote.text}&rdquo;</div>
+                                  <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',textAlign:'right'}}>— {acquisitionStrategy.buffettQuote.attribution}</div>
+                                </div>
+                              )}
+
+                              {/* Bottom line */}
+                              {acquisitionStrategy.bottomLine && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// BOTTOM LINE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitionStrategy.bottomLine}</div>
+                                </div>
+                              )}
                             </>
                           )}
                         </div>
