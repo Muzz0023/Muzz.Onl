@@ -7685,6 +7685,99 @@ const REH_BREAKDOWN = {
       ],
       verdict: 'Clean. No material contingent liabilities disclosed \u2014 consistent with a conservatively-run, low-litigation distribution business.',
     },
+
+    // Derivatives & hedging (maps to existing render: summary + hedgeTypes + accountingNote)
+    derivatives: {
+      summary: 'Reece uses derivatives mainly for cash flow hedging and occasionally for foreign investment hedging to manage financial risk. Gains and losses are recorded through Other Comprehensive Income (OCI) until the underlying transaction occurs. Hedge accounting ensures results align with operational performance \u2014 not short-term currency or rate volatility. As a conservatively-geared distributor, Reece\u2019s derivative use is modest and defensive, not speculative.',
+      hedgeTypes: [
+        { name: '1\uFE0F\u20E3 Cash Flow Hedges', description: 'Hedge risks in future cash flows (e.g. forecast purchases, variable interest payments). The effective portion goes to OCI and accumulates in the Cash Flow Hedge Reserve; any ineffective portion is expensed immediately to P&L under finance costs. Amounts are reclassified from OCI to P&L in the same period the hedged cash flow affects earnings (e.g. when inventory is sold or interest is paid).' },
+        { name: '2\uFE0F\u20E3 Net Investment Hedges', description: 'Hedge exposure from investments in foreign subsidiaries (the US operations). Reece borrows in USD to naturally hedge \u2014 these USD loans are designated as hedges of the net investment. The effective portion goes to OCI (Foreign Currency Translation Reserve) and is released to P&L only if the foreign operation is sold; the ineffective portion hits P&L immediately ("Other Gains and Losses").' },
+      ],
+      accountingNote: 'At inception Reece documents the hedge relationship, risk-management objective/strategy, and effectiveness-assessment method (under AASB 9 / IFRS 9), and tests effectiveness on an ongoing basis. Hedge accounting can only be discontinued if the risk objective changes, no economic relationship remains, or credit risk dominates the relationship \u2014 preventing arbitrary termination. FY24 POSITION: as at 30 June 2024, no net investment hedges were designated (same as FY23) \u2014 i.e. no active FX hedge positions for foreign subsidiaries at balance date.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // NUMBERS — segment financials by region (FY19–FY24)
+  // ════════════════════════════════════════════════════════════════
+  numbers: {
+    segments: {
+      byRegion: {
+        period: 'FY2019 \u2013 FY2024',
+        description: 'Reece reports two operating segments \u2014 Australia & New Zealand (ANZ) and the United States \u2014 plus a consolidated total. The data below is the full segment note: P&L (revenue through profit after tax), profit margins, and balance sheet (assets, liabilities, gearing) for FY19\u2013FY24.',
+        keyInsight: 'The defining fact: ANZ is dramatically more profitable than the US. ANZ runs a ~7% net margin; the US runs ~2.6%. The US is now the larger revenue base (A$5.26b vs A$3.85b in FY24) but contributes far less profit \u2014 it\u2019s a scale-up-and-improve-margin story, not yet a margin story. Note also the US carries higher gearing (liabilities ~0.51\u00d7 assets) while ANZ has rapidly deleveraged (0.73\u00d7 in FY19 \u2192 0.36\u00d7 in FY24).',
+        segments: [
+          {
+            name: 'Australia & New Zealand', flag: '🇦🇺', featured: true,
+            note: 'The mature, high-margin home market. Revenue dipped slightly in FY24 (\u22120.2%) on housing softness, but profit after tax still grew to A$280m at a 7.3% margin. Gearing has fallen dramatically \u2014 from 0.73\u00d7 (FY19) to 0.36\u00d7 (FY24).',
+            pnl: {
+              revenue:         [ {year:2019,value:2872699}, {year:2020,value:2889858}, {year:2021,value:3153799}, {year:2022,value:3518308}, {year:2023,value:3852891}, {year:2024,value:3845706,down:true} ],
+              depreciation:    [ {year:2019,value:-57963}, {year:2020,value:-113960}, {year:2021,value:-116780}, {year:2022,value:-123160}, {year:2023,value:-122627}, {year:2024,value:-129630} ],
+              amortisation:    [ {year:2019,value:-863}, {year:2020,value:-2229,spike:true}, {year:2021,value:-3594}, {year:2022,value:-5518}, {year:2023,value:-12940,spike:true}, {year:2024,value:-20165,spike:true} ],
+              financeCosts:    [ {year:2019,value:-48372}, {year:2020,value:-59478,spike:true}, {year:2021,value:-74237,spike:true}, {year:2022,value:-20740,spike:true}, {year:2023,value:-17865}, {year:2024,value:-6904,spike:true} ],
+              profitBeforeTax: [ {year:2019,value:263331}, {year:2020,value:263277,down:true}, {year:2021,value:307081}, {year:2022,value:376829}, {year:2023,value:390561}, {year:2024,value:403379} ],
+              incomeTax:       [ {year:2019,value:-86642}, {year:2020,value:-82969}, {year:2021,value:-87773}, {year:2022,value:-111613}, {year:2023,value:-137579}, {year:2024,value:-123475} ],
+              profitAfterTax:  [ {year:2019,value:176689}, {year:2020,value:180308}, {year:2021,value:219308}, {year:2022,value:265216}, {year:2023,value:252982,down:true}, {year:2024,value:279904} ],
+            },
+            margins: [ {year:2019,margin:6.2}, {year:2020,margin:6.2}, {year:2021,margin:7.0}, {year:2022,margin:7.5}, {year:2023,margin:6.6}, {year:2024,margin:7.3} ],
+            balance: {
+              currentAssets:    [ {year:2019,value:1044328}, {year:2020,value:1750681,spike:true}, {year:2021,value:1740985,down:true}, {year:2022,value:1379128,down:true,spike:true}, {year:2023,value:1452069}, {year:2024,value:1388777,down:true} ],
+              nonCurrentAssets: [ {year:2019,value:888249}, {year:2020,value:1327817,down:true}, {year:2021,value:1199803,down:true}, {year:2022,value:1323661}, {year:2023,value:1305606,down:true}, {year:2024,value:1388187} ],
+              totalAssets:      [ {year:2019,value:1932577}, {year:2020,value:3078498,spike:true}, {year:2021,value:2940788,down:true}, {year:2022,value:2702789,down:true}, {year:2023,value:2757675}, {year:2024,value:2776964} ],
+              totalLiabilities: [ {year:2019,value:1410583}, {year:2020,value:1855430,spike:true}, {year:2021,value:1529140,down:true}, {year:2022,value:1195103,down:true}, {year:2023,value:1102816,down:true}, {year:2024,value:1003704,down:true} ],
+            },
+            ratios: [ {year:2019,ratio:0.73}, {year:2020,ratio:0.60}, {year:2021,ratio:0.52}, {year:2022,ratio:0.44}, {year:2023,ratio:0.40}, {year:2024,ratio:0.36} ],
+          },
+          {
+            name: 'United States', flag: '🇺🇸',
+            note: 'The scale-up market. Revenue more than doubled from A$2.6b (FY19) to A$5.26b (FY24) \u2014 now the larger segment by revenue. But net margin is only ~2.6% vs ANZ\u2019s ~7%. Profit after tax (A$139m) is roughly half ANZ\u2019s despite higher revenue. The margin gap is the central question on the REH thesis.',
+            pnl: {
+              revenue:         [ {year:2019,value:2599114}, {year:2020,value:3123883,spike:true}, {year:2021,value:3116907}, {year:2022,value:4135739,spike:true}, {year:2023,value:4986681,spike:true}, {year:2024,value:5259066} ],
+              depreciation:    [ {year:2019,value:-26899}, {year:2020,value:-74710,spike:true}, {year:2021,value:-67530}, {year:2022,value:-81553,spike:true}, {year:2023,value:-104778,spike:true}, {year:2024,value:-128897,spike:true} ],
+              amortisation:    [ {year:2019,value:-42347}, {year:2020,value:-41549}, {year:2021,value:-39642}, {year:2022,value:-48000,spike:true}, {year:2023,value:-49560}, {year:2024,value:-46718} ],
+              financeCosts:    [ {year:2019,value:-34932}, {year:2020,value:-51402,spike:true}, {year:2021,value:-38052}, {year:2022,value:-48063,spike:true}, {year:2023,value:-68400,spike:true}, {year:2024,value:-84905,spike:true} ],
+              profitBeforeTax: [ {year:2019,value:33693}, {year:2020,value:49228}, {year:2021,value:73202}, {year:2022,value:132572}, {year:2023,value:177278}, {year:2024,value:186202} ],
+              incomeTax:       [ {year:2019,value:-8282}, {year:2020,value:-537,spike:true}, {year:2021,value:-6915,spike:true}, {year:2022,value:-5301}, {year:2023,value:-42653,spike:true}, {year:2024,value:-46935} ],
+              profitAfterTax:  [ {year:2019,value:25411}, {year:2020,value:48691}, {year:2021,value:66287}, {year:2022,value:127271}, {year:2023,value:134625}, {year:2024,value:139267} ],
+            },
+            margins: [ {year:2019,margin:1.0}, {year:2020,margin:1.6}, {year:2021,margin:2.1}, {year:2022,margin:3.1}, {year:2023,margin:2.7}, {year:2024,margin:2.6} ],
+            balance: {
+              currentAssets:    [ {year:2019,value:916623}, {year:2020,value:1153165}, {year:2021,value:1271164}, {year:2022,value:1743988,spike:true}, {year:2023,value:1766990}, {year:2024,value:1818253} ],
+              nonCurrentAssets: [ {year:2019,value:1624910}, {year:2020,value:2111190,spike:true}, {year:2021,value:1906117,down:true}, {year:2022,value:2160797}, {year:2023,value:2399621}, {year:2024,value:2499652} ],
+              totalAssets:      [ {year:2019,value:2541533}, {year:2020,value:3264355,spike:true}, {year:2021,value:3177281,down:true}, {year:2022,value:3904785,spike:true}, {year:2023,value:4166611}, {year:2024,value:4317905} ],
+              totalLiabilities: [ {year:2019,value:1071947}, {year:2020,value:1737537,spike:true}, {year:2021,value:1700820,down:true}, {year:2022,value:2091602,spike:true}, {year:2023,value:2196046}, {year:2024,value:2207022} ],
+            },
+            ratios: [ {year:2019,ratio:0.42}, {year:2020,ratio:0.53}, {year:2021,ratio:0.54}, {year:2022,ratio:0.54}, {year:2023,ratio:0.53}, {year:2024,ratio:0.51} ],
+          },
+        ],
+        total: {
+          name: 'Total (Consolidated)',
+          pnl: {
+            revenue:         [ {year:2019,value:5471813}, {year:2020,value:6013741}, {year:2021,value:6270706}, {year:2022,value:7654047}, {year:2023,value:8839572}, {year:2024,value:9104772} ],
+            depreciation:    [ {year:2019,value:-84862}, {year:2020,value:-188670,spike:true}, {year:2021,value:-184310}, {year:2022,value:-204713,spike:true}, {year:2023,value:-227405}, {year:2024,value:-258527,spike:true} ],
+            amortisation:    [ {year:2019,value:-43210}, {year:2020,value:-43778}, {year:2021,value:-43236}, {year:2022,value:-53518,spike:true}, {year:2023,value:-62500,spike:true}, {year:2024,value:-66883} ],
+            financeCosts:    [ {year:2019,value:-83304}, {year:2020,value:-110880,spike:true}, {year:2021,value:-112289}, {year:2022,value:-68803,spike:true}, {year:2023,value:-86265,spike:true}, {year:2024,value:-91809,spike:true} ],
+            profitBeforeTax: [ {year:2019,value:297024}, {year:2020,value:312505}, {year:2021,value:380283}, {year:2022,value:509401}, {year:2023,value:567839}, {year:2024,value:589581} ],
+            incomeTax:       [ {year:2019,value:-94924}, {year:2020,value:-83506}, {year:2021,value:-94688}, {year:2022,value:-116914}, {year:2023,value:-180232,spike:true}, {year:2024,value:-170410} ],
+            profitAfterTax:  [ {year:2019,value:202100}, {year:2020,value:228999}, {year:2021,value:285595}, {year:2022,value:392487}, {year:2023,value:387607,down:true}, {year:2024,value:419171} ],
+          },
+          margins: [ {year:2019,margin:3.7}, {year:2020,margin:3.8}, {year:2021,margin:4.6}, {year:2022,margin:5.1}, {year:2023,margin:4.4}, {year:2024,margin:4.6} ],
+          balance: {
+            currentAssets:    [ {year:2019,value:1960951}, {year:2020,value:2903846,spike:true}, {year:2021,value:3012149}, {year:2022,value:3123116}, {year:2023,value:3219059}, {year:2024,value:3207030,down:true} ],
+            nonCurrentAssets: [ {year:2019,value:2513159}, {year:2020,value:3439007,spike:true}, {year:2021,value:3105920,down:true}, {year:2022,value:3484458}, {year:2023,value:3705227,spike:true}, {year:2024,value:3887839} ],
+            totalAssets:      [ {year:2019,value:4474110}, {year:2020,value:6342853,spike:true}, {year:2021,value:6118069,down:true}, {year:2022,value:6607574,spike:true}, {year:2023,value:6924286,spike:true}, {year:2024,value:7094869} ],
+            totalLiabilities: [ {year:2019,value:2482530}, {year:2020,value:3592967,spike:true}, {year:2021,value:3229960,down:true}, {year:2022,value:3286705}, {year:2023,value:3298862}, {year:2024,value:3210726,down:true} ],
+          },
+          ratios: [ {year:2019,ratio:0.55}, {year:2020,ratio:0.57}, {year:2021,ratio:0.53}, {year:2022,ratio:0.50}, {year:2023,ratio:0.48}, {year:2024,ratio:0.45} ],
+        },
+        branches: {
+          note: 'Branch counts by region. The \u2b50 marks FY2020 \u2014 the last year REH traded at ~A$12 per share. ANZ added 22 net branches since then; the US added 59 (more than 3\u00d7 the ANZ pace), consistent with the US scale-up strategy.',
+          anz:  [ {year:2018,value:615}, {year:2019,value:634}, {year:2020,value:639,star:true}, {year:2021,value:642}, {year:2022,value:645}, {year:2023,value:655}, {year:2024,value:661} ],
+          us:   [ {year:2018,value:171}, {year:2019,value:175}, {year:2020,value:184,star:true}, {year:2021,value:189}, {year:2022,value:204}, {year:2023,value:231}, {year:2024,value:243} ],
+          anzAdded: 22, usAdded: 59,
+        },
+      },
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -22914,6 +23007,137 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const { segments } = bd.numbers;
                       return (
                         <div>
+                      {/* REH SEGMENT FINANCIALS BY REGION (byRegion shape) */}
+                      {segments && segments.byRegion && (() => {
+                        const br = segments.byRegion;
+                        const fmt = (v) => {
+                          if (v == null) return '—';
+                          const neg = v < 0;
+                          const a = Math.abs(v);
+                          const s = a >= 1000 ? (a/1000).toFixed(a >= 10000 ? 0 : 1) + 'M' : a.toLocaleString();
+                          return (neg ? '(' : '') + '$' + s + (neg ? ')' : '');
+                        };
+                        // Compact metric table: rows = metrics, cols = years
+                        const MetricTable = ({ title, rows }) => {
+                          const years = rows[0].series.map(d => d.year);
+                          return (
+                            <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                              <table style={{width:'100%',minWidth:'460px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'9.5px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                <thead>
+                                  <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                    <th style={{textAlign:'left',padding:'5px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'8px',whiteSpace:'nowrap'}}>{title}</th>
+                                    {years.map(y => <th key={y} style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'0.5px',fontWeight:600,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>{String(y).slice(2)}</th>)}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {rows.map((r, ri) => (
+                                    <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
+                                      <td style={{padding:'5px 8px',color: r.highlight ? amber : '#e0eaff',fontWeight: r.highlight ? 700 : 500,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{r.label}</td>
+                                      {r.series.map((d, di) => (
+                                        <td key={di} style={{padding:'5px 8px',textAlign:'right',color: d.value < 0 ? 'rgba(239,68,68,0.85)' : d.down ? 'rgba(239,68,68,0.85)' : r.highlight ? amber : 'rgba(224,234,255,0.82)',fontWeight: r.highlight ? 700 : 500,letterSpacing:'0.2px',borderLeft:`0.5px solid ${amberGlow}`,whiteSpace:'nowrap'}}>
+                                          {r.pct ? d.margin + '%' : r.ratioRow ? d.ratio + '\u00d7' : fmt(d.value)}
+                                          {d.down && <span style={{fontSize:'7px',marginLeft:'2px'}}>⬇</span>}
+                                          {d.spike && <span style={{fontSize:'7px',marginLeft:'2px',color:'rgba(245,158,11,0.7)'}}>⚠</span>}
+                                        </td>
+                                      ))}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        };
+                        const renderSeg = (seg, isTotal) => {
+                          const pnlRows = [
+                            { label: 'Revenue', series: seg.pnl.revenue, highlight: true },
+                            { label: 'Depreciation', series: seg.pnl.depreciation },
+                            { label: 'Amortisation', series: seg.pnl.amortisation },
+                            { label: 'Finance costs (net)', series: seg.pnl.financeCosts },
+                            { label: 'Profit before tax', series: seg.pnl.profitBeforeTax },
+                            { label: 'Income tax', series: seg.pnl.incomeTax },
+                            { label: 'Profit after tax', series: seg.pnl.profitAfterTax, highlight: true },
+                            { label: 'Net margin', series: seg.margins, pct: true, highlight: true },
+                          ];
+                          const balRows = [
+                            { label: 'Current assets', series: seg.balance.currentAssets },
+                            { label: 'Non-current assets', series: seg.balance.nonCurrentAssets },
+                            { label: 'Total assets', series: seg.balance.totalAssets, highlight: true },
+                            { label: 'Total liabilities', series: seg.balance.totalLiabilities },
+                            { label: 'Liabilities \u00f7 assets', series: seg.ratios, ratioRow: true, highlight: true },
+                          ];
+                          const latestMargin = seg.margins[seg.margins.length-1].margin;
+                          const latestRev = seg.pnl.revenue[seg.pnl.revenue.length-1].value;
+                          return (
+                            <details key={seg.name} open={seg.featured} style={{
+                              background: seg.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.06) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                              border:`0.5px solid ${seg.featured ? amber : amberGlow}`,borderLeft:`2px solid ${isTotal ? amberDim : amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'6px',
+                            }}>
+                              <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                <span style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                  {seg.flag && <span style={{fontSize:'15px'}}>{seg.flag}</span>}
+                                  <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{seg.name}</span>
+                                  {seg.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ HIGH MARGIN</span>}
+                                </span>
+                                <span style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
+                                  <span style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700}}>${(latestRev/1000).toFixed(1)}B</span>
+                                  <span style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',fontWeight:600}}>{latestMargin}% · FY24</span>
+                                  <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                </span>
+                              </summary>
+                              <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>// PROFIT & LOSS (A$000)</div>
+                                <MetricTable title="P&L" rows={pnlRows} />
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px',marginTop:'10px'}}>// BALANCE SHEET (A$000)</div>
+                                <MetricTable title="BALANCE" rows={balRows} />
+                                {seg.note && <div style={{marginTop:'8px',padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{seg.note}</div>}
+                              </div>
+                            </details>
+                          );
+                        };
+                        return (
+                          <>
+                            <SectionHeading>// SEGMENT FINANCIALS · {br.period}</SectionHeading>
+                            {br.description && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{br.description}</div>}
+                            {br.keyInsight && (
+                              <div style={{background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.45)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'4px',padding:'14px',marginBottom:'10px'}}>
+                                <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>◆ KEY INSIGHT</div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{br.keyInsight}</div>
+                              </div>
+                            )}
+                            {br.segments.map(s => renderSeg(s, false))}
+                            {br.total && renderSeg(br.total, true)}
+
+                            {/* BRANCHES */}
+                            {br.branches && (
+                              <>
+                                <SectionHeading>// BRANCH NETWORK</SectionHeading>
+                                {br.branches.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'8px',lineHeight:1.5,letterSpacing:'0.3px'}}>{br.branches.note}</div>}
+                                <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                  <table style={{width:'100%',minWidth:'420px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                        <th style={{textAlign:'left',padding:'5px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'8px'}}>REGION</th>
+                                        {br.branches.anz.map(d => <th key={d.year} style={{textAlign:'right',padding:'5px 8px',color:amberDim,fontWeight:600,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>{String(d.year).slice(2)}{d.star && <span style={{color:'rgba(245,158,11,0.9)'}}> ⭐</span>}</th>)}
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(34,197,94,0.95)',fontWeight:700,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>+SINCE FY20</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {[{label:'🇦🇺 ANZ',data:br.branches.anz,added:br.branches.anzAdded},{label:'🇺🇸 US',data:br.branches.us,added:br.branches.usAdded}].map((row,ri) => (
+                                        <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
+                                          <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:700,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{row.label}</td>
+                                          {row.data.map((d,di) => <td key={di} style={{padding:'5px 8px',textAlign:'right',color: d.star ? amber : 'rgba(224,234,255,0.82)',fontWeight: d.star ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>{d.value}</td>)}
+                                          <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(34,197,94,0.95)',fontWeight:700,borderLeft:`0.5px solid ${amberGlow}`}}>+{row.added}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </>
+                            )}
+                          </>
+                        );
+                      })()}
+
                       {/* ════════════════════════════════════════════════
                           SEGMENT RESULTS
                           ════════════════════════════════════════════════ */}
