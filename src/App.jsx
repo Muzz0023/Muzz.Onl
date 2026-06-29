@@ -9127,6 +9127,24 @@ const WM_BREAKDOWN = {
   ], note: 'Net margin \u2014 structurally higher since 2017 (~10\u201313%) vs ~7\u201310% pre-2016.' },
 },
     segments: {
+  wmGeography: {
+  preamble: 'Net operating revenues by geography, 2010\u20132024 ($M). Reconciles exactly to the consolidated total each year (USA + Canada + Western Europe = Total).',
+  prNote: 'Puerto Rico operations were sold in 2014. The 2010\u20132014 USA figures include Puerto Rico; 2015 onward exclude it \u2014 so the 2014\u21922015 USA step-down is partly the Puerto Rico divestiture, not organic decline.',
+  lines: [
+    { label: 'United States', unit: 'M USD', series: [
+      {year:2010,value:11784},{year:2011,value:12578},{year:2012,value:12812},{year:2013,value:13054},{year:2014,value:13064},{year:2015,value:12196},{year:2016,value:12915},{year:2017,value:13768},{year:2018,value:14167},{year:2019,value:14701},{year:2020,value:14505,down:true},{year:2021,value:17136},{year:2022,value:18860},{year:2023,value:19595},{year:2024,value:21107},
+    ], note: 'The overwhelming majority of revenue (~96%). 2010\u20132014 include Puerto Rico; 2015+ exclude it.' },
+    { label: 'Canada', unit: 'M USD', series: [
+      {year:2010,value:731},{year:2011,value:800},{year:2012,value:837},{year:2013,value:929},{year:2014,value:932},{year:2015,value:765,down:true},{year:2016,value:694,down:true},{year:2017,value:717},{year:2018,value:747},{year:2019,value:754},{year:2020,value:713,down:true},{year:2021,value:795},{year:2022,value:838},{year:2023,value:813,down:true},{year:2024,value:852},
+    ], note: 'The second core market \u2014 collection & disposal across Canadian provinces.' },
+    { label: 'Western Europe & other', unit: 'M USD', series: [
+      {year:2023,value:18},{year:2024,value:104},
+    ], note: 'New from the Nov 2024 Stericycle acquisition \u2014 medical waste + secure information destruction in Western Europe. Nil before 2023.' },
+    { label: 'Total Net Operating Revenues', unit: 'M USD', series: [
+      {year:2010,value:12515},{year:2011,value:13378},{year:2012,value:13649},{year:2013,value:13983},{year:2014,value:13996},{year:2015,value:12961,down:true},{year:2016,value:13609},{year:2017,value:14485},{year:2018,value:14914},{year:2019,value:15455},{year:2020,value:15218,down:true},{year:2021,value:17931},{year:2022,value:19698},{year:2023,value:20426},{year:2024,value:22063},
+    ], note: 'Headline top line (after intercompany eliminations) \u2014 matches the service-line total above.' },
+  ],
+},
   wmRevenue: {
     preamble: 'Operating revenues disaggregated by service line, 2010\u20132024 ($M). Collection is the core; Landfill + Transfer complete the Collection & Disposal segment. Note the structural reporting change in 2022: the newer presentation reports gross segment revenues with a separate intercompany elimination, so pre-2022 "Other / Corporate & Other" (~$1.4\u20132.1B) and the negative "Intercompany" line are not directly comparable to 2022\u20132024.',
     netNote: 'Total Net Operating Revenues is after intercompany eliminations. Total Gross Operating Revenues (2022\u20132024 only) is before eliminations.',
@@ -24549,6 +24567,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 </details>
                               )}
+                            </>
+                          )}
+
+                          {segments.wmGeography && (
+                            <>
+                              <SectionHeading>// REVENUE BY GEOGRAPHY</SectionHeading>
+                              {segments.wmGeography.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmGeography.preamble}</div>}
+                              {segments.wmGeography.prNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{segments.wmGeography.prNote}</div>}
+                              {segments.wmGeography.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
                             </>
                           )}
 
