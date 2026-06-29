@@ -9481,6 +9481,92 @@ const COST_BREAKDOWN = {
   },
 
   numbers: {
+    balanceSheet: {
+  cash: { label: 'Cash & Cash Equivalents', unit: 'M USD', series: [
+    {year:2006,value:1511},{year:2007,value:2780},{year:2008,value:2619},{year:2009,value:3157},{year:2010,value:3214},{year:2011,value:4009},{year:2012,value:3528},{year:2013,value:4644},{year:2014,value:5738},{year:2015,value:4801},{year:2016,value:3379},{year:2017,value:4546},{year:2018,value:6055},{year:2019,value:8384},{year:2020,value:12277},{year:2021,value:11258},{year:2022,value:10203},{year:2023,value:13700},{year:2024,value:9906},
+  ] },
+  accountsReceivable: { label: 'Receivables, net', unit: 'M USD', series: [
+    {year:2006,value:565},{year:2007,value:762},{year:2008,value:748},{year:2009,value:834},{year:2010,value:884},{year:2011,value:965},{year:2012,value:1036},{year:2013,value:1201},{year:2014,value:1148},{year:2015,value:1224},{year:2016,value:1252},{year:2017,value:1432},{year:2018,value:1669},{year:2019,value:1535},{year:2020,value:1550},{year:2021,value:1803},{year:2022,value:2241},{year:2023,value:2285},{year:2024,value:2721},
+  ] },
+  dso: { label: 'Days Sales Outstanding (DSO)', unit: 'days', series: [
+    {year:2013,value:4.26},{year:2014,value:3.80},{year:2015,value:3.84},{year:2016,value:3.85},{year:2017,value:4.05},{year:2018,value:4.30},{year:2019,value:3.67},{year:2020,value:3.39},{year:2021,value:3.36},{year:2022,value:3.60},{year:2023,value:3.44},{year:2024,value:3.90},
+  ], note: 'Costco collects in <4 days \u2014 most sales are cash/card at the register. 12-yr average ~3.74 days.' },
+  inventory: { label: 'Merchandise Inventories', unit: 'M USD', series: [
+    {year:2006,value:4561},{year:2007,value:4879},{year:2008,value:5039},{year:2009,value:5405},{year:2010,value:5638},{year:2011,value:6838},{year:2012,value:7096},{year:2013,value:7894},{year:2014,value:8456},{year:2015,value:8908},{year:2016,value:8969},{year:2017,value:9834},{year:2018,value:11004},{year:2019,value:11395},{year:2020,value:12242},{year:2021,value:14215},{year:2022,value:17907},{year:2023,value:16651},{year:2024,value:18647},
+  ] },
+  inventoryTurnover: { label: 'Inventory Turnover', unit: 'x', series: [
+    {year:2013,value:11.65},{year:2014,value:11.65},{year:2015,value:11.34},{year:2016,value:11.47},{year:2017,value:11.38},{year:2018,value:11.19},{year:2019,value:11.66},{year:2020,value:11.84},{year:2021,value:12.01},{year:2022,value:11.13},{year:2023,value:12.77},{year:2024,value:11.92},
+  ], note: 'Inventory turns ~12x a year \u2014 limited SKUs + bulk + high volume. 12-yr average ~11.67x.' },
+  dio: { label: 'Days Inventory Outstanding (DIO)', unit: 'days', series: [
+    {year:2013,value:31.34},{year:2014,value:31.32},{year:2015,value:32.19},{year:2016,value:31.81},{year:2017,value:32.08},{year:2018,value:32.61},{year:2019,value:31.30},{year:2020,value:30.83},{year:2021,value:30.40},{year:2022,value:32.78},{year:2023,value:28.59},{year:2024,value:30.61},
+  ], note: 'Merchandise sits ~31 days before sale. 12-yr average ~31.32 days.' },
+  totalCurrentAssets: { label: 'Current Assets', unit: 'M USD', series: [
+    {year:2006,value:8232},{year:2007,value:9324},{year:2008,value:9462},{year:2009,value:10337},{year:2010,value:11708},{year:2011,value:13706},{year:2012,value:13526},{year:2013,value:15840},{year:2014,value:17588},{year:2015,value:17299},{year:2016,value:15218},{year:2017,value:17317},{year:2018,value:20289},{year:2019,value:23485},{year:2020,value:28120},{year:2021,value:29505},{year:2022,value:32696},{year:2023,value:35879},{year:2024,value:34246},
+  ] },
+  totalCurrentLiabilities: { label: 'Current Liabilities', unit: 'M USD', series: [
+    {year:2006,value:7819},{year:2007,value:8258},{year:2008,value:8874},{year:2009,value:9201},{year:2010,value:10063},{year:2011,value:12053},{year:2012,value:12260},{year:2013,value:13257},{year:2014,value:14412},{year:2015,value:16540},{year:2016,value:15575},{year:2017,value:17495},{year:2018,value:19926},{year:2019,value:23237},{year:2020,value:24844},{year:2021,value:29441},{year:2022,value:31998},{year:2023,value:33583},{year:2024,value:35464},
+  ] },
+  currentRatio: { label: 'Current Ratio', unit: 'x', series: [
+    {year:2006,value:1.05},{year:2007,value:1.13},{year:2008,value:1.07},{year:2009,value:1.12},{year:2010,value:1.16},{year:2011,value:1.14},{year:2012,value:1.10},{year:2013,value:1.19},{year:2014,value:1.22},{year:2015,value:1.05},{year:2016,value:0.98},{year:2017,value:0.99},{year:2018,value:1.02},{year:2019,value:1.01},{year:2020,value:1.13},{year:2021,value:1.00},{year:2022,value:1.02},{year:2023,value:1.07},{year:2024,value:0.97},
+  ], note: 'Current Assets \u00f7 Current Liabilities. Costco runs ~1.0 deliberately \u2014 it funds inventory with supplier payables (negative working capital), a sign of strength here, not weakness. 2015\u20132024 average ~1.02x.' },
+  totalAssets: { label: 'Total Assets', unit: 'M USD', series: [
+    {year:2006,value:17495},{year:2007,value:19607},{year:2008,value:20682},{year:2009,value:21979},{year:2010,value:23815},{year:2011,value:26761},{year:2012,value:27140},{year:2013,value:30283},{year:2014,value:33024},{year:2015,value:33017},{year:2016,value:33163},{year:2017,value:36347},{year:2018,value:40830},{year:2019,value:45400},{year:2020,value:55556},{year:2021,value:59268},{year:2022,value:64166},{year:2023,value:68994},{year:2024,value:69831},
+  ], note: 'Ties to the sum of the three geographic segments\u2019 total assets ($48.8B US + $6.9B Canada + $14.1B Intl).' },
+  accountsPayable: { label: 'Accounts Payable', unit: 'M USD', series: [
+    {year:2013,value:7872},{year:2014,value:8491},{year:2015,value:9011},{year:2016,value:7612},{year:2017,value:9608},{year:2018,value:11237},{year:2019,value:11679},{year:2020,value:14172},{year:2021,value:16278},{year:2022,value:17848},{year:2023,value:17483},{year:2024,value:19421},
+  ] },
+  dpo: { label: 'Days Payable Outstanding (DPO)', unit: 'days', series: [
+    {year:2013,value:31.24},{year:2014,value:31.43},{year:2015,value:32.57},{year:2016,value:27.01},{year:2017,value:31.35},{year:2018,value:33.27},{year:2019,value:32.08},{year:2020,value:35.69},{year:2021,value:34.81},{year:2022,value:32.67},{year:2023,value:30.03},{year:2024,value:31.88},
+  ], note: 'Costco takes ~32 days to pay suppliers \u2014 longer than it takes to sell the goods. 12-yr average ~32.09 days.' },
+  longTermDebt: { label: 'Long-Term Debt (excl. current)', unit: 'M USD', series: [
+    {year:2006,value:215},{year:2007,value:2108},{year:2008,value:2226},{year:2009,value:2206},{year:2010,value:2141},{year:2011,value:1253},{year:2012,value:1381},{year:2013,value:4998},{year:2014,value:5093},{year:2015,value:4852},{year:2016,value:4061},{year:2017,value:6573},{year:2018,value:6487},{year:2019,value:5124},{year:2020,value:7514},{year:2021,value:6269},{year:2022,value:6484},{year:2023,value:5377},{year:2024,value:5794},
+  ] },
+  ltDebtToEquity: { label: 'Long-Term Debt-to-Equity', unit: 'x', series: [
+    {year:2006,value:0.02},{year:2007,value:0.24},{year:2008,value:0.24},{year:2009,value:0.22},{year:2010,value:0.20},{year:2011,value:0.10},{year:2012,value:0.11},{year:2013,value:0.46},{year:2014,value:0.41},{year:2015,value:0.46},{year:2016,value:0.34},{year:2017,value:0.61},{year:2018,value:0.51},{year:2019,value:0.33},{year:2020,value:0.41},{year:2021,value:0.36},{year:2022,value:0.31},{year:2023,value:0.21},{year:2024,value:0.25},
+  ], note: 'Very conservative long-term leverage \u2014 peaked at 0.61x (2017), just 0.25x in 2024. Costco funds mostly with payables, not long-term borrowing. 2015\u20132024 average ~0.38x.' },
+  ltDebtToNetIncome: { label: 'Long-Term Debt \u00f7 Net Income', unit: 'x', series: [
+    {year:2015,value:2.04},{year:2016,value:1.73},{year:2017,value:2.45},{year:2018,value:2.07},{year:2019,value:1.40},{year:2020,value:1.88},{year:2021,value:1.25},{year:2022,value:1.11},{year:2023,value:0.85},{year:2024,value:0.79},
+  ], note: 'Long-term debt is now under 1x net income \u2014 it could repay all LT debt in well under a year. 2015\u20132024 average ~1.56x.' },
+  totalDebt: { label: 'Total Debt', unit: 'M USD', series: [
+    {year:2006,value:8034},{year:2007,value:10366},{year:2008,value:11100},{year:2009,value:11407},{year:2010,value:12204},{year:2011,value:13306},{year:2012,value:13641},{year:2013,value:18255},{year:2014,value:19505},{year:2015,value:21392},{year:2016,value:19636},{year:2017,value:24068},{year:2018,value:26413},{year:2019,value:28361},{year:2020,value:32358},{year:2021,value:35710},{year:2022,value:38482},{year:2023,value:38960},{year:2024,value:41258},
+  ], note: 'Includes current liabilities (payables, accrued) \u2014 most of Costco\u2019s \u201Cdebt\u201D is interest-free supplier financing, not borrowings.' },
+  debtToEquity: { label: 'Total Debt-to-Equity', unit: 'x', series: [
+    {year:2015,value:2.01},{year:2016,value:1.62},{year:2017,value:2.23},{year:2018,value:2.06},{year:2019,value:1.83},{year:2020,value:1.44},{year:2021,value:2.03},{year:2022,value:1.86},{year:2023,value:1.55},{year:2024,value:1.75},
+  ], note: '2015\u20132024 average ~1.84x \u2014 but this overstates risk since most \u201Cdebt\u201D is interest-free payables.' },
+  retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [
+    {year:2006,value:6041},{year:2007,value:5139},{year:2008,value:5361},{year:2009,value:6101},{year:2010,value:6590},{year:2011,value:7311},{year:2012,value:7834},{year:2013,value:6283},{year:2014,value:7458},{year:2015,value:6518},{year:2016,value:7686},{year:2017,value:5988},{year:2018,value:7887},{year:2019,value:10258},{year:2020,value:12879},{year:2021,value:11666},{year:2022,value:15585},{year:2023,value:19521},{year:2024,value:17619},
+  ], note: 'Dips in some years (2013, 2017, 2024) reflect large special dividends paid out of retained earnings \u2014 Costco periodically returns cash via one-time specials (e.g. the FY2024 $15/share special).' },
+  shareholderEquity: { label: 'Shareholder Equity', unit: 'M USD', series: [
+    {year:2006,value:9143},{year:2007,value:8623},{year:2008,value:9192},{year:2009,value:10018},{year:2010,value:10829},{year:2011,value:12002},{year:2012,value:12361},{year:2013,value:10833},{year:2014,value:12303},{year:2015,value:10617},{year:2016,value:12079},{year:2017,value:10778},{year:2018,value:12799},{year:2019,value:15584},{year:2020,value:18284},{year:2021,value:17564},{year:2022,value:20642},{year:2023,value:25058},{year:2024,value:23622},
+  ], note: 'Total Costco stockholders\u2019 equity. The 2024 dip follows the special dividend; Costco keeps equity lean and compounds via high returns rather than retaining everything.' },
+  investedCapital: { label: 'Invested Capital', unit: 'M USD', series: [
+    {year:2015,value:11677},{year:2016,value:14209},{year:2017,value:14306},{year:2018,value:14849},{year:2019,value:13779},{year:2020,value:18435},{year:2021,value:18569},{year:2022,value:21965},{year:2023,value:21711},{year:2024,value:24461},
+  ], note: 'Total Assets \u2212 Cash \u2212 Current Liabilities. The lean capital base behind Costco\u2019s ~23% ROIC.' },
+  sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [
+    {year:2006,value:462.279},{year:2007,value:437.013},{year:2008,value:432.513},{year:2009,value:435.974},{year:2010,value:433.510},{year:2011,value:434.266},{year:2012,value:432.350},{year:2013,value:436.839},{year:2014,value:437.683},{year:2015,value:437.952},{year:2016,value:437.524},{year:2017,value:437.204},{year:2018,value:438.189},{year:2019,value:439.625},{year:2020,value:441.255},{year:2021,value:441.825},{year:2022,value:442.664},{year:2023,value:442.678},{year:2024,value:443.126},
+  ], note: 'Remarkably flat share count \u2014 ~462M (2006) to ~443M (2024). Minimal dilution; modest net buybacks offset stock comp. Almost all per-share growth is real, not financial engineering.' },
+  bookValuePerShare: { label: 'Book Value per Share', unit: 'USD per share', series: [
+    {year:2015,value:24.25},{year:2016,value:27.61},{year:2017,value:24.65},{year:2018,value:29.21},{year:2019,value:35.45},{year:2020,value:41.44},{year:2021,value:39.76},{year:2022,value:46.63},{year:2023,value:56.61},{year:2024,value:53.29},
+  ], note: 'Equity \u00f7 shares. 2015\u20132024 BVPS CAGR ~9.2%/yr (suppressed by special-dividend payouts).' },
+  ccc: { label: 'Cash Conversion Cycle (DIO + DSO \u2212 DPO)', unit: 'days', series: [
+    {year:2013,value:4.36},{year:2014,value:3.69},{year:2015,value:3.47},{year:2016,value:8.65,spike:true},{year:2017,value:4.78},{year:2018,value:3.64},{year:2019,value:2.89},{year:2020,value:-1.47},{year:2021,value:-1.06},{year:2022,value:3.71},{year:2023,value:2.00},{year:2024,value:2.63},
+  ], note: 'The capital-efficiency punchline \u2014 ~3 days on average, and NEGATIVE in 2020\u20132021 (Costco collected from members before it had to pay suppliers, so growth was self-funding). 12-yr average ~3.11 days.' },
+  returns: {
+    roe: [ {year:2015,value:22.39},{year:2016,value:19.46},{year:2017,value:24.86},{year:2018,value:24.49},{year:2019,value:24.00},{year:2020,value:21.89},{year:2021,value:27.70},{year:2022,value:28.30},{year:2023,value:25.11},{year:2024,value:31.19} ],
+    roic: [ {year:2015,value:22.66},{year:2016,value:18.86},{year:2017,value:20.97},{year:2018,value:22.02},{year:2019,value:25.10},{year:2020,value:21.52},{year:2021,value:26.37},{year:2022,value:25.90},{year:2023,value:27.27},{year:2024,value:27.71} ],
+    roa: [ {year:2015,value:7.20},{year:2016,value:7.09},{year:2017,value:7.37},{year:2018,value:7.68},{year:2019,value:8.06},{year:2020,value:7.20},{year:2021,value:8.45},{year:2022,value:9.11},{year:2023,value:9.12},{year:2024,value:10.55} ],
+    averages: { roe: 24.94, roic: 23.84, roa: 8.18 },
+  },
+  retainedEarningsTest: {
+    period: 'FY2006 \u2013 FY2024',
+    startYear: 2006, endYear: 2024,
+    retainedEarningsStart: 6041, retainedEarningsEnd: 17619,
+    retainedEarningsIncrease: 11.578,
+    marketCapIncrease: 393.22,
+    multiplier: 33.9,
+    verdict: 'Phenomenal pass. Retained earnings grew just $11.58B (2006\u20132024) while market cap grew $393.22B \u2014 about $34 of market value created for every $1 retained, far beyond Buffett\u2019s $1-for-$1 minimum. Costco\u2019s low retention (it pays out heavily via dividends and specials) plus ~23% ROIC means it compounds shareholder value with extraordinary capital efficiency rather than by hoarding earnings.',
+  },
+},
     incomeStatement: {
   netSales: { label: 'Net Sales', unit: 'M USD', series: [
     {year:2013,value:102870},{year:2014,value:110212},{year:2015,value:113666},{year:2016,value:116073},{year:2017,value:126172},{year:2018,value:138434},{year:2019,value:149351},{year:2020,value:163220},{year:2021,value:192052},{year:2022,value:222730},{year:2023,value:237710},{year:2024,value:249625},
