@@ -24668,19 +24668,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const renderSegmentsTab = () => {
                       if (!bd.numbers || !bd.numbers.segments) return null;
                       const { segments } = bd.numbers;
-                      const wmSubTabs = [
+                      const subTabDefs = [
                         segments.wmRevenue && { id: 'serviceLine', label: 'OPERATING REVENUES' },
                         segments.wmGeography && { id: 'geography', label: 'GEOGRAPHY' },
                         segments.wmSegmentPnl && { id: 'segmentPnl', label: 'SEGMENT P&L' },
                         segments.wmOpex && { id: 'opex', label: 'SEGMENT OP EX' },
+                        segments.unitCaseVolume && { id: 'unitCaseVolume', label: 'UNIT CASE VOLUME' },
+                        segments.revenueByCountry && { id: 'revenueByCountry', label: 'REVENUE BY GEOGRAPHY' },
+                        segments.byCountry && { id: 'byCountry', label: 'REVENUE BY GEOGRAPHY' },
+                        (segments.headlineInsight || segments.mix || segments.naCombined) && { id: 'hsyMix', label: 'SEGMENT MIX' },
+                        segments.naConfectionery && { id: 'naConfectionery', label: 'NA CONFECTIONERY' },
+                        segments.naSaltySnacks && { id: 'naSaltySnacks', label: 'NA SALTY SNACKS' },
+                        segments.international && { id: 'international', label: 'INTERNATIONAL' },
                       ].filter(Boolean);
-                      const isWM = wmSubTabs.length > 0;
-                      const activeSub = isWM ? (wmSubTabs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : wmSubTabs[0].id) : null;
+                      const hasSubTabs = subTabDefs.length > 1;
+                      const activeSub = subTabDefs.length ? (subTabDefs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : subTabDefs[0].id) : null;
                       return (
                         <div>
-                          {isWM && (
+                          {hasSubTabs && (
                             <div style={{display:'flex',gap:'6px',flexWrap:'wrap',marginBottom:'16px',paddingBottom:'12px',borderBottom:'0.5px solid rgba(245,158,11,0.2)'}}>
-                              {wmSubTabs.map(t => (
+                              {subTabDefs.map(t => (
                                 <button key={t.id} onClick={() => setSegmentsSubTab(t.id)} style={{
                                   padding:'7px 13px',
                                   background: activeSub === t.id ? 'rgba(245,158,11,0.14)' : 'rgba(0,0,0,0.3)',
@@ -24903,10 +24910,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {segments && (segments.headlineInsight || segments.mix || segments.naConfectionery || segments.naSaltySnacks || segments.international || segments.naCombined) && (
                         <>
                           <SectionHeading>// SEGMENT RESULTS</SectionHeading>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY’s defining strategic stories.</div>
+                          {activeSub === 'hsyMix' && (<div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY’s defining strategic stories.</div>)}
 
                           {/* Headline insight callout */}
-                          {segments.headlineInsight && (
+                          {segments.headlineInsight && activeSub === 'hsyMix' && (
                             <div style={{
                               background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
                               border:'0.5px solid rgba(34,197,94,0.45)',
@@ -24924,7 +24931,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* Mix shift stacked area chart */}
-                          {segments.mix && (() => {
+                          {segments.mix && activeSub === 'hsyMix' && (() => {
                             const mix = segments.mix;
                             const years = mix.map(m => m.year);
                             const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
@@ -25006,7 +25013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })()}
 
                           {/* Per-segment cards */}
-                          {[segments.naConfectionery, segments.naSaltySnacks, segments.international].filter(Boolean).map((seg, i) => {
+                          {[{ seg: segments.naConfectionery, id: 'naConfectionery' }, { seg: segments.naSaltySnacks, id: 'naSaltySnacks' }, { seg: segments.international, id: 'international' }].filter(x => x.seg && activeSub === x.id).map(({ seg }, i) => {
                             if (!seg) return null;
                             const isHighlight = seg.highlight;
                             return (
@@ -25059,7 +25066,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })}
 
                           {/* North America Combined long-history chart */}
-                          {segments.naCombined && (
+                          {segments.naCombined && activeSub === 'hsyMix' && (
                             <>
                               <TimeSeriesTable data={segments.naCombined} />
                               {segments.naCombined.description && (
@@ -25073,7 +25080,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       )}
 
                       {/* WORLDWIDE UNIT CASE VOLUME — KO shape (23-year physical-volume series) */}
-                      {segments && segments.unitCaseVolume && (() => {
+                      {segments && segments.unitCaseVolume && activeSub === 'unitCaseVolume' && (() => {
                         const ucv = segments.unitCaseVolume;
                         const latest = ucv.rows[ucv.rows.length - 1];
                         return (
@@ -25170,7 +25177,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       })()}
 
                       {/* REVENUE BY COUNTRY — KO shape (Concentrate + Finished Product + Total, US vs Intl) */}
-                      {segments && segments.revenueByCountry && (
+                      {segments && segments.revenueByCountry && activeSub === 'revenueByCountry' && (
                         <>
                           <SectionHeading>// REVENUE BY GEOGRAPHY · {segments.revenueByCountry.period}</SectionHeading>
                           {segments.revenueByCountry.description && (
@@ -25253,7 +25260,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       )}
 
                       {/* REVENUE BY COUNTRY (PEP shape) */}
-                      {segments && segments.byCountry && (
+                      {segments && segments.byCountry && activeSub === 'byCountry' && (
                         <>
                           <SectionHeading>// REVENUE BY GEOGRAPHY · {segments.byCountry.period}</SectionHeading>
                           {segments.byCountry.description && (
