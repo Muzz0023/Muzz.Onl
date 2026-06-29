@@ -24669,10 +24669,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       if (!bd.numbers || !bd.numbers.segments) return null;
                       const { segments } = bd.numbers;
                       const wmSubTabs = [
-                        segments.wmRevenue && { id: 'serviceLine', label: 'SERVICE LINE' },
+                        segments.wmRevenue && { id: 'serviceLine', label: 'OPERATING REVENUES' },
                         segments.wmGeography && { id: 'geography', label: 'GEOGRAPHY' },
                         segments.wmSegmentPnl && { id: 'segmentPnl', label: 'SEGMENT P&L' },
-                        segments.wmOpex && { id: 'opex', label: 'OPERATING EXP' },
+                        segments.wmOpex && { id: 'opex', label: 'SEGMENT OP EX' },
                       ].filter(Boolean);
                       const isWM = wmSubTabs.length > 0;
                       const activeSub = isWM ? (wmSubTabs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : wmSubTabs[0].id) : null;
@@ -24696,7 +24696,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
                           {segments.wmRevenue && activeSub === 'serviceLine' && (
                             <>
-                              <SectionHeading>// REVENUE BY SERVICE LINE</SectionHeading>
+                              <SectionHeading>// OPERATING REVENUES</SectionHeading>
                               {segments.wmRevenue.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmRevenue.preamble}</div>}
                               {segments.wmRevenue.netNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{segments.wmRevenue.netNote}</div>}
                               {segments.wmRevenue.lines.map((ln, i) => (
@@ -24709,7 +24709,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
                           {segments.wmOpex && activeSub === 'opex' && (
                             <>
-                              <SectionHeading>// OPERATING EXPENSES</SectionHeading>
+                              <SectionHeading>// SEGMENT OP EX</SectionHeading>
                               {segments.wmOpex.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmOpex.preamble}</div>}
                               {segments.wmOpex.lines.map((ln, i) => (
                                 <div key={i}>
