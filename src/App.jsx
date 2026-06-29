@@ -9481,6 +9481,59 @@ const COST_BREAKDOWN = {
   },
 
   numbers: {
+    incomeStatement: {
+  netSales: { label: 'Net Sales', unit: 'M USD', series: [
+    {year:2013,value:102870},{year:2014,value:110212},{year:2015,value:113666},{year:2016,value:116073},{year:2017,value:126172},{year:2018,value:138434},{year:2019,value:149351},{year:2020,value:163220},{year:2021,value:192052},{year:2022,value:222730},{year:2023,value:237710},{year:2024,value:249625},
+  ], note: 'Merchandise sales \u2014 the high-volume, thin-margin top line. Grew ~2.4x from 2013 to 2024.' },
+  membershipFees: { label: 'Membership Fees', unit: 'M USD', series: [
+    {year:2013,value:2286},{year:2014,value:2428},{year:2015,value:2533},{year:2016,value:2646},{year:2017,value:2853},{year:2018,value:3142},{year:2019,value:3352},{year:2020,value:3541},{year:2021,value:3877},{year:2022,value:4224},{year:2023,value:4580},{year:2024,value:4828},
+  ], note: 'THE ENGINE \u2014 near-100%-margin recurring fee revenue. Only ~1.9% of total revenue, but a large share of operating income flows straight from this line. Grew steadily every single year.' },
+  totalRevenue: { label: 'Total Revenue', unit: 'M USD', series: [
+    {year:2015,value:116199},{year:2016,value:118719},{year:2017,value:129025},{year:2018,value:141576},{year:2019,value:152703},{year:2020,value:166761},{year:2021,value:195929},{year:2022,value:226954},{year:2023,value:242290},{year:2024,value:254453},
+  ], note: 'Net Sales + Membership Fees. Ties exactly to the segment-geography total and the per-employee revenue base.' },
+  costOfSales: { label: 'Merchandise Costs', unit: 'M USD', series: [
+    {year:2013,value:91948},{year:2014,value:98548},{year:2015,value:101000},{year:2016,value:102901},{year:2017,value:111882},{year:2018,value:123152},{year:2019,value:132886},{year:2020,value:144939},{year:2021,value:170684},{year:2022,value:199382},{year:2023,value:212586},{year:2024,value:222358},
+  ] },
+  grossProfit: { label: 'Gross Profit', unit: 'M USD', series: [
+    {year:2015,value:15199},{year:2016,value:15818},{year:2017,value:17143},{year:2018,value:18424},{year:2019,value:19817},{year:2020,value:21822},{year:2021,value:25245},{year:2022,value:27572},{year:2023,value:29704},{year:2024,value:32095},
+  ], note: 'Total Revenue \u2212 Merchandise Costs (so it includes membership fees). Ties exactly each year.' },
+  grossMargin: { label: 'Gross Margin %', unit: '%', series: [
+    {year:2013,value:10.64},{year:2014,value:10.58},{year:2015,value:11.12},{year:2016,value:11.31},{year:2017,value:11.35},{year:2018,value:11.07},{year:2019,value:11.02},{year:2020,value:11.19},{year:2021,value:11.14},{year:2022,value:10.49},{year:2023,value:10.58},{year:2024,value:10.93},
+  ], note: 'Merchandise margin on Net Sales only (excludes membership fees) \u2014 held tightly around 10\u201311% by policy. Extreme, deliberate discipline; gasoline mix and inflation move it a point or so.' },
+  smaExpense: { label: 'SG&A Expenses', unit: 'M USD', series: [
+    {year:2013,value:10104},{year:2014,value:10899},{year:2015,value:11445},{year:2016,value:12068},{year:2017,value:12950},{year:2018,value:13876},{year:2019,value:14994},{year:2020,value:16332},{year:2021,value:18461},{year:2022,value:19772},{year:2023,value:21590},{year:2024,value:22810},
+  ] },
+  smaToGrossProfit: { label: 'SG&A \u00f7 Gross Profit %', unit: '%', series: [
+    {year:2015,value:75.3},{year:2016,value:76.3},{year:2017,value:75.6},{year:2018,value:75.3},{year:2019,value:75.7},{year:2020,value:74.9},{year:2021,value:73.1},{year:2022,value:71.7},{year:2023,value:72.7},{year:2024,value:71.1},
+  ], note: 'Operating leverage \u2014 SG&A as a share of gross profit fell from ~75% to ~71% as scale spread fixed costs over a larger base.' },
+  totalExpenses: { label: 'Total Expenses', unit: 'M USD', series: [
+    {year:2015,value:112510},{year:2016,value:114969},{year:2017,value:124832},{year:2018,value:137028},{year:2019,value:147880},{year:2020,value:161271},{year:2021,value:189145},{year:2022,value:219161},{year:2023,value:234176},{year:2024,value:245168},
+  ], note: 'Merchandise Costs + SG&A. Ties exactly each year.' },
+  expensesToRevenue: { label: 'Total Expenses to Revenue %', unit: '%', series: [
+    {year:2015,value:96.83},{year:2016,value:96.84},{year:2017,value:96.75},{year:2018,value:96.79},{year:2019,value:96.84},{year:2020,value:96.71},{year:2021,value:96.54},{year:2022,value:96.57},{year:2023,value:96.65},{year:2024,value:96.35},
+  ], note: 'Costco runs at ~96% of revenue in costs \u2014 the thin-margin model laid bare. Tiny improvements drop straight to the bottom line.' },
+  operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [
+    {year:2015,value:3624},{year:2016,value:3672},{year:2017,value:4111},{year:2018,value:4480},{year:2019,value:4737},{year:2020,value:5435},{year:2021,value:6708},{year:2022,value:7793},{year:2023,value:8114},{year:2024,value:9285},
+  ], note: 'Total Revenue \u2212 Merchandise Costs \u2212 SG&A, less a small preopening / store-closing line not separately listed here \u2014 so in 2015\u20132021 it runs ~$55\u201386M below Total Revenue minus Total Expenses, then ties exactly from 2022. Also ties to the sum of the three geographic segments\u2019 operating income.' },
+  provisionForTaxes: { label: 'Provision for Income Taxes', unit: 'M USD', series: [
+    {year:2015,value:1195},{year:2016,value:1243},{year:2017,value:1325},{year:2018,value:1263},{year:2019,value:1061},{year:2020,value:1308},{year:2021,value:1601},{year:2022,value:1925},{year:2023,value:2195},{year:2024,value:2373},
+  ] },
+  taxRate: { label: 'Effective Tax Rate', unit: '%', series: [
+    {year:2015,value:27},{year:2016,value:27},{year:2017,value:27},{year:2018,value:27},{year:2019,value:27},{year:2020,value:27},{year:2021,value:27},{year:2022,value:27},{year:2023,value:27},{year:2024,value:27},
+  ], note: 'Held ~27% across the decade.' },
+  nopat: { label: 'NOPAT', unit: 'M USD', series: [
+    {year:2015,value:2645.52},{year:2016,value:2680.56},{year:2017,value:3001.03},{year:2018,value:3270.40},{year:2019,value:3458.01},{year:2020,value:3967.55},{year:2021,value:4896.84},{year:2022,value:5688.89},{year:2023,value:5923.22},{year:2024,value:6778.05},
+  ], note: 'Operating Income \u00d7 (1 \u2212 27%). Ties each year.' },
+  netIncome: { label: 'Net Income', unit: 'M USD', series: [
+    {year:2015,value:2377},{year:2016,value:2350,down:true},{year:2017,value:2679},{year:2018,value:3134},{year:2019,value:3659},{year:2020,value:4002},{year:2021,value:5007},{year:2022,value:5844},{year:2023,value:6292},{year:2024,value:7367},
+  ], note: 'Up ~3.1x from 2015 to 2024. Only down year was 2016. (Net income exceeds NOPAT because of net interest income below the operating line.)' },
+  profitMargin: { label: 'Profit Margin %', unit: '%', series: [
+    {year:2015,value:2.09},{year:2016,value:2.02},{year:2017,value:2.12},{year:2018,value:2.26},{year:2019,value:2.45},{year:2020,value:2.45},{year:2021,value:2.61},{year:2022,value:2.62},{year:2023,value:2.65},{year:2024,value:2.95},
+  ], note: 'Net income on Net Sales \u2014 famously thin (~2\u20133%). The point isn\u2019t margin, it\u2019s velocity and the membership fee on top.' },
+  eps: { label: 'EPS (Diluted)', unit: 'USD per share', series: [
+    {year:2014,value:4.65},{year:2015,value:5.37},{year:2016,value:5.33,down:true},{year:2017,value:6.08},{year:2018,value:7.09},{year:2019,value:8.26},{year:2020,value:9.02},{year:2021,value:11.27},{year:2022,value:13.14},{year:2023,value:14.16},{year:2024,value:16.56},
+  ], note: 'Diluted EPS more than tripled from $4.65 (2014) to $16.56 (2024) \u2014 helped by a near-flat share count.' },
+},
     segments: {
   membership: {
     structure: {
@@ -24498,6 +24551,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                           {/* REVENUE & COSTS */}
                           {IS.netSales && (<><TimeSeriesTable data={IS.netSales} />{IS.netSales.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.netSales.note}</div>}</>)}
+                          {IS.membershipFees && (<><TimeSeriesTable data={IS.membershipFees} />{IS.membershipFees.note && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Note — </span>{IS.membershipFees.note}</div>}</>)}
+                          {IS.totalRevenue && (<><TimeSeriesTable data={IS.totalRevenue} />{IS.totalRevenue.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.totalRevenue.note}</div>}</>)}
                           {IS.costOfSales && (<><TimeSeriesTable data={IS.costOfSales} />{IS.costOfSales.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.costOfSales.note}</div>}</>)}
                           {IS.grossProfit    && <TimeSeriesTable data={IS.grossProfit} />}
                           {IS.grossMargin    && (
