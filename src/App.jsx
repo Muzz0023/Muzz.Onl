@@ -9596,9 +9596,28 @@ const COST_BREAKDOWN = {
       {year:2006,value:127000},{year:2007,value:127000},{year:2008,value:137000},{year:2009,value:142000},{year:2010,value:147000},{year:2011,value:164000},{year:2012,value:174000},{year:2013,value:184000},{year:2014,value:195000},{year:2015,value:205000},{year:2016,value:218000},{year:2017,value:231000},{year:2018,value:245000},{year:2019,value:254000},{year:2020,value:273000},{year:2021,value:288000},{year:2022,value:304000},{year:2023,value:316000},{year:2024,value:333000},
     ], note: 'Total headcount grew from 127k (2006) to 333k (2024). 2024 composition: US 219k / Canada 53k / Other International 61k \u2014 so ~34% of staff is now outside the US. (Pre-2019 Costco reported a full-time / part-time split instead of a regional one; in 2018 it was 143k full-time + 102k part-time.)' },
 
-    usEmployees: { label: 'U.S. Employees', unit: 'count', series: [
+    headcountDetail: {
+  description: 'Costco changed its workforce disclosure in 2019 \u2014 from a Full-Time / Part-Time split (2006\u20132018) to a geographic US / Canada / Other International split (2019 onward). Both regimes are preserved in full below; each ties to Total Employees in its years.',
+  byGeography: [
+    { label: 'United States \u2014 Employees', unit: 'count', series: [
       {year:2019,value:167000},{year:2020,value:181000},{year:2021,value:192000},{year:2022,value:202000},{year:2023,value:208000},{year:2024,value:219000},
-    ], note: 'U.S. headcount only (regional split first disclosed in 2019). Canada was 53k and Other International 61k in 2024.' },
+    ], note: 'The home-market workforce \u2014 ~66% of total staff.' },
+    { label: 'Canada \u2014 Employees', unit: 'count', series: [
+      {year:2019,value:42000},{year:2020,value:46000},{year:2021,value:47000},{year:2022,value:50000},{year:2023,value:51000},{year:2024,value:53000},
+    ], note: 'Second-largest workforce, matching the mature Canadian warehouse base.' },
+    { label: 'Other International \u2014 Employees', unit: 'count', series: [
+      {year:2019,value:45000},{year:2020,value:46000},{year:2021,value:49000},{year:2022,value:52000},{year:2023,value:57000},{year:2024,value:61000},
+    ], note: 'Fastest-growing headcount, tracking international warehouse expansion \u2014 up ~36% since 2019.' },
+  ],
+  byType: [
+    { label: 'Full-Time Employees', unit: 'count', series: [
+      {year:2006,value:71000},{year:2007,value:70000},{year:2008,value:75000},{year:2009,value:79000},{year:2010,value:82000},{year:2011,value:92000},{year:2012,value:96000},{year:2013,value:103000},{year:2014,value:112000},{year:2015,value:117000},{year:2016,value:126000},{year:2017,value:133000},{year:2018,value:143000},
+    ], note: 'Full-time roles (2006\u20132018 disclosure). Full-timers consistently outnumbered part-timers \u2014 unusual in retail and central to Costco\u2019s low-turnover, high-productivity labor model.' },
+    { label: 'Part-Time Employees', unit: 'count', series: [
+      {year:2006,value:56000},{year:2007,value:57000},{year:2008,value:62000},{year:2009,value:63000},{year:2010,value:65000},{year:2011,value:72000},{year:2012,value:78000},{year:2013,value:81000},{year:2014,value:83000},{year:2015,value:88000},{year:2016,value:92000},{year:2017,value:98000},{year:2018,value:102000},
+    ], note: 'Part-time roles (2006\u20132018 disclosure).' },
+  ],
+},
 
     revenuePerEmployee: { label: 'Revenue per Employee', unit: 'USD', series: [
       {year:2015,value:566822},{year:2016,value:544220},{year:2017,value:558216},{year:2018,value:577869},{year:2019,value:601583},{year:2020,value:610917},{year:2021,value:680311},{year:2022,value:746875},{year:2023,value:766772},{year:2024,value:764003},
@@ -24234,7 +24253,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === NUMBERS TAB ===
                     const renderNumbersTab = () => {
                       if (!bd.numbers) return null;
-                      const { marketCapHistory, employees, usEmployees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance, retirement } = bd.numbers;
+                      const { marketCapHistory, employees, usEmployees, headcountDetail, revenuePerEmployee, netIncomePerEmployee, ceoPerformance, retirement } = bd.numbers;
 
                       return (
                         <div>
@@ -24280,6 +24299,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {netIncomePerEmployee.note}
                                 </div>
+                              )}
+                            </>
+                          )}
+
+                          {headcountDetail && (
+                            <>
+                              <SectionHeading>// HEADCOUNT BREAKDOWN</SectionHeading>
+                              {headcountDetail.description && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{headcountDetail.description}</div>}
+                              {headcountDetail.byGeography && headcountDetail.byGeography.map((ln, i) => (
+                                <div key={'g'+i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                              {headcountDetail.byType && (
+                                <>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginTop:'6px',marginBottom:'10px'}}>// PRIOR DISCLOSURE · FULL-TIME / PART-TIME (2006–2018)</div>
+                                  {headcountDetail.byType.map((ln, i) => (
+                                    <div key={'t'+i}>
+                                      <TimeSeriesTable data={ln} />
+                                      {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                    </div>
+                                  ))}
+                                </>
                               )}
                             </>
                           )}
