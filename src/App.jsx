@@ -8926,6 +8926,116 @@ const WM_BREAKDOWN = {
       reporting: 'Publishes an annual Sustainability Report (progress toward 2030 goals) at sustainability.wm.com. Growing disclosure obligations: California Scope 1 & 2 (2026) / Scope 3 (2027), EU CSRD (2026+).',
     },
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // NUMBERS — income (revenue by service line + operating expenses)
+  // balance (PP&E + airspace + facilities) and segments (segment P&L + geography) pending the next pass
+  // ═══════════════════════════════════════════════════════════════
+  numbers: {
+    incomeStatement: {
+  wmRevenue: {
+    preamble: 'Operating revenues disaggregated by service line, 2010\u20132024 ($M). Collection is the core; Landfill + Transfer complete the Collection & Disposal segment. Note the structural reporting change in 2022: the newer presentation reports gross segment revenues with a separate intercompany elimination, so pre-2022 "Other / Corporate & Other" (~$1.4\u20132.1B) and the negative "Intercompany" line are not directly comparable to 2022\u20132024.',
+    netNote: 'Total Net Operating Revenues is after intercompany eliminations. Total Gross Operating Revenues (2022\u20132024 only) is before eliminations.',
+    lines: [
+      { label: 'Commercial', unit: 'M USD', series: [
+        {year:2010,value:3391},{year:2011,value:3499},{year:2012,value:3417,down:true},{year:2013,value:3423},{year:2014,value:3393,down:true},{year:2015,value:3332,down:true},{year:2016,value:3480},{year:2017,value:3714},{year:2018,value:3972},{year:2019,value:4229},{year:2020,value:4102,down:true},{year:2021,value:4760},{year:2022,value:5450},{year:2023,value:5801},{year:2024,value:6169},
+      ] },
+      { label: 'Industrial', unit: 'M USD', series: [
+        {year:2010,value:1988},{year:2011,value:2052},{year:2012,value:2129},{year:2013,value:2209},{year:2014,value:2231},{year:2015,value:2252},{year:2016,value:2412,down:true},{year:2017,value:2583},{year:2018,value:2773},{year:2019,value:2916},{year:2020,value:2770,down:true},{year:2021,value:3210},{year:2022,value:3681},{year:2023,value:3836},{year:2024,value:3883},
+      ] },
+      { label: 'Residential', unit: 'M USD', series: [
+        {year:2010,value:2594},{year:2011,value:2609},{year:2012,value:2584,down:true},{year:2013,value:2608},{year:2014,value:2543,down:true},{year:2015,value:2499,down:true},{year:2016,value:2487,down:true},{year:2017,value:2528},{year:2018,value:2529},{year:2019,value:2613},{year:2020,value:2716},{year:2021,value:3172},{year:2022,value:3339},{year:2023,value:3474},{year:2024,value:3555},
+      ] },
+      { label: 'Other collection', unit: 'M USD', series: [
+        {year:2010,value:274},{year:2011,value:246,down:true},{year:2012,value:275},{year:2013,value:273,down:true},{year:2014,value:340},{year:2015,value:356},{year:2016,value:423},{year:2017,value:439},{year:2018,value:450},{year:2019,value:482},{year:2020,value:465,down:true},{year:2021,value:533},{year:2022,value:2683,spike:true},{year:2023,value:3006},{year:2024,value:3194},
+      ] },
+      { label: 'Total collection', unit: 'M USD', series: [
+        {year:2010,value:8247},{year:2011,value:8406},{year:2012,value:8405,down:true},{year:2013,value:8513},{year:2014,value:8507,down:true},{year:2015,value:8439,down:true},{year:2016,value:8802},{year:2017,value:9264},{year:2018,value:9724},{year:2019,value:10240},{year:2020,value:10053,down:true},{year:2021,value:11675},{year:2022,value:15153},{year:2023,value:16117},{year:2024,value:16801},
+      ] },
+      { label: 'Landfill', unit: 'M USD', series: [
+        {year:2010,value:2540},{year:2011,value:2611},{year:2012,value:2685},{year:2013,value:2790},{year:2014,value:2849},{year:2015,value:2919},{year:2016,value:3110},{year:2017,value:3370},{year:2018,value:3560},{year:2019,value:3846},{year:2020,value:3667,down:true},{year:2021,value:4153},{year:2022,value:4516},{year:2023,value:4731},{year:2024,value:4958},
+      ] },
+      { label: 'Transfer', unit: 'M USD', series: [
+        {year:2010,value:1318},{year:2011,value:1280,down:true},{year:2012,value:1296},{year:2013,value:1329},{year:2014,value:1353},{year:2015,value:1377},{year:2016,value:1512},{year:2017,value:1591},{year:2018,value:1711},{year:2019,value:1820},{year:2020,value:1855},{year:2021,value:2072},{year:2022,value:2143},{year:2023,value:2293},{year:2024,value:2448},
+      ] },
+      { label: 'Total Collection & Disposal', unit: 'M USD', series: [
+        {year:2022,value:21812},{year:2023,value:23141},{year:2024,value:24207},
+      ], note: 'Reported under the post-2022 gross presentation (collection + landfill + transfer + intra-segment). Earlier years not disclosed on this basis.' },
+      { label: 'Recycling Processing & Sales', unit: 'M USD', series: [
+        {year:2010,value:1169},{year:2011,value:1580},{year:2012,value:1360,down:true},{year:2013,value:1447},{year:2014,value:1370,down:true},{year:2015,value:1163,down:true},{year:2016,value:1221},{year:2017,value:1432},{year:2018,value:1293,down:true},{year:2019,value:1040,down:true},{year:2020,value:1127},{year:2021,value:1681},{year:2022,value:1760},{year:2023,value:1576,down:true},{year:2024,value:1890},
+      ], note: 'Commodity-linked \u2014 swings with recycled paper/metal/plastic prices.' },
+      { label: 'WM Renewable Energy', unit: 'M USD', series: [
+        {year:2022,value:315},{year:2023,value:276,down:true},{year:2024,value:321},
+      ], note: 'Broken out as a reportable segment from 2022.' },
+      { label: 'WM Healthcare Solutions', unit: 'M USD', series: [
+        {year:2024,value:413},
+      ], note: 'New segment from the Nov 2024 Stericycle acquisition \u2014 two months of revenue ($403M post-close per the segment note; $413M in the service-line table).' },
+      { label: 'Wheelabrator (legacy, divested)', unit: 'M USD', series: [
+        {year:2010,value:889},{year:2011,value:877,down:true},{year:2012,value:846,down:true},{year:2013,value:845,down:true},{year:2014,value:817,down:true},
+      ], note: 'Waste-to-energy business divested \u2014 last reported 2014.' },
+      { label: 'Corporate & Other', unit: 'M USD', series: [
+        {year:2010,value:314},{year:2011,value:655},{year:2012,value:1416},{year:2013,value:1583},{year:2014,value:1561,down:true},{year:2015,value:1452,down:true},{year:2016,value:1601},{year:2017,value:1713},{year:2018,value:1736},{year:2019,value:1758},{year:2020,value:1776},{year:2021,value:2112},{year:2022,value:49,spike:true},{year:2023,value:46},{year:2024,value:48},
+      ], note: 'Structural break in 2022: under the older presentation this line carried large intra-company amounts (~$1.4\u20132.1B); under the newer presentation it drops to ~$48M. Not comparable across the 2021/2022 boundary.' },
+      { label: 'Intercompany (eliminations)', unit: 'M USD', series: [
+        {year:2010,value:-1962},{year:2011,value:-2031,down:true},{year:2012,value:-2359,down:true},{year:2013,value:-2524,down:true},{year:2014,value:-2461},{year:2015,value:-2389},{year:2016,value:-2637,down:true},{year:2017,value:-2885,down:true},{year:2018,value:-3110,down:true},{year:2019,value:-3249,down:true},{year:2020,value:-3260,down:true},{year:2021,value:-3762,down:true},
+      ], note: 'Shown as negative eliminations 2010\u20132021. From 2022 the newer presentation reports intercompany revenue separately (within the gross-vs-net bridge), so this line is blank 2022\u20132024.' },
+      { label: 'Total Net Operating Revenues', unit: 'M USD', series: [
+        {year:2010,value:12515},{year:2011,value:13378},{year:2012,value:13649},{year:2013,value:13983},{year:2014,value:13996},{year:2015,value:12961,down:true},{year:2016,value:13609},{year:2017,value:14485},{year:2018,value:14914},{year:2019,value:15455},{year:2020,value:15218,down:true},{year:2021,value:17931},{year:2022,value:19698},{year:2023,value:20426},{year:2024,value:22063},
+      ], note: 'The headline top line \u2014 after intercompany eliminations.' },
+      { label: 'Total Gross Operating Revenues', unit: 'M USD', series: [
+        {year:2022,value:23936},{year:2023,value:25039},{year:2024,value:26879},
+      ], note: 'Before intercompany eliminations (disclosed 2022\u20132024 only). 2024 gross $26.9B vs net $22.1B \u2192 ~$4.8B of internal revenue eliminated.' },
+    ],
+  },
+  wmOpex: {
+    preamble: 'Operating expenses by category, 2010\u20132024 ($M). Labor, subcontractor, and maintenance costs dominate and have risen with inflation and acquisitions since 2021.',
+    lines: [
+      { label: 'Labor & related benefits', unit: 'M USD', series: [
+        {year:2010,value:2300},{year:2011,value:2336},{year:2012,value:2407},{year:2013,value:2506},{year:2014,value:2452},{year:2015,value:2381},{year:2016,value:2410},{year:2017,value:2500},{year:2018,value:2703},{year:2019,value:2791},{year:2020,value:2746},{year:2021,value:3223,spike:true},{year:2022,value:3452},{year:2023,value:3669},{year:2024,value:3845},
+      ] },
+      { label: 'Transfer & disposal costs', unit: 'M USD', series: [
+        {year:2010,value:943},{year:2011,value:937},{year:2012,value:964},{year:2013,value:973},{year:2014,value:935},{year:2015,value:939},{year:2016,value:974},{year:2017,value:996},{year:2018,value:1105},{year:2019,value:1160},{year:2020,value:1135},{year:2021,value:1161},{year:2022,value:1215},{year:2023,value:1273},{year:2024,value:1331},
+      ] },
+      { label: 'Maintenance & repairs', unit: 'M USD', series: [
+        {year:2010,value:1041},{year:2011,value:1090},{year:2012,value:1157},{year:2013,value:1181},{year:2014,value:1181},{year:2015,value:1022},{year:2016,value:1076},{year:2017,value:1170},{year:2018,value:1255},{year:2019,value:1355},{year:2020,value:1331},{year:2021,value:1596},{year:2022,value:1835,spike:true},{year:2023,value:1978},{year:2024,value:2079},
+      ] },
+      { label: 'Subcontractor costs', unit: 'M USD', series: [
+        {year:2010,value:770},{year:2011,value:948},{year:2012,value:1190},{year:2013,value:1182},{year:2014,value:1223},{year:2015,value:1137},{year:2016,value:1193},{year:2017,value:1236},{year:2018,value:1375},{year:2019,value:1532},{year:2020,value:1523},{year:2021,value:1766},{year:2022,value:2006,spike:true},{year:2023,value:2185},{year:2024,value:2240},
+      ] },
+      { label: 'Cost of goods sold (recycling)', unit: 'M USD', series: [
+        {year:2010,value:776},{year:2011,value:1071,spike:true},{year:2012,value:919},{year:2013,value:1000},{year:2014,value:974},{year:2015,value:791},{year:2016,value:858},{year:2017,value:969},{year:2018,value:783},{year:2019,value:553},{year:2020,value:553},{year:2021,value:936,spike:true},{year:2022,value:973},{year:2023,value:769},{year:2024,value:1048,spike:true},
+      ], note: 'Moves with recycling commodity prices.' },
+      { label: 'Fuel', unit: 'M USD', series: [
+        {year:2010,value:493},{year:2011,value:628},{year:2012,value:649},{year:2013,value:603},{year:2014,value:553},{year:2015,value:361},{year:2016,value:300},{year:2017,value:375},{year:2018,value:409},{year:2019,value:336},{year:2020,value:265},{year:2021,value:393},{year:2022,value:592},{year:2023,value:501},{year:2024,value:437},
+      ], note: 'Diesel + natural gas; excludes RNG credited internally to Renewable Energy.' },
+      { label: 'Disposal & franchise fees and taxes', unit: 'M USD', series: [
+        {year:2010,value:589},{year:2011,value:602},{year:2012,value:630},{year:2013,value:653},{year:2014,value:669},{year:2015,value:662},{year:2016,value:702},{year:2017,value:753},{year:2018,value:598},{year:2019,value:627},{year:2020,value:606},{year:2021,value:698},{year:2022,value:720},{year:2023,value:736},{year:2024,value:744},
+      ] },
+      { label: 'Landfill operating costs', unit: 'M USD', series: [
+        {year:2010,value:294},{year:2011,value:255},{year:2012,value:224},{year:2013,value:232},{year:2014,value:266},{year:2015,value:255},{year:2016,value:352},{year:2017,value:328},{year:2018,value:331},{year:2019,value:379},{year:2020,value:394},{year:2021,value:412},{year:2022,value:421},{year:2023,value:453},{year:2024,value:524},
+      ], note: 'Leachate, methane capture, closure/post-closure accruals, remediation.' },
+      { label: 'Risk management', unit: 'M USD', series: [
+        {year:2010,value:202},{year:2011,value:222},{year:2012,value:230},{year:2013,value:244},{year:2014,value:219},{year:2015,value:221},{year:2016,value:192},{year:2017,value:219},{year:2018,value:235},{year:2019,value:267},{year:2020,value:269},{year:2021,value:344},{year:2022,value:348},{year:2023,value:320},{year:2024,value:351},
+      ], note: 'Insurance + self-insurance reserves (auto, workers\u2019 comp, property).' },
+      { label: 'Other', unit: 'M USD', series: [
+        {year:2010,value:416},{year:2011,value:452},{year:2012,value:509},{year:2013,value:538},{year:2014,value:530},{year:2015,value:462},{year:2016,value:429},{year:2017,value:475},{year:2018,value:455},{year:2019,value:496},{year:2020,value:519},{year:2021,value:582},{year:2022,value:732},{year:2023,value:722},{year:2024,value:784},
+      ], note: 'Acquisition integration costs, rebates, litigation settlements, utilities, travel, rentals.' },
+    ],
+    definitions: [
+      { term: 'Labor & related benefits',            definition: 'Wages, salaries, bonuses, health & welfare benefits, and retirement contributions for frontline workers, drivers, technicians, and support staff.' },
+      { term: 'Transfer & disposal costs',           definition: 'Fees paid to third-party haulers and landfill/transfer operators when WM cannot internalize disposal.' },
+      { term: 'Maintenance & repairs',               definition: 'Servicing WM\u2019s fleet and equipment \u2014 parts, supplies, outside vendors, technician wages.' },
+      { term: 'Subcontractor costs',                 definition: 'Payments to third-party haulers/vendors for transport, handling, or services WM does not perform directly.' },
+      { term: 'Cost of goods sold (recycling)',      definition: 'Processing, handling, and marketing of recyclables \u2014 moves with paper/metal/plastic prices.' },
+      { term: 'Fuel',                                definition: 'Diesel and natural gas for the fleet, adjusted for market prices (excludes internally-credited RNG).' },
+      { term: 'Disposal & franchise fees and taxes', definition: 'Fees/taxes to municipalities based on landfill volumes, plus franchise fees for the right to operate.' },
+      { term: 'Landfill operating costs',            definition: 'Leachate collection/treatment, methane capture, site maintenance, closure/post-closure obligations, remediation accruals.' },
+      { term: 'Risk management',                     definition: 'Insurance and claims \u2014 auto liability, workers\u2019 comp, property, large-loss reserves, self-insurance net of recoveries.' },
+      { term: 'Other',                               definition: 'Acquisition integration costs, supply-chain rebates, litigation settlements, utilities, travel, equipment rentals.' },
+    ],
+  },
+},
+  },
 };
 
 
@@ -23763,6 +23873,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div>
                           <SectionHeading>// INCOME STATEMENT</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
+
+                          {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
+                          {IS.wmRevenue && (
+                            <>
+                              <SectionHeading>// REVENUE BY SERVICE LINE</SectionHeading>
+                              {IS.wmRevenue.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.wmRevenue.preamble}</div>}
+                              {IS.wmRevenue.netNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{IS.wmRevenue.netNote}</div>}
+                              {IS.wmRevenue.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                            </>
+                          )}
+                          {IS.wmOpex && (
+                            <>
+                              <SectionHeading>// OPERATING EXPENSES</SectionHeading>
+                              {IS.wmOpex.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.wmOpex.preamble}</div>}
+                              {IS.wmOpex.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                              {IS.wmOpex.definitions && (
+                                <details style={{marginTop:'4px',marginBottom:'12px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(245,158,11,0.35)',borderLeft:'2px solid rgba(245,158,11,0.6)',borderRadius:'3px',overflow:'hidden'}}>
+                                  <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'9px',color:'rgba(245,158,11,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>// EXPENSE DEFINITIONS · {IS.wmOpex.definitions.length} ›</summary>
+                                  <div style={{padding:'4px 12px 10px',borderTop:'0.5px solid rgba(245,158,11,0.2)'}}>
+                                    {IS.wmOpex.definitions.map((d, i) => (
+                                      <div key={i} style={{padding:'7px 0',borderBottom: i < IS.wmOpex.definitions.length-1 ? '0.5px solid rgba(245,158,11,0.12)' : 'none'}}>
+                                        <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{d.term}</div>
+                                        <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.definition}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </details>
+                              )}
+                            </>
+                          )}
 
                           {/* REVENUE & COSTS */}
                           {IS.netSales       && <TimeSeriesTable data={IS.netSales} />}
