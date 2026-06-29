@@ -9481,6 +9481,117 @@ const COST_BREAKDOWN = {
   },
 
   numbers: {
+    segments: {
+  membership: {
+    structure: {
+      asOf: 'FY2024',
+      types: [
+        { type: 'Gold Star', eligibility: 'Individuals', fee: '$60 / year', features: 'Includes 1 free household card. Not eligible for affiliates.' },
+        { type: 'Business', eligibility: 'Businesses (license / sales permit required)', fee: '$60 / year', features: 'May add affiliates (each pays the same annual fee). Includes 1 free household card.' },
+        { type: 'Executive (upgrade)', eligibility: 'Gold Star & Business members (US, Canada, Mexico, UK, Japan, Korea, Taiwan, Australia)', fee: '+$60 / year', features: '2% reward on qualified purchases (up to $1,000/yr). Executive members are ~73.3% of net sales.' },
+      ],
+      performance: [
+        { label: 'Renewal Rate (U.S. & Canada)', value: '92.9%' },
+        { label: 'Renewal Rate (Worldwide)', value: '90.5%' },
+        { label: 'Executive Sales Penetration', value: '~73.3%' },
+        { label: 'Standard Annual Fee (U.S.)', value: '$60' },
+        { label: 'Executive Upgrade (U.S.)', value: '+$60' },
+      ],
+      note: 'The real engine. Membership fees are near-100%-margin recurring revenue, renewed ~91% worldwide (92.9% US/Canada). Executive members (2% reward) drive ~73% of sales. Most members renew within 6 months of expiration; the count includes active members plus those not renewed within the prior 12 months.',
+    },
+    counts: [
+      { label: 'Gold Star Members', unit: 'thousands', series: [
+        {year:2006,value:17338},{year:2007,value:18600},{year:2008,value:20200},{year:2009,value:21500},{year:2010,value:22500},{year:2011,value:25000},{year:2012,value:26700},{year:2013,value:28900},{year:2014,value:31600},{year:2015,value:34000},{year:2016,value:36800},{year:2017,value:38600},{year:2018,value:40700},{year:2019,value:42900},{year:2020,value:46800},{year:2021,value:50200},{year:2022,value:54000},{year:2023,value:58800},{year:2024,value:63700},
+      ], note: 'Individual memberships \u2014 the bulk of the base, up ~3.7x since 2006.' },
+      { label: 'Business Members (incl. affiliates)', unit: 'thousands', series: [
+        {year:2006,value:5214},{year:2007,value:5400},{year:2008,value:5600},{year:2009,value:5700},{year:2010,value:5800},{year:2011,value:6300},{year:2012,value:6400},{year:2013,value:10100},{year:2014,value:10400},{year:2015,value:10600},{year:2016,value:10800},{year:2017,value:10800},{year:2018,value:10900},{year:2019,value:11000},{year:2020,value:11300},{year:2021,value:11500},{year:2022,value:11800},{year:2023,value:12200},{year:2024,value:12500},
+      ], note: 'The 2012\u21922013 jump (6.4M\u219210.1M) is a reporting change \u2014 affiliates/add-ons folded into the Business line from 2013. Hence Gold Star + Business equals Total Paid only from 2013 onward.' },
+      { label: 'Total Paid Members', unit: 'thousands', series: [
+        {year:2006,value:22552},{year:2007,value:27500},{year:2008,value:29200},{year:2009,value:30600},{year:2010,value:31600},{year:2011,value:35300},{year:2012,value:36900},{year:2013,value:39000},{year:2014,value:42000},{year:2015,value:44600},{year:2016,value:47600},{year:2017,value:49400},{year:2018,value:51600},{year:2019,value:53900},{year:2020,value:58100},{year:2021,value:61700},{year:2022,value:65800},{year:2023,value:71000},{year:2024,value:76200},
+      ], note: 'Fee-paying memberships \u2014 the number that actually generates membership revenue. 76.2M in 2024.' },
+      { label: 'Household Cards', unit: 'thousands', series: [
+        {year:2013,value:32200},{year:2014,value:34400},{year:2015,value:36700},{year:2016,value:39100},{year:2017,value:40900},{year:2018,value:42700},{year:2019,value:44600},{year:2020,value:47400},{year:2021,value:49900},{year:2022,value:53100},{year:2023,value:56900},{year:2024,value:60600},
+      ], note: 'Free secondary cards (1 per paid membership). First disclosed in 2013.' },
+      { label: 'Total Cardholders', unit: 'thousands', series: [
+        {year:2006,value:47679},{year:2007,value:50400},{year:2008,value:53500},{year:2009,value:56000},{year:2010,value:58000},{year:2011,value:64000},{year:2012,value:67000},{year:2013,value:71200},{year:2014,value:76400},{year:2015,value:81300},{year:2016,value:86700},{year:2017,value:90300},{year:2018,value:94300},{year:2019,value:98500},{year:2020,value:105500},{year:2021,value:111600},{year:2022,value:118900},{year:2023,value:127900},{year:2024,value:136800},
+      ], note: 'Total people who can shop = Paid Members + Household Cards. 136.8M cardholders in 2024.' },
+    ],
+  },
+
+  costGeography: {
+    description: 'Costco reports three geographic segments: United States, Canada, and Other International. Segment revenue ties exactly to consolidated net sales (no inter-segment eliminations). Each is shown with Total Revenue, Operating Income, and Total Assets, 2001\u20132024.',
+    segments: [
+      { name: 'United States', type: 'Core', note: 'The home market \u2014 ~72% of revenue. 614 warehouses across 47 states + Puerto Rico. California alone is ~27% of US sales.', metrics: [
+        { label: 'Total Revenue', unit: 'M USD', series: [
+          {year:2001,value:28636},{year:2002,value:32310},{year:2003,value:35119},{year:2004,value:39430},{year:2005,value:43064},{year:2006,value:48465},{year:2007,value:51532},{year:2008,value:56903},{year:2009,value:56548,down:true},{year:2010,value:59624},{year:2011,value:64904},{year:2012,value:71776},{year:2013,value:75493},{year:2014,value:80477},{year:2015,value:84351},{year:2016,value:86579},{year:2017,value:93889},{year:2018,value:102286},{year:2019,value:111751},{year:2020,value:122142},{year:2021,value:141398},{year:2022,value:165294},{year:2023,value:176630},{year:2024,value:184143},
+        ] },
+        { label: 'Operating Income', unit: 'M USD', series: [
+          {year:2001,value:813},{year:2002,value:924},{year:2003,value:927},{year:2004,value:1121},{year:2005,value:1167},{year:2006,value:1245},{year:2007,value:1217,down:true},{year:2008,value:1393},{year:2009,value:1273,down:true},{year:2010,value:1310},{year:2011,value:1395},{year:2012,value:1632},{year:2013,value:1810},{year:2014,value:1880},{year:2015,value:2308},{year:2016,value:2326},{year:2017,value:2644},{year:2018,value:2787},{year:2019,value:3063},{year:2020,value:3633},{year:2021,value:4262},{year:2022,value:5268},{year:2023,value:5392},{year:2024,value:6217},
+        ] },
+        { label: 'Total Assets', unit: 'M USD', series: [
+          {year:2001,value:8216},{year:2002,value:9418},{year:2003,value:10522},{year:2004,value:12107},{year:2005,value:13202},{year:2006,value:14009},{year:2007,value:15577},{year:2008,value:16345},{year:2009,value:17228},{year:2010,value:18247},{year:2011,value:18558},{year:2012,value:18401,down:true},{year:2013,value:20608},{year:2014,value:21929},{year:2015,value:23397},{year:2016,value:22511,down:true},{year:2017,value:24068},{year:2018,value:28207},{year:2019,value:32162},{year:2020,value:38366},{year:2021,value:39589},{year:2022,value:44904},{year:2023,value:49189},{year:2024,value:48816,down:true},
+        ] },
+      ] },
+      { name: 'Canada', type: 'Core', note: 'The second core market \u2014 108 warehouses, the most mature international segment with strong margins.', metrics: [
+        { label: 'Total Revenue', unit: 'M USD', series: [
+          {year:2001,value:4695},{year:2002,value:4750},{year:2003,value:5237},{year:2004,value:6042},{year:2005,value:6732},{year:2006,value:8121},{year:2007,value:8724},{year:2008,value:10528},{year:2009,value:9737,down:true},{year:2010,value:12051},{year:2011,value:14020},{year:2012,value:15717},{year:2013,value:17179},{year:2014,value:17943},{year:2015,value:17341,down:true},{year:2016,value:17028,down:true},{year:2017,value:18775},{year:2018,value:20689},{year:2019,value:21366},{year:2020,value:22434},{year:2021,value:27298},{year:2022,value:31675},{year:2023,value:33056},{year:2024,value:34874},
+        ] },
+        { label: 'Operating Income', unit: 'M USD', series: [
+          {year:2001,value:179},{year:2002,value:192},{year:2003,value:199},{year:2004,value:214},{year:2005,value:241},{year:2006,value:292},{year:2007,value:287,down:true},{year:2008,value:420},{year:2009,value:354},{year:2010,value:547},{year:2011,value:621},{year:2012,value:668},{year:2013,value:756},{year:2014,value:796},{year:2015,value:771,down:true},{year:2016,value:778},{year:2017,value:841},{year:2018,value:939},{year:2019,value:924,down:true},{year:2020,value:860,down:true},{year:2021,value:1176},{year:2022,value:1346},{year:2023,value:1448},{year:2024,value:1648},
+        ] },
+        { label: 'Total Assets', unit: 'M USD', series: [
+          {year:2001,value:1093},{year:2002,value:1198},{year:2003,value:1579},{year:2004,value:1717},{year:2005,value:2034},{year:2006,value:1913,down:true},{year:2007,value:2280},{year:2008,value:2477},{year:2009,value:2641},{year:2010,value:3147},{year:2011,value:3741},{year:2012,value:4237},{year:2013,value:4529},{year:2014,value:4892},{year:2015,value:3608,down:true},{year:2016,value:3480,down:true},{year:2017,value:4471},{year:2018,value:4303,down:true},{year:2019,value:4369},{year:2020,value:5270},{year:2021,value:5962},{year:2022,value:6558},{year:2023,value:6420,down:true},{year:2024,value:6915},
+        ] },
+      ] },
+      { name: 'Other International', type: 'Growth', note: 'Mexico, Japan, UK, Korea, Taiwan, Australia, China, Spain, France, Iceland, NZ, Sweden \u2014 168 warehouses. The fastest-growing segment (smaller base, less competition). Posted a small loss as recently as 2001.', metrics: [
+        { label: 'Total Revenue', unit: 'M USD', series: [
+          {year:2001,value:1464},{year:2002,value:1701},{year:2003,value:2189},{year:2004,value:2636},{year:2005,value:3155},{year:2006,value:3563},{year:2007,value:4145},{year:2008,value:5052},{year:2009,value:5137},{year:2010,value:6271},{year:2011,value:9991},{year:2012,value:11644},{year:2013,value:12484},{year:2014,value:14220},{year:2015,value:14507},{year:2016,value:15112},{year:2017,value:16361},{year:2018,value:18601},{year:2019,value:19586},{year:2020,value:22185},{year:2021,value:27233},{year:2022,value:29895},{year:2023,value:32604},{year:2024,value:35436},
+        ] },
+        { label: 'Operating Income', unit: 'M USD', series: [
+          {year:2001,value:-4},{year:2002,value:15},{year:2003,value:29},{year:2004,value:50},{year:2005,value:65},{year:2006,value:87},{year:2007,value:105},{year:2008,value:156},{year:2009,value:150,down:true},{year:2010,value:220},{year:2011,value:423},{year:2012,value:459},{year:2013,value:487},{year:2014,value:544},{year:2015,value:545},{year:2016,value:568},{year:2017,value:626},{year:2018,value:754},{year:2019,value:750,down:true},{year:2020,value:942},{year:2021,value:1270},{year:2022,value:1346},{year:2023,value:1274,down:true},{year:2024,value:1420},
+        ] },
+        { label: 'Total Assets', unit: 'M USD', series: [
+          {year:2001,value:779},{year:2002,value:1002},{year:2003,value:1089},{year:2004,value:1266},{year:2005,value:1427},{year:2006,value:1571},{year:2007,value:1750},{year:2008,value:1860},{year:2009,value:2110},{year:2010,value:2421},{year:2011,value:4462},{year:2012,value:4502},{year:2013,value:5146},{year:2014,value:6203},{year:2015,value:6435},{year:2016,value:7172},{year:2017,value:7808},{year:2018,value:8320},{year:2019,value:8869},{year:2020,value:11920},{year:2021,value:13717},{year:2022,value:12704,down:true},{year:2023,value:13385},{year:2024,value:14100},
+        ] },
+      ] },
+    ],
+  },
+
+  warehouses: {
+    asOf: 'September 1, 2024',
+    description: '890 warehouses worldwide at FY2024 year-end. Total = United States & Puerto Rico + Canada + Other International. Costco operates e-commerce sites in the US, Canada, UK, Mexico, Korea, Taiwan, Japan, and Australia.',
+    counts: [
+      { label: 'Total Warehouses', unit: 'count', series: [
+        {year:2005,value:433},{year:2006,value:458},{year:2007,value:488},{year:2008,value:512},{year:2009,value:527},{year:2010,value:540},{year:2011,value:592},{year:2012,value:608},{year:2013,value:634},{year:2014,value:663},{year:2015,value:686},{year:2016,value:715},{year:2017,value:741},{year:2018,value:762},{year:2019,value:782},{year:2020,value:795},{year:2021,value:815},{year:2022,value:838},{year:2023,value:861},{year:2024,value:890},
+      ] },
+      { label: 'United States & Puerto Rico', unit: 'count', series: [
+        {year:2005,value:338},{year:2006,value:358},{year:2007,value:383},{year:2008,value:398},{year:2009,value:406},{year:2010,value:416},{year:2011,value:429},{year:2012,value:439},{year:2013,value:451},{year:2014,value:468},{year:2015,value:480},{year:2016,value:501},{year:2017,value:514},{year:2018,value:527},{year:2019,value:543},{year:2020,value:552},{year:2021,value:564},{year:2022,value:578},{year:2023,value:591},{year:2024,value:614},
+      ] },
+      { label: 'Canada', unit: 'count', series: [
+        {year:2005,value:65},{year:2006,value:68},{year:2007,value:71},{year:2008,value:75},{year:2009,value:77},{year:2010,value:79},{year:2011,value:82},{year:2012,value:82},{year:2013,value:85},{year:2014,value:88},{year:2015,value:89},{year:2016,value:91},{year:2017,value:97},{year:2018,value:100},{year:2019,value:100},{year:2020,value:101},{year:2021,value:105},{year:2022,value:107},{year:2023,value:107},{year:2024,value:108},
+      ] },
+      { label: 'Other International', unit: 'count', series: [
+        {year:2005,value:30},{year:2006,value:48},{year:2007,value:53},{year:2008,value:59},{year:2009,value:65},{year:2010,value:67},{year:2011,value:81},{year:2012,value:87},{year:2013,value:98},{year:2014,value:107},{year:2015,value:117},{year:2016,value:123},{year:2017,value:130},{year:2018,value:135},{year:2019,value:139},{year:2020,value:142},{year:2021,value:146},{year:2022,value:153},{year:2023,value:163},{year:2024,value:168},
+      ] },
+    ],
+    byCountry2024: [
+      {country:'United States & Puerto Rico', count:614, detail:'47 states'},
+      {country:'Canada', count:108},
+      {country:'Mexico', count:40},
+      {country:'Japan', count:35},
+      {country:'United Kingdom', count:29},
+      {country:'Korea', count:19},
+      {country:'Australia', count:15},
+      {country:'Taiwan', count:14},
+      {country:'China', count:7},
+      {country:'Spain', count:4},
+      {country:'France', count:2},
+      {country:'Iceland', count:1},
+      {country:'New Zealand', count:1},
+      {country:'Sweden', count:1},
+    ],
+  },
+},
     employees: { label: 'Total Employees', unit: 'count', series: [
       {year:2006,value:127000},{year:2007,value:127000},{year:2008,value:137000},{year:2009,value:142000},{year:2010,value:147000},{year:2011,value:164000},{year:2012,value:174000},{year:2013,value:184000},{year:2014,value:195000},{year:2015,value:205000},{year:2016,value:218000},{year:2017,value:231000},{year:2018,value:245000},{year:2019,value:254000},{year:2020,value:273000},{year:2021,value:288000},{year:2022,value:304000},{year:2023,value:316000},{year:2024,value:333000},
     ], note: 'Total headcount grew from 127k (2006) to 333k (2024). 2024 composition: US 219k / Canada 53k / Other International 61k \u2014 so ~34% of staff is now outside the US. (Pre-2019 Costco reported a full-time / part-time split instead of a regional one; in 2018 it was 143k full-time + 102k part-time.)' },
@@ -24792,6 +24903,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         segments.unitCaseVolume && { id: 'unitCaseVolume', label: 'UNIT CASE VOLUME' },
                         segments.revenueByCountry && { id: 'revenueByCountry', label: 'REVENUE BY GEOGRAPHY' },
                         segments.byCountry && { id: 'byCountry', label: 'REVENUE BY GEOGRAPHY' },
+                        segments.membership && { id: 'membership', label: 'MEMBERSHIP' },
+                        segments.costGeography && { id: 'costGeography', label: 'REVENUE BY GEOGRAPHY' },
+                        segments.warehouses && { id: 'warehouses', label: 'WAREHOUSES' },
                         (segments.headlineInsight || segments.mix || segments.naCombined) && { id: 'hsyMix', label: 'SEGMENT MIX' },
                         segments.naConfectionery && { id: 'naConfectionery', label: 'NA CONFECTIONERY' },
                         segments.naSaltySnacks && { id: 'naSaltySnacks', label: 'NA SALTY SNACKS' },
@@ -25496,6 +25610,92 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </>
                       )}
 
+                          {/* ════════ COSTCO — MEMBERSHIP · GEOGRAPHY · WAREHOUSES ════════ */}
+                          {segments.membership && activeSub === 'membership' && (() => {
+                            const mem = segments.membership;
+                            return (
+                              <>
+                                <SectionHeading>// MEMBERSHIP</SectionHeading>
+                                {mem.structure && (
+                                  <>
+                                    {mem.structure.note && <div style={{padding:'10px 13px',background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.45)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'4px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700,letterSpacing:'1.5px'}}>⚡ THE ENGINE  </span>{mem.structure.note}</div>}
+                                    {mem.structure.types.map((t, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'8px'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'9px',flexWrap:'wrap',marginBottom:'5px'}}>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{t.type}</span>
+                                          <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,padding:'2px 8px',border:`0.5px solid ${amber}`,borderRadius:'3px'}}>{t.fee}</span>
+                                        </div>
+                                        <div style={{fontSize:'9.5px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.5px',marginBottom:'5px'}}>{t.eligibility}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{t.features}</div>
+                                      </div>
+                                    ))}
+                                    {mem.structure.performance && (
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'8px',marginTop:'4px',marginBottom:'14px'}}>
+                                        {mem.structure.performance.map((p, i) => (
+                                          <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'10px 12px'}}>
+                                            <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>{p.label}</div>
+                                            <div style={{fontSize:'17px',color:amber,fontFamily:'monospace',fontWeight:700}}>{p.value}</div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                                {mem.counts.map((ln, i) => (
+                                  <div key={i}>
+                                    <TimeSeriesTable data={ln} />
+                                    {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:`0.5px solid rgba(245,158,11,0.35)`,borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                  </div>
+                                ))}
+                              </>
+                            );
+                          })()}
+
+                          {segments.costGeography && activeSub === 'costGeography' && (
+                            <>
+                              <SectionHeading>// REVENUE BY GEOGRAPHY</SectionHeading>
+                              {segments.costGeography.description && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.costGeography.description}</div>}
+                              {segments.costGeography.segments.map((seg, si) => {
+                                const tc = seg.type === 'Core' ? amber : seg.type === 'Growth' ? 'rgba(34,197,94,0.9)' : 'rgba(148,163,184,0.85)';
+                                return (
+                                  <div key={si} style={{background:'rgba(0,0,0,0.35)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${tc}`,borderRadius:'4px',padding:'13px',marginBottom:'12px'}}>
+                                    <div style={{display:'flex',alignItems:'center',gap:'9px',flexWrap:'wrap',marginBottom:'7px'}}>
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{seg.name}</span>
+                                      <span style={{fontSize:'8px',color:tc,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,padding:'2px 7px',border:`0.5px solid ${tc}`,borderRadius:'3px',textTransform:'uppercase'}}>{seg.type}</span>
+                                    </div>
+                                    {seg.note && <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{seg.note}</div>}
+                                    {seg.metrics.map((m, mi) => (<div key={mi}><TimeSeriesTable data={m} /></div>))}
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+
+                          {segments.warehouses && activeSub === 'warehouses' && (() => {
+                            const wh = segments.warehouses;
+                            const maxC = Math.max(...wh.byCountry2024.map(c => c.count));
+                            return (
+                              <>
+                                <SectionHeading>// WAREHOUSES</SectionHeading>
+                                {wh.description && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{wh.description}</div>}
+                                {wh.counts.map((ln, i) => (<div key={i}><TimeSeriesTable data={ln} /></div>))}
+                                {wh.byCountry2024 && (
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// WAREHOUSES BY COUNTRY · {wh.asOf} · 890 TOTAL</div>
+                                    {wh.byCountry2024.map((c, i) => (
+                                      <div key={i} style={{display:'flex',alignItems:'center',gap:'9px',marginBottom:'5px'}}>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',fontWeight:600,width:'170px',flexShrink:0}}>{c.country}{c.detail ? <span style={{color:amberDim}}> · {c.detail}</span> : ''}</span>
+                                        <div style={{flex:1,height:'12px',background:'rgba(245,158,11,0.07)',borderRadius:'2px',overflow:'hidden'}}>
+                                          <div style={{width:`${(c.count/maxC*100).toFixed(1)}%`,height:'100%',background:`linear-gradient(90deg, ${amberDim}, ${amber})`,borderRadius:'2px'}}/>
+                                        </div>
+                                        <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'38px',textAlign:'right',flexShrink:0}}>{c.count}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       );
                     };
