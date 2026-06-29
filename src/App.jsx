@@ -9952,30 +9952,30 @@ const COVERAGE_DATA = [
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
   { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null, locked: true },
 
-  // === RAILWAY · CANADA & USA ===
-  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
-  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null, locked: true },
-  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null, locked: true },
-  { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railway',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
+  // === RAILWAYS · CANADA & USA ===
+  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
+  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railways',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null, locked: true },
+  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railways',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null, locked: true },
+  { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
 
-  // === FINANCIAL · USA ===
-  { ticker: 'V',     name: 'Visa',                           industry: 'Financial',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
-  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
-  { ticker: 'AXP',   name: 'American Express',               industry: 'Financial',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
-  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
+  // === FINANCIAL SERVICES · USA ===
+  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
+  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
+  { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
+  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
 
-  // === MEDIA · USA ===
-  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
-  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
-  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: null, locked: true },
+  // === MEDIA/PRESS · USA ===
+  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media/Press',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
+  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media/Press',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
+  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media/Press',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: null, locked: true },
 
-  // === BEVERAGE · USA ===
-  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
-  { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: PEP_BREAKDOWN },
+  // === BEVERAGES · USA ===
+  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverages',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
+  { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverages',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: PEP_BREAKDOWN },
 
-  // === WASTE · USA ===
-  { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: WM_BREAKDOWN },
-  { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null, locked: true },
+  // === WASTE & RECYCLING · USA ===
+  { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste & Recycling',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: WM_BREAKDOWN },
+  { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste & Recycling',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null, locked: true },
 
   // === CONGLOMERATE · USA ===
   { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
@@ -9986,14 +9986,28 @@ const COVERAGE_DATA = [
   // === FOOD · USA ===
   { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
 
+  // === CONSTRUCTION · USA ===
+  { ticker: 'CAT',   name: 'Caterpillar',                  industry: 'Construction',       country: 'United States', marketCap: 460000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'The world’s dominant maker of construction and mining equipment — a cyclical industrial giant riding the AI-infrastructure and data-center power buildout.', breakdown: null, locked: true },
+  { ticker: 'DE',    name: 'Deere & Company',              industry: 'Construction',       country: 'United States', marketCap: 166000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'North America’s agricultural-machinery leader — precision-farming tech and a captive dealer-network moat (“Nothing Runs Like a Deere”).', breakdown: null, locked: true },
+
+  // === CONSUMER GOODS · USA ===
+  { ticker: 'PG',    name: 'Procter & Gamble',             industry: 'Consumer Goods', country: 'United States', marketCap: 347000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Consumer-staples powerhouse — a portfolio of trusted household brands (Tide, Pampers, Gillette) with 70 straight years of dividend increases.', breakdown: null, locked: true },
+
+  // === HOTELS · USA ===
+  { ticker: 'HLT',   name: 'Hilton Worldwide',             industry: 'Hotels',      country: 'United States', marketCap: 79000000000,   marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Asset-light global hotel franchisor — fee-based royalty economics across 8,000+ properties from Waldorf Astoria to Hampton.', breakdown: null, locked: true },
+  { ticker: 'MAR',   name: 'Marriott International',        industry: 'Hotels',      country: 'United States', marketCap: 99000000000,   marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'The world’s largest hotel company — an asset-light, fee-driven model spanning Ritz-Carlton to Courtyard, powered by the Bonvoy loyalty flywheel.', breakdown: null, locked: true },
+
+  // === OIL & GAS · USA ===
+  { ticker: 'CVX',   name: 'Chevron',                      industry: 'Oil & Gas',           country: 'United States', marketCap: 340000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Integrated oil & gas major — upstream-to-downstream energy with a 4%+ dividend, now pivoting into powering AI data centers.', breakdown: null, locked: true },
+
   // === ENTERTAINMENT · NETHERLANDS ===
   { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
 
   // === WHOLESALE · AUSTRALIA ===
   { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: REH_BREAKDOWN },
 
-  // === BANKING · AUSTRALIA ===
-  { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null, locked: true },
+  // === BANKS · AUSTRALIA ===
+  { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banks',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null, locked: true },
 
   // === RETAIL · AUSTRALIA ===
   { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null, locked: true },
@@ -10003,17 +10017,17 @@ const COVERAGE_DATA = [
   // === INFRASTRUCTURE · AUSTRALIA ===
   { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null, locked: true },
 
-  // === EXCHANGE · AUSTRALIA ===
-  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null, locked: true },
+  // === STOCK EXCHANGES · AUSTRALIA ===
+  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Stock Exchanges',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null, locked: true },
 
   // === TECHNOLOGY · AUSTRALIA ===
   { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null, locked: true },
 
-  // === MEDIA · AUSTRALIA ===
-  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null, locked: true },
+  // === MEDIA/PRESS · AUSTRALIA ===
+  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media/Press',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null, locked: true },
 
-  // === EXCHANGE · ISRAEL ===
-  { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Exchange',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets.', breakdown: null, locked: true },
+  // === STOCK EXCHANGES · ISRAEL ===
+  { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Stock Exchanges',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets.', breakdown: null, locked: true },
 ];
 
 function MuzzApp() {
@@ -18284,7 +18298,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           const portfolioPLLocal    = portfolioValueLocal - portfolioCostLocal;
           const portfolioPLPctLocal = portfolioCostLocal > 0 ? (portfolioPLLocal / portfolioCostLocal) * 100 : 0;
           const holdingsCountLocal  = (holdingsResearch || []).filter(h => h && h.ticker).length;
-          const coverageCountLocal  = 32;
+          const coverageCountLocal  = COVERAGE_DATA.length;
           const fmtCurrencyLocal = (n) => '$' + Math.round(Math.abs(n||0)).toLocaleString();
 
           // Live clock
