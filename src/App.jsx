@@ -8932,6 +8932,132 @@ const WM_BREAKDOWN = {
   // per-segment P&L + geography, plus balance (PP&E + airspace + facilities) pending the next pass
   // ═══════════════════════════════════════════════════════════════
   numbers: {
+    cashFlow: {
+  operatingCashFlow: { label: 'Operating Cash Flow', unit: 'M USD', series: [
+    {year:2002,value:2153},{year:2003,value:1926,down:true},{year:2004,value:2218},{year:2005,value:2391},{year:2006,value:2540},{year:2007,value:2439,down:true},{year:2008,value:2575},{year:2009,value:2362,down:true},{year:2010,value:2275,down:true},{year:2011,value:2469},{year:2012,value:2295,down:true},{year:2013,value:2455},{year:2014,value:2331,down:true},{year:2015,value:2528},{year:2016,value:3003},{year:2017,value:3180},{year:2018,value:3570},{year:2019,value:3874},{year:2020,value:3403,down:true},{year:2021,value:4338},{year:2022,value:4536},{year:2023,value:4719},{year:2024,value:5390},
+  ], note: 'The cash engine \u2014 OCF more than doubled from ~$2.3B (2010) to $5.4B (2024). Remarkably steady through recessions, the hallmark of an essential service.' },
+
+  capex: { label: 'Capital Expenditures', unit: 'M USD', series: [
+    {year:2002,value:1287},{year:2003,value:1200},{year:2004,value:1258},{year:2005,value:1180},{year:2006,value:1329},{year:2007,value:1211},{year:2008,value:1221},{year:2009,value:1179},{year:2010,value:1104},{year:2011,value:1324},{year:2012,value:1510},{year:2013,value:1271},{year:2014,value:1151},{year:2015,value:1233},{year:2016,value:1339},{year:2017,value:1509},{year:2018,value:1694},{year:2019,value:1818},{year:2020,value:1632},{year:2021,value:1904},{year:2022,value:2587,spike:true},{year:2023,value:2895,spike:true},{year:2024,value:3231,spike:true},
+  ], note: 'Shown as a positive magnitude (cash outflow). The 2022\u20132024 ramp reflects sustainability investments \u2014 renewable natural gas (RNG) plants and recycling automation.' },
+
+  capexRatio: { label: 'CapEx as % of Operating Cash Flow', unit: '%', series: [
+    {year:2002,value:59.78},{year:2003,value:62.33},{year:2004,value:56.74},{year:2005,value:49.34},{year:2006,value:52.32},{year:2007,value:49.65},{year:2008,value:47.42},{year:2009,value:49.90},{year:2010,value:48.53},{year:2011,value:53.63},{year:2012,value:65.80},{year:2013,value:51.76},{year:2014,value:49.37},{year:2015,value:48.78},{year:2016,value:44.59},{year:2017,value:47.45},{year:2018,value:47.44},{year:2019,value:46.93},{year:2020,value:47.96},{year:2021,value:43.89},{year:2022,value:57.03,spike:true},{year:2023,value:61.35,spike:true},{year:2024,value:59.94,spike:true},
+  ], note: 'Reinvestment intensity. 2002\u20132024 average 52.26%; 2014\u20132024 average 50.43%. The 2022\u201324 jump to ~60% is the elevated RNG/recycling growth-capex cycle \u2014 expected to normalise as those plants come online.' },
+
+  freeCashFlow: { label: 'Free Cash Flow (Owner Earnings)', unit: 'M USD', series: [
+    {year:2002,value:866},{year:2003,value:726,down:true},{year:2004,value:960},{year:2005,value:1211},{year:2006,value:1211},{year:2007,value:1228},{year:2008,value:1354},{year:2009,value:1183,down:true},{year:2010,value:1171,down:true},{year:2011,value:1145,down:true},{year:2012,value:785,down:true},{year:2013,value:1184},{year:2014,value:1180,down:true},{year:2015,value:1295},{year:2016,value:1664},{year:2017,value:1671},{year:2018,value:1876},{year:2019,value:2056},{year:2020,value:1771,down:true},{year:2021,value:2434},{year:2022,value:1949,down:true},{year:2023,value:1824,down:true},{year:2024,value:2159},
+  ], note: 'FCF = Operating Cash Flow \u2212 CapEx. CAGR 2002\u20132024 = 4.24%. The 2022\u201323 dip is the growth-capex cycle compressing FCF, not a deterioration in the business \u2014 OCF kept rising throughout.' },
+
+  debtSummary: {
+    asOf: 'December 31, 2024',
+    preamble: 'WM funds itself with mostly-unsecured investment-grade debt, a commercial-paper program backed by a $3.5B revolver, and senior notes laddered out for decades. The 2024 capital structure was reshaped by the ~$7.2B Stericycle acquisition.',
+    categories: [
+      { title: 'Debt Maturing Within 12 Months (~$4.0B)', detail: '$1.4B tax-exempt bonds with expiring term rates; $1.2B commercial paper; $422M 3.125% senior notes (Mar 2025); $500M 0.750% senior notes (Nov 2025); $438M other (incl. $298M tax-exempt bonds). Of this, $2.6B was reclassified as long-term (intent & ability to refinance under the revolver); $1.4B stays current.' },
+      { title: 'Term Credit Agreement (Stericycle funding)', detail: '$7.2B delayed-draw facility (Aug 2024). $5.2B drawn Oct 2024 to fund the Stericycle acquisition, then fully repaid Nov 2024 using $5.2B of new senior notes. Agreement terminated ($7M loss on extinguishment).' },
+      { title: '$3.5B Revolving Credit Facility', detail: 'Amended & extended May 2024 \u2192 matures May 2029. $1.0B accordion feature. Borrowings in USD & CAD (CAD limit $375M). Backs cash borrowings, letters of credit, and commercial paper. At 12/31/24: $1.2B CP + $224M letters of credit drawn \u2192 $2.1B remaining capacity.' },
+      { title: 'Commercial Paper Program', detail: 'Borrow up to 397 days at competitive rates, fully backstopped by the $3.5B revolver. $1.2B outstanding at 12/31/24. 2024 activity: $12.3B repaid, $12.7B borrowed.' },
+      { title: 'Senior Notes (2024 activity)', detail: 'Issued $750M 4.95% (2027) + $750M 4.95% (2031) for $1.49B (used to reduce CP). Repaid $156M 3.50% (matured May 2024). Nov 2024 issued $5.2B in five tranches: $1.0B 4.50% (2028), $700M 4.65% (2030), $750M 4.80% (2032), $1.5B 4.95% (2035), $1.25B 5.35% (2054).' },
+      { title: 'Stericycle Notes Exchange (Nov 2024)', detail: '$500M Stericycle 3.875% notes offered for exchange into WM notes (same terms, less restrictive covenants). $485M (97%) tendered and exchanged; $15M remains a Stericycle obligation.' },
+      { title: 'Tax-Exempt & Other Debt', detail: 'Issued $50M tax-exempt bonds (solid waste, recycling, RNG projects); repaid $60M at maturity. +$316M note payable (low-income housing investment); +$153M finance leases (non-cash); repaid $135M other debt at maturity. Debt is mostly unsecured \u2014 exceptions are finance leases + low-income housing notes.' },
+    ],
+    scheduledPayments: [
+      {period:'2025', amount:2.61},{period:'2026', amount:0.75},{period:'2027', amount:2.02},{period:'2028', amount:1.97},{period:'2029', amount:2.05},{period:'Thereafter', amount:14.68},
+    ],
+    covenants: 'Most restrictive covenant = Leverage Ratio \u2264 3.75\u00d7 EBITDA. Can rise to 4.25\u00d7 for up to 4 quarters after a large (>$200M) acquisition, then must revert to 3.75\u00d7 for \u22651 quarter before the next elevated period. WM was compliant with all covenants at Dec 31, 2024.',
+    derivatives: 'Treasury locks used to hedge the new note issuance \u2014 locked 10-year ($900M) and 30-year ($650M) Treasuries, settled on issuance for $35M cash received (gains deferred & amortised over the note lives). Also minor, immaterial natural-gas hedges. WM uses derivatives narrowly for hedging, not speculation.',
+  },
+},
+    balanceSheet: {
+  cash: { label: 'Cash & Cash Equivalents', unit: 'M USD', series: [
+    {year:2005,value:666},{year:2006,value:614},{year:2007,value:348},{year:2008,value:480},{year:2009,value:1140,spike:true},{year:2010,value:539},{year:2011,value:258},{year:2012,value:194},{year:2013,value:58},{year:2014,value:1307,spike:true},{year:2015,value:39},{year:2016,value:32},{year:2017,value:22},{year:2018,value:61},{year:2019,value:3561,spike:true},{year:2020,value:553},{year:2021,value:118},{year:2022,value:351},{year:2023,value:458},{year:2024,value:414},
+  ], note: 'WM runs a deliberately thin cash balance \u2014 spikes (2009, 2014, 2019) are pre-funding for acquisitions/debt actions, not idle cash.' },
+
+  accountsReceivable: { label: 'Accounts Receivable', unit: 'M USD', series: [
+    {year:2005,value:1757},{year:2006,value:1650},{year:2007,value:1674},{year:2008,value:1463},{year:2009,value:1408},{year:2010,value:1510},{year:2011,value:1631},{year:2012,value:1737},{year:2013,value:1699},{year:2014,value:1587},{year:2015,value:1549},{year:2016,value:1700},{year:2017,value:1805},{year:2018,value:1931},{year:2019,value:1949},{year:2020,value:2097},{year:2021,value:2278},{year:2022,value:2461},{year:2023,value:2633},{year:2024,value:3272,spike:true},
+  ], note: '2024 jump reflects the Stericycle acquisition adding a healthcare receivables book.' },
+
+  ppeNet: { label: 'Property & Equipment, Net', unit: 'M USD', series: [
+    {year:2010,value:11868},{year:2011,value:12242},{year:2012,value:12651},{year:2013,value:12344,down:true},{year:2014,value:10657,down:true},{year:2015,value:10665},{year:2016,value:10950},{year:2017,value:11559},{year:2018,value:11942},{year:2019,value:12893},{year:2020,value:14148},{year:2021,value:14419},{year:2022,value:15719},{year:2023,value:16968},{year:2024,value:19340},
+  ], note: 'The asset base \u2014 landfills, fleet, equipment, containers. Net of accumulated depreciation + landfill airspace depletion. Full component breakdown coming in the asset detail.' },
+
+  totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [
+    {year:2005,value:3451},{year:2006,value:3182,down:true},{year:2007,value:2480,down:true},{year:2008,value:2335,down:true},{year:2009,value:3010},{year:2010,value:2482,down:true},{year:2011,value:2379,down:true},{year:2012,value:2423},{year:2013,value:2499},{year:2014,value:3641},{year:2015,value:2345,down:true},{year:2016,value:2376},{year:2017,value:2694},{year:2018,value:2645,down:true},{year:2019,value:6209,spike:true},{year:2020,value:3540,down:true},{year:2021,value:3069,down:true},{year:2022,value:3551},{year:2023,value:3804},{year:2024,value:4774},
+  ] },
+
+  totalAssets: { label: 'Total Assets', unit: 'M USD', series: [
+    {year:2005,value:21135},{year:2006,value:20600,down:true},{year:2007,value:20175,down:true},{year:2008,value:20227},{year:2009,value:21154},{year:2010,value:21476},{year:2011,value:22569},{year:2012,value:23097},{year:2013,value:22603,down:true},{year:2014,value:21412,down:true},{year:2015,value:20367,down:true},{year:2016,value:20859},{year:2017,value:21829},{year:2018,value:22650},{year:2019,value:27743,spike:true},{year:2020,value:29345},{year:2021,value:29097,down:true},{year:2022,value:31367},{year:2023,value:32823},{year:2024,value:44567,spike:true},
+  ], note: '2024 jump to $44.6B is the ~$7.2B Stericycle acquisition landing on the balance sheet (goodwill + intangibles + assets).' },
+
+  totalCurrentLiabilities: { label: 'Total Current Liabilities', unit: 'M USD', series: [
+    {year:2005,value:3257},{year:2006,value:3268},{year:2007,value:2598},{year:2008,value:3036},{year:2009,value:2901},{year:2010,value:2485},{year:2011,value:3068},{year:2012,value:3036},{year:2013,value:3014},{year:2014,value:3485},{year:2015,value:2510},{year:2016,value:2794},{year:2017,value:3262},{year:2018,value:3108},{year:2019,value:3144},{year:2020,value:3553},{year:2021,value:4082},{year:2022,value:4394},{year:2023,value:4226},{year:2024,value:6258,spike:true},
+  ] },
+
+  currentRatio: { label: 'Current Liabilities \u00f7 Current Assets', unit: 'x', series: [
+    {year:2005,value:0.944},{year:2006,value:1.027},{year:2007,value:1.048},{year:2008,value:1.300},{year:2009,value:0.964},{year:2010,value:1.001},{year:2011,value:1.290},{year:2012,value:1.253},{year:2013,value:1.206},{year:2014,value:0.957},{year:2015,value:1.070},{year:2016,value:1.176},{year:2017,value:1.211},{year:2018,value:1.175},{year:2019,value:0.506},{year:2020,value:1.004},{year:2021,value:1.330},{year:2022,value:1.237},{year:2023,value:1.111},{year:2024,value:1.311},
+  ] },
+
+  longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [
+    {year:2005,value:8165},{year:2006,value:7495},{year:2007,value:8008},{year:2008,value:7491},{year:2009,value:8124},{year:2010,value:8674},{year:2011,value:9125},{year:2012,value:9173},{year:2013,value:9500},{year:2014,value:8345},{year:2015,value:8676},{year:2016,value:8893},{year:2017,value:8752},{year:2018,value:9594},{year:2019,value:13280,spike:true},{year:2020,value:13259},{year:2021,value:12697},{year:2022,value:14570},{year:2023,value:15895},{year:2024,value:22541,spike:true},
+  ], note: '2019 step-up funded the ADS acquisition era; 2024 surge to $22.5B funded Stericycle ($5.2B senior notes).' },
+
+  ltDebtToEquity: { label: 'Long-Term Debt / Equity', unit: 'x', series: [
+    {year:2005,value:1.33},{year:2006,value:1.20},{year:2007,value:1.38},{year:2008,value:1.27},{year:2009,value:1.23},{year:2010,value:1.32},{year:2011,value:1.43},{year:2012,value:1.37},{year:2013,value:1.58},{year:2014,value:1.42},{year:2015,value:1.62},{year:2016,value:1.67},{year:2017,value:1.45},{year:2018,value:1.53},{year:2019,value:1.88},{year:2020,value:1.78},{year:2021,value:1.78},{year:2022,value:2.12},{year:2023,value:2.30},{year:2024,value:2.73,spike:true},
+  ], note: '2015\u20132024 average 1.89\u00d7. Crept up post-Stericycle but well within covenant limits (leverage cap 3.75\u00d7 EBITDA).' },
+
+  ltDebtToNetIncome: { label: 'Long-Term Debt / Net Income', unit: 'x', series: [
+    {year:2005,value:6.05},{year:2006,value:5.26},{year:2007,value:6.29},{year:2008,value:6.35},{year:2009,value:7.51},{year:2010,value:8.60},{year:2011,value:9.58},{year:2012,value:9.09},{year:2013,value:7.20},{year:2014,value:6.24},{year:2015,value:11.54,spike:true},{year:2016,value:7.54},{year:2017,value:4.49},{year:2018,value:4.99},{year:2019,value:7.95},{year:2020,value:8.86},{year:2021,value:6.99},{year:2022,value:6.50},{year:2023,value:6.98},{year:2024,value:8.21},
+  ], note: '2015\u20132024 average 7.41\u00d7. The 2015 spike (11.54\u00d7) is the impairment-driven net-income trough, not a debt surge.' },
+
+  totalDebt: { label: 'Total Debt', unit: 'M USD', series: [
+    {year:2005,value:8687},{year:2006,value:8317},{year:2007,value:8337},{year:2008,value:8326},{year:2009,value:8873},{year:2010,value:8907},{year:2011,value:9756},{year:2012,value:9916},{year:2013,value:10226},{year:2014,value:9435},{year:2015,value:8929},{year:2016,value:9310},{year:2017,value:9491},{year:2018,value:10026},{year:2019,value:13498},{year:2020,value:13810},{year:2021,value:13405},{year:2022,value:14984},{year:2023,value:16229},{year:2024,value:23900,spike:true},
+  ] },
+
+  debtToEquity: { label: 'Total Debt / Equity', unit: 'x', series: [
+    {year:2005,value:1.42},{year:2006,value:1.34},{year:2007,value:1.44},{year:2008,value:1.41},{year:2009,value:1.35},{year:2010,value:1.35},{year:2011,value:1.53},{year:2012,value:1.49},{year:2013,value:1.70},{year:2014,value:1.60},{year:2015,value:1.66},{year:2016,value:1.75},{year:2017,value:1.57},{year:2018,value:1.60},{year:2019,value:1.91},{year:2020,value:1.85},{year:2021,value:1.88},{year:2022,value:2.18},{year:2023,value:2.35},{year:2024,value:2.90,spike:true},
+  ], note: '2015\u20132024 average 1.97\u00d7. Total leverage including finance leases and short-term borrowings.' },
+
+  additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [
+    {year:2005,value:4486},{year:2006,value:4513},{year:2007,value:4542},{year:2008,value:4558},{year:2009,value:4563},{year:2010,value:4526},{year:2011,value:4561},{year:2012,value:4589},{year:2013,value:4596},{year:2014,value:4585},{year:2015,value:4827},{year:2016,value:4850},{year:2017,value:4983},{year:2018,value:4993},{year:2019,value:5049},{year:2020,value:5129},{year:2021,value:5169},{year:2022,value:5314},{year:2023,value:5351},{year:2024,value:5496},
+  ] },
+
+  retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [
+    {year:2005,value:3615},{year:2006,value:4410},{year:2007,value:5080},{year:2008,value:5631},{year:2009,value:6053},{year:2010,value:6400},{year:2011,value:6721},{year:2012,value:6879},{year:2013,value:6289,down:true},{year:2014,value:6888},{year:2015,value:6939},{year:2016,value:7388},{year:2017,value:8588},{year:2018,value:9797},{year:2019,value:10592},{year:2020,value:11159},{year:2021,value:12004},{year:2022,value:13167},{year:2023,value:14334},{year:2024,value:15858},
+  ], note: 'Compounding retained capital \u2014 from $3.6B (2005) to $15.9B (2024). The retained-earnings test below grades how well that was reinvested.' },
+
+  shareholderEquity: { label: 'Shareholder Equity', unit: 'M USD', series: [
+    {year:2005,value:6121},{year:2006,value:6222},{year:2007,value:5792},{year:2008,value:5902},{year:2009,value:6591},{year:2010,value:6591},{year:2011,value:6390},{year:2012,value:6675},{year:2013,value:6002},{year:2014,value:5889},{year:2015,value:5367},{year:2016,value:5320},{year:2017,value:6042},{year:2018,value:6276},{year:2019,value:7070},{year:2020,value:7454},{year:2021,value:7126},{year:2022,value:6864},{year:2023,value:6896},{year:2024,value:8254},
+  ], note: 'Equity stayed roughly flat (~$5\u20138B) for two decades despite huge profits \u2014 because WM returned almost everything via buybacks and dividends. Low equity + high net income = the very high ROE.' },
+
+  investedCapital: { label: 'Invested Capital', unit: 'M USD', series: [
+    {year:2005,value:14142},{year:2006,value:13925},{year:2007,value:13781},{year:2008,value:13748},{year:2009,value:14324},{year:2010,value:14959},{year:2011,value:15888},{year:2012,value:16397},{year:2013,value:16170},{year:2014,value:14017},{year:2015,value:14257},{year:2016,value:14598},{year:2017,value:15511},{year:2018,value:16241},{year:2019,value:17007},{year:2020,value:20711},{year:2021,value:20413},{year:2022,value:21497},{year:2023,value:22667},{year:2024,value:31740},
+  ], note: 'Debt + equity funding the business. The denominator for ROIC \u2014 2024 jump reflects the Stericycle-funded debt.' },
+
+  sharesOutstanding: { label: 'Shares Outstanding (M)', unit: 'M shares', series: [
+    {year:2005,value:552.253},{year:2006,value:533.684},{year:2007,value:500.119},{year:2008,value:490.736},{year:2009,value:486.120},{year:2010,value:475.047},{year:2011,value:460.533},{year:2012,value:464.220},{year:2013,value:464.321},{year:2014,value:458.537},{year:2015,value:447.177},{year:2016,value:439.316},{year:2017,value:433.319},{year:2018,value:423.983},{year:2019,value:424.326},{year:2020,value:422.802},{year:2021,value:416.124},{year:2022,value:407.886},{year:2023,value:401.455},{year:2024,value:401.494},
+  ], note: 'Relentless buybacks \u2014 share count fell ~27% from 552M (2005) to 401M (2024). This shrinking denominator is why EPS (6.75% CAGR) outpaced net income (4.59% CAGR).' },
+
+  bookValuePerShare: { label: 'Book Value Per Share (BVPS)', unit: 'USD per share', series: [
+    {year:2005,value:11.08},{year:2006,value:11.66},{year:2007,value:11.59},{year:2008,value:12.03},{year:2009,value:13.56},{year:2010,value:13.87},{year:2011,value:13.88},{year:2012,value:14.38},{year:2013,value:12.93},{year:2014,value:12.84},{year:2015,value:12.00},{year:2016,value:12.11},{year:2017,value:13.95},{year:2018,value:14.80},{year:2019,value:16.66},{year:2020,value:17.63},{year:2021,value:17.12},{year:2022,value:16.83},{year:2023,value:17.17},{year:2024,value:20.56},
+  ], cagr2015_2024: 6.24, cagrLabel: 'BVPS CAGR 2015\u20132024' },
+
+  returns: {
+    roe:  [ {year:2005,value:22.06},{year:2006,value:22.92},{year:2007,value:21.98},{year:2008,value:19.99},{year:2009,value:16.42},{year:2010,value:15.31},{year:2011,value:14.91},{year:2012,value:15.12},{year:2013,value:21.99},{year:2014,value:22.72},{year:2015,value:14.01},{year:2016,value:22.18},{year:2017,value:32.26},{year:2018,value:30.64},{year:2019,value:23.64},{year:2020,value:20.07},{year:2021,value:25.50},{year:2022,value:32.63},{year:2023,value:33.00},{year:2024,value:33.26} ],
+    roic: [ {year:2005,value:8.63},{year:2006,value:10.92},{year:2007,value:10.57},{year:2008,value:8.92},{year:2009,value:9.74},{year:2010,value:9.41},{year:2011,value:8.98},{year:2012,value:10.90},{year:2013,value:8.88},{year:2014,value:12.11},{year:2015,value:10.76},{year:2016,value:11.19},{year:2017,value:15.43},{year:2018,value:14.51},{year:2019,value:13.30},{year:2020,value:9.84},{year:2021,value:11.92},{year:2022,value:12.69},{year:2023,value:13.40},{year:2024,value:10.42} ],
+    roa:  [ {year:2005,value:6.39},{year:2006,value:6.92},{year:2007,value:6.31},{year:2008,value:5.83},{year:2009,value:5.11},{year:2010,value:4.70},{year:2011,value:4.22},{year:2012,value:4.37},{year:2013,value:5.84},{year:2014,value:6.25},{year:2015,value:3.69},{year:2016,value:5.66},{year:2017,value:8.93},{year:2018,value:8.49},{year:2019,value:6.02},{year:2020,value:5.10},{year:2021,value:6.24},{year:2022,value:7.14},{year:2023,value:6.93},{year:2024,value:6.16} ],
+    averages: { roe: 26.72, roic: 12.35, roa: 6.69 },
+  },
+
+  retainedEarningsTest: {
+    period: 'FY2005 \u2013 FY2024',
+    startYear: 2005, endYear: 2024,
+    retainedEarningsStart: 3615, retainedEarningsEnd: 15858,
+    retainedEarningsIncrease: 12.243,
+    marketCapIncrease: 65.130,
+    multiplier: 5.32,
+    verdict: 'Strong pass. Retained earnings grew $12.24B (2005\u20132024) while market cap grew $65.13B \u2014 about $5.32 of market value created per $1 retained, comfortably above the $1 hurdle. Effective capital allocation over two decades.',
+  },
+},
     incomeStatement: {
   netSales: { label: 'Revenue (Operating Revenues)', unit: 'M USD', series: [
     {year:2002,value:11124},{year:2003,value:12493},{year:2004,value:13338},{year:2005,value:13397},{year:2006,value:13355,down:true},{year:2007,value:13289,down:true},{year:2008,value:13383},{year:2009,value:11790,down:true},{year:2010,value:12515},{year:2011,value:13378},{year:2012,value:13649},{year:2013,value:13982},{year:2014,value:13996},{year:2015,value:12641,down:true},{year:2016,value:13609},{year:2017,value:14485},{year:2018,value:14914},{year:2019,value:15455},{year:2020,value:15218,down:true},{year:2021,value:17931},{year:2022,value:19698},{year:2023,value:20465},{year:2024,value:22053},
@@ -25128,6 +25254,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+                          {BS.sharesOutstanding && (<><TimeSeriesTable data={BS.sharesOutstanding} />{BS.sharesOutstanding.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{BS.sharesOutstanding.note}</div>}</>)}
                           {BS.bookValuePerShare && (
                             <>
                               <TimeSeriesTable data={BS.bookValuePerShare} />
@@ -25613,8 +25740,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// CASH FLOW</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
 
-                          {cashFlow.operatingCashFlow && <TimeSeriesTable data={cashFlow.operatingCashFlow} />}
-                          {cashFlow.capex && <TimeSeriesTable data={cashFlow.capex} />}
+                          {cashFlow.operatingCashFlow && (<><TimeSeriesTable data={cashFlow.operatingCashFlow} />{cashFlow.operatingCashFlow.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.operatingCashFlow.note}</div>}</>)}
+                          {cashFlow.capex && (<><TimeSeriesTable data={cashFlow.capex} />{cashFlow.capex.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.capex.note}</div>}</>)}
                           {cashFlow.capexRatio && (
                             <>
                               <TimeSeriesTable data={cashFlow.capexRatio} />
@@ -25625,7 +25752,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
-                          {cashFlow.freeCashFlow && <TimeSeriesTable data={cashFlow.freeCashFlow} />}
+                          {cashFlow.freeCashFlow && (<><TimeSeriesTable data={cashFlow.freeCashFlow} />{cashFlow.freeCashFlow.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.freeCashFlow.note}</div>}</>)}
+                          {cashFlow.debtSummary && (() => {
+                            const ds = cashFlow.debtSummary;
+                            const maxPay = Math.max(...ds.scheduledPayments.map(p=>p.amount));
+                            return (
+                              <>
+                                <SectionHeading>// DEBT & FINANCING · {ds.asOf}</SectionHeading>
+                                {ds.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{ds.preamble}</div>}
+                                {ds.categories.map((c,i)=>(
+                                  <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'3px',padding:'11px 13px',marginBottom:'7px'}}>
+                                    <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'5px'}}>{c.title}</div>
+                                    <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.74)',fontFamily:'monospace',lineHeight:1.55,letterSpacing:'0.3px'}}>{c.detail}</div>
+                                  </div>
+                                ))}
+                                {ds.scheduledPayments && (
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'12px 13px',marginTop:'5px',marginBottom:'10px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'9px'}}>// SCHEDULED DEBT MATURITIES ($B)</div>
+                                    {ds.scheduledPayments.map((p,i)=>(
+                                      <div key={i} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'5px'}}>
+                                        <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:600,width:'64px',flexShrink:0}}>{p.period}</span>
+                                        <div style={{flex:1,height:'12px',background:'rgba(245,158,11,0.07)',borderRadius:'2px',overflow:'hidden'}}>
+                                          <div style={{width:`${(p.amount/maxPay*100).toFixed(1)}%`,height:'100%',background:`linear-gradient(90deg, ${amberDim}, ${amber})`,borderRadius:'2px'}}/>
+                                        </div>
+                                        <span style={{fontSize:'9.5px',color:amber,fontFamily:'monospace',fontWeight:700,width:'48px',textAlign:'right',flexShrink:0}}>${p.amount.toFixed(2)}B</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {ds.covenants && <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.55,letterSpacing:'0.3px',marginBottom:'8px'}}><span style={{color:amber,fontWeight:700}}>Covenants — </span>{ds.covenants}</div>}
+                                {ds.derivatives && <div style={{padding:'10px 12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.55,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(34,197,94,0.9)',fontWeight:700}}>Derivatives — </span>{ds.derivatives}</div>}
+                              </>
+                            );
+                          })()}
                         </>
                       )}
                         </div>
