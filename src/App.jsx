@@ -8969,6 +8969,91 @@ const WM_BREAKDOWN = {
   },
 },
     balanceSheet: {
+    wmAssetDetail: {
+  lifeDistribution: {
+    asOf: 'December 31, 2024',
+    buckets: [
+      {range:'0\u20135 years', count:28},{range:'6\u201310 years', count:22},{range:'11\u201320 years', count:53},{range:'21\u201340 years', count:62},{range:'41+ years', count:97},
+    ],
+    total: 262,
+    note: '262 landfills (221 owned, 29 operated under lease, 12 under other contract). Weighted-average remaining landfill life ~38 years (~39 including expansion airspace). WM is seeking expansion permits at 18 landfills. ~239 sites are in closure or post-closure.',
+  },
+  assetRollforward: {
+    asOf: 'Year ended December 31, 2024',
+    rows: [
+      {label:'Balance \u2014 Dec 31, 2023', cost:19473, depletion:-11643, nbv:7830, bound:true},
+      {label:'Capital additions', cost:832, depletion:0, nbv:832},
+      {label:'Asset retirement obligations', cost:91, depletion:0, nbv:91},
+      {label:'Depletion of landfill airspace', cost:0, depletion:-795, nbv:-795},
+      {label:'Foreign currency translation', cost:-100, depletion:47, nbv:-53},
+      {label:'Retirements & other adjustments', cost:-23, depletion:132, nbv:109},
+      {label:'Balance \u2014 Dec 31, 2024', cost:20273, depletion:-12259, nbv:8014, bound:true},
+    ],
+    note: 'Landfill assets only (the cost to prepare a landfill to accept waste \u2014 land, permitting, liners, leachate/gas systems, plus capitalized future capping/closure). Estimated construction spend: ~$845M in 2025 and ~$1.8B in 2026\u20132027 combined.',
+  },
+  airspace: {
+    description: 'Permitted landfill airspace remaining at year-end, in millions of tons. Remaining Permitted = legally allowed to accept; Expansion = additional capacity WM is pursuing via new permits; Total = the full potential pool. This is the moat \u2014 irreplaceable, hard-to-permit capacity that depletes as waste is buried and is replenished only by winning expansions (11 granted in 2024, 13 in 2023).',
+    lines: [
+      { label: 'Remaining Permitted Capacity', unit: 'M tons', series: [
+        {year:2010,value:4391},{year:2011,value:4485},{year:2012,value:4558},{year:2013,value:4769},{year:2014,value:4660,down:true},{year:2015,value:4728},{year:2016,value:4754},{year:2017,value:4799},{year:2018,value:4762,down:true},{year:2019,value:4754,down:true},{year:2020,value:4891},{year:2021,value:4889,down:true},{year:2022,value:5165},{year:2023,value:5211},{year:2024,value:5174,down:true},
+      ] },
+      { label: 'Expansion Capacity', unit: 'M tons', series: [
+        {year:2010,value:603},{year:2011,value:621},{year:2012,value:612,down:true},{year:2013,value:282,down:true},{year:2014,value:275,down:true},{year:2015,value:304},{year:2016,value:219,down:true},{year:2017,value:186,down:true},{year:2018,value:220},{year:2019,value:200,down:true},{year:2020,value:191,down:true},{year:2021,value:174,down:true},{year:2022,value:190},{year:2023,value:161,down:true},{year:2024,value:165},
+      ] },
+      { label: 'Total Permitted Capacity', unit: 'M tons', series: [
+        {year:2010,value:4994},{year:2011,value:5106},{year:2012,value:5170},{year:2013,value:5051,down:true},{year:2014,value:4935,down:true},{year:2015,value:5032},{year:2016,value:4973,down:true},{year:2017,value:4985},{year:2018,value:4982,down:true},{year:2019,value:4954,down:true},{year:2020,value:5082},{year:2021,value:5063,down:true},{year:2022,value:5355},{year:2023,value:5372},{year:2024,value:5339,down:true},
+      ] },
+    ],
+  },
+  disposalVolumes: {
+    description: 'Annual waste disposed (depletable tons received, in thousands) and average daily intake \u2014 split between solid-waste and hazardous landfills. Disposal volumes (~125M tons/yr) show steady, recession-resistant demand. Hazardous is tiny (~626k tons) but high-margin and specialized.',
+    solidWaste: [
+      { label: 'Solid Waste Landfills \u2014 Sites', unit: 'count', series: [
+        {year:2010,value:266},{year:2011,value:266},{year:2012,value:264,down:true},{year:2013,value:262,down:true},{year:2014,value:247,down:true},{year:2015,value:244,down:true},{year:2016,value:243,down:true},{year:2017,value:244},{year:2018,value:247},{year:2019,value:244,down:true},{year:2020,value:263},{year:2021,value:255,down:true},{year:2022,value:254,down:true},{year:2023,value:258},{year:2024,value:257,down:true},
+      ] },
+      { label: 'Solid Waste \u2014 Depletable Tons (000s)', unit: 'thousands', series: [
+        {year:2010,value:91863},{year:2011,value:91130,down:true},{year:2012,value:92393},{year:2013,value:93804},{year:2014,value:92847,down:true},{year:2015,value:96777},{year:2016,value:104913},{year:2017,value:112849},{year:2018,value:115972},{year:2019,value:120556},{year:2020,value:112729,down:true},{year:2021,value:123163},{year:2022,value:123462},{year:2023,value:122141,down:true},{year:2024,value:124271},
+      ] },
+      { label: 'Solid Waste \u2014 Tons/Day', unit: 'count', series: [
+        {year:2010,value:336},{year:2011,value:334,down:true},{year:2012,value:338},{year:2013,value:345},{year:2014,value:341,down:true},{year:2015,value:355},{year:2016,value:384},{year:2017,value:415},{year:2018,value:426},{year:2019,value:443},{year:2020,value:413,down:true},{year:2021,value:451},{year:2022,value:452},{year:2023,value:450,down:true},{year:2024,value:456},
+      ] },
+    ],
+    hazardous: [
+      { label: 'Hazardous Waste Landfills \u2014 Sites', unit: 'count', series: [
+        {year:2010,value:5},{year:2011,value:5},{year:2012,value:5},{year:2013,value:5},{year:2014,value:5},{year:2015,value:5},{year:2016,value:5},{year:2017,value:5},{year:2018,value:5},{year:2019,value:5},{year:2020,value:5},{year:2021,value:5},{year:2022,value:5},{year:2023,value:5},{year:2024,value:5},
+      ] },
+      { label: 'Hazardous \u2014 Depletable Tons (000s)', unit: 'thousands', series: [
+        {year:2010,value:667},{year:2011,value:599,down:true},{year:2012,value:640},{year:2013,value:568,down:true},{year:2014,value:505,down:true},{year:2015,value:567},{year:2016,value:646},{year:2017,value:584,down:true},{year:2018,value:739},{year:2019,value:703,down:true},{year:2020,value:676,down:true},{year:2021,value:586,down:true},{year:2022,value:652},{year:2023,value:658},{year:2024,value:626,down:true},
+      ] },
+      { label: 'Hazardous \u2014 Tons/Day', unit: 'count', series: [
+        {year:2010,value:2},{year:2011,value:2},{year:2012,value:2},{year:2013,value:2},{year:2014,value:2},{year:2015,value:2},{year:2016,value:2},{year:2017,value:2},{year:2018,value:3},{year:2019,value:3},{year:2020,value:2},{year:2021,value:2},{year:2022,value:2},{year:2023,value:2},{year:2024,value:2},
+      ] },
+    ],
+  },
+  facilities: {
+    description: 'Operating facility counts. Landfills here (262 in 2024) = solid-waste (257) + hazardous (5). The 2024 transfer-station jump (332 \u2192 506) and the new medical-waste facilities come from the Stericycle acquisition.',
+    lines: [
+      { label: 'Landfills (owned/operated)', unit: 'count', series: [
+        {year:2010,value:271},{year:2011,value:271},{year:2012,value:269,down:true},{year:2013,value:267,down:true},{year:2014,value:252,down:true},{year:2015,value:249,down:true},{year:2016,value:248,down:true},{year:2017,value:249},{year:2018,value:252},{year:2019,value:249,down:true},{year:2020,value:268},{year:2021,value:260,down:true},{year:2022,value:259,down:true},{year:2023,value:263},{year:2024,value:262,down:true},
+      ] },
+      { label: 'Transfer Stations', unit: 'count', series: [
+        {year:2010,value:286},{year:2011,value:287},{year:2012,value:297},{year:2013,value:300},{year:2014,value:298,down:true},{year:2015,value:297,down:true},{year:2016,value:310},{year:2017,value:305,down:true},{year:2018,value:314},{year:2019,value:302,down:true},{year:2020,value:348},{year:2021,value:340,down:true},{year:2022,value:337,down:true},{year:2023,value:332,down:true},{year:2024,value:506},
+      ] },
+      { label: 'Recycling / MRF Facilities', unit: 'count', series: [
+        {year:2010,value:98},{year:2011,value:107},{year:2012,value:114},{year:2013,value:120},{year:2014,value:126},{year:2015,value:104,down:true},{year:2016,value:95,down:true},{year:2017,value:90,down:true},{year:2018,value:102},{year:2019,value:103},{year:2020,value:103},{year:2021,value:96,down:true},{year:2022,value:97},{year:2023,value:102},{year:2024,value:105},
+      ] },
+    ],
+    medical2024: [
+      {label:'Autoclave / alternative treatment', value:69},
+      {label:'Medical waste incinerators', value:18},
+      {label:'Secure information destruction', value:107},
+    ],
+    notes: [
+      '167 of the 506 transfer stations in 2024 are tied to WM Healthcare Solutions (from the Stericycle acquisition).',
+      '35 Spain & Portugal locations are classified as held-for-sale at Dec 31, 2024: 19 transfer stations, 12 autoclave/alternative-treatment facilities, 1 medical-waste incinerator, and 3 secure-information-destruction facilities.',
+    ],
+  },
+},
   cash: { label: 'Cash & Cash Equivalents', unit: 'M USD', series: [
     {year:2005,value:666},{year:2006,value:614},{year:2007,value:348},{year:2008,value:480},{year:2009,value:1140,spike:true},{year:2010,value:539},{year:2011,value:258},{year:2012,value:194},{year:2013,value:58},{year:2014,value:1307,spike:true},{year:2015,value:39},{year:2016,value:32},{year:2017,value:22},{year:2018,value:61},{year:2019,value:3561,spike:true},{year:2020,value:553},{year:2021,value:118},{year:2022,value:351},{year:2023,value:458},{year:2024,value:414},
   ], note: 'WM runs a deliberately thin cash balance \u2014 spikes (2009, 2014, 2019) are pre-funding for acquisitions/debt actions, not idle cash.' },
@@ -9127,6 +9212,60 @@ const WM_BREAKDOWN = {
   ], note: 'Net margin \u2014 structurally higher since 2017 (~10\u201313%) vs ~7\u201310% pre-2016.' },
 },
     segments: {
+  wmSegmentPnl: {
+  preamble: 'Per-segment P&L, by reportable segment. WM changed its segment presentation in 2022 \u2014 Operating Expenses and SG&A are disclosed only from 2022 onward, while Net Operating Revenue, Income from Operations, and CapEx run from 2019 for the two Collection & Disposal tiers (and all the way back to 2010 for Corporate & Other). Segment income is reported before some allocations, so it does not equal Net Revenue \u2212 OpEx \u2212 SG&A at the segment level (the tiers are credited for internalized disposal; Corporate absorbs unallocated overhead).',
+  segments: [
+    { name: 'Collection & Disposal \u2014 East Tier', type: 'Core', note: 'Eastern U.S., Great Lakes, most of Canada. The single biggest profit engine \u2014 $2.76B segment income in 2024.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2019,value:6579},{year:2020,value:6370,down:true},{year:2021,value:7540},{year:2022,value:8011},{year:2023,value:8412},{year:2024,value:8703} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:6378},{year:2023,value:6747},{year:2024,value:6801} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:341},{year:2023,value:358},{year:2024,value:372} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2019,value:1847},{year:2020,value:1672},{year:2021,value:2037},{year:2022,value:2178},{year:2023,value:2446},{year:2024,value:2760} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2019,value:670},{year:2020,value:537},{year:2021,value:708},{year:2022,value:948},{year:2023,value:926},{year:2024,value:1119} ] },
+    ] },
+    { name: 'Collection & Disposal \u2014 West Tier', type: 'Core', note: 'Western U.S., Upper Midwest, British Columbia. The second core engine \u2014 nearly identical scale to East.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2019,value:6681},{year:2020,value:6584,down:true},{year:2021,value:7461},{year:2022,value:7614},{year:2023,value:7935},{year:2024,value:8285} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:6143},{year:2023,value:6352},{year:2024,value:6430} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:348},{year:2023,value:364},{year:2024,value:373} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2019,value:1934},{year:2020,value:1800,down:true},{year:2021,value:2103},{year:2022,value:2182},{year:2023,value:2383},{year:2024,value:2693} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2019,value:620},{year:2020,value:465},{year:2021,value:579},{year:2022,value:774},{year:2023,value:899},{year:2024,value:1071} ] },
+    ] },
+    { name: 'Other Ancillary Services', type: 'Support', note: 'Services supporting Collection & Disposal but not managed within the tiers. Runs around breakeven \u2014 slightly negative income.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2019,value:2195},{year:2020,value:2264},{year:2021,value:2930},{year:2022,value:2218,down:true},{year:2023,value:2518},{year:2024,value:2728} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:2278},{year:2023,value:2575},{year:2024,value:2782} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:104},{year:2023,value:112},{year:2024,value:117} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2019,value:-158},{year:2020,value:-42},{year:2021,value:34},{year:2022,value:0},{year:2023,value:-8,down:true},{year:2024,value:-9,down:true} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2019,value:118},{year:2020,value:75},{year:2021,value:181},{year:2022,value:40,spike:true},{year:2023,value:28},{year:2024,value:52} ] },
+    ] },
+    { name: 'Recycling Processing & Sales', type: 'Sustainability', note: 'Commodity-linked \u2014 income swung negative in 2023 ($\u201144M) when recycled-material prices fell, then recovered in 2024.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2022,value:1516},{year:2023,value:1264,down:true},{year:2024,value:1603} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:1481},{year:2023,value:1332},{year:2024,value:1610} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:92},{year:2023,value:56},{year:2024,value:59} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2022,value:128},{year:2023,value:-44,down:true},{year:2024,value:86} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2022,value:453},{year:2023,value:450},{year:2024,value:524} ] },
+    ] },
+    { name: 'WM Renewable Energy', type: 'Sustainability', note: 'High-margin and growing \u2014 ~31% income margin in 2024. CapEx ramping hard (RNG plant build-out) ahead of revenue.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2022,value:312},{year:2023,value:273,down:true},{year:2024,value:318} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:144},{year:2023,value:151},{year:2024,value:166} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:59},{year:2023,value:13},{year:2024,value:13} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2022,value:132},{year:2023,value:79,down:true},{year:2024,value:99} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2022,value:290},{year:2023,value:420},{year:2024,value:514} ] },
+    ] },
+    { name: 'WM Healthcare Solutions', type: 'New \u00b7 Stericycle', note: 'Two months of post-acquisition results only (Nov\u2013Dec 2024). Negative income reflects integration costs against a partial-period revenue.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2024,value:403} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2024,value:252} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2024,value:157} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2024,value:-69} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2024,value:43} ] },
+    ] },
+    { name: 'Corporate & Other', type: 'Non-segment', note: 'Not a business \u2014 it absorbs unallocated corporate SG&A and the long-term incentive program, so it runs a large, growing negative income ($\u20111.5B in 2024). This is the cost of running the whole company, netted out before consolidated income.', metrics: [
+      { label: 'Net Operating Revenue', unit: 'M USD', series: [ {year:2022,value:27},{year:2023,value:24,down:true},{year:2024,value:423} ] },
+      { label: 'Operating Expenses', unit: 'M USD', series: [ {year:2022,value:90},{year:2023,value:47},{year:2024,value:137} ] },
+      { label: 'SG&A', unit: 'M USD', series: [ {year:2022,value:1098},{year:2023,value:1038},{year:2024,value:1194} ] },
+      { label: 'Income from Operations', unit: 'M USD', series: [ {year:2010,value:-432},{year:2011,value:-588},{year:2012,value:-645},{year:2013,value:-667},{year:2014,value:-769},{year:2015,value:-522},{year:2016,value:-550},{year:2017,value:-585},{year:2018,value:-540},{year:2019,value:-917},{year:2020,value:-996},{year:2021,value:-1209},{year:2022,value:-1255},{year:2023,value:-1281,down:true},{year:2024,value:-1497,down:true} ] },
+      { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2010,value:62},{year:2011,value:64},{year:2012,value:73},{year:2013,value:123},{year:2014,value:71},{year:2015,value:64},{year:2016,value:56},{year:2017,value:45},{year:2018,value:30},{year:2019,value:36},{year:2020,value:45},{year:2021,value:76},{year:2022,value:304,spike:true},{year:2023,value:115},{year:2024,value:5} ] },
+    ] },
+  ],
+},
   wmGeography: {
   preamble: 'Net operating revenues by geography, 2010\u20132024 ($M). Reconciles exactly to the consolidated total each year (USA + Canada + Western Europe = Total).',
   prNote: 'Puerto Rico operations were sold in 2014. The 2010\u20132014 USA figures include Puerto Rico; 2015 onward exclude it \u2014 so the 2014\u21922015 USA step-down is partly the Puerto Rico divestiture, not organic decline.',
@@ -24584,6 +24723,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
+                          {segments.wmSegmentPnl && (
+                            <>
+                              <SectionHeading>// SEGMENT FINANCIALS (P&L BY SEGMENT)</SectionHeading>
+                              {segments.wmSegmentPnl.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmSegmentPnl.preamble}</div>}
+                              {segments.wmSegmentPnl.segments.map((seg, si) => {
+                                const tc = seg.type.indexOf('Core')>=0 ? amber : seg.type.indexOf('Sustainability')>=0 ? 'rgba(34,197,94,0.9)' : seg.type.indexOf('Stericycle')>=0 ? 'rgba(96,165,250,0.9)' : 'rgba(148,163,184,0.85)';
+                                return (
+                                  <div key={si} style={{background:'rgba(0,0,0,0.35)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${tc}`,borderRadius:'4px',padding:'13px',marginBottom:'12px'}}>
+                                    <div style={{display:'flex',alignItems:'center',gap:'9px',flexWrap:'wrap',marginBottom:'7px'}}>
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{seg.name}</span>
+                                      <span style={{fontSize:'8px',color:tc,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,padding:'2px 7px',border:`0.5px solid ${tc}`,borderRadius:'3px',textTransform:'uppercase'}}>{seg.type}</span>
+                                    </div>
+                                    {seg.note && <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{seg.note}</div>}
+                                    {seg.metrics.map((m, mi) => (
+                                      <div key={mi}><TimeSeriesTable data={m} /></div>
+                                    ))}
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+
                       {/* REH SEGMENT FINANCIALS BY REGION (byRegion shape) */}
                       {segments && segments.byRegion && (() => {
                         const br = segments.byRegion;
@@ -25754,6 +25915,111 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+                                                  {BS.wmAssetDetail && (() => {
+                            const ad = BS.wmAssetDetail;
+                            const fmt = (v) => v === 0 ? '—' : v < 0 ? '(' + Math.abs(v).toLocaleString() + ')' : v.toLocaleString();
+                            const sub = {fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'9px'};
+                            const desc = {fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'};
+                            const note = {padding:'8px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.74)',fontFamily:'monospace',lineHeight:1.55,letterSpacing:'0.3px',marginBottom:'12px'};
+                            const card = {background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'};
+                            return (
+                              <>
+                                <SectionHeading>// LANDFILL & ASSET DETAIL</SectionHeading>
+
+                                {ad.lifeDistribution && (() => {
+                                  const ld = ad.lifeDistribution; const maxC = Math.max(...ld.buckets.map(b=>b.count));
+                                  return (
+                                    <div style={card}>
+                                      <div style={sub}>// LANDFILL LIFE DISTRIBUTION · {ld.asOf}</div>
+                                      {ld.buckets.map((b,i)=>(
+                                        <div key={i} style={{display:'flex',alignItems:'center',gap:'9px',marginBottom:'5px'}}>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',fontWeight:600,width:'92px',flexShrink:0}}>{b.range}</span>
+                                          <div style={{flex:1,height:'13px',background:'rgba(245,158,11,0.07)',borderRadius:'2px',overflow:'hidden'}}>
+                                            <div style={{width:`${(b.count/maxC*100).toFixed(1)}%`,height:'100%',background:`linear-gradient(90deg, ${amberDim}, ${amber})`,borderRadius:'2px'}}/>
+                                          </div>
+                                          <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'34px',textAlign:'right',flexShrink:0}}>{b.count}</span>
+                                        </div>
+                                      ))}
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>TOTAL LANDFILLS</span>
+                                        <span style={{fontSize:'15px',color:amber,fontFamily:'monospace',fontWeight:700}}>{ld.total}</span>
+                                      </div>
+                                      {ld.note && <div style={{...note,marginTop:'10px',marginBottom:0}}>{ld.note}</div>}
+                                    </div>
+                                  );
+                                })()}
+
+                                {ad.assetRollforward && (() => {
+                                  const rf = ad.assetRollforward;
+                                  return (
+                                    <div style={card}>
+                                      <div style={sub}>// LANDFILL ASSET ROLL-FORWARD · {rf.asOf} ($M)</div>
+                                      <div style={{overflowX:'auto'}}>
+                                        <table style={{width:'100%',minWidth:'440px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                          <thead>
+                                            <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                              <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>ITEM</th>
+                                              <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>COST BASIS</th>
+                                              <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>ACCUM. DEPLETION</th>
+                                              <th style={{textAlign:'right',padding:'5px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'9px'}}>NET BOOK VALUE</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {rf.rows.map((r,i)=>(
+                                              <tr key={i} style={{borderBottom: r.bound ? `0.5px solid ${amberGlow}` : '0.5px solid rgba(245,158,11,0.08)', background: r.bound ? 'rgba(245,158,11,0.04)' : 'transparent'}}>
+                                                <td style={{padding:'4px 8px',color: r.bound ? '#e0eaff' : 'rgba(224,234,255,0.78)',fontWeight: r.bound ? 700 : 400}}>{r.label}</td>
+                                                <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.72)'}}>{fmt(r.cost)}</td>
+                                                <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{fmt(r.depletion)}</td>
+                                                <td style={{padding:'4px 8px',textAlign:'right',color: r.bound ? amber : 'rgba(34,197,94,0.85)',fontWeight: r.bound ? 700 : 600}}>{fmt(r.nbv)}</td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                      {rf.note && <div style={{...note,marginTop:'10px',marginBottom:0}}>{rf.note}</div>}
+                                    </div>
+                                  );
+                                })()}
+
+                                {ad.airspace && (
+                                  <>
+                                    <div style={{...sub,marginTop:'4px'}}>// PERMITTED AIRSPACE (millions of tons)</div>
+                                    {ad.airspace.description && <div style={desc}>{ad.airspace.description}</div>}
+                                    {ad.airspace.lines.map((ln,i)=>(<TimeSeriesTable key={i} data={ln} />))}
+                                  </>
+                                )}
+
+                                {ad.disposalVolumes && (
+                                  <>
+                                    <div style={{...sub,marginTop:'4px'}}>// DISPOSAL VOLUMES (depletable tons received)</div>
+                                    {ad.disposalVolumes.description && <div style={desc}>{ad.disposalVolumes.description}</div>}
+                                    {ad.disposalVolumes.solidWaste.map((ln,i)=>(<TimeSeriesTable key={'s'+i} data={ln} />))}
+                                    {ad.disposalVolumes.hazardous.map((ln,i)=>(<TimeSeriesTable key={'h'+i} data={ln} />))}
+                                  </>
+                                )}
+
+                                {ad.facilities && (
+                                  <>
+                                    <div style={{...sub,marginTop:'4px'}}>// FACILITY COUNTS</div>
+                                    {ad.facilities.description && <div style={desc}>{ad.facilities.description}</div>}
+                                    {ad.facilities.lines.map((ln,i)=>(<TimeSeriesTable key={i} data={ln} />))}
+                                    {ad.facilities.medical2024 && (
+                                      <div style={card}>
+                                        <div style={sub}>// MEDICAL-WASTE FACILITIES · 2024 (Stericycle)</div>
+                                        {ad.facilities.medical2024.map((m,i)=>(
+                                          <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',padding:'5px 0',borderBottom: i < ad.facilities.medical2024.length-1 ? '0.5px solid rgba(245,158,11,0.1)' : 'none'}}>
+                                            <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{m.label}</span>
+                                            <span style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700}}>{m.value}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                    {ad.facilities.notes && ad.facilities.notes.map((n,i)=>(<div key={i} style={note}>{n}</div>))}
+                                  </>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       );
                     };
