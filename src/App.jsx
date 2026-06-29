@@ -8932,6 +8932,74 @@ const WM_BREAKDOWN = {
   // per-segment P&L + geography, plus balance (PP&E + airspace + facilities) pending the next pass
   // ═══════════════════════════════════════════════════════════════
   numbers: {
+    incomeStatement: {
+  netSales: { label: 'Revenue (Operating Revenues)', unit: 'M USD', series: [
+    {year:2002,value:11124},{year:2003,value:12493},{year:2004,value:13338},{year:2005,value:13397},{year:2006,value:13355,down:true},{year:2007,value:13289,down:true},{year:2008,value:13383},{year:2009,value:11790,down:true},{year:2010,value:12515},{year:2011,value:13378},{year:2012,value:13649},{year:2013,value:13982},{year:2014,value:13996},{year:2015,value:12641,down:true},{year:2016,value:13609},{year:2017,value:14485},{year:2018,value:14914},{year:2019,value:15455},{year:2020,value:15218,down:true},{year:2021,value:17931},{year:2022,value:19698},{year:2023,value:20465},{year:2024,value:22053},
+  ], note: 'Consolidated income-statement revenue, 2002\u20132024. Slightly different from the service-line revenue cut in the Segments tab (e.g., 2024 $22,053M here vs $22,063M there) \u2014 different presentations.' },
+
+  costOfSales: { label: 'Operating Expenses (Cost of Services)', unit: 'M USD', series: [
+    {year:2010,value:7824},{year:2011,value:8541},{year:2012,value:8879},{year:2013,value:9112},{year:2014,value:9002},{year:2015,value:8231},{year:2016,value:8486},{year:2017,value:9021},{year:2018,value:9249},{year:2019,value:9496},{year:2020,value:9341},{year:2021,value:11111},{year:2022,value:12294},{year:2023,value:12606},{year:2024,value:13383},
+  ], note: 'Direct cost of services (labor, transfer/disposal, maintenance, subcontractor, fuel, etc.) \u2014 excludes DD&A and SG&A. Gross Profit = Revenue \u2212 this line.' },
+
+  grossProfit: { label: 'Gross Profit', unit: 'M USD', series: [
+    {year:2010,value:4691},{year:2011,value:4837},{year:2012,value:4770,down:true},{year:2013,value:4870},{year:2014,value:4994},{year:2015,value:4410,down:true},{year:2016,value:5123},{year:2017,value:5464},{year:2018,value:5665},{year:2019,value:5959},{year:2020,value:5877,down:true},{year:2021,value:6820},{year:2022,value:7404},{year:2023,value:7859},{year:2024,value:8670},
+  ] },
+
+  grossMargin: { label: 'Gross Margin %', unit: '%', series: [
+    {year:2010,value:37.5},{year:2011,value:36.1},{year:2012,value:35.0},{year:2013,value:34.8},{year:2014,value:35.7},{year:2015,value:34.9},{year:2016,value:37.6},{year:2017,value:37.7},{year:2018,value:38.0},{year:2019,value:38.5},{year:2020,value:38.6},{year:2021,value:38.0},{year:2022,value:37.6},{year:2023,value:38.4},{year:2024,value:39.3},
+  ], note: 'Steady expansion from ~35% (2012\u201315) to 39.3% (2024) \u2014 pricing power and internalization lifting margins.' },
+
+  opex: { label: 'Depreciation, Depletion & Amortization (DD&A)', unit: 'M USD', series: [
+    {year:2010,value:1194},{year:2011,value:1229},{year:2012,value:1327},{year:2013,value:1338},{year:2014,value:1382},{year:2015,value:1423},{year:2016,value:1301},{year:2017,value:1376},{year:2018,value:1477},{year:2019,value:1574},{year:2020,value:1671},{year:2021,value:1899},{year:2022,value:2018},{year:2023,value:2071},{year:2024,value:2267},
+  ], note: 'Non-cash charge \u2014 heavy for an asset-intensive business (landfill airspace depletion + fleet/equipment depreciation).' },
+
+  smaExpense: { label: 'SG&A', unit: 'M USD', series: [
+    {year:2002,value:1141},{year:2003,value:1147},{year:2004,value:1194},{year:2005,value:1234},{year:2006,value:1271},{year:2007,value:1238},{year:2008,value:1265},{year:2009,value:1216},{year:2010,value:1461},{year:2011,value:1464},{year:2012,value:1443},{year:2013,value:1438},{year:2014,value:1412},{year:2015,value:1348},{year:2016,value:1410},{year:2017,value:1468},{year:2018,value:1453},{year:2019,value:1631},{year:2020,value:1728},{year:2021,value:1864},{year:2022,value:1938},{year:2023,value:1926},{year:2024,value:2264,spike:true},
+  ], note: '2024 jump to $2,264M includes Stericycle acquisition & integration costs (~$160M).' },
+
+  smaToGrossProfit: { label: 'SG&A as % of Gross Profit', unit: '%', series: [
+    {year:2010,value:31.2},{year:2011,value:30.3},{year:2012,value:30.2},{year:2013,value:29.5},{year:2014,value:28.3},{year:2015,value:30.6},{year:2016,value:27.5},{year:2017,value:26.9},{year:2018,value:25.6},{year:2019,value:27.4},{year:2020,value:29.4},{year:2021,value:27.3},{year:2022,value:26.2},{year:2023,value:24.5},{year:2024,value:26.1},
+  ], note: 'Operating leverage \u2014 SG&A has fallen from ~31% of gross profit (2010) toward ~25\u201326% as the business scaled.' },
+
+  totalExpenses: { label: 'Total Expenses', unit: 'M USD', series: [
+    {year:2002,value:10292},{year:2003,value:10719},{year:2004,value:11071},{year:2005,value:11215},{year:2006,value:11020},{year:2007,value:11107},{year:2008,value:11464},{year:2009,value:9860},{year:2010,value:10289},{year:2011,value:10399},{year:2012,value:11350},{year:2013,value:12004},{year:2014,value:11697},{year:2015,value:10916},{year:2016,value:11313},{year:2017,value:11849},{year:2018,value:12125},{year:2019,value:12749},{year:2020,value:12784},{year:2021,value:14966},{year:2022,value:16133},{year:2023,value:16851},{year:2024,value:18000},
+  ] },
+
+  expensesToRevenue: { label: 'Total Expenses as % of Revenue', unit: '%', series: [
+    {year:2002,value:92.52},{year:2003,value:85.78},{year:2004,value:82.99},{year:2005,value:83.70},{year:2006,value:82.52},{year:2007,value:83.60},{year:2008,value:85.67},{year:2009,value:83.64},{year:2010,value:82.22},{year:2011,value:77.76},{year:2012,value:83.16},{year:2013,value:85.86},{year:2014,value:83.53},{year:2015,value:86.37},{year:2016,value:83.13},{year:2017,value:81.80},{year:2018,value:81.29},{year:2019,value:82.49},{year:2020,value:84.01},{year:2021,value:83.46},{year:2022,value:81.90},{year:2023,value:82.34},{year:2024,value:81.62},
+  ], note: 'Lower is better \u2014 grinding down from ~92% (2002) to ~82% (2024) shows steady operating-cost discipline.' },
+
+  operatingProfit: { label: 'Income from Operations', unit: 'M USD', series: [
+    {year:2002,value:1823},{year:2003,value:1774,down:true},{year:2004,value:2057},{year:2005,value:2045,down:true},{year:2006,value:2335},{year:2007,value:2182,down:true},{year:2008,value:1919,down:true},{year:2009,value:1720,down:true},{year:2010,value:1851},{year:2011,value:2028},{year:2012,value:2299},{year:2013,value:1979,down:true},{year:2014,value:2299},{year:2015,value:2045,down:true},{year:2016,value:2296},{year:2017,value:2636},{year:2018,value:2789},{year:2019,value:2706,down:true},{year:2020,value:2434,down:true},{year:2021,value:2965},{year:2022,value:3565},{year:2023,value:3575},{year:2024,value:4053},
+  ], note: 'Operating income more than doubled from ~$1.8B (2002) to $4.05B (2024).' },
+
+  interestExpense: { label: 'Interest Expense (net)', unit: 'M USD', series: [
+    {year:2010,value:473},{year:2011,value:481},{year:2012,value:488},{year:2013,value:477},{year:2014,value:660},{year:2015,value:385},{year:2016,value:376},{year:2017,value:363},{year:2018,value:374},{year:2019,value:411},{year:2020,value:425},{year:2021,value:365},{year:2022,value:378},{year:2023,value:500},{year:2024,value:598},
+  ], note: 'As % of operating income: 25.6% (2010) \u2192 ~13\u201315% (2017\u201323), ticking up to 14.8% in 2024 as post-Stericycle debt grew. The 2014 spike ($660M) reflects debt actions that year.' },
+    interestToOpIncome: { label: 'Interest as % of Operating Income', unit: '%', series: [
+      {year:2010,value:25.6},{year:2011,value:23.7},{year:2012,value:21.2},{year:2013,value:24.1},{year:2014,value:28.7},{year:2015,value:18.8},{year:2016,value:16.4},{year:2017,value:13.8},{year:2018,value:13.4},{year:2019,value:15.2},{year:2020,value:17.5},{year:2021,value:12.3},{year:2022,value:10.6},{year:2023,value:14.0},{year:2024,value:14.8},
+    ], note: 'Interest burden vs operating income — halved from ~24–29% (2010–14) to ~11–15% (2017–24) as operating income outgrew interest cost. The 2024 uptick reflects Stericycle-funded debt.' },
+
+  provisionForTaxes: { label: 'Tax Expense', unit: 'M USD', series: [
+    {year:2002,value:641},{year:2003,value:694},{year:2004,value:761},{year:2005,value:825},{year:2006,value:814},{year:2007,value:725},{year:2008,value:693},{year:2009,value:325},{year:2010,value:443},{year:2011,value:602},{year:2012,value:511},{year:2013,value:543},{year:2014,value:602},{year:2015,value:511},{year:2016,value:662},{year:2017,value:242},{year:2018,value:433},{year:2019,value:444},{year:2020,value:397},{year:2021,value:532},{year:2022,value:838},{year:2023,value:538},{year:2024,value:746},
+  ], note: '2017 dip ($242M) reflects the Tax Cuts and Jobs Act revaluation benefit.' },
+
+  nopat: { label: 'NOPAT', unit: 'M USD', series: [
+    {year:2002,value:1182},{year:2003,value:1080,down:true},{year:2004,value:1296},{year:2005,value:1220,down:true},{year:2006,value:1521},{year:2007,value:1457,down:true},{year:2008,value:1226,down:true},{year:2009,value:1395},{year:2010,value:1408},{year:2011,value:1426},{year:2012,value:1788},{year:2013,value:1436,down:true},{year:2014,value:1697},{year:2015,value:1534,down:true},{year:2016,value:1634},{year:2017,value:2394},{year:2018,value:2356,down:true},{year:2019,value:2262,down:true},{year:2020,value:2037,down:true},{year:2021,value:2433},{year:2022,value:2727},{year:2023,value:3037},{year:2024,value:3307},
+  ], note: 'Net Operating Profit After Tax \u2014 the unlevered earnings power feeding the ROIC calc.' },
+
+  netIncome: { label: 'Net Income', unit: 'M USD', series: [
+    {year:2002,value:999},{year:2003,value:1132},{year:2004,value:1295},{year:2005,value:1350},{year:2006,value:1426},{year:2007,value:1273,down:true},{year:2008,value:1180,down:true},{year:2009,value:1082,down:true},{year:2010,value:1009,down:true},{year:2011,value:953,down:true},{year:2012,value:1009},{year:2013,value:1320},{year:2014,value:1338},{year:2015,value:752,down:true},{year:2016,value:1180},{year:2017,value:1949},{year:2018,value:1923,down:true},{year:2019,value:1671,down:true},{year:2020,value:1496,down:true},{year:2021,value:1817},{year:2022,value:2240},{year:2023,value:2276},{year:2024,value:2745},
+  ], note: 'Net Income CAGR 2002\u20132024 = 4.59%. The 2015 trough ($752M) reflects asset impairments that year.' },
+
+  eps: { label: 'EPS (Diluted)', unit: 'USD per share', series: [
+    {year:2002,value:1.50},{year:2003,value:1.61},{year:2004,value:2.09},{year:2005,value:2.27},{year:2006,value:2.43},{year:2007,value:2.41,down:true},{year:2008,value:2.28,down:true},{year:2009,value:2.10,down:true},{year:2010,value:2.09,down:true},{year:2011,value:1.98,down:true},{year:2012,value:2.04},{year:2013,value:2.79},{year:2014,value:2.01,down:true},{year:2015,value:1.72,down:true},{year:2016,value:2.65},{year:2017,value:4.41},{year:2018,value:4.45},{year:2019,value:3.91,down:true},{year:2020,value:3.52,down:true},{year:2021,value:4.29},{year:2022,value:5.39},{year:2023,value:5.66},{year:2024,value:6.31},
+  ], note: 'EPS CAGR 2002\u20132024 = ~6.75% \u2014 outpacing net income growth thanks to a steadily shrinking share count (552M \u2192 401M).' },
+
+  profitMargin: { label: 'Profit Margin %', unit: '%', series: [
+    {year:2002,value:9.0},{year:2003,value:9.1},{year:2004,value:9.7},{year:2005,value:10.1},{year:2006,value:10.7},{year:2007,value:9.6},{year:2008,value:8.8},{year:2009,value:9.2},{year:2010,value:8.1},{year:2011,value:7.1},{year:2012,value:7.4},{year:2013,value:9.4},{year:2014,value:9.6},{year:2015,value:5.9},{year:2016,value:8.7},{year:2017,value:13.4},{year:2018,value:12.9},{year:2019,value:10.8},{year:2020,value:9.8},{year:2021,value:10.1},{year:2022,value:11.4},{year:2023,value:11.1},{year:2024,value:12.4},
+  ], note: 'Net margin \u2014 structurally higher since 2017 (~10\u201313%) vs ~7\u201310% pre-2016.' },
+},
     segments: {
   wmRevenue: {
     preamble: 'Operating revenues disaggregated by service line, 2010\u20132024 ($M). Collection is the core; Landfill + Transfer complete the Collection & Disposal segment. Note the structural reporting change in 2022: the newer presentation reports gross segment revenues with a separate intercompany elimination, so pre-2022 "Other / Corporate & Other" (~$1.4\u20132.1B) and the negative "Intercompany" line are not directly comparable to 2022\u20132024.',
@@ -23875,8 +23943,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
 
                           {/* REVENUE & COSTS */}
-                          {IS.netSales       && <TimeSeriesTable data={IS.netSales} />}
-                          {IS.costOfSales    && <TimeSeriesTable data={IS.costOfSales} />}
+                          {IS.netSales && (<><TimeSeriesTable data={IS.netSales} />{IS.netSales.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.netSales.note}</div>}</>)}
+                          {IS.costOfSales && (<><TimeSeriesTable data={IS.costOfSales} />{IS.costOfSales.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.costOfSales.note}</div>}</>)}
                           {IS.grossProfit    && <TimeSeriesTable data={IS.grossProfit} />}
                           {IS.grossMargin    && (
                             <>
@@ -23890,7 +23958,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* OPERATING EXPENSES */}
-                          {IS.smaExpense     && <TimeSeriesTable data={IS.smaExpense} />}
+                          {IS.smaExpense && (<><TimeSeriesTable data={IS.smaExpense} />{IS.smaExpense.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.smaExpense.note}</div>}</>)}
                           {IS.smaToGrossProfit && (
                             <>
                               <TimeSeriesTable data={IS.smaToGrossProfit} />
@@ -23901,7 +23969,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
-                          {IS.opex           && <TimeSeriesTable data={IS.opex} />}
+                          {IS.opex && (<><TimeSeriesTable data={IS.opex} />{IS.opex.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.opex.note}</div>}</>)}
                           {IS.totalExpenses  && <TimeSeriesTable data={IS.totalExpenses} />}
                           {IS.expensesToRevenue && (
                             <>
@@ -23925,11 +23993,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* OPERATING PROFIT */}
-                          {IS.operatingProfit  && <TimeSeriesTable data={IS.operatingProfit} />}
+                          {IS.operatingProfit && (<><TimeSeriesTable data={IS.operatingProfit} />{IS.operatingProfit.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.operatingProfit.note}</div>}</>)}
                           {IS.operatingMargin  && <TimeSeriesTable data={IS.operatingMargin} />}
 
                           {/* NON-OPERATING */}
-                          {IS.interestExpense  && <TimeSeriesTable data={IS.interestExpense} />}
+                          {IS.interestExpense && (<><TimeSeriesTable data={IS.interestExpense} />{IS.interestExpense.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.interestExpense.note}</div>}</>)}
+                          {IS.interestToOpIncome && (<><TimeSeriesTable data={IS.interestToOpIncome} />{IS.interestToOpIncome.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.interestToOpIncome.note}</div>}</>)}
                           {IS.otherIncomeExpense && (
                             <>
                               <TimeSeriesTable data={IS.otherIncomeExpense} />
@@ -23942,7 +24011,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* TAX */}
-                          {IS.provisionForTaxes && <TimeSeriesTable data={IS.provisionForTaxes} />}
+                          {IS.provisionForTaxes && (<><TimeSeriesTable data={IS.provisionForTaxes} />{IS.provisionForTaxes.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.provisionForTaxes.note}</div>}</>)}
                           {IS.taxRate && (
                             <>
                               <TimeSeriesTable data={IS.taxRate} />
@@ -23967,9 +24036,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BOTTOM LINE */}
-                          {IS.netIncome       && <TimeSeriesTable data={IS.netIncome} />}
-                          {IS.eps             && <TimeSeriesTable data={IS.eps} />}
-                          {IS.profitMargin    && <TimeSeriesTable data={IS.profitMargin} />}
+                          {IS.netIncome && (<><TimeSeriesTable data={IS.netIncome} />{IS.netIncome.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.netIncome.note}</div>}</>)}
+                          {IS.eps && (<><TimeSeriesTable data={IS.eps} />{IS.eps.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.eps.note}</div>}</>)}
+                          {IS.profitMargin && (<><TimeSeriesTable data={IS.profitMargin} />{IS.profitMargin.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(245,158,11,0.85)',fontWeight:600}}>Note — </span>{IS.profitMargin.note}</div>}</>)}
 
                           {/* Margin trio multi-line */}
                           {IS.margins && (() => {
