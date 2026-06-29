@@ -9976,6 +9976,7 @@ function MuzzApp() {
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
   const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
+  const [segmentsSubTab, setSegmentsSubTab] = useState('serviceLine'); // WM segments sub-tab nav
   const [coverageComingSoon, setCoverageComingSoon] = useState(null);            // ticker currently showing the COMING SOON flash (locked cards)
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
@@ -24667,10 +24668,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const renderSegmentsTab = () => {
                       if (!bd.numbers || !bd.numbers.segments) return null;
                       const { segments } = bd.numbers;
+                      const wmSubTabs = [
+                        segments.wmRevenue && { id: 'serviceLine', label: 'SERVICE LINE' },
+                        segments.wmGeography && { id: 'geography', label: 'GEOGRAPHY' },
+                        segments.wmSegmentPnl && { id: 'segmentPnl', label: 'SEGMENT P&L' },
+                        segments.wmOpex && { id: 'opex', label: 'OPERATING EXP' },
+                      ].filter(Boolean);
+                      const isWM = wmSubTabs.length > 0;
+                      const activeSub = isWM ? (wmSubTabs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : wmSubTabs[0].id) : null;
                       return (
                         <div>
+                          {isWM && (
+                            <div style={{display:'flex',gap:'6px',flexWrap:'wrap',marginBottom:'16px',paddingBottom:'12px',borderBottom:'0.5px solid rgba(245,158,11,0.2)'}}>
+                              {wmSubTabs.map(t => (
+                                <button key={t.id} onClick={() => setSegmentsSubTab(t.id)} style={{
+                                  padding:'7px 13px',
+                                  background: activeSub === t.id ? 'rgba(245,158,11,0.14)' : 'rgba(0,0,0,0.3)',
+                                  border: activeSub === t.id ? '0.5px solid rgba(245,158,11,0.9)' : '0.5px solid rgba(245,158,11,0.25)',
+                                  borderRadius:'4px', cursor:'pointer',
+                                  fontSize:'9.5px', fontFamily:'monospace', letterSpacing:'1px', fontWeight:700,
+                                  color: activeSub === t.id ? '#f59e0b' : 'rgba(224,234,255,0.55)',
+                                  transition:'all 0.15s',
+                                }}>{t.label}</button>
+                              ))}
+                            </div>
+                          )}
                           {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
-                          {segments.wmRevenue && (
+                          {segments.wmRevenue && activeSub === 'serviceLine' && (
                             <>
                               <SectionHeading>// REVENUE BY SERVICE LINE</SectionHeading>
                               {segments.wmRevenue.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmRevenue.preamble}</div>}
@@ -24683,7 +24707,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               ))}
                             </>
                           )}
-                          {segments.wmOpex && (
+                          {segments.wmOpex && activeSub === 'opex' && (
                             <>
                               <SectionHeading>// OPERATING EXPENSES</SectionHeading>
                               {segments.wmOpex.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmOpex.preamble}</div>}
@@ -24709,7 +24733,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
-                          {segments.wmGeography && (
+                          {segments.wmGeography && activeSub === 'geography' && (
                             <>
                               <SectionHeading>// REVENUE BY GEOGRAPHY</SectionHeading>
                               {segments.wmGeography.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmGeography.preamble}</div>}
@@ -24723,7 +24747,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
-                          {segments.wmSegmentPnl && (
+                          {segments.wmSegmentPnl && activeSub === 'segmentPnl' && (
                             <>
                               <SectionHeading>// SEGMENT FINANCIALS (P&L BY SEGMENT)</SectionHeading>
                               {segments.wmSegmentPnl.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmSegmentPnl.preamble}</div>}
