@@ -8430,6 +8430,506 @@ const REH_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════════
+// WM_BREAKDOWN — Waste Management, Inc. deep-dive Coverage data (Tier 1)
+// Non-numbers tabs: overview · moat · risks · thesis
+// NUMBERS (income/balance/cashflow/segments + landfill asset tables) pending the financials drop
+// ════════════════════════════════════════════════════════════════════
+const WM_BREAKDOWN = {
+  overview: {
+    facts: {
+      founded:      '1987 \u00b7 as USA Waste Services (Oklahoma)',
+      incorporated: '1995 \u00b7 Delaware (reincorporated)',
+      employees:    '~61,700',
+      network:      '262',
+    },
+    identity: {
+      coreIdentity: 'North America\u2019s leading environmental solutions provider. Waste Management, Inc. (WMI) is a holding company operating through subsidiaries \u2014 collection, transfer, disposal, recycling, resource recovery, and renewable energy. The largest integrated waste company in the U.S./Canada, built on an irreplaceable network of landfills and dense collection routes, now expanding into regulated healthcare waste via the 2024 Stericycle acquisition.',
+      industryPosition: [
+        'Largest U.S./Canada landfill network \u2014 262 landfills (257 solid waste + 5 secure hazardous), the biggest in North America.',
+        'Largest collection and transfer operator \u2014 339 transfer stations, vertically integrated via the \u201Cinternalization\u201D model (own trucks \u2192 own transfer stations \u2192 own landfills).',
+        'North America\u2019s leading recycler of post-consumer materials \u2014 105 recycling facilities (45 single-stream) + 49 organics facilities.',
+        'Largest landfill-gas-to-energy / renewable natural gas platform via WM Renewable Energy (102 projects).',
+        'Expanded into regulated medical waste & secure information destruction via the $7.2B Stericycle acquisition (Nov 2024) \u2014 new WM Healthcare Solutions segment.',
+        '22nd consecutive annual dividend increase (Dec 2024): $0.75 \u2192 $0.825 (+10%).',
+      ],
+    },
+
+    // Buffett-style framing \u2014 WM is regulated infrastructure, not a brand
+    buffettFraming: {
+      headline: '\u201CYou can\u2019t build a new landfill \u2014 and that\u2019s the whole moat.\u201D',
+      body: 'Waste Management is the closest thing to a regulated toll road in the waste business. Its durable advantage isn\u2019t a brand \u2014 it\u2019s an irreplaceable physical network of permitted landfills and dense collection routes that no new entrant can replicate. Permitting a new landfill takes years, faces fierce public opposition (NIMBY), and clears one of the strictest regulatory gauntlets in the U.S. (RCRA, CERCLA, Clean Air & Water Acts). The same heavy regulation that raises WM\u2019s compliance costs is the very thing that walls out competition. WM owns ~39 years of average permitted airspace and feeds its own landfills through its own trucks and transfer stations (\u201Cinternalization\u201D), capturing margin at every step. It is a boring, essential, recession-resistant public service with steady pricing power and a duopoly partner (Republic Services) rather than a price war.',
+      bottomLine: 'For Buffett-framework investors: WM is infrastructure disguised as a garbage company. The moat is regulatory + physical + capital-intensity \u2014 permits you cannot buy, airspace you cannot manufacture, and route density that compounds with scale. The Stericycle deal bolts on a second regulation-heavy moat (medical waste + secure data destruction). The risks are capital intensity ($800M\u2013$900M/yr on landfills alone), heavy debt, and long-tail environmental/closure liabilities \u2014 but the core business is about as defensible as it gets.',
+    },
+
+    // Operating segments \u2014 5 reportable + Corporate & Other (post-Stericycle, 2024)
+    operatingSegments: {
+      asOf: '2024 (post-Stericycle)',
+      description: 'Following the Nov 2024 Stericycle acquisition, WM operates five reportable segments plus Corporate & Other. The strategic core is Collection & Disposal (East Tier + West Tier + ancillary services).',
+      segments: [
+        { number: '01', name: 'Collection & Disposal \u2014 East Tier',  shortName: 'C&D EAST',   type: 'Core', detail: 'Eastern U.S., Great Lakes, and most of Canada. Core collection + landfill + transfer business.' },
+        { number: '02', name: 'Collection & Disposal \u2014 West Tier',  shortName: 'C&D WEST',   type: 'Core', detail: 'Western U.S., Upper Midwest, and British Columbia. Core collection + landfill + transfer business.' },
+        { number: '03', name: 'Recycling Processing & Sales',           shortName: 'RECYCLING',  type: 'Sustainability', detail: 'North America\u2019s leading post-consumer recycler \u2014 105 facilities (45 single-stream) + 49 organics facilities. Transitioned to a fee-for-service model.' },
+        { number: '04', name: 'WM Renewable Energy',                     shortName: 'WM RE',      type: 'Sustainability', detail: 'Landfill-gas-to-energy. 102 projects \u2014 RNG, electricity, RINs, RECs. Pays a 15% royalty on net operating revenue to Collection & Disposal and Corporate (eliminated in consolidation).' },
+        { number: '05', name: 'WM Healthcare Solutions',                 shortName: 'HEALTHCARE', type: 'New \u00b7 Stericycle', detail: 'Created via the Nov 2024 Stericycle acquisition. Regulated Waste & Compliance Services (RWCS) + Secure Information Destruction (SID), serving the U.S., Canada, and Western Europe. ~361 facilities; 35 locations held for sale at year-end.' },
+        { number: '06', name: 'Corporate & Other',                       shortName: 'CORPORATE',  type: 'Non-segment', detail: 'Services not managed through the five segments \u2014 corporate office functions, the long-term incentive program, closed energy sites, and minority investments in adjacent technologies. (Note 19.)' },
+      ],
+      operatingUnits: 'Collection & Disposal is the main business: East Tier + West Tier + Other Ancillary Services (which support the business but are not managed within the tiers). Internalization \u2014 routing WM\u2019s own collected waste into its own transfer stations and landfills \u2014 captures margin at every step.',
+    },
+
+    // Business lines \u2014 the operational service stack
+    businessLines: {
+      description: 'WM operates an integrated, vertically-linked service stack. The strategic core is \u201Cinternalization\u201D \u2014 routing WM\u2019s own collected waste into its own transfer stations and landfills to capture margin at every step.',
+      lines: [
+        {
+          name: 'Collection (Commercial, Industrial & Residential)',
+          description: 'Commercial & Industrial: ~3-year contracts; fees depend on frequency, equipment, waste type/volume, distance, labor, and disposal costs (steel containers, one-person automated trucks). Residential: typically 3\u201310 year municipal/franchise contracts or monthly subscriptions, paid by municipalities or residents; transitioning to automated collection for safety, service, and lower cost.',
+          revenueProfile: 'Recurring, contracted, sticky',
+          highlight: true,
+        },
+        {
+          name: 'Landfills',
+          description: '262 total (257 solid waste + 5 secure hazardous) \u2014 the largest network in the U.S./Canada. 239 sites in closure/post-closure. Tipping fees set by construction/closure costs, distance, waste type/volume, and competition. Internalization (using own vs. third-party landfills) improves margins and cash flow; hazardous waste is treated before disposal (specialized containment + deep-well injection).',
+          revenueProfile: 'Highest-margin, asset-backed, irreplaceable',
+        },
+        {
+          name: 'Transfer Stations',
+          description: '339 owned/operated (U.S./Canada). Waste is consolidated/compacted, then moved by truck or rail to disposal. Improve internalization by retaining disposal fees, optimizing locations, and using larger load capacities.',
+          revenueProfile: 'Margin-capture & logistics efficiency',
+        },
+        {
+          name: 'Recycling Processing & Sales',
+          description: 'North America\u2019s #1 post-consumer recycler. 105 facilities (45 single-stream) + 49 organics. First major firm to launch residential single-stream recycling. Transitioned from a rebate model \u2192 fee-for-service (processing covered first, margin added). Commodity-price volatility managed via tip fees / floor pricing.',
+          revenueProfile: 'Commodity-linked, fee-for-service',
+        },
+        {
+          name: 'WM Renewable Energy',
+          description: '102 landfill-gas projects (65 fuel electricity generators, 23 onsite/pipeline use, 11 upgraded to pipeline-quality RNG; 3 on third-party landfills). Revenue from RNG, RINs (Renewable Fuel Standard), RECs, electricity, and heat/steam. Pays a 15% royalty to Collection & Disposal / Corporate.',
+          revenueProfile: 'Policy-driven, growing',
+        },
+        {
+          name: 'WM Healthcare Solutions (Stericycle)',
+          description: 'B2B unit from the Stericycle deal. RWCS \u2014 medical, pharmaceutical, pathological, sharps, and hazardous waste (autoclaving primary; incineration for chemo/anatomical/pharma waste). SID \u2014 secure on-site/off-site document shredding across the U.S. and Europe with chain-of-custody. Compliance-driven, high regulatory barriers, lower cyclicality.',
+          revenueProfile: 'Regulation-heavy, diversifying',
+          highlight: true,
+        },
+      ],
+    },
+
+    // Regulatory framework \u2014 the moat-as-regulation story
+    regulatory: {
+      preamble: 'WM operates under one of the strictest regulatory frameworks in the U.S. \u2014 and that is a feature, not a bug. Heavy regulation across environmental, health, safety, transport, and data privacy raises compliance costs but acts as a powerful barrier to entry that reinforces WM\u2019s moat. Compliance costs are generally industry-wide (no competitive disadvantage), while permitting difficulty and CERCLA liability wall out new entrants.',
+      scope: 'Federal, state/provincial, regional, and local laws covering environmental protection, health & safety, land use, zoning, transportation, ethical business conduct, data privacy, and security \u2014 across the U.S., Canada, and (post-Stericycle) Western Europe. Authorities: EPA (U.S.), Environment and Climate Change Canada (ECCC), plus regional/local agencies.',
+      areas: [
+        {
+          area: 'Federal Statutes',
+          icon: '\u2696\uFE0F',
+          critical: true,
+          details: [
+            { label: 'RCRA (1976)',        detail: 'Handling, transport, disposal of hazardous & non-hazardous waste. Subtitle D = landfill design/performance standards (solid waste); Subtitle C = cradle-to-grave hazardous waste. States often stricter.' },
+            { label: 'CERCLA / Superfund',  detail: 'Strict, retroactive liability for cleanup of hazardous-substance releases \u2014 applies to current & former owners/operators, generators, and transporters. WM exposed as landfill operator and transporter.' },
+            { label: 'Clean Water Act',     detail: 'Regulates discharges to streams, groundwater, wetlands. Landfills need stormwater permits; wetland-affecting expansions require mitigation permits.' },
+            { label: 'Clean Air Act',       detail: 'NSPS, NESHAP, Title V permits for landfills & gas-to-energy facilities; many landfills must install gas collection & control systems; fleet emission controls.' },
+            { label: 'OSHA',                detail: 'Safe-workplace standards \u2014 PPE, excavation, bloodborne pathogens, training, recordkeeping, hazard communication.' },
+            { label: 'DOT (Hazmat)',        detail: 'Safety/movement/disposal of hazardous materials; roadside inspections for medical-waste transport.' },
+            { label: 'DEA',                 detail: 'Controlled-substances waste \u2014 licenses/registrations for collection, transport, treatment, and disposal; strict security, reporting, and recordkeeping.' },
+          ],
+        },
+        {
+          area: 'State, Provincial & Local',
+          icon: '\uD83C\uDFDB\uFE0F',
+          details: [
+            { label: 'Recycling & diversion mandates', detail: 'Growing mandates + landfill bans (cardboard, bottles, cans, yard waste, food waste, electronics). Organics diversion reduces landfill volumes and can lower landfill-gas output (hurting WM Renewable Energy).' },
+            { label: 'Out-of-state waste restrictions', detail: 'Direct discrimination is unconstitutional, but indirect restrictions and flow-control laws (waste to government-owned sites) are sometimes upheld.' },
+            { label: 'Fitness laws',                     detail: 'Some jurisdictions review compliance history before granting/renewing permits; can deny/revoke if an operator is deemed \u201Cunfit.\u201D' },
+            { label: 'Medical waste',                    detail: 'No uniform U.S. federal rule (EPA does not regulate) \u2014 states regulate individually, creating a patchwork (relevant to Healthcare Solutions).' },
+          ],
+        },
+        {
+          area: 'PFAS \u2014 \u201CForever Chemicals\u201D',
+          icon: '\uD83E\uDDEA',
+          critical: true,
+          details: [
+            { label: 'CERCLA designation', detail: 'April 2024: EPA designated PFOA & PFOS as hazardous substances under CERCLA \u2192 potential cleanup liability for landfills.' },
+            { label: 'Drinking water',     detail: 'April 2024: National Primary Drinking Water Regulation for 6 PFAS compounds (enforceable limits). Patchwork of state limits growing.' },
+            { label: 'WM\u2019s position',  detail: 'Actively lobbying Congress & EPA for liability relief \u2014 to shift responsibility from landfills to PFAS manufacturers and heavy users. Compliance raises costs, but PFAS treatment/disposal could create new revenue.' },
+          ],
+        },
+        {
+          area: 'Extended Producer Responsibility (EPR)',
+          icon: '\u267B\uFE0F',
+          details: [
+            { label: 'Mechanism', detail: 'Shifts partial/total responsibility for post-use products & packaging to producers (funding + management).' },
+            { label: 'Adoption',  detail: 'Some U.S. states exploring; some Canadian provinces implementing. No federal law in U.S. or Canada. More likely in economic downturns (reduces municipal recycling costs).' },
+            { label: 'Impact',    detail: 'Could reshape recycling economics \u2014 change material quality/volume, alter contract terms/pricing, and potentially shift control of local recycling programs away from WM to producers.' },
+          ],
+        },
+        {
+          area: 'Tax Legislation \u2014 IRA Credits',
+          icon: '\uD83D\uDCB0',
+          details: [
+            { label: 'Alternative Fuel Tax Credits', detail: '~$60M annual pre-tax benefit in 2023 & 2024 (recorded as an operating-expense reduction). Expired end of 2024 \u2014 no future benefit unless renewed by Congress.' },
+            { label: 'Investment Tax Credit',         detail: 'Expected cumulative benefit of $300M\u2013$400M, largely realized 2024\u20132026 (depends on project-completion timing).' },
+            { label: 'Production Tax Credit',         detail: 'Incentives for renewable energy & carbon capture; incremental benefit not yet quantified pending regulatory guidance.' },
+          ],
+        },
+        {
+          area: 'Natural-Gas Fleet & EV Transition',
+          icon: '\uD83D\uDE9B',
+          details: [
+            { label: 'Current strategy', detail: 'WM operates a large natural-gas vehicle (NGV) fleet plus its own fueling stations (some public).' },
+            { label: 'Regulatory push',  detail: 'April 2024 EPA GHG standards lean on EV adoption; California requires phased-in zero-emission heavy-duty fleets (other states may follow). Many rules under legal challenge.' },
+            { label: 'Risk',             detail: 'Premature mandates \u2192 higher costs, charging-infrastructure capex, and potential stranding of the NGV fleet/fueling assets; loss of NGV/RNG tax incentives would hurt gas-to-energy economics.' },
+          ],
+        },
+        {
+          area: 'WM Renewable Energy Programs',
+          icon: '\u26A1',
+          details: [
+            { label: 'RFS / RINs',          detail: 'RNG qualifies as cellulosic biofuel under the Renewable Fuel Standard; volatile RIN prices driven by EPA rulemaking and supply/demand. 2023 EPA rule set 2023\u20132025 volumes favorable to RNG (litigation pending).' },
+            { label: 'State clean-fuel',    detail: 'California LCFS + Oregon/Washington/New Mexico programs (Canada emerging) \u2014 declining carbon-intensity benchmarks; producers earn tradable credits.' },
+            { label: 'Voluntary market',    detail: 'Rising demand from utilities & corporates procuring RNG for GHG targets. Risk: programs may be paused, revoked, or legally challenged.' },
+          ],
+        },
+        {
+          area: 'Environmental Justice & Privacy',
+          icon: '\uD83C\uDF0D',
+          details: [
+            { label: 'Environmental Justice', detail: 'Agencies increasingly require EJ reviews in permitting, rulemaking & enforcement (EPA EJScreen). Can increase permitting time/cost and add conditions.' },
+            { label: 'Privacy & data',        detail: 'Breach-notification laws + increasing privacy enforcement. Heightened exposure via Healthcare Solutions\u2019 Secure Information Destruction (SID), where customer trust and data-privacy compliance are critical.' },
+          ],
+        },
+      ],
+      compliance: 'WM uses management, employees, consultants, and active policy advocacy to meet requirements. Significant capex is tied to compliance \u2014 siting, design, permitting, construction, monitoring, corrective action, closure & post-closure care, and financial assurance.',
+      futureRisks: 'The 2024 Loper Bright v. Raimondo decision overturned Chevron deference \u2192 courts no longer defer to agency interpretation, creating more legal challenges and regulatory uncertainty. A growing disclosure patchwork: California Scope 1 & 2 (2026) / Scope 3 (2027); SEC climate rules (stayed pending challenges); EU CSRD (2026+). Methane: EPA enforcement focus through 2027, and Aug 2024 revised emission factors increase reported emissions (being challenged). Greenwashing litigation risk is rising.',
+      remediation: 'Ongoing environmental remediation from owned and legacy sites, generally shared with co-PRPs. Not expected to materially harm overall financial health, though individual years may see elevated costs.',
+    },
+
+    // Headquarters
+    headquarters: {
+      location: 'Houston, Texas',
+      description: '800 Capitol Street, Suite 3000, Houston, Texas 77002. WMI is a holding company \u2014 all operations run through subsidiaries and variable interest entities, with WM Holdings (a subsidiary) also a holding company. Founded as USA Waste Services, Inc. (1987, Oklahoma); reincorporated in Delaware (1995); merged with the original Waste Management, Inc. (Illinois) in 1998, taking the Waste Management name.',
+    },
+
+    // Leadership \u2014 executive team + board of directors (2025)
+    leadership: {
+      asOf: '2025',
+      executives: [
+        { name: 'James C. Fish, Jr.',         role: 'President & CEO (since 2016) \u00b7 Director', since: 'CEO since 2016',          joined: 2001, tenureYears: 24, history: 'CFO (2012\u201316); SVP Operations & Finance; prior roles at YRC Worldwide, airlines, and KPMG.', featured: true },
+        { name: 'John J. Morris, Jr.',         role: 'President & COO',                            since: 'COO since 2019 \u00b7 President added 2025', joined: 1996, tenureYears: 30, history: 'Rose from frontline operations \u2014 Area VP, Chief Sales Officer, SVP Field Ops, EVP & COO. Deep operations background.', featured: true },
+        { name: 'Devina A. Rankin',            role: 'EVP & CFO',                                  since: 'CFO since 2017',         joined: 2002, tenureYears: 23, history: 'Treasurer, Investor Relations, and finance leadership; prior Arthur Andersen and EY.', featured: true },
+        { name: 'Charles C. \u201CChuck\u201D Boettcher', role: 'EVP & Chief Legal Officer',         since: 'EVP & CLO',              joined: 2017, tenureYears: 8,  history: 'Former EVP/CFO/GC at Oilfield Water Logistics; former GC at Eagle Rock Energy. Law background.' },
+        { name: 'John A. Carroll',             role: 'VP & Chief Accounting Officer',              since: 'VP & CAO',               joined: 2018, tenureYears: 7,  history: 'Former Director of Internal Audit at Newfield Exploration; began his career at Arthur Andersen.' },
+        { name: 'Johnson (John) Varkey',       role: 'SVP & Chief Information Officer',            since: 'CIO since 2023',         joined: 2015, tenureYears: 10, history: 'WM IT leadership; prior CSC and BP. B.Tech CompSci + MBA (Rice).' },
+        { name: 'Tara J. Hemmer',              role: 'SVP & Chief Sustainability Officer',         since: 'CSO since 2021',         joined: 1999, tenureYears: 26, history: '20+ years in WM operations (AVP Mid-Atlantic, SVP Ops); the industry\u2019s first Chief Sustainability Officer.' },
+        { name: 'Michael J. Watson',           role: 'SVP & Chief Customer Officer',               since: 'CCO since 2022',         joined: 2005, tenureYears: 20, history: 'Led call centers and Western operations; drove the CX transformation; launched the MyWM app.' },
+        { name: 'Donald J. \u201CDon\u201D Smith', role: 'SVP, Operations',                          since: 'Since 2020',             joined: 1995, tenureYears: 27, history: 'Long-time operations leader \u2014 oversaw hauling and safety-culture improvements.' },
+        { name: 'Rafael E. \u201CRafa\u201D Carrasco', role: 'SVP, Enterprise Strategy & President, WM Healthcare Solutions', since: 'Strategy + Healthcare', joined: 2016, tenureYears: 9, history: 'Former Sims Metal; strategy consulting; co-founded a defense firm. Leads M&A and the healthcare-waste unit.' },
+        { name: 'Kimberly G. Stith',           role: 'SVP & Chief Human Resources Officer',        since: 'CHRO since 2024 (interim 2023)', joined: 1999, tenureYears: 26, history: 'VP Talent & Diversity; 25+ years in WM HR leadership. MBA (Loyola).' },
+      ],
+      executiveTakeaways: [
+        'Exceptionally long-tenured insider team \u2014 CEO Fish (~24 yrs), COO Morris (~30 yrs), CFO Rankin (~23 yrs); most of the C-suite has 20+ years at WM.',
+        'Deep operational bench \u2014 many leaders rose from frontline operations (Morris, Smith), reflecting a promote-from-within culture.',
+        'Sustainability and customer experience elevated to the C-suite (Hemmer as the industry\u2019s first CSO; Watson driving the MyWM app).',
+        'Stericycle integration led by Carrasco (Enterprise Strategy + Healthcare Solutions president) \u2014 signals M&A discipline post-acquisition.',
+      ],
+      board: [
+        { name: 'Kathleen M. Mazzarella', role: 'Chairman of the Board (Non-Exec) \u00b7 Chair since 2023', background: 'Chairman, President & CEO of Graybar Electric (40+ yrs there); former Chair of the Federal Reserve Bank of St. Louis. First woman to lead WM\u2019s board. Also serves on Cigna and Core & Main boards.', category: 'Lead' },
+        { name: 'James C. Fish, Jr.',     role: 'President & CEO \u00b7 Director',         background: 'CEO since 2016; CFO 2012\u201316; earlier VP roles in ops & finance. Prior: YRC Worldwide, airlines, KPMG. Owns 170,000+ WM shares \u2014 strong alignment.', category: 'Operational' },
+        { name: 'Andr\u00e9s R. Gluski',  role: 'Independent Director',                  background: 'CEO of AES Corp since 2011; prior IMF and Venezuelan government economic posts. Chairs the Compensation Committee; financial-expert designation.', category: 'Operational' },
+        { name: 'Victoria M. Holt',       role: 'Independent Director',                  background: 'Former CEO of Proto Labs and Spartech; SVP at PPG Industries; 40+ years in manufacturing. Director at Piper Sandler and AO Smith.', category: 'Operational' },
+        { name: 'Maryrose T. Sylvester',  role: 'Independent Director',                  background: '30+ years at GE (CEO GE Lighting; CEO Current by GE); U.S. MD & Head of Electrification at ABB. Also director at Harley-Davidson, Flex, and Vontier.', category: 'Operational' },
+        { name: 'Sean E. Menke',          role: 'Independent Director',                  background: 'CEO of Sabre Corp (2016\u201323, now Executive Chair); prior CEO of Frontier and Pinnacle Airlines. Audit Committee financial expert. Also on the JetBlue board.', category: 'Finance' },
+        { name: 'William B. \u201CBill\u201D Plummer', role: 'Independent Director',        background: 'CFO of United Rentals (2008\u201318); CFO of Dow Jones; Treasurer of Alcoa; prior GE and Goldman Sachs. Chairs the Audit Committee.', category: 'Finance' },
+        { name: 'Bruce E. Chinn',         role: 'Independent Director',                  background: 'CEO of Chevron Phillips Chemical (2021\u201324); 30 years at DuPont; senior operations roles at Chevron. Focus on safety and environmental risk. Also director at Celanese.', category: 'Operational' },
+        { name: 'Thomas L. (Tom) Ben\u00e9', role: 'Independent Director',               background: 'CEO of Breakthru Beverage (since 2021); ex-CEO of Sysco; 23 years at PepsiCo. Also director at Ball Corp. Board expanded to add him in 2024.', category: 'Operational' },
+      ],
+      boardTakeaways: {
+        title: 'Buffett-style governance assessment',
+        scores: [
+          { label: 'Board independence (8 of 9)',          rating: 'strong' },
+          { label: 'Industrial / operational CEO depth',   rating: 'strong' },
+          { label: 'Financial expertise (Plummer, Menke)', rating: 'strong' },
+          { label: 'Long-tenured continuity',              rating: 'medium' },
+          { label: 'Independent board leadership',          rating: 'strong' },
+          { label: 'Founder / controlling shareholder',     rating: 'weak' },
+        ],
+        verdict: 'A deep, independent, operator-heavy board \u2014 8 of 9 directors are independent, chaired by an independent director (Mazzarella). Heavy industrial/operational CEO experience (Gluski/AES, Holt, Sylvester/GE, Chinn/Chevron Phillips) fits WM\u2019s capital-intensive operations, with solid finance depth (Plummer/United Rentals, Menke/Sabre). No controlling shareholder \u2014 a conventionally-governed, widely-held company, more exposed to activists than a family-controlled name but with normal shareholder accountability. CEO Fish owning 170,000+ shares aligns management with owners.',
+      },
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // MOAT \u2014 physical, regulatory, capital-intensive
+  // ════════════════════════════════════════════════════════════════
+  moat: {
+    preamble: 'WM\u2019s moat is physical, regulatory, and capital-intensive \u2014 not brand. The durable advantage is an irreplaceable network of permitted landfills (~39 years average remaining airspace) and dense collection routes that no new entrant can rebuild. Permitting a new landfill takes years, faces public opposition, and clears the RCRA/CERCLA/Clean Air & Water gauntlet. \u201CInternalization\u201D \u2014 feeding WM\u2019s own landfills through its own trucks and transfer stations \u2014 compounds margin with scale. The industry is a duopoly (WM + Republic Services) rather than a price war, and demand is recession-resistant essential service. The heavy regulation that raises WM\u2019s costs is the same wall that keeps competitors out. Major peers: Republic Services (RSG), Waste Connections (WCN), and GFL Environmental \u2014 plus thousands of regional and municipal haulers below the majors.',
+
+    summary: {
+      headline: 'WM\u2019s moat is the dirt \u2014 permitted airspace you can\u2019t manufacture and routes you can\u2019t rebuild.',
+      breakdown: [
+        { division: 'Landfills / Permitted Airspace', moatStrength: 'Very Strong',      biggestRisk: 'Diversion & recycling mandates reducing landfill volumes', icon: '\u26F0\uFE0F', featured: true },
+        { division: 'Collection Route Density',        moatStrength: 'Strong',           biggestRisk: 'Local price competition; municipal contract losses',     icon: '\uD83D\uDE9B' },
+        { division: 'Regulatory Barriers to Entry',    moatStrength: 'Very Strong',      biggestRisk: 'Deregulation lowering barriers (a double-edged sword)',  icon: '\u2696\uFE0F' },
+        { division: 'WM Renewable Energy',             moatStrength: 'Moderate',         biggestRisk: 'Policy reversal (RIN/RFS targets, expired IRA credits)', icon: '\u26A1' },
+        { division: 'Healthcare Solutions (Stericycle)', moatStrength: 'Strong (emerging)', biggestRisk: 'Integration execution; medical-waste volume softness',  icon: '\uD83C\uDFE5' },
+      ],
+      buffettTakeaways: [
+        'You literally cannot buy a permit or manufacture airspace \u2014 the scarcest assets in waste are the ones WM already owns.',
+        'Internalization means WM captures margin at collection, transfer, AND disposal \u2014 third-party haulers pay WM tipping fees.',
+        'It\u2019s a duopoly with Republic Services, not a fragmented price war \u2014 rational pricing and steady inflation pass-through.',
+        'Recession-resistant essential service \u2014 garbage doesn\u2019t stop in a downturn.',
+        'Stericycle bolts on a SECOND regulation-heavy moat (medical waste + secure data destruction).',
+      ],
+    },
+
+    // Acquisition strategy \u2014 the moat-widening machine
+    acquisitionStrategy: {
+      summary: 'WM runs a disciplined acquisition strategy with two modes: transformational deals that add new regulation-heavy moats (Stericycle \u2192 healthcare waste), and a steady stream of tuck-in solid-waste/recycling bolt-ons that deepen route density and add landfill/transfer capacity. WM buys largely for synergies, route density, and client retention \u2014 intangibles are mostly customer relationships and non-competes \u2014 rather than tangible assets alone. Funded mostly with cash and debt; the balance sheet normalizes ~18 months post-Stericycle before share repurchases resume.',
+      fundingMethods: [
+        { type: 'Cash',   emoji: '\uD83D\uDCB5', usage: 'Common',                    note: 'Strong operating cash flow funds the steady stream of bolt-on solid-waste and recycling deals.', frequency: 'common' },
+        { type: 'Debt',   emoji: '\uD83D\uDCB3', usage: 'For transformational deals', note: 'Stericycle ($7.2B EV) funded via a term credit agreement + commercial paper + cash, later refinanced with $5.2B senior notes (Nov 2024).', frequency: 'occasional' },
+        { type: 'Equity', emoji: '\uD83E\uDDFE', usage: 'Avoided',                   note: 'WM funds M&A with cash/debt, not share issuance \u2014 protecting per-share value.', frequency: 'rare' },
+      ],
+      majorAcquisitions: [
+        { name: 'Stericycle', year: 2024, price: '$7.2B EV', funding: 'Debt + Cash', country: 'USA (+ Canada, W. Europe)', featured: true, note: 'Closed Nov 4, 2024 at $62.00/share cash. Created the new WM Healthcare Solutions segment (regulated medical waste + secure information destruction). ~361 facilities (69 autoclaves, 18 incinerators, 107 SID facilities). Added ~$403M revenue in Nov\u2013Dec 2024. ~$3.6B goodwill (NOT tax-deductible) tied to synergies. ~$160M integration costs (SG&A) in 2024. ~9\u00d7 larger than all other 2022\u201324 deals combined.' },
+        { name: 'Other 2024 Acquisitions', year: 2024, price: '$790M', funding: 'Cash', country: 'USA (NY, FL, NC, AZ)', note: '$783M net cash. $160M PP&E + $79M intangibles (incl. $63M customer relationships, $14M non-compete). $588M goodwill (a substantial portion deductible). Solid-waste & recycling tuck-ins.' },
+        { name: '2023 Bolt-ons (12 deals)', year: 2023, price: '$182M', funding: 'Cash', country: 'USA', note: '$157M net cash. $49M PP&E + $44M intangibles ($34M customer relationships, $10M non-compete). $88M goodwill (substantially all deductible). Mainly Collection & Disposal.' },
+        { name: '2022 Bolt-ons (13 deals)', year: 2022, price: '$507M', funding: 'Cash + Note', country: 'USA', note: '$372M net cash + $135M (holdbacks + $67M convertible-note conversion). $138M PP&E + $64M intangibles ($45M customer relationships, $19M non-compete). $325M goodwill. Included a film & plastic-wrap recycling business (circular economy).' },
+      ],
+      buffettObservations: [
+        'Goodwill-heavy deals \u2014 WM buys for synergies, route density, and client retention, not just tangible assets.',
+        'Intangibles are consistently customer relationships + non-competes \u2014 proof the value is route density and retention.',
+        'Strategic arc: 2022 circular economy (plastics) \u2192 2023 core consolidation \u2192 2024 transformational healthcare (Stericycle) + regional expansion.',
+        'Tax-efficient bolt-ons (deductible goodwill); Stericycle\u2019s $3.6B goodwill is non-deductible (typical of large public-company deals).',
+        'Funds with cash/debt, not equity \u2014 protects per-share value; buybacks resume once leverage normalizes.',
+      ],
+      buffettQuote: {
+        text: 'WM\u2019s M&A is moat-widening, not empire-building. Tuck-ins compound route density and internalization while the Stericycle deal adds a second regulation-heavy moat. The discipline is in the funding \u2014 cash and debt, not dilution.',
+        attribution: 'Buffett-framework synthesis',
+      },
+      bottomLine: 'WM\u2019s M&A is a moat-widening machine: tuck-ins compound route density and internalization, while the transformational Stericycle deal bolts on a second regulation-heavy moat. The trade-off is integration risk (Stericycle synergies, internal-controls integration) and elevated leverage near-term \u2014 but the strategy reliably converts capital into denser, more defensible networks.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // RISKS \u2014 10-K risk taxonomy + commitments & contingencies
+  // ════════════════════════════════════════════════════════════════
+  risks: {
+    riskFactors: {
+      summary: 'WM\u2019s 10-K risk factors fall into five buckets: Strategy & Operational, External Economic & Industry, Technology & Information Security, Legal/Regulatory/Compliance, and Financial. The throughline: WM\u2019s biggest exposures are regulatory/environmental (permitting, PFAS, CERCLA, emissions), commodity/diversion pressure on volumes, Stericycle integration, fleet-transition (NGV \u2192 EV) capital risk, and multiemployer-pension liabilities.',
+      categories: [
+        {
+          name: 'Strategy & Operational',
+          risks: [
+            'Failure to implement the business strategy could materially harm financial performance and growth.',
+            'May not realize the strategic benefits / cost synergies anticipated from the Stericycle acquisition.',
+            'Extensive regulation (incl. emerging contaminants like PFAS and extended producer responsibility) can restrict or alter operations, raise operating costs and tax liabilities, reduce revenue, or require additional capex.',
+            'Operational and safety risks, including the risk of injury to employees and others.',
+            'Inability to obtain/maintain required permits or expand permitted landfill capacity (land scarcity, public opposition) \u2192 disposal alternatives, decreased revenue, increased costs.',
+            'Inability to attract, hire, or retain key team members and a high-quality workforce; an inadequate succession pipeline.',
+            'Higher labor costs from union organizing, changes in labor regulation, or minimum-wage increases.',
+            'Seasonality, severe weather from climate change, and event-driven projects cause results to fluctuate.',
+            'Damage to reputation and brand value.',
+            'Heavy natural-gas truck-fleet investment \u2192 dependence on natural-gas availability/price; EV-transition requirements could impair investments and require significant additional capital.',
+            'May not achieve sustainability / GHG-reduction goals within planned timelines or budget.',
+            'Regulation of sustainability performance & disclosure \u2192 higher costs, noncompliance risk, and reputational harm.',
+          ],
+        },
+        {
+          name: 'External Economic & Industry',
+          risks: [
+            'Market disruption (labor shortages, external strikes, supply-chain constraints) and macro pressures incl. inflation.',
+            'The environmental-services industry is highly competitive.',
+            'Revenues, earnings, and cash flows fluctuate with commodity prices and demand.',
+            'Increasing customer preference for landfill alternatives, and bans on certain wastes, could reduce landfill volumes.',
+            'General economic conditions directly affect service revenues and operating margins.',
+            'Reduced volumes of medical waste, controlled-substances waste, and confidential information; changing healthcare-industry conditions.',
+            'Credit risk of governmental entities/municipalities and major customers in a weak economy.',
+            'Changes to applicable tax laws, or new/increased taxes.',
+            'Diesel-fuel supply shortages or price increases.',
+            'Large-scale disruption of social/commercial activity and financial markets.',
+          ],
+        },
+        {
+          name: 'Technology & Information Security',
+          risks: [
+            'Technology developments could fundamentally change the industry (waste increasingly viewed as a resource), reducing landfill volumes and profitability.',
+            'Failure to develop new service offerings / protect IP, or a competitor obtaining exclusive rights to a breakthrough technology.',
+            'Dependence on technology \u2014 a technology failure would adversely affect the business.',
+            'Inability to adapt to and manage the benefits/risks of artificial intelligence.',
+            'Significant cybersecurity incidents harming customer/vendor/employee relationships and increasing liability.',
+            'Increasing regulatory focus on privacy and data protection.',
+          ],
+        },
+        {
+          name: 'Legal, Regulatory & Compliance',
+          risks: [
+            'Environmental, health & safety laws/regulations and contractual obligations may create significant liabilities.',
+            'WM Renewable Energy investments are exposed to changes in federal/state renewable-fuel policy.',
+            'Climate-change legislation/regulation restricting GHG emissions could increase operating costs.',
+            'Failure to maintain effective internal control over financial reporting (incl. difficulties integrating Stericycle\u2019s systems).',
+            'Fines, penalties, and reputational harm if WM or related third parties violate U.S. or foreign laws.',
+            'Pending or future litigation or governmental proceedings (judgments or settlements).',
+          ],
+        },
+        {
+          name: 'Financial',
+          risks: [
+            'Capital requirements and business strategy could increase expenses, change growth plans, or impair the desired credit profile.',
+            'Higher costs of financial assurance, or inadequate insurance coverage, could hurt liquidity and increase liabilities.',
+            'Material impairment charges against earnings.',
+            'Significant liabilities from withdrawal from multiemployer pension plans.',
+          ],
+        },
+      ],
+    },
+
+    // Commitments & Contingencies \u2014 guarantees, insurance, Superfund, litigation, pensions, tax
+    commitmentsAndContingencies: {
+      summary: 'WM\u2019s commitments & contingencies are substantial but well-managed and shared with co-obligors. Financial-assurance instruments (letters of credit, surety bonds, trusts) are regulatory-compliance tools WM has had no trouble maintaining. The notable items: ~74 Superfund (CERCLA) sites, the San Jacinto River Waste Pits remediation, legacy Stericycle legal matters (FCPA DPA, SDNY/EPA, DEA), a 2022 securities class action, multiemployer-pension exposure (~20% of the workforce), and a 2017-tax-year IRS dispute ($103M deposited, refund sought). WM does not expect any known contingency to materially harm overall financial condition.',
+      categories: [
+        {
+          name: 'Financial Assurance Instruments',
+          definition: 'Letters of credit, surety bonds, insurance policies, and trust funds backing landfill closure/post-closure, environmental remediation, tax-exempt bonds, and contracts.',
+          kosCase: 'Backed by a $3.5B revolving credit facility + other lines, third-party sureties/insurers, a noncontrolling-interest entity, and WM\u2019s wholly-owned captive insurer. WM has had no difficulty obtaining or maintaining these instruments. Trust funds are cash-funded where regulators require hard funding.',
+        },
+        {
+          name: 'Insurance & Self-Insurance',
+          definition: 'A mix of external insurance + a wholly-owned captive insurer covering deductibles for general liability, auto, and workers\u2019 comp; WM self-insures a significant portion of these risks. Claims are actuarially estimated.',
+          kosCase: 'Self-insurance reserves: $798M (2024) vs $712M (2023) \u2014 current $211M / long-term $587M. Movement included $243M self-insurance expense, $(231)M cash paid, and $74M assumed liabilities from acquisitions. Insurance receivables: $111M (2024) vs $127M (2023). Most reserves expected to settle in cash over ~6 years \u2014 actuarial risk if claims trend worse than expected.',
+          stats: [
+            { label: '2024 reserve',          value: '$798M' },
+            { label: '2023 reserve',          value: '$712M' },
+            { label: 'Current / Long-term',   value: '$211M / $587M' },
+          ],
+        },
+        {
+          name: 'Unconditional Purchase Obligations',
+          definition: 'Long-term \u201Cput-or-pay\u201D disposal contracts (minimum volume regardless of use) plus multi-year energy, interconnection, and renewable-energy support agreements.',
+          kosCase: 'Minimum obligations (Dec 31, 2024): 2025 $274M \u00b7 2026 $270M \u00b7 2027 $142M \u00b7 2028 $96M \u00b7 2029 $68M \u00b7 Thereafter $556M (total $1.4B). Quantity-driven, market-based rates \u2014 not expected to materially harm financials.',
+        },
+        {
+          name: 'Guarantees',
+          definition: 'Debt guarantees (WM Holdings \u2194 WMI cross-guarantees, plus subsidiary debt), property-value guarantees, indemnifications, and operating guarantees.',
+          kosCase: 'WM Holdings guarantees all WMI senior debt, the revolver, and certain LOCs; WMI guarantees WM Holdings\u2019 senior debt (2026 maturity). Property-value guarantees at 18 landfills (cover the shortfall if a nearby home sells below the guaranteed value). Indemnifications provided in acquisitions/divestitures, including contingent obligations tied to post-acquisition performance.',
+        },
+        {
+          name: 'Environmental Matters (CERCLA / Superfund)',
+          definition: 'Strict-liability cleanup exposure under CERCLA as a landfill operator and transporter.',
+          kosCase: '74 Superfund sites total \u2014 14 owned by WM, 60 not owned but linked to transport/disposal. San Jacinto River Waste Pits (TX): a WM subsidiary (MIMC) + International Paper under EPA consent; +$13M liability recorded in 2024 (total now $97M); final costs remain uncertain. Obligations are shared with co-PRPs.',
+          critical: true,
+          stats: [
+            { label: 'Superfund sites',       value: '74 (14 owned)' },
+            { label: 'San Jacinto liability', value: '$97M' },
+          ],
+        },
+        {
+          name: 'Litigation',
+          definition: 'Routine lawsuits (personal injury, environmental, class actions) plus specific legacy matters \u2014 mostly inherited from Stericycle.',
+          kosCase: 'Stericycle FCPA DPA (2022): DOJ/SEC compliance monitor + self-reporting through 2025 \u2014 charges dismissed if compliant. Stericycle SDNY & EPA probe (historical hazardous-waste compliance, divested business): $10M accrual; 2025 settlement agreed within accrual. Stericycle DEA / Controlled-Substances investigation (2015\u20132020 ops): still under investigation, not expected material. WM securities class action (NY, 2022) over Advanced Disposal acquisition timing: pending; WM expects insurance coverage to limit impact. WM does not expect a material adverse impact.',
+        },
+        {
+          name: 'Multiemployer Pension Plans',
+          definition: 'Industry-wide union pension plans run by trustees; WM could assume obligations if other employers withdraw, or owe a withdrawal liability if it exits.',
+          kosCase: 'About 20% of the workforce is covered by CBAs tied to these plans (~9,900 employees under CBAs in total). No material adverse effect currently, but future withdrawals could affect results in a given year.',
+        },
+        {
+          name: 'Tax Matters (IRS Dispute)',
+          definition: 'A liability for uncertain tax positions, plus a specific IRS dispute.',
+          kosCase: '2017 tax year: WM deposited $103M with the IRS (2022) to stop interest accrual; in 2024 it filed for a full refund and plans litigation if denied. Classified as a long-term asset (net of reserve).',
+          stats: [
+            { label: 'IRS deposit', value: '$103M' },
+            { label: 'Tax year',    value: '2017' },
+          ],
+        },
+      ],
+    },
+
+    // Contractual Obligations \u2014 the future-bills schedule ($39.5B), as of Dec 31 2024
+    // NOTE: 2026\u20132029 bucketed (26\u201327 / 28\u201329) to fit the existing 4-column render; per-year totals preserved exactly.
+    contractualObligations: {
+      asOf: 'Dec 31, 2024',
+      unit: 'M USD',
+      description: 'All money WM has already committed to pay in the future, by category and time period. Debt principal + interest dominate; landfill closure is a long-tail liability that mostly falls "Thereafter."',
+      totalCommitted: 39480,
+      categories: [
+        { name: 'Final capping, closure & post-closure', total: 4790,  y2025: 177,  y2627: 488,  y2829: 363,  yLater: 3762,  definition: 'Recorded liabilities to safely cap, close, and monitor landfills at end of life \u2014 most fall decades out. These grow as more tons are placed in permitted airspace.', highlight: true },
+        { name: 'Debt payments (principal)',             total: 24079, y2025: 2613, y2627: 2769, y2829: 4017, yLater: 14680, definition: 'Scheduled principal on long-term debt and financing leases, excluding interest.', highlight: true },
+        { name: 'Interest on debt',                      total: 9205,  y2025: 928,  y2627: 1726, y2829: 1383, yLater: 5168,  definition: 'Future interest on outstanding fixed- and variable-rate debt ($251M already accrued at year-end).' },
+        { name: 'Unconditional purchase obligations',    total: 1406,  y2025: 274,  y2627: 412,  y2829: 164,  yLater: 556,   definition: '"Put-or-pay" disposal contracts plus multi-year energy/renewable support agreements.' },
+      ],
+      totals: { total: 39480, y2025: 3992, y2627: 5395, y2829: 5927, yLater: 24166 },
+      takeaway: 'WM\u2019s future-bills schedule. Debt principal + interest dominate (~$33.3B of $39.5B, ~85%). Landfill closure is a long-tail liability \u2014 $3.8B of the $4.8B falls "Thereafter." 2025 is the heaviest near-term year (~$4.0B), easing to ~$2\u20133B/yr through 2029, then a ~$24B "Thereafter" spike from debt maturities and landfill closure.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // THESIS \u2014 strategy, imperatives, sustainability
+  // ════════════════════════════════════════════════════════════════
+  thesis: {
+    vision: 'ALWAYS WORKING FOR A SUSTAINABLE TOMORROW\u00ae \u2014 to be North America\u2019s leading environmental solutions provider, growing beyond traditional waste into recycling, renewable energy, and regulated healthcare waste while compounding the core collection-and-disposal network.',
+    strategicImperatives: [
+      {
+        number: '01',
+        title: 'Compound the Core (Collection, Transfer & Disposal)',
+        points: [
+          'Deepen route density and internalization \u2014 feed WM\u2019s own landfills through its own trucks and transfer stations.',
+          'Expand permitted landfill airspace (18 landfills seeking expansion permits at year-end).',
+          'Automate residential collection (one-person trucks) for safety, service quality, and lower cost.',
+          'Steady inflation-plus pricing in a rational duopoly with Republic Services.',
+        ],
+      },
+      {
+        number: '02',
+        title: 'Grow the Sustainability Businesses (Recycling + Renewable Energy)',
+        points: [
+          'Invest in automated single-stream and organics recycling facilities under the fee-for-service model.',
+          'Scale WM Renewable Energy \u2014 landfill-gas-to-RNG, electricity, RINs/RECs.',
+          'Capture IRA investment / production tax credits where available.',
+          'Build end-markets for harder-to-recycle materials (e.g., plastics).',
+        ],
+      },
+      {
+        number: '03',
+        title: 'Integrate & Scale WM Healthcare Solutions (Stericycle)',
+        points: [
+          'Realize the cost synergies and revenue cross-sell from the $7.2B Stericycle acquisition.',
+          'Diversify into regulation-heavy medical waste + secure information destruction (lower cyclicality).',
+          'Integrate systems and internal controls; divest the 35 held-for-sale locations.',
+          'Leverage WM\u2019s collection/disposal network behind the medical-waste fleet.',
+        ],
+      },
+      {
+        number: '04',
+        title: 'People-First, Technology-Led Operations',
+        points: [
+          'Safety as a core value \u2014 target 2.0 TRIR by 2030 (3% annual reduction; 2024 TRIR 3.23).',
+          'Attract/retain a high-quality workforce; build a leadership succession pipeline.',
+          'Technology & automation \u2014 the MyWM app, optical sorting, and methane monitoring.',
+          'Disciplined capital allocation \u2014 resume share repurchases once leverage normalizes (~18 months post-Stericycle).',
+        ],
+      },
+    ],
+    bigPicture: 'WM is compounding an irreplaceable, recession-resistant core (collection, transfer, and landfill) while layering on two growth engines \u2014 sustainability (recycling + renewable energy) and regulated healthcare waste (Stericycle). The strategy converts heavy capital intensity and strict regulation into a widening moat: permits competitors can\u2019t get, airspace they can\u2019t manufacture, and route density that compounds with scale.',
+
+    // Sustainability / ESG \u2014 framed as a growth strategy, not just compliance
+    sustainability: {
+      coreBelief: 'Turn waste into a resource \u2014 capture landfill methane as renewable energy, recover recyclables, and decarbonize operations.',
+      strategy: 'ALWAYS WORKING FOR A SUSTAINABLE TOMORROW\u00ae \u2014 WM positions sustainability as a growth strategy, not just compliance: recycling, renewable energy, and decarbonization are revenue lines, while landfill-gas capture and fleet/route efficiency reduce emissions.',
+      focusAreas: [
+        { name: 'Safety',                 description: 'A core value with no compromise. Target: reduce TRIR by 3%/yr to 2.0 by 2030 (2024 TRIR 3.23). 2024: overall injuries \u20135.8%, OSHA recordables \u20132.2%, lost-time \u20132.4% (acquisition impacts temporarily offset gains).' },
+        { name: 'Renewable Energy',        description: 'Landfill-gas-to-energy and RNG via WM Renewable Energy \u2014 recognized by the EPA as renewable (alongside wind, solar, geothermal). 102 active projects.' },
+        { name: 'Recycling & Circularity', description: 'North America\u2019s leading post-consumer recycler; investing in automated single-stream + organics facilities and in end-markets for hard-to-recycle plastics.' },
+        { name: 'Emissions & Methane',     description: 'Monitoring methane via ground, aerial, and satellite technologies; working with the EPA/ECCC on measurement standards; landfill gas collection & control systems.' },
+        { name: 'People & Communities',    description: 'People-first culture; ~61,700 employees (~9,900 under CBAs); engaging local communities and policymakers on the essential public-service role of the industry.' },
+      ],
+      reporting: 'Publishes an annual Sustainability Report (progress toward 2030 goals) at sustainability.wm.com. Growing disclosure obligations: California Scope 1 & 2 (2026) / Scope 3 (2027), EU CSRD (2026+).',
+    },
+  },
+};
+
+
+// ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COVERAGE_DATA = [
@@ -8461,7 +8961,7 @@ const COVERAGE_DATA = [
   { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: PEP_BREAKDOWN },
 
   // === WASTE · USA ===
-  { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
+  { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: WM_BREAKDOWN },
   { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null, locked: true },
 
   // === CONGLOMERATE · USA ===
@@ -19369,6 +19869,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               const founded     = parseFact(facts.founded);
                               const incorporated = parseFact(facts.incorporated);
                               // REH shape — distributor at-a-glance (no brands/global-reach)
+                              // WM shape — environmental-services at-a-glance (no brands/global-reach)
+                              if (facts.network) {
+                                return (
+                                  <>
+                                    <StatCard label="FOUNDED"      value={founded.value}      sub={founded.sub || 'as USA Waste Services'} />
+                                    <StatCard label="INCORPORATED" value={incorporated.value} sub={incorporated.sub || 'corporate'} />
+                                    <StatCard label="EMPLOYEES"    value={facts.employees}    sub="full-time (2024)" />
+                                    <StatCard label="NETWORK"      value={facts.network}      sub="landfills, largest in N. America" />
+                                  </>
+                                );
+                              }
                               if (facts.teamMembers) {
                                 return (
                                   <>
