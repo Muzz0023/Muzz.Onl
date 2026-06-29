@@ -9394,6 +9394,135 @@ const WM_BREAKDOWN = {
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COST_BREAKDOWN = {
+  risks: {
+  riskFactors: {
+    categories: [
+      { name: 'Business & Operating Risks', items: [
+        { risk: 'Geographic concentration', meaning: 'Heavy dependence on US & Canada (86% of 2024 sales; California alone ~27% of US sales). A regional slowdown could materially affect results.' },
+        { risk: 'Growth & expansion', meaning: 'Site acquisition, regulations, community opposition, and cannibalization of existing stores can slow expansion, raise costs, or cause failed new markets.' },
+        { risk: 'Membership loyalty', meaning: 'Membership growth and ~91% renewal are critical, and Kirkland Signature performance is key. Loss of trust means lower sales, margins, and fee revenue.' },
+        { risk: 'Supply-chain disruption', meaning: 'Weather, labor, pandemics, and transport disruptions cause delays, higher costs, and lower member satisfaction.' },
+        { risk: 'Consumer trends', meaning: 'Failure to track tastes and sustainability can cause inventory imbalances, lost sales, and weaker market share.' },
+        { risk: 'IT & cyber execution', meaning: 'System failures, cyber incidents, or poor execution of IT projects can disrupt transactions, raise costs, and damage reputation.' },
+        { risk: 'Data privacy', meaning: 'Privacy and data-protection failures amid stricter regulation risk fines, litigation, and reputational harm.' },
+        { risk: 'Payment systems', meaning: 'Fees, breaches, and reliance on third parties can raise costs, lose card acceptance, and dissatisfy members.' },
+        { risk: 'Product safety', meaning: 'Contamination or safety issues can trigger recalls, lawsuits, and brand damage.' },
+        { risk: 'Omnichannel execution', meaning: 'Failure in e-commerce/mobile can lose competitiveness and weaken member engagement.' },
+        { risk: 'Talent & retention', meaning: 'Recruitment, training, and retention challenges raise labor costs, weaken performance, and create succession risk.' },
+        { risk: 'Insurance & self-insurance', meaning: 'Coverage limitations and self-insurance exposure risk large uninsured losses in a catastrophic event.' },
+      ] },
+      { name: 'Market & External Risks', items: [
+        { risk: 'Competition', meaning: 'Strong retail competition (Walmart, Amazon, Sam\u2019s Club, and others) pressures share and margins.' },
+        { risk: 'Macroeconomic pressure', meaning: 'Inflation, unemployment, tariffs, and weak consumer confidence can lower demand and erode margins.' },
+        { risk: 'Commodity prices', meaning: 'Fuel and food price volatility raise costs and can lower sales.' },
+        { risk: 'Supplier risk', meaning: 'Suppliers unable to meet quality or volume needs cause stock-outs, higher costs, and reputational damage.' },
+        { risk: 'Foreign exchange', meaning: '28% of 2024 sales are from abroad; FX swings lower reported sales and profitability.' },
+        { risk: 'Climate & natural disasters', meaning: 'Disasters, extreme weather, and climate change can shut operations, disrupt supply chains, and raise costs.' },
+        { risk: 'Pandemics', meaning: 'Health crises cause labor shortages, supply disruptions, and demand shifts.' },
+        { risk: 'Investor expectations', meaning: 'Missing growth, EPS, or renewal expectations can drive stock-price declines and volatility.' },
+      ] },
+      { name: 'Legal & Regulatory Risks', items: [
+        { risk: 'Foreign-market regulation', meaning: 'Political, regulatory, tax, and legal challenges abroad raise costs and compliance burdens and reduce flexibility.' },
+        { risk: 'Accounting & judgment', meaning: 'Accounting changes and management assumptions can cause significant swings in financial results.' },
+        { risk: 'Internal controls (SOX 404)', meaning: 'Control failures risk investor-confidence loss and regulatory penalties.' },
+        { risk: 'Tax changes', meaning: 'US or foreign tax changes raise liabilities and lower earnings.' },
+        { risk: 'ESG regulation', meaning: 'Climate, carbon, waste, and human-rights rules raise costs, limit sourcing, and create reputational risk.' },
+        { risk: 'ESG goals', meaning: 'Failure to meet stated ESG goals risks reputational harm with members and stakeholders.' },
+        { risk: 'Legal proceedings', meaning: 'Audits, investigations, and litigation cause costly settlements, fines, and resource diversion.' },
+      ] },
+    ],
+  },
+  cyber: {
+    rows: [
+      { category: 'Risk Management Approach', meaning: 'Cyber risk is embedded in enterprise risk management and governed by an Information Security Policy.', points: ['Program mapped to NIST CSF, CIS 18, and PCI DSS'] },
+      { category: 'Program Assessments', meaning: 'Independent bi-annual assessments gauge program maturity, supplemented by audits.', points: ['Assessed against NIST CSF & CIS 18', 'Internal and external audits'] },
+      { category: 'Key Controls & Activities', meaning: 'Layered technical and human controls reduce attack surface.', points: ['Vulnerability scanning + internal/external penetration tests', 'Secure code scanning, allow-listing, configuration management', 'Employee security awareness & training'] },
+      { category: 'Third-Party Risk', meaning: 'Risk-based reviews of select vendors and service providers reduce incident likelihood and business interruption.', points: ['Vendor / service-provider risk reviews'] },
+      { category: 'SOC & Detection / Response', meaning: 'An in-house + external Security Operations Center handles threat detection and incident response.', points: ['Maintains IR plans & playbooks', 'Periodic tabletop exercises (including executives)'] },
+      { category: 'Materiality Governance', meaning: 'Significant incidents escalate to a Cybersecurity Materiality Committee (IT/Security, Ops, Admin, Finance, Legal).', points: ['Assesses materiality using qualitative & quantitative factors'] },
+      { category: 'Board Oversight', meaning: 'The Audit Committee oversees cybersecurity and the full Board receives periodic evaluations.', points: ['Regular updates from the CISO and Internal Audit'] },
+      { category: 'Leadership', meaning: 'A CISO (18+ yrs) leads engineering, operations, IR, IAM, risk/compliance, and vulnerability management.', points: ['CISO reports to the CIDO (30+ yrs global cyber leadership), who reports to the CEO'] },
+      { category: 'Insurance', meaning: 'Maintains cybersecurity insurance for certain losses from significant incidents.', points: ['Cyber insurance in place'] },
+      { category: 'Incident History', meaning: 'The company and some providers have experienced incidents/threats, with no material impacts identified to date.', points: ['Acknowledges undetected intrusions are possible', 'No controls can guarantee prevention'] },
+    ],
+    tldr: 'A mature, framework-based program (NIST CSF / CIS 18 / PCI DSS) with experienced leadership (CISO 18+ yrs \u2192 CIDO 30+ yrs \u2192 CEO), a materiality committee, Audit-Committee oversight, and cyber insurance. No material incidents to date.',
+  },
+  derivatives: {
+    summary: 'Costco uses derivatives strictly for risk management \u2014 never speculation. Most contracts are small or immaterial, and many fall under the \u201Cnormal purchases and normal sales\u201D exception, so they do not distort earnings with fair-value swings.',
+    risksHedged: [
+      { name: 'Foreign Currency Exchange', icon: '\uD83D\uDCB1', instruments: 'Forward FX contracts', purpose: 'Hedge USD-denominated inventory bought by foreign subsidiaries', description: 'International subsidiaries buy USD-denominated inventory while operating in other functional currencies. Forward contracts economically hedge these purchases but do not qualify for hedge accounting, so fair-value changes hit income \u2014 though they are immaterial.', extraNote: 'Some FX contracts carry credit-risk-related contingent features (early settlement if triggered) \u2014 an immaterial liability if triggered.' },
+      { name: 'Energy (Electricity & Natural Gas)', icon: '\u26A1', instruments: 'Fixed-price + variable-price contracts', purpose: 'Manage warehouse and facility energy costs', description: 'Warehouses and facilities consume large amounts of energy. Costco uses fixed-price contracts (mostly US & Canada) plus variable-price contracts tied to market indices. Many qualify for the \u201Cnormal purchases and normal sales\u201D exception \u2192 no mark-to-market.', extraNote: '' },
+      { name: 'Fuel (Gas Stations)', icon: '\u26FD', instruments: 'Variable-price index contracts', purpose: 'Manage gasoline supply costs', description: 'Costco sells large volumes of gasoline; costs depend on wholesale prices. It enters variable-price contracts tied to index benchmarks, treated under \u201Cnormal purchases/sales\u201D \u2192 no derivative revaluation. Exposure remains if fuel costs spike suddenly.', extraNote: '' },
+    ],
+    hedgeTypes: [
+      { name: 'Economic hedges (no hedge accounting)', description: 'FX forwards \u2014 fair-value changes recorded in income, but immaterial.' },
+      { name: 'Normal purchases & normal sales exception', description: 'Most energy and fuel contracts \u2014 no mark-to-market required.' },
+    ],
+    accountingNote: 'No speculative trading. Most contracts are small/immaterial and often fall under \u201Cnormal purchase/sales,\u201D so they don\u2019t distort earnings with fair-value swings. Counterparty credit risk is very low and actively managed.',
+  },
+},
+  moat: {
+  preamble: 'Costco\u2019s moat is a self-reinforcing membership flywheel, not a brand or a patent. Members pay an annual fee for the right to buy goods sold at near-cost; that fee \u2014 high-margin, recurring, renewed ~91% of the time \u2014 is where the profit lives. Scale buys lower costs \u2192 lower costs become lower prices \u2192 lower prices attract and retain more members \u2192 more members buy more scale. The switching cost is small in dollars (a ~$60 card) but powerful in behaviour: members rationalise spending to \u201Cget their money\u2019s worth.\u201D The deepest part of the moat is what Costco refuses to do \u2014 it has enormous pricing power and deliberately leaves it unused, because the trust of the member compounds into more value than a few points of margin ever could. True peers are limited to Sam\u2019s Club and BJ\u2019s; everyone else competes on some SKUs but not the whole system.',
+  pricingPower: {
+    label: 'Pricing Power \u00b7 Unused by Design',
+    description: 'Three Costco flagship prices over 25 years. The flat lines ARE the thesis: Costco has enormous pricing power and refuses to use it. The hot-dog combo ($1.50) and rotisserie chicken ($4.99) have not moved in decades; even the membership fee \u2014 the one price it lets drift up \u2014 rises only ~$5 every 5\u20136 years and was deliberately held flat through the 2021\u201324 inflation surge.',
+    products: [
+      { name: 'Hot Dog + Soda Combo', unit: 'USD', color: 'green', series: [
+        {year:2000,value:1.50},{year:2002,value:1.50},{year:2004,value:1.50},{year:2006,value:1.50},{year:2008,value:1.50},{year:2010,value:1.50},{year:2012,value:1.50},{year:2014,value:1.50},{year:2016,value:1.50},{year:2018,value:1.50},{year:2020,value:1.50},{year:2022,value:1.50},{year:2024,value:1.50},
+      ] },
+      { name: 'Rotisserie Chicken', unit: 'USD', color: 'amber', series: [
+        {year:2000,value:4.99},{year:2002,value:4.99},{year:2004,value:4.99},{year:2006,value:4.99},{year:2008,value:4.99},{year:2010,value:4.99},{year:2012,value:4.99},{year:2014,value:4.99},{year:2016,value:4.99},{year:2018,value:4.99},{year:2020,value:4.99},{year:2022,value:4.99},{year:2024,value:4.99},
+      ] },
+      { name: 'Annual Membership Fee', unit: 'USD', color: 'blue', series: [
+        {year:2000,value:45},{year:2002,value:45},{year:2004,value:45},{year:2005,value:45},{year:2006,value:50},{year:2008,value:50},{year:2010,value:50},{year:2011,value:55},{year:2013,value:55},{year:2015,value:55},{year:2016,value:55},{year:2017,value:60},{year:2019,value:60},{year:2021,value:60},{year:2022,value:60},{year:2024,value:60},
+      ] },
+    ],
+  },
+  summary: {
+    headline: 'The moat is pricing power it refuses to use \u2014 discipline that compounds.',
+    breakdown: [
+      { division: 'Membership Pricing Power', moatStrength: 'Very Strong', biggestRisk: 'Raising fees too fast could dent renewal and member trust', icon: '\uD83D\uDCB3', featured: true },
+      { division: 'Brand Loyalty \u2014 Kirkland Signature', moatStrength: 'Extremely Strong', biggestRisk: 'A quality slip would erode the trust premium', icon: '\uD83C\uDFF7\uFE0F' },
+      { division: 'Supplier Pricing Power', moatStrength: 'Strong', biggestRisk: 'Few \u2014 scale, volume and fast turns give the leverage', icon: '\uD83D\uDCE6' },
+      { division: 'Customer Pricing Power', moatStrength: 'Moderate (self-restrained)', biggestRisk: 'Deliberately unused \u2014 the restraint IS the strategy', icon: '\uD83D\uDED2' },
+    ],
+    buffettTakeaways: [
+      'Munger: \u201CCostco could raise prices tomorrow and earnings would explode, but the trust of the customer is worth far more.\u201D',
+      'Buffett: \u201CTheir pricing power is enormous but unused. That is the moat.\u201D',
+      'Markup is capped ~14% (many core items 8\u201311%); membership fees subsidise the razor-thin merchandise margins.',
+      'Kirkland Signature is ~30%+ of sales \u2014 higher margin while still undercutting the national brands beside it.',
+      'The hidden lever is supplier negotiation: huge guaranteed volumes, ~30-day inventory turns, limited SKUs, and exclusive sizes/packaging.',
+      'Through the 2021\u201324 inflation surge Costco raised some food prices only modestly and deferred any membership-fee hike \u2014 the restraint is voluntary, which is precisely why it is a moat.',
+    ],
+  },
+  competitiveLandscape: {
+    preamble: 'Costco really has very few true competitors. Only Sam\u2019s Club (Walmart) and BJ\u2019s Wholesale replicate the paid-membership + bulk + warehouse-format model. The rest are partial competitors who overlap on some categories but cannot replicate the membership + extreme operational efficiency + bulk-pricing system.',
+    middleLabel: 'COSTCO EDGE',
+    majorCompetitors: ['Sam\u2019s Club', 'BJ\u2019s Wholesale', 'Walmart', 'Amazon', 'Target', 'Kroger', 'Aldi', 'Lidl'],
+    categories: [
+      { category: 'Warehouse Clubs \u2014 true peers', icon: '\uD83D\uDD35', featured: true, rows: [
+        { type: 'Sam\u2019s Club (Walmart)', note: 'The only true apples-to-apples rival \u2014 same paid-membership bulk model', competitors: 'Direct head-to-head' },
+        { type: 'BJ\u2019s Wholesale Club', note: 'East-coast warehouse club; similar model at smaller scale', competitors: 'Direct head-to-head' },
+      ] },
+      { category: 'Large-Scale Discounters', icon: '\uD83C\uDFEC', rows: [
+        { type: 'Walmart', note: 'Costco wins on price-per-unit via bulk + Kirkland; Walmart wins on convenience/footprint', competitors: 'Groceries, general merchandise' },
+        { type: 'Target', note: 'No membership, less bulk-oriented; overlaps on general merchandise', competitors: 'General merchandise' },
+      ] },
+      { category: 'Online Retail Giants', icon: '\uD83D\uDCE6', rows: [
+        { type: 'Amazon (Fresh, Subscribe & Save)', note: 'Growing threat in non-perishables, personal care, supplements, bulk delivery', competitors: 'E-commerce, delivery' },
+        { type: 'Walmart.com', note: 'Scaled omnichannel; competes on price + delivery', competitors: 'E-commerce' },
+      ] },
+      { category: 'Grocery & Hard Discounters', icon: '\uD83D\uDED2', rows: [
+        { type: 'Kroger / Albertsons', note: 'Compete on food pricing & selection; Costco wins on price-per-unit', competitors: 'Food, fresh' },
+        { type: 'Aldi / Lidl', note: 'Hard discounters; compete on price, especially internationally', competitors: 'Food, staples' },
+      ] },
+      { category: 'Specialty & International', icon: '\uD83C\uDF0E', rows: [
+        { type: 'Home Depot / Best Buy / CVS', note: 'Category specialists \u2014 deeper selection in one category vs Costco\u2019s limited SKUs', competitors: 'Appliances, electronics, pharmacy' },
+        { type: 'Metro / Makro / Carrefour', note: 'Compete in select non-US markets; Costco has few true peers internationally', competitors: 'International' },
+      ] },
+    ],
+  },
+},
   overview: {
     facts: {
       founded:     '1983 \u00b7 Seattle, WA',
@@ -9481,6 +9610,26 @@ const COST_BREAKDOWN = {
   },
 
   numbers: {
+    cashFlow: {
+  operatingCashFlow: { label: 'Net Cash from Operating Activities', unit: 'M USD', series: [
+    {year:2015,value:4285},{year:2016,value:3292,down:true},{year:2017,value:6726},{year:2018,value:5774,down:true},{year:2019,value:6356},{year:2020,value:8861},{year:2021,value:8959},{year:2022,value:7392,down:true},{year:2023,value:11068},{year:2024,value:11339},
+  ], note: 'Operating cash flow more than doubled from 2015 to 2024, driven by membership-fee growth and disciplined working capital.' },
+  capex: { label: 'Capital Expenditures', unit: 'M USD', series: [
+    {year:2015,value:2393},{year:2016,value:2649},{year:2017,value:2502},{year:2018,value:2969},{year:2019,value:2998},{year:2020,value:2810},{year:2021,value:3588},{year:2022,value:3891},{year:2023,value:4323},{year:2024,value:4710},
+  ], note: 'Mostly new-warehouse build-out and remodels \u2014 steady, self-funded reinvestment.' },
+  capexRatio: { label: 'CapEx \u00f7 Operating Cash Flow %', unit: '%', series: [
+    {year:2015,value:55.85,spike:true},{year:2016,value:80.47,spike:true},{year:2017,value:37.20},{year:2018,value:51.42,spike:true},{year:2019,value:47.17},{year:2020,value:31.71},{year:2021,value:40.05},{year:2022,value:52.64,spike:true},{year:2023,value:39.06},{year:2024,value:41.54},
+  ], note: 'Reinvestment intensity averages ~48% of operating cash flow \u2014 Costco self-funds expansion and still has ~half of OCF left as free cash flow. The 2016 spike (80%) was a low-OCF year.' },
+  freeCashFlow: { label: 'Free Cash Flow (OCF \u2212 CapEx)', unit: 'M USD', series: [
+    {year:2015,value:1892},{year:2016,value:643,down:true},{year:2017,value:4224},{year:2018,value:2805,down:true},{year:2019,value:3358},{year:2020,value:6051},{year:2021,value:5371,down:true},{year:2022,value:3501,down:true},{year:2023,value:6745},{year:2024,value:6629,down:true},
+  ], note: 'FCF = OCF \u2212 CapEx, ties exactly each year. Lumpy year-to-year as CapEx and working capital swing, but the trend is firmly up. Funds the dividend, specials, and buybacks.' },
+  fcfPerShare: { label: 'Free Cash Flow per Share', unit: 'USD per share', series: [
+    {year:2015,value:4.27},{year:2016,value:1.47,down:true},{year:2017,value:9.66},{year:2018,value:6.40,down:true},{year:2019,value:7.64},{year:2020,value:13.71},{year:2021,value:12.16,down:true},{year:2022,value:7.91,down:true},{year:2023,value:15.23},{year:2024,value:14.96,down:true},
+  ], note: 'FCF \u00f7 shares \u2014 grew ~3.5x from 2015 to 2024 on a near-flat share count.' },
+  fcfMultiple: { label: 'Price / Free Cash Flow (FCF Multiple)', unit: 'x', series: [
+    {year:2015,value:33.96},{year:2016,value:102.04,spike:true},{year:2017,value:16.56},{year:2018,value:28.91},{year:2019,value:32.72},{year:2020,value:24.43},{year:2021,value:35.77},{year:2022,value:63.21},{year:2023,value:36.11},{year:2024,value:55.15},
+  ], note: 'The market consistently pays a premium FCF multiple for Costco \u2014 2015\u20132024 average ~42.9x (~36.3x excluding the 2016 low-FCF outlier). The quality is priced in.' },
+},
     balanceSheet: {
   cash: { label: 'Cash & Cash Equivalents', unit: 'M USD', series: [
     {year:2006,value:1511},{year:2007,value:2780},{year:2008,value:2619},{year:2009,value:3157},{year:2010,value:3214},{year:2011,value:4009},{year:2012,value:3528},{year:2013,value:4644},{year:2014,value:5738},{year:2015,value:4801},{year:2016,value:3379},{year:2017,value:4546},{year:2018,value:6055},{year:2019,value:8384},{year:2020,value:12277},{year:2021,value:11258},{year:2022,value:10203},{year:2023,value:13700},{year:2024,value:9906},
@@ -9621,6 +9770,32 @@ const COST_BREAKDOWN = {
   ], note: 'Diluted EPS more than tripled from $4.65 (2014) to $16.56 (2024) \u2014 helped by a near-flat share count.' },
 },
     segments: {
+      revenueByCategory: {
+  description: 'Net sales disaggregated by merchandise category, 2019\u20132024. Foods & Sundries + Non-Foods + Fresh Foods + Warehouse Ancillary & Other ties exactly to Total Net Sales each year. Note this is Net Sales only (excludes the ~$4.8B of membership fees).',
+  mix2024: [
+    {label:'Foods & Sundries', value:101463, pct:40.6},
+    {label:'Non-Foods', value:63973, pct:25.6},
+    {label:'Warehouse Ancillary & Other', value:49969, pct:20.0},
+    {label:'Fresh Foods', value:34220, pct:13.7},
+  ],
+  lines: [
+    { label: 'Foods & Sundries', unit: 'M USD', series: [
+      {year:2019,value:59672},{year:2020,value:68659},{year:2021,value:77277},{year:2022,value:85629},{year:2023,value:96175},{year:2024,value:101463},
+    ], note: 'The largest category (~41% of net sales) \u2014 groceries, snacks, candy, liquor, tobacco. High-frequency, traffic-driving staples.' },
+    { label: 'Non-Foods', unit: 'M USD', series: [
+      {year:2019,value:41160},{year:2020,value:44807},{year:2021,value:55966},{year:2022,value:61100},{year:2023,value:60865,down:true},{year:2024,value:63973},
+    ], note: 'Appliances, electronics, apparel, jewelry, housewares, toys, hardware \u2014 the treasure-hunt assortment. The only category to dip (2023).' },
+    { label: 'Fresh Foods', unit: 'M USD', series: [
+      {year:2019,value:19948},{year:2020,value:23204},{year:2021,value:27183},{year:2022,value:29527},{year:2023,value:31977},{year:2024,value:34220},
+    ], note: 'Meat, produce, bakery, deli \u2014 drives repeat trips and basket size. Grew every year.' },
+    { label: 'Warehouse Ancillary & Other', unit: 'M USD', series: [
+      {year:2019,value:28571},{year:2020,value:26550,down:true},{year:2021,value:31626},{year:2022,value:46474},{year:2023,value:48693},{year:2024,value:49969},
+    ], note: 'Gasoline, pharmacy, optical, food court, e-commerce, business centers, travel. The 2020 dip was the pandemic hit to gas + food court; the 2021\u201322 jump tracks the gasoline-price surge.' },
+    { label: 'Total Net Sales', unit: 'M USD', series: [
+      {year:2019,value:149351},{year:2020,value:163220},{year:2021,value:192052},{year:2022,value:222730},{year:2023,value:237710},{year:2024,value:249625},
+    ], note: 'Sum of the four categories \u2014 ties exactly. Matches the Net Sales line in the income statement.' },
+  ],
+},
   membership: {
     structure: {
       asOf: 'FY2024',
@@ -25088,6 +25263,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         segments.revenueByCountry && { id: 'revenueByCountry', label: 'REVENUE BY GEOGRAPHY' },
                         segments.byCountry && { id: 'byCountry', label: 'REVENUE BY GEOGRAPHY' },
                         segments.membership && { id: 'membership', label: 'MEMBERSHIP' },
+                        segments.revenueByCategory && { id: 'revenueByCategory', label: 'REVENUE BY CATEGORY' },
                         segments.costGeography && { id: 'costGeography', label: 'REVENUE BY GEOGRAPHY' },
                         segments.warehouses && { id: 'warehouses', label: 'WAREHOUSES' },
                         (segments.headlineInsight || segments.mix || segments.naCombined) && { id: 'hsyMix', label: 'SEGMENT MIX' },
@@ -25793,6 +25969,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
                         </>
                       )}
+
+                          {segments.revenueByCategory && activeSub === 'revenueByCategory' && (() => {
+                            const rc = segments.revenueByCategory;
+                            const maxV = rc.mix2024 ? Math.max(...rc.mix2024.map(c => c.value)) : 0;
+                            return (
+                              <>
+                                <SectionHeading>// REVENUE BY CATEGORY</SectionHeading>
+                                {rc.description && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{rc.description}</div>}
+                                {rc.mix2024 && (
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// 2024 NET SALES MIX</div>
+                                    {rc.mix2024.map((c, i) => (
+                                      <div key={i} style={{display:'flex',alignItems:'center',gap:'9px',marginBottom:'6px'}}>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',fontWeight:600,width:'200px',flexShrink:0}}>{c.label}</span>
+                                        <div style={{flex:1,height:'14px',background:'rgba(245,158,11,0.07)',borderRadius:'2px',overflow:'hidden'}}>
+                                          <div style={{width:`${(c.value/maxV*100).toFixed(1)}%`,height:'100%',background:`linear-gradient(90deg, ${amberDim}, ${amber})`,borderRadius:'2px'}}/>
+                                        </div>
+                                        <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'46px',textAlign:'right',flexShrink:0}}>{c.pct}%</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {rc.lines.map((ln, i) => (
+                                  <div key={i}>
+                                    <TimeSeriesTable data={ln} />
+                                    {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                  </div>
+                                ))}
+                              </>
+                            );
+                          })()}
 
                           {/* ════════ COSTCO — MEMBERSHIP · GEOGRAPHY · WAREHOUSES ════════ */}
                           {segments.membership && activeSub === 'membership' && (() => {
@@ -26582,6 +26789,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
                           {cashFlow.freeCashFlow && (<><TimeSeriesTable data={cashFlow.freeCashFlow} />{cashFlow.freeCashFlow.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.freeCashFlow.note}</div>}</>)}
+                          {cashFlow.fcfPerShare && (<><TimeSeriesTable data={cashFlow.fcfPerShare} />{cashFlow.fcfPerShare.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.fcfPerShare.note}</div>}</>)}
+                          {cashFlow.fcfMultiple && (<><TimeSeriesTable data={cashFlow.fcfMultiple} />{cashFlow.fcfMultiple.note && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend — </span>{cashFlow.fcfMultiple.note}</div>}</>)}
                           {cashFlow.debtSummary && (() => {
                             const ds = cashFlow.debtSummary;
                             const maxPay = Math.max(...ds.scheduledPayments.map(p=>p.amount));
@@ -27337,7 +27546,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                           <thead>
                                             <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.04)'}}>
                                               <th style={{textAlign:'left',padding:'7px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>TYPE</th>
-                                              <th style={{textAlign:'left',padding:'7px 9px',color:'rgba(34,197,94,0.95)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>PEP BRANDS</th>
+                                              <th style={{textAlign:'left',padding:'7px 9px',color:'rgba(34,197,94,0.95)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>{competitiveLandscape.middleLabel || 'PEP BRANDS'}</th>
                                               <th style={{textAlign:'left',padding:'7px 9px',color:'rgba(239,68,68,0.85)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>COMPETITORS</th>
                                             </tr>
                                           </thead>
@@ -27345,7 +27554,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                             {cat.rows.map((row, j) => (
                                               <tr key={j} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
                                                 <td style={{padding:'6px 9px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{row.type}</td>
-                                                <td style={{padding:'6px 9px',color:'rgba(34,197,94,0.85)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{row.pepBrands}</td>
+                                                <td style={{padding:'6px 9px',color:'rgba(34,197,94,0.85)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{row.pepBrands || row.note}</td>
                                                 <td style={{padding:'6px 9px',color:'rgba(224,234,255,0.75)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{row.competitors}</td>
                                               </tr>
                                             ))}
