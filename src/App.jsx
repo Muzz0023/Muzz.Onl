@@ -9393,6 +9393,112 @@ const WM_BREAKDOWN = {
 // ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
+const COST_BREAKDOWN = {
+  overview: {
+    facts: {
+      founded:     '1983 \u00b7 Seattle, WA',
+      warehouses:  '890',
+      employees:   '333,000',
+      renewal:     '~91%',
+    },
+    identity: {
+      coreIdentity: 'Costco Wholesale operates the world\u2019s leading membership warehouse-club chain \u2014 890 no-frills warehouses across 15+ countries selling a deliberately narrow selection (<4,000 SKUs) of national brands and Kirkland Signature private label at razor-thin markups. The business is not really a retailer: merchandise runs near break-even and the recurring annual membership fee is the profit engine. Low prices \u2192 more members \u2192 more fees \u2192 more buying scale \u2192 even lower prices \u2014 a self-reinforcing flywheel protected by ~91% renewal loyalty.',
+      industryPosition: [
+        'World\u2019s #1 warehouse club \u2014 890 warehouses worldwide (2024), far ahead of Sam\u2019s Club and BJ\u2019s on sales-per-warehouse productivity.',
+        'Membership model: ~91% worldwide renewal (~90% US/Canada). The annual fee covers a large share of net income, subsidizing thin merchandise margins.',
+        'Kirkland Signature private label is ~30%+ of sales \u2014 a high-trust, high-loyalty brand that often outsells the national brands it sits beside.',
+        'Deliberately limited SKUs (<4,000 vs 100,000+ at broadline retail) drive massive volume per item and supplier leverage.',
+        'Gross margin held around 10\u201311% by policy (markup capped ~14%, many core items 8\u201311%) \u2014 extreme cost discipline rare in retail.',
+        '86% of FY2024 sales from US & Canada; ~28% of sales from outside the US (FX-exposed). California alone is ~27% of US sales.',
+      ],
+    },
+    buffettFraming: {
+      headline: '\u201CThe membership fee is the whole business \u2014 the merchandise just feeds it.\u201D',
+      body: 'Costco is a Munger desert-island business: a membership toll-booth wearing a retailer\u2019s clothes. Members pay an annual fee for the right to buy goods sold at near-cost, and that fee \u2014 high-margin, recurring, and renewed ~91% of the time \u2014 is where the profit lives. The moat is a self-reinforcing flywheel: scale buys lower costs, lower costs are passed to members as lower prices, lower prices attract and retain more members, more members buy more scale. Management deliberately refuses to exercise its pricing power (the $1.50 hot dog and $4.99 rotisserie chicken have not changed in decades) because the trust of the member is worth more than a few points of margin. That voluntary restraint IS the moat \u2014 it is extremely hard for a competitor to undercut a company that prices at cost on purpose and makes its money from a subscription.',
+      bottomLine: 'For Buffett-framework investors: Costco is a subscription business disguised as a retailer, with switching costs hidden inside a $65 card and pricing power it chooses never to use. The flywheel compounds with scale; the risks are concentration (86% US/Canada, California ~27% of US sales), a premium valuation, FX exposure, and the perpetual need to keep renewal rates and member trust intact. But the core economics \u2014 recurring fee income on top of break-even merchandise \u2014 are about as durable and capital-light as consumer retail gets.',
+    },
+    businessLines: {
+      description: 'Costco\u2019s revenue is two distinct streams: (1) Net Sales \u2014 merchandise sold at thin markup, and (2) Membership Fees \u2014 the high-margin recurring engine. Merchandise breaks into core (foods, non-foods, fresh), ancillary (gas, pharmacy, optical, food court), and other (e-commerce, business centers, travel).',
+      lines: [
+        { name: 'Membership Fees', description: 'The profit engine. Annual fees from Gold Star (individual), Business, and Executive members (Executive members earn a 2% reward and drive a disproportionate share of sales). Recurring, near-100%-margin revenue renewed ~91% worldwide. Management has deliberately deferred fee increases through recent inflation to protect member trust.', revenueProfile: 'Recurring, very-high-margin, sticky', highlight: true },
+        { name: 'Core Merchandise \u2014 Foods & Sundries', description: 'Groceries, candy, snacks, liquor, tobacco. High-frequency, traffic-driving categories. Sold at thin markup to drive volume and visits.', revenueProfile: 'High-volume, thin-margin, traffic driver' },
+        { name: 'Core Merchandise \u2014 Non-Foods', description: 'Appliances, electronics, apparel, jewelry, housewares, toys, hardware. Higher ticket, treasure-hunt assortment that rotates to drive urgency.', revenueProfile: 'Higher-ticket, thin-margin' },
+        { name: 'Core Merchandise \u2014 Fresh Foods', description: 'Meat, produce, bakery, deli. Drives repeat trips and basket size; the $4.99 rotisserie chicken is a deliberate loss-leader.', revenueProfile: 'Traffic & loyalty driver' },
+        { name: 'Ancillary Businesses', description: 'Gasoline (~12% of 2024 sales, ~719 stations \u2014 lowest-price traffic driver with low gross-margin %), pharmacy, optical, hearing aids, tire installation, and the food court (the $1.50 hot dog combo, unchanged since 1985).', revenueProfile: 'Traffic driver, gas dilutes margin %' },
+        { name: 'Other Businesses', description: 'E-commerce (~7% of 2024 sales, lower gross margin %), Costco business centers, and Costco Travel. Digitally originated sales (e-comm + business delivery + travel + same-day grocery) are ~9% of total.', revenueProfile: 'Growth channel, margin-dilutive' },
+      ],
+    },
+    headquarters: {
+      location: 'Issaquah, Washington',
+      description: 'Costco Wholesale Corporation is headquartered in Issaquah, Washington. Founded in 1983 in Seattle; the original Price Club (founded 1976 by Sol Price) merged with Costco in 1993 to form Price/Costco, later renamed Costco Wholesale. Operates on a 52/53-week fiscal year ending the Sunday nearest August 31 (FY2023 was a 53-week year). Trades on NASDAQ under the ticker COST.',
+    },
+    leadership: {
+      asOf: '2024\u20132025',
+      executives: [
+        { name: 'Ron Vachris',        role: 'President & CEO (since Jan 2024) \u00b7 Director', since: 'CEO since 2024', joined: 1982, tenureYears: 43, history: 'Joined Costco in 1982 as a forklift driver; 40+ years inside the company; COO before becoming CEO. Deep merchant culture \u2014 lives the \u201Ccost first, margin second\u201D DNA.', featured: true },
+        { name: 'W. Craig Jelinek',    role: 'Former CEO (2012\u201324) \u00b7 Director', since: 'Board member', joined: 1984, tenureYears: 40, history: 'Joined Price Club 1984; Costco CEO 2012\u201324, leading enormous international and e-commerce growth while keeping strict low-margin, value-for-member discipline. Remains on the board.', featured: true },
+        { name: 'Gary Millerchip',     role: 'EVP & CFO (since 2023)', since: 'CFO since 2023', joined: 2023, tenureYears: 2, history: 'Former Kroger CFO; brings financial, capital-markets, and grocery/retail operations experience. Manages disciplined capital allocation, real estate, inventory control, and FX exposure. A rare outside hire.', featured: true },
+        { name: 'Paul Moulton',        role: 'EVP & Chief Information Officer', since: 'CIO', joined: 1985, tenureYears: 40, history: 'Longtime insider (joined 1985). Oversees IT, e-commerce, and Costco\u2019s slow-but-steady digital transformation.' },
+        { name: 'Russell Miller',      role: 'SVP, COO \u2014 International', since: 'COO International', joined: 1990, tenureYears: 35, history: '30+ years at Costco, started in warehouse operations. Oversees international expansion, including Asia.' },
+        { name: 'Fran Reyes',          role: 'EVP, COO \u2014 U.S. & Canada', since: 'COO US & Canada', joined: 1984, tenureYears: 41, history: '40+ year Costco veteran. Manages North American warehouse operations.' },
+        { name: 'Joe Portera',         role: 'EVP, COO \u2014 Eastern & Midwest Divisions', since: 'COO E&M', joined: 1984, tenureYears: 41, history: '40+ year veteran with long-tenured store-operations leadership.' },
+        { name: 'Claudine Adamo',      role: 'EVP, Merchandising', since: 'EVP Merch', joined: 1992, tenureYears: 33, history: 'Over 30 years at Costco. Directly manages Costco\u2019s most critical moat \u2014 merchandising and supplier negotiations.' },
+        { name: 'James P. Murphy',     role: 'EVP, International Division', since: 'EVP Intl', joined: 1987, tenureYears: 38, history: 'Costco veteran since 1987. Oversees global expansion and international pricing consistency.' },
+        { name: 'Robert Nelson',       role: 'SVP, Administration', since: 'SVP Admin', joined: 1992, tenureYears: 33, history: 'At Costco since 1992. Oversees HR, labor relations, and workforce culture.' },
+      ],
+      executiveTakeaways: [
+        'Extraordinary homegrown pipeline \u2014 nearly all top execs promoted internally (CEO Vachris started as a forklift driver in 1982). Very few outsiders.',
+        'Merchant-driven leadership \u2014 the CEO, COOs, and merchandising heads all built careers in warehouse operations, not finance.',
+        'Cost-obsessed culture \u2014 the team deliberately holds gross margin around 10\u201311%, an extremely rare discipline in retail.',
+        'No financial-engineering mentality \u2014 modest debt, minimal option dilution, prudent capital allocation. Only 3 CEOs in 40 years signals rare stability.',
+        'The one notable outside hire is CFO Millerchip (ex-Kroger, 2023) \u2014 bringing capital-markets depth to an otherwise insider bench.',
+      ],
+      board: [
+        { name: 'Hamilton E. (Tony) James', role: 'Chairman (since 2017)', background: 'Former Executive Vice Chairman of Blackstone; deep private-equity and capital-markets experience. Became Chairman in 2017 after the passing of co-founder Jeff Brotman.', category: 'Finance' },
+        { name: 'Ron Vachris',        role: 'Director \u00b7 CEO', background: 'New CEO (2024), promoted internally; joined Costco 1982. Extensive warehouse-ops and merchandising experience \u2014 a critical \u201Cculture carrier.\u201D', category: 'Operational' },
+        { name: 'W. Craig Jelinek',   role: 'Director \u00b7 Former CEO', background: 'Costco CEO 2012\u201324; 40+ year veteran with deep operations, merchandising, and culture knowledge. Retired as CEO but remains on the board.', category: 'Operational' },
+        { name: 'Susan Decker',       role: 'Independent Director', background: 'Former Yahoo! CFO; strong technology, finance, and digital background \u2014 a key voice as Costco expands e-commerce.', category: 'Finance' },
+        { name: 'Kenneth Denman',     role: 'Independent Director', background: 'Tech entrepreneur and venture capitalist; board experience at Motorola, VMware, and LendingClub. Adds tech, data, AI, and innovation oversight.', category: 'Operational' },
+        { name: 'John W. Stanton',    role: 'Independent Director (since 2015)', background: 'Wireless-industry entrepreneur (Clearwire, VoiceStream, Western Wireless); deep operations, telecom, and tech knowledge.', category: 'Operational' },
+        { name: 'Sally Jewell',       role: 'Independent Director', background: 'Former U.S. Secretary of the Interior and former CEO of REI; brings retail/outdoor, ESG, and environmental governance experience.', category: 'Operational' },
+        { name: 'Helena B. Foulkes',  role: 'Independent Director', background: 'Former President of CVS Pharmacy; retail-healthcare and pharmacy expertise.', category: 'Operational' },
+        { name: 'Maggie Wilderotter', role: 'Independent Director', background: 'Former CEO of Frontier Communications; technology, telecom, and extensive public-company board leadership.', category: 'Operational' },
+        { name: 'Adrianne Shapira',   role: 'Independent Director', background: 'Former Goldman Sachs retail analyst and private-equity partner at Eurazeo; capital-markets and retail-sector insight.', category: 'Finance' },
+      ],
+      boardTakeaways: {
+        title: 'Buffett-style governance assessment',
+        scores: [
+          { label: 'Shareholder-aligned, operator-heavy board', rating: 'strong' },
+          { label: 'Internal-promotion culture (Vachris, Jelinek)', rating: 'strong' },
+          { label: 'Retail / merchandising / real-estate depth', rating: 'strong' },
+          { label: 'Long-term orientation vs Wall Street', rating: 'strong' },
+          { label: 'Cost-leadership & operating focus', rating: 'strong' },
+          { label: 'Founder / controlling shareholder', rating: 'weak' },
+        ],
+        verdict: 'A \u201Cmoat-protector\u201D board \u2014 deeply focused on defending the low-cost culture, membership model, and long-term merchant mindset rather than short-term Wall Street demands. Heavy operational experience, not celebrity directors. Strong capital-markets depth (James/Blackstone, Decker, Shapira) balances the merchant operators. No controlling shareholder \u2014 a conventionally-governed, widely-held company. The board\u2019s defining feature is its alignment with the member-first, cost-leadership philosophy that is the entire business.',
+      },
+    },
+  },
+
+  numbers: {
+    employees: { label: 'Total Employees', unit: 'count', series: [
+      {year:2006,value:127000},{year:2007,value:127000},{year:2008,value:137000},{year:2009,value:142000},{year:2010,value:147000},{year:2011,value:164000},{year:2012,value:174000},{year:2013,value:184000},{year:2014,value:195000},{year:2015,value:205000},{year:2016,value:218000},{year:2017,value:231000},{year:2018,value:245000},{year:2019,value:254000},{year:2020,value:273000},{year:2021,value:288000},{year:2022,value:304000},{year:2023,value:316000},{year:2024,value:333000},
+    ], note: 'Total headcount grew from 127k (2006) to 333k (2024). 2024 composition: US 219k / Canada 53k / Other International 61k \u2014 so ~34% of staff is now outside the US. (Pre-2019 Costco reported a full-time / part-time split instead of a regional one; in 2018 it was 143k full-time + 102k part-time.)' },
+
+    usEmployees: { label: 'U.S. Employees', unit: 'count', series: [
+      {year:2019,value:167000},{year:2020,value:181000},{year:2021,value:192000},{year:2022,value:202000},{year:2023,value:208000},{year:2024,value:219000},
+    ], note: 'U.S. headcount only (regional split first disclosed in 2019). Canada was 53k and Other International 61k in 2024.' },
+
+    revenuePerEmployee: { label: 'Revenue per Employee', unit: 'USD', series: [
+      {year:2015,value:566822},{year:2016,value:544220},{year:2017,value:558216},{year:2018,value:577869},{year:2019,value:601583},{year:2020,value:610917},{year:2021,value:680311},{year:2022,value:746875},{year:2023,value:766772},{year:2024,value:764003},
+    ], note: 'Among the highest sales-per-employee in all of retail \u2014 the warehouse format and lean labor model (pallet merchandising, limited SKUs) drive ~$764k of revenue per worker in 2024, up ~35% since 2015. (Note: gasoline and bulk baskets inflate revenue-per-head vs conventional retail.)' },
+
+    netIncomePerEmployee: { label: 'Net Income per Employee', unit: 'USD', series: [
+      {year:2015,value:11602},{year:2016,value:10780},{year:2017,value:11600},{year:2018,value:12790},{year:2019,value:14409},{year:2020,value:14663},{year:2021,value:17389},{year:2022,value:19224},{year:2023,value:19908},{year:2024,value:22123},
+    ], note: 'Net income per employee nearly doubled from ~$11.6k (2015) to ~$22.1k (2024) \u2014 operating leverage as membership fees and scale compound on a controlled cost base.' },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
@@ -9429,7 +9535,7 @@ const COVERAGE_DATA = [
   { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
 
   // === RETAIL · USA ===
-  { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
+  { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: COST_BREAKDOWN },
 
   // === FOOD · USA ===
   { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
@@ -20332,6 +20438,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               const incorporated = parseFact(facts.incorporated);
                               // REH shape — distributor at-a-glance (no brands/global-reach)
                               // WM shape — environmental-services at-a-glance (no brands/global-reach)
+                              if (facts.warehouses) {
+                                return (
+                                  <>
+                                    <StatCard label="FOUNDED"    value={founded.value}     sub={founded.sub || 'Seattle, WA'} />
+                                    <StatCard label="WAREHOUSES" value={facts.warehouses}  sub="worldwide (FY2024)" />
+                                    <StatCard label="EMPLOYEES"  value={facts.employees}   sub="total (FY2024)" />
+                                    <StatCard label="RENEWAL"    value={facts.renewal}     sub="member renewal rate" />
+                                  </>
+                                );
+                              }
                               if (facts.network) {
                                 return (
                                   <>
