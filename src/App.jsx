@@ -8928,11 +8928,11 @@ const WM_BREAKDOWN = {
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // NUMBERS — income (revenue by service line + operating expenses)
-  // balance (PP&E + airspace + facilities) and segments (segment P&L + geography) pending the next pass
+  // NUMBERS — segments (revenue by service line + operating expenses)
+  // per-segment P&L + geography, plus balance (PP&E + airspace + facilities) pending the next pass
   // ═══════════════════════════════════════════════════════════════
   numbers: {
-    incomeStatement: {
+    segments: {
   wmRevenue: {
     preamble: 'Operating revenues disaggregated by service line, 2010\u20132024 ($M). Collection is the core; Landfill + Transfer complete the Collection & Disposal segment. Note the structural reporting change in 2022: the newer presentation reports gross segment revenues with a separate intercompany elimination, so pre-2022 "Other / Corporate & Other" (~$1.4\u20132.1B) and the negative "Intercompany" line are not directly comparable to 2022\u20132024.',
     netNote: 'Total Net Operating Revenues is after intercompany eliminations. Total Gross Operating Revenues (2022\u20132024 only) is before eliminations.',
@@ -23874,46 +23874,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// INCOME STATEMENT</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
 
-                          {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
-                          {IS.wmRevenue && (
-                            <>
-                              <SectionHeading>// REVENUE BY SERVICE LINE</SectionHeading>
-                              {IS.wmRevenue.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.wmRevenue.preamble}</div>}
-                              {IS.wmRevenue.netNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{IS.wmRevenue.netNote}</div>}
-                              {IS.wmRevenue.lines.map((ln, i) => (
-                                <div key={i}>
-                                  <TimeSeriesTable data={ln} />
-                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
-                                </div>
-                              ))}
-                            </>
-                          )}
-                          {IS.wmOpex && (
-                            <>
-                              <SectionHeading>// OPERATING EXPENSES</SectionHeading>
-                              {IS.wmOpex.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.wmOpex.preamble}</div>}
-                              {IS.wmOpex.lines.map((ln, i) => (
-                                <div key={i}>
-                                  <TimeSeriesTable data={ln} />
-                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
-                                </div>
-                              ))}
-                              {IS.wmOpex.definitions && (
-                                <details style={{marginTop:'4px',marginBottom:'12px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(245,158,11,0.35)',borderLeft:'2px solid rgba(245,158,11,0.6)',borderRadius:'3px',overflow:'hidden'}}>
-                                  <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'9px',color:'rgba(245,158,11,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>// EXPENSE DEFINITIONS · {IS.wmOpex.definitions.length} ›</summary>
-                                  <div style={{padding:'4px 12px 10px',borderTop:'0.5px solid rgba(245,158,11,0.2)'}}>
-                                    {IS.wmOpex.definitions.map((d, i) => (
-                                      <div key={i} style={{padding:'7px 0',borderBottom: i < IS.wmOpex.definitions.length-1 ? '0.5px solid rgba(245,158,11,0.12)' : 'none'}}>
-                                        <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{d.term}</div>
-                                        <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.definition}</div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </details>
-                              )}
-                            </>
-                          )}
-
                           {/* REVENUE & COSTS */}
                           {IS.netSales       && <TimeSeriesTable data={IS.netSales} />}
                           {IS.costOfSales    && <TimeSeriesTable data={IS.costOfSales} />}
@@ -24357,6 +24317,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const { segments } = bd.numbers;
                       return (
                         <div>
+                          {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
+                          {segments.wmRevenue && (
+                            <>
+                              <SectionHeading>// REVENUE BY SERVICE LINE</SectionHeading>
+                              {segments.wmRevenue.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmRevenue.preamble}</div>}
+                              {segments.wmRevenue.netNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{segments.wmRevenue.netNote}</div>}
+                              {segments.wmRevenue.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                            </>
+                          )}
+                          {segments.wmOpex && (
+                            <>
+                              <SectionHeading>// OPERATING EXPENSES</SectionHeading>
+                              {segments.wmOpex.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.wmOpex.preamble}</div>}
+                              {segments.wmOpex.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                              {segments.wmOpex.definitions && (
+                                <details style={{marginTop:'4px',marginBottom:'12px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(245,158,11,0.35)',borderLeft:'2px solid rgba(245,158,11,0.6)',borderRadius:'3px',overflow:'hidden'}}>
+                                  <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'9px',color:'rgba(245,158,11,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>// EXPENSE DEFINITIONS · {segments.wmOpex.definitions.length} ›</summary>
+                                  <div style={{padding:'4px 12px 10px',borderTop:'0.5px solid rgba(245,158,11,0.2)'}}>
+                                    {segments.wmOpex.definitions.map((d, i) => (
+                                      <div key={i} style={{padding:'7px 0',borderBottom: i < segments.wmOpex.definitions.length-1 ? '0.5px solid rgba(245,158,11,0.12)' : 'none'}}>
+                                        <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{d.term}</div>
+                                        <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.definition}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </details>
+                              )}
+                            </>
+                          )}
+
                       {/* REH SEGMENT FINANCIALS BY REGION (byRegion shape) */}
                       {segments && segments.byRegion && (() => {
                         const br = segments.byRegion;
