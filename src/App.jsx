@@ -9950,7 +9950,7 @@ const COVERAGE_DATA = [
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null },
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
-  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null },
+  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null, locked: true },
 
   // === RAILWAY · CANADA & USA ===
   { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
@@ -9967,7 +9967,7 @@ const COVERAGE_DATA = [
   // === MEDIA · USA ===
   { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
   { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
-  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: null },
+  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: null, locked: true },
 
   // === BEVERAGE · USA ===
   { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
@@ -10013,7 +10013,7 @@ const COVERAGE_DATA = [
   { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null, locked: true },
 
   // === EXCHANGE · ISRAEL ===
-  { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Exchange',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets (Ackman ~5% stake).', breakdown: null },
+  { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Exchange',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets.', breakdown: null, locked: true },
 ];
 
 function MuzzApp() {
