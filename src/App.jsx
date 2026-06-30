@@ -9966,6 +9966,7 @@ const CNI_BREAKDOWN = {
     },
     competitors: {
       preamble: 'The North American Class I railroads run as a tight oligopoly \u2014 four players carve up the continent by geography. CN\u2019s edge is reach (three coasts) and an industry-leading operating ratio; its burdens are capex intensity and labor.',
+      geographicRead: 'Seen on a map, Union Pacific\u2019s western coverage dominates \u2014 it controls most east\u2013west freight corridors west of the Mississippi, with dense Texas/Midwest presence and exclusive access to several West Coast ports (a major long-haul advantage). Against that: CN is the only true north\u2013south continental railway (Canada \u2192 Gulf of Mexico), but its U.S. footprint is narrow; CPKC connects all three countries but is more a single spine than a web; and NSC is concentrated in the east with strong intermodal hubs but no western presence.',
       rows: [
         { name: 'Canadian National', ticker: 'CNI / CN', self: true, reach: '~20,000 mi across Canada and into the U.S. Midwest & Gulf', strengths: ['Only transcontinental rail spanning three coasts \u2014 unmatched geographic coverage', 'High efficiency and operational excellence (industry-leading operating ratio)', 'Diverse customer and revenue base; resilient markets'], weaknesses: ['Labor disputes and infrastructure constraints affect reliability', 'High capex burden for network maintenance', 'Regulatory complexity over cross-border (U.S.\u2013Canada) operations'] },
         { name: 'Union Pacific', ticker: 'UNP', reach: '~32,200 mi across the western and central U.S.', strengths: ['Largest network in the U.S. West \u2014 vast market reach and economies of scale', 'Well-diversified across intermodal, agriculture, and automotive freight'], weaknesses: ['Significant operational complexity due to size and geography', 'Vulnerable to slowdowns like traffic delays (\u201Cmonster trains\u201D blocking crossings)', 'Heavy supplier dependence and regulatory scrutiny'] },
@@ -9981,6 +9982,74 @@ const CNI_BREAKDOWN = {
     },
   },
   overview: {
+    leadership: {
+      asOf: '2025',
+      executives: [
+        { name: 'Tracy Robinson', role: 'President & CEO', featured: true, tenureYears: 2, joined: '2022', history: 'In current role 2y; 30+ yrs total career. Prior: EVP at TC Energy; President of Canadian Natural Gas Pipelines; 27 years at Canadian Pacific. Strengths: deep rail-industry experience, strategic leadership, cross-sector expertise, inclusive leadership. Watch-outs: relatively new to CN culture; transition from energy back to rail could slow early impact.' },
+        { name: 'Ghislain Houle', role: 'EVP & CFO', tenureYears: 27, joined: '1997', history: 'In current role 8y; 30+ yrs total career. Prior: senior manager in tax/audit at a major accounting firm. Strengths: long CN tenure, deep financial & strategic-planning expertise, strong investor-relations track record. Watch-outs: very CN-centric career \u2014 may lack fresh external perspectives.' },
+        { name: 'Bhushan Ivaturi', role: 'EVP & Chief Information & Technology Officer', joined: '2025', history: 'In current role <1y; 25+ yrs total career. Prior: CIO at Enbridge; executive roles at AP Moller Maersk, GE; high-tech sector leadership. Strengths: digital transformation, cybersecurity & AI experience, global supply-chain tech innovation. Watch-outs: no direct rail-industry experience; adapting to CN operational realities may take time.' },
+        { name: 'Derek Taylor', role: 'EVP & Chief Field Operating Officer', tenureYears: 24, joined: '2000', history: 'In current role <1y; 24+ yrs total career. Prior: multiple senior ops roles at CN; VP roles in transportation & operational excellence. Strengths: deep operational knowledge, proven leadership within the CN network. Watch-outs: primarily CN experience; may lack outside operational benchmarks.' },
+        { name: 'Patrick Whitehead', role: 'EVP & Chief Network Operating Officer', tenureYears: 3, joined: '2021', history: 'In current role <1y; 30+ yrs total career. Prior: VP at Norfolk Southern; 30+ years in rail operations. Strengths: extensive rail operations & mechanical expertise, Wharton AMP graduate. Watch-outs: limited CN tenure; integration into CN culture still in progress.' },
+        { name: 'Janet Drysdale', role: 'Interim Chief Commercial Officer', tenureYears: 29, joined: '1996', history: 'In current role <1y (Interim); 29+ yrs total career. Prior: various senior roles in Sales, Finance, Sustainability, Corporate Development, Investor Relations. Strengths: broad cross-functional CN expertise, strong stakeholder relations, industry advocacy. Watch-outs: interim appointment \u2014 potential uncertainty until a permanent CCO is named.' },
+        { name: 'Olivier Chouc', role: 'SVP & Chief Legal Officer', tenureYears: 24, joined: '2000', history: 'In current role 2y; 31+ yrs total career. Prior: in-house counsel at Abitibi-Consolidated; 7 years private practice. Strengths: extensive legal & M&A expertise, strong governance & compliance knowledge. Watch-outs: career largely within CN \u2014 possible insular outlook.' },
+        { name: 'Jos\u00e9e Girard', role: 'SVP & CHRO', tenureYears: 2, joined: '2023', history: 'In current role 2y; 25+ yrs total career. Prior: Chief People & Purpose Officer at Ivanho\u00e9 Cambridge; HR leadership at Rio Tinto & CBC/Radio-Canada. Strengths: broad HR leadership, employer-brand building, inclusive-workplace focus. Watch-outs: limited rail-industry background.' },
+        { name: 'Patrick Lortie', role: 'SVP & Chief Strategy Officer', tenureYears: 2, joined: '2023', history: 'In current role 2y; 25+ yrs total career. Prior: Global Transport & Services Practice Leader at Oliver Wyman; prior airline experience. Strengths: strategic-growth expertise, deep transportation-consulting background. Watch-outs: consulting-heavy background; limited hands-on rail-operations experience.' },
+        { name: '\u00c9tienne Bourgeois', role: 'VP, Treasury & Tax', joined: '2025', history: 'In current role <1y; ~20 yrs total career. Prior: VP at CDPQ; senior finance at Ivanho\u00e9 Cambridge. Strengths: capital structure, treasury, M&A, taxation. Watch-outs: no prior rail-industry experience.' },
+        { name: 'Dan Bresolin', role: 'VP, Intermodal', tenureYears: 25, joined: '1999', history: 'In current role 5y; 25+ yrs total career. Prior: multiple CN intermodal roles. Strengths: deep intermodal knowledge, operational grounding. Watch-outs: career focus mostly in one segment.' },
+        { name: 'Cristina Circelli', role: 'VP, Corporate Secretary & General Counsel', tenureYears: 30, joined: '1994', history: 'In current role 2y; 34+ yrs total career. Prior: Partner at Mackenzie Gervais (M&A, financing). Strengths: strong governance & legal expertise. Watch-outs: primarily CN-based career.' },
+        { name: 'Nicholas Clark', role: 'VP, Mechanical', tenureYears: 13, joined: '2012', history: 'In current role <1y; ~20 yrs total career. Prior: CN ops & strategy; VP Transportation, Southern Region. Strengths: ops efficiency, fleet reliability. Watch-outs: entire career in CN.' },
+        { name: 'Dominic D\u2019Amata', role: 'VP, I&T Solution Delivery', tenureYears: 5, joined: '2019', history: 'In current role <1y; 20+ yrs total career. Prior: CIO at ALDO; IT leadership at BAT. Strengths: digital transformation expertise. Watch-outs: limited rail experience.' },
+        { name: 'JJ Dratva', role: 'VP, Procurement & Supply Management', tenureYears: 10, joined: '2014', history: 'In current role <1y; ~15 yrs total career. Prior: CN fleet & procurement leadership. Strengths: sustainable procurement, stakeholder engagement. Watch-outs: limited cross-industry exposure.' },
+        { name: 'Sandra Ellis', role: 'VP, Bulk', tenureYears: 2, joined: '2022', history: 'In current role 2y; 17+ yrs total career. Prior: Inter Pipeline; 15 years at CP. Strengths: bulk sales growth, asset negotiation. Watch-outs: limited CN tenure.' },
+        { name: 'Salvatore Forgione', role: 'VP & Corporate Comptroller', tenureYears: 30, joined: '1994', history: 'In current role 8y; 30+ yrs total career. Prior: CN accounting & M&A roles. Strengths: deep financial reporting. Watch-outs: highly CN-focused.' },
+        { name: 'Martin Guimond', role: 'VP, Transportation, Eastern Region', tenureYears: 7, joined: '2017', history: 'In current role 2y; 20+ yrs total career. Prior: BAT supply-chain roles. Strengths: network management, multimodal ops. Watch-outs: limited NA rail before CN.' },
+        { name: 'Mark Grubbs', role: 'VP, Safety & Environment', history: 'In current role <1y; 30+ yrs total career. Prior: VP Mechanical at CN; senior roles at BNSF. Strengths: safety leadership, mechanical ops. Watch-outs: new to role.' },
+        { name: 'Nicole James', role: 'VP, Transportation, Western Region', history: 'In current role 1y; 25+ yrs total career. Prior: CN ops roles; BNSF field ops. Strengths: ops leadership, safety culture. Watch-outs: limited time in VP role.' },
+        { name: 'Derek Lachaine', role: 'CEO, TransX', history: 'In current role <1y; 23+ yrs total career. Prior: TransX leadership since 2001. Strengths: truckload operations, Harvard AMP. Watch-outs: not core CN rail background.' },
+        { name: 'Kelly Levis', role: 'VP, Industrial Products', tenureYears: 27, joined: '1997', history: 'In current role 9y; 30+ yrs total career. Prior: pharma industry before CN. Strengths: sales & marketing, commodity management. Watch-outs: focused on one segment.' },
+        { name: 'Marianne Limoges', role: 'VP, Financial Planning', history: 'In current role <1y; ~15 yrs total career. Prior: VP Treasury at CN; Resolute Forest Products. Strengths: financial strategy, capital markets. Watch-outs: new to role.' },
+        { name: 'Jamie Lockwood', role: 'VP, Engineering', tenureYears: 16, joined: '2008', history: 'In current role <1y; 20+ yrs total career. Prior: CN finance & strategy. Strengths: capex planning, infrastructure. Watch-outs: new to engineering leadership.' },
+        { name: 'Matthew McClaren', role: 'VP, Transportation, Southern Region', tenureYears: 25, joined: '2000', history: 'In current role <1y; 25+ yrs total career. Prior: CN mechanical & safety. Strengths: ops-safety expertise. Watch-outs: new to regional VP role.' },
+        { name: 'Cassandra Mullee', role: 'VP, Network Operations', joined: '2024', history: 'In current role <1y; ~20 yrs total career. Prior: Norfolk Southern network ops. Strengths: terminal ops, service efficiency. Watch-outs: new to CN.' },
+        { name: 'Girish Nair', role: 'VP, Multimodal', tenureYears: 14, joined: '2010', history: 'In current role <1y; 20+ yrs total career. Prior: sales roles at CN, COSCO, GE. Strengths: multimodal marketing, sales. Watch-outs: limited CN executive tenure.' },
+        { name: 'Marc Pavlica', role: 'VP, I&T Ops & Technology Enablement', tenureYears: 16, joined: '2008', history: 'In current role <1y; 25+ yrs total career. Prior: IT roles at CGI, Domtar, Bombardier. Strengths: enterprise tech, reliability. Watch-outs: no direct rail-ops experience.' },
+        { name: 'Helen Quirke', role: 'VP, Supply Chain & Business Development', tenureYears: 4, joined: '2020', history: 'In current role 1y; 25+ yrs total career. Prior: BCG partner, sports management. Strengths: supply-chain strategy, business development. Watch-outs: limited rail tenure.' },
+        { name: 'Buck Rogers', role: 'VP, Petroleum & Chemicals', tenureYears: 5, joined: '2019', history: 'In current role 5y; ~15 yrs total career. Prior: CN petroleum sales. Strengths: industry sales expertise. Watch-outs: focused on one segment.' },
+        { name: 'Bruno Roy', role: 'CEO, CN Investment Division', tenureYears: 22, joined: '2002', history: 'In current role 1y; 30+ yrs total career. Prior: capital markets, pension management. Strengths: portfolio management, risk control. Watch-outs: investment-side focus.' },
+        { name: 'James Thompson', role: 'VP, Strategy & Special Projects', tenureYears: 25, joined: '1998', history: 'In current role 1y; 25+ yrs total career. Prior: CN ops leadership. Strengths: strategic-ops insight. Watch-outs: primarily CN experience.' },
+      ],
+      executiveTakeaways: [
+        'CEO Tracy Robinson brings 27 years at Canadian Pacific plus energy-sector leadership \u2014 deep rail expertise, though still newer to CN\u2019s culture.',
+        'Long-tenured internal operators (Houle 27y, Taylor 24y, Forgione 30y, Circelli 30y) provide stability and institutional knowledge.',
+        'Several recent external hires (Ivaturi from Enbridge, Whitehead & Mullee from Norfolk Southern) bring outside benchmarks \u2014 but need time to embed in CN ops.',
+        'Bench skews toward finance, tech, and ops; a permanent CCO is still to be named (Drysdale is interim).',
+      ],
+      board: [
+        { name: 'Shauneen Bruder', role: 'Chair of the Board', category: 'Lead', background: 'On board 2y (Chair); ~35 yrs career. Prior: EVP Operations at RBC; senior banking & governance roles. Strengths: deep operational & financial expertise, governance leadership, broad network. Watch-outs: limited direct rail/transportation ops experience.' },
+        { name: 'Tracy Robinson', role: 'President & CEO', category: 'Operational', background: 'On board 2y; ~30 yrs career. Prior: EVP at TC Energy; 27 years at CP. Strengths: extensive rail experience, strategic leadership, cross-sector perspective. Watch-outs: newer to CN culture; balancing CEO & board role.' },
+        { name: 'Jo-Ann dePass Olsovsky', role: 'Corporate Director', category: 'Digital/Media', background: 'On board ~2y; ~35 yrs career. Prior: EVP & CIO at Salesforce; SVP & CIO at BNSF; IT leadership at GTE/Verizon & AT&T. Strengths: deep rail-IT expertise, cybersecurity & AI leadership, digital transformation. Watch-outs: primarily tech-oriented \u2014 limited direct finance background.' },
+        { name: 'David Freeman', role: 'Corporate Director', category: 'Operational', background: 'On board ~4y; ~40 yrs career. Prior: EVP Operations at BNSF; Alcoa; Missouri Pacific Railroad. Strengths: deep rail-ops leadership, safety expertise, mechanical/engineering background. Watch-outs: no direct Canadian rail experience.' },
+        { name: 'Denise Gray', role: 'Corporate Director', category: 'Other', background: 'On board ~2y; ~35 yrs career. Prior: Director External Affairs at LG Energy Solution; CEO LG Chem Michigan; VP at AVL; 30+ years at GM. Strengths: energy-transition & EV expertise, STEM advocacy, global manufacturing. Watch-outs: limited rail-sector knowledge.' },
+        { name: 'Justin M. Howell', role: 'Corporate Director', category: 'Finance', background: 'On board <1y; ~20 yrs career. Prior: Sr. Investment Manager at Cascade; Investment Banker at BAML; Lawyer at Cravath. Strengths: finance & capital-markets expertise, corporate governance. Watch-outs: very new to CN; no rail or industrial-ops background.' },
+        { name: 'Susan C. Jones', role: 'Corporate Director', category: 'Other', background: 'On board ~2y; ~30 yrs career. Prior: EVP & CEO Potash BU at Nutrien; Chief Legal Officer; law-firm partner. Strengths: industrial ops, mining & ag-sector insight, customer-side rail experience. Watch-outs: limited direct rail-management experience.' },
+        { name: 'Robert Knight', role: 'Corporate Director', category: 'Finance', background: 'On board ~4y; ~40 yrs career. Prior: CFO of Union Pacific; senior leadership in rail finance, marketing, HR. Strengths: top-tier Class I rail finance expertise, operational knowledge. Watch-outs: U.S.-centric career, less Canadian-market familiarity.' },
+        { name: 'Michel Letellier', role: 'Corporate Director', category: 'Other', background: 'On board ~2y; ~30 yrs career. Prior: CEO Innergex; CFO & VP Finance; renewable-energy leadership. Strengths: renewable-energy & sustainability expertise, finance. Watch-outs: limited direct rail/transportation ops background.' },
+        { name: 'Margaret A. McKenzie', role: 'Corporate Director', category: 'Finance', background: 'On board 2y; ~35 yrs career. Prior: CFO Range Royalty; CPA; board leadership in energy. Strengths: strong finance & governance skills, risk management. Watch-outs: no rail/transportation operations experience.' },
+        { name: 'Al Monaco', role: 'Corporate Director', category: 'Other', background: 'On board <1y; ~40 yrs career. Prior: CEO of Enbridge; major energy-infrastructure leader. Strengths: large-scale infrastructure & M&A expertise, safety focus. Watch-outs: new to CN; no direct rail-ops leadership.' },
+      ],
+      boardTakeaways: {
+        title: 'Board Assessment',
+        scores: [
+          { label: 'Deep Class I rail expertise where it counts (Robinson, Freeman, Knight)', rating: 'strong' },
+          { label: 'Balanced with outsiders \u2014 EV/energy, infrastructure, tech/cyber perspectives', rating: 'strong' },
+          { label: 'Long-tenured internal operators provide stability (Houle, Taylor)', rating: 'strong' },
+          { label: 'Governance depth \u2014 several former board chairs / CEOs', rating: 'strong' },
+          { label: 'A few very new appointees still embedding (Ivaturi, Monaco, Howell)', rating: 'improving' },
+          { label: 'Slight bias to finance/infrastructure vs. customer-facing commercial leadership', rating: 'improving' },
+        ],
+        verdict: 'A mix of rail veterans, infrastructure operators, and modern tech/ESG perspectives \u2014 exactly the combination most Class I railroads don\u2019t always get right.',
+      },
+    },
     properties: {
       ppe: {
         asOf: 'Dec 31, 2024',
@@ -28100,6 +28169,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       </div>
                                     ))}
                                   </div>
+                                </>
+                              )}
+                              {competitors.geographicRead && (
+                                <>
+                                  <SectionHeading>// THE MAP READ</SectionHeading>
+                                  <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{competitors.geographicRead}</div>
                                 </>
                               )}
                             </>
