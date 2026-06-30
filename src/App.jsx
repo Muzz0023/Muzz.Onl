@@ -9981,6 +9981,43 @@ const CNI_BREAKDOWN = {
     },
   },
   overview: {
+    properties: {
+      ppe: {
+        asOf: 'Dec 31, 2024',
+        note: 'Property, plant & equipment \u2014 the physical network. Track and roadway alone is ~$37.2B net; the moat you can stand on. ($ in millions.)',
+        rows: [
+          { asset: 'Track and roadway', depRate: '3%', c24: 48744, ad24: 11557, n24: 37187, c23: 45370, ad23: 10506, n23: 34864 },
+          { asset: 'Rolling stock', depRate: '4%', c24: 9482, ad24: 3642, n24: 5840, c23: 8544, ad23: 3401, n23: 5143 },
+          { asset: 'Buildings', depRate: '3%', c24: 2452, ad24: 848, n24: 1604, c23: 2254, ad23: 782, n23: 1472 },
+          { asset: 'Information technology', depRate: '9%', c24: 3128, ad24: 1460, n24: 1668, c23: 2879, ad23: 1331, n23: 1548 },
+          { asset: 'Other', depRate: '5%', c24: 3116, ad24: 1455, n24: 1661, c23: 2964, ad23: 1374, n23: 1590 },
+        ],
+        total: { c24: 66922, ad24: 18962, n24: 47960, c23: 62011, ad23: 17394, n23: 44617 },
+        financeLeases: [
+          { asset: 'Track and roadway', c24: 405, ad24: 110, n24: 295, c23: 406, ad23: 105, n23: 301 },
+          { asset: 'Rolling stock', c24: 12, ad24: 2, n24: 10, c23: 28, ad23: 1, n23: 27 },
+          { asset: 'Buildings', c24: 27, ad24: 12, n24: 15, c23: 27, ad23: 12, n23: 15 },
+          { asset: 'Other', c24: 102, ad24: 41, n24: 61, c23: 107, ad23: 34, n23: 73 },
+        ],
+        financeLeaseTotal: { c24: 546, ad24: 165, n24: 381, c23: 568, ad23: 152, n23: 416 },
+        footnotes: [
+          'Track and roadway includes land of $2,682M (2023: $2,497M).',
+          'In 2024, the Company capitalised costs for internally developed software and related licenses of $235M (2023: $203M).',
+          'In 2024, property additions net of finance leases were $3,549M (2023: $3,187M), of which $1,564M (2023: $1,529M) related to track and railway infrastructure maintenance \u2014 replacement of rail, ties, bridge improvements, and other general track maintenance.',
+          'Finance-lease track and roadway includes right-of-way access of $106M (2023: $106M).',
+        ],
+      },
+    },
+    reinvestment: {
+      headline: '2024 capital program \u2014 ~$3.5 billion reinvested into the network.',
+      total: '$3.5B',
+      breakdown: [
+        { amount: '$1.7B', label: 'Maintain the network', detail: 'Safety and integrity of the network, particularly track infrastructure.' },
+        { amount: '$1.0B', label: 'Strategic initiatives', detail: 'Increase capacity, enable growth, and improve network resiliency \u2014 line-capacity upgrades and IT initiatives.' },
+        { amount: '$0.8B', label: 'Equipment', detail: 'Including the acquisition of 750 new grain hopper cars.' },
+      ],
+      note: 'Railroads are capital-intensive by nature \u2014 a large share of cash flow is permanently committed to keeping the network safe and competitive. This is the cost of holding the moat.',
+    },
     facts: { founded: '1919', foundedNote: 'Crown corp → privatised 1995', headquarters: 'Montreal', listed: 'NYSE: CNI', listedNote: 'TSX: CNR', network: 'Tri-Coastal', coasts: 'Atlantic · Pacific · Gulf' },
     identity: {
       coreIdentity: 'Canadian National Railway (CN) is North America\u2019s only transcontinental railway reaching three coasts \u2014 the Atlantic, the Pacific, and the Gulf of Mexico. Formed in 1919 as a Crown corporation out of several bankrupt railways, CN was privatised via a 1995 IPO and has since assembled a continent-spanning freight network \u2014 from the Canadian Atlantic and Pacific coasts down through Chicago to the U.S. Gulf Coast \u2014 through a disciplined, decades-long acquisition strategy.',
@@ -10037,6 +10074,60 @@ const CNI_BREAKDOWN = {
     },
   },
   risks: {
+    riskManagement: {
+      preamble: 'CN uses derivatives sparingly. Instead of heavy hedging, it leans on natural hedges \u2014 U.S.-dollar debt against U.S. operations, and a fuel-surcharge program against diesel \u2014 to keep reported earnings steadier. Derivatives are carried at fair value; changes on instruments not designated as hedges hit net income in the period.',
+      categories: [
+        { name: 'Interest Rate Risk', summary: 'Debt values and interest costs move with market rates. CN may use treasury locks / forward rate agreements to hedge future debt-issuance costs.', points: [
+          'Fixed-rate debt \u2192 fair value moves with rates; variable-rate debt \u2192 interest expense moves with rates.',
+          '2024 issuance (Sep 18, US$500M / C$680M): treasury locks settled \u2192 $15M cumulative loss.',
+          '2023 issuance (Nov 1, US$450M / C$622M): treasury locks settled \u2192 $97M cumulative gain.',
+          'Gains/losses go to Accumulated Other Comprehensive Loss and amortise over the life of the debt as interest-expense adjustments.',
+          'No treasury locks outstanding at end of 2023 or 2024.',
+        ] },
+        { name: 'Credit Risk', summary: 'Exposure from cash & investments, accounts receivable, and derivative counterparties. Considered low overall.', points: [
+          'Cash & investments placed only with governments, major banks, or highly rated counterparties, continuously monitored.',
+          'Accounts receivable: credit checks on new customers, ongoing monitoring, DSO targets, letters of credit, and credit insurance for high-risk customers.',
+          'Derivatives transacted only with investment-grade banks.',
+          'No major customer concentrations; customer and counterparty default both seen as remote \u2014 though a weak economy could lift defaults.',
+        ] },
+        { name: 'Commodity Price Risk (Diesel)', summary: 'Diesel price spikes lower net income. Managed mainly through a fuel-surcharge program, not derivatives.', points: [
+          'Fuel surcharge passes higher fuel costs onto customers, based on average U.S. On-Highway Diesel prices.',
+          'Applied with a 2-month lag (based on prices two months prior).',
+          'Timing gap + volatility mean full protection isn\u2019t possible; derivatives may be used selectively for extra cover.',
+        ] },
+        { name: 'Foreign Currency Risk', summary: 'CAD/USD swings affect revenues and expenses. CN uses U.S.-dollar debt as a natural hedge against its U.S. operations.', points: [
+          'A stronger Canadian dollar reduces U.S. revenues on translation; a weaker Canadian dollar increases them.',
+          'U.S.-dollar debt is formally designated as a hedge of U.S. operations.',
+          'FX gains/losses on that debt go to Accumulated Other Comprehensive Loss \u2014 avoiding large net-income swings and smoothing earnings.',
+        ] },
+        { name: 'Fair Value & Debt', summary: 'Most short-term items sit at fair value automatically. Cash and equity investments are Level 1; derivatives and debt are Level 2.', points: [
+          'Level 1: quoted prices in active markets. Level 2: observable inputs. Level 3: unobservable inputs.',
+          'Derivatives (FX hedging) valued via discounted future cash flows with market-based discount rates (Level 2).',
+          'Debt fair value (Level 2) derived from quoted market prices or discounted cash flows.',
+        ] },
+      ],
+      debtValuation: {
+        note: 'Carrying amount exceeds fair value because market interest rates rose above CN\u2019s fixed coupon rates. ($ in millions.)',
+        rows: [
+          { date: 'Dec 31, 2024', carrying: 20887, fair: 19688 },
+          { date: 'Dec 31, 2023', carrying: 18435, fair: 17844 },
+        ],
+      },
+    },
+    obligations: {
+      asOf: 'Dec 31, 2024',
+      note: 'Contractual obligations and related cash requirements. Debt and interest dominate, with ~$27.9B falling due in 2030 and beyond. ($ in millions.)',
+      columns: ['2025', '2026', '2027', '2028', '2029', '2030+'],
+      rows: [
+        { label: 'Debt obligations', total: 20887, years: [1165, 799, 81, 1116, 1134], beyond: 16592, foot: 'Net of unamortised discounts & issuance costs; excludes finance leases.' },
+        { label: 'Interest on debt obligations', total: 14543, years: [903, 879, 865, 861, 776], beyond: 10259 },
+        { label: 'Finance lease obligations', total: 8, years: [2, 4, 1, 1, 0], beyond: 0 },
+        { label: 'Operating lease obligations', total: 734, years: [150, 110, 80, 46, 20], beyond: 328, foot: 'Includes $257M of imputed interest.' },
+        { label: 'Purchase obligations', total: 2790, years: [2026, 309, 156, 263, 14], beyond: 22, foot: 'Fixed & variable commitments for rail, engineering services, locomotives, IT services & licenses, railroad cars, wheels, rail ties, and other equipment & services.' },
+        { label: 'Other long-term liabilities', total: 1021, years: [97, 58, 55, 50, 45], beyond: 716, foot: 'Workers\u2019 compensation, supplemental pension, postretirement benefits, net unrecognised tax benefits, and environmental liabilities.' },
+      ],
+      total: { total: 39983, years: [4343, 2159, 1238, 2337, 1989], beyond: 27917 },
+    },
     riskMatrix: {
       preamble: 'CN\u2019s enterprise risk register, scored by likelihood (1\u20135) and impact (1\u20135). Freight demand tracks the broader economy, so Economic Conditions sits at the top (5\u00d75). Note the cluster of low-likelihood / high-impact tail risks (hazmat, terrorism) that rank highly on impact alone.',
       rows: [
@@ -20957,7 +21048,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     };
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -21168,6 +21259,101 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {supplyChain.categories.map((c, i) => (
                                 <BulletPanel key={i} label={`// ${c.name.toUpperCase()}`} items={c.points} />
                               ))}
+                            </>
+                          )}
+
+                          {/* CN: PROPERTIES · NOTE 11 (properties.ppe shape) */}
+                          {properties && properties.ppe && (() => {
+                            const p = properties.ppe;
+                            const fmt = (n) => (n === 0 ? '—' : n.toLocaleString('en-US'));
+                            const Row = ({ r, bold }) => (
+                              <tr style={{borderBottom:`0.5px solid ${amberGlow}`, background: bold ? 'rgba(245,158,11,0.06)' : 'transparent'}}>
+                                <td style={{textAlign:'left',padding:'7px 10px',color: bold ? amber : 'rgba(224,234,255,0.85)',fontWeight: bold ? 700 : 400}}>{r.asset}</td>
+                                <td style={{textAlign:'center',padding:'7px 8px',color:amberDim}}>{r.depRate || ''}</td>
+                                <td style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.8)'}}>{fmt(r.c24)}</td>
+                                <td style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.55)'}}>{fmt(r.ad24)}</td>
+                                <td style={{textAlign:'right',padding:'7px 10px',color: bold ? amber : '#e0eaff',fontWeight:700}}>{fmt(r.n24)}</td>
+                                <td style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.45)'}}>{fmt(r.c23)}</td>
+                                <td style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.35)'}}>{fmt(r.ad23)}</td>
+                                <td style={{textAlign:'right',padding:'7px 10px',color:'rgba(224,234,255,0.6)',fontWeight: bold ? 700 : 400}}>{fmt(r.n23)}</td>
+                              </tr>
+                            );
+                            const Head = () => (
+                              <thead>
+                                <tr style={{borderBottom:`1px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                  <th rowSpan={2} style={{textAlign:'left',padding:'6px 10px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px',verticalAlign:'bottom'}}>ASSET</th>
+                                  <th rowSpan={2} style={{textAlign:'center',padding:'6px 8px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px',verticalAlign:'bottom'}}>DEP %</th>
+                                  <th colSpan={3} style={{textAlign:'center',padding:'5px 8px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px',borderBottom:`0.5px solid ${amberGlow}`}}>DEC 31, 2024</th>
+                                  <th colSpan={3} style={{textAlign:'center',padding:'5px 8px',color:'rgba(224,234,255,0.5)',letterSpacing:'1.5px',fontWeight:700,fontSize:'9px',borderBottom:`0.5px solid ${amberGlow}`}}>DEC 31, 2023</th>
+                                </tr>
+                                <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                  <th style={{textAlign:'right',padding:'4px 8px',color:amberDim,fontWeight:600,fontSize:'8px'}}>COST</th>
+                                  <th style={{textAlign:'right',padding:'4px 8px',color:amberDim,fontWeight:600,fontSize:'8px'}}>ACC DEP</th>
+                                  <th style={{textAlign:'right',padding:'4px 10px',color:amber,fontWeight:700,fontSize:'8px'}}>NET</th>
+                                  <th style={{textAlign:'right',padding:'4px 8px',color:'rgba(224,234,255,0.4)',fontWeight:600,fontSize:'8px'}}>COST</th>
+                                  <th style={{textAlign:'right',padding:'4px 8px',color:'rgba(224,234,255,0.4)',fontWeight:600,fontSize:'8px'}}>ACC DEP</th>
+                                  <th style={{textAlign:'right',padding:'4px 10px',color:'rgba(224,234,255,0.55)',fontWeight:700,fontSize:'8px'}}>NET</th>
+                                </tr>
+                              </thead>
+                            );
+                            return (
+                              <>
+                                <SectionHeading>// PROPERTIES · NOTE 11 · {p.asOf}</SectionHeading>
+                                {p.note && <InfoPanel label="// PHYSICAL NETWORK">{p.note}</InfoPanel>}
+                                <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                  <table style={{width:'100%',minWidth:'640px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <Head />
+                                    <tbody>
+                                      {p.rows.map((r, i) => <Row key={i} r={r} />)}
+                                      <Row r={{ asset: 'Total properties incl. finance leases', depRate: '', ...p.total }} bold />
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {p.financeLeases && p.financeLeases.length > 0 && (
+                                  <>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,margin:'4px 0 5px'}}>// FINANCE LEASES INCLUDED IN PROPERTIES</div>
+                                    <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                      <table style={{width:'100%',minWidth:'640px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                        <Head />
+                                        <tbody>
+                                          {p.financeLeases.map((r, i) => <Row key={i} r={r} />)}
+                                          {p.financeLeaseTotal && <Row r={{ asset: 'Total finance leases in properties', depRate: '', ...p.financeLeaseTotal }} bold />}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </>
+                                )}
+                                {p.footnotes && p.footnotes.length > 0 && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'8px',display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {p.footnotes.map((f, i) => (
+                                      <div key={i} style={{display:'flex',gap:'6px',fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amberDim,flexShrink:0,fontWeight:700}}>({i + 1})</span><span>{f}</span></div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
+
+                          {/* CN: REINVESTMENT IN THE BUSINESS */}
+                          {reinvestment && (
+                            <>
+                              <SectionHeading>// REINVESTMENT IN THE BUSINESS</SectionHeading>
+                              {reinvestment.headline && (
+                                <div style={{padding:'12px 14px',background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// 2024 CAPITAL PROGRAM</div>
+                                  <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{reinvestment.headline}</div>
+                                </div>
+                              )}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))',gap:'8px',marginBottom:'8px'}}>
+                                {reinvestment.breakdown.map((b, i) => (
+                                  <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px'}}>
+                                    <div style={{fontSize:'20px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'2px'}}>{b.amount}</div>
+                                    <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'5px'}}>{b.label}</div>
+                                    <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{b.detail}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {reinvestment.note && <InfoPanel label="// COST OF THE MOAT">{reinvestment.note}</InfoPanel>}
                             </>
                           )}
 
@@ -23544,7 +23730,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -23696,6 +23882,111 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+
+                          {/* CN: FINANCIAL RISK MANAGEMENT (riskManagement shape) */}
+                          {riskManagement && (
+                            <>
+                              <SectionHeading>// FINANCIAL RISK MANAGEMENT</SectionHeading>
+                              {riskManagement.preamble && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{riskManagement.preamble}</div>
+                              )}
+                              {riskManagement.categories && riskManagement.categories.map((cat, i) => (
+                                <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'5px'}}>{cat.name}</div>
+                                  {cat.summary && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px',fontStyle:'italic'}}>{cat.summary}</div>}
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {cat.points.map((p, j) => (
+                                      <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amberDim,flexShrink:0}}>›</span><span>{p}</span></li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                              {riskManagement.debtValuation && riskManagement.debtValuation.rows && (
+                                <div style={{marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,margin:'4px 0 5px'}}>// DEBT · CARRYING vs FAIR VALUE</div>
+                                  <div style={{overflowX:'auto'}}>
+                                    <table style={{width:'100%',minWidth:'360px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`1px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>AS AT</th>
+                                          <th style={{textAlign:'right',padding:'7px 10px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>CARRYING</th>
+                                          <th style={{textAlign:'right',padding:'7px 10px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'9px'}}>FAIR VALUE</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {riskManagement.debtValuation.rows.map((r, i) => (
+                                          <tr key={i} style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                            <td style={{textAlign:'left',padding:'7px 10px',color:'rgba(224,234,255,0.85)'}}>{r.date}</td>
+                                            <td style={{textAlign:'right',padding:'7px 10px',color:'rgba(224,234,255,0.85)'}}>{r.carrying.toLocaleString('en-US')}</td>
+                                            <td style={{textAlign:'right',padding:'7px 10px',color:'#e0eaff',fontWeight:700}}>{r.fair.toLocaleString('en-US')}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  {riskManagement.debtValuation.note && (
+                                    <div style={{padding:'8px 11px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginTop:'6px',fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{riskManagement.debtValuation.note}</div>
+                                  )}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CN: CONTRACTUAL OBLIGATIONS (obligations shape) */}
+                          {obligations && obligations.rows && (() => {
+                            const fmt = (n) => (n === 0 ? '\u2014' : n.toLocaleString('en-US'));
+                            const foots = obligations.rows.filter(r => r.foot);
+                            return (
+                              <>
+                                <SectionHeading>// CONTRACTUAL OBLIGATIONS · {obligations.asOf}</SectionHeading>
+                                {obligations.note && (
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{obligations.note}</div>
+                                )}
+                                <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                  <table style={{width:'100%',minWidth:'720px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`1px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                        <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>CATEGORY</th>
+                                        <th style={{textAlign:'right',padding:'7px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'9px'}}>TOTAL</th>
+                                        {obligations.columns.map((c, i) => (
+                                          <th key={i} style={{textAlign:'right',padding:'7px 8px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>{c}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {obligations.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                          <td style={{textAlign:'left',padding:'7px 10px',color:'rgba(224,234,255,0.85)'}}>{r.label}</td>
+                                          <td style={{textAlign:'right',padding:'7px 8px',color:amber,fontWeight:700}}>{fmt(r.total)}</td>
+                                          {r.years.map((y, j) => (
+                                            <td key={j} style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.7)'}}>{fmt(y)}</td>
+                                          ))}
+                                          <td style={{textAlign:'right',padding:'7px 8px',color:'rgba(224,234,255,0.7)'}}>{fmt(r.beyond)}</td>
+                                        </tr>
+                                      ))}
+                                      {obligations.total && (
+                                        <tr style={{borderTop:`1px solid ${amber}`,background:'rgba(245,158,11,0.06)'}}>
+                                          <td style={{textAlign:'left',padding:'8px 10px',color:amber,fontWeight:700}}>Total contractual obligations</td>
+                                          <td style={{textAlign:'right',padding:'8px 8px',color:amber,fontWeight:700}}>{fmt(obligations.total.total)}</td>
+                                          {obligations.total.years.map((y, j) => (
+                                            <td key={j} style={{textAlign:'right',padding:'8px 8px',color:'#e0eaff',fontWeight:700}}>{fmt(y)}</td>
+                                          ))}
+                                          <td style={{textAlign:'right',padding:'8px 8px',color:'#e0eaff',fontWeight:700}}>{fmt(obligations.total.beyond)}</td>
+                                        </tr>
+                                      )}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {foots.length > 0 && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'12px',display:'flex',flexDirection:'column',gap:'5px'}}>
+                                    {foots.map((r, i) => (
+                                      <div key={i} style={{display:'flex',gap:'6px',fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amberDim,flexShrink:0,fontWeight:700}}>{r.label}:</span><span>{r.foot}</span></div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
 
                           {/* REH ENTERPRISE RISK FRAMEWORK (riskSummary shape) */}
                           {riskSummary && riskSummary.categories && (
