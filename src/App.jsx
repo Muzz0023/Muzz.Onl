@@ -9943,6 +9943,112 @@ const COST_BREAKDOWN = {
   },
 };
 
+const CNI_BREAKDOWN = {
+  overview: {
+    facts: { founded: '1919', foundedNote: 'Crown corp → privatised 1995', headquarters: 'Montreal', listed: 'NYSE: CNI', listedNote: 'TSX: CNR', network: 'Tri-Coastal', coasts: 'Atlantic · Pacific · Gulf' },
+    identity: {
+      coreIdentity: 'Canadian National Railway (CN) is North America\u2019s only transcontinental railway reaching three coasts \u2014 the Atlantic, the Pacific, and the Gulf of Mexico. Formed in 1919 as a Crown corporation out of several bankrupt railways, CN was privatised via a 1995 IPO and has since assembled a continent-spanning freight network \u2014 from the Canadian Atlantic and Pacific coasts down through Chicago to the U.S. Gulf Coast \u2014 through a disciplined, decades-long acquisition strategy.',
+      industryPosition: [
+        'Largest rail network in Canada; the only Class I railroad physically connecting three coasts (Atlantic, Pacific, Gulf of Mexico).',
+        'Dual-listed on the NYSE (CNI) and the Toronto Stock Exchange (CNR).',
+        'Diversified freight mix led by Intermodal, Petroleum & Chemicals, and Grain.',
+        'Runs a Precision Scheduled Railroading (PSR) operating model, extended first-to-last-mile by TransX and CNTL trucking.',
+      ],
+    },
+    acquisitions: {
+      preamble: 'CN\u2019s three-coast network was not built organically \u2014 it was assembled. After its 1995 privatisation, CN used a disciplined string of acquisitions to push south into the U.S. heartland (Illinois Central to the Gulf), consolidate the Great Lakes, and densify regional corridors. The most recent additions (Iowa Northern, Cape Breton) continue that playbook of bolt-on, single-line connectivity.',
+      timeline: [
+        { year: '1919', target: 'Government Consolidation (Formation)', note: 'CN created as a Crown corporation, merging several bankrupt railways \u2014 Canadian Northern, Intercolonial, Grand Trunk, and National Transcontinental.', featured: true },
+        { year: '1920s', target: 'Grand Trunk Expansion', note: 'Absorbed numerous smaller lines \u2014 including Grand Trunk Western \u2014 creating a vast early network.' },
+        { year: '1995', target: 'Privatisation via IPO', price: 'C$2.26B', note: 'CN exited Crown ownership with a public offering \u2014 the foundation for its acquisition-led growth era.', featured: true },
+        { year: '1999', target: 'Illinois Central Railroad', price: '~C$2.4B', note: 'The critical purchase: extended CN\u2019s reach through the U.S. Midwest all the way to the Gulf of Mexico.', featured: true },
+        { year: '2001', target: 'Wisconsin Central', price: '~2,850 mi', note: 'Integrated a U.S. Midwest and Great Lakes footprint (~2,850 route miles).' },
+        { year: '2004', target: 'Great Lakes Transportation + BC Rail', note: 'Added marine and strategic rail assets, including BC Rail, strengthening Canadian coastal operations.' },
+        { year: '2006', target: 'Mackenzie Northern Railway (reacquisition)', price: '~C$26M', note: 'Bought back northern short lines in Alberta & NWT, expanding into remote regions.' },
+        { year: '2008', target: 'Ottawa Central Railway & affiliates', price: 'C$49.8M', note: 'Reacquired key regional lines (Ottawa area, NB East Coast) from Quebec Railway Corporation.' },
+        { year: '2019', target: 'TransX Group', note: 'Winnipeg-based logistics firm acquired to enhance intermodal hauling capability.' },
+        { year: '2023\u201325', target: 'Iowa Northern Railway (IANR)', note: 'Class III short-line in NE Iowa (biofuels, grain). STB-approved Jan 2025; integrated into CN Feb 2025. Adds U.S. Midwest connectivity.', featured: true },
+      ],
+      detailed: [
+        { target: 'Iowa Northern Railway (IANR)', date: 'Dec 6, 2023', kind: 'Class III short-line \u2014 NE Iowa (agriculture, biofuels, grain)', price: 'US$230M (C$312M) incl. transaction costs', routeMiles: '~175 mi', rationale: 'Create single-line service to North American destinations, support local business, and preserve other carriers\u2019 access.', treatment: 'Initially equity method (shares in voting trust pending STB approval); STB approved Jan 14, 2025, control assumed Q1 2025; acquisition method upon control. $236M basis difference allocated mainly to depreciable property, land, and goodwill.' },
+        { target: 'Cape Breton & Central Nova Scotia Railway (CBNS)', date: 'Nov 1, 2023', kind: 'Class III short-line \u2014 Nova Scotia (previously owned by Genesee & Wyoming)', price: 'C$78M net of cash acquired (incl. WC adjustments)', routeMiles: '~150 mi', rationale: 'Enhance regional network and asset base in Eastern Canada.', treatment: 'Business combination; net assets included $101M in properties, offset by $18M deferred tax liabilities; no goodwill recognised.' },
+      ],
+      note: 'IANR route miles appear as ~218 mi in CN\u2019s acquisition timeline and ~175 mi in the detailed combination disclosure \u2014 both figures preserved as reported.',
+    },
+    supplyChain: {
+      preamble: 'CN\u2019s moat widens at the edges of its network \u2014 the ports it feeds, the partners it interlines with, and the first/last-mile trucking it bolts on. Prince Rupert is the strategic gateway, with energy, intermodal, and transload capacity all expanding.',
+      categories: [
+        { name: 'Prince Rupert Gateway', points: [
+          'REEF \u2014 Ridley Island Energy Export Facility: boosts NGL (natural gas liquids) exports.',
+          'IntermodeX Logistics Centre: attracts more container business.',
+          'CANXPORT Transloading Facility: supports intermodal growth and export plastics.',
+        ] },
+        { name: 'Long-Term Partnerships', points: [
+          'AltaGas: long-term transportation agreement for NGL exports and Western Canada resource development.',
+        ] },
+        { name: 'Interline Intermodal Partnerships', points: [
+          'Norfolk Southern (NS): connects to Southeastern U.S. markets (Kansas City, Atlanta) via Detroit and Chicago.',
+          'Falcon Premium (with UP & FXE): Mexico\u2013U.S.\u2013Canada service with truck-like speed.',
+        ] },
+        { name: 'Shortline Connections', points: [
+          '~142 connections across the U.S. and Canada \u2014 adding ~13,000 rail miles of reach and extending CN\u2019s market access.',
+        ] },
+        { name: 'Domestic Intermodal (First-to-Last Mile)', points: [
+          'TransX: first-to-last-mile service, including less-than-truckload (LTL).',
+          'CNTL: integrated first- and last-mile trucking paired with rail efficiency.',
+        ] },
+      ],
+    },
+  },
+  risks: {
+    riskMatrix: {
+      preamble: 'CN\u2019s enterprise risk register, scored by likelihood (1\u20135) and impact (1\u20135). Freight demand tracks the broader economy, so Economic Conditions sits at the top (5\u00d75). Note the cluster of low-likelihood / high-impact tail risks (hazmat, terrorism) that rank highly on impact alone.',
+      rows: [
+        { risk: 'Economic Conditions', why: 'Freight volumes follow industrial and consumer demand.', likelihood: 5, impact: 5, priority: 'High' },
+        { risk: 'Commodity Concentration', why: 'Dependence on Intermodal, Petroleum & Chemicals, and Grain.', likelihood: 4, impact: 4, priority: 'High' },
+        { risk: 'Reputation Risk', why: 'Safety / environmental incidents hurt trust.', likelihood: 3, impact: 5, priority: 'High' },
+        { risk: 'Severe Weather & Natural Disasters', why: 'Network spans high-climate-risk areas.', likelihood: 4, impact: 5, priority: 'High' },
+        { risk: 'Transportation of Hazardous Materials', why: 'High-risk cargo like chemicals and petroleum.', likelihood: 3, impact: 5, priority: 'High' },
+        { risk: 'Labor Negotiations & Strikes', why: 'Heavily unionised workforce.', likelihood: 4, impact: 4, priority: 'High' },
+        { risk: 'Trade Restrictions & Tariffs', why: 'Relies on cross-border and overseas trade.', likelihood: 3, impact: 4, priority: 'Medium-High' },
+        { risk: 'Competition', why: 'Pressure from trucking, pipelines, and other railways.', likelihood: 4, impact: 3, priority: 'Medium-High' },
+        { risk: 'Regulatory & Political Risk', why: 'Tight oversight in Canada and the U.S.', likelihood: 3, impact: 4, priority: 'Medium-High' },
+        { risk: 'Fuel Cost Volatility', why: 'Rail is heavily dependent on diesel.', likelihood: 4, impact: 3, priority: 'Medium-High' },
+        { risk: 'Supply Chain Disruptions', why: 'Relies on ports, equipment, and logistics flow.', likelihood: 3, impact: 4, priority: 'Medium-High' },
+        { risk: 'Terrorism & Security Threats', why: 'Critical infrastructure target.', likelihood: 2, impact: 5, priority: 'Medium-High' },
+        { risk: 'Operational Disruptions', why: 'Network efficiency is critical.', likelihood: 3, impact: 4, priority: 'Medium-High' },
+        { risk: 'Capital Intensity & Maintenance Needs', why: 'Constant reinvestment required.', likelihood: 4, impact: 3, priority: 'Medium-High' },
+        { risk: 'Environmental & ESG Pressures', why: 'Tighter climate regulations ahead.', likelihood: 3, impact: 4, priority: 'Medium-High' },
+        { risk: 'Currency Risk', why: 'CAD / USD exposure.', likelihood: 3, impact: 2, priority: 'Medium' },
+        { risk: 'International Conflicts', why: 'Affects trade routes and demand.', likelihood: 2, impact: 4, priority: 'Medium' },
+      ],
+      legend: [
+        { label: 'High', desc: 'High likelihood & impact \u2014 monitor closely.' },
+        { label: 'Medium-High', desc: 'Significant, but slightly lower likelihood or impact.' },
+        { label: 'Medium', desc: 'Moderate likelihood / impact \u2014 still relevant.' },
+      ],
+    },
+    labor: {
+      resolution: 'Resolved \u2014 labor peace through end of 2026. On April 7, 2025, a binding arbitrator issued a 3-year contract (Jan 2024 \u2013 Dec 2026) with 3% annual pay raises for the ~6,000 TCRC conductors and engineers. Because it was binding, no ratification vote was needed and no strike occurred. The next bargaining cycle \u2014 and the next window of risk \u2014 begins in the fall of 2026.',
+      preamble: 'Labor is CN\u2019s recurring flashpoint. The heart of it is the Teamsters Canada Rail Conference (TCRC) \u2014 the ~6,000 conductors and engineers who actually run the trains. CN has clashed with the TCRC repeatedly; every breakdown in talks since 2007 has led to a strike, but every strike has been short, because Ottawa treats rail as critical infrastructure and steps in fast.',
+      unions: [
+        { name: 'TCRC (Teamsters Canada Rail Conference)', covered: '~6,000 conductors, engineers, trainees, coordinators (Canada)', status: 'Resolved', detail: '2024 dispute (lockout & strike notices, no essential-services ruling) → binding arbitration. Apr 7, 2025: 3-yr deal (2024\u201326), 3% annual raises. CN\u2019s #1 labor risk.' },
+        { name: 'Unifor', covered: '~3,300 employees, various departments (Canada)', status: 'Ratified', detail: 'New 4-year agreement signed Dec 22, 2024; effective to Dec 31, 2028.' },
+        { name: 'USW (United Steel Workers)', covered: '~2,500 track & bridge employees (Canada)', status: 'Ratified', detail: 'New 3-year agreement signed May 1, 2024; effective to Dec 31, 2026.' },
+        { name: 'IBEW', covered: '~750 Signals & Communications employees (Canada)', status: 'Pending ratification', detail: 'Tentative 4-year agreement reached Jan 28, 2025; smaller group \u2014 affects signals/comms, not train operations.' },
+        { name: 'CNTL \u2013 Unifor', covered: '~750 owner-operator truck drivers (Canada)', status: 'Ratified', detail: 'New 4-year agreement signed May 14, 2024; effective to Dec 31, 2027.' },
+        { name: 'U.S. Workforce', covered: 'Union-represented U.S. employees', status: 'Ongoing', detail: 'Collective bargaining in progress under U.S. mediation rules (no strike/lockout until cooling-off period ends).' },
+      ],
+      strikeHistory: [
+        { year: '2007', workers: '~2,800 conductors & yard staff', duration: '~2 weeks', resolution: 'Ended by federal back-to-work legislation. Stock finished the year +11%.' },
+        { year: '2009', workers: '~1,700 engineers', duration: '3 days', resolution: 'Government intervention threat → quick settlement. Stock +51% that year (post-GFC recovery).' },
+        { year: '2019', workers: '~3,200 conductors & yard staff', duration: '8 days', resolution: 'Tentative deal under government pressure. Caused propane shortages and grain delays; stock dipped ~2% then rebounded.' },
+      ],
+      whyItMatters: 'You can\u2019t run trains without conductors and engineers \u2014 so a TCRC walkout halts most of CN\u2019s Canadian network, freight volumes collapse, and the stock takes a short-term hit (history suggests ~2\u201310%). But Ottawa has intervened in every prolonged dispute (back-to-work laws in 2007, 2009; heavy pressure in 2019), so these have always been short-term shocks, not long-term value destroyers.',
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
@@ -9956,7 +10062,7 @@ const COVERAGE_DATA = [
   { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
   { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railways',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null, locked: true },
   { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railways',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null, locked: true },
-  { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
+  { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: CNI_BREAKDOWN },
 
   // === FINANCIAL SERVICES · USA ===
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
@@ -20815,7 +20921,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     };
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -20931,6 +21037,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </>
                                 );
                               }
+                              if (facts.coasts) {
+                                return (
+                                  <>
+                                    <StatCard label="FOUNDED"  value={facts.founded}      sub={facts.foundedNote} />
+                                    <StatCard label="HQ"        value={facts.headquarters} sub="Quebec, Canada" />
+                                    <StatCard label="LISTED"    value={facts.listed}       sub={facts.listedNote} />
+                                    <StatCard label="NETWORK"   value={facts.network}      sub={facts.coasts} />
+                                  </>
+                                );
+                              }
                               return (
                                 <>
                                   <StatCard label="FOUNDED"      value={founded.value}     sub={founded.sub || 'year established'} />
@@ -20946,6 +21062,78 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// IDENTITY & POSITIONING</SectionHeading>
                           <InfoPanel label="// CORE IDENTITY">{identity.coreIdentity}</InfoPanel>
                           <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
+
+                          {/* CN: NETWORK BUILT BY ACQUISITION */}
+                          {acquisitions && (
+                            <>
+                              <SectionHeading>// NETWORK BUILT BY ACQUISITION</SectionHeading>
+                              {acquisitions.preamble && <InfoPanel label="// THE PLAYBOOK">{acquisitions.preamble}</InfoPanel>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',margin:'8px 0'}}>
+                                {acquisitions.timeline.map((a, i) => (
+                                  <div key={i} style={{
+                                    background: a.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${a.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`, borderRadius:'3px', padding:'10px 12px',
+                                  }}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                        <span style={{fontSize:'14px',color:amber,fontFamily:'monospace',fontWeight:700}}>{a.year}</span>
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{a.target}</span>
+                                        {a.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>KEY</span>}
+                                      </span>
+                                      {a.price && <span style={{fontSize:'12px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{a.price}</span>}
+                                    </div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{a.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {acquisitions.detailed && acquisitions.detailed.length > 0 && (
+                                <>
+                                  <SectionHeading>// RECENT COMBINATIONS · DETAIL</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'8px'}}>
+                                    {acquisitions.detailed.map((d, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{d.target}</span>
+                                          <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',fontWeight:600}}>{d.date}</span>
+                                        </div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'6px'}}>{d.kind}</div>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'6px'}}>
+                                          <span style={{padding:'2px 7px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:600}}>{d.price}</span>
+                                          {d.routeMiles && <span style={{padding:'2px 7px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:600}}>{d.routeMiles}</span>}
+                                        </div>
+                                        <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'5px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// RATIONALE</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.rationale}</div>
+                                        </div>
+                                        <div style={{padding:'6px 9px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// ACCOUNTING TREATMENT</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.treatment}</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                              {acquisitions.note && (
+                                <div style={{padding:'8px 11px',background:'rgba(234,179,8,0.06)',border:'0.5px solid rgba(234,179,8,0.25)',borderRadius:'3px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(234,179,8,0.9)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>DATA NOTE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitions.note}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CN: SUPPLY-CHAIN & NETWORK REACH */}
+                          {supplyChain && (
+                            <>
+                              <SectionHeading>// SUPPLY-CHAIN & NETWORK REACH</SectionHeading>
+                              {supplyChain.preamble && <InfoPanel label="// EDGE OF THE NETWORK">{supplyChain.preamble}</InfoPanel>}
+                              {supplyChain.categories.map((c, i) => (
+                                <BulletPanel key={i} label={`// ${c.name.toUpperCase()}`} items={c.points} />
+                              ))}
+                            </>
+                          )}
 
                           {/* REECE-SPECIFIC: international footprint, milestones, acquisitions, letters, case studies */}
                           {reece && (
@@ -23320,7 +23508,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -23369,6 +23557,110 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
+                          {/* CN: SCORED RISK REGISTER (riskMatrix shape) */}
+                          {riskMatrix && riskMatrix.rows && (
+                            <>
+                              <SectionHeading>// RISK REGISTER · {riskMatrix.rows.length} RISKS SCORED</SectionHeading>
+                              {riskMatrix.preamble && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{riskMatrix.preamble}</div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {riskMatrix.rows.map((r, i) => {
+                                  const pColor = r.priority === 'High' ? '#ef4444' : r.priority === 'Medium-High' ? '#f59e0b' : '#eab308';
+                                  return (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${pColor}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.risk}</span>
+                                        <span style={{padding:'1px 7px',background:`${pColor}1a`,border:`0.5px solid ${pColor}`,borderRadius:'2px',fontSize:'8px',color:pColor,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>{r.priority.toUpperCase()}</span>
+                                      </div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'7px'}}>{r.why}</div>
+                                      <div style={{display:'flex',gap:'18px',flexWrap:'wrap'}}>
+                                        <span style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                          <span style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>LIKELIHOOD</span>
+                                          <span style={{display:'inline-flex',gap:'2px'}}>{[1,2,3,4,5].map(k => (<span key={k} style={{width:'7px',height:'7px',borderRadius:'1px',background: k <= r.likelihood ? pColor : 'rgba(148,163,184,0.18)'}}/>))}</span>
+                                          <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',fontWeight:600}}>{r.likelihood}/5</span>
+                                        </span>
+                                        <span style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                          <span style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>IMPACT</span>
+                                          <span style={{display:'inline-flex',gap:'2px'}}>{[1,2,3,4,5].map(k => (<span key={k} style={{width:'7px',height:'7px',borderRadius:'1px',background: k <= r.impact ? pColor : 'rgba(148,163,184,0.18)'}}/>))}</span>
+                                          <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',fontWeight:600}}>{r.impact}/5</span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {riskMatrix.legend && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'4px',padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'2px'}}>// LEGEND</div>
+                                  {riskMatrix.legend.map((lg, i) => {
+                                    const lc = lg.label === 'High' ? '#ef4444' : lg.label === 'Medium-High' ? '#f59e0b' : '#eab308';
+                                    return (
+                                      <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                        <span style={{padding:'1px 6px',background:`${lc}1a`,border:`0.5px solid ${lc}`,borderRadius:'2px',fontSize:'8px',color:lc,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',whiteSpace:'nowrap'}}>{lg.label.toUpperCase()}</span>
+                                        <span style={{fontSize:'9px',color:'rgba(224,234,255,0.65)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{lg.desc}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CN: LABOR RELATIONS (labor shape) */}
+                          {labor && (
+                            <>
+                              <SectionHeading>// LABOR RELATIONS</SectionHeading>
+                              {labor.resolution && <Tldr text={labor.resolution} />}
+                              {labor.preamble && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',margin:'10px 0',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{labor.preamble}</div>
+                              )}
+                              {labor.unions && labor.unions.length > 0 && (
+                                <>
+                                  <SectionHeading>// UNION AGREEMENTS</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                    {labor.unions.map((u, i) => {
+                                      const sColor = (u.status === 'Resolved' || u.status === 'Ratified') ? '#22c55e' : u.status === 'Pending ratification' ? '#eab308' : '#f59e0b';
+                                      return (
+                                        <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'3px'}}>
+                                            <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{u.name}</span>
+                                            <span style={{padding:'1px 7px',background:`${sColor}1a`,border:`0.5px solid ${sColor}`,borderRadius:'2px',fontSize:'8px',color:sColor,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>{u.status.toUpperCase()}</span>
+                                          </div>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600,marginBottom:'5px'}}>{u.covered}</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{u.detail}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </>
+                              )}
+                              {labor.strikeHistory && labor.strikeHistory.length > 0 && (
+                                <>
+                                  <SectionHeading>// STRIKE HISTORY</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                    {labor.strikeHistory.map((s, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'3px'}}>
+                                          <span style={{fontSize:'14px',color:amber,fontFamily:'monospace',fontWeight:700}}>{s.year}</span>
+                                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{s.workers}</span>
+                                          <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'8px',color:amberDim,fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',whiteSpace:'nowrap'}}>{s.duration}</span>
+                                        </div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{s.resolution}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                              {labor.whyItMatters && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'5px'}}>// WHY IT MATTERS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{labor.whyItMatters}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {/* REH ENTERPRISE RISK FRAMEWORK (riskSummary shape) */}
                           {riskSummary && riskSummary.categories && (
                             <>
