@@ -9945,6 +9945,35 @@ const COST_BREAKDOWN = {
 
 const CNI_BREAKDOWN = {
     numbers: {
+      segments: {
+        railCommodity: {
+          preamble: 'CN\u2019s freight revenue split across seven commodity groups (2004\u20132024, C$M). Intermodal, Grain & Fertilizers, and Petroleum & Chemicals are the growth engines; Forest Products and Automotive are the structural laggards.',
+          lines: [
+            { label: 'Intermodal (C$M)', unit: 'M USD', note: 'CAGR ~6.25% \u2014 fastest-growing and the largest contributor. CN\u2019s crown jewel: Prince Rupert / Vancouver / Chicago connections + truck-to-rail conversion. Peaked $4,906M (2022), since normalised.', series: [{year:2004,value:1117},{year:2005,value:1270},{year:2006,value:1420},{year:2007,value:1382},{year:2008,value:1580},{year:2009,value:1337},{year:2010,value:1576},{year:2011,value:1790},{year:2012,value:1994},{year:2013,value:2429},{year:2014,value:2748},{year:2015,value:2896},{year:2016,value:2846},{year:2017,value:3200},{year:2018,value:3465},{year:2019,value:3787},{year:2020,value:3751},{year:2021,value:4115},{year:2022,value:4906},{year:2023,value:3823},{year:2024,value:3757}] },
+            { label: 'Grain & Fertilizers (C$M)', unit: 'M USD', note: 'CAGR ~6.02% \u2014 one of CN\u2019s most stable, \u201cdefensive\u201d drivers, tied to global food demand and Canadian grain/potash exports. ~$3.42B in 2024.', series: [{year:2004,value:1063},{year:2005,value:1119},{year:2006,value:1259},{year:2007,value:1311},{year:2008,value:1382},{year:2009,value:1341},{year:2010,value:1418},{year:2011,value:1523},{year:2012,value:1590},{year:2013,value:1638},{year:2014,value:1986},{year:2015,value:2071},{year:2016,value:2098},{year:2017,value:2214},{year:2018,value:2357},{year:2019,value:2392},{year:2020,value:2609},{year:2021,value:2475},{year:2022,value:2783},{year:2023,value:3265},{year:2024,value:3422}] },
+            { label: 'Petroleum & Chemicals (C$M)', unit: 'M USD', note: 'CAGR ~6.03% \u2014 crude-by-rail, chemicals, plastics, industrial feedstocks. Cyclical with energy prices, but a consistent 20-year pillar.', series: [{year:2004,value:1059},{year:2005,value:1096},{year:2006,value:1173},{year:2007,value:1226},{year:2008,value:1346},{year:2009,value:1260},{year:2010,value:1322},{year:2011,value:1420},{year:2012,value:1640},{year:2013,value:1952},{year:2014,value:2354},{year:2015,value:2442},{year:2016,value:2174},{year:2017,value:2208},{year:2018,value:2660},{year:2019,value:3052},{year:2020,value:2631},{year:2021,value:2816},{year:2022,value:3229},{year:2023,value:3195},{year:2024,value:3414}] },
+            { label: 'Metals & Minerals (C$M)', unit: 'M USD', note: 'CAGR ~5.41% \u2014 steel, construction, mining, aggregates. Healthy but commodity-cyclical (steel, ore).', series: [{year:2004,value:714},{year:2005,value:837},{year:2006,value:885},{year:2007,value:826},{year:2008,value:950},{year:2009,value:728},{year:2010,value:861},{year:2011,value:1006},{year:2012,value:1133},{year:2013,value:1240},{year:2014,value:1484},{year:2015,value:1437},{year:2016,value:1218},{year:2017,value:1523},{year:2018,value:1689},{year:2019,value:1643},{year:2020,value:1409},{year:2021,value:1548},{year:2022,value:1911},{year:2023,value:2048},{year:2024,value:2048}] },
+            { label: 'Forest Products (C$M)', unit: 'M USD', note: 'CAGR ~1.25% \u2014 CN\u2019s weakest long-term grower. Structural paper decline (digital) + housing-cyclical lumber. 20-yr avg ~$1,628M.', series: [{year:2004,value:1505},{year:2005,value:1738},{year:2006,value:1745},{year:2007,value:1552},{year:2008,value:1436},{year:2009,value:1147},{year:2010,value:1183},{year:2011,value:1270},{year:2012,value:1331},{year:2013,value:1424},{year:2014,value:1523},{year:2015,value:1728},{year:2016,value:1797},{year:2017,value:1788},{year:2018,value:1886},{year:2019,value:1808},{year:2020,value:1700},{year:2021,value:1740},{year:2022,value:2006},{year:2023,value:1943},{year:2024,value:1931}] },
+            { label: 'Coal (C$M)', unit: 'M USD', note: 'CAGR ~6.10% \u2014 surprisingly strong over 20 years on Canadian metallurgical-coal exports, despite the energy transition. Volatile, with long-term thermal-coal risk.', series: [{year:2004,value:284},{year:2005,value:331},{year:2006,value:375},{year:2007,value:385},{year:2008,value:478},{year:2009,value:464},{year:2010,value:600},{year:2011,value:618},{year:2012,value:712},{year:2013,value:713},{year:2014,value:740},{year:2015,value:612},{year:2016,value:434},{year:2017,value:535},{year:2018,value:661},{year:2019,value:658},{year:2020,value:527},{year:2021,value:618},{year:2022,value:937},{year:2023,value:1017},{year:2024,value:929}] },
+            { label: 'Automotive (C$M)', unit: 'M USD', note: 'CAGR ~2.85% \u2014 slow grower tied to auto-production cycles. Disrupted in 2008\u201309 (GFC) and 2020\u201321 (chip shortage). Strategic, but not a growth driver.', series: [{year:2004,value:510},{year:2005,value:514},{year:2006,value:514},{year:2007,value:504},{year:2008,value:469},{year:2009,value:355},{year:2010,value:457},{year:2011,value:484},{year:2012,value:538},{year:2013,value:555},{year:2014,value:620},{year:2015,value:719},{year:2016,value:759},{year:2017,value:825},{year:2018,value:830},{year:2019,value:858},{year:2020,value:591},{year:2021,value:576},{year:2022,value:797},{year:2023,value:945},{year:2024,value:894}] },
+          ],
+          definitions: [
+            { segment: 'Petroleum & Chemicals', includes: 'Crude oil, refined petroleum (gasoline, diesel, jet fuel), plastics, industrial chemicals, LPG, fertilizers, sulfur', markets: 'Energy, refining, manufacturing, agriculture', drivers: 'Oil prices, refinery production, chemical demand, export flows' },
+            { segment: 'Metals & Minerals', includes: 'Iron ore, steel, non-ferrous metals (copper, aluminum, zinc), scrap, aggregates, cement, stone, sand', markets: 'Construction, mining, steel mills, heavy industry', drivers: 'Construction/housing cycles, mining output, industrial production' },
+            { segment: 'Forest Products', includes: 'Lumber, wood panels, pulp, paper, newsprint, packaging', markets: 'Housing, construction, packaging, publishing', drivers: 'U.S. housing starts, global packaging demand, decline in paper use' },
+            { segment: 'Coal', includes: 'Thermal coal (power plants) and metallurgical coal (steelmaking)', markets: 'Utilities (electricity), steel producers', drivers: 'Global steel demand, energy policies, coal export volumes' },
+            { segment: 'Grain & Fertilizers', includes: 'Canadian/U.S. grain (wheat, corn, soybeans, canola), fertilizers (potash, ammonia, phosphate)', markets: 'Food processors, livestock feed, agriculture, global exports', drivers: 'Crop yields, global food demand, fertilizer use, trade flows' },
+            { segment: 'Intermodal', includes: 'Containerized freight: retail goods, electronics, apparel, furniture, e-commerce', markets: 'Consumer goods, retail, imports/exports', drivers: 'Global trade, e-commerce, port volumes (Vancouver, Prince Rupert, Chicago), truck-to-rail conversion' },
+            { segment: 'Automotive', includes: 'Finished vehicles (cars, trucks, SUVs) and auto parts', markets: 'Auto manufacturers, dealerships, suppliers', drivers: 'Auto production cycles, consumer vehicle demand, supply-chain stability' },
+          ],
+          takeaways: [
+            'Winners (6%+ CAGR): Intermodal, Petroleum & Chemicals, Grain & Fertilizers, Coal \u2014 CN\u2019s growth engines.',
+            'Middle of the pack (~5%): Metals & Minerals \u2014 a steady contributor.',
+            'Laggards (~3% or less): Forest Products, Automotive \u2014 structurally weaker, defending revenue rather than driving growth.',
+            'The mix shift explains the strategy: leaning hard into ports, intermodal terminals, and fuel efficiency \u2014 that\u2019s where the demand growth is.',
+          ],
+        },
+      },
       railGroups: [
         { heading: 'VOLUME & NETWORK', note: 'The physical work CN does, and the network it does it on. Volumes peaked ~2018\u201319 and have plateaued since on tariffs and a softer economy.', metrics: [
           { label: 'Gross Ton Miles \u2014 GTMs (millions)', unit: '', note: 'Total train weight \u00d7 distance. Higher = better. CAGR 2012\u201324: +1.48%/yr.', series: [{year:2012,value:383754},{year:2013,value:401390},{year:2014,value:448765},{year:2015,value:422084},{year:2016,value:423426},{year:2017,value:469200},{year:2018,value:490414},{year:2019,value:482890},{year:2020,value:455368},{year:2021,value:458401},{year:2022,value:463710},{year:2023,value:452043},{year:2024,value:457694}] },
@@ -9970,6 +9999,20 @@ const CNI_BREAKDOWN = {
         { heading: 'CASH & DIVIDENDS', note: 'The owner-earnings story: strong FCF funding a fast-compounding dividend.', metrics: [
           { label: 'Free Cash Flow (C$M)', unit: 'M USD', note: 'CAGR 2013\u201324: ~6.03%/yr. Lumpy, but a real cash machine \u2014 peaked $4,259M (2022).', series: [{year:2013,value:1623},{year:2014,value:2220},{year:2015,value:2373},{year:2016,value:2520},{year:2017,value:2778},{year:2018,value:2514},{year:2019,value:1992},{year:2020,value:3227},{year:2021,value:3296},{year:2022,value:4259},{year:2023,value:3887},{year:2024,value:3092}] },
           { label: 'Dividends per Share (C$)', unit: 'USD per share', note: 'CAGR 2013\u201324: ~13.25%/yr \u2014 nearly 4\u00d7 the dividend in 11 years.', series: [{year:2013,value:0.86},{year:2014,value:1.00},{year:2015,value:1.25},{year:2016,value:1.50},{year:2017,value:1.65},{year:2018,value:1.82},{year:2019,value:2.15},{year:2020,value:2.30},{year:2021,value:2.46},{year:2022,value:2.93},{year:2023,value:3.16},{year:2024,value:3.38}] },
+        ] },
+        { heading: 'CASH FLOW & OWNER EARNINGS', note: 'The Buffett lens. Owner earnings (operating cash flow minus capex) is what actually accrues to shareholders \u2014 and roughly half of CN\u2019s operating cash is plowed straight back into the network.', metrics: [
+          { label: 'Operating Cash Flow (C$M)', unit: 'M USD', note: 'CAGR 2013\u201324: ~5.95%/yr. 2023 ($9,655M) was an outlier; 2024 normalised to $6,699M.', series: [{year:2013,value:3548},{year:2014,value:4381},{year:2015,value:5140},{year:2016,value:5202},{year:2017,value:5516},{year:2018,value:5918},{year:2019,value:5923},{year:2020,value:6165},{year:2021,value:6971},{year:2022,value:6667},{year:2023,value:9655},{year:2024,value:6699}] },
+          { label: 'Capital Expenditures / Property Additions (C$M)', unit: 'M USD', note: 'CAGR 2013\u201324: ~5.5%/yr. The price of the moat \u2014 heavy, perpetual reinvestment.', series: [{year:2013,value:1973},{year:2014,value:2971},{year:2015,value:2706},{year:2016,value:2695},{year:2017,value:2673},{year:2018,value:3531},{year:2019,value:3885},{year:2020,value:2863},{year:2021,value:2891},{year:2022,value:2750},{year:2023,value:3187},{year:2024,value:3549}] },
+          { label: 'CapEx as % of Operating Cash Flow', unit: '%', note: 'Avg 2013\u201324: 51.39%. About half of operating cash is reinvested; spiked to ~66\u201368% in 2014 and 2019.', series: [{year:2013,value:55.61},{year:2014,value:67.84},{year:2015,value:52.64},{year:2016,value:51.82},{year:2017,value:48.45},{year:2018,value:59.65},{year:2019,value:65.53},{year:2020,value:46.44},{year:2021,value:41.47},{year:2022,value:41.23},{year:2023,value:33.02},{year:2024,value:52.96}] },
+          { label: 'Owner Earnings (C$M)', unit: 'M USD', note: 'OCF \u2212 CapEx. CAGR 2013\u201324: ~6.5%. Ex-2023 avg ~$2.69B; incl. 2023 ~$3.01B. 2024 fell ~51% off the 2023 high.', series: [{year:2013,value:1575},{year:2014,value:1410},{year:2015,value:2434},{year:2016,value:2507},{year:2017,value:2843},{year:2018,value:2387},{year:2019,value:2038},{year:2020,value:3302},{year:2021,value:4080},{year:2022,value:3917},{year:2023,value:6468},{year:2024,value:3150}] },
+          { label: 'Owner Earnings per Share (C$)', unit: 'USD per share', note: 'Owner earnings \u00f7 shares. $4.98 (2024) vs $9.84 (2023 outlier). Share count shrinking via buybacks (843M in 2013 \u2192 633M in 2024) \u2014 quietly boosting per-share owner earnings.', series: [{year:2013,value:1.87},{year:2014,value:1.72},{year:2015,value:3.04},{year:2016,value:3.23},{year:2017,value:3.78},{year:2018,value:3.25},{year:2019,value:2.83},{year:2020,value:4.64},{year:2021,value:5.76},{year:2022,value:5.71},{year:2023,value:9.84},{year:2024,value:4.98}] },
+        ] },
+        { heading: 'CAPITAL EXPENDITURE BY ASSET CLASS', note: 'Where the capital goes (C$M, 2005\u20132024). Track & rolling stock are the hard-asset table stakes; IT is the fastest-growing line (+8.3%/yr) \u2014 CN digitising and automating as much as it lays steel.', metrics: [
+          { label: 'CapEx \u2014 Track & Roadway (C$M)', unit: 'M USD', note: 'The backbone: tracks, ballast, signals, bridges. CAGR 2005\u201324: ~4.73%. Maintenance + growth \u2014 Buffett\u2019s \u201ctable stakes.\u201d', series: [{year:2005,value:868},{year:2006,value:1012},{year:2007,value:1069},{year:2008,value:1131},{year:2009,value:1036},{year:2010,value:1031},{year:2011,value:1185},{year:2012,value:1351},{year:2013,value:1400},{year:2014,value:1604},{year:2015,value:1855},{year:2016,value:1834},{year:2017,value:1927},{year:2018,value:2341},{year:2019,value:2262},{year:2020,value:1842},{year:2021,value:1972},{year:2022,value:1841},{year:2023,value:1963},{year:2024,value:2088}] },
+          { label: 'CapEx \u2014 Rolling Stock (C$M)', unit: 'M USD', note: 'Locomotives & cars. CAGR 2005\u201324: ~4.63%. The 2019 spike (~$999M) = ~200 new Tier-4 GE locomotives for the volume boom; 2023\u201324 = fleet-renewal catch-up (grain hoppers, tank cars).', series: [{year:2005,value:338},{year:2006,value:349},{year:2007,value:281},{year:2008,value:160},{year:2009,value:195},{year:2010,value:415},{year:2011,value:195},{year:2012,value:206},{year:2013,value:286},{year:2014,value:325},{year:2015,value:480},{year:2016,value:494},{year:2017,value:226},{year:2018,value:433},{year:2019,value:999},{year:2020,value:478},{year:2021,value:403},{year:2022,value:390},{year:2023,value:663},{year:2024,value:799}] },
+          { label: 'CapEx \u2014 Buildings (C$M)', unit: 'M USD', note: 'Yards, terminals, shops, offices. CAGR 2005\u201324: ~5.28%. Modest but steady \u2014 the 2007 spike ($172M) stands out.', series: [{year:2005,value:44},{year:2006,value:35},{year:2007,value:172},{year:2008,value:57},{year:2009,value:48},{year:2010,value:43},{year:2011,value:72},{year:2012,value:66},{year:2013,value:104},{year:2014,value:104},{year:2015,value:71},{year:2016,value:85},{year:2017,value:70},{year:2018,value:95},{year:2019,value:87},{year:2020,value:103},{year:2021,value:81},{year:2022,value:96},{year:2023,value:90},{year:2024,value:117}] },
+          { label: 'CapEx \u2014 Information Technology (C$M)', unit: 'M USD', note: 'The standout grower. CAGR 2005\u201324: ~8.25% \u2014 PSR software, trip optimiser, fuel-efficiency systems, AI scheduling. Railroads increasingly compete on data + automation. Peaked $459M (2018).', series: [{year:2005,value:81},{year:2006,value:81},{year:2007,value:97},{year:2008,value:122},{year:2009,value:110},{year:2010,value:111},{year:2011,value:135},{year:2012,value:125},{year:2013,value:130},{year:2014,value:144},{year:2015,value:144},{year:2016,value:176},{year:2017,value:290},{year:2018,value:459},{year:2019,value:421},{year:2020,value:301},{year:2021,value:291},{year:2022,value:293},{year:2023,value:302},{year:2024,value:365}] },
+          { label: 'CapEx \u2014 Other (C$M)', unit: 'M USD', note: 'Communications, signals, smaller infrastructure. CAGR 2005\u201324: ~5.02%.', series: [{year:2005,value:71},{year:2006,value:82},{year:2007,value:69},{year:2008,value:71},{year:2009,value:88},{year:2010,value:118},{year:2011,value:125},{year:2012,value:77},{year:2013,value:97},{year:2014,value:120},{year:2015,value:156},{year:2016,value:163},{year:2017,value:190},{year:2018,value:203},{year:2019,value:310},{year:2020,value:139},{year:2021,value:150},{year:2022,value:137},{year:2023,value:199},{year:2024,value:180}] },
         ] },
         { heading: 'RETURNS & RATIOS', note: 'Quality lives here. ROIC and the operating ratio are the two numbers that decide whether the toll booth is being run well.', metrics: [
           { label: 'Return on Invested Capital \u2014 ROIC (%)', unit: '%', note: '20-yr avg 15.74%. Consistently mid-teens; 2024 (12.9%) and 2020 (12.7%) dipped below average.', series: [{year:2004,value:15.5},{year:2005,value:16.5},{year:2006,value:17.0},{year:2007,value:16.3},{year:2008,value:14.7},{year:2009,value:14.3},{year:2010,value:15.4},{year:2011,value:15.5},{year:2012,value:15.9},{year:2013,value:17.1},{year:2014,value:17.2},{year:2015,value:16.2},{year:2016,value:16.0},{year:2017,value:15.9},{year:2018,value:16.7},{year:2019,value:15.7},{year:2020,value:12.7},{year:2021,value:16.4},{year:2022,value:15.8},{year:2023,value:16.8},{year:2024,value:12.9}] },
@@ -26044,6 +26087,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         segments.naConfectionery && { id: 'naConfectionery', label: 'NA CONFECTIONERY' },
                         segments.naSaltySnacks && { id: 'naSaltySnacks', label: 'NA SALTY SNACKS' },
                         segments.international && { id: 'international', label: 'INTERNATIONAL' },
+                        segments.railCommodity && { id: 'railCommodity', label: 'BY COMMODITY' },
                       ].filter(Boolean);
                       const hasSubTabs = subTabDefs.length > 1;
                       const activeSub = subTabDefs.length ? (subTabDefs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : subTabDefs[0].id) : null;
@@ -26065,6 +26109,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           )}
                           {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
+                          {/* CN — FREIGHT REVENUE BY COMMODITY */}
+                          {segments.railCommodity && activeSub === 'railCommodity' && (
+                            <>
+                              <SectionHeading>// FREIGHT REVENUE BY COMMODITY</SectionHeading>
+                              {segments.railCommodity.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.railCommodity.preamble}</div>}
+                              {segments.railCommodity.lines.map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                              {segments.railCommodity.definitions && segments.railCommodity.definitions.length > 0 && (
+                                <>
+                                  <SectionHeading>// SEGMENT DEFINITIONS</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'16px'}}>
+                                    {segments.railCommodity.definitions.map((d, i) => (
+                                      <div key={i} style={{padding:'10px 12px',background:'rgba(245,158,11,0.03)',border:'0.5px solid rgba(245,158,11,0.2)',borderRadius:'3px'}}>
+                                        <div style={{fontSize:'11px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'6px'}}>{d.segment}</div>
+                                        <div style={{display:'flex',flexDirection:'column',gap:'3px'}}>
+                                          <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}><span style={{color:'rgba(245,158,11,0.65)',fontWeight:700,display:'inline-block',minWidth:'64px'}}>Includes</span>{d.includes}</div>
+                                          <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}><span style={{color:'rgba(245,158,11,0.65)',fontWeight:700,display:'inline-block',minWidth:'64px'}}>Markets</span>{d.markets}</div>
+                                          <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}><span style={{color:'rgba(245,158,11,0.65)',fontWeight:700,display:'inline-block',minWidth:'64px'}}>Drivers</span>{d.drivers}</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                              {segments.railCommodity.takeaways && segments.railCommodity.takeaways.length > 0 && (
+                                <>
+                                  <SectionHeading>// STRATEGIC TAKEAWAYS</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+                                    {segments.railCommodity.takeaways.map((t, i) => (
+                                      <div key={i} style={{display:'flex',gap:'9px',padding:'8px 12px',background:'rgba(245,158,11,0.05)',border:'0.5px solid rgba(245,158,11,0.3)',borderLeft:'2px solid rgba(245,158,11,0.9)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:'#f59e0b',fontWeight:700}}>{String(i+1).padStart(2,'0')}</span>
+                                        <span>{t}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
                           {segments.wmRevenue && activeSub === 'serviceLine' && (
                             <>
                               <SectionHeading>// OPERATING REVENUES</SectionHeading>
