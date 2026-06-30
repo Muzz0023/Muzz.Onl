@@ -9944,6 +9944,42 @@ const COST_BREAKDOWN = {
 };
 
 const CNI_BREAKDOWN = {
+  moat: {
+    preamble: 'CN\u2019s moat is the network itself \u2014 ~20,000 route miles of right-of-way that physically cannot be rebuilt. No one is laying a second transcontinental railroad across Canada: the land, the river crossings, and the port access simply aren\u2019t available to a new entrant. That makes CN a toll booth on the movement of energy, grain, forest products, metals, and containers across the continent \u2014 and the only operator reaching all three coasts. The constraint on that moat is the cost of holding it: heavy, perpetual capital reinvestment and a unionised workforce.',
+    networkAdvantage: {
+      headline: 'The only rail network touching three coasts.',
+      stats: [
+        { label: 'ROUTE MILES', value: '~20,000' },
+        { label: 'COUNTRIES', value: '2' },
+        { label: 'TIME ZONES', value: '5' },
+        { label: 'PROVINCES', value: '8' },
+        { label: 'U.S. STATES', value: '16' },
+        { label: 'MAJOR PORTS', value: '7' },
+        { label: 'INTERMODAL TERMINALS', value: '21' },
+      ],
+      points: [
+        'CN covers nearly 20,000 miles of track in two countries \u2014 five time zones, eight provinces, and 16 states \u2014 with access to energy and natural resources like propane, forest and agricultural products, minerals, and metals.',
+        'The three-coast network connects to seven major ports in Canada and the U.S. to help facilitate seamless global trade.',
+        'Service through 21 inland intermodal terminals across the network.',
+        'The Chicago bypass loop saves up to 48 hours of transit time by avoiding that city\u2019s densest area \u2014 a structural speed advantage no competitor routing through Chicago can match.',
+      ],
+    },
+    competitors: {
+      preamble: 'The North American Class I railroads run as a tight oligopoly \u2014 four players carve up the continent by geography. CN\u2019s edge is reach (three coasts) and an industry-leading operating ratio; its burdens are capex intensity and labor.',
+      rows: [
+        { name: 'Canadian National', ticker: 'CNI / CN', self: true, reach: '~20,000 mi across Canada and into the U.S. Midwest & Gulf', strengths: ['Only transcontinental rail spanning three coasts \u2014 unmatched geographic coverage', 'High efficiency and operational excellence (industry-leading operating ratio)', 'Diverse customer and revenue base; resilient markets'], weaknesses: ['Labor disputes and infrastructure constraints affect reliability', 'High capex burden for network maintenance', 'Regulatory complexity over cross-border (U.S.\u2013Canada) operations'] },
+        { name: 'Union Pacific', ticker: 'UNP', reach: '~32,200 mi across the western and central U.S.', strengths: ['Largest network in the U.S. West \u2014 vast market reach and economies of scale', 'Well-diversified across intermodal, agriculture, and automotive freight'], weaknesses: ['Significant operational complexity due to size and geography', 'Vulnerable to slowdowns like traffic delays (\u201Cmonster trains\u201D blocking crossings)', 'Heavy supplier dependence and regulatory scrutiny'] },
+        { name: 'Canadian Pacific Kansas City', ticker: 'CPKC / CP', reach: 'Post-merger: ~20,000 mi, spanning Canada to Mexico via the U.S.', strengths: ['First single-line railroad connecting Canada\u2013U.S.\u2013Mexico \u2014 seamless north\u2013south routing', 'Strong intermodal reach and trade-corridor access'], weaknesses: ['Still integrating legacy systems (CP & KCS)', 'Vulnerable to labor challenges similar to CN (as seen in past rail strikes)'] },
+        { name: 'Norfolk Southern', ticker: 'NSC', reach: '~19,420 route miles in the Eastern U.S. (plus ~28,400 mi maintained)', strengths: ['Dense coverage in economically vital Eastern U.S. corridors', 'Strong intermodal and southeastern logistics capabilities'], weaknesses: ['Limited expansion room east of the Mississippi', 'Regulatory hurdles against further consolidation or mergers (e.g. with UP)'] },
+      ],
+      keyInsights: [
+        'UNP dominates western U.S. freight rail \u2014 unmatched scale, but higher operational complexity and regulatory exposure.',
+        'CNI boasts continental reach and efficiency, yet must manage capex burdens and labor/infrastructure vulnerabilities.',
+        'CPKC delivers unique north\u2013south access spanning three countries, but still faces integration and labor challenges.',
+        'NSC excels in the busy eastern U.S. corridor with logistical depth, but has limited geographical expansion potential.',
+      ],
+    },
+  },
   overview: {
     facts: { founded: '1919', foundedNote: 'Crown corp → privatised 1995', headquarters: 'Montreal', listed: 'NYSE: CNI', listedNote: 'TSX: CNR', network: 'Tri-Coastal', coasts: 'Atlantic · Pacific · Gulf' },
     identity: {
@@ -27143,7 +27179,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -27690,6 +27726,92 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             }}>
                               {preamble}
                             </div>
+                          )}
+
+                          {/* CN: NETWORK ADVANTAGE */}
+                          {networkAdvantage && (
+                            <>
+                              <SectionHeading>// NETWORK ADVANTAGE</SectionHeading>
+                              {networkAdvantage.headline && (
+                                <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{networkAdvantage.headline}</div>
+                              )}
+                              {networkAdvantage.stats && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(110px, 1fr))',gap:'8px',marginBottom:'10px'}}>
+                                  {networkAdvantage.stats.map((s, i) => (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'10px 12px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>{s.label}</div>
+                                      <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.value}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {networkAdvantage.points && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                  {networkAdvantage.points.map((p, i) => (
+                                    <div key={i} style={{display:'flex',gap:'8px',padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                      <span style={{color:amber,flexShrink:0,fontWeight:700,fontFamily:'monospace'}}>›</span>
+                                      <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{p}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CN: COMPETITIVE LANDSCAPE (competitors shape) */}
+                          {competitors && competitors.rows && (
+                            <>
+                              <SectionHeading>// COMPETITIVE LANDSCAPE · {competitors.rows.length} CLASS I RAILROADS</SectionHeading>
+                              {competitors.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitors.preamble}</div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {competitors.rows.map((c, i) => (
+                                  <div key={i} style={{
+                                    background: c.self ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${c.self ? amber : amberGlow}`, borderLeft:`2px solid ${amber}`, borderRadius:'4px', padding:'12px 14px',
+                                  }}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',marginBottom:'3px'}}>
+                                      <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                      <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700}}>{c.ticker}</span>
+                                      {c.self && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>THIS COMPANY</span>}
+                                    </div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{c.reach}</div>
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}}>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'4px'}}>STRENGTHS</div>
+                                        <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                          {c.strengths.map((s, j) => (
+                                            <li key={j} style={{display:'flex',gap:'6px',fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.9)',flexShrink:0,fontWeight:700}}>+</span><span>{s}</span></li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'4px'}}>WEAKNESSES</div>
+                                        <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                          {c.weaknesses.map((w, j) => (
+                                            <li key={j} style={{display:'flex',gap:'6px',fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:'rgba(239,68,68,0.9)',flexShrink:0,fontWeight:700}}>−</span><span>{w}</span></li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {competitors.keyInsights && competitors.keyInsights.length > 0 && (
+                                <>
+                                  <SectionHeading>// KEY INSIGHTS</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'12px'}}>
+                                    {competitors.keyInsights.map((k, i) => (
+                                      <div key={i} style={{display:'flex',gap:'8px',padding:'9px 11px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                        <span style={{color:amberDim,flexShrink:0,fontWeight:700,fontFamily:'monospace'}}>›</span>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{k}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </>
                           )}
 
                           {/* SUMMARY — "more moats, more enemies" featured panel */}
