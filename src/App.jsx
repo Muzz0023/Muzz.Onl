@@ -10506,7 +10506,112 @@ const UMG_BREAKDOWN = {
       { id: 'thesis', label: 'THE THESIS', keys: ['preamble','thesis','greatIndustry','businessModel','resilience'] },
       { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
       { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
+      { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['dealValuationVsWmg','scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness','spotifyNetflixValuation'] },
     ],
+    dealValuationVsWmg: {
+      headline: 'UMG deal valuation below Warner Music Group',
+      callout: 'PSTH\u2019s purchase price for UMG represents a discount to WMG\u2019s trading multiple \u2014 even though UMG is a vastly superior company.',
+      metricLabel: 'EV / CY 2021E Operating Profit',
+      bars: [
+        { label: 'UMG', value: 22, suffix: 'x', color: 'rgba(245,158,11,0.95)', featured: true, badge: 'PSTH BUY-IN' },
+        { label: 'WMG', value: 23, suffix: 'x', color: 'rgba(148,163,184,0.9)' },
+      ],
+      advantagesTitle: 'UMG advantages over WMG',
+      advantages: [
+        'Undisputed market-leader',
+        'Represents significantly more of the top artists (10 out of top 10 global artists)',
+        'World-class management team',
+        'Iconic brand, IP and labels',
+        'Scale (~2x revenue of WMG)',
+        'Global reach & infrastructure',
+        'Uncontrolled',
+        'Independent board of directors',
+      ],
+      note: 'Operating profit defined as EBIT, excluding one-time restructuring and amortisation of acquired intangibles. The buy-in multiple (22x) sits BELOW the weaker peer\u2019s trading multiple (23x) \u2014 paying less for the demonstrably better business.',
+    },
+    scaleVsWmg: {
+      headline: 'UMG has a significant scale advantage vs WMG',
+      callout: 'UMG is the undisputed market leader with twice the revenue base of WMG and a larger footprint \u2014 in an industry where scale matters.',
+      rows: [
+        { metric: 'CY 2020 Revenue (\u20acmm)', umg: '\u20ac7,432', wmg: '\u20ac3,785', delta: '2.0x' },
+        { metric: 'Recorded Music Market Share', umg: '32%', wmg: '16%', delta: '2.0x' },
+        { metric: 'Publishing Market Share', umg: '23%', wmg: '11%', delta: '2.1x' },
+        { metric: 'Geographic Markets Covered', umg: '180', wmg: '71', delta: '2.5x' },
+        { metric: 'Employees', umg: '9,183', wmg: '5,500', delta: '1.7x' },
+        { metric: '# of Top 10 Artists Represented', umg: '10 of 10', wmg: '0 of 10', delta: '+10' },
+      ],
+      note: 'Source: Music & Copyright, company filings. WMG metrics converted to EUR at 1.20 EUR/USD for comparability. Every operational axis \u2014 revenue, share, footprint, roster \u2014 is roughly 2x WMG, and UMG holds all 10 of the top 10 global artists to WMG\u2019s zero.',
+    },
+    organicGrowthVsWmg: {
+      headline: 'UMG has higher organic revenue growth than WMG',
+      callout: 'Since 2016, UMG has grown revenues at 10% annually \u2014 ~300bps per annum faster than WMG. The gap widened to over 500bps in the last two years.',
+      metricLabel: 'Organic Revenue Growth',
+      umgAvg: 10, wmgAvg: 7,
+      years: [
+        { year: 2017, umg: 10, wmg: 11 },
+        { year: 2018, umg: 10, wmg: 9 },
+        { year: 2019, umg: 14, wmg: 9 },
+        { year: 2020, umg: 5, wmg: 0 },
+      ],
+      flag: '2020 revenue growth negatively impacted by COVID-19.',
+      note: 'UMG organic growth per filings (excludes FX and M&A). WMG growth adjusted to exclude FX, M&A (EMP and Concert Promotion Business) and ASC 606 impact. Period averages: UMG 10% vs WMG 7%.',
+    },
+    opProfitGrowthVsWmg: {
+      headline: 'UMG has higher operating profit growth than WMG',
+      callout: 'UMG has consistently grown operating profits in excess of 20% annually \u2014 about twice WMG\u2019s growth rate.',
+      metricLabel: 'Operating Profit Growth',
+      umgAvg: 21, wmgAvg: 11,
+      years: [
+        { year: 2017, umg: 21, wmg: -7 },
+        { year: 2018, umg: 22, wmg: 25 },
+        { year: 2019, umg: 22, wmg: 11 },
+        { year: 2020, umg: 20, wmg: 16 },
+      ],
+      note: 'Operating profit defined as EBIT, excluding one-time restructuring and amortisation of acquired intangibles. Period averages: UMG 21% vs WMG 11%. UMG\u2019s consistency (20\u201322% every year) contrasts with WMG\u2019s volatility (\u20137% to +25%).',
+    },
+    marginVsWmg: {
+      headline: 'Despite scale, UMG\u2019s operating margins are similar to WMG',
+      callout: 'Despite a significant scale advantage and consistent margin improvement over time, UMG\u2019s margins are not meaningfully higher than WMG\u2019s \u2014 because UMG has invested in growth and building a global footprint.',
+      metricLabel: 'CY 2020 Operating Profit Margin',
+      deltaNote: '200bps',
+      bars: [
+        { label: 'UMG', value: 18.3, suffix: '%', color: 'rgba(245,158,11,0.95)', featured: true },
+        { label: 'WMG', value: 16.3, suffix: '%', color: 'rgba(148,163,184,0.9)' },
+      ],
+      kicker: 'We believe UMG\u2019s margins will expand meaningfully in future as it maintains a high level of revenue growth and leverages the investments made in recent years.',
+      note: 'Operating profit defined as EBIT, excluding one-time restructuring and amortisation of acquired intangibles. WMG in EUR at 1.20 EUR/USD. The thin 200bps gap is the opportunity: a 2x-scale leader currently earning near-peer margins carries latent operating leverage.',
+    },
+    spotifyNetflixBusiness: {
+      headline: 'Business comparison to Spotify and Netflix',
+      callout: 'UMG has many structural advantages relative to Spotify while sharing many of the best attributes of Netflix.',
+      cols: ['Spotify','Netflix','UMG'],
+      rows: [
+        { attr: 'Most advantaged position in streaming ecosystem', vals: ['no','yes','yes'] },
+        { attr: 'Owns irreplaceable content', vals: ['no','yes','yes'] },
+        { attr: 'Decade-plus runway of robust subscriber growth', vals: ['yes','yes','yes'] },
+        { attr: 'Pricing power', vals: ['yes','yes','yes'] },
+        { attr: 'High incremental margin', vals: ['no','yes','yes'] },
+        { attr: 'Capital light', vals: ['yes','no','yes'] },
+        { attr: 'Content played more than once', vals: ['yes','no','yes'] },
+        { attr: 'Content retains value with time', vals: ['na','no','yes'] },
+      ],
+      note: 'UMG is the only column that scores positively on every attribute \u2014 it pairs Spotify\u2019s capital-light model with Netflix\u2019s ownership of irreplaceable, re-consumable content that appreciates with time.',
+    },
+    spotifyNetflixValuation: {
+      headline: 'Valuation comparison to Spotify and Netflix',
+      callout: 'PSTH\u2019s purchase price multiple for UMG is about half the trading multiple of Netflix \u2014 which has lower gross margins and is much more capital intensive.',
+      metricLabel: 'EV / CY 2021E Operating Profit',
+      bars: [
+        { label: 'UMG', value: 22, display: '22x', color: 'rgba(245,158,11,0.95)', featured: true, badge: 'PSTH BUY-IN' },
+        { label: 'Spotify', value: 0, display: 'NM', color: 'rgba(34,197,94,0.85)' },
+        { label: 'Netflix', value: 39, display: '39x', color: 'rgba(239,68,68,0.85)' },
+      ],
+      metrics: [
+        { label: 'Gross Margin', umg: '47.3%', spotify: '25.6%', netflix: '38.9%' },
+        { label: 'Operating Profit Margin', umg: '19.0%', spotify: '(2.0%)', netflix: '20.8%' },
+      ],
+      note: 'Source: Wall Street analyst consensus. Operating profit = EBIT ex one-time restructuring and amortisation of acquired intangibles. Gross margins CY2020A; operating margins 2021E (analyst-consensus availability). UMG bought at 22x vs Netflix at 39x \u2014 despite a higher gross margin (47.3% vs 38.9%) and far lower capital intensity.',
+    },
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
       intro: 'The core of the Pershing thesis. Paid streaming is a rapidly growing, recurring, high-margin annuity \u2014 and its adoption has made the whole record business lower-risk and more data-driven.',
@@ -28293,11 +28398,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, moatTabs } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, dealValuationVsWmg, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, spotifyNetflixValuation, moatTabs } = bd.moat;
 
                       // UMG moat sub-tab helper (flat render for companies without moatTabs)
                       const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
                       const showMoat = (key) => !moatTabs || (activeMoatTab && activeMoatTab.keys.includes(key));
+
+                      // Competitive-edge: multi-bar comparison (valuation multiples, margins)
+                      const CompBars = ({ label, bars }) => (
+                        <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                          {label && <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'12px'}}>// {label.toUpperCase()}</div>}
+                          {bars.map((b, i) => {
+                            const mx = Math.max(...bars.map(x => x.value), 0.0001);
+                            return (
+                              <div key={i} style={{marginBottom:'11px'}}>
+                                <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'4px',gap:'8px'}}>
+                                  <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight: b.featured?700:600,letterSpacing:'0.3px'}}>{b.label}{b.badge && <span style={{marginLeft:'6px',padding:'1px 5px',background:'rgba(245,158,11,0.14)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{b.badge}</span>}</span>
+                                  <span style={{fontSize:'15px',color:b.color,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{b.display || (b.value + (b.suffix||''))}</span>
+                                </div>
+                                <div style={{width:'100%',height:'8px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden'}}>
+                                  <div style={{width:`${Math.max(0,b.value)/mx*100}%`,height:'100%',background:b.color,opacity:0.72}}/>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                      // Competitive-edge: year-by-year UMG vs WMG bars (handles negatives)
+                      const CompYearChart = ({ label, umgAvg, wmgAvg, years, flag }) => {
+                        const mx = Math.max(...years.flatMap(v => [Math.abs(v.umg), Math.abs(v.wmg)]), 0.0001);
+                        const bar = (val, col) => (
+                          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                            <div style={{flex:1,height:'7px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.12)',borderRadius:'2px',overflow:'hidden'}}>
+                              <div style={{width:`${Math.abs(val)/mx*100}%`,height:'100%',background: val<0?'rgba(239,68,68,0.8)':col,opacity:0.75}}/>
+                            </div>
+                            <span style={{fontSize:'10px',color: val<0?'rgba(239,68,68,0.9)':col,fontFamily:'monospace',fontWeight:700,width:'46px',textAlign:'right'}}>{val<0?`(${Math.abs(val)}%)`:`${val}%`}</span>
+                          </div>
+                        );
+                        return (
+                          <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                            {label && <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>// {label.toUpperCase()}</div>}
+                            <div style={{display:'flex',gap:'16px',marginBottom:'12px',flexWrap:'wrap'}}>
+                              <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',fontWeight:700}}>{'\u25a0'} UMG{umgAvg!=null?` \u00b7 avg ${umgAvg}%`:''}</span>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.9)',fontFamily:'monospace',fontWeight:700}}>{'\u25a0'} WMG{wmgAvg!=null?` \u00b7 avg ${wmgAvg}%`:''}</span>
+                            </div>
+                            {years.map((y, i) => (
+                              <div key={i} style={{marginBottom:'10px'}}>
+                                <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,marginBottom:'4px',letterSpacing:'0.3px'}}>{y.year}</div>
+                                <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                  {bar(y.umg, 'rgba(245,158,11,0.95)')}
+                                  {bar(y.wmg, 'rgba(148,163,184,0.9)')}
+                                </div>
+                              </div>
+                            ))}
+                            {flag && <div style={{marginTop:'4px',padding:'6px 10px',background:'rgba(239,68,68,0.06)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'3px',fontSize:'9px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{flag}</div>}
+                          </div>
+                        );
+                      };
 
 
                       // Multi-line chart that compares price series across multiple products
@@ -29453,6 +29610,149 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>VERDICT — </span>{resilience.verdict}
                                 </div>
                               )}
+                            </>
+                          )}
+
+                          {/* UMG — DEAL VALUATION vs WMG */}
+                          {showMoat('dealValuationVsWmg') && dealValuationVsWmg && (
+                            <>
+                              <SectionHeading>// DEAL VALUATION vs WMG</SectionHeading>
+                              {dealValuationVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{dealValuationVsWmg.headline}</div>}
+                              {dealValuationVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{dealValuationVsWmg.callout}</div>}
+                              <CompBars label={dealValuationVsWmg.metricLabel} bars={dealValuationVsWmg.bars} />
+                              {dealValuationVsWmg.advantages && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                  {dealValuationVsWmg.advantagesTitle && <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// {dealValuationVsWmg.advantagesTitle.toUpperCase()}</div>}
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                    {dealValuationVsWmg.advantages.map((a, i) => (
+                                      <div key={i} style={{display:'flex',gap:'8px',alignItems:'flex-start'}}>
+                                        <span style={{color:'rgba(34,197,94,0.95)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'11px'}}>{'\u2713'}</span>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{a}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              {dealValuationVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{dealValuationVsWmg.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — SCALE ADVANTAGE vs WMG */}
+                          {showMoat('scaleVsWmg') && scaleVsWmg && (
+                            <>
+                              <SectionHeading>// SCALE ADVANTAGE vs WMG</SectionHeading>
+                              {scaleVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{scaleVsWmg.headline}</div>}
+                              {scaleVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{scaleVsWmg.callout}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
+                                <div style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'6px 0',borderBottom:`0.5px solid ${amberGlow}`}}>
+                                  <span style={{flex:1}}/>
+                                  <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',fontWeight:700,width:'72px',textAlign:'right',letterSpacing:'0.5px'}}>UMG</span>
+                                  <span style={{fontSize:'9px',color:'rgba(148,163,184,0.9)',fontFamily:'monospace',fontWeight:700,width:'72px',textAlign:'right',letterSpacing:'0.5px'}}>WMG</span>
+                                  <span style={{fontSize:'9px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',fontWeight:700,width:'46px',textAlign:'right',letterSpacing:'0.5px'}}>{'\u0394'}</span>
+                                </div>
+                                {scaleVsWmg.rows.map((r, i) => (
+                                  <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'7px 0',borderBottom: i<scaleVsWmg.rows.length-1?'0.5px solid rgba(245,158,11,0.08)':'none'}}>
+                                    <span style={{flex:1,fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{r.metric}</span>
+                                    <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'72px',textAlign:'right'}}>{r.umg}</span>
+                                    <span style={{fontSize:'11px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',width:'72px',textAlign:'right'}}>{r.wmg}</span>
+                                    <span style={{fontSize:'11px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',fontWeight:700,width:'46px',textAlign:'right'}}>{r.delta}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              {scaleVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{scaleVsWmg.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — ORGANIC REVENUE GROWTH vs WMG */}
+                          {showMoat('organicGrowthVsWmg') && organicGrowthVsWmg && (
+                            <>
+                              <SectionHeading>// ORGANIC REVENUE GROWTH vs WMG</SectionHeading>
+                              {organicGrowthVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{organicGrowthVsWmg.headline}</div>}
+                              {organicGrowthVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{organicGrowthVsWmg.callout}</div>}
+                              <CompYearChart label={organicGrowthVsWmg.metricLabel} umgAvg={organicGrowthVsWmg.umgAvg} wmgAvg={organicGrowthVsWmg.wmgAvg} years={organicGrowthVsWmg.years} flag={organicGrowthVsWmg.flag} />
+                              {organicGrowthVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{organicGrowthVsWmg.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — OPERATING PROFIT GROWTH vs WMG */}
+                          {showMoat('opProfitGrowthVsWmg') && opProfitGrowthVsWmg && (
+                            <>
+                              <SectionHeading>// OPERATING PROFIT GROWTH vs WMG</SectionHeading>
+                              {opProfitGrowthVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{opProfitGrowthVsWmg.headline}</div>}
+                              {opProfitGrowthVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{opProfitGrowthVsWmg.callout}</div>}
+                              <CompYearChart label={opProfitGrowthVsWmg.metricLabel} umgAvg={opProfitGrowthVsWmg.umgAvg} wmgAvg={opProfitGrowthVsWmg.wmgAvg} years={opProfitGrowthVsWmg.years} />
+                              {opProfitGrowthVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{opProfitGrowthVsWmg.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — OPERATING MARGIN vs WMG */}
+                          {showMoat('marginVsWmg') && marginVsWmg && (
+                            <>
+                              <SectionHeading>// OPERATING MARGIN vs WMG</SectionHeading>
+                              {marginVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{marginVsWmg.headline}</div>}
+                              {marginVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{marginVsWmg.callout}</div>}
+                              {marginVsWmg.deltaNote && <div style={{textAlign:'right',fontSize:'10px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',fontWeight:700,marginBottom:'6px',letterSpacing:'0.3px'}}>UMG lead: {marginVsWmg.deltaNote}</div>}
+                              <CompBars label={marginVsWmg.metricLabel} bars={marginVsWmg.bars} />
+                              {marginVsWmg.kicker && <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:700}}>OUTLOOK — </span>{marginVsWmg.kicker}</div>}
+                              {marginVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{marginVsWmg.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — BUSINESS vs SPOTIFY & NETFLIX */}
+                          {showMoat('spotifyNetflixBusiness') && spotifyNetflixBusiness && (
+                            <>
+                              <SectionHeading>// BUSINESS vs SPOTIFY & NETFLIX</SectionHeading>
+                              {spotifyNetflixBusiness.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{spotifyNetflixBusiness.headline}</div>}
+                              {spotifyNetflixBusiness.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{spotifyNetflixBusiness.callout}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
+                                <div style={{display:'flex',alignItems:'flex-end',gap:'6px',padding:'6px 0',borderBottom:`0.5px solid ${amberGlow}`}}>
+                                  <span style={{flex:1}}/>
+                                  {spotifyNetflixBusiness.cols.map((c, i) => (
+                                    <span key={i} style={{fontSize:'9px',color: c==='UMG'?amber:'rgba(148,163,184,0.9)',fontFamily:'monospace',fontWeight:700,width:'56px',textAlign:'center',letterSpacing:'0.5px'}}>{c}</span>
+                                  ))}
+                                </div>
+                                {spotifyNetflixBusiness.rows.map((r, i) => {
+                                  const mark = (v) => v==='yes' ? <span style={{color:'rgba(34,197,94,0.95)',fontWeight:700,fontSize:'12px'}}>{'\u2713'}</span> : v==='no' ? <span style={{color:'rgba(239,68,68,0.85)',fontWeight:700,fontSize:'12px'}}>{'\u2717'}</span> : <span style={{color:'rgba(148,163,184,0.55)',fontSize:'8px',fontWeight:700}}>N/A</span>;
+                                  return (
+                                    <div key={i} style={{display:'flex',alignItems:'center',gap:'6px',padding:'8px 0',borderBottom: i<spotifyNetflixBusiness.rows.length-1?'0.5px solid rgba(245,158,11,0.08)':'none'}}>
+                                      <span style={{flex:1,fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.2px'}}>{r.attr}</span>
+                                      {r.vals.map((v, j) => (
+                                        <span key={j} style={{width:'56px',textAlign:'center',fontFamily:'monospace',background: spotifyNetflixBusiness.cols[j]==='UMG'?'rgba(245,158,11,0.05)':'transparent',borderRadius:'2px',padding:'3px 0'}}>{mark(v)}</span>
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {spotifyNetflixBusiness.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{spotifyNetflixBusiness.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — VALUATION vs SPOTIFY & NETFLIX */}
+                          {showMoat('spotifyNetflixValuation') && spotifyNetflixValuation && (
+                            <>
+                              <SectionHeading>// VALUATION vs SPOTIFY & NETFLIX</SectionHeading>
+                              {spotifyNetflixValuation.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{spotifyNetflixValuation.headline}</div>}
+                              {spotifyNetflixValuation.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{spotifyNetflixValuation.callout}</div>}
+                              <CompBars label={spotifyNetflixValuation.metricLabel} bars={spotifyNetflixValuation.bars} />
+                              {spotifyNetflixValuation.metrics && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'6px 0',borderBottom:`0.5px solid ${amberGlow}`}}>
+                                    <span style={{flex:1}}/>
+                                    <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>UMG</span>
+                                    <span style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>SPOTIFY</span>
+                                    <span style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>NETFLIX</span>
+                                  </div>
+                                  {spotifyNetflixValuation.metrics.map((m, i) => (
+                                    <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'7px 0',borderBottom: i<spotifyNetflixValuation.metrics.length-1?'0.5px solid rgba(245,158,11,0.08)':'none'}}>
+                                      <span style={{flex:1,fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{m.label}</span>
+                                      <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right'}}>{m.umg}</span>
+                                      <span style={{fontSize:'11px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',width:'64px',textAlign:'right'}}>{m.spotify}</span>
+                                      <span style={{fontSize:'11px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',width:'64px',textAlign:'right'}}>{m.netflix}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {spotifyNetflixValuation.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{spotifyNetflixValuation.note}</div>}
                             </>
                           )}
 
