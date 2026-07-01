@@ -10502,6 +10502,111 @@ const UMG_BREAKDOWN = {
     },
   },
   moat: {
+    industryGrowth: {
+      headline: 'The music industry has returned to growth, driven by streaming',
+      intro: 'Global recorded-music revenue ($B, nominal). The industry peaked at $21.9B in 1999, then collapsed through the piracy / download era to a $12.9B trough in 2014 \u2014 and has grown every single year since, to $29.6B in 2024, now well above the old CD-era peak. That rising line is the traffic on UMG\u2019s toll road: the #1 owner of the content earns a royalty on all of it.',
+      series: [
+        { year: 1999, value: 21.9 }, { year: 2000, value: 20.6 }, { year: 2001, value: 21.8 }, { year: 2002, value: 20.4 },
+        { year: 2003, value: 18.9 }, { year: 2004, value: 18.9 }, { year: 2005, value: 18.4 }, { year: 2006, value: 17.8 },
+        { year: 2007, value: 16.6 }, { year: 2008, value: 15.3 }, { year: 2009, value: 14.3 }, { year: 2010, value: 13.6 },
+        { year: 2011, value: 13.5 }, { year: 2012, value: 13.5 }, { year: 2013, value: 13.3 }, { year: 2014, value: 12.9 },
+        { year: 2015, value: 13.3 }, { year: 2016, value: 14.5 }, { year: 2017, value: 15.6 }, { year: 2018, value: 17.2 },
+        { year: 2019, value: 18.5 }, { year: 2020, value: 19.8 }, { year: 2021, value: 23.5 }, { year: 2022, value: 25.6 },
+        { year: 2023, value: 28.2 }, { year: 2024, value: 29.6 },
+      ],
+      seriesNote: 'Source: IFPI Global Music Report 2025 (CY2024 FX, Russia excluded). Trough $12.9B (2014) \u2192 $29.6B (2024): a decade of unbroken growth.',
+      eras: [
+        { label: 'CD era', range: '1999\u20132005' },
+        { label: 'Digital download era', range: '2006\u20132015' },
+        { label: 'Streaming era', range: '2016\u20132024' },
+      ],
+      segments: 'Streams: Physical \u00b7 Streaming & Subscription (now dominant) \u00b7 Downloads & Other Digital \u00b7 Performance Rights \u00b7 Synchronization. Physical has stabilised and even ticked back up on the vinyl revival.',
+    },
+    topMarkets: {
+      headline: 'Recorded music \u2014 2024 top 10 markets',
+      rows: [
+        { rank: 1, country: 'USA', growth: '+2.2%', revenue: 'US$11.3bn', up: true },
+        { rank: 2, country: 'Japan', growth: '-0.2%', revenue: 'US$2.5bn', up: false },
+        { rank: 3, country: 'UK', growth: '+4.9%', revenue: 'US$2.0bn', up: true },
+        { rank: 4, country: 'Germany', growth: '+4.1%', revenue: 'US$1.7bn', up: true },
+        { rank: 5, country: 'China', growth: '+9.6%', revenue: 'US$1.6bn', up: true },
+        { rank: 6, country: 'France', growth: '+7.5%', revenue: 'US$1.3bn', up: true },
+        { rank: 7, country: 'South Korea', growth: '-5.7%', revenue: 'US$754m', up: false },
+        { rank: 8, country: 'Canada', growth: '+1.5%', revenue: 'US$660m', up: true },
+        { rank: 9, country: 'Brazil', growth: '+21.7%', revenue: 'US$647m', up: true },
+        { rank: 10, country: 'Mexico', growth: '+15.6%', revenue: 'US$549m', up: true },
+      ],
+      note: 'Source: IFPI Global Music Report 2025. The US alone (US$11.3bn) is bigger than the next four markets combined. The fast growers \u2014 Brazil (+21.7%), Mexico (+15.6%), China (+9.6%) \u2014 are the emerging-market tailwind; Japan (-0.2%) and Korea (-5.7%) are the mature laggards.',
+    },
+    chartDominance: {
+      headline: 'UMG is consistently home to the world\u2019s best-selling artists',
+      artistShare: {
+        intro: 'UMG\u2019s share of the IFPI Top 10 Global Artists, 2019\u20132024 \u2014 never below 7, usually 8\u20139. This is the "must-have content" claim made concrete: you cannot build a credible music service without UMG\u2019s roster.',
+        years: [
+          { year: '2019', share: '8/10', split: '8/8 US/UK' },
+          { year: '2020', share: '9/10', split: '9/9 US/UK' },
+          { year: '2021', share: '8/10', split: '6/8 US/UK \u00b7 2/8 non' },
+          { year: '2022', share: '7/10', split: '3/7 US/UK \u00b7 4/7 non' },
+          { year: '2023', share: '9/10', split: '5/9 US/UK \u00b7 4/9 non' },
+          { year: '2024', share: '9/10', split: '7/9 US/UK \u00b7 2/9 non' },
+        ],
+        note: 'The US/UK vs non-US/UK split shows the roster globalising \u2014 non-Anglophone superstars (Bad Bunny, Karol G, Mrs. GREEN APPLE) increasingly feature. Source: IFPI Global Charts.',
+      },
+      highlights2024: {
+        intro: '2024 chart highlights \u2014 a snapshot of one year\u2019s dominance across platforms and regions (Taylor Swift, Sabrina Carpenter, Billie Eilish, Kendrick Lamar, Karol G).',
+        platforms: [
+          { scope: 'Spotify (Global)', facts: '6 of top 10 artists (Taylor Swift #1, The Weeknd #2); 5 of top 10 songs (Sabrina Carpenter \u201cEspresso\u201d #1); 8 of top 10 albums.' },
+          { scope: 'Apple Music (Global)', facts: 'Artist of the Year: Billie Eilish; 6 of top 10 songs (Kendrick Lamar \u201cNot Like Us\u201d #1).' },
+          { scope: 'Amazon Music (Global)', facts: 'Top Artist: Taylor Swift; Top Album: The Tortured Poets Department; 7 of top 10 most-requested on Alexa.' },
+          { scope: 'Deezer / Vevo (Global)', facts: 'Deezer: 4 of top 5 artists (Taylor Swift #1). Vevo: 8 of top 10 artists (Karol G #1, 4th year running).' },
+          { scope: 'Billboard (US)', facts: '8 of top 10 albums (all of the top 5); all of the top 3 label groups \u2014 Republic Collective #1 for the 4th consecutive year.' },
+          { scope: 'US streaming', facts: 'Spotify: 6 of top 10 artists (Taylor Swift #1). Apple Music: 14 of top 20 songs. YouTube: 6 of top 10 songs.' },
+        ],
+        regions: [
+          { country: 'UK', facts: '7 of top 10 albums (all of the top 6); EMI the #1 label for the 3rd consecutive year.' },
+          { country: 'Australia', facts: '17 of the top 20 albums (all of the top 5) \u2014 ARIA.' },
+          { country: 'Canada', facts: '14 of top 20 albums (all of the top 7); #1 on the album chart for 41 weeks of the year.' },
+          { country: 'Germany', facts: '5 of top 10 albums \u2014 GfK.' },
+          { country: 'France', facts: 'Albums from 12 different UMG artists hit #1 during the year.' },
+          { country: 'Japan', facts: '4 of top 10 Spotify artists (Mrs. GREEN APPLE #1).' },
+          { country: 'Brazil / LatAm', facts: 'Top 2 songs of the year (BMAT); top artist Henrique & Juliano.' },
+        ],
+      },
+    },
+    demandTailwinds: {
+      headline: 'Consumption surfaces are multiplying',
+      intro: 'The Pershing thesis is a royalty on GROWING consumption. Beyond core streaming, music is becoming embedded in more and more monetisable surfaces \u2014 and well-capitalised tech giants are subsidising streaming adoption to cultivate their own customers.',
+      techInvestment: {
+        label: 'Tech leaders investing in streaming',
+        sublabel: 'Estimated paid streaming users (m) \u00b7 parent-company market cap ($bn)',
+        rows: [
+          { name: 'Spotify', users: 158, cap: '$49bn' },
+          { name: 'Apple Music', users: 72, cap: '$2,268bn' },
+          { name: 'Tencent Music', users: 61, cap: '$26bn' },
+          { name: 'Amazon Music', users: 55, cap: '$1,798bn' },
+          { name: 'YouTube / Google', users: 30, cap: '$1,694bn' },
+          { name: 'All other', users: 67, cap: '\u2014' },
+        ],
+        note: 'Source: company filings, MIDiA, Bloomberg, Pershing Square estimates (excludes free/freemium). Apple, Amazon and Google run music streaming as a loss-leader to lock in trillion-dollar ecosystems \u2014 they compete for subscribers, not for UMG\u2019s content, which they all must license. The customer (DSP) has money and scale, but no pricing power over the catalogue.',
+      },
+      surfaces: [
+        { surface: 'Gaming', partners: 'Epic Games \u00b7 Riot Games \u00b7 Oculus \u00b7 LEGO', points: [
+          'Music has always been a natural complement to gaming (storytelling).',
+          'Next-gen platforms serve as a digital venue for live concerts with global audiences.',
+          'Unlock new commerce: VR experiences, in-game streaming, skins, badges and tokens.',
+        ] },
+        { surface: 'Digital fitness', partners: 'Peloton \u00b7 Equinox+ \u00b7 Echelon \u00b7 Hydrow \u00b7 AARMY \u00b7 FitRadio', points: [
+          'Personalised, on-demand workouts built around synchronised music.',
+          'Expanding libraries with themed, genre, era and artist-based workouts.',
+          'Music improves athletic performance and drives platform stickiness.',
+        ] },
+        { surface: 'Social media', partners: 'TikTok \u00b7 Instagram \u00b7 Facebook \u00b7 Snapchat', points: [
+          '9 of 10 social-media users partake in music-related activities.',
+          'Music is the key to user-generated content \u2014 lip-syncing, dance routines, reaction videos.',
+          'Still early innings of monetisation: live streaming, direct artist payment, personalised stores.',
+        ] },
+      ],
+    },
     preamble: 'Pershing Square\u2019s one-line thesis: UMG is a capital-light, rapidly growing royalty on the greater global consumption and monetization of music \u2014 the classic toll-booth. It owns irreplaceable, must-have IP; earns predictable, recurring streaming royalties that need almost no incremental capital to grow at a high rate; sits #1 in a stable three-player oligopoly; and runs a substantial fixed-cost base, so revenue growth drops through to expanding margins.',
     thesis: {
       headline: 'The classic Pershing Square investment',
@@ -28092,7 +28197,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -28885,6 +28990,145 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 )}
                               </div>
+                            </>
+                          )}
+
+                          {/* UMG — INDUSTRY RETURN TO GROWTH */}
+                          {industryGrowth && (
+                            <>
+                              <SectionHeading>// INDUSTRY · RETURN TO GROWTH</SectionHeading>
+                              {industryGrowth.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{industryGrowth.headline}</div>}
+                              {industryGrowth.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{industryGrowth.intro}</div>}
+                              {industryGrowth.series && <TimeSeriesTable data={{label:'Global recorded music revenue', unit:'B USD', series: industryGrowth.series, note: industryGrowth.seriesNote}} />}
+                              {industryGrowth.eras && (
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'8px',marginBottom:'10px',marginTop:'10px'}}>
+                                  {industryGrowth.eras.map((e, i) => (
+                                    <div key={i} style={{padding:'6px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                      <span style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{e.label}</span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px',marginLeft:'6px'}}>{e.range}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {industryGrowth.segments && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px',fontStyle:'italic'}}>{industryGrowth.segments}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — TOP 10 MARKETS */}
+                          {topMarkets && (
+                            <>
+                              <SectionHeading>// {topMarkets.headline ? topMarkets.headline.toUpperCase() : 'TOP MARKETS'}</SectionHeading>
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
+                                {topMarkets.rows.map((m, i) => (
+                                  <div key={i} style={{display:'flex',alignItems:'center',gap:'10px',padding:'6px 0',borderBottom: i < topMarkets.rows.length-1 ? '0.5px solid rgba(245,158,11,0.08)' : 'none'}}>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',fontWeight:700,width:'20px',flexShrink:0}}>{m.rank}</span>
+                                    <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,flex:1,letterSpacing:'0.3px'}}>{m.country}</span>
+                                    <span style={{fontSize:'10px',color: m.up ? 'rgba(34,197,94,0.9)' : 'rgba(239,68,68,0.85)',fontFamily:'monospace',fontWeight:600,width:'56px',textAlign:'right'}}>{m.growth}</span>
+                                    <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,width:'80px',textAlign:'right'}}>{m.revenue}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              {topMarkets.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{topMarkets.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — CHART DOMINANCE */}
+                          {chartDominance && (
+                            <>
+                              <SectionHeading>// {chartDominance.headline ? chartDominance.headline.toUpperCase() : 'CHART DOMINANCE'}</SectionHeading>
+                              {chartDominance.artistShare && (
+                                <>
+                                  {chartDominance.artistShare.intro && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{chartDominance.artistShare.intro}</div>}
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(96px, 1fr))',gap:'8px',marginBottom:'10px'}}>
+                                    {chartDominance.artistShare.years.map((y, i) => (
+                                      <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'10px',textAlign:'center'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'4px'}}>{y.year}</div>
+                                        <div style={{fontSize:'20px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{y.share}</div>
+                                        <div style={{fontSize:'8px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.2px',marginTop:'4px'}}>{y.split}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  {chartDominance.artistShare.note && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px',fontStyle:'italic'}}>{chartDominance.artistShare.note}</div>}
+                                </>
+                              )}
+                              {chartDominance.highlights2024 && (
+                                <>
+                                  {chartDominance.highlights2024.intro && <div style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{chartDominance.highlights2024.intro}</div>}
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
+                                    <div style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>BY PLATFORM</div>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'9px'}}>
+                                        {chartDominance.highlights2024.platforms.map((p, i) => (
+                                          <div key={i}>
+                                            <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{p.scope}</div>
+                                            <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{p.facts}</div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <div style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>BY REGION</div>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'9px'}}>
+                                        {chartDominance.highlights2024.regions.map((r, i) => (
+                                          <div key={i}>
+                                            <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.country}</div>
+                                            <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{r.facts}</div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
+
+                          {/* UMG — DEMAND TAILWINDS */}
+                          {demandTailwinds && (
+                            <>
+                              <SectionHeading>// DEMAND TAILWINDS · EXPANDING SURFACES</SectionHeading>
+                              {demandTailwinds.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{demandTailwinds.headline}</div>}
+                              {demandTailwinds.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{demandTailwinds.intro}</div>}
+                              {demandTailwinds.techInvestment && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{demandTailwinds.techInvestment.label}</div>
+                                  {demandTailwinds.techInvestment.sublabel && <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px',marginBottom:'10px'}}>{demandTailwinds.techInvestment.sublabel}</div>}
+                                  {(() => { const mx = Math.max(...demandTailwinds.techInvestment.rows.map(r => r.users)); return (
+                                    <div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
+                                      {demandTailwinds.techInvestment.rows.map((r, i) => (
+                                        <div key={i}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'3px'}}>
+                                            <span style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{r.name} <span style={{color:amberDim,fontWeight:400}}>· {r.cap}</span></span>
+                                            <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700}}>{r.users}m</span>
+                                          </div>
+                                          <div style={{width:'100%',height:'7px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden'}}>
+                                            <div style={{width: `${(r.users/mx)*100}%`,height:'100%',background:amber,opacity:0.7}}/>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ); })()}
+                                  {demandTailwinds.techInvestment.note && <div style={{marginTop:'10px',padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{demandTailwinds.techInvestment.note}</div>}
+                                </div>
+                              )}
+                              {demandTailwinds.surfaces && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:'12px',marginBottom:'12px'}}>
+                                  {demandTailwinds.surfaces.map((s, i) => (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.surface}</div>
+                                      <div style={{fontSize:'8.5px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{s.partners}</div>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                        {s.points.map((p, pi) => (
+                                          <div key={pi} style={{display:'flex',gap:'6px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u2713'}</span>
+                                            <span style={{fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{p}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </>
                           )}
 
