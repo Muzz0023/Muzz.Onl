@@ -10502,6 +10502,96 @@ const UMG_BREAKDOWN = {
     },
   },
   moat: {
+    whyStreaming: {
+      headline: 'Streaming is an extremely high-quality growth business',
+      intro: 'The core of the Pershing thesis. Paid streaming is a rapidly growing, recurring, high-margin annuity \u2014 and its adoption has made the whole record business lower-risk and more data-driven.',
+      growthSeries: [
+        { year: 2015, value: 3 }, { year: 2016, value: 5 }, { year: 2017, value: 6 },
+        { year: 2018, value: 9 }, { year: 2019, value: 11 }, { year: 2020, value: 13 },
+      ],
+      growthNote: 'Global paid-streaming trade revenue ($B). +37% CAGR over 2015\u201320, and still growing >20% a year (YoY: 65% \u2192 41% \u2192 42% \u2192 22% \u2192 20%). Source: IFPI.',
+      pillars: [
+        { title: 'A growing recurring annuity', points: [
+          'Subscription revenues are a growing annuity.',
+          'Streaming growth continued right through the COVID crisis \u2014 recession-resistant.',
+        ] },
+        { title: 'Enhanced profitability', points: [
+          'Higher-margin than physical: savings on manufacturing and distribution more than offset the higher royalty rates paid to artists.',
+        ] },
+        { title: 'A higher mix of high-value catalogue (songs >3 years old)', points: [
+          'Catalogue is ~60% of streaming monetisation.',
+          'Catalogue is higher-margin \u2014 the cost to create it was expensed long ago, so there is very little associated operating expense.',
+        ] },
+        { title: 'Substantially lower risk', points: [
+          'Data-driven decisions: platforms identify trending talent and calibrate marketing spend.',
+          'No physical inventory \u2014 no upfront manufacturing cost, no obsolescence risk.',
+          'Releasing individual tracks lets labels gauge consumer reaction before committing more capital.',
+          'Richer data at signing means more informed A&R decisions.',
+        ] },
+      ],
+    },
+    musicVsVideo: {
+      headline: 'Music is a better streaming business than video',
+      intro: 'Record labels and publishers have far better bargaining power with their distributors (the DSPs) than the creators and owners of video content do \u2014 the structural reason music economics beat video economics.',
+      rows: [
+        { music: 'Each DSP needs ALL music catalogue and genres to be attractive to subscribers.', video: 'Each DSP only needs a critical mass of content to be attractive.' },
+        { music: 'Limited number of key content providers.', video: 'Large number of content providers.' },
+        { music: 'Distributors have limited exclusive content.', video: 'Distributors have a lot of exclusive content.' },
+        { music: 'Evergreen content \u2014 consumed potentially hundreds of times.', video: 'Majority of content consumed only once.' },
+        { music: 'Complements other media; compatible with many activities and listened to many hours a day.', video: 'Usually requires the consumer\u2019s full attention.' },
+      ],
+    },
+    labelValueProp: {
+      headline: 'Streaming makes labels MORE valuable, not less',
+      intro: 'Streaming made it easy for anyone to produce and distribute music \u2014 >60k new songs are added to Spotify every day. That flood makes labels even more critical: the value has shifted from distribution to breaking through the noise. This is the direct rebuttal to the \u201cartists don\u2019t need labels anymore\u201d disintermediation thesis.',
+      newArtists: {
+        title: 'For new artists',
+        points: [
+          'Experts at discovering and breaking new artists.',
+          'A critical source of funding, creative support, collaboration, marketing and relationships.',
+          'Help artists rise above the din of a saturated digital world (>60k new songs on Spotify every day).',
+        ],
+      },
+      establishedArtists: {
+        title: 'For established artists',
+        points: [
+          'Maximise commercial success: world-class marketing, global operations, unrivalled distribution, data & analytics.',
+          'Additional monetisation \u2014 merchandising, film, etc.',
+          'Enjoy higher royalty rates, commensurate with the lower risk they represent for the label.',
+        ],
+      },
+    },
+    streamingEcosystem: {
+      headline: 'A win-win ecosystem everyone is incentivised to grow',
+      intro: 'Streaming benefits every party in the value chain \u2014 which is exactly why all of them push to grow it.',
+      beneficiaries: [
+        { group: 'Artists', points: [
+          'Higher relative and absolute advances and royalty payments.',
+          'Converts a one-time transactional payment into a potential, perpetual earnings stream.',
+          'Royalties calculated on actual listening.',
+        ] },
+        { group: 'Labels & Publishers', points: [
+          'A rapidly growing stream of recurring revenue.',
+          'Enhanced profitability.',
+          'Better monetisation of the high-value catalogue (songs >3 years).',
+        ] },
+        { group: 'DSPs', points: [
+          'Enormous, still-unmonetised global subscriber-penetration opportunity.',
+          'Does not require significant upfront content investment.',
+        ] },
+      ],
+      ecosystemNote: 'This mutually beneficial ecosystem incentivises all parties to grow streaming.',
+      moneyFlow: {
+        label: 'How the money flows \u2014 paid premium streaming',
+        steps: [
+          'Retail Pricing (ARPU) \u00d7 Subscribers = Retail Revenue. DSPs set the retail ARPU and bear the marketing & customer-acquisition costs.',
+          'DSPs pay 52%+ of revenue to the recorded-music industry, and compensate publishers directly.',
+          'Recorded-music industry revenue is split to the record labels by market share.',
+          'Labels pay artists royalties based on the artist\u2019s share of consumer listening hours.',
+        ],
+        flowNote: 'The key number: DSPs hand over 52%+ of revenue to the rights holders. The platform takes the customer-acquisition risk and the thinner margin; the content owner (UMG) takes the majority of the revenue with almost no incremental cost. That split is the toll-booth in one line.',
+      },
+    },
     industryGrowth: {
       headline: 'The music industry has returned to growth, driven by streaming',
       intro: 'Global recorded-music revenue ($B, nominal). The industry peaked at $21.9B in 1999, then collapsed through the piracy / download era to a $12.9B trough in 2014 \u2014 and has grown every single year since, to $29.6B in 2024, now well above the old CD-era peak. That rising line is the traffic on UMG\u2019s toll road: the #1 owner of the content earns a royalty on all of it.',
@@ -10590,17 +10680,17 @@ const UMG_BREAKDOWN = {
         note: 'Source: company filings, MIDiA, Bloomberg, Pershing Square estimates (excludes free/freemium). Apple, Amazon and Google run music streaming as a loss-leader to lock in trillion-dollar ecosystems \u2014 they compete for subscribers, not for UMG\u2019s content, which they all must license. The customer (DSP) has money and scale, but no pricing power over the catalogue.',
       },
       surfaces: [
-        { surface: 'Gaming', partners: 'Epic Games \u00b7 Riot Games \u00b7 Oculus \u00b7 LEGO', points: [
+        { surface: 'Gaming', market: '$151bn', partners: 'Epic Games \u00b7 Riot Games \u00b7 Oculus \u00b7 LEGO', points: [
           'Music has always been a natural complement to gaming (storytelling).',
           'Next-gen platforms serve as a digital venue for live concerts with global audiences.',
           'Unlock new commerce: VR experiences, in-game streaming, skins, badges and tokens.',
         ] },
-        { surface: 'Digital fitness', partners: 'Peloton \u00b7 Equinox+ \u00b7 Echelon \u00b7 Hydrow \u00b7 AARMY \u00b7 FitRadio', points: [
+        { surface: 'Digital fitness', market: '$17bn', partners: 'Peloton \u00b7 Equinox+ \u00b7 Echelon \u00b7 Hydrow \u00b7 AARMY \u00b7 FitRadio', points: [
           'Personalised, on-demand workouts built around synchronised music.',
           'Expanding libraries with themed, genre, era and artist-based workouts.',
           'Music improves athletic performance and drives platform stickiness.',
         ] },
-        { surface: 'Social media', partners: 'TikTok \u00b7 Instagram \u00b7 Facebook \u00b7 Snapchat', points: [
+        { surface: 'Social media', market: '$87bn', partners: 'TikTok \u00b7 Instagram \u00b7 Facebook \u00b7 Snapchat', points: [
           '9 of 10 social-media users partake in music-related activities.',
           'Music is the key to user-generated content \u2014 lip-syncing, dance routines, reaction videos.',
           'Still early innings of monetisation: live streaming, direct artist payment, personalised stores.',
@@ -28197,7 +28287,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -29115,8 +29205,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:'12px',marginBottom:'12px'}}>
                                   {demandTailwinds.surfaces.map((s, i) => (
                                     <div key={i} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
-                                      <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.surface}</div>
-                                      <div style={{fontSize:'8.5px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{s.partners}</div>
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'6px'}}>
+                                        <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.surface}</span>
+                                        {s.market && <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{s.market}</span>}
+                                      </div>
+                                      <div style={{fontSize:'8.5px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{s.partners}{s.market ? '  \u00b7  market size' : ''}</div>
                                       <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
                                         {s.points.map((p, pi) => (
                                           <div key={pi} style={{display:'flex',gap:'6px'}}>
@@ -29127,6 +29220,123 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       </div>
                                     </div>
                                   ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* UMG — WHY STREAMING IS A GREAT BUSINESS */}
+                          {whyStreaming && (
+                            <>
+                              <SectionHeading>// WHY STREAMING IS A GREAT BUSINESS</SectionHeading>
+                              {whyStreaming.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{whyStreaming.headline}</div>}
+                              {whyStreaming.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{whyStreaming.intro}</div>}
+                              {whyStreaming.growthSeries && <TimeSeriesTable data={{label:'Global paid-streaming revenue', unit:'B USD', series: whyStreaming.growthSeries, note: whyStreaming.growthNote}} />}
+                              {whyStreaming.pillars && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'12px',marginTop:'10px'}}>
+                                  {whyStreaming.pillars.map((p, i) => (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{p.title}</div>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                        {p.points.map((pt, pi) => (
+                                          <div key={pi} style={{display:'flex',gap:'7px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u2713'}</span>
+                                            <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{pt}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* UMG — MUSIC VS VIDEO */}
+                          {musicVsVideo && (
+                            <>
+                              <SectionHeading>// MUSIC vs VIDEO STREAMING</SectionHeading>
+                              {musicVsVideo.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{musicVsVideo.intro}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px',marginBottom:'6px'}}>
+                                <div style={{fontSize:'10px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',textAlign:'center',padding:'6px',background:'rgba(34,197,94,0.08)',borderRadius:'3px'}}>MUSIC STREAMING</div>
+                                <div style={{fontSize:'10px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',textAlign:'center',padding:'6px',background:'rgba(239,68,68,0.08)',borderRadius:'3px'}}>VIDEO STREAMING</div>
+                              </div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'12px'}}>
+                                {musicVsVideo.rows.map((r, i) => (
+                                  <div key={i} style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
+                                    <div style={{display:'flex',gap:'7px',padding:'9px 11px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.25)',borderLeft:'2px solid rgba(34,197,94,0.8)',borderRadius:'3px'}}>
+                                      <span style={{color:'rgba(34,197,94,0.9)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u2713'}</span>
+                                      <span style={{fontSize:'9px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{r.music}</span>
+                                    </div>
+                                    <div style={{display:'flex',gap:'7px',padding:'9px 11px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',borderLeft:'2px solid rgba(239,68,68,0.75)',borderRadius:'3px'}}>
+                                      <span style={{color:'rgba(239,68,68,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u2715'}</span>
+                                      <span style={{fontSize:'9px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{r.video}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — LABEL VALUE PROP */}
+                          {labelValueProp && (
+                            <>
+                              <SectionHeading>// {labelValueProp.headline ? labelValueProp.headline.toUpperCase() : 'LABEL VALUE PROPOSITION'}</SectionHeading>
+                              {labelValueProp.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{labelValueProp.intro}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
+                                {[labelValueProp.newArtists, labelValueProp.establishedArtists].filter(Boolean).map((col, ci) => (
+                                  <div key={ci} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{col.title}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
+                                      {col.points.map((p, pi) => (
+                                        <div key={pi} style={{display:'flex',gap:'7px'}}>
+                                          <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u203a'}</span>
+                                          <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{p}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — STREAMING ECOSYSTEM & ECONOMICS */}
+                          {streamingEcosystem && (
+                            <>
+                              <SectionHeading>// STREAMING ECOSYSTEM & ECONOMICS</SectionHeading>
+                              {streamingEcosystem.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{streamingEcosystem.headline}</div>}
+                              {streamingEcosystem.intro && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{streamingEcosystem.intro}</div>}
+                              {streamingEcosystem.beneficiaries && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))',gap:'12px',marginBottom:'10px'}}>
+                                  {streamingEcosystem.beneficiaries.map((b, i) => (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',marginBottom:'9px',paddingBottom:'7px',borderBottom:`0.5px solid ${amberGlow}`}}>{b.group.toUpperCase()}</div>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                        {b.points.map((p, pi) => (
+                                          <div key={pi} style={{display:'flex',gap:'6px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u2713'}</span>
+                                            <span style={{fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{p}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {streamingEcosystem.ecosystemNote && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'3px',marginBottom:'12px',fontSize:'10px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',fontStyle:'italic'}}>{streamingEcosystem.ecosystemNote}</div>}
+                              {streamingEcosystem.moneyFlow && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{streamingEcosystem.moneyFlow.label}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                    {streamingEcosystem.moneyFlow.steps.map((st, i) => (
+                                      <div key={i} style={{display:'flex',gap:'9px',alignItems:'flex-start'}}>
+                                        <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,flexShrink:0,width:'16px'}}>{i+1}</span>
+                                        <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{st}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  {streamingEcosystem.moneyFlow.flowNote && <div style={{marginTop:'10px',padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{streamingEcosystem.moneyFlow.flowNote}</div>}
                                 </div>
                               )}
                             </>
