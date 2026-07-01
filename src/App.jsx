@@ -10392,6 +10392,113 @@ const CNI_BREAKDOWN = {
   },
 };
 
+const UMG_BREAKDOWN = {
+  overview: {
+    facts: {
+      euronext: true,
+      hq: 'Hilversum, NL',
+      hqNote: 'US ops: Santa Monica, CA',
+      listed: 'Euronext AMS \u00b7 2021',
+      listedNote: 'Ticker: UMG \u00b7 IPO Sep 2021',
+      structure: 'Dutch N.V.',
+      structureNote: 'Spun out of Vivendi, 2021',
+      ceo: 'Sir Lucian Grainge',
+      ceoNote: 'CEO since 2010',
+    },
+    identity: {
+      coreIdentity: 'Universal Music Group N.V. is the world\u2019s largest music company \u2014 a Dutch-listed holding company that owns and controls the recorded-music masters and music-publishing copyrights behind a vast share of the world\u2019s most valuable songs and artists. It earns a royalty every time that IP is streamed, played on radio, performed live, synced to film / TV / games / ads, or sold. This is about as pure a toll-booth as exists: the catalogue cannot be replicated, and demand for it recurs forever.',
+      industryPosition: 'UMG operates through three divisions: Recorded Music (labels including Interscope, Republic, Capitol, Def Jam, Island, Motown, Deutsche Grammophon and EMI), Music Publishing (Universal Music Publishing Group \u2014 5m+ copyrights, 48 offices in 40 countries), and Merchandising & Other (Bravado). As at 31 December 2024 the group sits under Universal Music Group N.V. (Netherlands), which 100% owns Universal Music Group, Inc. (US) and Universal International Music B.V. (Netherlands); the latter in turn holds the territory operations \u2014 Japan, UK, Germany, France, South Korea, Canada, China, Latin America, Australia and the rest of the world.',
+    },
+    shareholders: {
+      asOf: 'latest notifications, 2025',
+      note: 'UMG\u2019s register per the latest regulatory notifications. The striking feature is that voting rights diverge sharply from economic ownership \u2014 a legacy of the Vivendi / Bollor\u00e9 control structure and loyalty-voting mechanics. This is the one genuinely un-Buffett-like aspect of UMG: governance complexity, not business risk.',
+      holders: [
+        { name: 'V. Bollor\u00e9', date: '2025-05-21', capital: '18.51%', voting: '39.90%', tag: 'Concentrated control', signal: 'warn', note: 'One of Europe\u2019s most powerful media tycoons; controls Vivendi and much of its historic strategy \u2014 the de facto kingmaker behind Vivendi-era decisions. Strong believer in owning content over platforms. Long-term strategic mindset, not a trader, but a concentrated European-style control structure.' },
+        { name: 'Vivendi SE', date: '2025-05-21', capital: '13.43%', voting: '43.38%', tag: 'Former parent', signal: 'warn', note: 'UMG\u2019s former parent; spun UMG out in 2021 and has been gradually exiting, not dumping. Retains outsized voting rights through the legacy structure \u2014 fading influence over time, some governance complexity, but aligned to protect asset value through the transition.' },
+        { name: 'Tencent Holdings', date: '2025-05-21', capital: '11.45%', voting: '39.90%', tag: 'Strategic partner', signal: 'ok', note: 'Chinese tech & media giant, dominant in Chinese music streaming via Tencent Music. Holds UMG for strategic partnership \u2014 distribution, licensing, Asia growth, global catalogue access. Not trying to control UMG; they need the music. Carries some geopolitical / regulatory headline risk.' },
+        { name: 'GIC Private Limited', date: '2025-05-23', capital: '4.70%', voting: '4.70%', tag: 'Sovereign wealth', signal: 'ok', note: 'Singapore\u2019s sovereign wealth fund \u2014 quiet, patient money that likes durable cash-flow assets (infrastructure, IP, toll-like businesses). Institutional credibility, very long holding period, no operational interference.' },
+        { name: 'W.A. Ackman / Pershing Square', date: '2025-03-13', capital: '4.74%', voting: '4.74%', tag: 'High-conviction value', signal: 'ok', note: 'Bought UMG pre-IPO through Pershing Square Holdings and publicly calls it a core, long-term royalty / toll-booth compounder. The most \u201cyou-and-Buffett\u201d aligned owner on the register \u2014 low turnover, high conviction, rational capital-allocation expectations.' },
+      ],
+      takeaway: 'UMG is owned by a mix of sovereign wealth, strategic partners and long-term capital allocators \u2014 with European governance complexity (Vivendi / Bollor\u00e9 voting), but no short-term or extractive owners. None of these holders benefit from destroying UMG\u2019s economics; they all want stable royalties, growing cash flows and a strong catalogue.',
+    },
+    leadership: {
+      asOf: '31 Dec 2024',
+      executives: [
+        { name: 'Sir Lucian Grainge', role: 'Chairman & Chief Executive Officer', since: 'Joined UMG 1986 \u00b7 CEO since 2010', joined: 1986, tenureYears: 38, featured: true, history: '40+ years in music; personally signed, developed or worked with ABBA, Queen, The Rolling Stones, U2, Jay-Z, Rihanna, Elton John, Katy Perry and Amy Winehouse. Directed the 2011 acquisition of EMI\u2019s recorded-music assets (revitalising Capitol) \u2014 one of the most important deals in music history. Credited with repositioning music from a declining physical-product business into a recurring, IP-driven royalty model \u2014 the shift that aligned perfectly with the rise of streaming and returned the whole industry to growth. No.1 on Billboard\u2019s Power 100 four consecutive years (the only person to do so); Billboard\u2019s first-ever Executive of the Decade; knighted 2016 by Queen Elizabeth II; Hollywood Walk of Fame star.' },
+        { name: 'Jody Gerson', role: 'Chairman & CEO, Universal Music Publishing Group', since: 'Joined UMPG 2015', joined: 2015, tenureYears: 9, featured: true, history: 'Architect of UMG\u2019s publishing dominance and steward of its longest-duration, most annuity-like cash flows. UMPG runs 48 offices in 40 countries, 850+ staff, and administers 5m+ copyrights. First female Chairman of a global music company and first woman to run a major music publisher. Acquired the Bob Dylan, Neil Diamond and Sting catalogues \u2014 decades-long cash-flow decisions, not short-term boosts. Represents Taylor Swift, Adele, Drake, Billie Eilish, Kendrick Lamar, Coldplay, Ariana Grande, The Weeknd, Bad Bunny, Harry Styles and SZA. Also oversees Polygram Entertainment (film/TV). In Buffett terms, a moat-widener rather than an earnings-maximiser.' },
+        { name: 'Boyd Muir', role: 'EVP, Chief Operating Officer & Chief Financial Officer', since: 'COO since Oct 2024 (continuing as CFO)', joined: 2010, tenureYears: 14, featured: true, history: 'The operational and financial engine \u2014 translated UMG\u2019s creative dominance into an asset-light, cash-compounding model (low capex, negative working capital, durable margins). Central to the 2021 Euronext listing and to major deals: EMI, Ingrooves, [PIAS], Sanctuary, V2, and the minority stake in the Chord Music publishing fund. Previously CFO of UMG International (50+ countries for over a decade). Career: E&Y (1984\u201391, entertainment media), then EMI (Head of Internal Audit, incl. the Virgin and Chrysalis deals).' },
+        { name: 'Vincent Vallejo', role: 'Deputy CEO, Corporate', since: 'Joined UMG 2021 (Vivendi since 1998)', joined: 2021, tenureYears: 3, history: 'Senior corporate and financial steward \u2014 governance, corporate structure and capital-markets initiatives; central to the Euronext listing and post-Vivendi oversight. 20+ years at Vivendi (last role SVP, Audit & Special Projects), giving deep historical context on ownership structure and reporting. Earlier: Deputy CFO at AGF-Allianz; E&Y Paris & Madrid. MBA Montpellier; MSc Cornell-ESSEC. The low-drama governance counterweight to Grainge\u2019s creative leadership.' },
+        { name: 'Jeffrey Harleston', role: 'General Counsel & EVP, Business & Legal Affairs', since: 'Joined 1993 (MCA Records)', joined: 1993, tenureYears: 31, history: 'Legal architect and moat defender \u2014 global oversight of all transactions, contracts, litigation, government relations and anti-piracy enforcement; keeps decades of creative value legally enforceable and collectible. 30+ years of institutional memory. Before UMG: Associate Independent Counsel on the Iran-Contra investigation, and litigation associate at Covington & Burling. Billboard \u201cLawyer of the Year\u201d (2018). In a business where IP is the product, this is a core value driver, not a support function.' },
+        { name: 'Michael Nash', role: 'EVP, Chief Digital Officer', since: 'Chief Digital Officer', joined: 2011, tenureYears: 13, history: 'Digital strategy architect \u2014 owns UMG\u2019s relationships with streaming and social platforms (Spotify, Apple Music, YouTube, TikTok, Meta) and the licensing structures behind them. 2000\u201311 at Warner Music (EVP Digital Strategy & Business Development) through the piracy era and the birth of streaming. Earlier digital pioneer: The Madison Project (the industry\u2019s first digital-distribution trial), founding CEO of Inscape, and The Criterion Collection. Ensures technology stays a distribution channel, not a value-extractor \u2014 protecting pricing power against AI, UGC and new formats.' },
+        { name: 'Philippe Flageul', role: 'EVP, Controller', since: 'Joined 2015', joined: 2015, tenureYears: 9, history: 'Financial control and risk steward \u2014 accounting, tax, treasury, risk management, IT finance, supply-chain finance and global procurement. Joined from Bollor\u00e9 Group (20+ years; CFO of the industrial division; Chairman of IER). Brings heavy-industry cost discipline and conservative risk controls into an asset-light IP business \u2014 ensuring UMG\u2019s excellent economics show up as durable owner earnings, not accounting noise.' },
+        { name: 'Eric Hutcherson', role: 'EVP, Chief People & Inclusion Officer', since: 'Chief People & Inclusion Officer', joined: 2020, tenureYears: 4, history: 'Human-capital strategy across a decentralised federation of labels, publishing teams and territory operations. Previously EVP & CHRO of the NBA. In the music business, culture risk equals earnings risk \u2014 his remit keeps elite creative talent and long-tenured label heads in place, motivated and aligned, protecting the artist relationships that underpin long-term cash flows.' },
+        { name: 'Will Tanous', role: 'EVP, Chief Administrative Officer', since: 'Joined 2013', joined: 2013, tenureYears: 11, history: 'Strategy coordination plus the external-facing functions \u2014 communications, investor relations, government and public-policy engagement, global events and impact initiatives. Previously EVP Communications & Marketing at Warner Music (through the WMG IPO in 2005 and the later sales to private equity and Access Industries). Reduces headline, policy and valuation-multiple risk \u2014 keeping a complex business clearly understood and confidently supported by markets and regulators.' },
+      ],
+      executiveTakeaways: [
+        'Deliberate separation of powers: Grainge and Gerson drive creative and IP strategy (moat expansion); Muir, Vallejo and Flageul enforce financial discipline; Harleston and Nash defend the moat legally and digitally; Hutcherson and Tanous protect culture and reputation. Creative strategy isn\u2019t diluted by bureaucracy, and financial discipline isn\u2019t compromised by industry emotion.',
+        'Deep institutional memory \u2014 Grainge (1986), Harleston (1993), Muir (E&Y / EMI since the 1980s) and Vallejo (Vivendi since 1998). This is a team that has navigated multiple industry cycles \u2014 piracy, the digital transition, the streaming boom \u2014 without destroying economics.',
+        'In Buffett terms, most of this bench are moat-wideners and risk-eliminators rather than earnings-maximisers \u2014 exactly the profile you want stewarding an IP-royalty compounder where a single bad decision could undo decades of catalogue value.',
+      ],
+      board: [
+        { name: 'Sir Lucian Grainge', role: 'Executive Director \u00b7 Chairman & CEO', category: 'Executive Directors' },
+        { name: 'Vincent Vallejo', role: 'Executive Director \u00b7 Deputy CEO, Corporate', category: 'Executive Directors' },
+        { name: 'Sherry Lansing', role: 'Non-Executive \u00b7 Chairman of the Board', category: 'Board Leadership' },
+        { name: 'Margaret Frerejean-Taittinger', role: 'Non-Executive \u00b7 Vice-Chairman of the Board', category: 'Board Leadership' },
+        { name: 'Bill Ackman', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Cathia Lawson-Hall', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Cyrille Bollor\u00e9', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Eric Sprunk', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Haim Saban', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'James Mitchell', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Luc van Os', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Mandy Ginsberg', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+        { name: 'Nicole Avant', role: 'Non-Executive Director', category: 'Non-Executive Directors' },
+      ],
+      boardTakeaways: {
+        title: 'board read',
+        scores: [
+          { label: 'Investor voice on the board (Ackman, Mitchell)', status: 'strong' },
+          { label: 'Independent chair (Sherry Lansing)', status: 'strong' },
+          { label: 'Bollor\u00e9 / Vivendi legacy presence', status: 'improving' },
+        ],
+        verdict: 'A heavyweight board: Bill Ackman (Pershing Square) and James Mitchell bring investor discipline, while Sherry Lansing chairs independently. The Bollor\u00e9 / Vivendi bloc (Cyrille Bollor\u00e9) reflects the legacy control structure that still shows up in the voting rights. Recent churn: Antoine Fi\u00e9vet\u2019s term ended at the May 16, 2024 AGM (he chose not to stand again), and Manning Doherty resigned effective March 21, 2025. No non-executive director represents the company\u2019s employees.',
+      },
+    },
+    deepBench: {
+      note: 'Below the nine Corporate Executives sits a deep operating bench \u2014 the label heads and territory leaders who actually run the catalogue day to day. The label names in the middle column ARE the moat: each is a decades-old brand with its own roster and catalogue.',
+      columns: [
+        { title: 'Corporate Officers', people: [
+          { name: 'Boyd Muir', unit: 'Finance, Operations, IT' },
+          { name: 'Michele Anthony', unit: 'US Commercial' },
+          { name: 'Jeffrey Harleston', unit: 'Legal' },
+          { name: 'Eric Hutcherson', unit: 'People & Inclusion' },
+          { name: 'Andrew Kronfeld', unit: 'Marketing' },
+          { name: 'Michael Nash', unit: 'Digital Strategy' },
+          { name: 'Will Tanous', unit: 'Administration & Communications' },
+        ] },
+        { title: 'Major Business Units', people: [
+          { name: 'Jody Gerson', unit: 'Publishing' },
+          { name: 'Bruce Resnikoff', unit: 'Global Music Catalog' },
+          { name: 'John Janick', unit: 'Interscope' },
+          { name: 'Monte Lipman', unit: 'Republic' },
+          { name: 'Jeff Vaughn + Michelle Jubelirer', unit: 'Capitol' },
+          { name: 'Michael Dungan', unit: 'Nashville' },
+          { name: 'Dickson Stainer', unit: 'Classics & Jazz' },
+        ] },
+        { title: 'Territory Leaders', people: [
+          { name: 'David Joseph', unit: 'UK' },
+          { name: 'Frank Briegmann', unit: 'Central Europe' },
+          { name: 'Naoshi Fujikura', unit: 'Japan' },
+          { name: 'Jes\u00fas L\u00f3pez', unit: 'Latin America, Iberia' },
+          { name: 'Olivier Nusse', unit: 'France & Africa (FS)' },
+          { name: 'George Ash', unit: 'Australia / New Zealand' },
+          { name: 'Adam Granite', unit: 'High-Growth Markets' },
+        ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
@@ -10450,7 +10557,7 @@ const COVERAGE_DATA = [
   { ticker: 'CVX',   name: 'Chevron',                      industry: 'Oil & Gas',           country: 'United States', marketCap: 340000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Integrated oil & gas major — upstream-to-downstream energy with a 4%+ dividend, now pivoting into powering AI data centers.', breakdown: null, locked: true },
 
   // === ENTERTAINMENT · NETHERLANDS ===
-  { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
+  { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'The world\u2019s largest music company \u2014 a toll-booth on a recorded-music and publishing catalogue nobody can replicate.',                  breakdown: UMG_BREAKDOWN },
 
   // === WHOLESALE · AUSTRALIA ===
   { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: REH_BREAKDOWN },
@@ -21265,7 +21372,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     };
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment, shareholders, deepBench } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -21378,6 +21485,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <StatCard label="TEAM"         value={facts.teamMembers}  sub="employees (ANZ + US)" />
                                     <StatCard label="ANZ REVENUE"  value={facts.anzRevenue}   sub="FY24" />
                                     <StatCard label="US REVENUE"   value={facts.usRevenue}    sub="FY24 · AUD" />
+                                  </>
+                                );
+                              }
+                              if (facts.euronext) {
+                                return (
+                                  <>
+                                    <StatCard label="HQ"        value={facts.hq}        sub={facts.hqNote} />
+                                    <StatCard label="LISTED"    value={facts.listed}    sub={facts.listedNote} />
+                                    <StatCard label="STRUCTURE" value={facts.structure} sub={facts.structureNote} />
+                                    <StatCard label="CEO"       value={facts.ceo}       sub={facts.ceoNote} />
                                   </>
                                 );
                               }
@@ -23125,6 +23242,75 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   )}
                                 </>
+                              )}
+                            </>
+                          )}
+
+                          {/* UMG — OPERATING BENCH (deep-bench roster) */}
+                          {deepBench && (
+                            <>
+                              <SectionHeading>// OPERATING BENCH</SectionHeading>
+                              {deepBench.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'14px',lineHeight:1.5,letterSpacing:'0.3px'}}>{deepBench.note}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))',gap:'12px',marginBottom:'16px'}}>
+                                {deepBench.columns.map((col, ci) => (
+                                  <div key={ci} style={{background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.2)',borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'10px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',marginBottom:'10px',paddingBottom:'8px',borderBottom:'0.5px solid rgba(245,158,11,0.2)'}}>{col.title.toUpperCase()}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                                      {col.people.map((p, pi) => (
+                                        <div key={pi}>
+                                          <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.2px'}}>{p.name}</div>
+                                          <div style={{fontSize:'9px',color:'rgba(245,158,11,0.7)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{p.unit}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — SHAREHOLDER REGISTER (capital vs voting) */}
+                          {shareholders && (
+                            <>
+                              <SectionHeading>// SHAREHOLDER REGISTER · {shareholders.asOf}</SectionHeading>
+                              {shareholders.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'14px',lineHeight:1.5,letterSpacing:'0.3px'}}>{shareholders.note}</div>}
+                              <div style={{overflowX:'auto',marginBottom:'14px'}}>
+                                <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:'0.5px solid rgba(245,158,11,0.3)'}}>
+                                      <th style={{textAlign:'left',padding:'6px 8px',fontSize:'9px',color:'rgba(245,158,11,0.7)',letterSpacing:'1px'}}>SHAREHOLDER</th>
+                                      <th style={{textAlign:'left',padding:'6px 8px',fontSize:'9px',color:'rgba(245,158,11,0.7)',letterSpacing:'1px'}}>DATE</th>
+                                      <th style={{textAlign:'right',padding:'6px 8px',fontSize:'9px',color:'rgba(245,158,11,0.7)',letterSpacing:'1px'}}>CAPITAL</th>
+                                      <th style={{textAlign:'right',padding:'6px 8px',fontSize:'9px',color:'rgba(245,158,11,0.7)',letterSpacing:'1px'}}>VOTING</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {shareholders.holders.map((h, i) => (
+                                      <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                        <td style={{padding:'7px 8px',fontSize:'11px',color:'#e0eaff',fontWeight:600}}>{h.name}</td>
+                                        <td style={{padding:'7px 8px',fontSize:'10px',color:'rgba(148,163,184,0.7)'}}>{h.date}</td>
+                                        <td style={{padding:'7px 8px',fontSize:'11px',color:'#e0eaff',textAlign:'right'}}>{h.capital}</td>
+                                        <td style={{padding:'7px 8px',fontSize:'11px',textAlign:'right',color: h.voting !== h.capital ? '#f59e0b' : '#e0eaff',fontWeight: h.voting !== h.capital ? 700 : 400}}>{h.voting}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'14px'}}>
+                                {shareholders.holders.map((h, i) => (
+                                  <div key={i} style={{padding:'10px 12px',background: h.signal === 'warn' ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.3)',border: h.signal === 'warn' ? '0.5px solid rgba(245,158,11,0.35)' : '0.5px solid rgba(245,158,11,0.15)',borderLeft: h.signal === 'warn' ? '2px solid rgba(245,158,11,0.9)' : '2px solid rgba(34,197,94,0.6)',borderRadius:'3px'}}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'4px',flexWrap:'wrap',gap:'6px'}}>
+                                      <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{h.name}</span>
+                                      <span style={{fontSize:'8.5px',color: h.signal === 'warn' ? '#f59e0b' : 'rgba(34,197,94,0.9)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:700}}>{h.tag.toUpperCase()}</span>
+                                    </div>
+                                    <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{h.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {shareholders.takeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY — </span>{shareholders.takeaway}
+                                </div>
                               )}
                             </>
                           )}
