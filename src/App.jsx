@@ -10407,7 +10407,11 @@ const UMG_BREAKDOWN = {
     },
     identity: {
       coreIdentity: 'Universal Music Group N.V. is the world\u2019s largest music company \u2014 a Dutch-listed holding company that owns and controls the recorded-music masters and music-publishing copyrights behind a vast share of the world\u2019s most valuable songs and artists. It earns a royalty every time that IP is streamed, played on radio, performed live, synced to film / TV / games / ads, or sold. This is about as pure a toll-booth as exists: the catalogue cannot be replicated, and demand for it recurs forever.',
-      industryPosition: 'UMG operates through three divisions: Recorded Music (labels including Interscope, Republic, Capitol, Def Jam, Island, Motown, Deutsche Grammophon and EMI), Music Publishing (Universal Music Publishing Group \u2014 5m+ copyrights, 48 offices in 40 countries), and Merchandising & Other (Bravado). As at 31 December 2024 the group sits under Universal Music Group N.V. (Netherlands), which 100% owns Universal Music Group, Inc. (US) and Universal International Music B.V. (Netherlands); the latter in turn holds the territory operations \u2014 Japan, UK, Germany, France, South Korea, Canada, China, Latin America, Australia and the rest of the world.',
+      industryPosition: [
+        'Three divisions: Recorded Music (labels including Interscope, Republic, Capitol, Def Jam, Island, Motown, Deutsche Grammophon and EMI), Music Publishing (Universal Music Publishing Group \u2014 5m+ copyrights, 48 offices in 40 countries), and Merchandising & Other (Bravado).',
+        'Corporate structure as at 31 December 2024: Universal Music Group N.V. (Netherlands) 100% owns Universal Music Group, Inc. (US) and Universal International Music B.V. (Netherlands).',
+        'Universal International Music B.V. in turn holds the territory operations \u2014 Japan, UK, Germany, France, South Korea, Canada, China, Latin America, Australia and the rest of the world.',
+      ],
     },
     shareholders: {
       asOf: 'latest notifications, 2025',
