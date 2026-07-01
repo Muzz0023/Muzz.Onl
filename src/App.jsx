@@ -11234,6 +11234,123 @@ const UMG_BREAKDOWN = {
         approxNote: 'Streaming (19% \u2192 52%) and Recorded Music total (81% \u2192 80%) are stated on the slide. The Publishing and Merchandising splits are derived to reconcile to 100% and are approximate.',
       },
     },
+    balanceSheet: {
+      umgBalance: {
+        years: ['2023', '2024'],
+        currency: '\u20ac millions',
+        yearsNote: 'UMG\u2019s full balance sheet, FY2023 and FY2024 (two years in this workbook).',
+        groups: [
+          { title: 'Non-current assets', lines: [
+            { label: 'Goodwill', vals: [1624, 1895] },
+            { label: 'Non-current royalty advances', vals: [1574, 2085] },
+            { label: 'Catalogues', vals: [3020, 3393] },
+            { label: 'Other intangible assets', vals: [180, 232] },
+            { label: 'Property, plant & equipment', vals: [177, 242] },
+            { label: 'Right-of-use assets', vals: [316, 446] },
+            { label: 'Investments in equity affiliates', vals: [222, 578] },
+            { label: 'Non-current financial assets', vals: [1436, 3245] },
+            { label: 'Deferred income tax assets', vals: [479, 625] },
+            { label: 'Other non-current assets', vals: [7, 6] },
+          ], subtotal: { label: 'Non-current assets', vals: [9035, 12747] } },
+          { title: 'Current assets', lines: [
+            { label: 'Inventories', vals: [210, 255] },
+            { label: 'Current tax receivables', vals: [36, 30] },
+            { label: 'Current royalty advances', vals: [1060, 1211] },
+            { label: 'Other current financial assets', vals: [91, 27] },
+            { label: 'Trade & other receivables', vals: [2246, 2497] },
+            { label: 'Cash & cash equivalents', vals: [413, 553] },
+          ], subtotal: { label: 'Current assets', vals: [4056, 4573] } },
+          { title: null, lines: [], subtotal: { label: 'TOTAL ASSETS', vals: [13091, 17320], big: true } },
+          { title: 'Equity', lines: [
+            { label: 'Shareowners\u2019 equity', vals: [2962, 4526] },
+            { label: 'Non-controlling interests', vals: [21, 25] },
+          ], subtotal: { label: 'Total equity', vals: [2983, 4551] } },
+          { title: 'Non-current liabilities', lines: [
+            { label: 'Non-current provisions', vals: [300, 266] },
+            { label: 'Long-term borrowings & other financial liabilities', vals: [1826, 1778] },
+            { label: 'Deferred tax liabilities', vals: [676, 1170] },
+            { label: 'Long-term lease liabilities', vals: [324, 475] },
+            { label: 'Other non-current liabilities', vals: [715, 1456] },
+          ], subtotal: { label: 'Non-current liabilities', vals: [3841, 5145] } },
+          { title: 'Current liabilities', lines: [
+            { label: 'Current provisions', vals: [122, 195] },
+            { label: 'Short-term borrowings & other financial liabilities', vals: [278, 873] },
+            { label: 'Trade & other payables', vals: [5711, 6394] },
+            { label: 'Short-term lease liabilities', vals: [86, 66] },
+            { label: 'Current tax payables', vals: [70, 96] },
+          ], subtotal: { label: 'Current liabilities', vals: [6267, 7624] } },
+          { title: null, lines: [], subtotal: { label: 'Total liabilities', vals: [10108, 12769], big: true } },
+        ],
+        workingCapital: {
+          intro: 'The working-capital cycle is where UMG\u2019s quality really shows.',
+          metrics: [
+            { label: 'DSO \u2014 days sales outstanding', vals: ['~74', '~73'], note: 'Very stable; ~70\u201375 days is normal and healthy for a global royalty / licensing business. Strong counterparty quality (Spotify, Apple, YouTube) and predictable cash inflows.' },
+            { label: 'DIO \u2014 days inventory outstanding', vals: ['~12.3', '~12.6'], note: 'Very low even with vinyl / CDs \u2014 inventory is not a working-capital drag. Confirms UMG is fundamentally digital / IP-driven and structurally asset-light.' },
+            { label: 'DPO \u2014 days payables outstanding', vals: ['~336', '~327'], note: 'Very high, and normal for UMG \u2014 payables are mostly royalties owed to artists & labels (contractual settlement timing). Structural working-capital financing, not supplier distress.' },
+            { label: 'CCC \u2014 cash conversion cycle', vals: ['~\u2212250', '\u2212241'], note: 'CCC = DSO + DIO \u2212 DPO. Deeply negative \u2014 UMG gets paid by platforms far before it pays artists and labels, so working capital is a SOURCE of cash. (2024 \u2212241 as stated; 2023 derived from the ratios above.)' },
+          ],
+          takeaway: 'UMG doesn\u2019t need to fund growth \u2014 its ecosystem funds UMG. A negative CCC puts it in rare company (Visa / Mastercard, Moody\u2019s, insurance float). Cash comes in from platforms before payouts settle, which supports strong operating cash flow, low capital needs and high owner-earnings quality.',
+        },
+        returns: {
+          rows: [
+            { label: 'ROE  \u2014 net profit \u00f7 equity', vals: ['42.6%', '46.2%'] },
+            { label: 'ROA  \u2014 net profit \u00f7 total assets', vals: ['9.6%', '12.1%'] },
+            { label: 'ROIC \u2014 NOPAT \u00f7 invested capital', vals: ['10.2%', '12.8%'] },
+          ],
+          note: 'NOPAT \u20ac1,291m \u2192 \u20ac2,153m; invested capital \u20ac12,678m \u2192 \u20ac16,767m. Returns stepped up sharply in 2024 as profit normalised. High ROE partly reflects a modest equity base against a large royalty-payables float.',
+        },
+        leverage: {
+          rows: [
+            { label: 'Current liabilities \u00f7 current assets', vals: ['1.55\u00d7', '1.67\u00d7'], note: 'Fairly high \u2014 driven by the huge royalty-payables balance, not distress.' },
+            { label: 'LT liabilities \u00f7 equity', vals: ['1.30\u00d7', '1.14\u00d7'], note: 'Falling as equity builds.' },
+            { label: 'LT liabilities \u00f7 net income', vals: ['3.04\u00d7', '2.46\u00d7'], note: 'Comfortable \u2014 ~2.5\u00d7 earnings.' },
+            { label: 'Book value per share (\u20ac)', vals: ['1.63', '2.48'], note: 'Equity per share up ~52% in a single year.' },
+          ],
+        },
+      },
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash (proxy \u2248 operating profit)', unit: 'M EUR',
+        series: [ { year: 2020, value: 1221 }, { year: 2021, value: 1394 }, { year: 2022, value: 1600 }, { year: 2023, value: 1418 }, { year: 2024, value: 1775 } ],
+        note: 'Operating profit is used here as the operating-cash proxy for the capital-intensity read below \u2014 identical to the INCOME tab\u2019s operating profit line, not UMG\u2019s statutory cash-flow-statement OCF.',
+      },
+      capex: {
+        label: 'Capital Expenditure', unit: 'M EUR',
+        series: [ { year: 2020, value: 29 }, { year: 2021, value: 13 }, { year: 2022, value: 33 }, { year: 2023, value: 47 }, { year: 2024, value: 91 } ],
+        note: 'Tiny in absolute terms \u2014 UMG owns IP, not factories. Rising modestly (\u20ac13m \u2192 \u20ac91m) but still trivial next to earnings.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash', unit: '%',
+        series: [ { year: 2020, value: 2.4 }, { year: 2021, value: 0.9 }, { year: 2022, value: 2.1 }, { year: 2023, value: 3.3 }, { year: 2024, value: 5.1 } ],
+        note: 'Runs ~1\u20135% of operating cash \u2014 elite capital efficiency. The business barely needs to reinvest to keep earning.',
+      },
+      ownerEarnings: {
+        headline: 'Owner earnings \u2014 the true earning power',
+        intro: 'Owner earnings = net profit + non-cash charges \u2212 capex. For UMG the non-cash adjustments are material (heavy catalogue amortisation) and capex is tiny, so owner earnings run well ABOVE reported net profit \u2014 and never collapsed the way net profit did in 2022\u201323.',
+        rows: [
+          { year: 2024, np: 2093, adj: 520, capex: 91, oe: 2522, oeps: 1.38 },
+          { year: 2023, np: 1263, adj: 796, capex: 47, oe: 2012, oeps: 1.10 },
+          { year: 2022, np: 785,  adj: 461, capex: 33, oe: 1213, oeps: 0.66 },
+          { year: 2021, np: 888,  adj: 280, capex: 13, oe: 1155, oeps: 0.63 },
+          { year: 2020, np: 1369, adj: 213, capex: 29, oe: 1553, oeps: 0.85 },
+        ],
+        cagr: 'Owner-earnings CAGR \u2248 12.9% / yr (2020\u201324). OEPS on 1,827m shares: \u20ac0.85 \u2192 \u20ac1.38.',
+        multiples: [
+          { year: 2024, oeps: 1.38, price: 21, mult: 15.2 },
+          { year: 2023, oeps: 1.10, price: 18, mult: 16.4 },
+          { year: 2022, oeps: 0.66, price: 17, mult: 25.8 },
+          { year: 2021, oeps: 0.63, price: 23, mult: 36.5 },
+        ],
+        multiplesNote: 'Owner-earnings multiple on each year\u2019s low price. Average \u2248 19\u00d7 excluding 2021 (the distorted listing year). On its 2024 low UMG traded at ~15\u00d7 owner earnings.',
+        interpretation: [
+          'Net profit is misleading on its own \u2014 2022\u201323 look weak at the net-profit level, but owner earnings show the true earning power never collapsed.',
+          'Non-cash charges matter a lot here \u2014 adjustments are material (especially 2023), because this business is amortisation-driven, not cash-draining.',
+          'CapEx is tiny \u2014 ~1\u20135% of owner earnings. That is elite capital efficiency.',
+        ],
+        anchor: 'True earning power is ~\u20ac2.0\u20132.5bn in recent years; 2024 is a recovery to normalised strength, not an outlier. Buffett would anchor valuation on ~\u20ac2.2bn normalised owner earnings \u2014 not reported FCF or GAAP net income. Growth rates to stress-test: 5% / 4% / 3%.',
+      },
+    },
   },
   risks: {
     riskMatrix: {
@@ -23431,7 +23548,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {facilityMatrix && (
                             <>
                               <SectionHeading>// PRINCIPAL FACILITIES · {facilityMatrix.asOf}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Headcount of Coca-Cola\u2019s physical footprint by operating segment and site type. "Principal" = significant sites only; owned vs leased reflects capital strategy.</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Headcount of Coca-Cola’s physical footprint by operating segment and site type. "Principal" = significant sites only; owned vs leased reflects capital strategy.</div>
 
                               {/* Capital strategy callout */}
                               {facilityMatrix.capitalStrategy && (
@@ -24618,7 +24735,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   marginBottom:'6px',
                                 }}>
                                   <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
-                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚠ CONTROVERSIES &amp; REFORMS (2010\u20132025)</span>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚠ CONTROVERSIES &amp; REFORMS (2010–2025)</span>
                                     <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
                                   </summary>
                                   <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(239,68,68,0.03)'}}>
@@ -25884,7 +26001,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cat.definition}</div>
                                     </div>
                                     <div style={{padding:'7px 10px',background: cat.critical ? 'rgba(239,68,68,0.05)' : 'rgba(245,158,11,0.05)',border:`0.5px solid ${cat.critical ? 'rgba(239,68,68,0.3)' : amberGlow}`,borderRadius:'2px',marginBottom: cat.stats ? '6px' : 0}}>
-                                      <div style={{fontSize:'9px',color: cat.critical ? 'rgba(239,68,68,0.95)' : amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// COCA-COLA\u2019S CASE</div>
+                                      <div style={{fontSize:'9px',color: cat.critical ? 'rgba(239,68,68,0.95)' : amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// COCA-COLA’S CASE</div>
                                       <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cat.kosCase}</div>
                                     </div>
                                     {cat.stats && cat.stats.length > 0 && (
@@ -25918,7 +26035,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'2px'}}>// TOTAL COMMITTED</div>
                                     <div style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>${(contractualObligations.totalCommitted / 1000).toFixed(1)}B</div>
                                   </div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',flex:1,minWidth:'200px'}}>Future financial commitments KO cannot avoid paying \u2014 every category × period combined.</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',flex:1,minWidth:'200px'}}>Future financial commitments KO cannot avoid paying — every category × period combined.</div>
                                 </div>
                               )}
 
@@ -25930,8 +26047,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>CATEGORY</th>
                                       <th style={{textAlign:'right',padding:'8px 10px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px'}}>TOTAL</th>
                                       <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2025</th>
-                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2026\u201327</th>
-                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2028\u201329</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2026–27</th>
+                                      <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2028–29</th>
                                       <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>2030+</th>
                                     </tr>
                                   </thead>
@@ -27228,14 +27345,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
                                       {s.points.map((pt, pi) => (
                                         <div key={pi} style={{display:'flex',gap:'8px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>
-                                          <span style={{color:s.color,flexShrink:0,fontWeight:700}}>\u25b8</span><span>{pt}</span>
+                                          <span style={{color:s.color,flexShrink:0,fontWeight:700}}>▸</span><span>{pt}</span>
                                         </div>
                                       ))}
                                     </div>
                                   </div>
                                 ))}
                               </div>
-                              {segments.umgSegments.takeaway && <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.5)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'8px'}}><span style={{color:'#f59e0b',fontWeight:700}}>TAKEAWAY \u2014 </span>{segments.umgSegments.takeaway}</div>}
+                              {segments.umgSegments.takeaway && <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.5)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'8px'}}><span style={{color:'#f59e0b',fontWeight:700}}>TAKEAWAY — </span>{segments.umgSegments.takeaway}</div>}
                             </>
                           )}
 
@@ -27267,7 +27384,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 ))}
                               </div>
-                              {segments.umgEvolution.approxNote && <div style={{padding:'8px 12px',background:'rgba(148,163,184,0.06)',border:'0.5px solid rgba(148,163,184,0.25)',borderRadius:'3px',fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px',marginBottom:'8px'}}><span style={{color:'rgba(148,163,184,0.9)',fontWeight:700}}>Note \u2014 </span>{segments.umgEvolution.approxNote}</div>}
+                              {segments.umgEvolution.approxNote && <div style={{padding:'8px 12px',background:'rgba(148,163,184,0.06)',border:'0.5px solid rgba(148,163,184,0.25)',borderRadius:'3px',fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px',marginBottom:'8px'}}><span style={{color:'rgba(148,163,184,0.9)',fontWeight:700}}>Note — </span>{segments.umgEvolution.approxNote}</div>}
                             </>
                           )}
 
@@ -28092,6 +28209,85 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         );
                       };
 
+                      if (BS.umgBalance) {
+                        const U = BS.umgBalance;
+                        const fmt = (v) => typeof v === 'number' ? v.toLocaleString() : v;
+                        return (
+                          <div>
+                            <SectionHeading>// BALANCE SHEET</SectionHeading>
+                            <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{U.yearsNote} <span style={{color:amber}}>({U.currency})</span></div>
+                            <div style={{overflowX:'auto',marginBottom:'16px'}}>
+                              <table style={{width:'100%',minWidth:'420px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                <thead>
+                                  <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                    <th style={{textAlign:'left',padding:'6px 8px',color:'rgba(245,158,11,0.6)',letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>LINE ITEM</th>
+                                    {U.years.map((y,i)=>(<th key={i} style={{textAlign:'right',padding:'6px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'9px'}}>{y}</th>))}
+                                  </tr>
+                                </thead>
+                                {U.groups.map((g, gi) => (
+                                  <tbody key={gi}>
+                                    {g.title && (<tr><td colSpan={U.years.length+1} style={{padding:'9px 8px 3px',color:'#e0eaff',fontWeight:700,fontSize:'9.5px',letterSpacing:'0.5px',borderBottom:'0.5px solid rgba(245,158,11,0.15)'}}>{g.title}</td></tr>)}
+                                    {g.lines.map((ln, li) => (
+                                      <tr key={li} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                        <td style={{padding:'4px 8px 4px 16px',color:'rgba(224,234,255,0.75)'}}>{ln.label}</td>
+                                        {ln.vals.map((v,vi)=>(<td key={vi} style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{fmt(v)}</td>))}
+                                      </tr>
+                                    ))}
+                                    <tr style={{borderTop: g.subtotal.big ? `1px solid ${amber}` : '0.5px solid rgba(245,158,11,0.3)',borderBottom: g.subtotal.big ? `1px solid ${amber}` : 'none',background: g.subtotal.big ? 'rgba(245,158,11,0.07)' : 'transparent'}}>
+                                      <td style={{padding:'5px 8px',color: g.subtotal.big ? amber : '#e0eaff',fontWeight:700,letterSpacing:'0.3px'}}>{g.subtotal.label}</td>
+                                      {g.subtotal.vals.map((v,vi)=>(<td key={vi} style={{padding:'5px 8px',textAlign:'right',color: g.subtotal.big ? amber : '#e0eaff',fontWeight:700}}>{fmt(v)}</td>))}
+                                    </tr>
+                                  </tbody>
+                                ))}
+                              </table>
+                            </div>
+                            <SectionHeading>// WORKING CAPITAL CYCLE</SectionHeading>
+                            {U.workingCapital.intro && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{U.workingCapital.intro}</div>}
+                            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))',gap:'8px',marginBottom:'10px'}}>
+                              {U.workingCapital.metrics.map((m, mi) => (
+                                <div key={mi} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'11px'}}>
+                                  <div style={{fontSize:'9.5px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'6px'}}>{m.label}</div>
+                                  <div style={{display:'flex',gap:'14px',marginBottom:'6px'}}>
+                                    {m.vals.map((v, vi) => (
+                                      <div key={vi}><span style={{fontSize:'8px',color:'rgba(224,234,255,0.45)',fontFamily:'monospace',marginRight:'4px'}}>{U.years[vi]}</span><span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{v}</span></div>
+                                    ))}
+                                  </div>
+                                  <div style={{fontSize:'9px',color:'rgba(224,234,255,0.68)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{m.note}</div>
+                                </div>
+                              ))}
+                            </div>
+                            {U.workingCapital.takeaway && <div style={{padding:'11px 14px',background:'rgba(34,197,94,0.07)',border:'0.5px solid rgba(34,197,94,0.4)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'4px',marginBottom:'16px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>NEGATIVE CCC — </span>{U.workingCapital.takeaway}</div>}
+                            <SectionHeading>// RETURNS ON CAPITAL</SectionHeading>
+                            <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                              <table style={{width:'100%',minWidth:'360px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                <thead><tr style={{borderBottom:`0.5px solid ${amberGlow}`}}><th style={{textAlign:'left',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>METRIC</th>{U.years.map((y,i)=>(<th key={i} style={{textAlign:'right',padding:'5px 8px',color:amber,fontSize:'9px',fontWeight:700}}>{y}</th>))}</tr></thead>
+                                <tbody>
+                                  {U.returns.rows.map((r, ri) => (
+                                    <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                      <td style={{padding:'5px 8px',color:'rgba(224,234,255,0.78)'}}>{r.label}</td>
+                                      {r.vals.map((v,vi)=>(<td key={vi} style={{padding:'5px 8px',textAlign:'right',color:'rgba(34,197,94,0.95)',fontWeight:700}}>{v}</td>))}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                            {U.returns.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'16px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{U.returns.note}</div>}
+                            <SectionHeading>// LEVERAGE & BOOK VALUE</SectionHeading>
+                            <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+                              {U.leverage.rows.map((r, ri) => (
+                                <div key={ri} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'9px 12px'}}>
+                                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom: r.note ? '4px':'0'}}>
+                                    <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{r.label}</span>
+                                    <span style={{display:'flex',gap:'12px',flexShrink:0}}>{r.vals.map((v,vi)=>(<span key={vi} style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}><span style={{fontSize:'7.5px',color:'rgba(224,234,255,0.4)',marginRight:'3px'}}>{U.years[vi]}</span>{v}</span>))}</span>
+                                  </div>
+                                  {r.note && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.2px'}}>{r.note}</div>}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+
                       return (
                         <div>
                           <SectionHeading>// BALANCE SHEET</SectionHeading>
@@ -28768,6 +28964,71 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+                          {cashFlow.ownerEarnings && (() => {
+                            const OE = cashFlow.ownerEarnings;
+                            return (
+                              <>
+                                <SectionHeading>// OWNER EARNINGS</SectionHeading>
+                                {OE.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{OE.headline}</div>}
+                                {OE.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{OE.intro}</div>}
+                                <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                  <table style={{width:'100%',minWidth:'440px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead><tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                      <th style={{textAlign:'left',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>YEAR</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>NET PROFIT</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>+ ADJ</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>− CAPEX</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:amber,fontSize:'9px',fontWeight:700}}>= OWNER EARN</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS (€)</th>
+                                    </tr></thead>
+                                    <tbody>
+                                      {OE.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.np.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(34,197,94,0.8)'}}>+{r.adj}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(239,68,68,0.7)'}}>({r.capex})</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:amber,fontWeight:700}}>{r.oe.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:600}}>{r.oeps.toFixed(2)}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {OE.cagr && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{OE.cagr}</div>}
+                                <SectionHeading>// OWNER-EARNINGS MULTIPLE</SectionHeading>
+                                <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                  <table style={{width:'100%',minWidth:'360px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead><tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                      <th style={{textAlign:'left',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>YEAR</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS (€)</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>YEAR-LOW (€)</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:amber,fontSize:'9px',fontWeight:700}}>OE MULTIPLE</th>
+                                    </tr></thead>
+                                    <tbody>
+                                      {OE.multiples.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.oeps.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.price}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color: r.mult <= 19 ? 'rgba(34,197,94,0.95)' : amber,fontWeight:700}}>{r.mult.toFixed(1)}×</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {OE.multiplesNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{OE.multiplesNote}</div>}
+                                {OE.interpretation && (
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                    {OE.interpretation.map((t, i) => (
+                                      <div key={i} style={{display:'flex',gap:'9px',padding:'8px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}><span style={{color:amber,fontWeight:700,flexShrink:0}}>{String(i+1).padStart(2,'0')}</span><span>{t}</span></div>
+                                    ))}
+                                  </div>
+                                )}
+                                {OE.anchor && <div style={{padding:'11px 14px',background:'rgba(34,197,94,0.07)',border:'0.5px solid rgba(34,197,94,0.4)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>VALUATION ANCHOR — </span>{OE.anchor}</div>}
+                              </>
+                            );
+                          })()}
                           {cashFlow.freeCashFlow && (<><TimeSeriesTable data={cashFlow.freeCashFlow} />{cashFlow.freeCashFlow.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.freeCashFlow.note}</div>}</>)}
                           {cashFlow.fcfPerShare && (<><TimeSeriesTable data={cashFlow.fcfPerShare} />{cashFlow.fcfPerShare.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{cashFlow.fcfPerShare.note}</div>}</>)}
                           {cashFlow.fcfMultiple && (<><TimeSeriesTable data={cashFlow.fcfMultiple} />{cashFlow.fcfMultiple.note && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend — </span>{cashFlow.fcfMultiple.note}</div>}</>)}
@@ -30339,7 +30600,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   );
                                 })}
                               </div>
-                              {arcHistory.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY \u2014 </span>{arcHistory.takeaway}</div>}
+                              {arcHistory.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY — </span>{arcHistory.takeaway}</div>}
                             </>
                           )}
 
@@ -30355,7 +30616,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div key={i}>
                                     <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
                                       <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{b.label}</span>
-                                      <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.3px'}}>Streaming {b.streaming}% \u00b7 {arcTo2030.otherLabel} {b.other}%</span>
+                                      <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.3px'}}>Streaming {b.streaming}% · {arcTo2030.otherLabel} {b.other}%</span>
                                     </div>
                                     <div style={{display:'flex',height:'26px',borderRadius:'4px',overflow:'hidden',border:`0.5px solid ${amberGlow}`}}>
                                       <div style={{width:`${b.streaming}%`,background:'rgba(245,158,11,0.55)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9.5px',color:'#0a0a0a',fontFamily:'monospace',fontWeight:700}}>{b.streaming}%</div>
@@ -30368,7 +30629,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <span><span style={{display:'inline-block',width:'9px',height:'9px',background:'rgba(245,158,11,0.55)',borderRadius:'2px',marginRight:'4px',verticalAlign:'middle'}}></span>Streaming</span>
                                 <span><span style={{display:'inline-block',width:'9px',height:'9px',background:'rgba(148,163,184,0.35)',borderRadius:'2px',marginRight:'4px',verticalAlign:'middle'}}></span>{arcTo2030.otherLabel}</span>
                               </div>
-                              {arcTo2030.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY \u2014 </span>{arcTo2030.takeaway}</div>}
+                              {arcTo2030.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY — </span>{arcTo2030.takeaway}</div>}
                             </>
                           )}
 
@@ -30384,7 +30645,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
                                       {g.points.map((pt, pi) => (
                                         <div key={pi} style={{display:'flex',gap:'8px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>
-                                          <span style={{color:amber,flexShrink:0,fontWeight:700}}>\u25b8</span>
+                                          <span style={{color:amber,flexShrink:0,fontWeight:700}}>▸</span>
                                           <span>{pt}</span>
                                         </div>
                                       ))}
@@ -30557,13 +30818,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'8px',marginBottom:'8px'}}>
                                     {reece.returnOutlook.base && (
                                       <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
-                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BASE CASE · 5\u20136%</div>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BASE CASE · 5–6%</div>
                                         <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.returnOutlook.base}</div>
                                       </div>
                                     )}
                                     {reece.returnOutlook.bull && (
                                       <div style={{background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',padding:'10px 12px'}}>
-                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BULL CASE · 7\u20139%</div>
+                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>BULL CASE · 7–9%</div>
                                         <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{reece.returnOutlook.bull}</div>
                                       </div>
                                     )}
@@ -30632,7 +30893,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {strategicImperatives && strategicImperatives.length > 0 && (
                             <>
                               <SectionHeading>// STRATEGIC IMPERATIVES · {strategicImperatives.length}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The {strategicImperatives.length === 4 ? 'four' : strategicImperatives.length === 5 ? 'five' : strategicImperatives.length} pillars guiding {selected.name}\u2019s capital allocation and operating decisions.</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The {strategicImperatives.length === 4 ? 'four' : strategicImperatives.length === 5 ? 'five' : strategicImperatives.length} pillars guiding {selected.name}’s capital allocation and operating decisions.</div>
                               <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
                                 {strategicImperatives.map((imp, i) => (
                                   <div key={i} style={{
