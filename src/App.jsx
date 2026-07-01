@@ -10989,6 +10989,150 @@ const UMG_BREAKDOWN = {
       verdict: 'On balance, COVID-19 was a modest headwind to operating earnings \u2014 which management expected to become a tailwind in 2H\u201921 and 2022 as live, sync and merch recovered on top of a permanently leaner cost base. The recurring, subscription-driven core barely flinched while the cyclical bits fell; that asymmetry is the toll-booth showing its quality.',
     },
   },
+  numbers: {
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Revenue', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 7432 }, { year: 2021, value: 8504 }, { year: 2022, value: 10340 },
+          { year: 2023, value: 11108 }, { year: 2024, value: 11834 },
+        ],
+        note: 'Revenue compounded \u2248 12.3% / yr FY20\u2192FY24 (\u20ac7.4bn \u2192 \u20ac11.8bn), driven by paid-streaming subscription growth.',
+      },
+      costOfSales: {
+        label: 'Cost of Revenues', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 3917 }, { year: 2021, value: 4608 }, { year: 2022, value: 5753 },
+          { year: 2023, value: 6208 }, { year: 2024, value: 6746 },
+        ],
+        note: 'Artist royalties, content and distribution costs. Rising as a share of revenue \u2014 52.7% (2020) \u2192 57.0% (2024) \u2014 the flip side of the gross-margin slide below.',
+      },
+      grossProfit: {
+        label: 'Gross Profit', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 3515 }, { year: 2021, value: 3896 }, { year: 2022, value: 4587 },
+          { year: 2023, value: 4900 }, { year: 2024, value: 5088 },
+        ],
+      },
+      grossMargin: {
+        label: 'Gross Margin', unit: '%',
+        series: [
+          { year: 2020, value: 47.3 }, { year: 2021, value: 45.8 }, { year: 2022, value: 44.4 },
+          { year: 2023, value: 44.1 }, { year: 2024, value: 43.0 },
+        ],
+        note: 'Declining every single year \u2014 47.3% (2020) \u2192 43.0% (2024). Mix shift toward streaming (higher pay-through to artists and platforms than legacy physical/download) is compressing the headline gross margin even as absolute gross profit keeps growing.',
+      },
+      smaExpense: {
+        label: 'Selling, General & Administrative', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 2285 }, { year: 2021, value: 2327 }, { year: 2022, value: 2702 },
+          { year: 2023, value: 3213 }, { year: 2024, value: 3015 },
+        ],
+      },
+      smaToGrossProfit: {
+        label: 'SG&A as % of Gross Profit', unit: '%',
+        series: [
+          { year: 2020, value: 65.0 }, { year: 2021, value: 59.7 }, { year: 2022, value: 58.9 },
+          { year: 2023, value: 65.6 }, { year: 2024, value: 59.3 },
+        ],
+        note: 'No clean trend yet. 2020 (65.0%) and 2023 (65.6%) are the heavy years; 2022 the leanest (58.9%). If the operating-leverage thesis is real this line should trend DOWN over time \u2014 so far it has not.',
+      },
+      impairment: {
+        label: 'Amortisation & Impairment of Intangibles', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 0 }, { year: 2021, value: 175 }, { year: 2022, value: 285 },
+          { year: 2023, value: 269 }, { year: 2024, value: 298 },
+        ],
+        note: 'Amortisation / impairment of acquired catalogues and publishing rights. Nil in 2020, then \u20ac175\u2013298m/yr \u2014 roughly 4.5\u20136.2% of gross profit.',
+      },
+      operatingProfit: {
+        label: 'Operating Profit', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 1221 }, { year: 2021, value: 1394 }, { year: 2022, value: 1600 },
+          { year: 2023, value: 1418 }, { year: 2024, value: 1775 },
+        ],
+        note: '2023 stepped BACK to \u20ac1,418m before the 2024 recovery to \u20ac1,775m. The 2023 wobble came from the SG&A spike (65.6% of gross profit), not from revenue.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin', unit: '%',
+        series: [
+          { year: 2020, value: 16.4 }, { year: 2021, value: 16.4 }, { year: 2022, value: 15.5 },
+          { year: 2023, value: 12.8 }, { year: 2024, value: 15.0 },
+        ],
+        note: 'Sagged from 16.4% (2020) to a 12.8% trough in 2023, recovering to 15.0% in 2024 \u2014 still below the 2020 level. The fixed-cost / operating-leverage story has NOT yet shown up in reported operating margin.',
+      },
+      otherIncomeExpense: {
+        label: 'Net Financial Result', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 560 }, { year: 2021, value: -234 }, { year: 2022, value: -698 },
+          { year: 2023, value: 303 }, { year: 2024, value: 1092 },
+        ],
+        note: 'Financial income less financial expenses \u2014 lumpy and non-operating. Swung from +\u20ac560m (2020) to \u2212\u20ac698m (2022) to +\u20ac1,092m (2024). Income components: 613 / 143 / 37 / 454 / 1,279; expense components: 53 / 377 / 735 / 151 / 187. The 2024 spike (financial income \u20ac1,279m) flattered pre-tax profit \u2014 treat as non-core when judging earnings power. Equity-affiliate result is immaterial (\u22129 / 5 / \u22122 / 0 / 4).',
+      },
+      provisionForTaxes: {
+        label: 'Income Taxes', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 412 }, { year: 2021, value: 277 }, { year: 2022, value: 115 },
+          { year: 2023, value: 458 }, { year: 2024, value: 778 },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2020, value: 23.1 }, { year: 2021, value: 23.8 }, { year: 2022, value: 12.8 },
+          { year: 2023, value: 26.6 }, { year: 2024, value: 27.1 },
+        ],
+        note: 'Normally 23\u201327%. The 12.8% in 2022 is an outlier \u2014 small pre-tax base that year plus one-off items. Profit before tax ran \u20ac1,781m / 1,165 / 900 / 1,721 / 2,871 (FY20\u2013FY24).',
+      },
+      netIncome: {
+        label: 'Net Profit', unit: 'M EUR',
+        series: [
+          { year: 2020, value: 1369 }, { year: 2021, value: 888 }, { year: 2022, value: 785 },
+          { year: 2023, value: 1263 }, { year: 2024, value: 2093 },
+        ],
+        note: 'Net profit CAGR \u2248 11.2% / yr FY20\u2192FY24, but far from smooth \u2014 dipped to \u20ac785m in 2022 before recovering to \u20ac2,093m in 2024 (2024 helped by the \u2248 \u20ac1.1bn positive financial result).',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin', unit: '%',
+        series: [
+          { year: 2020, value: 18.4 }, { year: 2021, value: 10.4 }, { year: 2022, value: 7.6 },
+          { year: 2023, value: 11.4 }, { year: 2024, value: 17.7 },
+        ],
+        note: 'Noisy, because the financial-result swings run straight through it: 18.4% (2020) \u2192 7.6% trough (2022) \u2192 17.7% (2024). The 2024 figure is flattered by non-operating financial income \u2014 the 15.0% operating margin is the cleaner read on the underlying business.',
+      },
+      eps: {
+        label: 'EPS \u2014 Diluted', unit: 'EUR per share',
+        series: [
+          { year: 2020, value: 0.75 }, { year: 2021, value: 0.49 }, { year: 2022, value: 0.43 },
+          { year: 2023, value: 0.68 }, { year: 2024, value: 1.13 },
+        ],
+        note: 'On year-low share prices UMG\u2019s trailing P/E ran 46.9\u00d7 (2021, the listing year) \u2192 39.5\u00d7 (2022) \u2192 26.5\u00d7 (2023) \u2192 18.6\u00d7 (2024). Average \u2248 32.9\u00d7 including 2021, \u2248 28.2\u00d7 excluding it. The de-rating from ~47\u00d7 to ~19\u00d7 is multiple compression, not earnings decline \u2014 diluted EPS actually ROSE across the window.',
+      },
+      cagr: {
+        value: '11.2%',
+        label: 'Net Profit CAGR \u00b7 FY20\u2013FY24',
+        note: 'Revenue compounded even faster at \u2248 12.3% / yr (\u20ac7,432m \u2192 \u20ac11,834m). Net profit grew \u2248 11.2% / yr (\u20ac1,369m \u2192 \u20ac2,093m) despite the 2021\u201322 margin dip.',
+      },
+      extraLines: [
+        {
+          label: 'Year-Low Share Price', unit: 'EUR',
+          series: [
+            { year: 2021, value: 23 }, { year: 2022, value: 17 },
+            { year: 2023, value: 18 }, { year: 2024, value: 21 },
+          ],
+          note: 'Approximate calendar-year low (\u20ac). 2025 low so far \u2248 \u20ac21.',
+        },
+        {
+          label: 'P/E on Year-Low Price', unit: '\u00d7',
+          series: [
+            { year: 2021, value: 46.9 }, { year: 2022, value: 39.5 },
+            { year: 2023, value: 26.5 }, { year: 2024, value: 18.6 },
+          ],
+          note: 'Trailing P/E if bought at each year\u2019s low. Average \u2248 32.9\u00d7 incl 2021 / \u2248 28.2\u00d7 excl 2021 (2021 = the SPAC / listing year, distorted). On its 2024 low (\u20ac21 vs \u20ac1.13 diluted EPS) UMG traded at 18.6\u00d7 \u2014 the cheapest since listing.',
+        },
+      ],
+    },
+  },
   risks: {
     riskMatrix: {
       preamble: 'UMG\u2019s enterprise risk register (from its annual filing), each scored on likelihood and impact (High = 5, Moderate = 3, Low = 1 on the pips). The two at the top \u2014 Content protection & piracy and Generative AI \u2014 are both High/High and go straight to the heart of the moat: they threaten the enforceability and scarcity of the owned IP. Cybersecurity joins them. Most other risks are Moderate, and the genuinely low ones (financing access, acquisitions) reflect the capital-light, low-leverage balance sheet.',
