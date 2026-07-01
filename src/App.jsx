@@ -10502,6 +10502,11 @@ const UMG_BREAKDOWN = {
     },
   },
   moat: {
+    moatTabs: [
+      { id: 'thesis', label: 'THE THESIS', keys: ['preamble','thesis','greatIndustry','businessModel','resilience'] },
+      { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
+      { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
+    ],
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
       intro: 'The core of the Pershing thesis. Paid streaming is a rapidly growing, recurring, high-margin annuity \u2014 and its adoption has made the whole record business lower-risk and more data-driven.',
@@ -11415,6 +11420,7 @@ function MuzzApp() {
   const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
   const [segmentsSubTab, setSegmentsSubTab] = useState('serviceLine'); // WM segments sub-tab nav
   const [numbersSubTab, setNumbersSubTab] = useState(null); // CN railGroups sub-tab nav
+  const [moatSubTab, setMoatSubTab] = useState(null); // UMG moat sub-tab nav
   const [coverageComingSoon, setCoverageComingSoon] = useState(null);            // ticker currently showing the COMING SOON flash (locked cards)
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
@@ -28287,7 +28293,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, moatTabs } = bd.moat;
+
+                      // UMG moat sub-tab helper (flat render for companies without moatTabs)
+                      const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
+                      const showMoat = (key) => !moatTabs || (activeMoatTab && activeMoatTab.keys.includes(key));
+
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -28813,12 +28824,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
+                          {/* UMG — MOAT SUB-TAB NAV */}
+                          {moatTabs && (
+                            <div style={{display:'flex',gap:'6px',flexWrap:'wrap',marginBottom:'16px',paddingBottom:'12px',borderBottom:'0.5px solid rgba(245,158,11,0.2)'}}>
+                              {moatTabs.map((t, ti) => (
+                                <button key={ti} onClick={() => setMoatSubTab(t.id)} style={{
+                                  padding:'7px 13px',
+                                  background: (activeMoatTab && activeMoatTab.id === t.id) ? 'rgba(245,158,11,0.14)' : 'rgba(0,0,0,0.3)',
+                                  border: (activeMoatTab && activeMoatTab.id === t.id) ? '0.5px solid rgba(245,158,11,0.9)' : '0.5px solid rgba(245,158,11,0.25)',
+                                  borderRadius:'4px', cursor:'pointer',
+                                  fontSize:'9.5px', fontFamily:'monospace', letterSpacing:'1px', fontWeight:700,
+                                  color: (activeMoatTab && activeMoatTab.id === t.id) ? '#f59e0b' : 'rgba(224,234,255,0.55)',
+                                  transition:'all 0.15s',
+                                }}>{t.label}</button>
+                              ))}
+                            </div>
+                          )}
+
                           {/* ════════════════════════════════════════════════ */}
                           {/* PEP-SPECIFIC MOAT RENDER BLOCKS */}
                           {/* ════════════════════════════════════════════════ */}
 
                           {/* Preamble */}
-                          {preamble && (
+                          {showMoat('preamble') && preamble && (
                             <div style={{
                               padding:'12px 14px',
                               background:'rgba(245,158,11,0.04)',
@@ -28837,7 +28865,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — THE PERSHING SQUARE THESIS */}
-                          {thesis && (
+                          {showMoat('thesis') && thesis && (
                             <>
                               <SectionHeading>// THE PERSHING SQUARE THESIS</SectionHeading>
                               {thesis.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{thesis.headline}</div>}
@@ -29041,7 +29069,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* MARKET SHARE — US beverage share visualisation */}
-                          {marketShare && marketShare.data && (
+                          {showMoat('marketShare') && marketShare && marketShare.data && (
                             <>
                               <SectionHeading>// {marketShare.headline ? marketShare.headline.toUpperCase() : 'MARKET SHARE'}</SectionHeading>
                               <div style={{
@@ -29084,7 +29112,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — INDUSTRY RETURN TO GROWTH */}
-                          {industryGrowth && (
+                          {showMoat('industryGrowth') && industryGrowth && (
                             <>
                               <SectionHeading>// INDUSTRY · RETURN TO GROWTH</SectionHeading>
                               {industryGrowth.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{industryGrowth.headline}</div>}
@@ -29105,7 +29133,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — TOP 10 MARKETS */}
-                          {topMarkets && (
+                          {showMoat('topMarkets') && topMarkets && (
                             <>
                               <SectionHeading>// {topMarkets.headline ? topMarkets.headline.toUpperCase() : 'TOP MARKETS'}</SectionHeading>
                               <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
@@ -29123,7 +29151,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — CHART DOMINANCE */}
-                          {chartDominance && (
+                          {showMoat('chartDominance') && chartDominance && (
                             <>
                               <SectionHeading>// {chartDominance.headline ? chartDominance.headline.toUpperCase() : 'CHART DOMINANCE'}</SectionHeading>
                               {chartDominance.artistShare && (
@@ -29174,7 +29202,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — DEMAND TAILWINDS */}
-                          {demandTailwinds && (
+                          {showMoat('demandTailwinds') && demandTailwinds && (
                             <>
                               <SectionHeading>// DEMAND TAILWINDS · EXPANDING SURFACES</SectionHeading>
                               {demandTailwinds.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{demandTailwinds.headline}</div>}
@@ -29226,7 +29254,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — WHY STREAMING IS A GREAT BUSINESS */}
-                          {whyStreaming && (
+                          {showMoat('whyStreaming') && whyStreaming && (
                             <>
                               <SectionHeading>// WHY STREAMING IS A GREAT BUSINESS</SectionHeading>
                               {whyStreaming.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{whyStreaming.headline}</div>}
@@ -29253,7 +29281,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — MUSIC VS VIDEO */}
-                          {musicVsVideo && (
+                          {showMoat('musicVsVideo') && musicVsVideo && (
                             <>
                               <SectionHeading>// MUSIC vs VIDEO STREAMING</SectionHeading>
                               {musicVsVideo.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{musicVsVideo.intro}</div>}
@@ -29279,7 +29307,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — LABEL VALUE PROP */}
-                          {labelValueProp && (
+                          {showMoat('labelValueProp') && labelValueProp && (
                             <>
                               <SectionHeading>// {labelValueProp.headline ? labelValueProp.headline.toUpperCase() : 'LABEL VALUE PROPOSITION'}</SectionHeading>
                               {labelValueProp.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{labelValueProp.intro}</div>}
@@ -29302,7 +29330,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — STREAMING ECOSYSTEM & ECONOMICS */}
-                          {streamingEcosystem && (
+                          {showMoat('streamingEcosystem') && streamingEcosystem && (
                             <>
                               <SectionHeading>// STREAMING ECOSYSTEM & ECONOMICS</SectionHeading>
                               {streamingEcosystem.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{streamingEcosystem.headline}</div>}
@@ -29343,7 +29371,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — BEST COMPANY IN A GREAT INDUSTRY */}
-                          {greatIndustry && (
+                          {showMoat('greatIndustry') && greatIndustry && (
                             <>
                               <SectionHeading>// BEST COMPANY IN A GREAT INDUSTRY</SectionHeading>
                               <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
@@ -29365,7 +29393,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — BUSINESS MODEL */}
-                          {businessModel && (
+                          {showMoat('businessModel') && businessModel && (
                             <>
                               <SectionHeading>// BUSINESS MODEL</SectionHeading>
                               <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
@@ -29396,7 +29424,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — RESILIENCE (COVID stress test) */}
-                          {resilience && (
+                          {showMoat('resilience') && resilience && (
                             <>
                               <SectionHeading>// RESILIENCE · COVID-19 STRESS TEST</SectionHeading>
                               {resilience.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{resilience.intro}</div>}
