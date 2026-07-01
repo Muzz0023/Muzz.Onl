@@ -10497,6 +10497,119 @@ const UMG_BREAKDOWN = {
       ],
     },
   },
+  moat: {
+    preamble: 'Pershing Square\u2019s one-line thesis: UMG is a capital-light, rapidly growing royalty on the greater global consumption and monetization of music \u2014 the classic toll-booth. It owns irreplaceable, must-have IP; earns predictable, recurring streaming royalties that need almost no incremental capital to grow at a high rate; sits #1 in a stable three-player oligopoly; and runs a substantial fixed-cost base, so revenue growth drops through to expanding margins.',
+    thesis: {
+      headline: 'The classic Pershing Square investment',
+      stats: [
+        { label: 'RECORDED MUSIC', value: '#1 \u00b7 32%' },
+        { label: 'MUSIC PUBLISHING', value: '#2 \u00b7 23%' },
+        { label: 'TOP-10 SUPERSTARS', value: '10 / 10' },
+        { label: 'OP INCOME GROWTH', value: '~20% / yr' },
+      ],
+      statsNote: '>3mm-song recorded portfolio \u00b7 180k-songwriter publishing portfolio \u00b7 accelerating double-digit revenue growth \u00b7 highly recurring streaming revenue \u00b7 low financial leverage. The 20% figure is operating-income growth over the last four years.',
+      points: [
+        'Massive addressable market, strong customer value proposition and a dominant market position support double-digit revenue growth.',
+        'Irreplaceable owned intellectual property (IP) and must-have content.',
+        'Predictable, recurring revenue streams require almost no capital to grow at a high rate.',
+        'Industry-leading position (#1 share) and a stable competitive environment.',
+        'Substantial fixed-cost expense base and operating leverage drive long-term margin expansion.',
+        'Iconic, world-class management team.',
+        'The only uncontrolled, pure-play, music-streaming content company.',
+      ],
+    },
+    marketShare: {
+      headline: 'Recorded Music Market Share (2020)',
+      data: [
+        { company: 'Universal Music Group', share: 32, color: 'rgba(245,158,11,0.9)', note: 'World\u2019s #1 recorded-music company; >3mm-song catalogue.' },
+        { company: 'Sony Music', share: 21, color: 'rgba(239,68,68,0.85)', note: 'The #2 major.' },
+        { company: 'Warner Music Group', share: 16, color: 'rgba(96,165,250,0.85)', note: 'The #3 major.' },
+        { company: 'All others combined', share: 31, color: 'rgba(148,163,184,0.5)', note: 'Independents and self-releasing artists \u2014 highly fragmented, no single meaningful rival.' },
+      ],
+      note: 'The top three account for ~70% of all streams \u2014 and DSPs need all of this content, because consumers demand that every song is available on their streaming service. That non-substitutability is the moat: a DSP cannot offer a credible product without UMG\u2019s catalogue, so UMG sits on the toll road, not in the toll queue.',
+    },
+    greatIndustry: {
+      industryTitle: 'Music-as-a-Service is a phenomenal industry',
+      industryPoints: [
+        'Massive addressable market and a strong customer value proposition support double-digit revenue growth.',
+        'Predictable, recurring revenue streams require almost no capital to grow at a high rate.',
+        'A significant fixed-cost expense base allows for long-term margin improvement.',
+        'Incumbents\u2019 strong market position and the industry\u2019s competitive dynamics limit new entrants and customer (DSP) power.',
+      ],
+      umgTitle: 'UMG is the best company in the industry',
+      umgPoints: [
+        'Industry-leading position (#1 share) with irreplaceable, must-have content.',
+        'Leading scale and recent investments position UMG to continue to outperform peers.',
+        'Iconic, world-class management team.',
+        'The only uncontrolled, pure-play, music-streaming content company.',
+      ],
+    },
+    businessModel: {
+      doTitle: 'What does UMG do?',
+      does: [
+        'Discovers and develops recording artists.',
+        'Markets and promotes artists and their music.',
+        'Distributes artists\u2019 music in digital and physical formats.',
+        'Acquires, licenses and administers rights to musical compositions (publishing).',
+      ],
+      moneyTitle: 'How does UMG make money?',
+      makesMoney: [
+        { stream: 'Streaming royalties', detail: 'Earns a royalty each time a song is streamed, via licence agreements with digital music services (DSPs). The recurring core.' },
+        { stream: 'Sync licensing', detail: 'Licenses songs for use in film, television and video games.' },
+        { stream: 'Public performance', detail: 'Receives royalties when a song is performed publicly \u2014 TV and radio broadcasts, and public spaces (shops, restaurants, bars).' },
+        { stream: 'Physical', detail: 'Sells physical products such as CDs and vinyl \u2014 now a growth business again.' },
+        { stream: 'Artist services & D2C', detail: 'Partners with artists on concerts, touring, sponsorship, fan engagement and brand management.' },
+      ],
+    },
+    resilience: {
+      intro: 'Management navigated COVID-19 extremely well despite significant industry-wide declines in live music, sync, physical and merchandising \u2014 proof that the streaming core is recession- and pandemic-resilient.',
+      revenue: [
+        { seg: 'Recorded Music', impact: 'Limited impact \u2014 subscription & streaming kept growing', sign: 'ok' },
+        { seg: 'Live Music', impact: 'Down 80%+', sign: 'bad' },
+        { seg: 'Publishing', impact: 'Performance & sync revenue negatively impacted', sign: 'bad' },
+        { seg: 'Merchandising', impact: 'Significantly impacted given lack of touring', sign: 'bad' },
+      ],
+      expense: [
+        'Rationalised marketing, A&R and SG&A.',
+        'Expected some cost actions to prove permanent given enhanced operational efficiencies.',
+      ],
+      verdict: 'On balance, COVID-19 was a modest headwind to operating earnings \u2014 which management expected to become a tailwind in 2H\u201921 and 2022 as live, sync and merch recovered on top of a permanently leaner cost base. The recurring, subscription-driven core barely flinched while the cyclical bits fell; that asymmetry is the toll-booth showing its quality.',
+    },
+  },
+  risks: {
+    riskMatrix: {
+      preamble: 'UMG\u2019s enterprise risk register (from its annual filing), each scored on likelihood and impact (High = 5, Moderate = 3, Low = 1 on the pips). The two at the top \u2014 Content protection & piracy and Generative AI \u2014 are both High/High and go straight to the heart of the moat: they threaten the enforceability and scarcity of the owned IP. Cybersecurity joins them. Most other risks are Moderate, and the genuinely low ones (financing access, acquisitions) reflect the capital-light, low-leverage balance sheet.',
+      rows: [
+        { risk: 'Content protection and piracy', why: 'Unauthorised copying and distribution erodes the value of owned recordings and compositions \u2014 the core asset.', likelihood: 5, impact: 5, priority: 'High' },
+        { risk: 'Generative AI', why: 'AI-generated music and training on copyrighted catalogue threaten both scarcity and licensing economics \u2014 the defining new risk.', likelihood: 5, impact: 5, priority: 'High' },
+        { risk: 'Cybersecurity', why: 'A breach of masters, unreleased music or systems would be financially and reputationally severe.', likelihood: 5, impact: 5, priority: 'High' },
+        { risk: 'Challenge to attract, sign and retain successful artists', why: 'The talent pipeline is the raw material; a highly competitive, evolving industry makes signing and retention harder.', likelihood: 5, impact: 3, priority: 'Medium-High' },
+        { risk: 'Competition in evolving markets', why: 'New entrants, DSPs moving upstream, and independents compete for artists and share.', likelihood: 5, impact: 3, priority: 'Medium-High' },
+        { risk: 'Changes in global economic and financial conditions', why: 'Advertising, physical and live revenue are economically sensitive (streaming subscriptions much less so).', likelihood: 5, impact: 3, priority: 'Medium-High' },
+        { risk: 'Geopolitical instability', why: 'A global operator exposed to conflict, sanctions and market-access shifts.', likelihood: 5, impact: 3, priority: 'Medium-High' },
+        { risk: 'Governmental and regulatory challenges', why: 'Antitrust scrutiny, copyright regulation and DSP licensing rules shape the economics.', likelihood: 5, impact: 3, priority: 'Medium-High' },
+        { risk: 'Data protection compliance', why: 'Privacy regimes (GDPR and others) across many jurisdictions carry large penalties for missteps.', likelihood: 3, impact: 5, priority: 'Medium-High' },
+        { risk: 'Changes in laws and regulations', why: 'Copyright, tax and digital-market law changes can shift the value of the catalogue.', likelihood: 3, impact: 5, priority: 'Medium-High' },
+        { risk: 'Loss of intellectual property rights', why: 'Low likelihood, but losing rights to key catalogue would be severe \u2014 a tail risk to the moat itself.', likelihood: 1, impact: 5, priority: 'Medium-High' },
+        { risk: 'Decline in streaming revenue, subscription adoption and digital marketshare', why: 'The growth engine; slower subscriber growth or share loss would compress the whole thesis.', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Digital service provider dependency', why: 'Revenue is concentrated through a handful of large DSPs (Spotify, Apple, YouTube).', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Challenge to attract and retain internal talent', why: 'Label heads and executives carry the artist relationships \u2014 turnover is earnings risk.', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Dependency on information technology systems', why: 'Royalty accounting and global distribution run on complex systems.', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Restructuring and reorganization', why: 'Ongoing reorganisation carries execution and cost risk.', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Changes in tax laws', why: 'A multi-jurisdiction group is exposed to shifting international tax rules.', likelihood: 3, impact: 3, priority: 'Medium' },
+        { risk: 'Inability to timely adapt to trends and developments', why: 'Failing to move with formats and consumption habits \u2014 though the catalogue provides a buffer.', likelihood: 3, impact: 1, priority: 'Medium' },
+        { risk: 'Currency fluctuations', why: 'Global revenue in many currencies translated back to euros.', likelihood: 3, impact: 1, priority: 'Medium' },
+        { risk: 'Acquisitions and other investments', why: 'M&A (catalogues, distribution) carries integration and valuation risk.', likelihood: 1, impact: 3, priority: 'Medium' },
+        { risk: 'Access to and cost of financing', why: 'Low leverage and strong cash generation make this a minor concern.', likelihood: 1, impact: 1, priority: 'Medium' },
+      ],
+      legend: [
+        { label: 'High', desc: 'High likelihood AND high impact \u2014 strikes at the IP moat directly.' },
+        { label: 'Medium-High', desc: 'High on one axis (likelihood or impact) \u2014 monitor closely.' },
+        { label: 'Medium', desc: 'Moderate likelihood / impact \u2014 ordinary course of business.' },
+      ],
+    },
+    tldr: 'The risk register maps cleanly onto the moat: the only High/High risks (piracy, generative AI, cybersecurity) are all attacks on the enforceability and scarcity of the owned IP \u2014 which is exactly why UMG spends so heavily on legal, anti-piracy and digital licensing. Everything else is ordinary-course, and the capital-light balance sheet keeps financing risk negligible.',
+  },
 };
 
 const COVERAGE_DATA = [
@@ -24133,7 +24246,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations, tldr } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -24231,6 +24344,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+
+                          {/* UMG — RISK TL;DR */}
+                          {tldr && <Tldr text={tldr} />}
 
                           {/* CN: LABOR RELATIONS (labor shape) */}
                           {labor && (
@@ -27972,7 +28088,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -28521,6 +28637,35 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           )}
 
+                          {/* UMG — THE PERSHING SQUARE THESIS */}
+                          {thesis && (
+                            <>
+                              <SectionHeading>// THE PERSHING SQUARE THESIS</SectionHeading>
+                              {thesis.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{thesis.headline}</div>}
+                              {thesis.stats && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))',gap:'8px',marginBottom:'10px'}}>
+                                  {thesis.stats.map((s, i) => (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'10px 12px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>{s.label}</div>
+                                      <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.value}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {thesis.statsNote && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px',fontStyle:'italic'}}>{thesis.statsNote}</div>}
+                              {thesis.points && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                  {thesis.points.map((p, i) => (
+                                    <div key={i} style={{display:'flex',gap:'8px',padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:'2px solid rgba(34,197,94,0.6)',borderRadius:'3px'}}>
+                                      <span style={{color:'rgba(34,197,94,0.9)',flexShrink:0,fontWeight:700,fontFamily:'monospace'}}>{'\u2713'}</span>
+                                      <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{p}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {/* CN: NETWORK ADVANTAGE */}
                           {networkAdvantage && (
                             <>
@@ -28736,6 +28881,92 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 )}
                               </div>
+                            </>
+                          )}
+
+                          {/* UMG — BEST COMPANY IN A GREAT INDUSTRY */}
+                          {greatIndustry && (
+                            <>
+                              <SectionHeading>// BEST COMPANY IN A GREAT INDUSTRY</SectionHeading>
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
+                                {[{title: greatIndustry.industryTitle, points: greatIndustry.industryPoints, accent:'rgba(34,197,94,0.75)'}, {title: greatIndustry.umgTitle, points: greatIndustry.umgPoints, accent:amber}].map((col, ci) => (
+                                  <div key={ci} style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'11px',color: col.accent, fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{col.title}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
+                                      {col.points.map((p, pi) => (
+                                        <div key={pi} style={{display:'flex',gap:'7px'}}>
+                                          <span style={{color: col.accent, flexShrink:0, fontWeight:700, fontFamily:'monospace', fontSize:'10px'}}>{'\u2713'}</span>
+                                          <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{p}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — BUSINESS MODEL */}
+                          {businessModel && (
+                            <>
+                              <SectionHeading>// BUSINESS MODEL</SectionHeading>
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:'12px',marginBottom:'12px'}}>
+                                <div style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                  <div style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{businessModel.doTitle}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
+                                    {businessModel.does.map((d, i) => (
+                                      <div key={i} style={{display:'flex',gap:'7px'}}>
+                                        <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'10px'}}>{'\u203a'}</span>
+                                        <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{d}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div style={{background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                  <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'10px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{businessModel.moneyTitle}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                                    {businessModel.makesMoney.map((m, i) => (
+                                      <div key={i}>
+                                        <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{m.stream}</div>
+                                        <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{m.detail}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — RESILIENCE (COVID stress test) */}
+                          {resilience && (
+                            <>
+                              <SectionHeading>// RESILIENCE · COVID-19 STRESS TEST</SectionHeading>
+                              {resilience.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{resilience.intro}</div>}
+                              {resilience.revenue && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                  {resilience.revenue.map((r, i) => (
+                                    <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',padding:'9px 12px',background: r.sign==='ok' ? 'rgba(34,197,94,0.05)' : 'rgba(239,68,68,0.05)',border:`0.5px solid ${r.sign==='ok' ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,borderLeft:`2px solid ${r.sign==='ok' ? 'rgba(34,197,94,0.9)' : 'rgba(239,68,68,0.85)'}`,borderRadius:'3px',flexWrap:'wrap'}}>
+                                      <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.seg}</span>
+                                      <span style={{fontSize:'9.5px',color: r.sign==='ok' ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'0.2px',textAlign:'right'}}>{r.impact}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {resilience.expense && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                  {resilience.expense.map((e, i) => (
+                                    <div key={i} style={{display:'flex',gap:'8px',padding:'9px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'3px'}}>
+                                      <span style={{color:amber,flexShrink:0,fontWeight:700,fontFamily:'monospace'}}>{'\u203a'}</span>
+                                      <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{e}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {resilience.verdict && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>VERDICT — </span>{resilience.verdict}
+                                </div>
+                              )}
                             </>
                           )}
 
