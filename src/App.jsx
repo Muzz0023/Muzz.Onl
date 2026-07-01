@@ -10504,6 +10504,7 @@ const UMG_BREAKDOWN = {
   moat: {
     moatTabs: [
       { id: 'thesis', label: 'THE THESIS', keys: ['preamble','thesis','greatIndustry','businessModel','resilience'] },
+      { id: 'transformation', label: 'THE TRANSFORMATION', keys: ['businessModelTransform','musicAsService','transformationBridge','transformationImpact','recordedMusicPrimer','publishingPrimer','lowCostEntertainment'] },
       { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
       { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
       { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness'] },
@@ -10575,6 +10576,101 @@ const UMG_BREAKDOWN = {
         { attr: 'Content retains value with time', vals: ['na','no','yes'] },
       ],
       note: 'UMG is the only column that scores positively on every attribute \u2014 it pairs Spotify\u2019s capital-light model with Netflix\u2019s ownership of irreplaceable, re-consumable content that appreciates with time.',
+    },
+    businessModelTransform: {
+      headline: 'Streaming has transformed the business model',
+      callout: 'The quality of the music business has improved dramatically due to the consumer adoption of streaming.',
+      points: [
+        'Reduced upfront investment and associated risk',
+        'Distribution and customer-acquisition now funded by major tech companies',
+        'Predictable recurring revenue streams with higher catalogue activation',
+        'Less hit-driven than in the past',
+        'Limited, if any, seasonality',
+        'Minimal recession risk',
+        'Increasing value of catalogue',
+      ],
+      kicker: 'Music streaming is a substantial, fast-growing, predictable, capital-light growth annuity with high visibility on the majority of revenues.',
+    },
+    musicAsService: {
+      headline: 'Streaming has transformed the industry into Music-as-a-Service',
+      callout: 'Similar to the software industry, music has emerged from a business transformation \u2014 from one-time, lumpy sales of physical product to a recurring, subscription-based \u201cMusic-as-a-Service\u201d model.',
+      eras: [
+        { era: 'Physical', period: 'Pre 2000', model: 'One-time purchase' },
+        { era: 'Download', period: '2000\u20132015', model: 'Unbundled music' },
+        { era: 'Music-as-a-Service', period: 'Post 2015', model: 'Subscription', featured: true },
+      ],
+    },
+    transformationBridge: {
+      headline: 'The transformation of the music industry',
+      pre: {
+        title: 'Pre-Transformation',
+        points: [
+          'Physical music',
+          'One-off album sales and tracks',
+          'Limited access to music',
+          { text: 'Poor user experience', subs: ['Limited functionality', 'Inconvenient'] },
+          { text: 'Limited addressable market', subs: ['~10% of the world'] },
+          'Large investment in manufacturing and distribution',
+          'Incur cost to build distribution infrastructure and acquire customers',
+          'Limited retailer subsidy',
+        ],
+      },
+      post: {
+        title: 'Post-Transformation',
+        points: [
+          'Digital music',
+          'Streaming and subscriptions',
+          'Unlimited access to music',
+          { text: 'Great user experience', subs: ['High-functionality: AI-curated playlists', 'Convenient'] },
+          { text: 'Massive addressable market', subs: ['Approaching 100% of the world'] },
+          'Minimal investment in manufacturing and distribution',
+          'DSPs (e.g. Spotify and Apple) fund the cost to build distribution infrastructure and acquire customers',
+          'Highly subsidised distribution by some of the most important and best-capitalised tech companies in the world',
+        ],
+      },
+    },
+    transformationImpact: {
+      headline: 'Impact of the music industry transformation',
+      points: [
+        { text: 'Democratisation of access to music', subs: ['Access to 60mm songs for free (ad-supported) or by inexpensive subscription \u2014 via smartphone, computer, connected car or speaker'] },
+        { text: 'Globalisation of the music business' },
+        { text: 'Enhanced value of catalogue', subs: ['Remonetisation'] },
+        { text: 'Extremely low cost-per-hour of entertainment' },
+        { text: 'The music business has transformed into a fast-growing, capital-light annuity' },
+      ],
+    },
+    recordedMusicPrimer: {
+      headline: 'Primer \u00b7 recorded music',
+      points: [
+        { text: 'Record labels discover artists, fund their development and work collaboratively with them to maximise commercial success', subs: ['\u201cBreak\u201d new artists to the world', 'Invest in A&R (Artist & Repertoire \u2014 think R&D) and marketing'] },
+        { text: 'Invest in artists at an early stage of their career and share in their success (think venture capital)', subs: ['But most artists are not commercially successful'] },
+        { text: 'In exchange, labels contractually secure the \u201cmaster\u201d rights on sound recordings and lock in the rights to future recordings (i.e. 4\u20135 albums)', subs: ['Right to monetise a sound recording for 95 years in the U.S. (70 years in Europe)'] },
+        { text: 'Labels generate revenue through the sale or monetisation of music and share it as a royalty to the artist who produced the recording' },
+      ],
+    },
+    publishingPrimer: {
+      headline: 'Primer \u00b7 publishing',
+      points: [
+        { text: 'Music publishers represent the songwriter' },
+        { text: 'Administer, license, promote and monetise the rights to musical compositions and lyrics' },
+        { text: 'In exchange, publishers share the royalties with songwriters', subs: ['Royalty rates may be subject to government minimums (i.e. the Copyright Royalty Board in the U.S.)', 'Copyrights last for 70 years after the author\u2019s death'] },
+        { text: 'Royalties are generally reported by listening format:', subs: ['Performance \u2014 radio, streaming, public performances (nightclubs, concerts); collected by PROs (ASCAP, BMI, SESAC)', 'Digital \u2014 digital formats and performances to the public, incl. streaming and download services', 'Synchronisation (\u201cSync\u201d) \u2014 licensing music against visual images (film, TV, commercials)', 'Mechanical \u2014 paid whenever a composition is copied, distributed or re-transmitted (CDs, vinyl, DVDs)'] },
+      ],
+    },
+    lowCostEntertainment: {
+      headline: 'Music streaming is a very low-cost form of entertainment',
+      callout: 'A music streaming subscription is one of the lowest-cost forms of high-value entertainment \u2014 a listening cost of about 10 cents per hour.',
+      metricLabel: 'Cost of entertainment \u2014 per hour',
+      bars: [
+        { label: 'Concert', value: 31.7, display: '$31.7', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Sports Event', value: 19.1, display: '$19.1', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Theme Park', value: 11.7, display: '$11.7', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Theatrical Movie', value: 5.7, display: '$5.7', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Cable TV Show', value: 0.8, display: '$0.8', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Video Games', value: 0.5, display: '$0.5', color: 'rgba(148,163,184,0.9)' },
+        { label: 'Music Streaming', value: 0.1, display: '$0.1', color: 'rgba(245,158,11,0.95)', featured: true },
+      ],
+      note: 'Source: JP Morgan research. At ~$0.10/hour, music streaming is dramatically cheaper than every other category \u2014 which is exactly why it carries pricing headroom: subscription prices can climb for years before consumers feel it.',
     },
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
@@ -28362,7 +28458,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, moatTabs } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, businessModelTransform, musicAsService, transformationBridge, transformationImpact, recordedMusicPrimer, publishingPrimer, lowCostEntertainment, moatTabs } = bd.moat;
 
                       // UMG moat sub-tab helper (flat render for companies without moatTabs)
                       const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
@@ -28383,6 +28479,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{width:'100%',height:'8px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden'}}>
                                   <div style={{width:`${Math.max(0,b.value)/mx*100}%`,height:'100%',background:b.color,opacity:0.72}}/>
                                 </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                      // Transformation: bullet list supporting flat strings or { text, subs: [] }
+                      const BulletList = ({ points, marker, markerColor }) => (
+                        <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                          {points.map((p, i) => {
+                            const text = typeof p === 'string' ? p : p.text;
+                            const subs = typeof p === 'string' ? null : p.subs;
+                            return (
+                              <div key={i}>
+                                <div style={{display:'flex',gap:'8px',alignItems:'flex-start'}}>
+                                  <span style={{color: markerColor, flexShrink:0, fontWeight:700, fontFamily:'monospace', fontSize:'11px', lineHeight:1.5}}>{marker}</span>
+                                  <span style={{fontSize:'10.5px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{text}</span>
+                                </div>
+                                {subs && subs.map((s, j) => (
+                                  <div key={j} style={{display:'flex',gap:'8px',alignItems:'flex-start',marginLeft:'19px',marginTop:'4px'}}>
+                                    <span style={{color:'rgba(245,158,11,0.5)',flexShrink:0,fontFamily:'monospace',fontSize:'10px',lineHeight:1.45}}>{'\u2013'}</span>
+                                    <span style={{fontSize:'9.5px',color:'rgba(224,234,255,0.68)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{s}</span>
+                                  </div>
+                                ))}
                               </div>
                             );
                           })}
@@ -29664,6 +29783,100 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 })}
                               </div>
                               {spotifyNetflixBusiness.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{spotifyNetflixBusiness.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — THE BUSINESS MODEL, TRANSFORMED */}
+                          {showMoat('businessModelTransform') && businessModelTransform && (
+                            <>
+                              <SectionHeading>// THE BUSINESS MODEL, TRANSFORMED</SectionHeading>
+                              {businessModelTransform.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{businessModelTransform.headline}</div>}
+                              {businessModelTransform.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{businessModelTransform.callout}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                <BulletList points={businessModelTransform.points} marker={'\u2713'} markerColor={'rgba(34,197,94,0.95)'} />
+                              </div>
+                              {businessModelTransform.kicker && <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:700}}>THE ANNUITY — </span>{businessModelTransform.kicker}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — MUSIC-AS-A-SERVICE */}
+                          {showMoat('musicAsService') && musicAsService && (
+                            <>
+                              <SectionHeading>// MUSIC-AS-A-SERVICE</SectionHeading>
+                              {musicAsService.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{musicAsService.headline}</div>}
+                              {musicAsService.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{musicAsService.callout}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))',gap:'8px',marginBottom:'12px'}}>
+                                {musicAsService.eras.map((e, i) => (
+                                  <div key={i} style={{position:'relative',padding:'14px 12px',background: e.featured ? 'rgba(245,158,11,0.06)' : 'rgba(0,0,0,0.4)',border:`0.5px solid ${e.featured ? amber : amberGlow}`,borderRadius:'4px'}}>
+                                    <div style={{fontSize:'8px',color: e.featured ? amber : 'rgba(148,163,184,0.9)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'6px'}}>{e.period}</div>
+                                    <div style={{fontSize:'12px',color: e.featured ? amber : '#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'4px'}}>{e.era}</div>
+                                    <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{e.model}</div>
+                                    {i < musicAsService.eras.length-1 && <span style={{position:'absolute',right:'-7px',top:'50%',transform:'translateY(-50%)',color:amberDim,fontSize:'12px',fontFamily:'monospace',zIndex:1}}>{'\u203a'}</span>}
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — PRE vs POST TRANSFORMATION */}
+                          {showMoat('transformationBridge') && transformationBridge && (
+                            <>
+                              <SectionHeading>// PRE vs POST TRANSFORMATION</SectionHeading>
+                              {transformationBridge.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{transformationBridge.headline}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:'10px',marginBottom:'12px'}}>
+                                <div style={{background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.75)',borderRadius:'4px',padding:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// {transformationBridge.pre.title.toUpperCase()}</div>
+                                  <BulletList points={transformationBridge.pre.points} marker={'\u203a'} markerColor={'rgba(239,68,68,0.8)'} />
+                                </div>
+                                <div style={{background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.8)',borderRadius:'4px',padding:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// {transformationBridge.post.title.toUpperCase()}</div>
+                                  <BulletList points={transformationBridge.post.points} marker={'\u203a'} markerColor={'rgba(34,197,94,0.85)'} />
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — IMPACT OF THE TRANSFORMATION */}
+                          {showMoat('transformationImpact') && transformationImpact && (
+                            <>
+                              <SectionHeading>// IMPACT OF THE TRANSFORMATION</SectionHeading>
+                              {transformationImpact.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{transformationImpact.headline}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                <BulletList points={transformationImpact.points} marker={'\u2713'} markerColor={'rgba(34,197,94,0.95)'} />
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — PRIMER · RECORDED MUSIC */}
+                          {showMoat('recordedMusicPrimer') && recordedMusicPrimer && (
+                            <>
+                              <SectionHeading>// PRIMER · RECORDED MUSIC</SectionHeading>
+                              {recordedMusicPrimer.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{recordedMusicPrimer.headline}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                <BulletList points={recordedMusicPrimer.points} marker={'\u203a'} markerColor={amber} />
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — PRIMER · PUBLISHING */}
+                          {showMoat('publishingPrimer') && publishingPrimer && (
+                            <>
+                              <SectionHeading>// PRIMER · PUBLISHING</SectionHeading>
+                              {publishingPrimer.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{publishingPrimer.headline}</div>}
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                <BulletList points={publishingPrimer.points} marker={'\u203a'} markerColor={amber} />
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — LOW-COST ENTERTAINMENT */}
+                          {showMoat('lowCostEntertainment') && lowCostEntertainment && (
+                            <>
+                              <SectionHeading>// LOW-COST ENTERTAINMENT</SectionHeading>
+                              {lowCostEntertainment.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{lowCostEntertainment.headline}</div>}
+                              {lowCostEntertainment.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{lowCostEntertainment.callout}</div>}
+                              <CompBars label={lowCostEntertainment.metricLabel} bars={lowCostEntertainment.bars} />
+                              {lowCostEntertainment.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{lowCostEntertainment.note}</div>}
                             </>
                           )}
 
