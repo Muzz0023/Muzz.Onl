@@ -10504,7 +10504,9 @@ const UMG_BREAKDOWN = {
   moat: {
     moatTabs: [
       { id: 'thesis', label: 'THE THESIS', keys: ['preamble','thesis','greatIndustry','businessModel','resilience'] },
-      { id: 'transformation', label: 'THE TRANSFORMATION', keys: ['businessModelTransform','musicAsService','transformationBridge','transformationImpact','recordedMusicPrimer','publishingPrimer','lowCostEntertainment'] },
+      { id: 'transformation', label: 'THE TRANSFORMATION', keys: ['businessModelTransform','musicAsService','transformationBridge','transformationImpact','recordedMusicPrimer','publishingPrimer'] },
+      { id: 'howmoney', label: 'HOW THEY MAKE MONEY', keys: ['tollOwns','tollPayers','tollFlow','tollDurable','tollLens'] },
+      { id: 'lowcost', label: 'LOW-COST EDGE', keys: ['lowCostEntertainment'] },
       { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
       { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
       { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness'] },
@@ -10671,6 +10673,48 @@ const UMG_BREAKDOWN = {
         { label: 'Music Streaming', value: 0.1, display: '$0.1', color: 'rgba(245,158,11,0.95)', featured: true },
       ],
       note: 'Source: JP Morgan research. At ~$0.10/hour, music streaming is dramatically cheaper than every other category \u2014 which is exactly why it carries pricing headroom: subscription prices can climb for years before consumers feel it.',
+    },
+    tollOwns: {
+      headline: 'What UMG owns',
+      intro: 'Forget \u201cmusic company\u201d \u2014 think of UMG as a toll collector for songs. It owns two things, and gets paid whenever either one is used.',
+      assets: [
+        { name: 'Master recordings', desc: 'The actual recording of a song (e.g. \u201cLose Yourself\u201d, \u201cBlinding Lights\u201d, \u201cHey Jude\u201d). Anyone who wants to play that recording must pay the owner of the master \u2014 which UMG owns or controls.' },
+        { name: 'Publishing (songwriting rights)', desc: 'The underlying song itself \u2014 lyrics + melody. Whether it is covered by another artist, used in a film, or played live, the songwriter / publisher gets paid. UMG owns or manages many of these rights too.' },
+      ],
+    },
+    tollPayers: {
+      headline: 'Who pays the toll',
+      intro: 'UMG doesn\u2019t sell music to you directly. Everyone who plays music pays UMG instead \u2014 if a song is played anywhere, someone pays.',
+      payers: ['Spotify','Apple Music','YouTube','TikTok / Instagram','Radio stations','Movie studios','Game companies','TV networks','Stores playing music'],
+    },
+    tollFlow: {
+      headline: 'The money flow',
+      intro: 'One stream on Spotify \u2014 multiplied by millions per day, across every platform, globally:',
+      steps: [
+        'You pay Spotify ~$12 / month',
+        'Spotify sends part of that money to UMG',
+        'UMG keeps its share and pays the artist their cut',
+        'UMG keeps the remainder as profit',
+      ],
+      note: 'UMG doesn\u2019t care who the listener is \u2014 only that the song plays.',
+    },
+    tollDurable: {
+      headline: 'Why the toll is durable',
+      pillars: [
+        { title: 'Old songs keep paying', body: 'Once a song is recorded it costs almost nothing to keep, yet earns for decades as people replay it. Eminem has released little recently, but his old songs still stream billions of times \u2014 catalogue value is like rent from a house built 20 years ago.' },
+        { title: 'Format-agnostic', body: 'UMG never has to predict the next Spotify, build new technology, or win a format war. Vinyl \u2192 CD \u2192 downloads \u2192 streaming: every change still paid UMG. Platforms change; music ownership doesn\u2019t.' },
+        { title: 'Artists don\u2019t cut UMG out', body: 'UMG provides global marketing, radio promotion, playlist access, upfront cash, legal protection and distribution everywhere. Most artists want to make music, not run a global business \u2014 so UMG handles the business and takes a cut forever.' },
+        { title: 'Capital-light', body: 'Costs are artist advances, marketing and staff \u2014 no factories, heavy machinery, massive R&D or constant capex. Once the catalogue is built, margins improve and cash stacks.' },
+      ],
+    },
+    tollLens: {
+      headline: 'The Buffett lens',
+      analogies: [
+        { as: 'A railroad', note: 'songs are the tracks' },
+        { as: 'A toll road', note: 'platforms pay to pass' },
+        { as: 'A royalty trust', note: 'cash flows forever' },
+      ],
+      takeaway: 'Universal Music Group owns music and collects a toll every time anyone in the world listens to it \u2014 regardless of platform, format, or trend. Boring, repetitive and predictable, which is exactly what investors want.',
     },
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
@@ -28458,7 +28502,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, businessModelTransform, musicAsService, transformationBridge, transformationImpact, recordedMusicPrimer, publishingPrimer, lowCostEntertainment, moatTabs } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, businessModelTransform, musicAsService, transformationBridge, transformationImpact, recordedMusicPrimer, publishingPrimer, lowCostEntertainment, tollOwns, tollPayers, tollFlow, tollDurable, tollLens, moatTabs } = bd.moat;
 
                       // UMG moat sub-tab helper (flat render for companies without moatTabs)
                       const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
@@ -29877,6 +29921,89 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {lowCostEntertainment.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{lowCostEntertainment.callout}</div>}
                               <CompBars label={lowCostEntertainment.metricLabel} bars={lowCostEntertainment.bars} />
                               {lowCostEntertainment.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{lowCostEntertainment.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — WHAT UMG OWNS */}
+                          {showMoat('tollOwns') && tollOwns && (
+                            <>
+                              <SectionHeading>// WHAT UMG OWNS</SectionHeading>
+                              {tollOwns.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{tollOwns.headline}</div>}
+                              {tollOwns.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{tollOwns.intro}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:'8px',marginBottom:'12px'}}>
+                                {tollOwns.assets.map((a, i) => (
+                                  <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'6px'}}>ASSET {i+1}</div>
+                                    <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'6px'}}>{a.name}</div>
+                                    <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{a.desc}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — WHO PAYS THE TOLL */}
+                          {showMoat('tollPayers') && tollPayers && (
+                            <>
+                              <SectionHeading>// WHO PAYS THE TOLL</SectionHeading>
+                              {tollPayers.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{tollPayers.headline}</div>}
+                              {tollPayers.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{tollPayers.intro}</div>}
+                              <div style={{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'12px'}}>
+                                {tollPayers.payers.map((p, i) => (
+                                  <span key={i} style={{padding:'6px 11px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{p}</span>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — THE MONEY FLOW */}
+                          {showMoat('tollFlow') && tollFlow && (
+                            <>
+                              <SectionHeading>// THE MONEY FLOW</SectionHeading>
+                              {tollFlow.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{tollFlow.headline}</div>}
+                              {tollFlow.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{tollFlow.intro}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {tollFlow.steps.map((s, i) => (
+                                  <div key={i} style={{display:'flex',gap:'10px',alignItems:'center',padding:'9px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                    <span style={{flexShrink:0,width:'20px',height:'20px',borderRadius:'50%',background:'rgba(245,158,11,0.14)',border:`0.5px solid ${amber}`,color:amber,fontFamily:'monospace',fontSize:'10px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center'}}>{i+1}</span>
+                                    <span style={{fontSize:'10.5px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.45,letterSpacing:'0.2px'}}>{s}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              {tollFlow.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{tollFlow.note}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — WHY THE TOLL IS DURABLE */}
+                          {showMoat('tollDurable') && tollDurable && (
+                            <>
+                              <SectionHeading>// WHY THE TOLL IS DURABLE</SectionHeading>
+                              {tollDurable.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{tollDurable.headline}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'12px'}}>
+                                {tollDurable.pillars.map((p, i) => (
+                                  <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'5px'}}>{p.title}</div>
+                                    <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{p.body}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* UMG — THE BUFFETT LENS */}
+                          {showMoat('tollLens') && tollLens && (
+                            <>
+                              <SectionHeading>// THE BUFFETT LENS</SectionHeading>
+                              {tollLens.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{tollLens.headline}</div>}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))',gap:'8px',marginBottom:'10px'}}>
+                                {tollLens.analogies.map((a, i) => (
+                                  <div key={i} style={{padding:'12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderTop:`2px solid ${amber}`,borderRadius:'4px',textAlign:'center'}}>
+                                    <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'4px'}}>{a.as}</div>
+                                    <div style={{fontSize:'9px',color:'rgba(224,234,255,0.68)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{a.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {tollLens.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY — </span>{tollLens.takeaway}</div>}
                             </>
                           )}
 
