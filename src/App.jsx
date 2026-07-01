@@ -10506,29 +10506,8 @@ const UMG_BREAKDOWN = {
       { id: 'thesis', label: 'THE THESIS', keys: ['preamble','thesis','greatIndustry','businessModel','resilience'] },
       { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
       { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
-      { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['dealValuationVsWmg','scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness','spotifyNetflixValuation'] },
+      { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness'] },
     ],
-    dealValuationVsWmg: {
-      headline: 'UMG deal valuation below Warner Music Group',
-      callout: 'PSTH\u2019s purchase price for UMG represents a discount to WMG\u2019s trading multiple \u2014 even though UMG is a vastly superior company.',
-      metricLabel: 'EV / CY 2021E Operating Profit',
-      bars: [
-        { label: 'UMG', value: 22, suffix: 'x', color: 'rgba(245,158,11,0.95)', featured: true, badge: 'PSTH BUY-IN' },
-        { label: 'WMG', value: 23, suffix: 'x', color: 'rgba(148,163,184,0.9)' },
-      ],
-      advantagesTitle: 'UMG advantages over WMG',
-      advantages: [
-        'Undisputed market-leader',
-        'Represents significantly more of the top artists (10 out of top 10 global artists)',
-        'World-class management team',
-        'Iconic brand, IP and labels',
-        'Scale (~2x revenue of WMG)',
-        'Global reach & infrastructure',
-        'Uncontrolled',
-        'Independent board of directors',
-      ],
-      note: 'Operating profit defined as EBIT, excluding one-time restructuring and amortisation of acquired intangibles. The buy-in multiple (22x) sits BELOW the weaker peer\u2019s trading multiple (23x) \u2014 paying less for the demonstrably better business.',
-    },
     scaleVsWmg: {
       headline: 'UMG has a significant scale advantage vs WMG',
       callout: 'UMG is the undisputed market leader with twice the revenue base of WMG and a larger footprint \u2014 in an industry where scale matters.',
@@ -10596,21 +10575,6 @@ const UMG_BREAKDOWN = {
         { attr: 'Content retains value with time', vals: ['na','no','yes'] },
       ],
       note: 'UMG is the only column that scores positively on every attribute \u2014 it pairs Spotify\u2019s capital-light model with Netflix\u2019s ownership of irreplaceable, re-consumable content that appreciates with time.',
-    },
-    spotifyNetflixValuation: {
-      headline: 'Valuation comparison to Spotify and Netflix',
-      callout: 'PSTH\u2019s purchase price multiple for UMG is about half the trading multiple of Netflix \u2014 which has lower gross margins and is much more capital intensive.',
-      metricLabel: 'EV / CY 2021E Operating Profit',
-      bars: [
-        { label: 'UMG', value: 22, display: '22x', color: 'rgba(245,158,11,0.95)', featured: true, badge: 'PSTH BUY-IN' },
-        { label: 'Spotify', value: 0, display: 'NM', color: 'rgba(34,197,94,0.85)' },
-        { label: 'Netflix', value: 39, display: '39x', color: 'rgba(239,68,68,0.85)' },
-      ],
-      metrics: [
-        { label: 'Gross Margin', umg: '47.3%', spotify: '25.6%', netflix: '38.9%' },
-        { label: 'Operating Profit Margin', umg: '19.0%', spotify: '(2.0%)', netflix: '20.8%' },
-      ],
-      note: 'Source: Wall Street analyst consensus. Operating profit = EBIT ex one-time restructuring and amortisation of acquired intangibles. Gross margins CY2020A; operating margins 2021E (analyst-consensus availability). UMG bought at 22x vs Netflix at 39x \u2014 despite a higher gross margin (47.3% vs 38.9%) and far lower capital intensity.',
     },
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
@@ -28398,7 +28362,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, dealValuationVsWmg, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, spotifyNetflixValuation, moatTabs } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, moatTabs } = bd.moat;
 
                       // UMG moat sub-tab helper (flat render for companies without moatTabs)
                       const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
@@ -29613,30 +29577,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
-                          {/* UMG — DEAL VALUATION vs WMG */}
-                          {showMoat('dealValuationVsWmg') && dealValuationVsWmg && (
-                            <>
-                              <SectionHeading>// DEAL VALUATION vs WMG</SectionHeading>
-                              {dealValuationVsWmg.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{dealValuationVsWmg.headline}</div>}
-                              {dealValuationVsWmg.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{dealValuationVsWmg.callout}</div>}
-                              <CompBars label={dealValuationVsWmg.metricLabel} bars={dealValuationVsWmg.bars} />
-                              {dealValuationVsWmg.advantages && (
-                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
-                                  {dealValuationVsWmg.advantagesTitle && <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'10px'}}>// {dealValuationVsWmg.advantagesTitle.toUpperCase()}</div>}
-                                  <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-                                    {dealValuationVsWmg.advantages.map((a, i) => (
-                                      <div key={i} style={{display:'flex',gap:'8px',alignItems:'flex-start'}}>
-                                        <span style={{color:'rgba(34,197,94,0.95)',flexShrink:0,fontWeight:700,fontFamily:'monospace',fontSize:'11px'}}>{'\u2713'}</span>
-                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{a}</span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                              {dealValuationVsWmg.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{dealValuationVsWmg.note}</div>}
-                            </>
-                          )}
-
                           {/* UMG — SCALE ADVANTAGE vs WMG */}
                           {showMoat('scaleVsWmg') && scaleVsWmg && (
                             <>
@@ -29724,35 +29664,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 })}
                               </div>
                               {spotifyNetflixBusiness.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{spotifyNetflixBusiness.note}</div>}
-                            </>
-                          )}
-
-                          {/* UMG — VALUATION vs SPOTIFY & NETFLIX */}
-                          {showMoat('spotifyNetflixValuation') && spotifyNetflixValuation && (
-                            <>
-                              <SectionHeading>// VALUATION vs SPOTIFY & NETFLIX</SectionHeading>
-                              {spotifyNetflixValuation.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{spotifyNetflixValuation.headline}</div>}
-                              {spotifyNetflixValuation.callout && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{spotifyNetflixValuation.callout}</div>}
-                              <CompBars label={spotifyNetflixValuation.metricLabel} bars={spotifyNetflixValuation.bars} />
-                              {spotifyNetflixValuation.metrics && (
-                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px',marginBottom:'12px'}}>
-                                  <div style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'6px 0',borderBottom:`0.5px solid ${amberGlow}`}}>
-                                    <span style={{flex:1}}/>
-                                    <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>UMG</span>
-                                    <span style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>SPOTIFY</span>
-                                    <span style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right',letterSpacing:'0.5px'}}>NETFLIX</span>
-                                  </div>
-                                  {spotifyNetflixValuation.metrics.map((m, i) => (
-                                    <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px',padding:'7px 0',borderBottom: i<spotifyNetflixValuation.metrics.length-1?'0.5px solid rgba(245,158,11,0.08)':'none'}}>
-                                      <span style={{flex:1,fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.2px'}}>{m.label}</span>
-                                      <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,width:'64px',textAlign:'right'}}>{m.umg}</span>
-                                      <span style={{fontSize:'11px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',width:'64px',textAlign:'right'}}>{m.spotify}</span>
-                                      <span style={{fontSize:'11px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',width:'64px',textAlign:'right'}}>{m.netflix}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {spotifyNetflixValuation.note && <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'12px'}}>{spotifyNetflixValuation.note}</div>}
                             </>
                           )}
 
