@@ -10508,6 +10508,7 @@ const UMG_BREAKDOWN = {
       { id: 'howmoney', label: 'HOW THEY MAKE MONEY', keys: ['tollOwns','tollPayers','tollFlow','tollDurable','tollLens'] },
       { id: 'lowcost', label: 'LOW-COST EDGE', keys: ['lowCostEntertainment'] },
       { id: 'market', label: 'MARKET & INDUSTRY', keys: ['marketShare','industryGrowth','topMarkets','chartDominance','demandTailwinds'] },
+      { id: 'industryarc', label: 'INDUSTRY ARC', keys: ['arcHistory','arcTo2030','arcLongTerm'] },
       { id: 'streaming', label: 'STREAMING ENGINE', keys: ['whyStreaming','musicVsVideo','labelValueProp','streamingEcosystem'] },
       { id: 'competitive', label: 'COMPETITIVE EDGE', keys: ['scaleVsWmg','organicGrowthVsWmg','opProfitGrowthVsWmg','marginVsWmg','spotifyNetflixBusiness'] },
     ],
@@ -10715,6 +10716,48 @@ const UMG_BREAKDOWN = {
         { as: 'A royalty trust', note: 'cash flows forever' },
       ],
       takeaway: 'Universal Music Group owns music and collects a toll every time anyone in the world listens to it \u2014 regardless of platform, format, or trend. Boring, repetitive and predictable, which is exactly what investors want.',
+    },
+    arcHistory: {
+      headline: 'The 40-year arc: boom \u2192 bust \u2192 streaming rebirth',
+      intro: 'US recorded-music industry revenue tells the whole story of why UMG is interesting now. The same catalogue of songs generated wildly different revenue depending on the delivery format \u2014 and the format has finally flipped to one that pays forever.',
+      chartRef: 'U.S. Recorded Music Industry Revenue ($bn), 1990\u20132020 \u00b7 Source: RIAA (US trends track global)',
+      phases: [
+        { era: '1990s \u2014 Physical boom', stat: '+8% CAGR', tone: 'good', body: 'The industry grew strongly through the 1990s while deriving nearly all its sales from one-time purchases of CDs and records. Revenue climbed from ~$7.5bn (1990) to a peak near $14bn around 1999 \u2014 almost entirely physical.' },
+        { era: '2000\u20132014 \u2014 Piracy & downloads', stat: '(54%) decline', tone: 'bad', body: 'File-sharing services unbundled the album and introduced piracy, collapsing industry revenue over the next ~15 years to a trough near $7bn around 2014. Paid downloads and early streaming only partially offset the lost physical sales.' },
+        { era: '2015\u2013present \u2014 Streaming rebirth', stat: '+13% CAGR', tone: 'good', body: 'Since 2015 revenue has grown substantially as consumers adopted streaming and new platforms launched (Spotify, Apple Music, Amazon, YouTube Music, Tencent Music). By 2020 the industry was back to ~$12bn \u2014 now dominated by recurring streaming rather than one-time purchases.' },
+      ],
+      takeaway: 'The point isn\u2019t that revenue recovered \u2014 it\u2019s HOW. The same songs now earn a recurring toll every time they\u2019re played instead of a single sale. Revenue is more predictable, higher-margin and structurally growing.',
+    },
+    arcTo2030: {
+      headline: 'Streaming to generate nearly all recorded-music revenue by 2030',
+      intro: 'Pershing Square estimates streaming will represent more than 90% of recorded-music industry revenue by 2030 \u2014 and that excludes any upside from NFTs or other new revenue-generating technologies.',
+      chartRef: 'Global Recorded Music Industry Revenue Breakdown \u00b7 2019 vs 2030E \u00b7 Source: IFPI (2019), Pershing Square estimates (2030E)',
+      otherLabel: 'Digital & Physical',
+      bridge: [
+        { label: '2019', streaming: 66, other: 34 },
+        { label: '2030E', streaming: 94, other: 6 },
+      ],
+      takeaway: 'Streaming will represent an even greater share of industry PROFITS than revenue, because of its higher margin. As the business shifts from physical to streaming, the greater predictability, higher margins and faster growth should support a substantially higher valuation.',
+    },
+    arcLongTerm: {
+      headline: 'Why streaming growth likely continues long-term',
+      groups: [
+        { title: 'Music is a unique industry with an enormous addressable market', points: [
+          'Music is universal \u2014 everyone listens to music',
+          'Consumption of music has never been greater',
+          'People enjoy listening to the same songs many, many times',
+          'Music is the ideal short-format content',
+          'Music can be listened to as a primary activity, in the background, or as an enabling tool \u2014 during almost every hour of the day',
+        ] },
+        { title: 'Streaming offers an incredible consumer value proposition', points: [
+          'Consumers can instantly access a library of >60mm songs, on demand',
+          'Tens of thousands of new songs are added to the library every day',
+          'Wide variety of personalisation and customisation through AI and playlists',
+          'An incredible value \u2014 a monthly subscription is less than the cost of one CD',
+          'Streaming: $9.99 vs Netflix Premium $17.99, Sling TV $30, and Cable $100+',
+        ] },
+      ],
+      takeaway: 'Music is the lowest-cost essential form of entertainment.',
     },
     whyStreaming: {
       headline: 'Streaming is an extremely high-quality growth business',
@@ -11131,6 +11174,65 @@ const UMG_BREAKDOWN = {
           note: 'Trailing P/E if bought at each year\u2019s low. Average \u2248 32.9\u00d7 incl 2021 / \u2248 28.2\u00d7 excl 2021 (2021 = the SPAC / listing year, distorted). On its 2024 low (\u20ac21 vs \u20ac1.13 diluted EPS) UMG traded at 18.6\u00d7 \u2014 the cheapest since listing.',
         },
       ],
+    },
+    segments: {
+      umgSegments: {
+        headline: 'UMG operates across three business segments with unique attributes',
+        segments: [
+          {
+            name: 'Recorded Music', pct: 80, color: 'rgba(37,99,235,0.9)',
+            desc: 'Royalties from the sale and licensing of sound recordings.',
+            points: [
+              'Double-digit revenue growth driven by global consumer adoption of premium subscription services and ad-supported streaming',
+              'High proportion of costs are fixed, which allows for significant operating leverage',
+            ],
+          },
+          {
+            name: 'Publishing (\u201cUMPG\u201d)', pct: 16, color: 'rgba(34,197,94,0.75)',
+            desc: 'Royalties from licensing of musical compositions and lyrics.',
+            points: [
+              'Highly recurring and predictable, growing revenue stream',
+              'Revenue growth driven by attractive end-market growth (a derivative of streaming adoption) and UMPG share gains',
+            ],
+          },
+          {
+            name: 'Merchandising', pct: 4, color: 'rgba(180,60,50,0.85)',
+            desc: 'Sale of merchandise from touring, physical retail, and eCommerce.',
+            points: [
+              'High-growth opportunity from eCommerce, with significant rebound potential for physical retail and touring post-COVID',
+            ],
+          },
+        ],
+        takeaway: 'Recorded Music dominates the revenue mix (~80%), but Publishing is the most predictable slice \u2014 highly recurring composition royalties that grow as a derivative of the same streaming adoption driving Recorded Music.',
+      },
+      umgEvolution: {
+        headline: 'Consumer adoption of streaming has transformed UMG\u2019s financial profile',
+        subhead: 'Streaming is now >50% of revenue and growing rapidly \u2014 up from 19% in 2015.',
+        source: 'UMG Revenue Composition (%) \u00b7 Source: Company filings',
+        periods: [
+          {
+            year: '2015', total: '\u20ac5.1bn',
+            slices: [
+              { label: 'Streaming & Subscriptions', pct: 19, color: 'rgba(96,165,250,0.9)', featured: true },
+              { label: 'All Other Recorded Music', pct: 62, color: 'rgba(30,58,110,0.95)' },
+              { label: 'Music Publishing', pct: 15, color: 'rgba(34,197,94,0.75)' },
+              { label: 'Merchandising & Other', pct: 4, color: 'rgba(148,163,184,0.5)' },
+            ],
+            note: 'Recorded Music was 81% of revenue; streaming just 19% of the total.',
+          },
+          {
+            year: '2020', total: '\u20ac7.4bn',
+            slices: [
+              { label: 'Streaming & Subscriptions', pct: 52, color: 'rgba(96,165,250,0.9)', featured: true },
+              { label: 'All Other Recorded Music', pct: 28, color: 'rgba(30,58,110,0.95)' },
+              { label: 'Music Publishing', pct: 16, color: 'rgba(34,197,94,0.75)' },
+              { label: 'Merchandising & Other', pct: 4, color: 'rgba(148,163,184,0.5)' },
+            ],
+            note: 'Recorded Music still ~80% of revenue, but streaming grew from 19% to 52% of the total in just five years \u2014 while total revenue rose \u20ac5.1bn \u2192 \u20ac7.4bn.',
+          },
+        ],
+        approxNote: 'Streaming (19% \u2192 52%) and Recorded Music total (81% \u2192 80%) are stated on the slide. The Publishing and Merchandising splits are derived to reconcile to 100% and are approximate.',
+      },
     },
   },
   risks: {
@@ -27041,6 +27143,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         segments.naSaltySnacks && { id: 'naSaltySnacks', label: 'NA SALTY SNACKS' },
                         segments.international && { id: 'international', label: 'INTERNATIONAL' },
                         segments.railCommodity && { id: 'railCommodity', label: 'BY COMMODITY' },
+                        segments.umgSegments && { id: 'umgSegments', label: 'SEGMENT OVERVIEW' },
+                        segments.umgEvolution && { id: 'umgEvolution', label: 'FINANCIAL EVOLUTION' },
                       ].filter(Boolean);
                       const hasSubTabs = subTabDefs.length > 1;
                       const activeSub = subTabDefs.length ? (subTabDefs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : subTabDefs[0].id) : null;
@@ -27105,6 +27209,68 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+                          {/* UMG — SEGMENT OVERVIEW */}
+                          {segments.umgSegments && activeSub === 'umgSegments' && (
+                            <>
+                              <SectionHeading>// SEGMENT OVERVIEW</SectionHeading>
+                              {segments.umgSegments.headline && <div style={{fontSize:'12px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'12px',lineHeight:1.4}}>{segments.umgSegments.headline}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'12px'}}>
+                                {segments.umgSegments.segments.map((s, i) => (
+                                  <div key={i} style={{background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(245,158,11,0.35)',borderLeft:`3px solid ${s.color}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom:'6px'}}>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{s.name}</div>
+                                      <div style={{fontSize:'15px',color:s.color,fontFamily:'monospace',fontWeight:700}}>{s.pct}%<span style={{fontSize:'8px',color:'rgba(224,234,255,0.5)',fontWeight:400,marginLeft:'4px'}}>of revenue</span></div>
+                                    </div>
+                                    <div style={{height:'6px',background:'rgba(255,255,255,0.06)',borderRadius:'3px',overflow:'hidden',marginBottom:'8px'}}>
+                                      <div style={{width:`${s.pct}%`,height:'100%',background:s.color,borderRadius:'3px'}}></div>
+                                    </div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',fontStyle:'italic',lineHeight:1.5,letterSpacing:'0.2px',marginBottom:'8px'}}>{s.desc}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {s.points.map((pt, pi) => (
+                                        <div key={pi} style={{display:'flex',gap:'8px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>
+                                          <span style={{color:s.color,flexShrink:0,fontWeight:700}}>\u25b8</span><span>{pt}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {segments.umgSegments.takeaway && <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.5)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'8px'}}><span style={{color:'#f59e0b',fontWeight:700}}>TAKEAWAY \u2014 </span>{segments.umgSegments.takeaway}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — FINANCIAL EVOLUTION */}
+                          {segments.umgEvolution && activeSub === 'umgEvolution' && (
+                            <>
+                              <SectionHeading>// FINANCIAL EVOLUTION</SectionHeading>
+                              {segments.umgEvolution.headline && <div style={{fontSize:'12px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'4px',lineHeight:1.4}}>{segments.umgEvolution.headline}</div>}
+                              {segments.umgEvolution.subhead && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'6px'}}>{segments.umgEvolution.subhead}</div>}
+                              {segments.umgEvolution.source && <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.4px',marginBottom:'14px',fontStyle:'italic'}}>{segments.umgEvolution.source}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'16px',marginBottom:'12px'}}>
+                                {segments.umgEvolution.periods.map((p, i) => (
+                                  <div key={i}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'6px'}}>
+                                      <span style={{fontSize:'12px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{p.year}</span>
+                                      <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{p.total}</span>
+                                    </div>
+                                    <div style={{display:'flex',height:'30px',borderRadius:'4px',overflow:'hidden',border:'0.5px solid rgba(245,158,11,0.3)',marginBottom:'8px'}}>
+                                      {p.slices.map((sl, si) => (
+                                        <div key={si} title={`${sl.label} ${sl.pct}%`} style={{width:`${sl.pct}%`,background:sl.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px',color:'#fff',fontFamily:'monospace',fontWeight:700,borderRight: si < p.slices.length-1 ? '1px solid rgba(0,0,0,0.3)' : 'none',boxShadow: sl.featured ? 'inset 0 0 0 1.5px rgba(255,255,255,0.55)' : 'none'}}>{sl.pct >= 8 ? sl.pct + '%' : ''}</div>
+                                      ))}
+                                    </div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'8px 14px',marginBottom:'6px'}}>
+                                      {p.slices.map((sl, si) => (
+                                        <span key={si} style={{fontSize:'8.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',letterSpacing:'0.2px'}}><span style={{display:'inline-block',width:'9px',height:'9px',background:sl.color,borderRadius:'2px',marginRight:'4px',verticalAlign:'middle'}}></span>{sl.label} {sl.pct}%</span>
+                                      ))}
+                                    </div>
+                                    {p.note && <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.68)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px',paddingLeft:'2px'}}>{p.note}</div>}
+                                  </div>
+                                ))}
+                              </div>
+                              {segments.umgEvolution.approxNote && <div style={{padding:'8px 12px',background:'rgba(148,163,184,0.06)',border:'0.5px solid rgba(148,163,184,0.25)',borderRadius:'3px',fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px',marginBottom:'8px'}}><span style={{color:'rgba(148,163,184,0.9)',fontWeight:700}}>Note \u2014 </span>{segments.umgEvolution.approxNote}</div>}
+                            </>
+                          )}
+
                           {segments.wmRevenue && activeSub === 'serviceLine' && (
                             <>
                               <SectionHeading>// OPERATING REVENUES</SectionHeading>
@@ -28646,7 +28812,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, businessModelTransform, musicAsService, transformationBridge, transformationImpact, recordedMusicPrimer, publishingPrimer, lowCostEntertainment, tollOwns, tollPayers, tollFlow, tollDurable, tollLens, moatTabs } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat, reece, networkAdvantage, competitors, thesis, greatIndustry, businessModel, resilience, industryGrowth, topMarkets, chartDominance, demandTailwinds, whyStreaming, musicVsVideo, labelValueProp, streamingEcosystem, scaleVsWmg, organicGrowthVsWmg, opProfitGrowthVsWmg, marginVsWmg, spotifyNetflixBusiness, businessModelTransform, musicAsService, transformationBridge, transformationImpact, recordedMusicPrimer, publishingPrimer, lowCostEntertainment, tollOwns, tollPayers, tollFlow, tollDurable, tollLens, arcHistory, arcTo2030, arcLongTerm, moatTabs } = bd.moat;
 
                       // UMG moat sub-tab helper (flat render for companies without moatTabs)
                       const activeMoatTab = moatTabs ? (moatTabs.find(t => t.id === moatSubTab) || moatTabs[0]) : null;
@@ -30148,6 +30314,85 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 ))}
                               </div>
                               {tollLens.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY — </span>{tollLens.takeaway}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — INDUSTRY ARC: HISTORY */}
+                          {showMoat('arcHistory') && arcHistory && (
+                            <>
+                              <SectionHeading>// THE 40-YEAR ARC</SectionHeading>
+                              {arcHistory.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{arcHistory.headline}</div>}
+                              {arcHistory.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{arcHistory.intro}</div>}
+                              {arcHistory.chartRef && <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.4px',marginBottom:'10px',fontStyle:'italic'}}>{arcHistory.chartRef}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {arcHistory.phases.map((p, i) => {
+                                  const tc = p.tone === 'bad' ? 'rgba(239,68,68,0.95)' : 'rgba(34,197,94,0.95)';
+                                  const tb = p.tone === 'bad' ? 'rgba(239,68,68,0.35)' : 'rgba(34,197,94,0.35)';
+                                  return (
+                                    <div key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${tc}`,borderRadius:'4px',padding:'12px'}}>
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'10px',marginBottom:'6px',flexWrap:'wrap'}}>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{p.era}</div>
+                                        <div style={{fontSize:'11px',color:tc,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',padding:'2px 8px',background:tb.replace('0.35','0.10'),border:`0.5px solid ${tb}`,borderRadius:'3px',whiteSpace:'nowrap'}}>{p.stat}</div>
+                                      </div>
+                                      <div style={{fontSize:'9.5px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>{p.body}</div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {arcHistory.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY \u2014 </span>{arcHistory.takeaway}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — INDUSTRY ARC: STREAMING TO 2030 */}
+                          {showMoat('arcTo2030') && arcTo2030 && (
+                            <>
+                              <SectionHeading>// STREAMING TO ~94% BY 2030</SectionHeading>
+                              {arcTo2030.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{arcTo2030.headline}</div>}
+                              {arcTo2030.intro && <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{arcTo2030.intro}</div>}
+                              {arcTo2030.chartRef && <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.4px',marginBottom:'12px',fontStyle:'italic'}}>{arcTo2030.chartRef}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'12px',marginBottom:'10px'}}>
+                                {arcTo2030.bridge.map((b, i) => (
+                                  <div key={i}>
+                                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
+                                      <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{b.label}</span>
+                                      <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.3px'}}>Streaming {b.streaming}% \u00b7 {arcTo2030.otherLabel} {b.other}%</span>
+                                    </div>
+                                    <div style={{display:'flex',height:'26px',borderRadius:'4px',overflow:'hidden',border:`0.5px solid ${amberGlow}`}}>
+                                      <div style={{width:`${b.streaming}%`,background:'rgba(245,158,11,0.55)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9.5px',color:'#0a0a0a',fontFamily:'monospace',fontWeight:700}}>{b.streaming}%</div>
+                                      <div style={{width:`${b.other}%`,background:'rgba(148,163,184,0.35)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700}}>{b.other > 8 ? b.other + '%' : ''}</div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <div style={{display:'flex',gap:'14px',marginBottom:'10px',fontSize:'8.5px',fontFamily:'monospace',color:'rgba(224,234,255,0.6)',letterSpacing:'0.3px'}}>
+                                <span><span style={{display:'inline-block',width:'9px',height:'9px',background:'rgba(245,158,11,0.55)',borderRadius:'2px',marginRight:'4px',verticalAlign:'middle'}}></span>Streaming</span>
+                                <span><span style={{display:'inline-block',width:'9px',height:'9px',background:'rgba(148,163,184,0.35)',borderRadius:'2px',marginRight:'4px',verticalAlign:'middle'}}></span>{arcTo2030.otherLabel}</span>
+                              </div>
+                              {arcTo2030.takeaway && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.9)',borderRadius:'4px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>TAKEAWAY \u2014 </span>{arcTo2030.takeaway}</div>}
+                            </>
+                          )}
+
+                          {/* UMG — INDUSTRY ARC: LONG-TERM DRIVERS */}
+                          {showMoat('arcLongTerm') && arcLongTerm && (
+                            <>
+                              <SectionHeading>// LONG-TERM GROWTH DRIVERS</SectionHeading>
+                              {arcLongTerm.headline && <div style={{fontSize:'13px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{arcLongTerm.headline}</div>}
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'10px'}}>
+                                {arcLongTerm.groups.map((g, gi) => (
+                                  <div key={gi} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',padding:'12px'}}>
+                                    <div style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px',paddingBottom:'8px',borderBottom:`0.5px solid ${amberGlow}`}}>{g.title}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                      {g.points.map((pt, pi) => (
+                                        <div key={pi} style={{display:'flex',gap:'8px',fontSize:'9.5px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.2px'}}>
+                                          <span style={{color:amber,flexShrink:0,fontWeight:700}}>\u25b8</span>
+                                          <span>{pt}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {arcLongTerm.takeaway && <div style={{padding:'11px 14px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberDim}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'12px',fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,lineHeight:1.5,letterSpacing:'0.4px',textAlign:'center'}}>{arcLongTerm.takeaway}</div>}
                             </>
                           )}
 
