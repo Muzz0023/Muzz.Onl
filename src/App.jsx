@@ -19789,7 +19789,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {
               title: 'LIVE DATA',
               items: [
-                { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Real-time tracker' },
+                { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Quickly see your investment returns' },
                 { id:'stockScreen', glyph:'⌗', label:'Stock Screen', desc:'Quick price board' },
                 { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
               ],
