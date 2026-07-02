@@ -19972,10 +19972,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>INVESTMENTS</div>
               </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:totalGainLossFx>=0?"rgba(34,197,94,0.5)":"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>PORTFOLIO VALUE · {displayCurrency}</div>
-                <div style={{fontSize:"24px",color:totalGainLossFx>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>{displaySym}{totalStocksValueFx.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-              </div>
+              <button
+                onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
+                style={{textAlign:"right",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace",padding:0}}
+                onMouseEnter={(e) => { const t = e.currentTarget.querySelector('[data-ros]'); if (t) t.style.textShadow = "0 0 18px rgba(245,158,11,0.55)"; }}
+                onMouseLeave={(e) => { const t = e.currentTarget.querySelector('[data-ros]'); if (t) t.style.textShadow = "none"; }}
+              >
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.55)",letterSpacing:"2px",marginBottom:"4px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px"}}>
+                  <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
+                  PREMIUM RESEARCH WORKSPACE
+                </div>
+                <div data-ros style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"2.5px",fontWeight:600,transition:"text-shadow 0.2s ease"}}>RESEARCH OS →</div>
+              </button>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
@@ -19988,15 +19996,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </button>
                 );
               })}
-              <button
-                onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
-                style={{padding:"6px 14px",background:"rgba(245,158,11,0.12)",border:"0.5px solid rgba(245,158,11,0.6)",borderRadius:"3px",color:"#f59e0b",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600,display:"flex",alignItems:"center",gap:"7px"}}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.2)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.12)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.6)"; }}
-              >
-                <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
-                RESEARCH OS →
-              </button>
             </div>
           </div>
         </div>
