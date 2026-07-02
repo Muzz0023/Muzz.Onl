@@ -19750,7 +19750,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               items: [
                 { id:'research',        glyph:'≡', label:'Holdings',         desc:'Your positions' },
                 { id:'futurePortfolio', glyph:'◬', label:'Future Portfolio', desc:'Watchlist' },
-                { id:'researchMap',     glyph:'⊞', label:'Map',              desc:'Constellation graph' },
+                { id:'researchMap',     glyph:'⊞', label:'Holdings Map',     desc:'Constellation graph' },
                 { id:'coverage',        glyph:'◇', label:'Coverage',         desc:'Company library' },
               ],
             },
@@ -20034,7 +20034,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* Header / breadcrumb */}
                 <div style={{padding:"12px 16px",borderLeft:`2px solid ${accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
-                    <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH CONSTELLATION</span>
+                    <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// HOLDINGS MAP</span>
                     {inDrill && (
                       <>
                         <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>›</span>
