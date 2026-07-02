@@ -31423,12 +31423,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const c = (COVERAGE_DATA || []).find(x => x.ticker && x.ticker.toUpperCase() === t);
               return c ? c.name : '';
             };
+            const industryFor = (t) => {
+              const h = (holdingsResearch || []).find(x => x && x.ticker && x.ticker.trim().toUpperCase() === t);
+              if (h && h.industry && h.industry.trim()) return h.industry.trim();
+              const c = (COVERAGE_DATA || []).find(x => x.ticker && x.ticker.toUpperCase() === t);
+              return (c && c.industry) ? c.industry : 'Other';
+            };
             let rows = list.map(t => {
               const p = screenPrices[t];
               const c = p?.c || 0;
               const pc = p?.pc || 0;
               const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
-              return { ticker: t, name: nameFor(t), price: c, chg, currency: p?.currency || 'USD' };
+              return { ticker: t, name: nameFor(t), industry: industryFor(t), price: c, chg, currency: p?.currency || 'USD' };
             }).filter(r => !q || r.ticker.includes(q) || (r.name || '').toUpperCase().includes(q));
             const dirMul = screenSort.dir === 'asc' ? 1 : -1;
             rows.sort((a, b) => {
@@ -31496,6 +31502,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{width:"1px",height:"18px",background:sGlow}}/>
                     {chipBtn('BOARD', screenView === 'board', () => setScreenView('board'), 'vboard')}
                     {chipBtn('SPLIT', screenView === 'split', () => setScreenView('split'), 'vsplit')}
+                    {chipBtn('INDUSTRY', screenView === 'industry', () => setScreenView('industry'), 'vind')}
                     {screenView === 'board' && (<>
                       <span style={{width:"1px",height:"18px",background:sGlow}}/>
                       {chipBtn('% MOVE', screenSort.key === 'chg', () => setScreenSort(s => ({ key:'chg', dir: s.key==='chg' && s.dir==='desc' ? 'asc' : 'desc' })), 'schg')}
@@ -31553,7 +31560,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                       ))}
                     </div>
-                  ) : (
+                  ) : screenView === 'split' ? (
                     <>
                       <div style={{display:"grid",gridTemplateColumns:isWideScr ? "1fr 1fr" : "1fr",gap:"10px"}}>
                         {[{title:'▲ GAINERS',items:gainers,accent:green,bg:'rgba(34,197,94,0.05)'},{title:'▼ DECLINERS',items:losers,accent:red,bg:'rgba(239,68,68,0.05)'}].map(col => (
@@ -31582,6 +31589,50 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                       )}
                     </>
+                  ) : (
+                    (() => {
+                      const groupMap = {};
+                      rows.forEach(r => { const ind = r.industry || 'Other'; if (!groupMap[ind]) groupMap[ind] = []; groupMap[ind].push(r); });
+                      const groups = Object.keys(groupMap).map(ind => {
+                        const items = groupMap[ind];
+                        const pr = items.filter(x => x.chg !== null);
+                        const avg = pr.length ? pr.reduce((s, x) => s + x.chg, 0) / pr.length : null;
+                        const up = pr.filter(x => x.chg > 0).length;
+                        const down = pr.filter(x => x.chg < 0).length;
+                        const sorted = items.slice().sort((a, b) => ((b.chg === null ? -Infinity : b.chg) - (a.chg === null ? -Infinity : a.chg)));
+                        return { ind, items: sorted, avg, up, down };
+                      }).sort((a, b) => ((b.avg === null ? -Infinity : b.avg) - (a.avg === null ? -Infinity : a.avg)));
+                      return (
+                        <div style={{display:"grid",gridTemplateColumns:isWideScr ? "repeat(auto-fill, minmax(330px, 1fr))" : "1fr",gap:"10px",alignItems:"start"}}>
+                          {groups.map(g => (
+                            <div key={g.ind} style={{background:"rgba(5,12,24,0.7)",border:`0.5px solid ${sGlow}`,borderTop:`2px solid ${moveColor(g.avg)}`,borderRadius:"5px",overflow:"hidden"}}>
+                              <div style={{padding:"10px 13px",borderBottom:`0.5px solid ${sGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+                                <div>
+                                  <div style={{fontSize:"11px",color:sAmber,letterSpacing:"1.5px",fontWeight:700,textTransform:"uppercase"}}>{g.ind}</div>
+                                  <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",letterSpacing:"1px",marginTop:"3px"}}>
+                                    {g.items.length} TICKER{g.items.length !== 1 ? 'S' : ''}
+                                    {(g.up > 0 || g.down > 0) && <span> · <span style={{color:green}}>▲ {g.up}</span> <span style={{color:red}}>▼ {g.down}</span></span>}
+                                  </div>
+                                </div>
+                                <span style={{padding:"4px 10px",borderRadius:"3px",fontSize:"13px",fontWeight:700,letterSpacing:"0.5px",color:moveColor(g.avg),background: g.avg === null ? "rgba(148,163,184,0.08)" : g.avg >= 0 ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",border:`0.5px solid ${g.avg === null ? "rgba(148,163,184,0.2)" : g.avg >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,whiteSpace:"nowrap"}}>
+                                  {g.avg === null ? '—' : (g.avg >= 0 ? '+' : '') + g.avg.toFixed(2) + '%'}
+                                </span>
+                              </div>
+                              <div>
+                                {g.items.map(r => (
+                                  <div key={r.ticker} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 13px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                                    <span style={{fontSize:"11px",color:sAmber,fontWeight:700,letterSpacing:"0.5px",width:"52px",flexShrink:0}}>{r.ticker}</span>
+                                    <span style={{flex:1,fontSize:"9px",color:"rgba(148,163,184,0.55)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}</span>
+                                    <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{r.price > 0 ? r.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</span>
+                                    <span style={{fontSize:"11px",fontWeight:700,width:"64px",textAlign:"right",flexShrink:0,color:moveColor(r.chg)}}>{r.chg === null ? '—' : (r.chg >= 0 ? '+' : '') + r.chg.toFixed(2) + '%'}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()
                   )}
                 </div>
               </div>
