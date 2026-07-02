@@ -31492,11 +31492,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                     <input value={screenQuery} onChange={(e) => setScreenQuery(e.target.value)} placeholder="FILTER"
-                      style={{padding:"6px 10px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRadius:"3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"110px"}}/>
+                      style={{padding:"7px 12px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRadius:"3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"150px",minWidth:"120px"}}/>
                     <div style={{display:"flex",gap:"0"}}>
                       <input value={screenAddInput} onChange={(e) => setScreenAddInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') addTicker(); }} placeholder="ADD TICKER"
-                        style={{padding:"6px 10px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRight:"none",borderRadius:"3px 0 0 3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"100px"}}/>
-                      <button onClick={addTicker} style={{padding:"6px 12px",background:"rgba(245,158,11,0.14)",border:`0.5px solid ${sAmber}`,borderRadius:"0 3px 3px 0",color:sAmber,fontSize:"10px",letterSpacing:"1.5px",fontWeight:700,cursor:"pointer"}}>+</button>
+                        style={{padding:"7px 12px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRight:"none",borderRadius:"3px 0 0 3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"170px",minWidth:"140px"}}/>
+                      <button onClick={addTicker} style={{padding:"7px 14px",background:"rgba(245,158,11,0.14)",border:`0.5px solid ${sAmber}`,borderRadius:"0 3px 3px 0",color:sAmber,fontSize:"10px",letterSpacing:"1.5px",fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>+ ADD</button>
                     </div>
                     {chipBtn('SYNC HOLDINGS', false, syncHoldings, 'sync')}
                     <span style={{width:"1px",height:"18px",background:sGlow}}/>
