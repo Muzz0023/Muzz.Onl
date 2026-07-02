@@ -19988,27 +19988,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </button>
                 );
               })}
+              <button
+                onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
+                style={{padding:"6px 14px",background:"rgba(245,158,11,0.12)",border:"0.5px solid rgba(245,158,11,0.6)",borderRadius:"3px",color:"#f59e0b",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600,display:"flex",alignItems:"center",gap:"7px"}}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.2)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.12)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.6)"; }}
+              >
+                <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
+                RESEARCH OS →
+              </button>
             </div>
           </div>
         </div>
         )}
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* === RESEARCH OS — slim premium bar, top of Investments === */}
-          {investmentsSubTab === 'portfolio' && (
-            <button
-              onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
-              style={{width:"100%",background:"linear-gradient(90deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.03) 100%)",border:"1px solid rgba(245,158,11,0.45)",borderLeft:"3px solid rgba(245,158,11,0.95)",borderRadius:"5px",padding:"10px 16px",cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:"12px",fontFamily:"monospace",transition:"all 0.2s ease"}}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; e.currentTarget.style.boxShadow = "0 2px 16px rgba(245,158,11,0.12)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.45)"; e.currentTarget.style.boxShadow = "none"; }}
-            >
-              <span style={{fontSize:"12px",color:"#f59e0b",letterSpacing:"2px",fontWeight:700,whiteSpace:"nowrap"}}>RESEARCH OS</span>
-              <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)",flexShrink:0}}/>
-              <span style={{flex:1,fontSize:"10px",color:"rgba(224,234,255,0.55)",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>Deep-dive coverage · Investment Map · Holdings research · Live prices · Performance · Investing guide</span>
-              <span style={{fontSize:"10px",color:"rgba(245,158,11,0.95)",letterSpacing:"2px",fontWeight:600,whiteSpace:"nowrap",flexShrink:0}}>ENTER →</span>
-            </button>
-          )}
-
           {/* === RESEARCH CONSTELLATION — drill-down by industry === */}
           {investmentsSubTab === 'researchMap' && (() => {
             const accent = '#a855f7';
