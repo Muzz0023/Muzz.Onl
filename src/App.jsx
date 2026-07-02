@@ -19739,15 +19739,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           const amberDim = 'rgba(245,158,11,0.6)';
           const amberGlow = 'rgba(245,158,11,0.35)';
 
-          // === Live metrics for HUD status strip ===
-          const portfolioValueLocal = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.currentPrice || s?.price)||0), 0);
-          const portfolioCostLocal  = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.price)||0), 0);
-          const portfolioPLLocal    = portfolioValueLocal - portfolioCostLocal;
-          const portfolioPLPctLocal = portfolioCostLocal > 0 ? (portfolioPLLocal / portfolioCostLocal) * 100 : 0;
-          const holdingsCountLocal  = (holdingsResearch || []).filter(h => h && h.ticker).length;
-          const coverageCountLocal  = COVERAGE_DATA.length;
-          const fmtCurrencyLocal = (n) => '$' + Math.round(Math.abs(n||0)).toLocaleString();
-
           // Live clock
           const nowR = liveTime || new Date();
           const timeStrR = nowR.toLocaleTimeString('en-AU', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -19832,34 +19823,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
                     ONLINE
                   </span>
-                </div>
-              </div>
-
-              {/* === HUD STATUS STRIP — 4 live metrics === */}
-              <div style={{padding:"12px 16px 0",background:"rgba(0,0,0,0.5)"}}>
-                <div className="max-w-6xl mx-auto">
-                  <div style={{
-                    display:"grid",
-                    gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",
-                    gap:"1px",
-                    background:amberGlow,
-                    border:`0.5px solid ${amberGlow}`,
-                    borderRadius:"3px",
-                    overflow:"hidden",
-                  }}>
-                    {[
-                      { label:'PORTFOLIO VALUE', value: fmtCurrencyLocal(portfolioValueLocal), unit:'AUD', color: '#e0eaff' },
-                      { label:'UNREALISED P/L',  value: (portfolioPLLocal >= 0 ? '+' : '−') + fmtCurrencyLocal(portfolioPLLocal), unit: (portfolioPLPctLocal >= 0 ? '+' : '') + portfolioPLPctLocal.toFixed(2) + '%', color: portfolioPLLocal >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' },
-                      { label:'HOLDINGS',        value: holdingsCountLocal, unit:'POSITIONS', color: '#e0eaff' },
-                      { label:'COVERAGE',        value: coverageCountLocal, unit:'COMPANIES', color: '#e0eaff' },
-                    ].map((m,i) => (
-                      <div key={i} style={{background:"#000", padding:"10px 12px"}}>
-                        <div style={{fontSize:"8px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px",fontWeight:600}}>{m.label}</div>
-                        <div style={{fontSize:"16px",color:m.color,fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",lineHeight:1}}>{m.value}</div>
-                        <div style={{fontSize:"8px",color:"rgba(224,234,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"4px"}}>{m.unit}</div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
 
