@@ -19780,7 +19780,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {
               title: 'CORE RESEARCH',
               items: [
-                { id:'research',        glyph:'≡', label:'Holdings',         desc:'Your positions' },
+                { id:'research',        glyph:'≡', label:'Holdings Research', desc:'Your positions' },
                 { id:'futurePortfolio', glyph:'◬', label:'Future Portfolio', desc:'Watchlist' },
                 { id:'researchMap',     glyph:'⊞', label:'Holdings Map',     desc:'Constellation graph' },
                 { id:'coverage',        glyph:'◇', label:'Coverage',         desc:'Company library' },
