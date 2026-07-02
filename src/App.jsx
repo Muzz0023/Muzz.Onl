@@ -19974,15 +19974,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
               <button
                 onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
-                style={{textAlign:"right",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace",padding:0}}
-                onMouseEnter={(e) => { const t = e.currentTarget.querySelector('[data-ros]'); if (t) t.style.textShadow = "0 0 18px rgba(245,158,11,0.55)"; }}
-                onMouseLeave={(e) => { const t = e.currentTarget.querySelector('[data-ros]'); if (t) t.style.textShadow = "none"; }}
+                style={{position:"relative",textAlign:"right",cursor:"pointer",fontFamily:"monospace",padding:"12px 18px",background:"linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 100%)",border:"1px solid rgba(245,158,11,0.55)",borderRadius:"6px",boxShadow:"0 0 22px rgba(245,158,11,0.18)",transition:"all 0.2s ease"}}
+                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 34px rgba(245,158,11,0.38)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.95)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.18)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.55)"; e.currentTarget.style.transform = "translateY(0)"; }}
               >
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.55)",letterSpacing:"2px",marginBottom:"4px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px"}}>
-                  <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
+                <div style={{position:"absolute",top:"5px",left:"5px",width:"9px",height:"9px",borderTop:"1px solid rgba(245,158,11,0.8)",borderLeft:"1px solid rgba(245,158,11,0.8)"}}/>
+                <div style={{position:"absolute",top:"5px",right:"5px",width:"9px",height:"9px",borderTop:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
+                <div style={{position:"absolute",bottom:"5px",left:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderLeft:"1px solid rgba(245,158,11,0.8)"}}/>
+                <div style={{position:"absolute",bottom:"5px",right:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.65)",letterSpacing:"2px",marginBottom:"5px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px",fontWeight:600}}>
+                  <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 5px rgba(34,197,94,0.95)"}}/>
                   PREMIUM RESEARCH WORKSPACE
                 </div>
-                <div data-ros style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"2.5px",fontWeight:600,transition:"text-shadow 0.2s ease"}}>RESEARCH OS →</div>
+                <div style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"2.5px",fontWeight:700,textShadow:"0 0 14px rgba(245,158,11,0.35)"}}>RESEARCH OS →</div>
               </button>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
