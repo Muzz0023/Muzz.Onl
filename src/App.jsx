@@ -19994,58 +19994,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         )}
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* === RESEARCH OS — Premium entry card, shows when on portfolio === */}
-          {investmentsSubTab === 'portfolio' && (
-            <button
-              onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
-              style={{
-                width:"100%",
-                background:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%)",
-                border:"1px solid rgba(245,158,11,0.5)",
-                borderLeft:"3px solid rgba(245,158,11,0.95)",
-                borderRadius:"6px",
-                padding:"22px 24px",
-                cursor:"pointer",
-                textAlign:"left",
-                display:"flex",
-                alignItems:"center",
-                gap:"20px",
-                position:"relative",
-                overflow:"hidden",
-                fontFamily:"monospace",
-                backgroundImage:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%), radial-gradient(circle at 0% 50%, rgba(245,158,11,0.08) 0%, transparent 40%)",
-                transition:"all 0.2s ease",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(245,158,11,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.5)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-            >
-              {/* Corner brackets */}
-              <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
-              <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
-              <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
-              <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
-
-              <div style={{flex:1}}>
-                <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
-                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",letterSpacing:"2px",fontWeight:600}}>// PREMIUM RESEARCH WORKSPACE</span>
-                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"5px"}}>
-                    <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
-                    ONLINE
-                  </span>
-                </div>
-                <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"2.5px",fontWeight:600,marginBottom:"6px"}}>RESEARCH OS</div>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.6)",letterSpacing:"0.3px",lineHeight:1.5}}>
-                  Deep-dive coverage · Investment Map · Holdings research · Live prices · Performance · Investing guide
-                </div>
-              </div>
-
-              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                <span style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",letterSpacing:"2px",fontWeight:600}}>ENTER</span>
-                <span style={{fontSize:"18px",color:"rgba(245,158,11,0.95)"}}>→</span>
-              </div>
-            </button>
-          )}
-
           {/* === RESEARCH CONSTELLATION — drill-down by industry === */}
           {investmentsSubTab === 'researchMap' && (() => {
             const accent = '#a855f7';
@@ -20501,6 +20449,58 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                 )}
+
+          {/* === RESEARCH OS — Premium entry card, sits below portfolio totals === */}
+          {effectiveMode === 'current' && (
+            <button
+              onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
+              style={{
+                width:"100%",
+                background:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%)",
+                border:"1px solid rgba(245,158,11,0.5)",
+                borderLeft:"3px solid rgba(245,158,11,0.95)",
+                borderRadius:"6px",
+                padding:"22px 24px",
+                cursor:"pointer",
+                textAlign:"left",
+                display:"flex",
+                alignItems:"center",
+                gap:"20px",
+                position:"relative",
+                overflow:"hidden",
+                fontFamily:"monospace",
+                backgroundImage:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%), radial-gradient(circle at 0% 50%, rgba(245,158,11,0.08) 0%, transparent 40%)",
+                transition:"all 0.2s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(245,158,11,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.5)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              {/* Corner brackets */}
+              <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
+
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",letterSpacing:"2px",fontWeight:600}}>// PREMIUM RESEARCH WORKSPACE</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"5px"}}>
+                    <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
+                    ONLINE
+                  </span>
+                </div>
+                <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"2.5px",fontWeight:600,marginBottom:"6px"}}>RESEARCH OS</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.6)",letterSpacing:"0.3px",lineHeight:1.5}}>
+                  Deep-dive coverage · Investment Map · Holdings research · Live prices · Performance · Investing guide
+                </div>
+              </div>
+
+              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                <span style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",letterSpacing:"2px",fontWeight:600}}>ENTER</span>
+                <span style={{fontSize:"18px",color:"rgba(245,158,11,0.95)"}}>→</span>
+              </div>
+            </button>
+          )}
 
                 {/* The map itself — same component as Asset Map */}
                 <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
