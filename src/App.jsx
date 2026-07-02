@@ -11879,6 +11879,29 @@ function MuzzApp() {
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
   const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
+  // === STOCK SCREEN — quick price board over the coverage universe (same API as Live Prices) ===
+  const [screenPrices, setScreenPrices] = useState({});
+  const [screenLoading, setScreenLoading] = useState(false);
+  const [screenLastUpdated, setScreenLastUpdated] = useState(null);
+  const [screenQuery, setScreenQuery] = useState('');
+  const [screenSort, setScreenSort] = useState({ key: 'ticker', dir: 'asc' });
+  const fetchScreenPrices = () => {
+    const tSet = new Set();
+    (COVERAGE_DATA || []).forEach(c => { if (c.ticker) tSet.add(c.ticker.toUpperCase()); });
+    (trackedStocks || []).forEach(s => { const t = (s.ticker || '').trim().toUpperCase(); if (t) tSet.add(t); });
+    (stocks || []).forEach(s => { const t = (s.name || '').trim().toUpperCase(); if (t) tSet.add(t); });
+    const tickers = Array.from(tSet);
+    if (tickers.length === 0 || screenLoading) return;
+    setScreenLoading(true);
+    fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) })
+      .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
+      .then(data => { if (data.prices) { setScreenPrices(data.prices); setScreenLastUpdated(new Date().toLocaleTimeString()); } })
+      .catch(err => console.error('Failed to fetch screen prices:', err))
+      .finally(() => setScreenLoading(false));
+  };
+  useEffect(() => {
+    if (investmentsSubTab === 'stockScreen' && Object.keys(screenPrices).length === 0 && !screenLoading) fetchScreenPrices();
+  }, [investmentsSubTab]);
   const [openTooltipKey, setOpenTooltipKey] = useState(null); // Tracks which inline explainer is currently open (one at a time)
 
   // Plain-language explainers for the Holdings/Future Research fields. Tapped via the ⓘ icon next to each label.
@@ -19758,6 +19781,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               title: 'LIVE DATA',
               items: [
                 { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Real-time tracker' },
+                { id:'stockScreen', glyph:'⌗', label:'Stock Screen', desc:'Quick price board' },
                 { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
               ],
             },
@@ -31374,6 +31398,98 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* LIVE PRICES TAB */}
+          {/* === STOCK SCREEN — quick price board (same API as Live Prices) === */}
+          {investmentsSubTab === 'stockScreen' && (() => {
+            const uniMap = {};
+            (COVERAGE_DATA || []).forEach(c => { if (c.ticker) uniMap[c.ticker.toUpperCase()] = { ticker: c.ticker.toUpperCase(), name: c.name || '', industry: c.industry || '' }; });
+            (trackedStocks || []).forEach(s => { const t = (s.ticker || '').trim().toUpperCase(); if (t && !uniMap[t]) uniMap[t] = { ticker: t, name: s.name || '', industry: 'Tracked' }; });
+            (stocks || []).forEach(s => { const t = (s.name || '').trim().toUpperCase(); if (t && !uniMap[t]) uniMap[t] = { ticker: t, name: '', industry: 'Holding' }; });
+            const q = screenQuery.trim().toUpperCase();
+            let rows = Object.values(uniMap)
+              .filter(r => !q || r.ticker.includes(q) || (r.name || '').toUpperCase().includes(q) || (r.industry || '').toUpperCase().includes(q))
+              .map(r => {
+                const p = screenPrices[r.ticker];
+                const c = p?.c || 0;
+                const pc = p?.pc || 0;
+                const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
+                return { ...r, price: c, chg, currency: p?.currency || 'USD' };
+              });
+            const dirMul = screenSort.dir === 'asc' ? 1 : -1;
+            rows.sort((a, b) => {
+              if (screenSort.key === 'ticker') return a.ticker.localeCompare(b.ticker) * dirMul;
+              const av = screenSort.key === 'price' ? a.price : a.chg;
+              const bv = screenSort.key === 'price' ? b.price : b.chg;
+              const aa = (av === null || av === undefined) ? -Infinity : av;
+              const bb = (bv === null || bv === undefined) ? -Infinity : bv;
+              return (aa - bb) * dirMul;
+            });
+            const sortArrow = (key) => screenSort.key === key ? (screenSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+            const clickSort = (key) => setScreenSort(s => ({ key, dir: s.key === key && s.dir === 'desc' ? 'asc' : 'desc' }));
+            const thStyle = {textAlign:"right",padding:"8px 12px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"};
+            return (
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>// Stock Screen</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Quick prices across the coverage universe · {rows.length} tickers</p>
+                    </div>
+                    <div className="flex items-center gap-3" style={{flexWrap:"wrap"}}>
+                      {screenLastUpdated && (
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>Updated: {screenLastUpdated}</span>
+                      )}
+                      <input
+                        value={screenQuery}
+                        onChange={(e) => setScreenQuery(e.target.value)}
+                        placeholder="SEARCH TICKER / NAME / INDUSTRY"
+                        style={{padding:"6px 10px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",outline:"none",minWidth:"210px"}}
+                      />
+                      <button
+                        onClick={fetchScreenPrices}
+                        disabled={screenLoading}
+                        style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
+                      >
+                        {screenLoading ? 'LOADING...' : 'REFRESH'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div style={{overflowX:"auto"}}>
+                  <table style={{width:"100%",minWidth:"520px",borderCollapse:"collapse"}}>
+                    <thead>
+                      <tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)"}}>
+                        <th onClick={() => clickSort('ticker')} style={{...thStyle,textAlign:"left"}}>TICKER{sortArrow('ticker')}</th>
+                        <th style={{...thStyle,textAlign:"left",cursor:"default"}}>COMPANY</th>
+                        <th style={{...thStyle,textAlign:"left",cursor:"default"}}>INDUSTRY</th>
+                        <th onClick={() => clickSort('price')} style={thStyle}>PRICE{sortArrow('price')}</th>
+                        <th onClick={() => clickSort('chg')} style={thStyle}>DAY %{sortArrow('chg')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((r, i) => (
+                        <tr key={r.ticker} style={{borderBottom:"0.5px solid rgba(0,200,255,0.05)",background: i % 2 === 1 ? "rgba(0,200,255,0.015)" : "transparent"}}>
+                          <td style={{padding:"7px 12px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",fontWeight:700,letterSpacing:"0.5px"}}>{r.ticker}</td>
+                          <td style={{padding:"7px 12px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.2px"}}>{r.name || '—'}</td>
+                          <td style={{padding:"7px 12px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"0.5px"}}>{r.industry || '—'}</td>
+                          <td style={{padding:"7px 12px",textAlign:"right",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",fontWeight:600}}>
+                            {r.price > 0 ? r.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                            {r.price > 0 && <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"4px"}}>{r.currency}</span>}
+                          </td>
+                          <td style={{padding:"7px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",fontWeight:600,color: r.chg === null ? "rgba(148,163,184,0.4)" : r.chg >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>
+                            {r.chg === null ? '—' : (r.chg >= 0 ? '+' : '') + r.chg.toFixed(2) + '%'}
+                          </td>
+                        </tr>
+                      ))}
+                      {rows.length === 0 && (
+                        <tr><td colSpan={5} style={{padding:"28px 16px",textAlign:"center",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px"}}>NO MATCHES</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
+
           {investmentsSubTab === 'livePrices' && (
             <>
               {/* Live Stock Prices */}
