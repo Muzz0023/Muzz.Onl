@@ -13764,7 +13764,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, title:e.target.value} : r))}
                           placeholder="Reminder..."
                           className="slick-textarea"
-                          style={{width:"100%",minHeight:"50px",resize:"vertical",fontSize:"13px"}}
+                          style={{fontFamily:SANS_FONT,width:"100%",minHeight:"50px",resize:"vertical",fontSize:"13px"}}
                           rows={2}
                         />
                         <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
@@ -13867,7 +13867,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, name:e.target.value} : b))}
                           placeholder="Name..."
                           className="slick-input"
-                          style={{fontSize:"13px"}}
+                          style={{fontFamily:SANS_FONT,fontSize:"13px"}}
                         />
                         <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
                           <input
@@ -14540,7 +14540,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         value={activeJob.name}
                         onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
                         className="slick-input"
-                        style={{fontSize:"13px"}}
+                        style={{fontFamily:SANS_FONT,fontSize:"13px"}}
                       />
                     </div>
                     <div>
@@ -14556,7 +14556,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         }}
                         placeholder="0.00"
                         className="slick-input"
-                        style={{width:"90px",fontSize:"13px",textAlign:"center"}}
+                        style={{fontFamily:SANS_FONT,width:"90px",fontSize:"13px",textAlign:"center"}}
                       />
                     </div>
                   </div>
@@ -14685,7 +14685,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>NOTES</div>
-                          <input type="text" value={shift.notes||''} onFocus={scrollInputIntoView} onChange={(e) => updateShift(day.date,'notes',e.target.value)} placeholder="What did you work on?" className="slick-input" style={{fontSize:"12px"}} />
+                          <input type="text" value={shift.notes||''} onFocus={scrollInputIntoView} onChange={(e) => updateShift(day.date,'notes',e.target.value)} placeholder="What did you work on?" className="slick-input" style={{fontFamily:SANS_FONT,fontSize:"12px"}} />
                         </div>
                         {hasShift && (
                           <button onClick={() => { const newShifts={...activeJob.shifts}; delete newShifts[day.date]; updateJob(activeJobId,'shifts',newShifts); setEditingShiftDate(null); }}
@@ -15618,7 +15618,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
                               placeholder="e.g. Electricity, Netflix, Rent"
                               className="slick-input"
-                              style={{fontSize:"13px"}}
+                              style={{fontFamily:SANS_FONT,fontSize:"13px"}}
                             />
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr 1fr",gap:"12px"}}>
@@ -15632,6 +15632,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)}
                                 placeholder="0.00"
                                 className="slick-input"
+                                style={{fontFamily:SANS_FONT}}
                               />
                             </div>
                             <div>
@@ -15640,7 +15641,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 value={freq}
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
                                 className="slick-select"
-                                style={{colorScheme:"dark"}}>
+                                style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
                                 <option value="weekly">Weekly</option>
                                 <option value="fortnightly">Fortnightly</option>
                                 <option value="monthly">Monthly</option>
@@ -15659,6 +15660,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
                                   placeholder="e.g. 23"
                                   className="slick-input"
+                                  style={{fontFamily:SANS_FONT}}
                                 />
                               </div>
                             )}
@@ -15669,7 +15671,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   value={sub?.weekday ?? ''}
                                   onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)}
                                   className="slick-select"
-                                  style={{colorScheme:"dark"}}>
+                                  style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
                                   <option value="">— pick day —</option>
                                   {WEEKDAYS.map((d, i) => <option key={i} value={i}>{d}</option>)}
                                 </select>
@@ -15687,7 +15689,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onFocus={scrollInputIntoView}
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'fortnightAnchor', e.target.value)}
                                 className="slick-input"
-                                style={{colorScheme:"dark"}}
+                                style={{fontFamily:SANS_FONT,colorScheme:"dark"}}
                               />
                               <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>
                                 Pick any {WEEKDAYS[parseInt(sub.weekday)]} — the bill will recur every 2 weeks from there.
@@ -15721,6 +15723,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       }}
                                       placeholder={i===0?"01-04":i===1?"01-07":i===2?"01-10":"01-01"}
                                       className="slick-input"
+                                      style={{fontFamily:SANS_FONT}}
                                     />
                                   ))}
                                 </div>
@@ -17920,7 +17923,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             onChange={(e) => updateAsset(index, 'name', e.target.value)}
                             placeholder="e.g. House, Tesla, Super, Bitcoin"
                             className="slick-input"
-                            style={{fontSize:"13px"}}
+                            style={{fontFamily:SANS_FONT,fontSize:"13px"}}
                           />
                         </div>
                         <div>
@@ -17930,7 +17933,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             onFocus={scrollInputIntoView}
                             onChange={(e) => updateAsset(index, 'category', e.target.value)}
                             className="slick-select"
-                            style={{colorScheme:"dark"}}>
+                            style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
                             {assetCategories.map(c => (
                               <option key={c.id} value={c.id}>{c.name}</option>
                             ))}
@@ -17947,6 +17950,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               onChange={(e) => updateAsset(index, 'value', e.target.value)}
                               placeholder="0"
                               className="slick-input"
+                              style={{fontFamily:SANS_FONT}}
                             />
                           </div>
                           <div>
@@ -17958,6 +17962,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
                               placeholder="e.g. 1y 5m"
                               className="slick-input"
+                              style={{fontFamily:SANS_FONT}}
                             />
                           </div>
                         </div>
