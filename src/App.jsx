@@ -35708,7 +35708,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
-            onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '✅', createdAt: today }])}
+            onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }])}
             style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
           >
             + ADD NEW HABIT
@@ -35725,19 +35725,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const baseId = Date.now();
               const newHabits = samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, icon: s.icon, createdAt: today }));
               setHabits(newHabits);
-              // Pre-fill habit log with the sample pattern so the user sees how it looks
-              const newLog = { ...habitLog };
-              const last31Days = last31;
-              samples.forEach((s, hi) => {
-                const habitId = (baseId + hi).toString();
-                s.pattern.forEach((checked, di) => {
-                  if (checked) newLog[`${habitId}:${last31Days[di]}`] = true;
-                });
-              });
-              setHabitLog(newLog);
+              // Logs start clean — the grid fills as the user actually completes days.
             };
             const startFresh = () => {
-              setHabits([{ id: Date.now().toString(), name: '', icon: '✅', createdAt: today }]);
+              setHabits([{ id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }]);
             };
             return (
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -35770,8 +35761,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* CTAs */}
                 <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
                 </div>
               </div>
             );
