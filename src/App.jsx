@@ -14778,7 +14778,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     const health = calcHealthScore();
 
-    const palantirPanel = {background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px"};
+    const palantirPanel = {background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"16px"};
     const palantirLabel = {fontSize:"11px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px",textTransform:"uppercase",marginBottom:"4px",fontFamily:SANS_FONT};
     const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500};
     const palantirSubValue = {fontSize:"13px",color:"rgba(226,232,240,0.6)",fontFamily:SANS_FONT,marginTop:"2px"};
@@ -15013,7 +15013,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </svg>
               <div>
                 <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.2px",fontFamily:SANS_FONT}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
-                <div style={{fontSize:"clamp(24px,5vw,32px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.4px",marginTop:"2px"}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
+                  <div style={{fontSize:"clamp(24px,5vw,32px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                  {isElite && <SeverityPill level="ELITE" label="ELITE" />}
+                </div>
               </div>
             </div>
           </div>
@@ -15025,9 +15028,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{...palantirPanel,padding:"22px 24px 18px"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
               <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
-              {health && typeof health.score === 'number' && (
-                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.6)",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.08)",padding:"3px 10px",borderRadius:"999px"}}>Health {health.score}</span>
-              )}
             </div>
             <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"6px"}}>
               <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"46px":"38px",color:"#f2f6ff",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
@@ -15077,7 +15077,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const Icon = item.icon;
                 return (
                   <button key={item.id} onClick={() => setActiveView(item.id)}
-                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
+                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
                     onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.045)"; }}>
                     <Icon size={16} style={{color:"rgba(0,200,255,0.8)",flexShrink:0}}/>
@@ -15090,22 +15090,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",marginBottom:"12px",fontWeight:600}}>Account</div>
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               <button onClick={() => setActiveView('upgrade')}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
                 {isElite ? 'Elite Status' : 'Upgrade to Elite'}
               </button>
               <button onClick={() => setActiveView('statsinsights')}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
                 Stats & Insights
               </button>
               <button onClick={() => setActiveView('feedback')}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
                 Feedback & Support
               </button>
               <button onClick={doExport}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
                 Export Data
               </button>
-              <label style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500,display:"block"}}>
+              <label style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500,display:"block"}}>
                 Import Data
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </label>
