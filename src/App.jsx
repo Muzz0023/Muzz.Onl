@@ -35762,6 +35762,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* CTAs */}
                 <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
                   <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
+                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                 </div>
               </div>
             );
