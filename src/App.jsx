@@ -120,6 +120,8 @@ const RevenueCat = {
 // ============================================
 // STARRY BACKGROUND COMPONENT
 // ============================================
+const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+
 const StarryBackground = ({ children }) => {
   // Generate stable star positions using useMemo
   const stars = React.useMemo(() => {
@@ -149,8 +151,6 @@ const StarryBackground = ({ children }) => {
 
   return (
     <div className="relative noise-overlay" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 40%,#030a14 100%)"}}>
-      {/* Futuristic grid overlay */}
-      <div className="fixed inset-0 pointer-events-none z-0" style={{backgroundImage: 'linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
       {/* Ambient glow orbs */}
       <div className="fixed pointer-events-none z-0" style={{width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px'}} />
       <div className="fixed pointer-events-none z-0" style={{width:'300px',height:'300px',borderRadius:'50%',background:'rgba(255,120,0,0.04)',filter:'blur(80px)',bottom:'200px',left:'-60px'}} />
@@ -13145,15 +13145,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (!items || items.length === 0) return null;
     const doubled = [...items, ...items, ...items]; // ensure seamless scroll
     return (
-      <div style={{position:"relative",overflow:"hidden",borderTop:"0.5px solid rgba(0,200,255,0.15)",borderBottom:"0.5px solid rgba(0,200,255,0.15)",background:"rgba(3,8,18,0.7)",height:"26px",display:"flex",alignItems:"center"}}>
+      <div style={{position:"relative",overflow:"hidden",borderTop:"1px solid rgba(255,255,255,0.08)",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(3,8,18,0.7)",height:"26px",display:"flex",alignItems:"center"}}>
         <div style={{position:"absolute",left:0,top:0,bottom:0,width:"60px",background:"linear-gradient(90deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
         <div style={{position:"absolute",right:0,top:0,bottom:0,width:"60px",background:"linear-gradient(270deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
         <div style={{display:"flex",animation:"ticker 60s linear infinite",whiteSpace:"nowrap",gap:"32px",paddingLeft:"60px"}}>
           {doubled.map((item, i) => {
             const c = item.delta == null ? "rgba(148,163,184,0.5)" : item.delta >= 0 ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)";
             return (
-              <div key={i} style={{display:"inline-flex",alignItems:"center",gap:"8px",fontFamily:"monospace",fontSize:"10.5px",letterSpacing:"1px"}}>
-                <span style={{color:"rgba(0,200,255,0.6)",fontWeight:500}}>{item.label}</span>
+              <div key={i} style={{display:"inline-flex",alignItems:"center",gap:"8px",fontFamily:SANS_FONT,fontSize:"10.5px",letterSpacing:"0.3px"}}>
+                <span style={{color:"rgba(226,232,240,0.7)",fontWeight:500}}>{item.label}</span>
                 <span style={{color:"#e0eaff"}}>{item.value}</span>
                 {item.delta != null && <span style={{color:c}}>{item.delta >= 0 ? "▲" : "▼"} {Math.abs(item.delta).toFixed(2)}%</span>}
                 <span style={{color:"rgba(0,200,255,0.2)"}}>·</span>
@@ -13170,16 +13170,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   const ContextMenu = ({ x, y, entity, actions }) => {
     return (
-      <div style={{position:"fixed",left:Math.min(x,window.innerWidth-200),top:Math.min(y,window.innerHeight-200),zIndex:500,minWidth:"180px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"4px",boxShadow:"0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(0,200,255,0.1)",overflow:"hidden"}}>
-        <div style={{padding:"6px 10px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.04)"}}>
-          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// {entity.type}</div>
-          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
+      <div style={{position:"fixed",left:Math.min(x,window.innerWidth-200),top:Math.min(y,window.innerHeight-200),zIndex:500,minWidth:"180px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"12px",boxShadow:"0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(0,200,255,0.1)",overflow:"hidden"}}>
+        <div style={{padding:"6px 10px",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.05)"}}>
+          <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{entity.type}</div>
+          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
         </div>
         {actions.map((a,i) => (
-          <button key={i} onClick={(e) => { e.stopPropagation(); a.onClick(); }} style={{display:"block",width:"100%",textAlign:"left",padding:"7px 12px",background:"transparent",border:"none",borderBottom:i<actions.length-1?"0.5px solid rgba(0,200,255,0.04)":"none",fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",letterSpacing:"0.5px",cursor:"pointer"}}
+          <button key={i} onClick={(e) => { e.stopPropagation(); a.onClick(); }} style={{display:"block",width:"100%",textAlign:"left",padding:"7px 12px",background:"transparent",border:"none",borderBottom:i<actions.length-1?"0.5px solid rgba(0,200,255,0.04)":"none",fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.5px",cursor:"pointer"}}
             onMouseEnter={(e) => e.currentTarget.style.background="rgba(0,200,255,0.06)"}
             onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-            <span style={{color:"rgba(0,200,255,0.5)",fontSize:"10px",marginRight:"6px"}}>{a.icon || "›"}</span>
+            <span style={{color:"rgba(226,232,240,0.55)",fontSize:"10px",marginRight:"6px"}}>{a.icon || "›"}</span>
             {a.label}
           </button>
         ))}
@@ -13195,11 +13195,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const { livePrices, subscriptions, assets, trackedStocks, stocks: heldStocks, setActiveView } = deps;
 
     const sectionLabel = (txt) => (
-      <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>// {txt}</div>
+      <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>{txt}</div>
     );
     const kvRow = (k, v, color) => (
-      <div style={{display:"grid",gridTemplateColumns:"110px 1fr",gap:"8px",padding:"5px 14px",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
-        <span style={{color:"rgba(0,200,255,0.5)",letterSpacing:"0.5px"}}>{k}</span>
+      <div style={{display:"grid",gridTemplateColumns:"110px 1fr",gap:"8px",padding:"5px 14px",fontFamily:SANS_FONT,fontSize:"11px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
+        <span style={{color:"rgba(226,232,240,0.55)",letterSpacing:"0.5px"}}>{k}</span>
         <span style={{color:color||"#e0eaff",letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis"}}>{v}</span>
       </div>
     );
@@ -13260,20 +13260,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </>
       );
     } else {
-      content = <div style={{padding:"14px",fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>NO DATA</div>;
+      content = <div style={{padding:"14px",fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>NO DATA</div>;
     }
 
     const typeColor = entity.type === "STOCK" ? "rgba(168,85,247,0.9)" : entity.type === "BILL" ? "rgba(239,68,68,0.85)" : "rgba(34,197,94,0.85)";
 
     return (
-      <div style={{height:"100%",display:"flex",flexDirection:"column",background:"rgba(5,12,24,0.92)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"4px",backgroundImage:"radial-gradient(rgba(0,200,255,0.025) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
+      <div style={{height:"100%",display:"flex",flexDirection:"column",background:"rgba(5,12,24,0.92)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.025) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
         {/* Header */}
-        <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:`2px solid ${typeColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{padding:"10px 14px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:`2px solid ${typeColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{minWidth:0}}>
-            <div style={{fontSize:"9px",color:typeColor,fontFamily:"monospace",letterSpacing:"2px"}}>// OBJECT_INSPECTOR · {entity.type}</div>
-            <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
+            <div style={{fontSize:"9px",color:typeColor,fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>OBJECT_INSPECTOR · {entity.type}</div>
+            <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
           </div>
-          <button onClick={onClose} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"3px 8px",cursor:"pointer",borderRadius:"2px",letterSpacing:"1px",flexShrink:0}}>✕</button>
+          <button onClick={onClose} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(226,232,240,0.7)",fontFamily:SANS_FONT,fontSize:"10px",padding:"3px 8px",cursor:"pointer",borderRadius:"10px",letterSpacing:"0.3px",flexShrink:0}}>✕</button>
         </div>
         {/* Body */}
         <div style={{flex:1,overflowY:"auto"}}>
@@ -13282,18 +13282,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {sectionLabel("RELATIONSHIPS")}
           <div style={{padding:"8px 14px"}}>
             {entity.type === "STOCK" && (
-              <button onClick={() => { setActiveView('investments'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Investments</button>
+              <button onClick={() => { setActiveView('investments'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Investments</button>
             )}
             {entity.type === "BILL" && (
-              <button onClick={() => { setActiveView('varied'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Bills</button>
+              <button onClick={() => { setActiveView('varied'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Bills</button>
             )}
             {entity.type === "ASSET" && (
-              <button onClick={() => { setActiveView('assets'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Assets</button>
+              <button onClick={() => { setActiveView('assets'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Assets</button>
             )}
           </div>
         </div>
         {/* Footer */}
-        <div style={{padding:"6px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+        <div style={{padding:"6px 14px",borderTop:"1px solid rgba(255,255,255,0.08)",fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
           ↗ ENTITY · INSPECTED
         </div>
       </div>
@@ -13305,7 +13305,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   const SystemHealthRail = ({ checks }) => {
     return (
-      <div style={{position:"fixed",left:0,top:"32px",bottom:0,width:"4px",zIndex:30,display:"flex",flexDirection:"column",gap:"2px",padding:"4px 0",background:"rgba(3,8,18,0.6)",borderRight:"0.5px solid rgba(0,200,255,0.08)"}}>
+      <div style={{position:"fixed",left:0,top:"32px",bottom:0,width:"4px",zIndex:30,display:"flex",flexDirection:"column",gap:"2px",padding:"4px 0",background:"rgba(3,8,18,0.6)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
         {checks.map((c, i) => {
           // Calm palette — cyan tones only, no red, no blinking
           const color =
@@ -13349,16 +13349,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           left: hidden ? "-72px" : "4px",
           top:"32px",bottom:"26px",width:"68px",zIndex:25,
           background:"rgba(3,8,18,0.95)",
-          borderRight:"0.5px solid rgba(0,200,255,0.12)",
-          borderLeft:"0.5px solid rgba(0,200,255,0.06)",
+          borderRight:"1px solid rgba(255,255,255,0.08)",
+          borderLeft:"1px solid rgba(255,255,255,0.08)",
           display:"flex",flexDirection:"column",
           backdropFilter:"blur(8px)",
           transition:"left 0.22s ease"
         }}>
           {/* Header */}
-          <div style={{padding:"10px 6px 6px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
-            <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WORK</div>
-            <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SPACES</div>
+          <div style={{padding:"10px 6px 6px",borderBottom:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
+            <div style={{fontSize:"8px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>WORK</div>
+            <div style={{fontSize:"8px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>SPACES</div>
           </div>
           {/* Nav — flex-stretch, no scroll */}
           <div style={{flex:1,minHeight:0,padding:"4px 0",display:"flex",flexDirection:"column",overflow:"hidden"}}>
@@ -13375,16 +13375,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   cursor:locked?"not-allowed":"pointer",
                   opacity:locked?0.3:1
                 }}>
-                  <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace",lineHeight:1}}>{s.icon}</span>
-                  <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",lineHeight:1}}>{s.label}</span>
+                  <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:SANS_FONT,lineHeight:1}}>{s.icon}</span>
+                  <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",lineHeight:1}}>{s.label}</span>
                   {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)",lineHeight:1}}>⚡</span>}
                 </button>
               );
             })}
           </div>
           {/* Footer */}
-          <div style={{padding:"6px",borderTop:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
-            <div style={{fontSize:"7.5px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>v2026.05</div>
+          <div style={{padding:"6px",borderTop:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
+            <div style={{fontSize:"7.5px",color:"rgba(0,200,255,0.3)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>v2026.05</div>
           </div>
         </div>
 
@@ -13400,11 +13400,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             zIndex:26,
             width:"18px",height:"54px",
             background:"rgba(3,8,18,0.95)",
-            border:"0.5px solid rgba(0,200,255,0.25)",
-            borderLeft: hidden ? "0.5px solid rgba(0,200,255,0.25)" : "none",
+            border:"1px solid rgba(255,255,255,0.08)",
+            borderLeft: hidden ? "1px solid rgba(255,255,255,0.08)" : "none",
             borderRadius: hidden ? "0 4px 4px 0" : "0 4px 4px 0",
             color:"rgba(0,200,255,0.7)",
-            fontFamily:"monospace",fontSize:"12px",
+            fontFamily:SANS_FONT,fontSize:"12px",
             display:"flex",alignItems:"center",justifyContent:"center",
             cursor:"pointer",
             backdropFilter:"blur(8px)",
@@ -13473,15 +13473,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           border:'0.5px solid transparent',
           borderLeft:active?`3px solid ${accent}`:'3px solid transparent',
           cursor:locked?'default':'pointer',
-          borderRadius:'3px',
+          borderRadius:'10px',
           opacity:locked?0.7:1,
           textAlign:'left',
         }}
       >
-        <span style={{fontSize:'14px',color:active?accent:locked?'rgba(251,191,36,0.5)':'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
-        <span style={{fontSize:'13px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':locked?'rgba(224,234,255,0.55)':'rgba(224,234,255,0.88)',letterSpacing:'0.3px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
-        <span style={{display:'flex',alignItems:'center',gap:'5px',fontFamily:'monospace',fontSize:'10px',lineHeight:1}}>
-          {locked && <span style={{fontSize:'8px',color:'rgba(251,191,36,0.95)',fontFamily:'monospace',letterSpacing:'1px',padding:'2px 6px',border:'0.5px solid rgba(251,191,36,0.5)',borderRadius:'2px',background:'rgba(251,191,36,0.08)',fontWeight:600}}>🔒 ELITE</span>}
+        <span style={{fontSize:'14px',color:active?accent:locked?'rgba(251,191,36,0.5)':'rgba(0,200,255,0.5)',fontFamily:SANS_FONT,lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
+        <span style={{fontSize:'13px',fontFamily:SANS_FONT,color:active?accent:item.danger?'rgba(239,68,68,0.78)':locked?'rgba(224,234,255,0.55)':'rgba(224,234,255,0.88)',letterSpacing:'0.3px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
+        <span style={{display:'flex',alignItems:'center',gap:'5px',fontFamily:SANS_FONT,fontSize:'10px',lineHeight:1}}>
+          {locked && <span style={{fontSize:'8px',color:'rgba(251,191,36,0.95)',fontFamily:SANS_FONT,letterSpacing:'0.3px',padding:'2px 6px',border:'0.5px solid rgba(251,191,36,0.5)',borderRadius:'10px',background:'rgba(251,191,36,0.08)',fontWeight:600}}>🔒 ELITE</span>}
           {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.5)'}}>{item.lockGlyph}</span>}
           {active && <span style={{width:'6px',height:'6px',borderRadius:'50%',background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}} />}
         </span>
@@ -13492,7 +13492,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // eslint-disable-next-line no-unreachable
     return (
       <>
-        <button onClick={() => setSidebarOpen(true)} className="fixed w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"40px",left:"16px",zIndex:60,background:"rgba(3,8,18,0.95)",border:"0.5px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
+        <button onClick={() => setSidebarOpen(true)} className="fixed w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"40px",left:"16px",zIndex:60,background:"rgba(3,8,18,0.95)",border:"1px solid rgba(255,255,255,0.08)",backdropFilter:"blur(10px)"}}>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
@@ -13503,27 +13503,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none'}} />
 
           {/* COMPACT HEADER */}
-          <div style={{position:'relative',zIndex:10,padding:'40px 20px 14px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
+          <div style={{position:'relative',zIndex:10,padding:'40px 20px 14px',borderBottom:'1px solid rgba(255,255,255,0.08)',flexShrink:0}}>
             {/* Title row + close on same line */}
             <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:'14px',gap:'12px'}}>
               <div style={{display:'flex',flexDirection:'column',gap:'4px',minWidth:0,flex:1}}>
                 <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
-                  <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>MUZZ</span>
-                  <span style={{fontSize:'10px',color:'rgba(0,200,255,0.55)',letterSpacing:'2px',fontFamily:'monospace'}}>LIFE.INTEL</span>
+                  <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:SANS_FONT,fontWeight:500,letterSpacing:'4px'}}>MUZZ</span>
+                  <span style={{fontSize:'10px',color:'rgba(0,200,255,0.55)',letterSpacing:'0.3px',fontFamily:SANS_FONT}}>LIFE.INTEL</span>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
-                  <span style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'1.5px'}}>// rev_2026.05.06</span>
-                  <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>·</span>
-                  <span style={{fontSize:'9px',color:isElite?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',border:`0.5px solid ${isElite?'rgba(0,200,255,0.4)':'rgba(148,163,184,0.25)'}`,padding:'1px 5px',borderRadius:'2px'}}>{isElite?'⚡ ELITE':'FREE.TIER'}</span>
+                  <span style={{fontSize:'9px',color:'rgba(226,232,240,0.55)',fontFamily:SANS_FONT,letterSpacing:'0.3px'}}>rev_2026.05.06</span>
+                  <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:SANS_FONT}}>·</span>
+                  <span style={{fontSize:'9px',color:isElite?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:SANS_FONT,letterSpacing:'0.3px',border:`0.5px solid ${isElite?'rgba(0,200,255,0.4)':'rgba(148,163,184,0.25)'}`,padding:'1px 5px',borderRadius:'10px'}}>{isElite?'⚡ ELITE':'FREE.TIER'}</span>
                   {eliteName && (
                     <>
-                      <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>·</span>
-                      <span style={{fontSize:'9px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'1.5px'}}>OP:{eliteName.toUpperCase()}</span>
+                      <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:SANS_FONT}}>·</span>
+                      <span style={{fontSize:'9px',color:'rgba(226,232,240,0.7)',fontFamily:SANS_FONT,letterSpacing:'0.3px'}}>OP:{eliteName.toUpperCase()}</span>
                     </>
                   )}
                 </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px',flexShrink:0}}>
+              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'10px',flexShrink:0}}>
                 <X style={{color:'#00c8ff',width:'15px',height:'15px'}} />
               </button>
             </div>
@@ -13538,7 +13538,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const color = sectionColors[sec];
                 return (
                   <div key={sec} style={{display:'flex',flexDirection:'column',marginBottom:'10px'}}>
-                    <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
+                    <div style={{fontSize:'11px',color,letterSpacing:'0.3px',fontFamily:SANS_FONT,marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>{sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
@@ -13569,8 +13569,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* SIGN OUT */}
-          <div style={{position:'relative',zIndex:10,padding:'10px 16px 14px',borderTop:'0.5px solid rgba(0,200,255,0.08)',flexShrink:0}}>
-            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)',fontFamily:'monospace',fontSize:'13px',letterSpacing:'2.5px',cursor:'pointer',borderRadius:'3px'}}>
+          <div style={{position:'relative',zIndex:10,padding:'10px 16px 14px',borderTop:'1px solid rgba(255,255,255,0.08)',flexShrink:0}}>
+            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)',fontFamily:SANS_FONT,fontSize:'13px',letterSpacing:'0.3px',cursor:'pointer',borderRadius:'10px'}}>
               ⊗ SIGN OUT
             </button>
           </div>
@@ -13588,8 +13588,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         padding:'4px 10px',
         background:'rgba(3,8,18,0.92)',
         border:`0.5px solid ${saveStatus==='saving'?'rgba(0,200,255,0.3)':saveStatus==='saved'?'rgba(34,197,94,0.3)':'rgba(239,68,68,0.3)'}`,
-        borderRadius:'3px',backdropFilter:'blur(8px)',
-        fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',
+        borderRadius:'10px',backdropFilter:'blur(8px)',
+        fontFamily:SANS_FONT,fontSize:'9px',letterSpacing:'0.3px',
         color:saveStatus==='saving'?'rgba(0,200,255,0.7)':saveStatus==='saved'?'rgba(34,197,94,0.7)':'rgba(239,68,68,0.7)',
       }}>
         <span style={{width:'5px',height:'5px',borderRadius:'50%',display:'inline-block',flexShrink:0,
@@ -14778,10 +14778,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     const health = calcHealthScore();
 
-    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px, transparent 1px)",backgroundSize:"20px 20px"};
-    const palantirLabel = {fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace"};
-    const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
-    const palantirSubValue = {fontSize:"13px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",marginTop:"2px"};
+    const palantirPanel = {background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px"};
+    const palantirLabel = {fontSize:"11px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px",textTransform:"uppercase",marginBottom:"4px",fontFamily:SANS_FONT};
+    const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500};
+    const palantirSubValue = {fontSize:"13px",color:"rgba(226,232,240,0.6)",fontFamily:SANS_FONT,marginTop:"2px"};
     const accentHeader = {padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"};
     const liveClock = liveTime.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
     const liveDate = liveTime.toLocaleDateString('en-AU',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
@@ -14822,7 +14822,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       };
       const m = map[level] || map.NOMINAL;
       return (
-        <span style={{fontSize:"9px",color:m.c,background:m.bg,border:`0.5px solid ${m.c}`,padding:"1px 6px",letterSpacing:"1.5px",fontFamily:"monospace",borderRadius:"2px",whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"9px",color:m.c,background:m.bg,border:`0.5px solid ${m.c}`,padding:"1px 6px",letterSpacing:"0.3px",fontFamily:SANS_FONT,borderRadius:"10px",whiteSpace:"nowrap"}}>
           [{label || level}]
         </span>
       );
@@ -14831,7 +14831,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // EntityLink: Palantir-style hyperlinked entity reference
     const EntityLink = ({ children, onClick, color = "#00c8ff", size = "12px" }) => (
       <span onClick={onClick} style={{
-        color, fontFamily:"monospace", fontSize:size, cursor:onClick?"pointer":"default",
+        color, fontFamily:SANS_FONT, fontSize:size, cursor:onClick?"pointer":"default",
         borderBottom:`0.5px dashed ${color}66`, paddingBottom:"1px", letterSpacing:"0.5px"
       }}>{children} <span style={{fontSize:"9px",opacity:0.7}}>↗</span></span>
     );
@@ -14997,7 +14997,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.22s ease"}}>
         {/* BOOT SEQUENCE (first load only) */}
-        {!bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
+        {false && !bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
 
         {/* SYSTEM HEALTH RAIL — disabled */}
 
@@ -15020,7 +15020,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"60px 28px 20px"}}>
+        <div style={{borderBottom:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"60px 28px 20px"}}>
           <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"}>
             <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
               <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
@@ -15029,9 +15029,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div style={{flex:1}}>
-                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>DAILY BRIEFING — {todayISO.replace(/-/g,'.')}</div>
-                <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
-                  <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}><span style={{whiteSpace:"nowrap"}}>{eliteName ? `OPERATOR: ${eliteName.toUpperCase()}` : "WELCOME BACK"}</span></div>
+                <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.2px",fontFamily:SANS_FONT}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
+                  <div style={{fontSize:"clamp(22px,5vw,30px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.3px"}}><span style={{whiteSpace:"nowrap"}}>{eliteName ? `${greeting}, ${eliteName}` : `${greeting}`}</span></div>
                   {isElite && <SeverityPill level="ELITE" label="ELITE" />}
                 </div>
               </div>
@@ -15044,20 +15044,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{...palantirLabel,display:"flex",alignItems:"center",gap:"8px"}}>
                     <span>Net Worth</span>
                     {nwDelta7d !== null && (
-                      <span style={{fontSize:"9px",color:nwDelta7d>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                      <span style={{fontSize:"9px",color:nwDelta7d>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
                         {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% 7D
                       </span>
                     )}
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"40px":"32px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
-                    {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"1.5px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"2px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
+                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"40px":"32px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}} />
+                    {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"10px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
                   </div>
                 </div>
-                <div style={{textAlign:isWide?"right":"left",flexShrink:0,paddingTop:isWide?0:"10px",borderTop:isWide?"none":"0.5px solid rgba(0,200,255,0.1)"}}>
+                <div style={{textAlign:isWide?"right":"left",flexShrink:0,paddingTop:isWide?0:"10px",borderTop:isWide?"none":"1px solid rgba(255,255,255,0.08)"}}>
                   <div style={{...palantirLabel,textAlign:isWide?"right":"left"}}>Portfolio</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:isWide?"flex-end":"flex-start"}}>
-                    <RollingValue value={totalStocks} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
+                    <RollingValue value={totalStocks} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}} />
                     <Sparkline data={portfolioSeries} w={50} h={18} color="rgba(168,85,247,0.9)" />
                   </div>
                 </div>
@@ -15090,8 +15090,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{...palantirPanel,borderLeft:`2px solid ${scrubberDate?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.4)"}`,padding:"10px 14px",marginTop:"10px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// TIMELINE</span>
-                      <span style={{fontSize:"10px",color:scrubberDate?"rgba(251,191,36,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>TIMELINE</span>
+                      <span style={{fontSize:"10px",color:scrubberDate?"rgba(251,191,36,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
                         {scrubberDate ? `ANCHORED · ${scrubberDate}` : `LIVE · ${endDate}`}
                       </span>
                     </div>
@@ -15104,11 +15104,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const target = new Date(endMs - p.days*86400000).toISOString().split('T')[0];
                         const valid = target >= startDate;
                         return (
-                          <button key={p.label} onClick={() => valid && setScrubberDate(target)} disabled={!valid} style={{fontSize:"9px",color:valid?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",background:"transparent",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"2px",padding:"2px 6px",fontFamily:"monospace",letterSpacing:"1px",cursor:valid?"pointer":"not-allowed"}}>{p.label}</button>
+                          <button key={p.label} onClick={() => valid && setScrubberDate(target)} disabled={!valid} style={{fontSize:"9px",color:valid?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",background:"transparent",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"2px 6px",fontFamily:SANS_FONT,letterSpacing:"0.3px",cursor:valid?"pointer":"not-allowed"}}>{p.label}</button>
                         );
                       })}
                       {scrubberDate && (
-                        <button onClick={() => setScrubberDate(null)} style={{fontSize:"9px",color:"rgba(34,197,94,0.85)",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"2px",padding:"2px 8px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>← LIVE</button>
+                        <button onClick={() => setScrubberDate(null)} style={{fontSize:"9px",color:"rgba(34,197,94,0.85)",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"10px",padding:"2px 8px",fontFamily:SANS_FONT,letterSpacing:"0.3px",cursor:"pointer"}}>← LIVE</button>
                       )}
                     </div>
                   </div>
@@ -15147,7 +15147,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
                   {/* Date labels */}
-                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px",fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
                     <span>{startDate}</span>
                     <span>{endDate}</span>
                   </div>
@@ -15177,7 +15177,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{...palantirPanel}}>
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Financial Overview</span>
-                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY SNAPSHOT</span>
+                  <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>MONTHLY SNAPSHOT</span>
                 </div>
                 <div style={{padding:"16px 20px"}}>
                   <div style={{display:"flex",alignItems:"flex-end",gap:"10px",height:"80px"}}>
@@ -15185,16 +15185,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const pct = maxVal > 0 ? (d.value / maxVal) * 100 : 0;
                       return (
                         <div key={i} onClick={() => d.view && setActiveView(d.view)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end",cursor:d.view?"pointer":"default"}}>
-                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.value > 0 ? `$${d.value.toLocaleString()}` : "—"}</span>
+                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:SANS_FONT}}>{d.value > 0 ? `$${d.value.toLocaleString()}` : "—"}</span>
                           <div style={{width:"100%",background:d.color,borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${d.color}`}}></div>
                         </div>
                       );
                     })}
                   </div>
-                  <div style={{display:"flex",gap:"10px",marginTop:"8px",borderTop:"0.5px solid rgba(0,200,255,0.08)",paddingTop:"8px"}}>
+                  <div style={{display:"flex",gap:"10px",marginTop:"8px",borderTop:"1px solid rgba(255,255,255,0.08)",paddingTop:"8px"}}>
                     {chartData.map((d,i) => (
                       <div key={i} style={{flex:1,textAlign:"center"}}>
-                        <span style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{d.label}</span>
+                        <span style={{fontSize:"8px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{d.label}</span>
                       </div>
                     ))}
                   </div>
@@ -15238,7 +15238,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                 </div>
-                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>NO ASSETS TRACKED</div>
+                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO ASSETS TRACKED</div>
               </div>
             );
 
@@ -15261,22 +15261,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
-                  <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${total.toLocaleString()}</span>
+                  <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500}}>${total.toLocaleString()}</span>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
                   <svg width="130" height="130" viewBox="0 0 130 130" style={{flexShrink:0}}>
                     {slices.map((s,i) => (
                       <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
                     ))}
-                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
-                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total.toLocaleString()}</text>
+                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT}}>TOTAL</text>
+                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:SANS_FONT,fontWeight:"bold"}}>${total.toLocaleString()}</text>
                   </svg>
                   <div style={{display:"flex",flexDirection:"column",gap:"5px",flex:1,maxHeight:"110px",overflowY:"auto"}}>
                     {donutData.sort((a,b)=>b.value-a.value).map((d,i) => (
                       <div key={i} style={{display:"flex",alignItems:"center",gap:"5px"}}>
                         <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1}}>{d.name}</span>
-                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(1)}%</span>
+                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,flex:1}}>{d.name}</span>
+                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:SANS_FONT}}>{((d.value/total)*100).toFixed(1)}%</span>
                       </div>
                     ))}
                   </div>
@@ -15289,17 +15289,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* DENSE ENTITY TABLE — UPCOMING BILLS */}
           {billsDueSoon.length > 0 && (
             <div style={palantirPanel}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <span style={{...palantirLabel,marginBottom:0,color:"rgba(239,68,68,0.7)"}}>Upcoming Bills · Entity Table</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{billsDueSoon.length} ROWS</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{billsDueSoon.length} ROWS</span>
               </div>
               {/* Table header */}
-              <div style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"6px 12px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.02)"}}>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>#</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>NAME</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>AMOUNT</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>DUE</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>STATUS</span>
+              <div style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"6px 12px",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(0,200,255,0.02)"}}>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>#</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NAME</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>AMOUNT</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>DUE</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>STATUS</span>
               </div>
               {billsDueSoon.map((b,i) => {
                 const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
@@ -15310,20 +15310,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
                     style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
                   >
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT}}>{String(i+1).padStart(2,'0')}</span>
                     <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
-                      <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
+                      <span style={{color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
                     </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':'/mo'}</span></span>
-                    <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':'/mo'}</span></span>
+                    <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,textAlign:"right"}}>{b.days}d</span>
                     <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
                   </div>
                 );
               })}
               {/* Footer total row */}
-              <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(0,200,255,0.12)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Σ MONTHLY OUTFLOW</span>
-                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+(b.monthlyEquiv||b.amount),0).toFixed(2)}</span>
+              <div style={{padding:"8px 14px",borderTop:"1px solid rgba(255,255,255,0.08)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Σ MONTHLY OUTFLOW</span>
+                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+(b.monthlyEquiv||b.amount),0).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -15331,9 +15331,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
             {/* UPCOMING EVENTS */}
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"14px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
-                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Upcoming Events</span>
+                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"0.3px",textTransform:"uppercase",fontFamily:SANS_FONT}}>Upcoming Events</span>
               </div>
               {(() => {
                 const thisYear = new Date().getFullYear();
@@ -15348,11 +15348,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   id:c.id, title:c.name||c.title||'Untitled', days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
                 const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:"monospace",letterSpacing:"1px"}}>NO EVENTS SCHEDULED</div>;
+                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO EVENTS SCHEDULED</div>;
                 return all.map(ev => (
                   <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.06)"}}>
-                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace"}}>{ev.title}</span>
-                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
+                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT}}>{ev.title}</span>
+                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:SANS_FONT,border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
                   </div>
                 ));
               })()}
@@ -15384,13 +15384,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={palantirPanel} onClick={() => setActiveView('assets')} >
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Wealth Milestones</span>
-                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>${netWorth.toLocaleString()}</span>
+                  <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT}}>${netWorth.toLocaleString()}</span>
                 </div>
                 <div style={{padding:"16px 20px"}}>
                   {/* Progress track */}
                   <div style={{position:"relative",marginBottom:"16px"}}>
-                    <div style={{height:"3px",background:"rgba(255,255,255,0.06)",borderRadius:"2px",marginBottom:"8px"}}>
-                      <div style={{height:"3px",background:"linear-gradient(90deg,#00c8ff,rgba(168,85,247,0.9))",borderRadius:"2px",width:`${Math.min((completed/milestones.length)*100,100)}%`,transition:"width 1s ease"}} />
+                    <div style={{height:"3px",background:"rgba(255,255,255,0.06)",borderRadius:"10px",marginBottom:"8px"}}>
+                      <div style={{height:"3px",background:"linear-gradient(90deg,#00c8ff,rgba(168,85,247,0.9))",borderRadius:"10px",width:`${Math.min((completed/milestones.length)*100,100)}%`,transition:"width 1s ease"}} />
                     </div>
                     {/* Milestone dots */}
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>
@@ -15408,7 +15408,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               border: isCurrent ? "1px solid #00c8ff" : "none",
                               animation: isCurrent ? "blink 2s infinite" : "none",
                             }} />
-                            <span style={{fontSize:"8px",color:done?"#00c8ff":isCurrent?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{m.label}</span>
+                            <span style={{fontSize:"8px",color:done?"#00c8ff":isCurrent?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{m.label}</span>
                           </div>
                         );
                       })}
@@ -15418,16 +15418,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {nextMilestone && (
                     <div>
                       <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NEXT: {nextMilestone.label}</span>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace"}}>${(nextMilestone.value - netWorth).toLocaleString()} to go</span>
+                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NEXT: {nextMilestone.label}</span>
+                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.7)",fontFamily:SANS_FONT}}>${(nextMilestone.value - netWorth).toLocaleString()} to go</span>
                       </div>
-                      <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                        <div style={{height:"2px",background:"rgba(0,200,255,0.5)",borderRadius:"1px",width:`${Math.max(progressToNext,1)}%`,transition:"width 1s ease"}} />
+                      <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
+                        <div style={{height:"2px",background:"rgba(0,200,255,0.5)",borderRadius:"10px",width:`${Math.max(progressToNext,1)}%`,transition:"width 1s ease"}} />
                       </div>
                     </div>
                   )}
                   {completed === milestones.length && (
-                    <div style={{textAlign:"center",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px"}}>ALL MILESTONES COMPLETE 🏆</div>
+                    <div style={{textAlign:"center",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ALL MILESTONES COMPLETE 🏆</div>
                   )}
                 </div>
               </div>
@@ -15439,15 +15439,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const topStocks = trackedStocks.filter(s => s.ticker).slice(0,5);
             return (
               <div style={palantirPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}} onClick={() => setActiveView('investments')}>
+                <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}} onClick={() => setActiveView('investments')}>
                   <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Portfolio Feed · {topStocks.length} positions</span>
                   <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
                     <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(168,85,247,0.9)",display:"inline-block",animation:"blink 2s infinite"}}></span>
-                    <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
+                    <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>LIVE</span>
                   </div>
                 </div>
                 {topStocks.length === 0 ? (
-                  <div style={{padding:"20px",textAlign:"center",color:"rgba(168,85,247,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>NO STOCKS TRACKED</div>
+                  <div style={{padding:"20px",textAlign:"center",color:"rgba(168,85,247,0.3)",fontSize:"11px",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO STOCKS TRACKED</div>
                 ) : topStocks.map((stock,i) => {
                   const ticker = stock.ticker?.toUpperCase();
                   const priceData = ticker ? livePrices[ticker] : null;
@@ -15468,10 +15468,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       style={{display:"grid",gridTemplateColumns:"60px 1fr 70px 60px 60px",gap:"6px",alignItems:"center",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",cursor:"pointer"}}
                     >
                       <EntityLink size="12px" color="rgba(168,85,247,0.95)">{ticker}</EntityLink>
-                      <div style={{textAlign:"left"}}>{sparkSeries ? <Sparkline data={sparkSeries} w={70} h={14} color={dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"} fillOpacity={0.08} /> : <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>—</span>}</div>
-                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
-                      <span style={{fontSize:"10px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",textAlign:"right"}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
-                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",textAlign:"right"}}>{pl===null?"":`${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
+                      <div style={{textAlign:"left"}}>{sparkSeries ? <Sparkline data={sparkSeries} w={70} h={14} color={dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"} fillOpacity={0.08} /> : <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT}}>—</span>}</div>
+                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,textAlign:"right"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
+                      <span style={{fontSize:"10px",fontFamily:SANS_FONT,color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",textAlign:"right"}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
+                      <span style={{fontSize:"10px",fontFamily:SANS_FONT,color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",textAlign:"right"}}>{pl===null?"":`${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
                     </div>
                   );
                 })}
@@ -15481,18 +15481,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {reminders && reminders.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"}}>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"14px"}}>
               <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Reminders</span>
-                <button onClick={() => setActiveView('reminders')} style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:"1px"}}>VIEW ALL →</button>
+                <span style={{fontSize:"11px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px",textTransform:"uppercase",fontFamily:SANS_FONT}}>Reminders</span>
+                <button onClick={() => setActiveView('reminders')} style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",background:"none",border:"none",cursor:"pointer",letterSpacing:"0.3px"}}>VIEW ALL →</button>
               </div>
               {reminders.filter(r => r.title).slice(0,4).map(r => (
-                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{r.title}</span>
+                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
+                  <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT}}>{r.title}</span>
                   {r.permanent ? (
-                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",letterSpacing:"1px"}}>PINNED</span>
+                    <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px"}}>PINNED</span>
                   ) : r.date ? (
-                    <span style={{fontSize:"12px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
+                    <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
                   ) : null}
                 </div>
               ))}
@@ -15500,23 +15500,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {isElite && (
-            <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"6px"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"14px"}}>
               <span style={{fontSize:"14px"}}>💛</span>
               <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
             </div>
           )}
 
           {/* QUICK-LAUNCH BOTTOM NAV — replaces hamburger as primary navigation */}
-          <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+          <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"1px solid rgba(255,255,255,0.08)"}}>
 
             {/* SECTIONS */}
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
+            <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"14px",fontWeight:600}}>SECTIONS</div>
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
                 const Icon = item.icon;
                 return (
                   <button key={item.id} onClick={() => setActiveView(item.id)}
-                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",transition:"all 0.15s"}}
+                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
                     onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.06)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.55)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.18)"; }}>
                     <Icon size={16} style={{color:"rgba(0,200,255,0.7)",flexShrink:0}}/>
@@ -15527,37 +15527,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             {/* ACCOUNT */}
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// ACCOUNT</div>
+            <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"14px",fontWeight:600}}>ACCOUNT</div>
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               <button onClick={() => setActiveView('upgrade')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 {isElite ? '⚡ Elite Status' : '⚡ Upgrade to Elite'}
               </button>
               <button onClick={() => setActiveView('statsinsights')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ⌬ Stats & Insights
               </button>
               <button onClick={() => setActiveView('feedback')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ✎ Feedback & Support
               </button>
               <button onClick={doExport}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ↓ Export Data
               </button>
-              <label style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
+              <label style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
                 ↑ Import Data
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </label>
               <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
-                style={{padding:"18px 20px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
                 ⊘ Delete Account
               </button>
             </div>
 
             {/* SIGN OUT */}
             <button onClick={signOut}
-              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"6px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600}}>
+              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"14px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
               ⊗ SIGN OUT
             </button>
 
