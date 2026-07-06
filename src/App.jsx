@@ -13923,19 +13923,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div>
-              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TASKS</div>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>TASKS</div>
             </div>
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5">
           {/* Tab bar with progress */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
+          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"1px solid rgba(0,200,255,0.15)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
             {[
               {id:'daily', label:'DAILY', items: dailyItems, color:'#00c8ff'},
               {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
@@ -13944,9 +13944,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const done = tab.items.filter(i => i.checked).length;
               const total = tab.items.length;
               return (
-                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
                   {tab.label}
-                  {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:"monospace"}}>{done}/{total}</span>}
+                  {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:SANS_FONT}}>{done}/{total}</span>}
                 </button>
               );
             })}
@@ -13965,7 +13965,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const newName = window.prompt('Rename list:', list.name);
                       if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
                     }}
-                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
+                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
                     title="Tap to open · Double-tap to rename"
                   >
                     {(list.name||'').toUpperCase()}
@@ -13977,7 +13977,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         setCustomTaskLists(prev => prev.filter(l => l.id !== list.id));
                         setTasksSubTab('daily');
                       }
-                    }} style={{padding:"8px 10px",background:`${list.color}26`,border:`1px solid ${list.color}99`,borderLeft:`1px solid ${list.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:700,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
+                    }} style={{padding:"8px 10px",background:`${list.color}26`,border:`1px solid ${list.color}99`,borderLeft:`1px solid ${list.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:700,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
                   )}
                 </div>
               );
@@ -13992,7 +13992,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const newList = { id: 'custom_' + Date.now(), name: name.trim(), color, note: '' };
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
-            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
+            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -14055,17 +14055,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
 
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"6px",borderLeft:`2px solid ${accentColor}`,backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"14px",borderLeft:`2px solid ${accentColor}`}}>
 
                 {/* Header */}
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                  <span style={{fontSize:"10px",color:accentColor,fontFamily:"monospace",letterSpacing:"1.5px",opacity:0.6}}>{headerLabel}</span>
-                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"1px",transition:"width 0.3s"}} />
+                  <span style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0.3px",opacity:0.6}}>{headerLabel}</span>
+                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
+                    <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",flexShrink:0}}>{unchecked.length} left</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
                   {checked.length > 0 && (
-                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"2px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
+                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"10px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
                   )}
                 </div>
 
@@ -14104,10 +14104,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       save(newItems);
                     };
                     return (
-                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"6px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
-                        <div style={{fontSize:"10px",color:accentColor,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · NOT YOUR TASKS</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
+                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"14px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
+                        <div style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR TASKS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.85}}>
                           {samples.map((s, i) => (
                             <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
@@ -14117,8 +14117,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           ))}
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"4px",color:accentColor,fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"12px",color:accentColor,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
                     );
@@ -14161,7 +14161,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           const el = document.getElementById(`completed-${tasksSubTab}`);
                           if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
                         }}
-                        style={{fontSize:"9px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
+                        style={{fontSize:"9px",color:"rgba(148,163,184,0.25)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
                       >
                         <span>▾ COMPLETED · {checked.length}</span>
                       </button>
@@ -35690,17 +35690,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>HABIT INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HABIT TRACKER</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>HABIT INTELLIGENCE</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>HABIT TRACKER</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ACTIVE</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{habits.length}</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ACTIVE</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500}}>{habits.length}</div>
               </div>
             </div>
           </div>
@@ -35709,7 +35709,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
             onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }])}
-            style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
+            style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"1px dashed rgba(0,200,255,0.35)",borderRadius:"14px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}
           >
             + ADD NEW HABIT
           </button>
@@ -35731,11 +35731,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setHabits([{ id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }]);
             };
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"14px 16px 8px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                  <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · NOT YOUR DATA</div>
-                  <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.5px",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
-                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid #00c8ff",overflow:"hidden"}}>
+                <div style={{padding:"14px 16px 8px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                  <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR DATA</div>
+                  <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.5px",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
+                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
                 </div>
 
                 {/* Sample habit previews */}
@@ -35745,13 +35745,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     return (
                       <div key={i} style={{opacity:0.85}}>
                         <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
-                          <div style={{width:"24px",height:"24px",borderRadius:"4px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
-                          <div style={{flex:1,fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace"}}>{s.name}</div>
-                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.65)",fontFamily:"monospace",letterSpacing:"1px"}}>{doneCount}/31</div>
+                          <div style={{width:"24px",height:"24px",borderRadius:"12px",background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.28)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
+                          <div style={{flex:1,fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT}}>{s.name}</div>
+                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.65)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{doneCount}/31</div>
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(31, 1fr)":"repeat(31, 1fr)",gap:"2px"}}>
                           {s.pattern.map((c, di) => (
-                            <div key={di} style={{aspectRatio:"1",borderRadius:"2px",background:c?"#00c8ff":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(0,200,255,0.5)":"none"}} />
+                            <div key={di} style={{aspectRatio:"1",borderRadius:"10px",background:c?"#00c8ff":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(0,200,255,0.5)":"none"}} />
                           ))}
                         </div>
                       </div>
@@ -35760,9 +35760,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* CTAs */}
-                <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
-                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                <div style={{padding:"12px 16px 14px",borderTop:"1px solid rgba(0,200,255,0.15)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
+                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                 </div>
               </div>
             );
@@ -35779,32 +35779,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const cardAccentColor = completedToday ? "#00c8ff" : streakAtRisk ? "rgba(251,191,36,0.8)" : "rgba(0,200,255,0.3)";
 
             return (
-              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${cardBorderColor}`,borderRadius:"6px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:completedToday?"0 0 12px rgba(0,200,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
+              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${cardBorderColor}`,borderRadius:"14px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",boxShadow:completedToday?"0 0 12px rgba(0,200,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
 
                 {/* Streak at risk warning */}
                 {streakAtRisk && (
                   <div style={{padding:"5px 16px",background:"rgba(251,191,36,0.06)",borderBottom:"0.5px solid rgba(251,191,36,0.2)",display:"flex",alignItems:"center",gap:"6px"}}>
                     <span style={{fontSize:"10px"}}>⚠️</span>
-                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAK AT RISK — {streak} DAY STREAK</span>
+                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>STREAK AT RISK — {streak} DAY STREAK</span>
                   </div>
                 )}
-                <div style={{padding:"18px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"14px"}}>
+                <div style={{padding:"18px 20px",borderBottom:"1px solid rgba(0,200,255,0.15)",display:"flex",alignItems:"center",gap:"14px"}}>
                   <input
                     type="text"
                     value={habit.icon}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",flexShrink:0,outline:"none"}}
+                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",flexShrink:0,outline:"none"}}
                   />
                   <input
                     type="text"
                     value={habit.name}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
                     placeholder="Habit name..."
-                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",letterSpacing:"0.5px",fontWeight:500}}
+                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"16px",letterSpacing:"0.5px",fontWeight:500}}
                   />
                   <button
                     onClick={() => toggleHabit(habit.id, today)}
-                    style={{width:"52px",height:"52px",borderRadius:"6px",fontSize:"22px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(0,200,255,0.4)":"none",transition:"all 0.15s"}}
+                    style={{width:"52px",height:"52px",borderRadius:"14px",fontSize:"22px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(0,200,255,0.4)":"none",transition:"all 0.15s"}}
                   >
                     {completedToday ? '✓' : '○'}
                   </button>
@@ -35816,9 +35816,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Stats row */}
                 {/* Completion rate bar */}
-                <div style={{padding:"10px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px"}}>
-                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"2px",transition:"width 0.3s"}} />
+                <div style={{padding:"10px 20px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                  <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
+                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
                 </div>
 
@@ -35832,12 +35832,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"5px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                          style={{aspectRatio:"1",borderRadius:"14px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
                         />
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
                 </div>
               </div>
             );
@@ -35893,18 +35893,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>{countdownsSubTab === 'countdowns' ? 'COUNTDOWNS' : 'BUCKET LIST'}</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{countdownsSubTab === 'countdowns' ? 'COUNTDOWNS' : 'BUCKET LIST'}</div>
               </div>
             </div>
             <div style={{display:"flex",gap:"4px"}}>
               {[{id:'countdowns',label:'COUNTDOWNS'},{id:'bucketlist',label:'BUCKET LIST'}].map(tab => (
-                <button key={tab.id} onClick={() => setCountdownsSubTab(tab.id)} style={{padding:"6px 14px",background:countdownsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${countdownsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:countdownsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setCountdownsSubTab(tab.id)} style={{padding:"6px 14px",background:countdownsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${countdownsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:countdownsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -35918,7 +35918,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               <button
                 onClick={() => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}])}
-                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
+                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"1px dashed rgba(0,200,255,0.35)",borderRadius:"14px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}
               >+ ADD COUNTDOWN</button>
 
               {countdowns.length === 0 && (() => {
@@ -35935,27 +35935,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 };
                 const startFresh = () => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}]);
                 return (
-                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE COUNTDOWNS</div>
-                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Count down to events you're excited about.</div>
-                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Trips, birthdays, deadlines. The closer the date, the brighter it glows.</div>
+                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE COUNTDOWNS</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Count down to events you're excited about.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Trips, birthdays, deadlines. The closer the date, the brighter it glows.</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"1fr",gap:"8px",marginBottom:"12px",opacity:0.9}}>
                       {samples.map((s, i) => {
                         const diff = Math.ceil((new Date(s.date) - today) / 86400000);
                         const color = diff <= 14 ? "rgba(239,68,68,0.9)" : diff <= 60 ? "rgba(251,191,36,0.9)" : "rgba(34,197,94,0.9)";
                         return (
-                          <div key={i} style={{padding:"14px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${color}33`,borderLeft:`2px solid ${color}`,borderRadius:"3px",textAlign:"center"}}>
+                          <div key={i} style={{padding:"14px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${color}33`,borderLeft:`2px solid ${color}`,borderRadius:"10px",textAlign:"center"}}>
                             <div style={{fontSize:"24px",marginBottom:"4px"}}>{s.emoji}</div>
-                            <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)",marginBottom:"6px"}}>{s.name}</div>
-                            <div style={{fontFamily:"monospace",fontSize:"22px",color,fontWeight:600}}>{diff}</div>
-                            <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>DAYS</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)",marginBottom:"6px"}}>{s.name}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"22px",color,fontWeight:600}}>{diff}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.3px"}}>DAYS</div>
                           </div>
                         );
                       })}
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -35965,34 +35965,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const countdown = cd.date ? getCountdown(cd.date) : null;
                 const urgency = countdown && !countdown.passed ? getUrgencyColor(countdown.days) : {color:'rgba(34,197,94,0.8)', border:'rgba(34,197,94,0.3)', glow:'rgba(34,197,94,0.04)'};
                 return (
-                  <div key={cd.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${urgency.border}`,borderRadius:"6px",borderLeft:`2px solid ${urgency.color}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:`0 0 16px ${urgency.glow}`}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                  <div key={cd.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${urgency.border}`,borderRadius:"14px",borderLeft:`2px solid ${urgency.color}`,overflow:"hidden",boxShadow:`0 0 16px ${urgency.glow}`}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
                       <input type="text" value={cd.emoji} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, emoji:e.target.value.slice(0,2)} : c))} style={{width:"32px",textAlign:"center",fontSize:"18px",background:"transparent",border:"none",outline:"none"}} />
-                      <input type="text" value={cd.name} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, name:e.target.value} : c))} placeholder="What are you counting down to?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:500}} />
+                      <input type="text" value={cd.name} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, name:e.target.value} : c))} placeholder="What are you counting down to?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500}} />
                       {countdown && !countdown.passed && countdown.days <= 7 && (
-                        <span style={{fontSize:"8px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"2px 6px",borderRadius:"2px",flexShrink:0}}>SOON</span>
+                        <span style={{fontSize:"8px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"2px 6px",borderRadius:"10px",flexShrink:0}}>SOON</span>
                       )}
                       <button onClick={() => setCountdowns(prev => prev.filter(c => c.id!==cd.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}>×</button>
                     </div>
-                    <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",alignItems:"center",gap:"8px"}}>
-                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TARGET DATE</span>
-                      <input type="date" value={cd.date} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, date:e.target.value} : c))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",padding:"3px 8px"}} />
+                    <div style={{padding:"8px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)",display:"flex",alignItems:"center",gap:"8px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>TARGET DATE</span>
+                      <input type="date" value={cd.date} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, date:e.target.value} : c))} style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",padding:"3px 8px"}} />
                     </div>
                     {countdown && !countdown.passed && (
                       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px",background:"rgba(0,200,255,0.06)"}}>
                         {[{val:countdown.days,label:"DAYS"},{val:countdown.hours,label:"HOURS"},{val:countdown.mins,label:"MINS"}].map((item,i) => (
                           <div key={i} style={{padding:"16px",textAlign:"center",background:"rgba(5,12,24,0.9)"}}>
-                            <div style={{fontSize:"36px",color:urgency.color,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{item.val}</div>
-                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px"}}>{item.label}</div>
+                            <div style={{fontSize:"36px",color:urgency.color,fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>{item.val}</div>
+                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"4px"}}>{item.label}</div>
                           </div>
                         ))}
                       </div>
                     )}
                     {countdown && countdown.passed && (
-                      <div style={{padding:"20px",textAlign:"center",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px"}}>◆ EVENT REACHED</div>
+                      <div style={{padding:"20px",textAlign:"center",color:"rgba(34,197,94,0.8)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0.3px"}}>◆ EVENT REACHED</div>
                     )}
                     {!cd.date && (
-                      <div style={{padding:"16px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>SET A DATE TO START COUNTDOWN</div>
+                      <div style={{padding:"16px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px"}}>SET A DATE TO START COUNTDOWN</div>
                     )}
                   </div>
                 );
@@ -36007,12 +36007,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           return (
             <>
               {/* Category filter */}
-              <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(5,12,24,0.4)"}}>
+              <div style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(5,12,24,0.4)"}}>
                 <div className="max-w-4xl mx-auto" style={{padding:"8px 24px",display:"flex",gap:"4px",overflowX:"auto"}}>
                   {['all','travel','experience','fitness','career','financial','personal','creative'].map(cat => {
                     const cfg = cat === 'all' ? {label:'ALL', color:'rgba(0,200,255,0.8)', bg:'rgba(0,200,255,0.08)'} : categoryConfig[cat];
                     return (
-                      <button key={cat} onClick={() => setBlFilter(cat)} style={{padding:"4px 10px",background:blFilter===cat?cfg.bg:"transparent",border:`0.5px solid ${blFilter===cat?cfg.color:"rgba(255,255,255,0.08)"}`,borderRadius:"2px",color:blFilter===cat?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"8px",letterSpacing:"1px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                      <button key={cat} onClick={() => setBlFilter(cat)} style={{padding:"4px 10px",background:blFilter===cat?cfg.bg:"transparent",border:`0.5px solid ${blFilter===cat?cfg.color:"rgba(255,255,255,0.08)"}`,borderRadius:"10px",color:blFilter===cat?cfg.color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT,fontSize:"8px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
                         {cfg.label}
                       </button>
                     );
@@ -36021,7 +36021,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"6px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
+                <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"14px",color:"rgba(251,191,36,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
 
                 {filteredList.length === 0 && (() => {
                   const samples = [
@@ -36037,22 +36037,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   };
                   const startFresh = () => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}]);
                   return (
-                    <div style={{border:"1px solid rgba(251,191,36,0.4)",borderLeft:"2px solid rgba(251,191,36,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(251,191,36,0.05)"}}>
-                      <div style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE BUCKET LIST</div>
-                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Things you want to do before you die.</div>
-                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Travel, fitness, skills, experiences. Tick them off as life happens.</div>
+                    <div style={{border:"1px solid rgba(251,191,36,0.4)",borderLeft:"2px solid rgba(251,191,36,0.9)",borderRadius:"14px",padding:"14px",background:"rgba(251,191,36,0.05)"}}>
+                      <div style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.8}}>PREVIEW · SAMPLE BUCKET LIST</div>
+                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Things you want to do before you die.</div>
+                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Travel, fitness, skills, experiences. Tick them off as life happens.</div>
                       <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
                         {samples.map((s, i) => (
-                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"3px"}}>
+                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"10px"}}>
                             <div style={{width:"18px",height:"18px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",flexShrink:0}} />
                             <span style={{fontSize:"16px"}}>{s.emoji}</span>
-                            <span style={{flex:1,fontFamily:"monospace",fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.text}</span>
+                            <span style={{flex:1,fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.text}</span>
                           </div>
                         ))}
                       </div>
                       <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(251,191,36,0.18)",border:"1px solid rgba(251,191,36,0.7)",borderRadius:"4px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(251,191,36,0.18)",border:"1px solid rgba(251,191,36,0.7)",borderRadius:"12px",color:"rgba(251,191,36,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                       </div>
                     </div>
                   );
@@ -36061,17 +36061,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {filteredList.filter(b => !b.completed).map(item => {
                   const cfg = categoryConfig[item.category] || categoryConfig.experience;
                   return (
-                    <div key={item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.5)",padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div key={item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"14px",borderLeft:"2px solid rgba(251,191,36,0.5)",padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                       <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:true} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",background:"transparent",flexShrink:0,marginTop:"2px",cursor:"pointer"}} />
                       <div style={{flex:1}}>
                         <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
                           <input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, emoji:e.target.value.slice(0,2)} : b))} style={{width:"24px",textAlign:"center",fontSize:"16px",background:"transparent",border:"none",outline:"none"}} />
-                          <input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, text:e.target.value} : b))} placeholder="What do you want to do?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}} />
+                          <input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, text:e.target.value} : b))} placeholder="What do you want to do?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px"}} />
                         </div>
                         <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
                           {Object.entries(categoryConfig).map(([key, c]) => (
                             <button key={key} onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, category:key} : b))}
-                              style={{fontSize:"7px",fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 6px",borderRadius:"2px",border:`0.5px solid ${item.category===key?c.color:"rgba(255,255,255,0.06)"}`,background:item.category===key?c.bg:"transparent",color:item.category===key?c.color:"rgba(148,163,184,0.2)",cursor:"pointer"}}>
+                              style={{fontSize:"7px",fontFamily:SANS_FONT,letterSpacing:"0.5px",padding:"2px 6px",borderRadius:"10px",border:`0.5px solid ${item.category===key?c.color:"rgba(255,255,255,0.06)"}`,background:item.category===key?c.bg:"transparent",color:item.category===key?c.color:"rgba(148,163,184,0.2)",cursor:"pointer"}}>
                               {c.label}
                             </button>
                           ))}
@@ -36086,13 +36086,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div>
                     <button
                       onClick={() => { const el = document.getElementById('bl-completed'); if(el) el.style.display = el.style.display==='none'?'block':'none'; }}
-                      style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"8px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0}}
+                      style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"8px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0}}
                     >▾ COMPLETED · {filteredList.filter(b => b.completed).length}</button>
                     <div id="bl-completed">
                       {filteredList.filter(b => b.completed).map(item => (
-                        <div key={item.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px",opacity:0.6}}>
+                        <div key={item.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"14px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px",opacity:0.6}}>
                           <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:false} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"none",background:"rgba(34,197,94,0.8)",flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>✓</button>
-                          <span style={{flex:1,color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",textDecoration:"line-through"}}>{item.emoji} {item.text||'Unnamed goal'}</span>
+                          <span style={{flex:1,color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"12px",textDecoration:"line-through"}}>{item.emoji} {item.text||'Unnamed goal'}</span>
                           <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
                         </div>
                       ))}
