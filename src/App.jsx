@@ -14995,597 +14995,133 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     ];
 
     return (
-      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.22s ease"}}>
-        {/* BOOT SEQUENCE (first load only) */}
-        {false && !bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
-
-        {/* SYSTEM HEALTH RAIL — disabled */}
-
+      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
         {/* LEFT RAIL — desktop only */}
         {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
-
-        {/* CONTEXT MENU */}
-        {ctxMenu && (
-          <ContextMenu
-            x={ctxMenu.x} y={ctxMenu.y} entity={ctxMenu.entity}
-            actions={[
-              { icon: "◉", label: "Inspect entity", onClick: () => { setInspectorEntity(ctxMenu.entity); setCtxMenu(null); } },
-              { icon: "↗", label: `Open in ${ctxMenu.entity.viewName||'view'}`, onClick: () => { setActiveView(ctxMenu.entity.view); setCtxMenu(null); } },
-              { icon: "✕", label: "Cancel", onClick: () => setCtxMenu(null) },
-            ]}
-          />
-        )}
 
         <Sidebar />
         <SaveIndicator />
 
-        {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"60px 28px 20px"}}>
-          <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"}>
-            <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
-              <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
+        {/* HEADER — date + greeting */}
+        <div style={{padding:isWide?"48px 24px 8px":"64px 28px 8px"}}>
+          <div className="max-w-4xl mx-auto">
+            <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+              <svg width="36" height="44" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#dashEliteGrad)" />
                 <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
-              <div style={{flex:1}}>
+              <div>
                 <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.2px",fontFamily:SANS_FONT}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
-                <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
-                  <div style={{fontSize:"clamp(22px,5vw,30px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.3px"}}><span style={{whiteSpace:"nowrap"}}>{eliteName ? `${greeting}, ${eliteName}` : `${greeting}`}</span></div>
-                  {isElite && <SeverityPill level="ELITE" label="ELITE" />}
-                </div>
+                <div style={{fontSize:"clamp(24px,5vw,32px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.4px",marginTop:"2px"}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
               </div>
             </div>
-
-            {/* NET WORTH PANEL */}
-            <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff",padding:"16px 20px"}}>
-              <div style={{display:"flex",flexDirection:isWide?"row":"column",alignItems:isWide?"flex-start":"stretch",justifyContent:"space-between",gap:isWide?"12px":"14px"}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{...palantirLabel,display:"flex",alignItems:"center",gap:"8px"}}>
-                    <span>Net Worth</span>
-                    {nwDelta7d !== null && (
-                      <span style={{fontSize:"9px",color:nwDelta7d>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
-                        {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% 7D
-                      </span>
-                    )}
-                  </div>
-                  <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"40px":"32px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}} />
-                    {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"10px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
-                  </div>
-                </div>
-                <div style={{textAlign:isWide?"right":"left",flexShrink:0,paddingTop:isWide?0:"10px",borderTop:isWide?"none":"1px solid rgba(255,255,255,0.08)"}}>
-                  <div style={{...palantirLabel,textAlign:isWide?"right":"left"}}>Portfolio</div>
-                  <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:isWide?"flex-end":"flex-start"}}>
-                    <RollingValue value={totalStocks} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}} />
-                    <Sparkline data={portfolioSeries} w={50} h={18} color="rgba(168,85,247,0.9)" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* TIME SCRUBBER */}
-            {(() => {
-              const series = sortedNwHistory;
-              if (series.length < 2) return null;
-              const startDate = series[0].date;
-              const endDate = series[series.length-1].date;
-              const startMs = new Date(startDate).getTime();
-              const endMs = new Date(endDate).getTime();
-              const totalMs = endMs - startMs || 1;
-              const currentMs = scrubberDate ? new Date(scrubberDate).getTime() : endMs;
-              const pct = ((currentMs - startMs) / totalMs) * 100;
-
-              const handleScrub = (e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const x = ((e.clientX ?? e.touches?.[0]?.clientX) - rect.left) / rect.width;
-                const clamped = Math.max(0, Math.min(1, x));
-                const ms = startMs + clamped * totalMs;
-                const date = new Date(ms).toISOString().split('T')[0];
-                if (date >= endDate) setScrubberDate(null);
-                else setScrubberDate(date);
-              };
-
-              return (
-                <div style={{...palantirPanel,borderLeft:`2px solid ${scrubberDate?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.4)"}`,padding:"10px 14px",marginTop:"10px"}}>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>TIMELINE</span>
-                      <span style={{fontSize:"10px",color:scrubberDate?"rgba(251,191,36,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
-                        {scrubberDate ? `ANCHORED · ${scrubberDate}` : `LIVE · ${endDate}`}
-                      </span>
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                      {[
-                        {label:"30D", days:30},
-                        {label:"90D", days:90},
-                        {label:"1Y", days:365},
-                      ].map(p => {
-                        const target = new Date(endMs - p.days*86400000).toISOString().split('T')[0];
-                        const valid = target >= startDate;
-                        return (
-                          <button key={p.label} onClick={() => valid && setScrubberDate(target)} disabled={!valid} style={{fontSize:"9px",color:valid?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",background:"transparent",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"2px 6px",fontFamily:SANS_FONT,letterSpacing:"0.3px",cursor:valid?"pointer":"not-allowed"}}>{p.label}</button>
-                        );
-                      })}
-                      {scrubberDate && (
-                        <button onClick={() => setScrubberDate(null)} style={{fontSize:"9px",color:"rgba(34,197,94,0.85)",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"10px",padding:"2px 8px",fontFamily:SANS_FONT,letterSpacing:"0.3px",cursor:"pointer"}}>← LIVE</button>
-                      )}
-                    </div>
-                  </div>
-                  {/* Track */}
-                  <div onClick={handleScrub} onMouseDown={(e) => {
-                    handleScrub(e);
-                    const move = (mv) => handleScrub(mv);
-                    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
-                    window.addEventListener('mousemove', move);
-                    window.addEventListener('mouseup', up);
-                  }} onTouchStart={handleScrub} onTouchMove={handleScrub} style={{position:"relative",height:"28px",cursor:"pointer",userSelect:"none"}}>
-                    {/* Mini sparkline behind */}
-                    <svg width="100%" height="28" preserveAspectRatio="none" viewBox={`0 0 100 28`} style={{position:"absolute",inset:0}}>
-                      {(() => {
-                        const vals = series.map(p => p.value);
-                        const min = Math.min(...vals), max = Math.max(...vals), range = max-min||1;
-                        const points = series.map((p,i) => `${(i/(series.length-1)*100).toFixed(2)},${(28 - ((p.value-min)/range)*22 - 3).toFixed(2)}`).join(" ");
-                        return (
-                          <>
-                            <polyline points={points} fill="none" stroke="rgba(0,200,255,0.3)" strokeWidth="0.6" />
-                            <polygon points={`0,28 ${points} 100,28`} fill="rgba(0,200,255,0.05)" />
-                          </>
-                        );
-                      })()}
-                    </svg>
-                    {/* Track line */}
-                    <div style={{position:"absolute",left:0,right:0,top:"50%",height:"1px",background:"rgba(0,200,255,0.15)"}} />
-                    {/* Tick marks at 0/25/50/75/100% */}
-                    {[0,25,50,75,100].map(t => (
-                      <div key={t} style={{position:"absolute",left:`${t}%`,top:"50%",transform:"translate(-50%, -50%)",width:"1px",height:"6px",background:"rgba(0,200,255,0.25)"}} />
-                    ))}
-                    {/* Playhead */}
-                    <div style={{position:"absolute",left:`${pct}%`,top:0,bottom:0,transform:"translateX(-50%)",pointerEvents:"none"}}>
-                      <div style={{width:"1px",height:"100%",background:scrubberDate?"rgba(251,191,36,0.95)":"#00c8ff",boxShadow:`0 0 6px ${scrubberDate?"rgba(251,191,36,0.7)":"#00c8ff"}`}} />
-                      <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%, -50%)",width:"10px",height:"10px",borderRadius:"50%",background:scrubberDate?"rgba(251,191,36,0.95)":"#00c8ff",boxShadow:`0 0 8px ${scrubberDate?"rgba(251,191,36,0.7)":"#00c8ff"}`,border:"1.5px solid rgba(5,12,24,0.95)"}} />
-                    </div>
-                  </div>
-                  {/* Date labels */}
-                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px",fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
-                    <span>{startDate}</span>
-                    <span>{endDate}</span>
-                  </div>
-                </div>
-              );
-            })()}
           </div>
         </div>
 
-        {/* SAVED VIEWS TAB STRIP — removed; Time Scrubber remains in header */}
+        <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 20px 0"}}>
 
-        <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
-
-          {/* CHARTS ROW — stacks on mobile */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-          {/* FINANCIAL BAR CHART */}
-          {(() => {
-            const chartData = [
-              {label:"INCOME", value:salaryNum, color:"#00c8ff", view:"work"},
-              {label:"BILLS", value:totalMonthly, color:"rgba(239,68,68,0.8)", view:"varied"},
-              {label:"SAVED", value:Math.max(0, salaryNum - totalMonthly), color:"rgba(34,197,94,0.8)", view:null},
-              {label:"PORTFOLIO", value:totalStocks, color:"rgba(168,85,247,0.8)", view:"investments"},
-              {label:"NET WORTH", value:netWorth, color:"rgba(251,191,36,0.8)", view:"assets"},
-            ];
-            const maxVal = Math.max(...chartData.map(d => d.value), 1);
-            return (
-              <div style={{...palantirPanel}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Financial Overview</span>
-                  <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>MONTHLY SNAPSHOT</span>
-                </div>
-                <div style={{padding:"16px 20px"}}>
-                  <div style={{display:"flex",alignItems:"flex-end",gap:"10px",height:"80px"}}>
-                    {chartData.map((d,i) => {
-                      const pct = maxVal > 0 ? (d.value / maxVal) * 100 : 0;
-                      return (
-                        <div key={i} onClick={() => d.view && setActiveView(d.view)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end",cursor:d.view?"pointer":"default"}}>
-                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:SANS_FONT}}>{d.value > 0 ? `$${d.value.toLocaleString()}` : "—"}</span>
-                          <div style={{width:"100%",background:d.color,borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${d.color}`}}></div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div style={{display:"flex",gap:"10px",marginTop:"8px",borderTop:"1px solid rgba(255,255,255,0.08)",paddingTop:"8px"}}>
-                    {chartData.map((d,i) => (
-                      <div key={i} style={{flex:1,textAlign:"center"}}>
-                        <span style={{fontSize:"8px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{d.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* ASSET ALLOCATION DONUT */}
-          {(() => {
-            const filledAssets = assets.filter(a => a.name && (parseFloat(a.value)||0) > 0).map(a => ({...a, value: parseFloat(a.value)||0}));
-            const assetCats = [
-              { id: 'property', name: 'Home', color: '#00c8ff' },
-              { id: 'rental', name: 'Rental', color: '#0ea5e9' },
-              { id: 'vacation', name: 'Vacation', color: '#38bdf8' },
-              { id: 'land', name: 'Land', color: '#7dd3fc' },
-              { id: 'business', name: 'Business', color: 'rgba(251,191,36,0.9)' },
-              { id: 'super', name: 'Super', color: 'rgba(34,197,94,0.9)' },
-              { id: 'cash', name: 'Cash', color: 'rgba(74,222,128,0.9)' },
-              { id: 'stocks', name: 'Stocks', color: 'rgba(168,85,247,0.9)' },
-              { id: 'bonds', name: 'Bonds', color: 'rgba(192,132,252,0.9)' },
-              { id: 'mutualfunds', name: 'Funds', color: 'rgba(216,180,254,0.9)' },
-              { id: 'etfs', name: 'ETFs', color: 'rgba(139,92,246,0.9)' },
-              { id: 'crypto', name: 'Crypto', color: 'rgba(251,146,60,0.9)' },
-              { id: 'vehicle', name: 'Vehicles', color: 'rgba(239,68,68,0.8)' },
-              { id: 'jewellery', name: 'Jewellery', color: 'rgba(249,168,212,0.9)' },
-              { id: 'art', name: 'Art', color: 'rgba(236,72,153,0.8)' },
-              { id: 'collectibles', name: 'Collectibles', color: 'rgba(244,114,182,0.8)' },
-              { id: 'lifeinsurance', name: 'Insurance', color: 'rgba(148,163,184,0.8)' },
-              { id: 'loansowed', name: 'Loans Owed', color: 'rgba(100,116,139,0.8)' },
-              { id: 'other', name: 'Other', color: 'rgba(71,85,105,0.8)' },
-            ];
-            const donutData = assetCats.map(cat => ({
-              ...cat,
-              value: filledAssets.filter(a => a.category === cat.id).reduce((sum,a) => sum+a.value, 0)
-            })).filter(d => d.value > 0);
-            const total = donutData.reduce((s,d) => s+d.value, 0);
-
-            if (total === 0) return (
-              <div style={{...palantirPanel}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
-                </div>
-                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO ASSETS TRACKED</div>
-              </div>
-            );
-
-            let cumulative = 0;
-            const cx=65, cy=65, r=52, inner=34;
-            const slices = donutData.map(d => {
-              const pct = d.value / total;
-              const startAngle = cumulative * 2 * Math.PI - Math.PI/2;
-              cumulative += pct;
-              const endAngle = cumulative * 2 * Math.PI - Math.PI/2;
-              const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
-              const x2=cx+r*Math.cos(endAngle), y2=cy+r*Math.sin(endAngle);
-              const xi1=cx+inner*Math.cos(startAngle), yi1=cy+inner*Math.sin(startAngle);
-              const xi2=cx+inner*Math.cos(endAngle), yi2=cy+inner*Math.sin(endAngle);
-              const large = pct > 0.5 ? 1 : 0;
-              return {...d, path:`M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${inner},${inner} 0 ${large},0 ${xi1},${yi1} Z`, pct};
-            });
-
-            return (
-              <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
-                  <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500}}>${total.toLocaleString()}</span>
-                </div>
-                <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
-                  <svg width="130" height="130" viewBox="0 0 130 130" style={{flexShrink:0}}>
-                    {slices.map((s,i) => (
-                      <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
-                    ))}
-                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT}}>TOTAL</text>
-                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:SANS_FONT,fontWeight:"bold"}}>${total.toLocaleString()}</text>
-                  </svg>
-                  <div style={{display:"flex",flexDirection:"column",gap:"5px",flex:1,maxHeight:"110px",overflowY:"auto"}}>
-                    {donutData.sort((a,b)=>b.value-a.value).map((d,i) => (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                        <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
-                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,flex:1}}>{d.name}</span>
-                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:SANS_FONT}}>{((d.value/total)*100).toFixed(1)}%</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
+          {/* HERO — net worth */}
+          <div style={{...palantirPanel,padding:"22px 24px 18px"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+              <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
+              {health && typeof health.score === 'number' && (
+                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.6)",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.08)",padding:"3px 10px",borderRadius:"999px"}}>Health {health.score}</span>
+              )}
+            </div>
+            <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"6px"}}>
+              <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"46px":"38px",color:"#f2f6ff",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
+              {nwDelta7d !== null && (
+                <span style={{fontSize:"14px",fontWeight:600,fontFamily:SANS_FONT,color:nwDelta7d>=0?"rgba(52,211,153,0.95)":"rgba(248,113,113,0.95)"}}>
+                  {nwDelta7d>=0?"+":""}{nwDelta7d.toFixed(2)}% this week
+                </span>
+              )}
+            </div>
+            <div style={{marginTop:"16px"}}>
+              <Sparkline data={nwSeries} w={isWide?640:280} h={44} color="rgba(0,200,255,0.75)" fillOpacity={0.08} />
+            </div>
           </div>
 
-          {/* DENSE ENTITY TABLE — UPCOMING BILLS */}
-          {billsDueSoon.length > 0 && (
-            <div style={palantirPanel}>
-              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{...palantirLabel,marginBottom:0,color:"rgba(239,68,68,0.7)"}}>Upcoming Bills · Entity Table</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{billsDueSoon.length} ROWS</span>
-              </div>
-              {/* Table header */}
-              <div style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"6px 12px",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(0,200,255,0.02)"}}>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>#</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NAME</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>AMOUNT</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>DUE</span>
-                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textAlign:"right"}}>STATUS</span>
-              </div>
-              {billsDueSoon.map((b,i) => {
-                const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
-                return (
-                  <div
-                    key={i}
-                    onClick={() => setInspectorEntity({ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" })}
-                    onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
-                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
-                  >
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT}}>{String(i+1).padStart(2,'0')}</span>
-                    <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
-                      <span style={{color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
-                    </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':'/mo'}</span></span>
-                    <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,textAlign:"right"}}>{b.days}d</span>
-                    <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
-                  </div>
-                );
-              })}
-              {/* Footer total row */}
-              <div style={{padding:"8px 14px",borderTop:"1px solid rgba(255,255,255,0.08)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Σ MONTHLY OUTFLOW</span>
-                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+(b.monthlyEquiv||b.amount),0).toFixed(2)}</span>
-              </div>
+          {/* SUMMARY GRID — four tappable cards */}
+          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"14px"}}>
+            {[
+              { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, sub:"Portfolio", view:"investments" },
+              { label:"Savings rate", value:`${Math.round(savingsRate)}%`, sub:"Of income", view:"varied" },
+              { label:"Today", value:`${completedDailyTasks}/${dailyTasks.length}`, sub:"Tasks done", view:"tasks" },
+              { label:"This week", value:`${weeklyWorkHours.toFixed(1)}h`, sub:"Hours worked", view:"work" },
+            ].map(card => (
+              <button key={card.label} onClick={() => setActiveView(card.view)}
+                style={{...palantirPanel,padding:"16px 18px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s"}}
+                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.045)"}>
+                <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontWeight:500}}>{card.label}</div>
+                <div style={{fontSize:"22px",color:"#f2f6ff",fontWeight:700,letterSpacing:"-0.4px",marginTop:"6px",lineHeight:1.1}}>{card.value}</div>
+                <div style={{fontSize:"11px",color:"rgba(226,232,240,0.4)",marginTop:"4px"}}>{card.sub}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* QUOTE — one quiet line */}
+          {todayQuote && (
+            <div style={{padding:"18px 6px 4px",textAlign:"center"}}>
+              <div style={{fontSize:"13px",color:"rgba(226,232,240,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
+              <div style={{fontSize:"11px",color:"rgba(226,232,240,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
             </div>
           )}
 
-
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-            {/* UPCOMING EVENTS */}
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"14px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
-                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"0.3px",textTransform:"uppercase",fontFamily:SANS_FONT}}>Upcoming Events</span>
-              </div>
-              {(() => {
-                const thisYear = new Date().getFullYear();
-                const bdayEvents = (birthdays||[]).map(b => {
-                  if (!b.date) return null;
-                  const parts = b.date.split("-");
-                  let next = `${thisYear}-${parts[1]}-${parts[2]}`;
-                  if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
-                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, days:Math.ceil((new Date(next)-new Date())/86400000) };
-                }).filter(Boolean);
-                const cdEvents = (countdowns||[]).filter(c=>c.date>=today && (c.name||c.title)).map(c=>({
-                  id:c.id, title:c.name||c.title||'Untitled', days:Math.ceil((new Date(c.date)-new Date())/86400000)
-                }));
-                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO EVENTS SCHEDULED</div>;
-                return all.map(ev => (
-                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.06)"}}>
-                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT}}>{ev.title}</span>
-                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:SANS_FONT,border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
-                  </div>
-                ));
-              })()}
-            </div>
-          </div>
-          {/* WEALTH MILESTONES + STOCK FEED ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-
-          {/* WEALTH MILESTONES */}
-          {(() => {
-            const milestones = [
-              {label:"$100K", value:100000},
-              {label:"$250K", value:250000},
-              {label:"$500K", value:500000},
-              {label:"$1M", value:1000000},
-              {label:"$2M", value:2000000},
-              {label:"$5M", value:5000000},
-              {label:"$10M", value:10000000},
-            ];
-            const currentIdx = milestones.findIndex(m => netWorth < m.value);
-            const completed = currentIdx === -1 ? milestones.length : currentIdx;
-            const nextMilestone = milestones[completed];
-            const prevMilestone = milestones[completed - 1];
-            const progressToNext = nextMilestone
-              ? ((netWorth - (prevMilestone?.value || 0)) / (nextMilestone.value - (prevMilestone?.value || 0))) * 100
-              : 100;
-
-            return (
-              <div style={palantirPanel} onClick={() => setActiveView('assets')} >
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Wealth Milestones</span>
-                  <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT}}>${netWorth.toLocaleString()}</span>
-                </div>
-                <div style={{padding:"16px 20px"}}>
-                  {/* Progress track */}
-                  <div style={{position:"relative",marginBottom:"16px"}}>
-                    <div style={{height:"3px",background:"rgba(255,255,255,0.06)",borderRadius:"10px",marginBottom:"8px"}}>
-                      <div style={{height:"3px",background:"linear-gradient(90deg,#00c8ff,rgba(168,85,247,0.9))",borderRadius:"10px",width:`${Math.min((completed/milestones.length)*100,100)}%`,transition:"width 1s ease"}} />
-                    </div>
-                    {/* Milestone dots */}
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>
-                      {milestones.map((m,i) => {
-                        const done = netWorth >= m.value;
-                        const isCurrent = i === completed;
-                        return (
-                          <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"4px"}}>
-                            <div style={{
-                              width: isCurrent ? "10px" : done ? "8px" : "6px",
-                              height: isCurrent ? "10px" : done ? "8px" : "6px",
-                              borderRadius:"50%",
-                              background: done ? "#00c8ff" : isCurrent ? "rgba(0,200,255,0.5)" : "rgba(255,255,255,0.1)",
-                              boxShadow: done ? "0 0 6px #00c8ff" : isCurrent ? "0 0 10px rgba(0,200,255,0.8)" : "none",
-                              border: isCurrent ? "1px solid #00c8ff" : "none",
-                              animation: isCurrent ? "blink 2s infinite" : "none",
-                            }} />
-                            <span style={{fontSize:"8px",color:done?"#00c8ff":isCurrent?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{m.label}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  {/* Next milestone progress */}
-                  {nextMilestone && (
-                    <div>
-                      <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NEXT: {nextMilestone.label}</span>
-                        <span style={{fontSize:"9px",color:"rgba(226,232,240,0.7)",fontFamily:SANS_FONT}}>${(nextMilestone.value - netWorth).toLocaleString()} to go</span>
-                      </div>
-                      <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
-                        <div style={{height:"2px",background:"rgba(0,200,255,0.5)",borderRadius:"10px",width:`${Math.max(progressToNext,1)}%`,transition:"width 1s ease"}} />
-                      </div>
-                    </div>
-                  )}
-                  {completed === milestones.length && (
-                    <div style={{textAlign:"center",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ALL MILESTONES COMPLETE 🏆</div>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* LIVE STOCK FEED */}
-          {(() => {
-            const topStocks = trackedStocks.filter(s => s.ticker).slice(0,5);
-            return (
-              <div style={palantirPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}} onClick={() => setActiveView('investments')}>
-                  <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Portfolio Feed · {topStocks.length} positions</span>
-                  <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                    <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(168,85,247,0.9)",display:"inline-block",animation:"blink 2s infinite"}}></span>
-                    <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>LIVE</span>
-                  </div>
-                </div>
-                {topStocks.length === 0 ? (
-                  <div style={{padding:"20px",textAlign:"center",color:"rgba(168,85,247,0.3)",fontSize:"11px",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO STOCKS TRACKED</div>
-                ) : topStocks.map((stock,i) => {
-                  const ticker = stock.ticker?.toUpperCase();
-                  const priceData = ticker ? livePrices[ticker] : null;
-                  const currentPrice = priceData?.c || 0;
-                  const dailyChange = (priceData?.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : null;
-                  const shares = parseFloat(stock.shares) || 0;
-                  const avgCost = parseFloat(stock.avgCost) || 0;
-                  const pl = shares > 0 && currentPrice > 0 ? ((currentPrice - avgCost) / avgCost * 100) : null;
-                  // tiny sparkline synthesized around current price
-                  const sparkSeries = currentPrice > 0
-                    ? Array.from({length:14},(_,k) => currentPrice * (1 + ((Math.sin(k*0.7 + (ticker?.charCodeAt(0)||0)) * 0.015) + (k/13)*(dailyChange||0)/100)))
-                    : null;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => setInspectorEntity({ type:"STOCK", id:ticker, label:ticker, view:"investments", viewName:"Investments" })}
-                      onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"STOCK", id:ticker, label:ticker, view:"investments", viewName:"Investments" } }); }}
-                      style={{display:"grid",gridTemplateColumns:"60px 1fr 70px 60px 60px",gap:"6px",alignItems:"center",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",cursor:"pointer"}}
-                    >
-                      <EntityLink size="12px" color="rgba(168,85,247,0.95)">{ticker}</EntityLink>
-                      <div style={{textAlign:"left"}}>{sparkSeries ? <Sparkline data={sparkSeries} w={70} h={14} color={dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"} fillOpacity={0.08} /> : <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT}}>—</span>}</div>
-                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,textAlign:"right"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
-                      <span style={{fontSize:"10px",fontFamily:SANS_FONT,color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",textAlign:"right"}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
-                      <span style={{fontSize:"10px",fontFamily:SANS_FONT,color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",textAlign:"right"}}>{pl===null?"":`${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })()}
-          </div>
-
-          {reminders && reminders.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"14px"}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"11px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px",textTransform:"uppercase",fontFamily:SANS_FONT}}>Reminders</span>
-                <button onClick={() => setActiveView('reminders')} style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",background:"none",border:"none",cursor:"pointer",letterSpacing:"0.3px"}}>VIEW ALL →</button>
-              </div>
-              {reminders.filter(r => r.title).slice(0,4).map(r => (
-                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
-                  <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT}}>{r.title}</span>
-                  {r.permanent ? (
-                    <span style={{fontSize:"10px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.3px"}}>PINNED</span>
-                  ) : r.date ? (
-                    <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {isElite && (
-            <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"14px"}}>
-              <span style={{fontSize:"14px"}}>💛</span>
-              <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
-            </div>
-          )}
-
-          {/* QUICK-LAUNCH BOTTOM NAV — replaces hamburger as primary navigation */}
-          <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"1px solid rgba(255,255,255,0.08)"}}>
-
-            {/* SECTIONS */}
-            <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"14px",fontWeight:600}}>SECTIONS</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
+          {/* QUICK-LAUNCH NAV — primary navigation */}
+          <div style={{marginTop:"20px",paddingTop:"20px",borderTop:"1px solid rgba(255,255,255,0.08)"}}>
+            <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",marginBottom:"12px",fontWeight:600}}>Sections</div>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"22px"}}>
               {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
                 const Icon = item.icon;
                 return (
                   <button key={item.id} onClick={() => setActiveView(item.id)}
-                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.06)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.55)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.18)"; }}>
-                    <Icon size={16} style={{color:"rgba(0,200,255,0.7)",flexShrink:0}}/>
-                    <span style={{fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>{item.label}</span>
+                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.045)"; }}>
+                    <Icon size={16} style={{color:"rgba(0,200,255,0.8)",flexShrink:0}}/>
+                    <span style={{fontSize:"14px",color:"#e8eefc",letterSpacing:"0.1px",fontWeight:500}}>{item.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* ACCOUNT */}
-            <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"14px",fontWeight:600}}>ACCOUNT</div>
+            <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",marginBottom:"12px",fontWeight:600}}>Account</div>
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               <button onClick={() => setActiveView('upgrade')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
                 {isElite ? '⚡ Elite Status' : '⚡ Upgrade to Elite'}
               </button>
               <button onClick={() => setActiveView('statsinsights')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
-                ⌬ Stats & Insights
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                Stats & Insights
               </button>
               <button onClick={() => setActiveView('feedback')}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
-                ✎ Feedback & Support
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                Feedback & Support
               </button>
               <button onClick={doExport}
-                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
-                ↓ Export Data
+                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
+                Export Data
               </button>
-              <label style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
-                ↑ Import Data
+              <label style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500,display:"block"}}>
+                Import Data
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </label>
               <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
-                style={{padding:"18px 20px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
-                ⊘ Delete Account
+                style={{padding:"18px 20px",background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"rgba(248,113,113,0.9)",fontWeight:500}}>
+                Delete Account
               </button>
             </div>
 
-            {/* SIGN OUT */}
             <button onClick={signOut}
-              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"14px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
-              ⊗ SIGN OUT
+              style={{width:"100%",padding:"14px",background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:"14px",color:"rgba(248,113,113,0.9)",fontFamily:SANS_FONT,fontSize:"14px",cursor:"pointer",fontWeight:600}}>
+              Sign Out
             </button>
-
           </div>
 
         </div>
-
-        {/* OBJECT INSPECTOR — right side panel on wide, bottom sheet on mobile */}
-        {inspectorEntity && isWide && (
-          <div style={{position:"fixed",top:"32px",right:"4px",bottom:"26px",width:"312px",zIndex:60}}>
-            <ObjectInspector
-              entity={inspectorEntity}
-              onClose={() => setInspectorEntity(null)}
-              deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView, auditLog }}
-            />
-          </div>
-        )}
-        {inspectorEntity && !isWide && (
-          <div onClick={() => setInspectorEntity(null)} style={{position:"fixed",inset:0,zIndex:200,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(4px)",display:"flex",alignItems:"flex-end"}}>
-            <div onClick={e => e.stopPropagation()} style={{width:"100%",height:"75vh",animation:"valueRoll 0.25s ease-out"}}>
-              <ObjectInspector
-                entity={inspectorEntity}
-                onClose={() => setInspectorEntity(null)}
-                deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView, auditLog }}
-              />
-            </div>
-          </div>
-        )}
 
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
