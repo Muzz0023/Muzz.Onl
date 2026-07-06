@@ -34460,14 +34460,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
-        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:`1px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>WELLNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px",margin:0}}>HEALTH</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"2px"}}>AVG SLEEP · WEEK</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"2px"}}>Avg sleep · week</div>
                 <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
               </div>
             </div>
@@ -34483,7 +34483,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             ].map(tab => {
               const active = (gymSubTab||'sleep') === tab.id;
               return (
-                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               );
@@ -34493,7 +34493,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* SLEEP TAB */}
           {(gymSubTab||'sleep') === 'sleep' && (
             <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",padding:"20px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"20px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
                   <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>SLEEP LOG · 7 DAYS</div>
                   <button onClick={() => {
@@ -34503,7 +34503,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       weekDays.forEach(d => { delete next[d.date]; });
                       return next;
                     });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear week</button>
                 </div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginBottom:"18px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
@@ -34511,12 +34511,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const data = sleepData[day.date] || {};
                     const hrs = sleepHoursFor(day.date);
                     return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"14px",padding:"18px 18px"}}>
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`1px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"14px",padding:"18px 18px"}}>
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                             <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 8px ${sleepColor(hrs)}`:"none"}}/>
-                            <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"0.3px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>TODAY</span>}
+                            <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"0.3px"}}>{day.dayShort} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Today</span>}
                           </div>
                           {hrs > 0 && (
                             <span style={{fontFamily:SANS_FONT,fontSize:"18px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
@@ -34524,15 +34524,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
                           <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>BEDTIME</div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Bedtime</div>
                             <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>WAKE</div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Wake</div>
                             <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>QUALITY</div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Quality</div>
                             <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
                               <option value="">—</option>
                               <option value="great">Great</option>
@@ -34543,9 +34543,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                         </div>
                         {/* Times woken counter */}
-                        <div style={{marginTop:"14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"12px 14px",background:"rgba(0,0,0,0.35)",border:`0.5px solid ${accent}25`,borderRadius:"12px"}}>
+                        <div style={{marginTop:"14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"12px 14px",background:"rgba(0,0,0,0.35)",border:`1px solid ${accent}25`,borderRadius:"12px"}}>
                           <div style={{display:"flex",flexDirection:"column",gap:"2px"}}>
-                            <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)",letterSpacing:"0.3px",fontWeight:600}}>TIMES WOKEN</span>
+                            <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)",letterSpacing:"0.3px",fontWeight:600}}>Times woken</span>
                             <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.5px"}}>How many times you woke during the night</span>
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -34561,8 +34561,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Sleep guidance */}
-              <div style={{background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}15`,borderRadius:"12px",padding:"10px 14px"}}>
-                <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>COLOUR CODE</div>
+              <div style={{background:"rgba(5,12,24,0.6)",border:`1px solid ${accent}15`,borderRadius:"12px",padding:"10px 14px"}}>
+                <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Colour code</div>
                 <div style={{display:"flex",gap:"14px",flexWrap:"wrap",fontFamily:SANS_FONT,fontSize:"10px"}}>
                   <span style={{color:"rgba(34,197,94,0.9)"}}>● 7+ hrs · Healthy</span>
                   <span style={{color:"rgba(251,191,36,0.9)"}}>● 6–7 hrs · Marginal</span>
@@ -34575,9 +34575,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* MENTAL TAB */}
           {gymSubTab === 'mental' && (
             <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",padding:"20px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"20px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>MENTAL HEALTH · CHECK-INS</div>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Mental health · Check-ins</div>
                   <button onClick={() => {
                     if (!window.confirm("Clear all mental health check-ins for this week? This can't be undone.")) return;
                     setMentalHealthData(prev => {
@@ -34585,7 +34585,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       weekDays.forEach(d => { delete next[d.date]; });
                       return next;
                     });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear week</button>
                 </div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginBottom:"18px"}}>Mood, energy, stress, and a daily journal note.</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
@@ -34593,12 +34593,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const data = mentalHealthData[day.date] || {};
                     const mood = MOODS.find(m => m.label.toLowerCase() === (data.mood||'').toLowerCase());
                     return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"14px",padding:"18px 18px"}}>
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`1px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"14px",padding:"18px 18px"}}>
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                             <div style={{width:"10px",height:"10px",borderRadius:"50%",background:mood?mood.color:"rgba(148,163,184,0.3)",boxShadow:mood?`0 0 8px ${mood.color}`:"none"}}/>
-                            <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"0.3px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>TODAY</span>}
+                            <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"0.3px"}}>{day.dayShort} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Today</span>}
                           </div>
                           {mood && <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:mood.color,letterSpacing:"0.3px",fontWeight:600}}>{mood.label.toUpperCase()}</span>}
                         </div>
@@ -34615,7 +34615,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
                           <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>ENERGY</div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Energy</div>
                             <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
                               <option value="">—</option>
                               <option value="high">High</option>
@@ -34624,7 +34624,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </select>
                           </div>
                           <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>STRESS</div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Stress</div>
                             <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
                               <option value="">—</option>
                               <option value="low">Low</option>
@@ -34633,7 +34633,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </select>
                           </div>
                         </div>
-                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px"}}/>
+                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`1px solid ${accent}25`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px"}}/>
                       </div>
                     );
                   })}
