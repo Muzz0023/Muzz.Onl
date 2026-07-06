@@ -34389,7 +34389,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ─────────────────────────────────────────────────────────────
   if (activeView === 'gym') {
     if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
-    const accent = 'rgba(251,146,60,0.9)';
+    const accent = '#fb923c';
     const today = new Date().toISOString().split('T')[0];
 
     const getWeekDays = () => {
@@ -34648,7 +34648,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ─────────────────────────────────────────────────────────────
   if (activeView === 'gymworkout') {
     if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
-    const accent = 'rgba(168,85,247,0.9)';
+    const accent = '#a855f7';
     const today = new Date().toISOString().split('T')[0];
 
     const getWeekDays = () => {
@@ -34950,7 +34950,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ─────────────────────────────────────────────────────────────
   if (activeView === 'nutrition') {
     if (!isElite) return <LockedFeature featureName="Nutrition" setActiveView={setActiveView} />;
-    const accent = 'rgba(34,197,94,0.9)';
+    const accent = '#22c55e';
     const today = new Date().toISOString().split('T')[0];
 
     const getWeekDays = () => {
