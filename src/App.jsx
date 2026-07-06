@@ -15091,7 +15091,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               <button onClick={() => setActiveView('upgrade')}
                 style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
-                {isElite ? '⚡ Elite Status' : '⚡ Upgrade to Elite'}
+                {isElite ? 'Elite Status' : 'Upgrade to Elite'}
               </button>
               <button onClick={() => setActiveView('statsinsights')}
                 style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
