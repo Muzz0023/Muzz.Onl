@@ -15390,7 +15390,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Income Input — collapsible */}
           <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{(activeBucket.incomeLabel || 'MONTHLY INCOME').toUpperCase()} — {activeBucket.name.toUpperCase()}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
+              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
               <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
@@ -15411,9 +15411,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Salary Breakdown — collapsible */}
           {salaryNum > 0 && (
-            <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{(activeBucket.incomeLabel || 'INCOME').toUpperCase()} BREAKDOWN</span>
+                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.incomeLabel || 'Income'} breakdown</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{overflowX:"auto",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
@@ -15448,7 +15448,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Bills List - active bucket — collapsible */}
           <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
-              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name.toUpperCase()} BILLS{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
+              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
               <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
@@ -15757,7 +15757,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Breakdown Table — collapsible */}
           {filledSubs.length > 0 && (
-            <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
                 <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Cost breakdown</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
@@ -16054,9 +16054,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             });
 
             return (
-              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
+              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{bucket.name.toUpperCase()} CONSTELLATION · BRANCH GRAPH</span>
+                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{bucket.name} constellation</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
@@ -16252,7 +16252,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Bills vs Salary Comparison — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
                 <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Bills vs income</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
@@ -17814,12 +17814,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {assetsSubTab === 'assets' && (
             <>
-              {/* Total Assets Summary */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"14px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px"}}>Total assets</div>
-                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
-              </div>
-
               {/* Assets Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
@@ -17982,7 +17976,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Breakdown by type</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
@@ -18097,9 +18091,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               return { ...a, angle, x, y, px, py, bx, by, catName: cat?.name || 'Other' };
             });
             return (
-              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
+              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} CONSTELLATION · ASSET GRAPH</span>
+                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} constellation</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
@@ -18261,7 +18255,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Assets breakdown</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
