@@ -15388,9 +15388,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {activeBucket && (<>
           {/* Income Input — collapsible */}
-          <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+          <details open style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
+              <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
               <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
@@ -15411,13 +15411,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Bills vs Income — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Bills vs income</span>
+                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Bills vs income</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
-              <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
+              <div style={{background:"rgba(255,255,255,0.03)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Bills vs Income</h2>
               </div>
               <div style={{overflowX:"auto"}}>
@@ -15499,9 +15499,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* Bills List - active bucket — collapsible */}
-          <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+          <details open style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
-              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
+              <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
               <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
@@ -15537,7 +15537,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const startFresh = () => addBillToBucket(activeBucket.id);
                 return (
                   <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
-                    <div style={{padding:"12px 14px 8px",borderBottom:`0.5px solid ${bucketAccent}1a`}}>
+                    <div style={{padding:"12px 14px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
                       <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · not your data</div>
                       <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
                       <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
@@ -15550,13 +15550,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{color:"rgba(148,163,184,0.55)",textAlign:"right",fontSize:"10px"}}>{s.dueDate}</div>
                         </div>
                       ))}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:`0.5px solid ${bucketAccent}33`,marginTop:"4px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:"1px solid rgba(255,255,255,0.07)",marginTop:"4px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600}}>
                         <div style={{color:"rgba(224,234,255,0.95)"}}>Total</div>
                         <div style={{color:bucketAccent,textAlign:"right"}}>${sampleTotal}/mo</div>
                         <div></div>
                       </div>
                     </div>
-                    <div style={{padding:"10px 14px 12px",borderTop:`0.5px solid ${bucketAccent}1a`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                    <div style={{padding:"10px 14px 12px",borderTop:"1px solid rgba(255,255,255,0.07)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
                       <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${bucketAccent}26`,border:`1px solid ${bucketAccent}99`,borderRadius:"12px",color:bucketAccent,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
                       <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
@@ -15578,7 +15578,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     }
                   });
                   return (
-                    <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}30`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",padding:"16px 18px",marginBottom:"6px"}}>
+                    <div style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",padding:"16px 18px",marginBottom:"6px"}}>
                       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px"}}>
                         <span style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name} overview</span>
                         <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{filledSubs.length} BILL{filledSubs.length!==1?'S':''}</span>
@@ -15659,7 +15659,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Expanded edit panel */}
                       {isEditing && (
-                        <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid ${bucketAccent}25`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                        <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(255,255,255,0.07)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                           <div>
                             <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Bill name</div>
                             <input
@@ -15785,7 +15785,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             );
                           })()}
                           {freq !== 'monthly' && sub?.monthly > 0 && (
-                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,padding:"8px 10px",background:`${bucketAccent}10`,border:`0.5px solid ${bucketAccent}30`,borderRadius:"10px"}}>
+                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,padding:"8px 10px",background:`${bucketAccent}10`,border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px"}}>
                               ≈ ${monthlyEq.toFixed(2)}/mo · ${(monthlyEq*12).toFixed(0)}/yr equivalent
                             </div>
                           )}
@@ -15810,13 +15810,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Breakdown Table — collapsible */}
           {filledSubs.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Cost breakdown</span>
+                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Cost breakdown</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
+              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Cost Breakdown</h2>
               </div>
               
@@ -16047,7 +16047,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Muzz Advice Categories Info - Personal Only */}
           {isPersonal && filledSubs.length === 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <div style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <div style={{padding:"14px 16px"}}>
                 <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Muzz can help you save on</div>
                 <p style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
@@ -16107,7 +16107,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             });
 
             return (
-              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
+              <details style={{background:"rgba(255,255,255,0.045)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{bucket.name} constellation</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
@@ -16178,7 +16178,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
                       return (
                         <div key={s.id || idx} style={{position:"absolute",left:x,top:y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",background:"rgba(255,255,255,0.05)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
                             {/* Corner ticks */}
                             <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                             <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
@@ -16239,7 +16239,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div key={s.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
                                 <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
                                 <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
-                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(255,255,255,0.05)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
                                   <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
