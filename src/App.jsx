@@ -18758,8 +18758,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <button onClick={() => setActiveView('assets')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← ASSETS</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>WORLD MAP</div>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{mapPins.length} PINS</span>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>WORLD MAP</div>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{mapPins.length} PINS</span>
+            </div>
+            <div style={{marginTop:"12px",padding:"12px 16px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",fontSize:"13px",color:"rgba(226,232,240,0.65)",fontFamily:SANS_FONT,lineHeight:1.55}}>
+              Pin the places that matter to your money — approximate locations of investment properties, areas you're researching, or spots on your property plan. <span style={{color:"rgba(0,200,255,0.85)"}}>Tap anywhere on the map to drop a pin</span>, give it a name and notes, and add an optional radius to mark a whole suburb or region.
             </div>
           </div>
         </div>
