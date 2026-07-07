@@ -18724,6 +18724,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {assetMapExpanded ? '⊟ COLLAPSE MAP' : '⊞ EXPAND MAP'}
                 </button>
               </div>
+              {!assetMapExpanded && (
+                <div style={{marginBottom:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",fontSize:"13px",color:"rgba(226,232,240,0.65)",fontFamily:SANS_FONT,lineHeight:1.55}}>
+                  A visual map of how your wealth fits together — you at the centre, with branches out to properties, super, cash, shares and anything else you own. <span style={{color:"rgba(0,200,255,0.85)"}}>Add nodes and connect them</span> to see your whole position as one picture, and expand the map for the full view.
+                </div>
+              )}
               <div style={assetMapExpanded ? {flex:1,minHeight:0} : {}}>
                 <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} expanded={assetMapExpanded} />
               </div>
