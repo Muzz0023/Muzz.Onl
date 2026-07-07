@@ -15355,7 +15355,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* === OVERVIEW — Apple-style bills home === */}
           {billsSubTab === 'overview' && (() => {
             const ob = (activeBucket?.bills || []).filter(b => b && b.name && String(b.name).trim());
-            const oMonthly = ob.reduce((s, b) => s + calcCost(b.monthly, 'monthly', b.freq || 'monthly'), 0);
+            const oMonthly = ob.reduce((s, b) => s + (parseFloat(calcCost(b.monthly, 'monthly', b.freq || 'monthly')) || 0), 0);
             const oIncome = parseFloat(activeBucket?.incomeStr) || 0;
             const oPct = oIncome > 0 ? Math.min(100, (oMonthly / oIncome) * 100) : null;
             const nowD = new Date();
@@ -15365,9 +15365,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const dd = b.dueDate ? parseInt(String(b.dueDate).replace(/[^0-9]/g, '')) : NaN;
               if (!dd || isNaN(dd) || dd < 1 || dd > 31) return null;
               const daysAway = dd >= todayD ? dd - todayD : (daysInM - todayD) + dd;
-              return { id: b.id, name: b.name, amt: calcCost(b.monthly, 'monthly', b.freq || 'monthly'), daysAway };
+              return { id: b.id, name: b.name, amt: parseFloat(calcCost(b.monthly, 'monthly', b.freq || 'monthly')) || 0, daysAway };
             }).filter(Boolean).sort((a, b) => a.daysAway - b.daysAway).slice(0, 3);
-            const biggest = ob.slice().sort((a, b) => calcCost(b.monthly, 'monthly', b.freq || 'monthly') - calcCost(a.monthly, 'monthly', a.freq || 'monthly'))[0];
+            const biggest = ob.slice().sort((a, b) => (parseFloat(calcCost(b.monthly, 'monthly', b.freq || 'monthly')) || 0) - (parseFloat(calcCost(a.monthly, 'monthly', a.freq || 'monthly')) || 0))[0];
             const dueLabel = (d) => d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : `In ${d} days`;
             const bAccent = activeBucket?.color || '#00c8ff';
             return (
@@ -15405,7 +15405,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* One quiet insight */}
                 {biggest && (
                   <div style={{padding:"4px 6px",textAlign:"center",fontSize:"13px",color:"rgba(226,232,240,0.45)",fontFamily:SANS_FONT}}>
-                    Biggest bill: {biggest.name} · ${Math.round(calcCost(biggest.monthly, 'monthly', biggest.freq || 'monthly')).toLocaleString()}/mo
+                    Biggest bill: {biggest.name} · ${Math.round(parseFloat(calcCost(biggest.monthly, 'monthly', biggest.freq || 'monthly')) || 0).toLocaleString()}/mo
                   </div>
                 )}
 
