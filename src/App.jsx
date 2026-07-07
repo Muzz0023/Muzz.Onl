@@ -15511,7 +15511,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 );
               })()}
               <div style={{overflowX:'auto'}}>
-              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+              <div style={{display:"flex",flexDirection:"column",gap:"0"}}>
 
                 {/* SUMMARY PANEL — only show if there are bills */}
                 {filledSubs.length > 0 && (() => {
@@ -15572,11 +15572,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const isToday = daysAway === 0;
                   const dueDay = nd ? nd.date.getDate() : null;
                   return (
-                    <div key={sub?.id || index} style={{background:isEditing?`${bucketAccent}0d`:"rgba(5,12,24,0.6)",border:`0.5px solid ${bucketAccent}25`,borderLeft:`2px solid ${isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
+                    <div key={sub?.id || index} style={{background:isEditing?`${bucketAccent}0d`:"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
                       {/* Compact row */}
                       <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent,boxShadow:`0 0 6px ${isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent}80`,flexShrink:0}}/>
+                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent,flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                           <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
                             {sub?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed bill</span>}
@@ -17827,7 +17827,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
             {/* Assets Cards */}
-            <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{padding:"0 0 6px",display:"flex",flexDirection:"column",gap:"0"}}>
               {assets.length === 0 && (() => {
                 const samples = [
                   { name: 'Bank — savings',       category: 'cash',    value: 18500  },
@@ -17879,11 +17879,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
                 const val = parseFloat(asset?.value) || 0;
                 return (
-                  <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
+                  <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.05)"):"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
                     {/* Compact row */}
                     <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",boxShadow:researchMode?"0 0 6px rgba(245,158,11,0.6)":"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                      <div style={{width:"28px",height:"28px",borderRadius:"8px",background:"rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",flexShrink:0}}>{cat?.emoji || '💼'}</div>
                       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                         <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{asset?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed asset</span>}</div>
                         <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
