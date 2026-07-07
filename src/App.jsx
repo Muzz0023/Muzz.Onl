@@ -15332,7 +15332,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>BILLS</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>MONTHLY TOTAL · ALL</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Monthly total · all</div>
                 <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontWeight:500}}>${(buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0).toLocaleString()}</div>
                 {activeBucket && totalMonthly !== (buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0) && (
                   <div style={{fontSize:"9px",color:`${bucketAccent}aa`,fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"2px"}}>{activeBucket.name}: ${totalMonthly.toLocaleString()}</div>
@@ -15391,7 +15391,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
               <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{(activeBucket.incomeLabel || 'MONTHLY INCOME').toUpperCase()} — {activeBucket.name.toUpperCase()}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -15414,7 +15414,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
                 <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{(activeBucket.incomeLabel || 'INCOME').toUpperCase()} BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{overflowX:"auto",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
@@ -15449,7 +15449,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
               <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name.toUpperCase()} BILLS{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px"}}>
@@ -15485,7 +15485,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
                     <div style={{padding:"12px 14px 8px",borderBottom:`0.5px solid ${bucketAccent}1a`}}>
-                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR DATA</div>
+                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · not your data</div>
                       <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
                       <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
                     </div>
@@ -15498,7 +15498,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                       ))}
                       <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:`0.5px solid ${bucketAccent}33`,marginTop:"4px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600}}>
-                        <div style={{color:"rgba(224,234,255,0.95)"}}>TOTAL</div>
+                        <div style={{color:"rgba(224,234,255,0.95)"}}>Total</div>
                         <div style={{color:bucketAccent,textAlign:"right"}}>${sampleTotal}/mo</div>
                         <div></div>
                       </div>
@@ -15532,7 +15532,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                       <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"14px"}}>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>MONTHLY</div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Monthly</div>
                           <div style={{fontSize:"22px",color:bucketAccent,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${totalMonthly.toFixed(0)}</div>
                         </div>
                         <div>
@@ -15541,7 +15541,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {nextDue && (
                           <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>NEXT DUE</div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Next due</div>
                             <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
                               <span style={{fontSize:"14px",color:"#e0eaff",fontWeight:500}}>{nextDue.sub.name||'Bill'}</span>
                               <span style={{fontSize:"11px",color:nextDue.daysAway<=3?"#ef4444":nextDue.daysAway<=7?"#f59e0b":"rgba(148,163,184,0.7)",marginLeft:"8px"}}>
@@ -15608,7 +15608,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid ${bucketAccent}25`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>BILL NAME</div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Bill name</div>
                             <input
                               type="text"
                               value={sub?.name || ''}
@@ -15634,7 +15634,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               />
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FREQUENCY</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Frequency</div>
                               <select
                                 value={freq}
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
@@ -15650,7 +15650,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                             {freq === 'monthly' && (
                               <div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>DUE DAY</div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Due day</div>
                                 <input
                                   type="text"
                                   value={sub?.dueDate || ''}
@@ -15664,7 +15664,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             )}
                             {(freq === 'weekly' || freq === 'fortnightly') && (
                               <div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>DAY OF WEEK</div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Day of week</div>
                                 <select
                                   value={sub?.weekday ?? ''}
                                   onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)}
@@ -15737,7 +15737,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           )}
                           <button onClick={() => { removeBillFromBucket(activeBucket.id, index); setEditingBillIdx(null); }}
-                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                         </div>
                       )}
                     </div>
@@ -15759,8 +15759,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>COST BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Cost breakdown</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
@@ -15996,7 +15996,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isPersonal && filledSubs.length === 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <div style={{padding:"14px 16px"}}>
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>MUZZ CAN HELP YOU SAVE ON</div>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Muzz can help you save on</div>
                 <p style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",gap:"6px"}}>
                   {[
@@ -16057,7 +16057,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{bucket.name.toUpperCase()} CONSTELLATION · BRANCH GRAPH</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   {isWide ? (
@@ -16219,7 +16219,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                   {/* Detail list below — full bill data, since absolute-positioned cards can't expand cleanly */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>BILL DETAILS</div>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Bill details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {sortedBills.map(({s, nd, mEq}, idx) => {
                         const freq = s.freq || 'monthly';
@@ -16254,8 +16254,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && salaryNum > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>BILLS VS INCOME</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Bills vs income</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
@@ -16434,7 +16434,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px",marginBottom:"20px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>NEXT 12 MONTHS</div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Next 12 months</div>
                       <div style={{fontSize:"22px",color:`${forecastAccent}`,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                     </div>
                     <div>
@@ -16442,7 +16442,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${avgPerMonth.toFixed(0)}</div>
                     </div>
                     <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>HIGHEST MONTH</div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Highest month</div>
                       <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
                         <span style={{fontSize:"18px",color:"#f59e0b",fontWeight:600}}>${maxTotal.toFixed(0)}</span>
                         <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",marginLeft:"8px"}}>{months.find(m => m.total === maxTotal)?.label}</span>
@@ -16472,7 +16472,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* Per-month breakdown */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"14px"}}>
                   <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${forecastAccent}15`}}>
-                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>MONTH-BY-MONTH BREAKDOWN</span>
+                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Month-by-month breakdown</span>
                   </div>
                   {months.map((m, i) => {
                     const items = Object.entries(m.breakdown).sort((a,b) => b[1] - a[1]);
@@ -16785,7 +16785,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const startFresh = () => setBillSmallGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
                     return (
                       <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
                         <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Short-term savings goals — under $10k, achievable in months.</div>
                         <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Set a target, track your progress. The bar fills as you save.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
@@ -16923,7 +16923,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const startFresh = () => setBillBigGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
                     return (
                       <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
                         <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Long-term targets — house deposit, debt freedom, retirement.</div>
                         <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Years-long milestones. Track the slow climb.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
@@ -17275,7 +17275,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const startFresh = () => addDebt('personal');
                       return (
                         <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE DEBTS</div>
+                          <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample debts</div>
                           <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track personal debts — see what you owe and what you've paid off.</div>
                           <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Total borrowed minus what's paid. Watch the bar shrink as you knock them down.</div>
                           <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
@@ -17336,7 +17336,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const startFresh = () => addDebt('business');
                       return (
                         <div style={{border:"1px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.9)",borderRadius:"14px",padding:"14px",background:"rgba(168,85,247,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.8}}>PREVIEW · BUSINESS DEBTS</div>
+                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.8}}>Preview · business debts</div>
                           <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track debts owed by the business — equipment finance, lines of credit.</div>
                           <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Keep separate from personal debt to track business cashflow accurately.</div>
                           <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
@@ -17390,7 +17390,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",padding:"14px 16px"}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"12px"}}>DEBT PAYOFF CALCULATOR</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"12px"}}>Debt payoff calculator</h2>
                   <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
                     <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>SNOWBALL (SMALLEST FIRST)</button>
                     <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>AVALANCHE (HIGHEST RATE)</button>
@@ -17794,10 +17794,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>ASSETS</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>TOTAL VALUE</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Total value</div>
                 <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500}}>${totalAssets.toLocaleString()}</div>
               </div>
             </div>
@@ -17816,17 +17816,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               {/* Total Assets Summary */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"14px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px"}}>TOTAL ASSETS</div>
+                <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px"}}>Total assets</div>
                 <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
               </div>
 
               {/* Assets Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>ASSETS{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                  <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Assets{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
-                <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{}}>
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Property, super, cash, vehicles, etc.</p>
@@ -17851,7 +17851,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const catEmoji = { cash:'💵', super:'🏦', vehicle:'🚗', shares:'📈', property:'🏠' };
                 return (
                   <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE ASSETS</div>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample assets</div>
                     <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your total net worth — everything you own.</div>
                     <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Cash, super, vehicles, shares, property. The pie chart breaks down where your money lives.</div>
                     <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
@@ -17868,7 +17868,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       })}
                       <div style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",borderTop:"1px solid rgba(0,200,255,0.28)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
                         <div></div>
-                        <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"0.3px"}}>NET WORTH</div>
+                        <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"0.3px"}}>Net worth</div>
                         <div style={{color:"#00c8ff",textAlign:"right"}}>${sampleTotal.toLocaleString()}</div>
                         <div></div>
                       </div>
@@ -17910,7 +17910,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {isEditing && (
                       <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(0,200,255,0.28)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>ASSET NAME</div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Asset name</div>
                           <input
                             type="text"
                             value={asset?.name || ''}
@@ -17922,7 +17922,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                         </div>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>TYPE</div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Type</div>
                           <select
                             value={asset?.category || ''}
                             onFocus={scrollInputIntoView}
@@ -17949,7 +17949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>OWNED FOR</div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Owned for</div>
                             <input
                               type="text"
                               value={asset?.ownedFor || ''}
@@ -17962,7 +17962,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                         </div>
                         <button onClick={() => { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); }}
-                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
+                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                       </div>
                     )}
                   </div>
@@ -17984,10 +17984,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>BREAKDOWN BY TYPE</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Breakdown by type</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
-              <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{}}>
               <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Breakdown by Type</h2>
                 <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Click column headers to sort</p>
@@ -18100,7 +18100,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} CONSTELLATION · ASSET GRAPH</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   {isWide ? (
@@ -18238,7 +18238,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                   {/* Detail list below */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>ASSET DETAILS</div>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Asset details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {nodes.map((a, idx) => (
                         <div key={a.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"10px"}}>
@@ -18263,10 +18263,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>ASSETS BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Assets breakdown</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
-              <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{}}>
               <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets Breakdown</h2>
               </div>
@@ -18721,7 +18721,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {padding:"12px 16px"}}>
               <div style={{marginBottom:"10px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexShrink:0}}>
                 {assetMapExpanded && (
-                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>ASSET MAP · FULLSCREEN</span>
+                  <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>ASSET MAP · FULLSCREEN</span>
                 )}
                 <button
                   onClick={() => setAssetMapExpanded(v => !v)}
