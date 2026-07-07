@@ -19902,15 +19902,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Mode switcher — hidden; each sub-tab determines its own mode */}
                 {false && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
-                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>GRAPH MODE</div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
+                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Graph mode</div>
                   <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
                     {['current','future'].map(m => {
                       const meta = modeMeta[m];
                       const active = constellationMode === m;
                       return (
                         <button key={m} onClick={() => setConstellationMode(m)}
-                          style={{padding:"7px 14px",background:active?`${meta.accent}1f`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?meta.accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?meta.accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600,boxShadow:active?`0 0 12px ${meta.accent}30`:"none"}}>
+                          style={{padding:"7px 14px",background:active?`${meta.accent}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${active?meta.accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?meta.accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600,boxShadow:active?`0 0 12px ${meta.accent}30`:"none"}}>
                           {meta.label} · {meta.count}
                         </button>
                       );
@@ -19921,15 +19921,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Portfolio summary — only in current mode */}
                 {effectiveMode==='current' && currentList.length > 0 && (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"14px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"14px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>PORTFOLIO TOTALS · {displayCurrency}</div>
+                      <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio totals · {displayCurrency}</div>
                       <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>DISPLAY:</span>
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Display:</span>
                         <select
                           value={displayCurrency}
                           onChange={(e) => setDisplayCurrency(e.target.value)}
-                          style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",fontWeight:600,letterSpacing:"0.3px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
+                          style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",fontWeight:600,letterSpacing:"0.3px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
                         >
                           {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
                             <option key={c} value={c}>{c}</option>
@@ -19943,11 +19943,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{fontSize:"18px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>INVESTED</div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Invested</div>
                         <div style={{fontSize:"18px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>RETURN</div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Return</div>
                         <div style={{fontSize:"18px",color:totalPortReturn>=0?"#22c55e":"#ef4444",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{totalPortReturn>=0?'+':''}{displaySym}{Math.abs(totalPortReturn).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
@@ -19962,14 +19962,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 )}
 
                 {/* The map itself — same component as Asset Map */}
-                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
+                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`1px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
                     <span style={{fontSize:"11px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} INVESTMENT MAP · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                       <button
                         onClick={() => setMapExpanded(v => !v)}
-                        style={{fontSize:"10px",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:`${modeMeta[effectiveMode].accent}15`,border:`0.5px solid ${modeMeta[effectiveMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
+                        style={{fontSize:"10px",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:`${modeMeta[effectiveMode].accent}15`,border:`1px solid ${modeMeta[effectiveMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
                       >
                         {mapExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND'}
                       </button>
@@ -19981,7 +19981,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               setCurrentGraph({ nodes: [], edges: [], types: currentGraph.types || [] });
                             }
                           }}
-                          style={{fontSize:"9px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",padding:"5px 10px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
+                          style={{fontSize:"9px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",padding:"5px 10px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
                         >
                           🗑 CLEAR MAP
                         </button>
@@ -20018,7 +20018,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       }}
                       customEmptyState={(
                       <>
-                        <div style={{ fontSize: '10px', color: `${modeMeta[effectiveMode].accent}99`, fontFamily:SANS_FONT, letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>EMPTY MAP</div>
+                        <div style={{ fontSize: '10px', color: `${modeMeta[effectiveMode].accent}99`, fontFamily:SANS_FONT, letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>Empty map</div>
                         <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily:SANS_FONT, fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[effectiveMode].label.toLowerCase()}.</div>
                         <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily:SANS_FONT, lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
                           Auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
@@ -20033,11 +20033,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Hint card */}
                 <div style={{background:"rgba(5,12,24,0.6)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"14px",padding:"12px 14px",fontSize:"10px",fontFamily:SANS_FONT,color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
-                  <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"0.3px",marginBottom:"6px"}}>HOW TO USE</div>
+                  <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"0.3px",marginBottom:"6px"}}>How to use</div>
                   {(currentGraph.nodes || []).length === 0 ? (
-                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.</>
+                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map.</>
                   ) : (
-                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
+                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
                   )}
                 </div>
               </div>
@@ -20048,19 +20048,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
 
               {/* Stocks Input */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>STOCKS & ETFS{stocks.length>0?` · ${stocks.length}`:''}</span>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Stocks & ETFs{stocks.length>0?` · ${stocks.length}`:''}</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                 </summary>
-                <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                <div style={{}}>
+                <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Stocks & ETFs</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
                 {/* Live price coverage notice */}
-                <div style={{margin:"12px 16px 0",padding:"10px 12px",background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.25)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"10px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                <div style={{margin:"12px 16px 0",padding:"10px 12px",background:"rgba(168,85,247,0.06)",border:"1px solid rgba(168,85,247,0.25)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"10px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <div style={{fontSize:"14px",lineHeight:"1.2",color:"rgba(168,85,247,0.8)"}}>ⓘ</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"3px"}}>LIVE PRICES — GLOBAL COVERAGE</div>
@@ -20088,7 +20088,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const startFresh = () => setStocks([{ id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }]);
                     return (
                       <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE PORTFOLIO</div>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample portfolio</div>
                         <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your stock & ETF holdings — see gains, losses, and total portfolio value.</div>
                         <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Enter what you invested, the current value, and the app calculates returns + breaks down by stock and industry.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
@@ -20131,7 +20131,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const stockCurrency = (tickerKey && livePrices[tickerKey]?.currency) || stock?.currency || 'USD';
                     const sym = currencySymbol(stockCurrency);
                     return (
-                      <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
+                      <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`1px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
                         {/* Compact row */}
                         <button onClick={() => setEditingStockIdx(isEditing ? null : index)}
                           style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
@@ -20160,7 +20160,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {isEditing && (
                           <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(0,200,255,0.28)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>TICKER / NAME</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Ticker / name</div>
                               <input
                                 type="text"
                                 value={stock?.name || ''}
@@ -20172,7 +20172,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>{stock?.manualMode ? 'Manual mode — enter invested and current value directly' : 'Auto mode — uses live price × shares. ASX tickers auto-resolve (REH → REH.AX). For others, add suffix (.L, .TO, etc.).'}</div>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Industry</div>
                               <select
                                 value={stock?.industry || ''}
                                 onFocus={scrollInputIntoView}
@@ -20192,7 +20192,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                               <button
                                 onClick={() => updateStock(index, 'manualMode', !stock?.manualMode)}
-                                style={{padding:"6px 12px",background:stock?.manualMode ? "rgba(168,85,247,0.15)" : "rgba(0,200,255,0.12)",border:`0.5px solid ${stock?.manualMode ? "rgba(168,85,247,0.5)" : "rgba(0,200,255,0.4)"}`,borderRadius:"10px",color:stock?.manualMode ? "rgba(168,85,247,0.95)" : "rgba(0,200,255,0.9)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}
+                                style={{padding:"6px 12px",background:stock?.manualMode ? "rgba(168,85,247,0.15)" : "rgba(0,200,255,0.12)",border:`1px solid ${stock?.manualMode ? "rgba(168,85,247,0.5)" : "rgba(0,200,255,0.4)"}`,borderRadius:"10px",color:stock?.manualMode ? "rgba(168,85,247,0.95)" : "rgba(0,200,255,0.9)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}
                               >
                                 {stock?.manualMode ? '→ SWITCH TO AUTO' : '→ SWITCH TO MANUAL'}
                               </button>
@@ -20228,8 +20228,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 </div>
                                 <div>
-                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>GAIN / LOSS</div>
-                                  <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Gain / loss</div>
+                                  <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`1px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                     {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}$${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
                                   </div>
                                 </div>
@@ -20239,7 +20239,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 {/* AUTO MODE: shares + avgCost inputs, computed values */}
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>SHARES OWNED</div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Shares owned</div>
                                     <input
                                       type="text"
                                       inputMode="decimal"
@@ -20272,7 +20272,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIVE PRICE {stockCurrency && livePrice > 0 ? `· ${stockCurrency}` : ''}</div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Live price {stockCurrency && livePrice > 0 ? `· ${stockCurrency}` : ''}</div>
                                     <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",color:livePrice > 0 ? "#e0eaff" : "rgba(148,163,184,0.5)"}}>
                                       {livePrice > 0 ? `${sym}${livePrice.toFixed(2)}` : (tickerKey ? 'Hit refresh →' : '—')}
                                     </div>
@@ -20286,8 +20286,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>GAIN / LOSS</div>
-                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Gain / loss</div>
+                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`1px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                       {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}${sym}${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
                                     </div>
                                   </div>
@@ -20295,7 +20295,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </>
                             )}
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>HELD FOR</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Held for</div>
                               <input
                                 type="text"
                                 value={stock?.heldFor || ''}
@@ -20305,14 +20305,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               />
                             </div>
                             <button onClick={() => { setStocks(prev => prev.filter((_, i) => i !== index)); setEditingStockIdx(null); }}
-                              style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
+                              style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                           </div>
                         )}
                       </div>
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
+                <div style={{padding:"12px 16px",borderTop:`1px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => { setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', shares: 0, sharesStr: '', avgCost: 0, avgCostStr: '', industry: '', dateAdded: new Date().toISOString() }]); setEditingStockIdx(stocks.length); }}
                     style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
@@ -20325,12 +20325,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
                   <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>PORTFOLIO BY NAME</span>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by name</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
-                  <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
                     <div className="relative">
@@ -20414,12 +20414,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
                   <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>PORTFOLIO BY INDUSTRY · CHART</span>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by industry · chart</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
-                  <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
                     <div className="relative">
@@ -20496,13 +20496,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
                   <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>PORTFOLIO BY INDUSTRY · TABLE</span>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by industry · table</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
-                  <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <div style={{}}>
+                  <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                     <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Portfolio by Industry</h2>
                     <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Click column headers to sort</p>
                   </div>
@@ -20576,7 +20576,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         ))}
                       </tbody>
                       <tfoot>
-                        <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
+                        <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"1px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
                           <td className="py-3 px-4">Total</td>
                           <td className="py-3 px-4 text-center">{filledStocks.length}</td>
                           <td className="py-3 px-4 text-right">{displaySym}{totalStocksValueFx.toLocaleString(undefined, { maximumFractionDigits: 0 })} {displayCurrency}</td>
@@ -20698,10 +20698,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const quoteIndex = daysDiff % quotes.length;
                 const todayQuote = quotes[quoteIndex];
                 return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"14px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(168,85,247,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"14px",padding:"14px 18px"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>QUOTE OF THE DAY</div>
-                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>DAY {(quoteIndex + 1)} / {quotes.length}</div>
+                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Quote of the day</div>
+                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Day {(quoteIndex + 1)} / {quotes.length}</div>
                     </div>
                     <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
                       <div style={{fontSize:"28px",lineHeight:"1",color:"rgba(168,85,247,0.45)",fontFamily:"Georgia, serif",fontWeight:700,marginTop:"-4px"}}>"</div>
