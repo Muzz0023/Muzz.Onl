@@ -17807,9 +17807,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {tab.label}
                 </button>
               ))}
-              <button onClick={() => setActiveView('worldmap')} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                WORLD MAP
-              </button>
             </div>
           </div>
         </div>
