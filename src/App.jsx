@@ -20097,17 +20097,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
-                {/* Live price coverage notice */}
-                <div style={{margin:"12px 16px 0",padding:"10px 12px",background:"rgba(168,85,247,0.06)",border:"1px solid rgba(168,85,247,0.25)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"10px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                  <div style={{fontSize:"14px",lineHeight:"1.2",color:"rgba(168,85,247,0.8)"}}>ⓘ</div>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"3px"}}>LIVE PRICES — GLOBAL COVERAGE</div>
-                    <div style={{fontSize:"10px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,lineHeight:1.5}}>
-                      Auto-pricing works for stocks worldwide. Type the US ticker (HSY, AAPL, GOOG) or ASX (REH, CBA, VAS — auto-resolved). For LSE add <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.L</span>, TSX add <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.TO</span>, Tokyo <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.T</span>. If a ticker can't be found, hit SWITCH TO MANUAL.
-                    </div>
-                  </div>
-                </div>
-
                 {/* Stocks Cards */}
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {stocks.length === 0 && (() => {
