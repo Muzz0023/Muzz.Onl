@@ -19753,6 +19753,127 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
 
+          {investmentsSubTab === 'portfolio' && (
+            <>
+              {/* Daily Investment Quote */}
+              {(() => {
+                const quotes = [
+                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
+                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
+                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
+                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
+                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
+                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
+                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
+                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
+                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
+                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
+                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
+                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
+                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
+                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Charlie Munger", quote: "Invert, always invert." },
+                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
+                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
+                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
+                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
+                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
+                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
+                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
+                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
+                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
+                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
+                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
+                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
+                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
+                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
+                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
+                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
+                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
+                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
+                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
+                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
+                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
+                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
+                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
+                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
+                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
+                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
+                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
+                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
+                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
+                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
+                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
+                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
+                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
+                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
+                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
+                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
+                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
+                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
+                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
+                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
+                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
+                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
+                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
+                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
+                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
+                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
+                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
+                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
+                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
+                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
+                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
+                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
+                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
+                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
+                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
+                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
+                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
+                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
+                ];
+                const startDate = new Date('2025-01-01');
+                const today = new Date();
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                const quoteIndex = daysDiff % quotes.length;
+                const todayQuote = quotes[quoteIndex];
+                return (
+                  <div style={{padding:"2px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"13px",color:"rgba(226,232,240,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
+                    <div style={{fontSize:"11px",color:"rgba(226,232,240,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
+                  </div>
+                );
+              })()}
+            </>
+          )}
+
           {(investmentsSubTab === 'portfolio' || investmentsSubTab === 'futurePortfolio') && (() => {
             const isResearchMapTab = false;
             // Each tab forces its own mode — current portfolio = current, future portfolio = future.
@@ -19960,89 +20081,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                 )}
-
-                {/* The map itself — same component as Asset Map */}
-                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`1px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
-                    <span style={{fontSize:"11px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} INVESTMENT MAP · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
-                    <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
-                      <button
-                        onClick={() => setMapExpanded(v => !v)}
-                        style={{fontSize:"10px",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:`${modeMeta[effectiveMode].accent}15`,border:`1px solid ${modeMeta[effectiveMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
-                      >
-                        {mapExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND'}
-                      </button>
-                      {(currentGraph.nodes || []).length > 0 && (
-                        <button
-                          onClick={() => {
-                            const count = (currentGraph.nodes || []).length;
-                            if (confirm(`Delete the entire ${modeMeta[effectiveMode].label.toLowerCase()} map (${count} node${count!==1?'s':''})? This can't be undone.`)) {
-                              setCurrentGraph({ nodes: [], edges: [], types: currentGraph.types || [] });
-                            }
-                          }}
-                          style={{fontSize:"9px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",padding:"5px 10px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
-                        >
-                          🗑 CLEAR MAP
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={effectiveMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[effectiveMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
-                      liveValueByLabel={(label) => {
-                        // Map a node label (typically a ticker) back to the live $ value + currency.
-                        // Returns { value, currency, symbol } so node display can tag with currency code.
-                        // CURRENT mode → look up the holding in stocks[] and return its currentValue + native currency.
-                        // FUTURE mode  → look up the planned deposit amount from futureResearch (currency unknown → display currency).
-                        // RESEARCH mode→ no native $ amount; return null so manual node.value wins.
-                        if (!label) return null;
-                        const key = String(label).trim().toUpperCase();
-                        if (effectiveMode === 'current') {
-                          const hit = (stocks || []).find(s => String(s?.name || '').trim().toUpperCase() === key);
-                          if (!hit) return null;
-                          const v = parseFloat(hit.currentValue) || 0;
-                          if (v <= 0) return null;
-                          const cur = hit.currency || 'USD';
-                          return { value: v, currency: cur, symbol: currencySymbol(cur) };
-                        }
-                        if (effectiveMode === 'future') {
-                          const hit = (futureResearch || []).find(s => String(s?.ticker || '').trim().toUpperCase() === key);
-                          if (!hit) return null;
-                          const v = parseFloat(hit.plannedAmount) || 0;
-                          if (v <= 0) return null;
-                          // Planned amounts don't carry a currency, so treat them as in the user's display currency
-                          return { value: v, currency: displayCurrency, symbol: currencySymbol(displayCurrency) };
-                        }
-                        return null;
-                      }}
-                      customEmptyState={(
-                      <>
-                        <div style={{ fontSize: '10px', color: `${modeMeta[effectiveMode].accent}99`, fontFamily:SANS_FONT, letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>Empty map</div>
-                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily:SANS_FONT, fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[effectiveMode].label.toLowerCase()}.</div>
-                        <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily:SANS_FONT, lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
-                          Auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
-                        </div>
-                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[effectiveMode].accent}26`, border: `1px solid ${modeMeta[effectiveMode].accent}b3`, borderRadius: '4px', color: modeMeta[effectiveMode].accent, fontFamily:SANS_FONT, fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[effectiveMode].accent}26` }}>⚡ GENERATE MAP</button>
-                        </div>
-                      </>
-                    )} />
-                  </div>
-                </div>
-
-                {/* Hint card */}
-                <div style={{background:"rgba(5,12,24,0.6)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"14px",padding:"12px 14px",fontSize:"10px",fontFamily:SANS_FONT,color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
-                  <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"0.3px",marginBottom:"6px"}}>How to use</div>
-                  {(currentGraph.nodes || []).length === 0 ? (
-                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map.</>
-                  ) : (
-                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
 
           {investmentsSubTab === 'portfolio' && (
             <>
@@ -20588,133 +20626,92 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </details>
               )}
-              {/* Daily Investment Quote */}
-              {(() => {
-                const quotes = [
-                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
-                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
-                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
-                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
-                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
-                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
-                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
-                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
-                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
-                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
-                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
-                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
-                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
-                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Charlie Munger", quote: "Invert, always invert." },
-                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
-                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
-                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
-                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
-                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
-                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
-                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
-                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
-                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
-                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
-                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
-                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
-                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
-                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
-                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
-                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
-                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
-                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
-                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
-                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
-                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
-                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
-                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
-                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
-                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
-                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
-                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
-                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
-                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
-                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
-                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
-                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
-                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
-                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
-                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
-                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
-                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
-                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
-                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
-                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
-                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
-                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
-                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
-                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
-                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
-                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
-                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
-                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
-                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
-                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
-                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
-                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
-                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
-                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
-                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
-                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
-                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
-                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
-                ];
-                const startDate = new Date('2025-01-01');
-                const today = new Date();
-                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                const quoteIndex = daysDiff % quotes.length;
-                const todayQuote = quotes[quoteIndex];
-                return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"14px",padding:"14px 18px"}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Quote of the day</div>
-                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Day {(quoteIndex + 1)} / {quotes.length}</div>
-                    </div>
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
-                      <div style={{fontSize:"28px",lineHeight:"1",color:"rgba(168,85,247,0.45)",fontFamily:"Georgia, serif",fontWeight:700,marginTop:"-4px"}}>"</div>
-                      <div style={{flex:1}}>
-                        <p style={{fontSize:"15px",fontStyle:"italic",color:"#f1f5ff",fontFamily:SANS_FONT,lineHeight:1.55,marginBottom:"8px",fontWeight:500}}>{todayQuote.quote}</p>
-                        <p style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.5px"}}>— {todayQuote.author}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
             </>
           )}
+
+                {/* The map itself — same component as Asset Map */}
+                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`1px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
+                  <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
+                    <span style={{fontSize:"11px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} INVESTMENT MAP · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                      <button
+                        onClick={() => setMapExpanded(v => !v)}
+                        style={{fontSize:"10px",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:`${modeMeta[effectiveMode].accent}15`,border:`1px solid ${modeMeta[effectiveMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
+                      >
+                        {mapExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND'}
+                      </button>
+                      {(currentGraph.nodes || []).length > 0 && (
+                        <button
+                          onClick={() => {
+                            const count = (currentGraph.nodes || []).length;
+                            if (confirm(`Delete the entire ${modeMeta[effectiveMode].label.toLowerCase()} map (${count} node${count!==1?'s':''})? This can't be undone.`)) {
+                              setCurrentGraph({ nodes: [], edges: [], types: currentGraph.types || [] });
+                            }
+                          }}
+                          style={{fontSize:"9px",color:"rgba(239,68,68,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",padding:"5px 10px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
+                        >
+                          🗑 CLEAR MAP
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
+                    <AssetMapGraph key={effectiveMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[effectiveMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
+                      liveValueByLabel={(label) => {
+                        // Map a node label (typically a ticker) back to the live $ value + currency.
+                        // Returns { value, currency, symbol } so node display can tag with currency code.
+                        // CURRENT mode → look up the holding in stocks[] and return its currentValue + native currency.
+                        // FUTURE mode  → look up the planned deposit amount from futureResearch (currency unknown → display currency).
+                        // RESEARCH mode→ no native $ amount; return null so manual node.value wins.
+                        if (!label) return null;
+                        const key = String(label).trim().toUpperCase();
+                        if (effectiveMode === 'current') {
+                          const hit = (stocks || []).find(s => String(s?.name || '').trim().toUpperCase() === key);
+                          if (!hit) return null;
+                          const v = parseFloat(hit.currentValue) || 0;
+                          if (v <= 0) return null;
+                          const cur = hit.currency || 'USD';
+                          return { value: v, currency: cur, symbol: currencySymbol(cur) };
+                        }
+                        if (effectiveMode === 'future') {
+                          const hit = (futureResearch || []).find(s => String(s?.ticker || '').trim().toUpperCase() === key);
+                          if (!hit) return null;
+                          const v = parseFloat(hit.plannedAmount) || 0;
+                          if (v <= 0) return null;
+                          // Planned amounts don't carry a currency, so treat them as in the user's display currency
+                          return { value: v, currency: displayCurrency, symbol: currencySymbol(displayCurrency) };
+                        }
+                        return null;
+                      }}
+                      customEmptyState={(
+                      <>
+                        <div style={{ fontSize: '10px', color: `${modeMeta[effectiveMode].accent}99`, fontFamily:SANS_FONT, letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>Empty map</div>
+                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily:SANS_FONT, fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[effectiveMode].label.toLowerCase()}.</div>
+                        <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily:SANS_FONT, lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
+                          Auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[effectiveMode].accent}26`, border: `1px solid ${modeMeta[effectiveMode].accent}b3`, borderRadius: '4px', color: modeMeta[effectiveMode].accent, fontFamily:SANS_FONT, fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[effectiveMode].accent}26` }}>⚡ GENERATE MAP</button>
+                        </div>
+                      </>
+                    )} />
+                  </div>
+                </div>
+
+                {/* Hint card */}
+                <div style={{background:"rgba(5,12,24,0.6)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"14px",padding:"12px 14px",fontSize:"10px",fontFamily:SANS_FONT,color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
+                  <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"0.3px",marginBottom:"6px"}}>How to use</div>
+                  {(currentGraph.nodes || []).length === 0 ? (
+                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map.</>
+                  ) : (
+                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>Current</span> / <span style={{color:"#3b82f6"}}>Future</span> / <span style={{color:"#a855f7"}}>Research</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
 
           {/* COVERAGE LIBRARY TAB — analysed companies, drill-down by industry → country → company */}
           {investmentsSubTab === 'coverage' && (() => {
