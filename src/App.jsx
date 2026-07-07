@@ -17417,22 +17417,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>MUZZ.ONL</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>FEEDBACK & SUPPORT</div>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>MUZZ.ONL</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>FEEDBACK & SUPPORT</div>
           </div>
         </div>
         <div className="max-w-lg mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {/* Contact */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>GET IN TOUCH</div>
-            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"4px",textDecoration:"none",marginBottom:"10px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid #00c8ff",padding:"16px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"12px"}}>Get in touch</div>
+            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"12px",textDecoration:"none",marginBottom:"10px"}}>
               <Mail style={{width:"18px",height:"18px",color:"rgba(249,115,22,0.8)",flexShrink:0}} />
               <div>
-                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>EMAIL US</div>
-                <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>Muzz.onl@outlook.com</div>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500}}>Email us</div>
+                <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:SANS_FONT}}>Muzz.onl@outlook.com</div>
               </div>
             </a>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
@@ -17441,27 +17441,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:'BUG REPORT',subject:'Muzz Bug Report'},
                 {label:'SUPPORT',subject:'Muzz Support Request'},
               ].map((t,i) => (
-                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 8px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",textDecoration:"none"}}>
-                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>{t.label}</span>
+                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 8px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",textDecoration:"none"}}>
+                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>{t.label}</span>
                 </a>
               ))}
             </div>
           </div>
           {/* Instagram */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(225,48,108,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>STAY UPDATED</div>
-            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"4px",textDecoration:"none"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"14px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(225,48,108,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"12px"}}>Stay updated</div>
+            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"12px",textDecoration:"none"}}>
               <div style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(225,48,108,0.9)",boxShadow:"0 0 6px rgba(225,48,108,0.9)",flexShrink:0}}/>
               <div>
-                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>INSTAGRAM @MUZZ.ONL</div>
-                <div style={{fontSize:"10px",color:"rgba(225,48,108,0.7)",fontFamily:"monospace"}}>instagram.com/muzz.onl</div>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INSTAGRAM @MUZZ.ONL</div>
+                <div style={{fontSize:"10px",color:"rgba(225,48,108,0.7)",fontFamily:SANS_FONT}}>instagram.com/muzz.onl</div>
               </div>
             </a>
           </div>
           {/* FAQ */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.6)",overflow:"hidden"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-              <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FAQ</span>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid rgba(251,191,36,0.6)",overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+              <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>FAQ</span>
             </div>
             {[
               {q:"What plans are available?",a:"Muzz Elite at $4.99/month unlocks the full Muzz personal finance and life management system."},
@@ -17469,11 +17469,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {q:"How do I cancel?",a:"Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period."},
               {q:"Can I use Muzz on my phone?",a:"Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl."},
             ].map((faq,i,arr) => (
-              <details key={i} style={{borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",listStyle:"none",display:"flex",gap:"8px",alignItems:"center"}}>
+              <details key={i} style={{borderBottom:i<arr.length-1?"1px solid rgba(0,200,255,0.15)":"none"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",listStyle:"none",display:"flex",gap:"8px",alignItems:"center"}}>
                   <span style={{color:"rgba(251,191,36,0.5)"}}>?</span> {faq.q}
                 </summary>
-                <div style={{padding:"0 16px 12px 28px",fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",lineHeight:"1.6"}}>{faq.a}</div>
+                <div style={{padding:"0 16px 12px 28px",fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,lineHeight:"1.6"}}>{faq.a}</div>
               </details>
             ))}
           </div>
@@ -17488,9 +17488,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
               <svg width="40" height="50" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -17498,9 +17498,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>{isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.5px"}}>{isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0.5px"}}>{isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
               </div>
             </div>
           </div>
@@ -17513,34 +17513,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"grid",gap:"12px",gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))'}}>
 
               {/* Muzz Elite Card */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isElite ? "rgba(245,158,11,0.4)" : "rgba(245,158,11,0.2)"}`,borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 18px",position:"relative",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isElite ? "rgba(245,158,11,0.4)" : "rgba(245,158,11,0.2)"}`,borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"14px",padding:"16px 18px",position:"relative",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
                 {isElite && (
-                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:"monospace",fontSize:"8px",letterSpacing:"1.5px",borderRadius:"2px",fontWeight:600}}>CURRENT</div>
+                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:SANS_FONT,fontSize:"8px",letterSpacing:"0.3px",borderRadius:"10px",fontWeight:600}}>Current</div>
                 )}
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIER 01</div>
-                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>MUZZ ELITE</div>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Tier 01</div>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"8px"}}>MUZZ ELITE</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
-                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$4.99</span>
-                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>/MONTH</span>
+                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>$4.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"6px"}}>Personal finance & life management</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
                   {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Nutrition & Water Tracker','Elite Badge & Name'].map((f,i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
                   ))}
                 </div>
                 {!isElite && (
                   <button onClick={handleUpgrade}
-                    style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                    style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
                     SUBSCRIBE — $4.99/MONTH
                   </button>
                 )}
                 {isElite && (
-                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"3px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"10px",textAlign:"center",letterSpacing:"1.5px",fontWeight:600}}>● ACTIVE PLAN</div>
+                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"10px",color:"rgba(245,158,11,0.7)",fontFamily:SANS_FONT,fontSize:"10px",textAlign:"center",letterSpacing:"0.3px",fontWeight:600}}>● ACTIVE PLAN</div>
                 )}
               </div>
 
@@ -17549,31 +17549,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Legal text for iOS */}
           {!isElite && isNative && (
-            <div style={{textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>
-              <p>AUTO-RENEWABLE SUBSCRIPTION · CHARGED TO APPLE ID AT CONFIRMATION</p>
-              <p>RENEWS UNLESS CANCELLED 24H BEFORE PERIOD ENDS</p>
+            <div style={{textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>
+              <p>Auto-renewable subscription · charged to Apple ID at confirmation</p>
+              <p>Renews unless cancelled 24h before the period ends</p>
             </div>
           )}
 
           {/* Restore Purchases - iOS only */}
           {isNative && !isElite && (
             <div style={{textAlign:"center"}}>
-              <button onClick={handleRestorePurchases} style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",background:"none",border:"0.5px solid rgba(245,158,11,0.3)",padding:"6px 14px",borderRadius:"3px",cursor:"pointer"}}>
+              <button onClick={handleRestorePurchases} style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"0.5px solid rgba(245,158,11,0.3)",padding:"6px 14px",borderRadius:"10px",cursor:"pointer"}}>
                 RESTORE PREVIOUS PURCHASE
               </button>
             </div>
           )}
 
           {/* Feature Comparison */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// FEATURE MATRIX</span>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Feature matrix</span>
             </div>
             <div>
-              <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(0,200,255,0.04)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
-                <span style={{flex:1,fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FEATURE</span>
-                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>FREE</span>
-                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>MUZZ</span>
+              <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(0,200,255,0.04)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                <span style={{flex:1,fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Feature</span>
+                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Free</span>
+                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>MUZZ</span>
               </div>
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true },
@@ -17592,9 +17592,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   : <span style={{color:"rgba(148,163,184,0.2)"}}>—</span>;
                 return (
                   <div key={i} style={{display:"flex",alignItems:"center",padding:"9px 16px",borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
-                    <span style={{flex:1,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace"}}>{row.feature}</span>
-                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:"monospace"}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
-                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:"monospace"}}>{renderCell(row.elite, "rgba(245,158,11,0.9)")}</span>
+                    <span style={{flex:1,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT}}>{row.feature}</span>
+                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
+                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.elite, "rgba(245,158,11,0.9)")}</span>
                   </div>
                 );
               })}
@@ -17603,13 +17603,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"10px"}}>// SUBSCRIPTION</div>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"14px",padding:"14px 18px"}}>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500,marginBottom:"10px"}}>Subscription</div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                 <div>
-                  <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE</span></div>
+                  <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE</span></div>
                   {subscriptionInfo.currentPeriodEnd && (
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",marginTop:"4px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,marginTop:"4px"}}>
                       {subscriptionInfo.cancelAtPeriodEnd
                         ? `CANCELS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
                         : `RENEWS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
@@ -17618,9 +17618,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   )}
                 </div>
                 {subscriptionInfo.cancelAtPeriodEnd ? (
-                  <button onClick={handleReactivateSubscription} style={{padding:"8px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}>REACTIVATE</button>
+                  <button onClick={handleReactivateSubscription} style={{padding:"8px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"10px",color:"rgba(34,197,94,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>Reactivate</button>
                 ) : (
-                  <button onClick={handleCancelSubscription} style={{padding:"8px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>CANCEL</button>
+                  <button onClick={handleCancelSubscription} style={{padding:"8px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer"}}>Cancel</button>
                 )}
               </div>
             </div>
@@ -17628,35 +17628,35 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// SUBSCRIPTION</div>
-              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE (APPLE)</span></div>
-              <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6}}>To manage or cancel: iPhone Settings → Apple ID → Subscriptions</div>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"14px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Subscription</div>
+              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE (APPLE)</span></div>
+              <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,lineHeight:1.6}}>To manage or cancel: iPhone Settings → Apple ID → Subscriptions</div>
               <button onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.85)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.85)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
                 MANAGE APPLE SUBSCRIPTION
               </button>
             </div>
           )}
 
           {/* Display Name */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-            <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// DISPLAY NAME</div>
-            <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>Shows on dashboard greeting — e.g. <span style={{color:"#00c8ff"}}>"G'day, Muzz"</span></div>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Display name</div>
+            <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>Shows on dashboard greeting — e.g. <span style={{color:"#00c8ff"}}>"G'day, Muzz"</span></div>
             <input
               value={eliteName}
               onChange={e => setEliteName(e.target.value)}
               placeholder="Enter your name..."
-              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"9px 12px",outline:"none",letterSpacing:"0.5px"}}
+              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px",padding:"9px 12px",outline:"none",letterSpacing:"0.5px"}}
             />
-            {eliteName && <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>● SAVED — G'DAY, {eliteName.toUpperCase()}</div>}
+            {eliteName && <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>● SAVED — G'DAY, {eliteName.toUpperCase()}</div>}
           </div>
 
           {/* Giving Back */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.25)",borderLeft:"2px solid rgba(255,200,0,0.6)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(255,200,0,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.25)",borderLeft:"2px solid rgba(255,200,0,0.6)",borderRadius:"14px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(255,200,0,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px 18px",borderBottom:"0.5px solid rgba(255,200,0,0.15)"}}>
-              <div style={{fontSize:"10px",color:"rgba(255,200,0,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"6px"}}>// GIVING BACK</div>
-              <div style={{fontSize:"11px",color:"rgba(255,200,100,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>$2 of every Elite subscription goes to charity</div>
+              <div style={{fontSize:"10px",color:"rgba(255,200,0,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500,marginBottom:"6px"}}>Giving back</div>
+              <div style={{fontSize:"11px",color:"rgba(255,200,100,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>$2 of every Elite subscription goes to charity</div>
             </div>
             <div>
               {[
@@ -17666,23 +17666,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div key={i} style={{padding:"12px 18px",display:"flex",alignItems:"center",gap:"12px",borderBottom:i<arr.length-1?"0.5px solid rgba(255,255,255,0.04)":"none"}}>
                   <div style={{width:"6px",height:"6px",borderRadius:"50%",background:c.color,boxShadow:`0 0 6px ${c.color}`,flexShrink:0}}/>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500}}>{c.name}</div>
-                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"2px"}}>$1 PER SUBSCRIPTION</div>
+                    <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>{c.name}</div>
+                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"2px"}}>$1 PER SUBSCRIPTION</div>
                   </div>
-                  <a href={c.url} target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(255,200,0,0.8)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600,textDecoration:"none",border:"0.5px solid rgba(255,200,0,0.3)",padding:"4px 10px",borderRadius:"3px"}}>VISIT →</a>
+                  <a href={c.url} target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(255,200,0,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,textDecoration:"none",border:"0.5px solid rgba(255,200,0,0.3)",padding:"4px 10px",borderRadius:"10px"}}>VISIT →</a>
                 </div>
               ))}
             </div>
             <div style={{padding:"10px 18px",borderTop:"0.5px solid rgba(255,200,0,0.1)",textAlign:"center"}}>
-              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>Every Elite member helps fund research into endometriosis and brain cancer.</div>
+              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>Every Elite member helps fund research into endometriosis and brain cancer.</div>
             </div>
           </div>
 
           {/* Legal Links */}
           <div style={{display:"flex",justifyContent:"center",gap:"16px",paddingTop:"4px"}}>
-            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",textDecoration:"none"}}>PRIVACY POLICY</a>
-            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>·</span>
-            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",textDecoration:"none"}}>TERMS OF USE</a>
+            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textDecoration:"none"}}>Privacy Policy</a>
+            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT}}>·</span>
+            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textDecoration:"none"}}>Terms of Use</a>
           </div>
         </div>
         <FloatingChat 
@@ -35561,20 +35561,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>STATS & INSIGHTS</div>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>STATS & INSIGHTS</div>
           </div>
         </div>
         <div className="max-w-4xl mx-auto px-4 py-5">
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(160px, 1fr))",gap:"10px"}}>
             {statCards.map((s, i) => (
-              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${s.color}40`,borderRadius:"6px",borderLeft:`2px solid ${s.color}`,padding:"14px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"9px",color:`${s.color}90`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>{s.label}</div>
-                <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{s.value}</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{s.sub}</div>
+              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${s.color}40`,borderRadius:"14px",borderLeft:`2px solid ${s.color}`,padding:"14px"}}>
+                <div style={{fontSize:"9px",color:`${s.color}90`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>{s.label}</div>
+                <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500}}>{s.value}</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>{s.sub}</div>
                 <div style={{marginTop:"10px",height:"1px",background:`linear-gradient(90deg,${s.color}50,transparent)`}} />
               </div>
             ))}
