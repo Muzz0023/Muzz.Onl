@@ -11706,7 +11706,7 @@ function MuzzApp() {
   const [billsSortDir, setBillsSortDir] = useState('asc');
   const [assetsSortBy, setAssetsSortBy] = useState('value');
   const [assetsSortDir, setAssetsSortDir] = useState('desc');
-  const [billsSubTab, setBillsSubTab] = useState('bills');
+  const [billsSubTab, setBillsSubTab] = useState('overview');
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
@@ -15341,7 +15341,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'}].map(tab => (
+              {[{id:'overview',label:'OVERVIEW'},{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'}].map(tab => (
                 <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
@@ -15351,6 +15351,73 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+          {/* === OVERVIEW — Apple-style bills home === */}
+          {billsSubTab === 'overview' && (() => {
+            const ob = (activeBucket?.bills || []).filter(b => b && b.name && String(b.name).trim());
+            const oMonthly = ob.reduce((s, b) => s + calcCost(b.monthly, 'monthly', b.freq || 'monthly'), 0);
+            const oIncome = parseFloat(activeBucket?.incomeStr) || 0;
+            const oPct = oIncome > 0 ? Math.min(100, (oMonthly / oIncome) * 100) : null;
+            const nowD = new Date();
+            const todayD = nowD.getDate();
+            const daysInM = new Date(nowD.getFullYear(), nowD.getMonth() + 1, 0).getDate();
+            const upcoming = ob.map(b => {
+              const dd = b.dueDate ? parseInt(String(b.dueDate).replace(/[^0-9]/g, '')) : NaN;
+              if (!dd || isNaN(dd) || dd < 1 || dd > 31) return null;
+              const daysAway = dd >= todayD ? dd - todayD : (daysInM - todayD) + dd;
+              return { id: b.id, name: b.name, amt: calcCost(b.monthly, 'monthly', b.freq || 'monthly'), daysAway };
+            }).filter(Boolean).sort((a, b) => a.daysAway - b.daysAway).slice(0, 3);
+            const biggest = ob.slice().sort((a, b) => calcCost(b.monthly, 'monthly', b.freq || 'monthly') - calcCost(a.monthly, 'monthly', a.freq || 'monthly'))[0];
+            const dueLabel = (d) => d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : `In ${d} days`;
+            const bAccent = activeBucket?.color || '#00c8ff';
+            return (
+              <>
+                {/* This month hero */}
+                <div style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"16px",padding:"20px 22px"}}>
+                  <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,fontWeight:500}}>This month{activeBucket ? ` · ${activeBucket.name}` : ''}</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap",marginTop:"6px"}}>
+                    <div style={{fontSize:"38px",color:"#f2f6ff",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.8px",lineHeight:1}}>${Math.round(oMonthly).toLocaleString()}</div>
+                    <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT}}>{ob.length} bill{ob.length !== 1 ? 's' : ''}{oPct !== null ? ` · ${Math.round(oPct)}% of income` : ''}</div>
+                  </div>
+                  {oPct !== null && (
+                    <div style={{marginTop:"14px",height:"6px",background:"rgba(255,255,255,0.07)",borderRadius:"3px",overflow:"hidden"}}>
+                      <div style={{width:`${oPct}%`,height:"100%",background:bAccent,borderRadius:"3px"}}></div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upcoming */}
+                {upcoming.length > 0 && (
+                  <div style={{background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"16px",overflow:"hidden"}}>
+                    <div style={{padding:"12px 18px 8px",fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,fontWeight:600}}>Upcoming</div>
+                    {upcoming.map((u, i) => (
+                      <div key={u.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"12px 18px",borderTop: i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none"}}>
+                        <div>
+                          <div style={{fontSize:"15px",color:"#e8eefc",fontFamily:SANS_FONT,fontWeight:500}}>{u.name}</div>
+                          <div style={{fontSize:"12px",color: u.daysAway <= 1 ? "rgba(251,191,36,0.9)" : "rgba(226,232,240,0.5)",fontFamily:SANS_FONT,marginTop:"2px"}}>{dueLabel(u.daysAway)}</div>
+                        </div>
+                        <div style={{fontSize:"15px",color:"#f2f6ff",fontFamily:SANS_FONT,fontWeight:600}}>${Math.round(u.amt).toLocaleString()}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* One quiet insight */}
+                {biggest && (
+                  <div style={{padding:"4px 6px",textAlign:"center",fontSize:"13px",color:"rgba(226,232,240,0.45)",fontFamily:SANS_FONT}}>
+                    Biggest bill: {biggest.name} · ${Math.round(calcCost(biggest.monthly, 'monthly', biggest.freq || 'monthly')).toLocaleString()}/mo
+                  </div>
+                )}
+
+                {ob.length === 0 && (
+                  <div style={{padding:"32px 16px",textAlign:"center"}}>
+                    <div style={{fontSize:"14px",color:"rgba(226,232,240,0.6)",fontFamily:SANS_FONT,marginBottom:"12px"}}>No bills yet{activeBucket ? ` in ${activeBucket.name}` : ''}.</div>
+                    <button onClick={() => setBillsSubTab('bills')} style={{padding:"10px 22px",background:"rgba(0,200,255,0.14)",border:"1px solid rgba(0,200,255,0.6)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Add your bills</button>
+                  </div>
+                )}
+              </>
+            );
+          })()}
 
           {billsSubTab === 'bills' && (
             <>
