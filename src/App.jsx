@@ -15409,38 +15409,91 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </details>
 
-          {/* Salary Breakdown — collapsible */}
-          {salaryNum > 0 && (
+          {/* Bills vs Income — collapsible */}
+          {filledSubs.length > 0 && salaryNum > 0 && (
             <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.incomeLabel || 'Income'} breakdown</span>
+                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Bills vs income</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
-              <div style={{overflowX:"auto",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+              <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Bills vs Income</h2>
+              </div>
+              <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:`${bucketAccent}08`,borderBottom:`0.5px solid ${bucketAccent}1a`}}>
-                      <th className="text-left py-3 px-4 font-semibold">Period</th>
-                      <th className="text-right py-3 px-4 font-semibold">Daily</th>
-                      <th className="text-right py-3 px-4 font-semibold">Weekly</th>
-                      <th className="text-right py-3 px-4 font-semibold">Monthly</th>
-                      <th className="text-right py-3 px-4 font-semibold">Quarterly</th>
-                      <th className="text-right py-3 px-4 font-semibold">Half-Year</th>
-                      <th className="text-right py-3 px-4 font-semibold">Annually</th>
+                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                      <th className="text-left py-3 px-4 font-semibold">Category</th>
+                      <th className="text-right py-3 px-3 font-semibold">Daily</th>
+                      <th className="text-right py-3 px-3 font-semibold">Weekly</th>
+                      <th className="text-right py-3 px-3 font-semibold">Monthly</th>
+                      <th className="text-right py-3 px-3 font-semibold">Quarterly</th>
+                      <th className="text-right py-3 px-3 font-semibold">Half-Year</th>
+                      <th className="text-right py-3 px-3 font-semibold">Annually</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={{background:`${bucketAccent}10`,borderTop:`0.5px solid ${bucketAccent}55`,fontFamily:SANS_FONT,fontWeight:600,color:`${bucketAccent}ee`}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{activeBucket.incomeLabel || 'Income'}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'daily')}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'weekly')}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'monthly')}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'quarterly')}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'halfyear')}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'annually')}</td>
+                    <tr className="border-b">
+                      <td className="py-3 px-4 font-medium text-green-700">Income</td>
+                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'daily')}</td>
+                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'weekly')}</td>
+                      <td className="py-3 px-3 text-right text-green-700 font-semibold">${calcCost(salaryNum, 'monthly')}</td>
+                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'quarterly')}</td>
+                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'halfyear')}</td>
+                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'annually')}</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-3 px-4 font-medium text-red-600">Bills</td>
+                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'daily')}</td>
+                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'weekly')}</td>
+                      <td className="py-3 px-3 text-right text-red-600 font-semibold">${calcCost(totalMonthly, 'monthly')}</td>
+                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'quarterly')}</td>
+                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'halfyear')}</td>
+                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'annually')}</td>
+                    </tr>
+                    <tr style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(34,197,94,0.06)"}}>
+                      <td className="py-3 px-4 font-semibold text-green-800">Left Over</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'daily')}</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'weekly')}</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-bold">${calcCost(salaryNum - totalMonthly, 'monthly')}</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'quarterly')}</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'halfyear')}</td>
+                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'annually')}</td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Percentage Breakdown */}
+              <div style={{padding:"14px 16px",borderTop:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.03)"}}>
+                <h3 className="font-semibold mb-4">% of Income</h3>
+                <div className="flex flex-col md:flex-row gap-6 items-center">
+                  <div className="flex gap-8">
+                    <div style={{textAlign:"center"}}>
+                      <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Bills</p>
+                    </div>
+                    <div style={{textAlign:"center"}}>
+                      <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Savings</p>
+                    </div>
+                  </div>
+                  <div className="flex-1 w-full md:w-auto">
+                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
+                      <div 
+                        style={{height:"100%",background:"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}}
+                        style={{ width: `${Math.min(parseFloat(calcPercentage(totalMonthly, salaryNum)), 100)}%` }}
+                      ></div>
+                    </div>
+                    <div className="flex justify-between mt-1 text-xs text-gray-400">
+                      <span>0%</span>
+                      <span>50%</span>
+                      <span>100%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               </div>
             </details>
           )}
@@ -16250,94 +16303,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
 
-          {/* Bills vs Salary Comparison — collapsible */}
-          {filledSubs.length > 0 && salaryNum > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"14px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Bills vs income</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-              </summary>
-              <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Bills vs Income</h2>
-              </div>
-              <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                  <thead>
-                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                      <th className="text-left py-3 px-4 font-semibold">Category</th>
-                      <th className="text-right py-3 px-3 font-semibold">Daily</th>
-                      <th className="text-right py-3 px-3 font-semibold">Weekly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Monthly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Quarterly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Half-Year</th>
-                      <th className="text-right py-3 px-3 font-semibold">Annually</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-3 px-4 font-medium text-green-700">Income</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700 font-semibold">${calcCost(salaryNum, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'annually')}</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-3 px-4 font-medium text-red-600">Bills</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600 font-semibold">${calcCost(totalMonthly, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'annually')}</td>
-                    </tr>
-                    <tr style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(34,197,94,0.06)"}}>
-                      <td className="py-3 px-4 font-semibold text-green-800">Left Over</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-bold">${calcCost(salaryNum - totalMonthly, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'annually')}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Percentage Breakdown */}
-              <div style={{padding:"14px 16px",borderTop:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.03)"}}>
-                <h3 className="font-semibold mb-4">% of Income</h3>
-                <div className="flex flex-col md:flex-row gap-6 items-center">
-                  <div className="flex gap-8">
-                    <div style={{textAlign:"center"}}>
-                      <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Bills</p>
-                    </div>
-                    <div style={{textAlign:"center"}}>
-                      <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Savings</p>
-                    </div>
-                  </div>
-                  <div className="flex-1 w-full md:w-auto">
-                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                      <div 
-                        style={{height:"100%",background:"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}}
-                        style={{ width: `${Math.min(parseFloat(calcPercentage(totalMonthly, salaryNum)), 100)}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between mt-1 text-xs text-gray-400">
-                      <span>0%</span>
-                      <span>50%</span>
-                      <span>100%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
-            </details>
-          )}
           </>)}{/* end activeBucket wrapper */}
             </>
           )}
