@@ -121,6 +121,7 @@ const RevenueCat = {
 // STARRY BACKGROUND COMPONENT
 // ============================================
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+const localISODate = (d = new Date()) => { const x = d instanceof Date ? d : new Date(d); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
 
 const StarryBackground = ({ children }) => {
   // Generate stable star positions using useMemo
@@ -11583,14 +11584,14 @@ function MuzzApp() {
       const stored = localStorage.getItem('muzz_ai_usage');
       if (stored) {
         const { count, date } = JSON.parse(stored);
-        const today = new Date().toISOString().split('T')[0];
+        const today = localISODate();
         if (date === today) return count;
       }
     } catch (e) {}
     return 0;
   };
   const incrementAiUsage = () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
     const current = getAiUsage();
     localStorage.setItem('muzz_ai_usage', JSON.stringify({ count: current + 1, date: today }));
   };
@@ -12132,7 +12133,7 @@ function MuzzApp() {
 
   // Compound Interest Calculator
   const [compoundCalc, setCompoundCalc] = useState({ principal: '', monthlyAdd: '', rate: '7', years: '10' });
-  const [journalDate, setJournalDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [journalDate, setJournalDate] = useState(() => localISODate());
 
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
@@ -13695,7 +13696,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {sortedReminders.length === 0 && (() => {
                 const today = new Date();
-                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; };
+                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return localISODate(d); };
                 const samples = [
                   { title: 'Renew car rego',           date: inDays(5),  permanent: false },
                   { title: 'Dad\'s birthday gift',     date: inDays(14), permanent: false },
@@ -14191,7 +14192,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'work') {
     if (!isElite) return <LockedFeature featureName="Work" setActiveView={setActiveView} />;
     
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
     
     // Get all days of the current week (Monday to Sunday)
     const getWeekDays = () => {
@@ -14205,10 +14206,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const day = new Date(monday);
         day.setDate(monday.getDate() + i);
         days.push({
-          date: day.toISOString().split('T')[0],
+          date: localISODate(day),
           dayName: day.toLocaleDateString('en-AU', { weekday: 'long' }),
           dayShort: day.toLocaleDateString('en-AU', { weekday: 'short' }),
-          isToday: day.toISOString().split('T')[0] === today
+          isToday: localISODate(day) === today
         });
       }
       return days;
@@ -14705,11 +14706,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'home') {
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
     const todaySleep = sleepData[today] || {};
     const todayMood = mentalHealthData[today] || {};
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    const lastNightSleep = sleepData[yesterday.toISOString().split('T')[0]] || {};
+    const lastNightSleep = sleepData[localISODate(yesterday)] || {};
     const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split("T")[0];}); };
     const weekDays = getWeekDays();
     const jobs = timesheetData.jobs || [{ id:1, name:"Job 1", hourlyRate:timesheetData.hourlyRate||0, shifts:timesheetData.shifts||{} }];
@@ -14719,7 +14720,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
     // Auto-fetch stock prices on dashboard load (from trackedStocks AND stocks holdings)
-    const todayPriceKey = new Date().toISOString().split('T')[0];
+    const todayPriceKey = localISODate();
     if (dataLoaded && Object.keys(livePrices).length === 0 && !pricesLoading) {
       const trackedTickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
       const holdingTickers = stocks.filter(s => s && s.name && s.name.trim() !== '').map(s => s.name.toUpperCase());
@@ -14733,7 +14734,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           .finally(() => setPricesLoading(false));
       }
     }
-    const todaySnap = new Date().toISOString().split('T')[0];
+    const todaySnap = localISODate();
     if (dataLoaded && netWorth > 0) {
       const existing = netWorthHistory.find(p => p.date === todaySnap);
       if (!existing || existing.value !== netWorth) {
@@ -14857,7 +14858,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // Net worth sparkline series (last ~30 days from current OR scrubber anchor), oldest → newest
     const nwSeries = (() => {
-      const cutoffDate = scrubberDate || new Date().toISOString().split('T')[0];
+      const cutoffDate = scrubberDate || localISODate();
       const filtered = sortedNwHistory.filter(p => p.date <= cutoffDate);
       const last = filtered.slice(-30).map(p => p.value);
       // ensure at least 2 points so sparklines render — synthesize from current netWorth if empty
@@ -14970,7 +14971,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     })();
 
     // Object IDs / metadata
-    const todayISO = new Date().toISOString().split('T')[0];
+    const todayISO = localISODate();
     const objectId = `nw_${todayISO.replace(/-/g,'_')}`;
     const sessionId = (userId || 'anon').slice(0,8).toUpperCase();
     const lastSyncStr = liveTime.toISOString().split('T')[1].split('.')[0] + 'Z';
@@ -17801,8 +17802,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'}].map(tab => (
-                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'assetMap',label:'ASSET MAP'},{id:'worldmap',label:'WORLD MAP',view:true},{id:'knowledge',label:'GUIDE'}].map(tab => (
+                <button key={tab.id} onClick={() => tab.view ? setActiveView(tab.id) : setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -34390,7 +34391,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'gym') {
     if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
     const accent = '#fb923c';
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
 
     const getWeekDays = () => {
       const now = new Date();
@@ -34402,11 +34403,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         days.push({
-          date: d.toISOString().split('T')[0],
+          date: localISODate(d),
           dayName: d.toLocaleDateString('en-AU', { weekday: 'long' }),
           dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
           dateNum: d.getDate(),
-          isToday: d.toISOString().split('T')[0] === today,
+          isToday: localISODate(d) === today,
         });
       }
       return days;
@@ -34649,7 +34650,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'gymworkout') {
     if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
     const accent = '#a855f7';
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
 
     const getWeekDays = () => {
       const now = new Date();
@@ -34661,10 +34662,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         days.push({
-          date: d.toISOString().split('T')[0],
+          date: localISODate(d),
           dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
           dateNum: d.getDate(),
-          isToday: d.toISOString().split('T')[0] === today,
+          isToday: localISODate(d) === today,
         });
       }
       return days;
@@ -34951,7 +34952,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'nutrition') {
     if (!isElite) return <LockedFeature featureName="Nutrition" setActiveView={setActiveView} />;
     const accent = '#22c55e';
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
 
     const getWeekDays = () => {
       const now = new Date();
@@ -34963,10 +34964,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         days.push({
-          date: d.toISOString().split('T')[0],
+          date: localISODate(d),
           dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
           dateNum: d.getDate(),
-          isToday: d.toISOString().split('T')[0] === today,
+          isToday: localISODate(d) === today,
         });
       }
       return days;
@@ -35561,7 +35562,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // STATS & INSIGHTS VIEW
   if (activeView === 'statsinsights') {
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
     const thisMonth = today.slice(0, 7);
     const totalHabitDays = Object.keys(habitLog || {}).length;
     const thisMonthHabits = Object.keys(habitLog || {}).filter(k => k.includes(thisMonth)).length;
@@ -35621,7 +35622,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // ============================================
   if (activeView === 'habits') {
-    const today = new Date().toISOString().split('T')[0];
+    const today = localISODate();
 
     const toggleHabit = (habitId, date) => {
       const key = `${habitId}:${date}`;
@@ -35637,7 +35638,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       let streak = 0;
       let d = new Date();
       while (true) {
-        const dateStr = d.toISOString().split('T')[0];
+        const dateStr = localISODate(d);
         if (habitLog[`${habitId}:${dateStr}`]) { streak++; d.setDate(d.getDate() - 1); }
         else break;
       }
@@ -35649,7 +35650,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const d = new Date();
       for (let i = 365; i >= 0; i--) {
         const dd = new Date(d); dd.setDate(d.getDate() - i);
-        const dateStr = dd.toISOString().split('T')[0];
+        const dateStr = localISODate(dd);
         if (habitLog[`${habitId}:${dateStr}`]) { current++; best = Math.max(best, current); }
         else current = 0;
       }
@@ -35660,7 +35661,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const days = [];
       for (let i = 30; i >= 0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i);
-        days.push(d.toISOString().split('T')[0]);
+        days.push(localISODate(d));
       }
       return days;
     };
@@ -35669,7 +35670,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const days = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i);
-        days.push(d.toISOString().split('T')[0]);
+        days.push(localISODate(d));
       }
       return days;
     };
@@ -35925,7 +35926,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {countdowns.length === 0 && (() => {
                 const today = new Date();
-                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; };
+                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return localISODate(d); };
                 const samples = [
                   { name: 'Bali trip',         emoji: '✈️', date: inDays(45)  },
                   { name: 'My birthday',       emoji: '🎂', date: inDays(120) },
