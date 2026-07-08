@@ -31079,6 +31079,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   (COVERAGE_DATA || []).forEach(c => { const k = c.industry || 'Other'; indCounts[k] = (indCounts[k] || 0) + 1; });
                   const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]);
                   const maxInd = inds.length ? inds[0][1] : 1;
+                  const ctryCounts = {};
+                  (COVERAGE_DATA || []).forEach(c => { const k = c.country || 'Other'; ctryCounts[k] = (ctryCounts[k] || 0) + 1; });
+                  const ctrys = Object.entries(ctryCounts).sort((a, b) => b[1] - a[1]);
                   return (
                     <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px"}}>
                       <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
@@ -31125,6 +31128,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <span style={{fontSize:"10px",color:rAmber,fontWeight:700,width:"22px",textAlign:"right",flexShrink:0}}>{n}</span>
                             </div>
                           ))}
+                        </div>
+                        <div style={{borderTop:`0.5px solid ${rGlow}`,padding:"9px 14px 11px"}}>
+                          <div style={{fontSize:"8px",color:rDim,letterSpacing:"2px",fontWeight:600,marginBottom:"8px"}}>// GLOBAL REACH · BY COUNTRY</div>
+                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
+                            {ctrys.map(([name, n]) => (
+                              <span key={name} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"4px 10px",background:"rgba(245,158,11,0.05)",border:`0.5px solid ${rGlow}`,borderRadius:"3px",fontSize:"8.5px",color:"rgba(224,234,255,0.75)",letterSpacing:"1px",textTransform:"uppercase"}}>
+                                {name}<span style={{color:rAmber,fontWeight:700,fontSize:"10px"}}>{n}</span>
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
