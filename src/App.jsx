@@ -31072,7 +31072,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const c = p?.c || 0; const pc = p?.pc || 0;
                     const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
                     return { t, c, chg };
-                  }).filter(x => x.chg !== null).sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg)).slice(0, 5);
+                  }).filter(x => x.chg !== null);
+                  const feedGainers = feed.filter(x => x.chg > 0).sort((a, b) => b.chg - a.chg).slice(0, 5);
+                  const feedLosers = feed.filter(x => x.chg < 0).sort((a, b) => a.chg - b.chg).slice(0, 5);
                   const indCounts = {};
                   (COVERAGE_DATA || []).forEach(c => { const k = c.industry || 'Other'; indCounts[k] = (indCounts[k] || 0) + 1; });
                   const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
@@ -31082,19 +31084,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
                         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// MARKET FEED</span>
-                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>{screenLoading ? 'SYNCING…' : feed.length ? 'TOP MOVERS · 24H' : 'STANDBY'}</span>
+                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>{screenLoading ? 'SYNCING…' : feed.length ? 'TOP 5 · EACH WAY' : 'STANDBY'}</span>
                         </div>
                         {feed.length === 0 && (
                           <div style={{padding:"18px 14px",fontSize:"9px",color:rDim,letterSpacing:"2px",textAlign:"center"}}>{screenLoading ? '● ACQUIRING PRICE FEED…' : 'NO FEED — ADD TICKERS IN STOCK SCREEN'}</div>
                         )}
-                        {feed.map(f => (
-                          <div key={f.t} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 14px",borderTop:"0.5px solid rgba(255,255,255,0.04)"}}>
-                            <span style={{fontSize:"11px",color:rAmber,fontWeight:700,letterSpacing:"0.5px",width:"56px",flexShrink:0}}>{f.t}</span>
-                            <span style={{flex:1,height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
-                              <span style={{display:"block",height:"100%",width:`${Math.min(100, Math.abs(f.chg) * 20)}%`,background: f.chg >= 0 ? "rgba(34,197,94,0.8)" : "rgba(239,68,68,0.8)"}}/>
-                            </span>
-                            <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{f.c.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
-                            <span style={{fontSize:"11px",fontWeight:700,width:"62px",textAlign:"right",flexShrink:0,color: f.chg >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>{(f.chg >= 0 ? '+' : '') + f.chg.toFixed(2)}%</span>
+                        {[{title:'▲ GAINERS', items: feedGainers, accent:'rgba(34,197,94,0.95)'},{title:'▼ DECLINERS', items: feedLosers, accent:'rgba(239,68,68,0.95)'}].map(grp => (
+                          <div key={grp.title}>
+                            {feed.length > 0 && (
+                              <div style={{padding:"7px 14px 4px",fontSize:"8px",color:grp.accent,letterSpacing:"2px",fontWeight:700,borderTop:"0.5px solid rgba(255,255,255,0.04)"}}>{grp.title} · {grp.items.length}</div>
+                            )}
+                            {feed.length > 0 && grp.items.length === 0 && (
+                              <div style={{padding:"6px 14px 8px",fontSize:"8.5px",color:"rgba(148,163,184,0.45)",letterSpacing:"1.5px"}}>NONE TODAY</div>
+                            )}
+                            {grp.items.map(f => (
+                              <div key={f.t} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 14px"}}>
+                                <span style={{fontSize:"11px",color:rAmber,fontWeight:700,letterSpacing:"0.5px",width:"56px",flexShrink:0}}>{f.t}</span>
+                                <span style={{flex:1,height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
+                                  <span style={{display:"block",height:"100%",width:`${Math.min(100, Math.abs(f.chg) * 20)}%`,background: f.chg >= 0 ? "rgba(34,197,94,0.8)" : "rgba(239,68,68,0.8)"}}/>
+                                </span>
+                                <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{f.c.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+                                <span style={{fontSize:"11px",fontWeight:700,width:"62px",textAlign:"right",flexShrink:0,color: f.chg >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>{(f.chg >= 0 ? '+' : '') + f.chg.toFixed(2)}%</span>
+                              </div>
+                            ))}
                           </div>
                         ))}
                       </div>
