@@ -19330,23 +19330,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               }}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <button
-                    onClick={() => setResearchDrawerOpen(true)}
-                    aria-label="Open research menu"
-                    style={{
-                      width:"36px", height:"36px",
-                      background:"rgba(245,158,11,0.08)",
-                      border:`0.5px solid ${amberGlow}`,
-                      borderRadius:"4px",
-                      color:amber,
-                      cursor:"pointer",
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                      padding:0,
-                    }}>
-                    <div style={{display:"flex",flexDirection:"column",gap:"4px",alignItems:"center"}}>
-                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
-                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
-                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
-                    </div>
+                    onClick={() => { if (investmentsSubTab === 'researchHome') { setResearchMode(false); setInvestmentsSubTab('portfolio'); } else { setInvestmentsSubTab('researchHome'); } }}
+                    style={{padding:"9px 13px",background:"rgba(245,158,11,0.08)",border:`0.5px solid ${amberGlow}`,borderRadius:"4px",color:amber,cursor:"pointer",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:700,whiteSpace:"nowrap"}}>
+                    {investmentsSubTab === 'researchHome' ? '← EXIT' : '← DASHBOARD'}
                   </button>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
                     <span style={{fontSize:"11px",color:amber,fontFamily:"monospace",letterSpacing:"2.5px",fontWeight:700}}>RESEARCH OS</span>
@@ -19363,101 +19349,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               </div>
 
-              {/* === DRAWER — slides in from the left === */}
-              {researchDrawerOpen && (
-                <>
-                  {/* Backdrop */}
-                  <div
-                    onClick={() => setResearchDrawerOpen(false)}
-                    style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",backdropFilter:"blur(2px)",zIndex:99}}
-                  />
-                  {/* Drawer panel */}
-                  <div style={{
-                    position:"fixed", top:0, left:0, bottom:0,
-                    width:"min(320px, 88vw)",
-                    background:"#000",
-                    borderRight:`0.5px solid ${amberGlow}`,
-                    zIndex:100,
-                    display:"flex", flexDirection:"column",
-                    fontFamily:"monospace",
-                    overflow:"auto",
-                  }}>
-                    {/* Drawer header */}
-                    <div style={{padding:"20px 18px 14px",borderBottom:`0.5px solid ${amberGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                      <div>
-                        <div style={{fontSize:"9px",color:amberDim,letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>// MENU</div>
-                        <div style={{fontSize:"15px",color:amber,letterSpacing:"2.5px",fontWeight:700}}>RESEARCH OS</div>
-                      </div>
-                      <button
-                        onClick={() => setResearchDrawerOpen(false)}
-                        style={{width:"28px",height:"28px",background:"rgba(245,158,11,0.08)",border:`0.5px solid ${amberGlow}`,borderRadius:"3px",color:amber,cursor:"pointer",fontSize:"14px",lineHeight:1}}>
-                        ×
-                      </button>
-                    </div>
-
-                    {/* Section groups */}
-                    <div style={{padding:"14px 12px",flex:1}}>
-                      {DRAWER_GROUPS.map((group, gi) => (
-                        <div key={gi} style={{marginBottom:"18px"}}>
-                          <div style={{padding:"0 6px 8px",fontSize:"9px",color:amberDim,letterSpacing:"2px",fontWeight:600}}>// {group.title}</div>
-                          {group.items.map(item => {
-                            const isActive = investmentsSubTab === item.id || (item.id === 'knowledge' && investmentsSubTab === 'books');
-                            return (
-                              <button
-                                key={item.id}
-                                onClick={() => { setInvestmentsSubTab(item.id); setResearchDrawerOpen(false); }}
-                                style={{
-                                  width:"100%",
-                                  background: isActive ? `rgba(245,158,11,0.12)` : "transparent",
-                                  border:`0.5px solid ${isActive ? amber : "rgba(255,255,255,0.05)"}`,
-                                  borderLeft: isActive ? `2px solid ${amber}` : "2px solid transparent",
-                                  borderRadius:"3px",
-                                  padding:"10px 12px",
-                                  marginBottom:"4px",
-                                  cursor:"pointer",
-                                  textAlign:"left",
-                                  display:"flex", alignItems:"center", gap:"12px",
-                                  transition:"all 0.15s ease",
-                                }}
-                                onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.background = "rgba(245,158,11,0.05)"; e.currentTarget.style.borderColor = amberGlow; }}}
-                                onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; }}}
-                              >
-                                <span style={{fontSize:"18px",color:isActive?amber:amberDim,lineHeight:1,width:"22px",textAlign:"center"}}>{item.glyph}</span>
-                                <div style={{flex:1,minWidth:0}}>
-                                  <div style={{fontSize:"12px",color:isActive?"#e0eaff":"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{item.label.toUpperCase()}</div>
-                                  <div style={{fontSize:"9px",color:"rgba(224,234,255,0.45)",letterSpacing:"0.3px",marginTop:"2px"}}>{item.desc}</div>
-                                </div>
-                                {isActive && <span style={{fontSize:"10px",color:amber}}>●</span>}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Drawer footer: exit research */}
-                    <div style={{padding:"14px 14px 20px",borderTop:`0.5px solid ${amberGlow}`}}>
-                      <button
-                        onClick={() => { setResearchMode(false); setInvestmentsSubTab('portfolio'); setResearchDrawerOpen(false); }}
-                        style={{
-                          width:"100%",
-                          background:"rgba(239,68,68,0.06)",
-                          border:`0.5px solid rgba(239,68,68,0.4)`,
-                          borderRadius:"3px",
-                          padding:"10px 12px",
-                          cursor:"pointer",
-                          color:"rgba(239,68,68,0.9)",
-                          fontSize:"10px",
-                          letterSpacing:"2px",
-                          fontWeight:600,
-                          fontFamily:"monospace",
-                        }}>
-                        ← EXIT RESEARCH OS
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
             </>
           );
         })()}
