@@ -19466,7 +19466,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px",flexWrap:"wrap",gap:"12px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INVESTMENTS</div>
@@ -19481,7 +19481,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{position:"absolute",top:"5px",right:"5px",width:"9px",height:"9px",borderTop:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
                 <div style={{position:"absolute",bottom:"5px",left:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderLeft:"1px solid rgba(245,158,11,0.8)"}}/>
                 <div style={{position:"absolute",bottom:"5px",right:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.65)",letterSpacing:"2px",marginBottom:"5px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px",fontWeight:600}}>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.65)",letterSpacing:"2px",marginBottom:"5px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px",fontWeight:600,whiteSpace:"nowrap"}}>
                   <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 5px rgba(34,197,94,0.95)"}}/>
                   PREMIUM RESEARCH WORKSPACE
                 </div>
