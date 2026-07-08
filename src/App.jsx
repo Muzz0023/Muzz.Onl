@@ -31644,17 +31644,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const rAmber = 'rgba(245,158,11,0.95)';
             const rDim = 'rgba(245,158,11,0.6)';
             const rGlow = 'rgba(245,158,11,0.35)';
-            const rdSections = [
-              { id:'research',        glyph:'≡', label:'HOLDINGS RESEARCH', desc:'Your positions' },
-              { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO',  desc:'Watchlist' },
-              { id:'researchMap',     glyph:'⊞', label:'HOLDINGS MAP',      desc:'Constellation graph' },
-              { id:'coverage',        glyph:'◇', label:'COVERAGE',          desc:'Company library' },
-              { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
-              { id:'stockScreen',     glyph:'⌗', label:'STOCK SCREEN',      desc:'Market board' },
-              { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
-              { id:'accounting',      glyph:'◳', label:'ACCOUNTING',        desc:'Financial statements' },
-              { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',   desc:'Buffett & Munger' },
-              { id:'sp500',           glyph:'★', label:'S&P 500',           desc:'Index data' },
+            const rdModuleGroups = [
+              { title:'CORE RESEARCH', items:[
+                { id:'research',        glyph:'≡', label:'HOLDINGS RESEARCH', desc:'Your positions' },
+                { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO',  desc:'Watchlist' },
+                { id:'researchMap',     glyph:'⊞', label:'HOLDINGS MAP',      desc:'Constellation graph' },
+                { id:'coverage',        glyph:'◇', label:'COVERAGE',          desc:'Company library' },
+              ]},
+              { title:'LIVE DATA', items:[
+                { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
+                { id:'stockScreen',     glyph:'⌗', label:'STOCK SCREEN',      desc:'Market board' },
+                { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
+              ]},
+              { title:'INFORMATION', items:[
+                { id:'accounting',      glyph:'◳', label:'ACCOUNTING',        desc:'Financial statements' },
+                { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',   desc:'Buffett & Munger' },
+                { id:'sp500',           glyph:'★', label:'S&P 500',           desc:'Index data' },
+              ]},
             ];
             const rdStats = [
               { key:'rd-holdings', label:'HOLDINGS', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'POSITIONS TRACKED', info:'Positions you currently own — synced live from the stocks in your Current Portfolio.' },
@@ -31767,10 +31773,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   );
                 })()}
 
-                <div>
-                  <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,margin:"4px 0 10px"}}>// MODULES</div>
+                {rdModuleGroups.map(grp => (
+                <div key={grp.title}>
+                  <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,margin:"4px 0 10px"}}>// {grp.title}</div>
                   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(215px, 1fr))",gap:"8px"}}>
-                    {rdSections.map(s => (
+                    {grp.items.map(s => (
                       <button key={s.id} onClick={() => setInvestmentsSubTab(s.id)}
                         style={{textAlign:"left",background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderLeft:`2px solid ${rAmber}`,borderRadius:"5px",padding:"13px 14px",cursor:"pointer",fontFamily:"monospace",transition:"all 0.15s",display:"flex",alignItems:"center",gap:"11px"}}
                         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.07)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.6)"; }}
@@ -31785,6 +31792,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ))}
                   </div>
                 </div>
+                ))}
               </div>
             );
           })()}
