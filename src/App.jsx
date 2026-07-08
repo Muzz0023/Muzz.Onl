@@ -1140,9 +1140,9 @@ function LockedFeature({ featureName, setActiveView }) {
           </button>
           <button
             onClick={() => setActiveView('home')}
-            style={{ flex: 1, minWidth: '140px', padding: '11px 16px', background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}
+            style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}
           >
-            ← DASHBOARD
+            ← Dashboard
           </button>
         </div>
       </div>
@@ -13670,7 +13670,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
@@ -13923,7 +13923,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div>
               <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
               <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>TASKS</div>
@@ -14353,7 +14353,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
@@ -15325,7 +15325,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
@@ -17419,7 +17419,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>MUZZ.ONL</div>
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>FEEDBACK & SUPPORT</div>
           </div>
@@ -17490,7 +17490,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
               <svg width="40" height="50" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -17755,7 +17755,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => { const el = document.getElementById('world-map-container'); if (el && el._leaflet_map) { el._leaflet_map.remove(); el._leaflet_map = null; el._leaflet_init = false; el._markers = {}; } setActiveView('home'); }} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => { const el = document.getElementById('world-map-container'); if (el && el._leaflet_map) { el._leaflet_map.remove(); el._leaflet_map = null; el._leaflet_init = false; el._markers = {}; } setActiveView('home'); }} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
@@ -19465,7 +19465,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {!researchMode && (
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px",flexWrap:"wrap",gap:"12px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
@@ -34410,7 +34410,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:`1px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:`${accent}1a`,border:`1px solid ${accent}55`,borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>WELLNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px",margin:0}}>HEALTH</h1>
@@ -34669,7 +34669,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:`1px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:`${accent}1a`,border:`1px solid ${accent}55`,borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px",margin:0}}>GYM</h1>
@@ -34985,7 +34985,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:`${accent}1a`,border:`1px solid ${accent}55`,borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>NUTRITION INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px",margin:0}}>NUTRITION</h1>
@@ -35241,7 +35241,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={()=>setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={()=>setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"16px"}}>TIMETABLE</div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
@@ -35549,7 +35549,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>STATS & INSIGHTS</div>
           </div>
@@ -35645,7 +35645,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>HABIT INTELLIGENCE</div>
@@ -35848,7 +35848,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
@@ -36070,7 +36070,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>EXPORT DATA</div>
           </div>
@@ -36111,7 +36111,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>IMPORT DATA</div>
           </div>
