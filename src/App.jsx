@@ -31189,6 +31189,53 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <span style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px'}}>All market caps shown in USD. Captured on the date listed beside each figure.</span>
                     </div>
 
+                  </>
+                )}
+
+                {/* Breadcrumb */}
+                <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
+                  <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
+                    style={{background:'none',border:'none',color: coverageIndustry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                    ALL INDUSTRIES
+                  </button>
+                  {coverageIndustry && (
+                    <>
+                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
+                      <button onClick={() => setCoverageCountry(null)}
+                        style={{background:'none',border:'none',color: coverageCountry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                        {coverageIndustry.toUpperCase()}
+                      </button>
+                    </>
+                  )}
+                  {coverageCountry && (
+                    <>
+                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
+                      <span style={{color:'rgba(148,163,184,0.5)',fontWeight:600}}>{coverageCountry.toUpperCase()}</span>
+                    </>
+                  )}
+                </div>
+
+                {/* LEVEL 1: industries */}
+                {!coverageIndustry && (
+                  <>
+                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// BROWSE BY INDUSTRY</div>
+                    {industries.length === 0 ? (
+                      <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies analysed yet.</div>
+                    ) : industries.map(ind => {
+                      const count = COVERAGE.filter(c => c.industry === ind).length;
+                      return (
+                        <button key={ind} onClick={() => setCoverageIndustry(ind)} style={cardBtn}>
+                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{ind}</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1px',flexShrink:0}}>{count} COMPAN{count !== 1 ? 'IES' : 'Y'} →</div>
+                        </button>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* Intro disclaimers — moved below the industry grid */}
+                {!coverageIndustry && (
+                  <>
                     {/* Do Your Own Research disclaimer */}
                     <div style={{
                       padding:'12px 14px',
@@ -31282,47 +31329,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <span style={{color:amber,fontStyle:'normal',fontWeight:700}}>Note —</span> Tiers reflect the <span style={{color:amber,fontStyle:'normal',fontWeight:700}}>current</span> depth of research, not a permanent rating. As research deepens on a company, it can move <span style={{color:'rgba(34,197,94,0.95)',fontStyle:'normal',fontWeight:700}}>up a tier</span>. A Tier 3 today may be a Tier 1 next year.
                       </div>
                     </div>
-                  </>
-                )}
-
-                {/* Breadcrumb */}
-                <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
-                  <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
-                    style={{background:'none',border:'none',color: coverageIndustry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
-                    ALL INDUSTRIES
-                  </button>
-                  {coverageIndustry && (
-                    <>
-                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
-                      <button onClick={() => setCoverageCountry(null)}
-                        style={{background:'none',border:'none',color: coverageCountry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
-                        {coverageIndustry.toUpperCase()}
-                      </button>
-                    </>
-                  )}
-                  {coverageCountry && (
-                    <>
-                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
-                      <span style={{color:'rgba(148,163,184,0.5)',fontWeight:600}}>{coverageCountry.toUpperCase()}</span>
-                    </>
-                  )}
-                </div>
-
-                {/* LEVEL 1: industries */}
-                {!coverageIndustry && (
-                  <>
-                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// BROWSE BY INDUSTRY</div>
-                    {industries.length === 0 ? (
-                      <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies analysed yet.</div>
-                    ) : industries.map(ind => {
-                      const count = COVERAGE.filter(c => c.industry === ind).length;
-                      return (
-                        <button key={ind} onClick={() => setCoverageIndustry(ind)} style={cardBtn}>
-                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{ind}</div>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1px',flexShrink:0}}>{count} COMPAN{count !== 1 ? 'IES' : 'Y'} →</div>
-                        </button>
-                      );
-                    })}
                   </>
                 )}
 
