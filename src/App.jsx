@@ -19283,6 +19283,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {
               title: 'CORE RESEARCH',
               items: [
+                { id:'researchHome',    glyph:'⌂', label:'Dashboard',        desc:'Command overview' },
                 { id:'research',        glyph:'≡', label:'Holdings Research', desc:'Your positions' },
                 { id:'futurePortfolio', glyph:'◬', label:'Future Portfolio', desc:'Watchlist' },
                 { id:'researchMap',     glyph:'⊞', label:'Holdings Map',     desc:'Constellation graph' },
@@ -19472,7 +19473,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INVESTMENTS</div>
               </div>
               <button
-                onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
+                onClick={() => { setInvestmentsSubTab('researchHome'); setResearchMode(true); }}
                 style={{position:"relative",textAlign:"right",cursor:"pointer",fontFamily:"monospace",padding:"12px 18px",background:"linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 100%)",border:"1px solid rgba(245,158,11,0.55)",borderRadius:"6px",boxShadow:"0 0 22px rgba(245,158,11,0.18)",transition:"all 0.2s ease"}}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 34px rgba(245,158,11,0.38)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.95)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.18)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.55)"; e.currentTarget.style.transform = "translateY(0)"; }}
@@ -31123,6 +31124,74 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     })()
                   )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* === RESEARCH OS — COMMAND DASHBOARD === */}
+          {investmentsSubTab === 'researchHome' && (() => {
+            const rAmber = 'rgba(245,158,11,0.95)';
+            const rDim = 'rgba(245,158,11,0.6)';
+            const rGlow = 'rgba(245,158,11,0.35)';
+            const rdSections = [
+              { id:'research',        glyph:'≡', label:'HOLDINGS RESEARCH', desc:'Your positions' },
+              { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO',  desc:'Watchlist' },
+              { id:'researchMap',     glyph:'⊞', label:'HOLDINGS MAP',      desc:'Constellation graph' },
+              { id:'coverage',        glyph:'◇', label:'COVERAGE',          desc:'Company library' },
+              { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
+              { id:'stockScreen',     glyph:'⌗', label:'STOCK SCREEN',      desc:'Market board' },
+              { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
+              { id:'accounting',      glyph:'◳', label:'ACCOUNTING',        desc:'Financial statements' },
+              { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',   desc:'Buffett & Munger' },
+              { id:'sp500',           glyph:'★', label:'S&P 500',           desc:'Index data' },
+            ];
+            const rdStats = [
+              { label:'HOLDINGS', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'POSITIONS TRACKED' },
+              { label:'RESEARCH FILES', value:(holdingsResearch||[]).filter(h=>h&&h.ticker).length, sub:'HOLDINGS RESEARCH' },
+              { label:'COVERAGE', value:(COVERAGE_DATA||[]).length, sub:'COMPANIES ANALYSED' },
+              { label:'SCREEN', value:(screenTickers||[]).length, sub:'TICKERS ON BOARD' },
+            ];
+            const isWideRd = typeof window !== 'undefined' && window.innerWidth >= 768;
+            return (
+              <div style={{display:"flex",flexDirection:"column",gap:"14px",fontFamily:"monospace"}}>
+                <div style={{position:"relative",background:"rgba(0,0,0,0.55)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",padding:"18px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"22px 22px"}}>
+                  <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:`1px solid ${rDim}`,borderLeft:`1px solid ${rDim}`}}/>
+                  <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:`1px solid ${rDim}`,borderRight:`1px solid ${rDim}`}}/>
+                  <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${rDim}`,borderLeft:`1px solid ${rDim}`}}/>
+                  <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${rDim}`,borderRight:`1px solid ${rDim}`}}/>
+                  <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,marginBottom:"5px"}}>// RESEARCH OS · COMMAND</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"3px",fontWeight:600}}>MISSION CONTROL</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",letterSpacing:"1.5px",marginTop:"6px"}}><span style={{color:"rgba(34,197,94,0.9)"}}>● ALL SYSTEMS NOMINAL</span> · {new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase()}</div>
+                </div>
+
+                <div style={{display:"grid",gridTemplateColumns:isWideRd?"repeat(4,1fr)":"repeat(2,1fr)",gap:"1px",background:rGlow,border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
+                  {rdStats.map(st => (
+                    <div key={st.label} style={{background:"#000",padding:"12px 14px"}}>
+                      <div style={{fontSize:"8px",color:rDim,letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>{st.label}</div>
+                      <div style={{fontSize:"22px",color:rAmber,fontWeight:700,lineHeight:1}}>{st.value}</div>
+                      <div style={{fontSize:"7px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px",marginTop:"4px"}}>{st.sub}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,margin:"4px 0 10px"}}>// MODULES</div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(215px, 1fr))",gap:"8px"}}>
+                    {rdSections.map(s => (
+                      <button key={s.id} onClick={() => setInvestmentsSubTab(s.id)}
+                        style={{textAlign:"left",background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderLeft:`2px solid ${rAmber}`,borderRadius:"5px",padding:"13px 14px",cursor:"pointer",fontFamily:"monospace",transition:"all 0.15s",display:"flex",alignItems:"center",gap:"11px"}}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(245,158,11,0.07)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.6)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.45)"; e.currentTarget.style.borderColor = rGlow; }}>
+                        <span style={{fontSize:"16px",color:rAmber,flexShrink:0}}>{s.glyph}</span>
+                        <span style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"11px",color:"#e0eaff",fontWeight:700,letterSpacing:"1.5px"}}>{s.label}</div>
+                          <div style={{fontSize:"8.5px",color:"rgba(148,163,184,0.6)",letterSpacing:"0.5px",marginTop:"3px"}}>{s.desc}</div>
+                        </span>
+                        <span style={{color:rDim,fontSize:"11px",flexShrink:0}}>→</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
