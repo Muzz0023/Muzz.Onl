@@ -31038,10 +31038,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               { id:'sp500',           glyph:'★', label:'S&P 500',           desc:'Index data' },
             ];
             const rdStats = [
-              { label:'HOLDINGS', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'POSITIONS TRACKED' },
-              { label:'RESEARCH FILES', value:(holdingsResearch||[]).filter(h=>h&&h.ticker).length, sub:'HOLDINGS RESEARCH' },
-              { label:'COVERAGE', value:(COVERAGE_DATA||[]).length, sub:'COMPANIES ANALYSED' },
-              { label:'SCREEN', value:(screenTickers||[]).length, sub:'TICKERS ON BOARD' },
+              { key:'rd-holdings', label:'HOLDINGS', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'POSITIONS TRACKED', info:'Positions you currently own — synced live from the stocks in your Current Portfolio.' },
+              { key:'rd-files', label:'RESEARCH FILES', value:(holdingsResearch||[]).filter(h=>h&&h.ticker).length, sub:'HOLDINGS RESEARCH', info:'Companies you\u2019ve built research notes on inside Holdings Research — your own analysis files.' },
+              { key:'rd-coverage', label:'COVERAGE', value:(COVERAGE_DATA||[]).length, sub:'COMPANIES ANALYSED', info:'Companies fully analysed in the muzz coverage library — moats, financials, risks and thesis.' },
+              { key:'rd-screen', label:'SCREEN', value:(screenTickers||[]).length, sub:'TICKERS ON BOARD', info:'Tickers on your Stock Screen — the live price board seeded from your holdings.' },
             ];
             const isWideRd = typeof window !== 'undefined' && window.innerWidth >= 768;
             return (
@@ -31052,17 +31052,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${rDim}`,borderLeft:`1px solid ${rDim}`}}/>
                   <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${rDim}`,borderRight:`1px solid ${rDim}`}}/>
                   <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,marginBottom:"5px"}}>// RESEARCH OS · COMMAND</div>
-                  <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"3px",fontWeight:600}}>MISSION CONTROL</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"3px",fontWeight:600}}>ANALYST DESK</div>
                   <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",letterSpacing:"1.5px",marginTop:"6px"}}><span style={{color:"rgba(34,197,94,0.9)"}}>● ALL SYSTEMS NOMINAL</span> · {new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase()}</div>
                 </div>
 
                 <div style={{display:"grid",gridTemplateColumns:isWideRd?"repeat(4,1fr)":"repeat(2,1fr)",gap:"1px",background:rGlow,border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
                   {rdStats.map(st => (
-                    <div key={st.label} style={{background:"#000",padding:"12px 14px"}}>
-                      <div style={{fontSize:"8px",color:rDim,letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>{st.label}</div>
+                    <button key={st.label} onClick={() => setOpenTooltipKey(openTooltipKey === st.key ? null : st.key)}
+                      style={{background:"#000",padding:"12px 14px",border:"none",textAlign:"left",cursor:"pointer",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:rDim,letterSpacing:"2px",fontWeight:600,marginBottom:"4px",display:"flex",alignItems:"center",gap:"5px"}}>{st.label}<span style={{fontSize:"9px",color:openTooltipKey === st.key ? rAmber : "rgba(148,163,184,0.45)"}}>ⓘ</span></div>
                       <div style={{fontSize:"22px",color:rAmber,fontWeight:700,lineHeight:1}}>{st.value}</div>
                       <div style={{fontSize:"7px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px",marginTop:"4px"}}>{st.sub}</div>
-                    </div>
+                      {openTooltipKey === st.key && (
+                        <div style={{marginTop:"8px",paddingTop:"7px",borderTop:`0.5px solid ${rGlow}`,fontSize:"8.5px",color:"rgba(224,234,255,0.7)",letterSpacing:"0.4px",lineHeight:1.55,textTransform:"none"}}>{st.info}</div>
+                      )}
+                    </button>
                   ))}
                 </div>
 
