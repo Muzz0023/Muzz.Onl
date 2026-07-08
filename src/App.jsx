@@ -20510,6 +20510,625 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
+          {investmentsSubTab === 'futurePortfolio' && (
+            <>
+              {/* Future Portfolio Header */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"14px 20px",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"11px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// FUTURE PORTFOLIO</div>
+                <p style={{fontSize:"11px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Plan your future investments with full research details</p>
+              </div>
+
+              {/* Future Holdings Research - Same format as Current */}
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE HOLDINGS RESEARCH{futureResearch.length>0?` · ${futureResearch.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Holdings Research</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Research stocks you're considering for your portfolio</p>
+                </div>
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {futureResearch.length === 0 && (() => {
+                    // === Generate from Core: pull Core-status holdings from Holdings Research into Future Portfolio
+                    const coreHoldings = (holdingsResearch || []).filter(h => h && (h.status === 'Core') && h.ticker);
+
+                    const generateFromCore = () => {
+                      if (coreHoldings.length === 0) {
+                        window.alert(
+                          "No Core holdings yet.\n\n" +
+                          "To use this: open Holdings Research, expand any holding you want to research further, and set HOLDING STATUS to 'Core'. " +
+                          "Those will auto-populate here with all their research data filled in — you just add a Planned Investment $."
+                        );
+                        return;
+                      }
+                      // Smart merge — skip tickers already in Future
+                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
+                      const newEntries = coreHoldings
+                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
+                        .map(h => ({
+                          ticker: h.ticker,
+                          industry: h.industry || '',
+                          tollBooth: h.tollBooth || '',
+                          capitalIntensity: h.capitalIntensity || '',
+                          growthProspects: h.growthProspects || '',
+                          notes: h.notes || '',
+                          plannedAmount: 0,
+                          plannedAmountStr: '',
+                          status: 'Core',
+                        }));
+                      if (newEntries.length === 0) {
+                        window.alert("All your Core holdings are already in Future Portfolio.");
+                        return;
+                      }
+                      setFutureResearch(prev => [...prev, ...newEntries]);
+                    };
+                    const startFresh = () => setFutureResearch(prev => [...prev, { ticker: '', notes: '' }]);
+
+                    return (
+                      <div style={{border:`1px solid ${researchMode?"rgba(245,158,11,0.45)":"rgba(0,200,255,0.35)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"6px",padding:"14px",background:researchMode?"rgba(245,158,11,0.05)":"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.85}}>// GENERATE FROM CORE HOLDINGS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Auto-populate from your Core holdings.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>
+                          Mark a holding as <span style={{color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontWeight:600}}>Core</span> in Holdings Research and it auto-fills here with all its research data — Toll Booth, Capital Intensity, Growth, Industry. You just add a Planned Investment $.
+                        </div>
+
+                        {coreHoldings.length > 0 ? (
+                          <>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// {coreHoldings.length} CORE HOLDING{coreHoldings.length!==1?'S':''} READY TO PROMOTE</div>
+                            <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                              {coreHoldings.slice(0,5).map((h, i) => (
+                                <div key={i} style={{padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.5)":"rgba(0,200,255,0.4)"}`,borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                                  <div style={{fontFamily:"monospace",fontSize:"12px",fontWeight:600,color:"#e0eaff",flexShrink:0}}>{h.ticker}</div>
+                                  <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,textAlign:"right"}}>
+                                    {[h.industry, h.tollBooth ? `Toll: ${h.tollBooth}` : null, h.capitalIntensity, h.growthProspects].filter(Boolean).join(' · ')}
+                                  </div>
+                                </div>
+                              ))}
+                              {coreHoldings.length > 5 && (
+                                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontStyle:"italic",paddingLeft:"4px"}}>+ {coreHoldings.length - 5} more</div>
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{padding:"12px",background:"rgba(0,0,0,0.25)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.25)":"rgba(148,163,184,0.25)"}`,borderRadius:"3px",marginBottom:"12px",fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.5,textAlign:"center"}}>
+                            No Core holdings yet. Open Holdings Research and mark something as Core.
+                          </div>
+                        )}
+
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={generateFromCore} style={{flex:1,padding:"12px",background:researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)",border:`1px solid ${researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.7)"}`,borderRadius:"4px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>⚡ GENERATE TABLE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {(() => {
+                    // Sort by planned investment descending (highest at top), preserving original indices for editing
+                    const sortedView = futureResearch
+                      .map((holding, originalIndex) => ({ holding, originalIndex }))
+                      .sort((a, b) => {
+                        const aP = parseFloat(a.holding?.plannedAmount) || 0;
+                        const bP = parseFloat(b.holding?.plannedAmount) || 0;
+                        return bP - aP; // descending
+                      });
+                    return sortedView;
+                  })().map(({ holding, originalIndex }) => {
+                    const index = originalIndex; // use original index for all updates
+                    const isEditing = editingFutureResearchIdx === index;
+                    const updateF = (field, val) => {
+                      setFutureResearch(prev => {
+                        const u = [...prev];
+                        if (!u[index]) u[index] = {};
+                        u[index] = { ...u[index], [field]: val };
+                        return u;
+                      });
+                    };
+                    const planned = parseFloat(holding?.plannedAmount) || 0;
+                    return (
+                    <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                      {/* Compact row */}
+                      <button onClick={() => setEditingFutureResearchIdx(isEditing ? null : index)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",boxShadow:researchMode?"0 0 6px rgba(245,158,11,0.6)":"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
+                            <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</span>
+                            {holding?.ticker && (() => {
+                              const covered = !!findCoverageEntry(holding.ticker);
+                              return (
+                                <span
+                                  title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
+                                  onClick={(e) => { e.stopPropagation(); openTickerInCoverage(holding.ticker); }}
+                                  style={{
+                                    fontSize:"9px", padding:"2px 6px",
+                                    background: covered ? "rgba(245,158,11,0.12)" : "rgba(148,163,184,0.08)",
+                                    border: `0.5px solid ${covered ? "rgba(245,158,11,0.5)" : "rgba(148,163,184,0.3)"}`,
+                                    borderRadius:"2px",
+                                    color: covered ? "rgba(245,158,11,0.95)" : "rgba(148,163,184,0.65)",
+                                    letterSpacing:"1px", fontWeight:600, flexShrink:0, cursor:"pointer",
+                                  }}
+                                >
+                                  {covered ? '◆ COVERED' : '○ NOT COVERED'}
+                                </span>
+                              );
+                            })()}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                            {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}
+                          </div>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                          {planned > 0 && (
+                            <div style={{textAlign:"right"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${planned.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                            </div>
+                          )}
+                          <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
+                        </div>
+                      </button>
+
+                      {/* Expanded edit panel */}
+                      {isEditing && (
+                        <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
+                            <input
+                              type="text"
+                              value={holding?.ticker || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateF('ticker', e.target.value)}
+                              placeholder="e.g. AAPL, BRK"
+                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,padding:"8px 10px",outline:"none"}}
+                            />
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="tollBooth" text="TOLL BOOTH ECONOMICS?" />
+                              <select
+                                value={holding?.tollBooth || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('tollBooth', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Yes">YES</option>
+                                <option value="No">NO</option>
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PLANNED INVESTMENT $</div>
+                              <input
+                                type="text"
+                                inputMode="decimal"
+                                value={holding?.plannedAmountStr || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => {
+                                  const val = e.target.value.replace(/[^0-9.]/g, '');
+                                  setFutureResearch(prev => {
+                                    const u = [...prev];
+                                    if (!u[index]) u[index] = {};
+                                    u[index] = { ...u[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
+                                    return u;
+                                  });
+                                }}
+                                placeholder="0"
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                              />
+                            </div>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="capitalIntensity" text="CAPITAL INTENSITY" />
+                              <select
+                                value={holding?.capitalIntensity || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('capitalIntensity', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Toll-Like Capital Intensity">Toll-Like</option>
+                                <option value="Lean Capital Intensity">Lean</option>
+                                <option value="Heavy Capital Intensity">Heavy</option>
+                              </select>
+                            </div>
+                            <div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="growthProspects" text="GROWTH PROSPECTS" />
+                              <select
+                                value={holding?.growthProspects || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('growthProspects', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Very Low Growth">Very Low</option>
+                                <option value="Low Growth">Low</option>
+                                <option value="Medium Growth">Medium</option>
+                                <option value="High Growth">High</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="industry" text="INDUSTRY" />
+                              <select
+                                value={holding?.industry || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('industry', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                {industries.map(ind => (
+                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="holdingStatus" text="STATUS" />
+                              <select
+                                value={holding?.status || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('status', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select Status</option>
+                                <option value="New">New</option>
+                                <option value="Core">Core</option>
+                                <option value="Reserve">Reserve</option>
+                                <option value="Trim">Trim</option>
+                              </select>
+                            </div>
+                          </div>
+                          <button onClick={() => { setFutureResearch(prev => prev.filter((_, i) => i !== index)); setEditingFutureResearchIdx(null); }}
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
+                        </div>
+                      )}
+                    </div>
+                    );
+                  })}
+                </div>
+                {futureResearch.length > 0 && (
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                  <button
+                    onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
+                    style={{
+                      flex:1, padding:"12px",
+                      border:`2px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"}`,
+                      borderRadius:"6px",
+                      background:"transparent",
+                      color:researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)",
+                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
+                      cursor:"pointer", transition:"all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.8)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,1)":"rgba(0,200,255,0.95)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)"; }}
+                  >
+                    + Add Research Entry
+                  </button>
+                  <button
+                    onClick={() => {
+                      const coreHoldings = (holdingsResearch || []).filter(h => h && h.status === 'Core' && h.ticker);
+                      if (coreHoldings.length === 0) {
+                        window.alert(
+                          "No Core holdings yet.\n\n" +
+                          "Open Holdings Research, expand a holding, and set HOLDING STATUS to 'Core'. " +
+                          "It'll auto-populate here with all its research data — you just add a Planned Investment $."
+                        );
+                        return;
+                      }
+                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
+                      const newEntries = coreHoldings
+                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
+                        .map(h => ({
+                          ticker: h.ticker,
+                          industry: h.industry || '',
+                          tollBooth: h.tollBooth || '',
+                          capitalIntensity: h.capitalIntensity || '',
+                          growthProspects: h.growthProspects || '',
+                          notes: h.notes || '',
+                          plannedAmount: 0,
+                          plannedAmountStr: '',
+                          status: 'Core',
+                        }));
+                      if (newEntries.length === 0) {
+                        window.alert("All your Core holdings are already in Future Portfolio.");
+                        return;
+                      }
+                      setFutureResearch(prev => [...prev, ...newEntries]);
+                    }}
+                    style={{
+                      flex:1, padding:"12px",
+                      border:`2px solid ${researchMode?"rgba(245,158,11,0.6)":"rgba(0,200,255,0.5)"}`,
+                      borderRadius:"6px",
+                      background:researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)",
+                      color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",
+                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
+                      cursor:"pointer", transition:"all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)"; }}
+                  >
+                    ⚡ Generate from Core
+                  </button>
+                </div>
+                )}
+                </div>
+              </details>
+
+              {/* Future Portfolio Summary Table */}
+              {(() => {
+                const filledFuture = futureResearch.filter(h => h && h.ticker);
+                const totalPlanned = filledFuture.reduce((sum, h) => sum + (h.plannedAmount || 0), 0);
+                
+                if (filledFuture.length === 0) return null;
+                
+                const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
+                const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
+                
+                const sortedFuture = [...filledFuture].sort((a, b) => {
+                  let comparison = 0;
+                  switch (futureSortBy) {
+                    case 'ticker':
+                      comparison = (a.ticker || '').localeCompare(b.ticker || '');
+                      break;
+                    case 'industry':
+                      comparison = (a.industry || '').localeCompare(b.industry || '');
+                      break;
+                    case 'tollBooth':
+                      const aVal = a.tollBooth === 'Yes' ? 1 : 0;
+                      const bVal = b.tollBooth === 'Yes' ? 1 : 0;
+                      comparison = bVal - aVal;
+                      break;
+                    case 'growth':
+                      comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
+                      break;
+                    case 'planned':
+                      comparison = (a.plannedAmount || 0) - (b.plannedAmount || 0);
+                      break;
+                    case 'status':
+                      comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+                      break;
+                    default:
+                      comparison = 0;
+                  }
+                  return futureSortDir === 'asc' ? comparison : -comparison;
+                });
+                
+                return (
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE PORTFOLIO SUMMARY</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Portfolio Summary</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
+                    </div>
+                    <div style={{overflowX:"auto"}}>
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                            <th 
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'ticker') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('ticker'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Ticker {futureSortBy === 'ticker' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'industry') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('industry'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Industry {futureSortBy === 'industry' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'tollBooth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('tollBooth'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Toll Booth? {futureSortBy === 'tollBooth' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'growth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('growth'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Growth {futureSortBy === 'growth' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'planned') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('planned'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Planned $ {futureSortBy === 'planned' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Weight %</th>
+                            <th 
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              onClick={() => {
+                                if (futureSortBy === 'status') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('status'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Status {futureSortBy === 'status' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sortedFuture.map((holding, idx) => {
+                            const weight = totalPlanned > 0 ? ((holding.plannedAmount || 0) / totalPlanned * 100) : 0;
+                            return (
+                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                                <td className="py-3 px-4 font-bold">{holding.ticker}</td>
+                                <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
+                                <td className="py-3 px-4 text-center">
+                                  {holding.tollBooth === 'Yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : holding.tollBooth === 'No' ? <span style={{color:'rgba(239,68,68,0.7)'}}>○</span> : '-'}
+                                </td>
+                                <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
+                                <td className="py-3 px-4 text-right">${(holding.plannedAmount || 0).toLocaleString()}</td>
+                                <td className="py-3 px-4 text-right font-semibold text-blue-600">{weight.toFixed(1)}%</td>
+                                <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                        <tfoot>
+                          <tr style={{background:"rgba(59,130,246,0.06)",borderTop:"0.5px solid rgba(59,130,246,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(59,130,246,0.95)"}}>
+                            <td className="py-3 px-4">Total</td>
+                            <td className="py-3 px-4" colSpan={3}>{filledFuture.length} stocks planned</td>
+                            <td className="py-3 px-4 text-right">${totalPlanned.toLocaleString()}</td>
+                            <td className="py-3 px-4 text-right">100%</td>
+                            <td className="py-3 px-4"></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    </div>
+                  </details>
+                );
+              })()}
+
+              {/* Company Weighting Pie Chart */}
+              {(() => {
+                const filledFuture = futureResearch.filter(h => h && h.ticker && h.plannedAmount > 0);
+                const totalAmount = filledFuture.reduce((sum, h) => sum + (h.plannedAmount || 0), 0);
+                
+                if (filledFuture.length === 0) return null;
+                
+                const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
+                let currentAngle = 0;
+                
+                return (
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO COMPANY WEIGHTING</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio Company Weighting</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
+                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      <div className="flex-1 space-y-2">
+                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
+                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1 font-medium">{stock.ticker}</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>${stock.plannedAmount.toLocaleString()}</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    </div>
+                  </details>
+                );
+              })()}
+
+              {/* Industry Allocation Pie Chart */}
+              {(() => {
+                const filledFuture = futureResearch.filter(h => h && h.ticker && h.industry);
+                
+                const industryData = filledFuture.reduce((acc, h) => {
+                  if (!acc[h.industry]) acc[h.industry] = { count: 0, amount: 0 };
+                  acc[h.industry].count++;
+                  acc[h.industry].amount += h.plannedAmount || 0;
+                  return acc;
+                }, {});
+                
+                const industryList = Object.entries(industryData)
+                  .map(([name, data]) => ({ name, ...data }))
+                  .sort((a, b) => b.count - a.count);
+                
+                const totalCount = industryList.reduce((sum, i) => sum + i.count, 0);
+                
+                if (industryList.length === 0) return null;
+                
+                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1'];
+                let currentAngle = 0;
+                
+                return (
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>INDUSTRY ALLOCATION</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Breakdown of your future portfolio by industry</p>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {industryList.map((ind, idx) => {
+                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      <div className="flex-1 space-y-2">
+                        {industryList.map((ind, idx) => {
+                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </>
+          )}
+
                 {/* The map itself — same component as Asset Map */}
                 <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`1px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
@@ -31436,624 +32055,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* FUTURE PORTFOLIO TAB */}
-          {investmentsSubTab === 'futurePortfolio' && (
-            <>
-              {/* Future Portfolio Header */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"14px 20px",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"11px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// FUTURE PORTFOLIO</div>
-                <p style={{fontSize:"11px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Plan your future investments with full research details</p>
-              </div>
-
-              {/* Future Holdings Research - Same format as Current */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE HOLDINGS RESEARCH{futureResearch.length>0?` · ${futureResearch.length}`:''}</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
-                </summary>
-                <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Holdings Research</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Research stocks you're considering for your portfolio</p>
-                </div>
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {futureResearch.length === 0 && (() => {
-                    // === Generate from Core: pull Core-status holdings from Holdings Research into Future Portfolio
-                    const coreHoldings = (holdingsResearch || []).filter(h => h && (h.status === 'Core') && h.ticker);
-
-                    const generateFromCore = () => {
-                      if (coreHoldings.length === 0) {
-                        window.alert(
-                          "No Core holdings yet.\n\n" +
-                          "To use this: open Holdings Research, expand any holding you want to research further, and set HOLDING STATUS to 'Core'. " +
-                          "Those will auto-populate here with all their research data filled in — you just add a Planned Investment $."
-                        );
-                        return;
-                      }
-                      // Smart merge — skip tickers already in Future
-                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
-                      const newEntries = coreHoldings
-                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
-                        .map(h => ({
-                          ticker: h.ticker,
-                          industry: h.industry || '',
-                          tollBooth: h.tollBooth || '',
-                          capitalIntensity: h.capitalIntensity || '',
-                          growthProspects: h.growthProspects || '',
-                          notes: h.notes || '',
-                          plannedAmount: 0,
-                          plannedAmountStr: '',
-                          status: 'Core',
-                        }));
-                      if (newEntries.length === 0) {
-                        window.alert("All your Core holdings are already in Future Portfolio.");
-                        return;
-                      }
-                      setFutureResearch(prev => [...prev, ...newEntries]);
-                    };
-                    const startFresh = () => setFutureResearch(prev => [...prev, { ticker: '', notes: '' }]);
-
-                    return (
-                      <div style={{border:`1px solid ${researchMode?"rgba(245,158,11,0.45)":"rgba(0,200,255,0.35)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"6px",padding:"14px",background:researchMode?"rgba(245,158,11,0.05)":"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.85}}>// GENERATE FROM CORE HOLDINGS</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Auto-populate from your Core holdings.</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>
-                          Mark a holding as <span style={{color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontWeight:600}}>Core</span> in Holdings Research and it auto-fills here with all its research data — Toll Booth, Capital Intensity, Growth, Industry. You just add a Planned Investment $.
-                        </div>
-
-                        {coreHoldings.length > 0 ? (
-                          <>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// {coreHoldings.length} CORE HOLDING{coreHoldings.length!==1?'S':''} READY TO PROMOTE</div>
-                            <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                              {coreHoldings.slice(0,5).map((h, i) => (
-                                <div key={i} style={{padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.5)":"rgba(0,200,255,0.4)"}`,borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                                  <div style={{fontFamily:"monospace",fontSize:"12px",fontWeight:600,color:"#e0eaff",flexShrink:0}}>{h.ticker}</div>
-                                  <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,textAlign:"right"}}>
-                                    {[h.industry, h.tollBooth ? `Toll: ${h.tollBooth}` : null, h.capitalIntensity, h.growthProspects].filter(Boolean).join(' · ')}
-                                  </div>
-                                </div>
-                              ))}
-                              {coreHoldings.length > 5 && (
-                                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontStyle:"italic",paddingLeft:"4px"}}>+ {coreHoldings.length - 5} more</div>
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <div style={{padding:"12px",background:"rgba(0,0,0,0.25)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.25)":"rgba(148,163,184,0.25)"}`,borderRadius:"3px",marginBottom:"12px",fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.5,textAlign:"center"}}>
-                            No Core holdings yet. Open Holdings Research and mark something as Core.
-                          </div>
-                        )}
-
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={generateFromCore} style={{flex:1,padding:"12px",background:researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)",border:`1px solid ${researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.7)"}`,borderRadius:"4px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>⚡ GENERATE TABLE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {(() => {
-                    // Sort by planned investment descending (highest at top), preserving original indices for editing
-                    const sortedView = futureResearch
-                      .map((holding, originalIndex) => ({ holding, originalIndex }))
-                      .sort((a, b) => {
-                        const aP = parseFloat(a.holding?.plannedAmount) || 0;
-                        const bP = parseFloat(b.holding?.plannedAmount) || 0;
-                        return bP - aP; // descending
-                      });
-                    return sortedView;
-                  })().map(({ holding, originalIndex }) => {
-                    const index = originalIndex; // use original index for all updates
-                    const isEditing = editingFutureResearchIdx === index;
-                    const updateF = (field, val) => {
-                      setFutureResearch(prev => {
-                        const u = [...prev];
-                        if (!u[index]) u[index] = {};
-                        u[index] = { ...u[index], [field]: val };
-                        return u;
-                      });
-                    };
-                    const planned = parseFloat(holding?.plannedAmount) || 0;
-                    return (
-                    <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
-                      {/* Compact row */}
-                      <button onClick={() => setEditingFutureResearchIdx(isEditing ? null : index)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",boxShadow:researchMode?"0 0 6px rgba(245,158,11,0.6)":"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
-                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</span>
-                            {holding?.ticker && (() => {
-                              const covered = !!findCoverageEntry(holding.ticker);
-                              return (
-                                <span
-                                  title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
-                                  onClick={(e) => { e.stopPropagation(); openTickerInCoverage(holding.ticker); }}
-                                  style={{
-                                    fontSize:"9px", padding:"2px 6px",
-                                    background: covered ? "rgba(245,158,11,0.12)" : "rgba(148,163,184,0.08)",
-                                    border: `0.5px solid ${covered ? "rgba(245,158,11,0.5)" : "rgba(148,163,184,0.3)"}`,
-                                    borderRadius:"2px",
-                                    color: covered ? "rgba(245,158,11,0.95)" : "rgba(148,163,184,0.65)",
-                                    letterSpacing:"1px", fontWeight:600, flexShrink:0, cursor:"pointer",
-                                  }}
-                                >
-                                  {covered ? '◆ COVERED' : '○ NOT COVERED'}
-                                </span>
-                              );
-                            })()}
-                          </div>
-                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
-                            {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}
-                          </div>
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                          {planned > 0 && (
-                            <div style={{textAlign:"right"}}>
-                              <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${planned.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                            </div>
-                          )}
-                          <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
-                        </div>
-                      </button>
-
-                      {/* Expanded edit panel */}
-                      {isEditing && (
-                        <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
-                            <input
-                              type="text"
-                              value={holding?.ticker || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateF('ticker', e.target.value)}
-                              placeholder="e.g. AAPL, BRK"
-                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,padding:"8px 10px",outline:"none"}}
-                            />
-                          </div>
-                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                            <div>
-                              <InfoLabel rowKey={`future-${index}`} fieldKey="tollBooth" text="TOLL BOOTH ECONOMICS?" />
-                              <select
-                                value={holding?.tollBooth || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateF('tollBooth', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
-                                <option value="">Select</option>
-                                <option value="Yes">YES</option>
-                                <option value="No">NO</option>
-                              </select>
-                            </div>
-                            <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PLANNED INVESTMENT $</div>
-                              <input
-                                type="text"
-                                inputMode="decimal"
-                                value={holding?.plannedAmountStr || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => {
-                                  const val = e.target.value.replace(/[^0-9.]/g, '');
-                                  setFutureResearch(prev => {
-                                    const u = [...prev];
-                                    if (!u[index]) u[index] = {};
-                                    u[index] = { ...u[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
-                                    return u;
-                                  });
-                                }}
-                                placeholder="0"
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                              />
-                            </div>
-                          </div>
-                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                            <div>
-                              <InfoLabel rowKey={`future-${index}`} fieldKey="capitalIntensity" text="CAPITAL INTENSITY" />
-                              <select
-                                value={holding?.capitalIntensity || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateF('capitalIntensity', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
-                                <option value="">Select</option>
-                                <option value="Toll-Like Capital Intensity">Toll-Like</option>
-                                <option value="Lean Capital Intensity">Lean</option>
-                                <option value="Heavy Capital Intensity">Heavy</option>
-                              </select>
-                            </div>
-                            <div>
-                              <InfoLabel rowKey={`future-${index}`} fieldKey="growthProspects" text="GROWTH PROSPECTS" />
-                              <select
-                                value={holding?.growthProspects || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateF('growthProspects', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
-                                <option value="">Select</option>
-                                <option value="Very Low Growth">Very Low</option>
-                                <option value="Low Growth">Low</option>
-                                <option value="Medium Growth">Medium</option>
-                                <option value="High Growth">High</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                            <div>
-                              <InfoLabel rowKey={`future-${index}`} fieldKey="industry" text="INDUSTRY" />
-                              <select
-                                value={holding?.industry || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateF('industry', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
-                                {industries.map(ind => (
-                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
-                                ))}
-                              </select>
-                            </div>
-                            <div>
-                              <InfoLabel rowKey={`future-${index}`} fieldKey="holdingStatus" text="STATUS" />
-                              <select
-                                value={holding?.status || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateF('status', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
-                                <option value="">Select Status</option>
-                                <option value="New">New</option>
-                                <option value="Core">Core</option>
-                                <option value="Reserve">Reserve</option>
-                                <option value="Trim">Trim</option>
-                              </select>
-                            </div>
-                          </div>
-                          <button onClick={() => { setFutureResearch(prev => prev.filter((_, i) => i !== index)); setEditingFutureResearchIdx(null); }}
-                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
-                        </div>
-                      )}
-                    </div>
-                    );
-                  })}
-                </div>
-                {futureResearch.length > 0 && (
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button
-                    onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
-                    style={{
-                      flex:1, padding:"12px",
-                      border:`2px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"}`,
-                      borderRadius:"6px",
-                      background:"transparent",
-                      color:researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)",
-                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
-                      cursor:"pointer", transition:"all 0.15s ease",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.8)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,1)":"rgba(0,200,255,0.95)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)"; }}
-                  >
-                    + Add Research Entry
-                  </button>
-                  <button
-                    onClick={() => {
-                      const coreHoldings = (holdingsResearch || []).filter(h => h && h.status === 'Core' && h.ticker);
-                      if (coreHoldings.length === 0) {
-                        window.alert(
-                          "No Core holdings yet.\n\n" +
-                          "Open Holdings Research, expand a holding, and set HOLDING STATUS to 'Core'. " +
-                          "It'll auto-populate here with all its research data — you just add a Planned Investment $."
-                        );
-                        return;
-                      }
-                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
-                      const newEntries = coreHoldings
-                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
-                        .map(h => ({
-                          ticker: h.ticker,
-                          industry: h.industry || '',
-                          tollBooth: h.tollBooth || '',
-                          capitalIntensity: h.capitalIntensity || '',
-                          growthProspects: h.growthProspects || '',
-                          notes: h.notes || '',
-                          plannedAmount: 0,
-                          plannedAmountStr: '',
-                          status: 'Core',
-                        }));
-                      if (newEntries.length === 0) {
-                        window.alert("All your Core holdings are already in Future Portfolio.");
-                        return;
-                      }
-                      setFutureResearch(prev => [...prev, ...newEntries]);
-                    }}
-                    style={{
-                      flex:1, padding:"12px",
-                      border:`2px solid ${researchMode?"rgba(245,158,11,0.6)":"rgba(0,200,255,0.5)"}`,
-                      borderRadius:"6px",
-                      background:researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)",
-                      color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",
-                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
-                      cursor:"pointer", transition:"all 0.15s ease",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)"; }}
-                  >
-                    ⚡ Generate from Core
-                  </button>
-                </div>
-                )}
-                </div>
-              </details>
-
-              {/* Future Portfolio Summary Table */}
-              {(() => {
-                const filledFuture = futureResearch.filter(h => h && h.ticker);
-                const totalPlanned = filledFuture.reduce((sum, h) => sum + (h.plannedAmount || 0), 0);
-                
-                if (filledFuture.length === 0) return null;
-                
-                const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
-                const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
-                
-                const sortedFuture = [...filledFuture].sort((a, b) => {
-                  let comparison = 0;
-                  switch (futureSortBy) {
-                    case 'ticker':
-                      comparison = (a.ticker || '').localeCompare(b.ticker || '');
-                      break;
-                    case 'industry':
-                      comparison = (a.industry || '').localeCompare(b.industry || '');
-                      break;
-                    case 'tollBooth':
-                      const aVal = a.tollBooth === 'Yes' ? 1 : 0;
-                      const bVal = b.tollBooth === 'Yes' ? 1 : 0;
-                      comparison = bVal - aVal;
-                      break;
-                    case 'growth':
-                      comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
-                      break;
-                    case 'planned':
-                      comparison = (a.plannedAmount || 0) - (b.plannedAmount || 0);
-                      break;
-                    case 'status':
-                      comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
-                      break;
-                    default:
-                      comparison = 0;
-                  }
-                  return futureSortDir === 'asc' ? comparison : -comparison;
-                });
-                
-                return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE PORTFOLIO SUMMARY</span>
-                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
-                    </summary>
-                    <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Portfolio Summary</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
-                    </div>
-                    <div style={{overflowX:"auto"}}>
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                            <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'ticker') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('ticker'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Ticker {futureSortBy === 'ticker' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                            <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'industry') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('industry'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Industry {futureSortBy === 'industry' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                            <th 
-                              style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'tollBooth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('tollBooth'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Toll Booth? {futureSortBy === 'tollBooth' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                            <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'growth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('growth'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Growth {futureSortBy === 'growth' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                            <th 
-                              style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'planned') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('planned'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Planned $ {futureSortBy === 'planned' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                            <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Weight %</th>
-                            <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                              onClick={() => {
-                                if (futureSortBy === 'status') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                                else { setFutureSortBy('status'); setFutureSortDir('asc'); }
-                              }}
-                            >
-                              Status {futureSortBy === 'status' && (futureSortDir === 'asc' ? '↑' : '↓')}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {sortedFuture.map((holding, idx) => {
-                            const weight = totalPlanned > 0 ? ((holding.plannedAmount || 0) / totalPlanned * 100) : 0;
-                            return (
-                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                                <td className="py-3 px-4 font-bold">{holding.ticker}</td>
-                                <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
-                                <td className="py-3 px-4 text-center">
-                                  {holding.tollBooth === 'Yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : holding.tollBooth === 'No' ? <span style={{color:'rgba(239,68,68,0.7)'}}>○</span> : '-'}
-                                </td>
-                                <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
-                                <td className="py-3 px-4 text-right">${(holding.plannedAmount || 0).toLocaleString()}</td>
-                                <td className="py-3 px-4 text-right font-semibold text-blue-600">{weight.toFixed(1)}%</td>
-                                <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                        <tfoot>
-                          <tr style={{background:"rgba(59,130,246,0.06)",borderTop:"0.5px solid rgba(59,130,246,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(59,130,246,0.95)"}}>
-                            <td className="py-3 px-4">Total</td>
-                            <td className="py-3 px-4" colSpan={3}>{filledFuture.length} stocks planned</td>
-                            <td className="py-3 px-4 text-right">${totalPlanned.toLocaleString()}</td>
-                            <td className="py-3 px-4 text-right">100%</td>
-                            <td className="py-3 px-4"></td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                    </div>
-                  </details>
-                );
-              })()}
-
-              {/* Company Weighting Pie Chart */}
-              {(() => {
-                const filledFuture = futureResearch.filter(h => h && h.ticker && h.plannedAmount > 0);
-                const totalAmount = filledFuture.reduce((sum, h) => sum + (h.plannedAmount || 0), 0);
-                
-                if (filledFuture.length === 0) return null;
-                
-                const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
-                let currentAngle = 0;
-                
-                return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO COMPANY WEIGHTING</span>
-                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
-                    </summary>
-                    <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio Company Weighting</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
-                    </div>
-                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
-                      <svg width="200" height="200" viewBox="0 0 200 200">
-                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
-                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
-                          const angle = (percentage / 100) * 360;
-                          const startAngle = currentAngle;
-                          currentAngle += angle;
-                          
-                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
-                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
-                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
-                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
-                          const largeArc = angle > 180 ? 1 : 0;
-                          
-                          return (
-                            <path
-                              key={idx}
-                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                              fill={colors[idx % colors.length]}
-                            />
-                          );
-                        })}
-                      </svg>
-                      <div className="flex-1 space-y-2">
-                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
-                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
-                          return (
-                            <div key={idx} className="flex items-center gap-3">
-                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span className="text-sm text-gray-700 flex-1 font-medium">{stock.ticker}</span>
-                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>${stock.plannedAmount.toLocaleString()}</span>
-                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    </div>
-                  </details>
-                );
-              })()}
-
-              {/* Industry Allocation Pie Chart */}
-              {(() => {
-                const filledFuture = futureResearch.filter(h => h && h.ticker && h.industry);
-                
-                const industryData = filledFuture.reduce((acc, h) => {
-                  if (!acc[h.industry]) acc[h.industry] = { count: 0, amount: 0 };
-                  acc[h.industry].count++;
-                  acc[h.industry].amount += h.plannedAmount || 0;
-                  return acc;
-                }, {});
-                
-                const industryList = Object.entries(industryData)
-                  .map(([name, data]) => ({ name, ...data }))
-                  .sort((a, b) => b.count - a.count);
-                
-                const totalCount = industryList.reduce((sum, i) => sum + i.count, 0);
-                
-                if (industryList.length === 0) return null;
-                
-                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1'];
-                let currentAngle = 0;
-                
-                return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>INDUSTRY ALLOCATION</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Breakdown of your future portfolio by industry</p>
-                    </div>
-                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
-                      <svg width="200" height="200" viewBox="0 0 200 200">
-                        {industryList.map((ind, idx) => {
-                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
-                          const angle = (percentage / 100) * 360;
-                          const startAngle = currentAngle;
-                          currentAngle += angle;
-                          
-                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
-                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
-                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
-                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
-                          const largeArc = angle > 180 ? 1 : 0;
-                          
-                          return (
-                            <path
-                              key={idx}
-                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                              fill={colors[idx % colors.length]}
-                            />
-                          );
-                        })}
-                      </svg>
-                      <div className="flex-1 space-y-2">
-                        {industryList.map((ind, idx) => {
-                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
-                          return (
-                            <div key={idx} className="flex items-center gap-3">
-                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
-                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-            </>
-          )}
 
 
           {investmentsSubTab === 'research' && (
