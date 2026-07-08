@@ -11897,7 +11897,7 @@ function MuzzApp() {
       .finally(() => setScreenLoading(false));
   };
   useEffect(() => {
-    if (investmentsSubTab !== 'stockScreen') return;
+    if (investmentsSubTab !== 'stockScreen' && investmentsSubTab !== 'researchHome') return;
     if (screenTickers === null) {
       const seed = Array.from(new Set((holdingsResearch || []).filter(h => h && h.ticker).map(h => h.ticker.trim().toUpperCase()).filter(Boolean)));
       setScreenTickers(seed);
@@ -31065,6 +31065,59 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
+
+                {(() => {
+                  const feed = (screenTickers || []).map(t => {
+                    const p = screenPrices[t];
+                    const c = p?.c || 0; const pc = p?.pc || 0;
+                    const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
+                    return { t, c, chg };
+                  }).filter(x => x.chg !== null).sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg)).slice(0, 5);
+                  const indCounts = {};
+                  (COVERAGE_DATA || []).forEach(c => { const k = c.industry || 'Other'; indCounts[k] = (indCounts[k] || 0) + 1; });
+                  const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+                  const maxInd = inds.length ? inds[0][1] : 1;
+                  return (
+                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px"}}>
+                      <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
+                        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                          <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// MARKET FEED</span>
+                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>{screenLoading ? 'SYNCING…' : feed.length ? 'TOP MOVERS · 24H' : 'STANDBY'}</span>
+                        </div>
+                        {feed.length === 0 && (
+                          <div style={{padding:"18px 14px",fontSize:"9px",color:rDim,letterSpacing:"2px",textAlign:"center"}}>{screenLoading ? '● ACQUIRING PRICE FEED…' : 'NO FEED — ADD TICKERS IN STOCK SCREEN'}</div>
+                        )}
+                        {feed.map(f => (
+                          <div key={f.t} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 14px",borderTop:"0.5px solid rgba(255,255,255,0.04)"}}>
+                            <span style={{fontSize:"11px",color:rAmber,fontWeight:700,letterSpacing:"0.5px",width:"56px",flexShrink:0}}>{f.t}</span>
+                            <span style={{flex:1,height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
+                              <span style={{display:"block",height:"100%",width:`${Math.min(100, Math.abs(f.chg) * 20)}%`,background: f.chg >= 0 ? "rgba(34,197,94,0.8)" : "rgba(239,68,68,0.8)"}}/>
+                            </span>
+                            <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{f.c.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+                            <span style={{fontSize:"11px",fontWeight:700,width:"62px",textAlign:"right",flexShrink:0,color: f.chg >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>{(f.chg >= 0 ? '+' : '') + f.chg.toFixed(2)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
+                        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                          <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// COVERAGE MATRIX</span>
+                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>BY INDUSTRY</span>
+                        </div>
+                        <div style={{padding:"10px 14px 12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                          {inds.map(([name, n]) => (
+                            <div key={name} style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                              <span style={{fontSize:"8.5px",color:"rgba(224,234,255,0.7)",letterSpacing:"1px",width:"110px",flexShrink:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",textTransform:"uppercase"}}>{name}</span>
+                              <span style={{flex:1,height:"8px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
+                                <span style={{display:"block",height:"100%",width:`${(n / maxInd) * 100}%`,background:"linear-gradient(90deg, rgba(245,158,11,0.85), rgba(245,158,11,0.4))"}}/>
+                              </span>
+                              <span style={{fontSize:"10px",color:rAmber,fontWeight:700,width:"22px",textAlign:"right",flexShrink:0}}>{n}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 <div>
                   <div style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600,margin:"4px 0 10px"}}>// MODULES</div>
