@@ -31077,10 +31077,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const feedLosers = feed.filter(x => x.chg < 0).sort((a, b) => a.chg - b.chg).slice(0, 5);
                   const indCounts = {};
                   (COVERAGE_DATA || []).forEach(c => { const k = c.industry || 'Other'; indCounts[k] = (indCounts[k] || 0) + 1; });
-                  const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+                  const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]);
                   const maxInd = inds.length ? inds[0][1] : 1;
                   return (
-                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px"}}>
+                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px",alignItems:"start"}}>
                       <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
                         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// MARKET FEED</span>
