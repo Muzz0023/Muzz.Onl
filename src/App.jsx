@@ -12025,6 +12025,7 @@ function MuzzApp() {
   const [segmentsSubTab, setSegmentsSubTab] = useState('serviceLine'); // WM segments sub-tab nav
   const [numbersSubTab, setNumbersSubTab] = useState(null); // CN railGroups sub-tab nav
   const [moatSubTab, setMoatSubTab] = useState(null); // UMG moat sub-tab nav
+  const [overviewSubTab, setOverviewSubTab] = useState(null); // coverage OVERVIEW sub-segment nav
   const [coverageComingSoon, setCoverageComingSoon] = useState(null);            // ticker currently showing the COMING SOON flash (locked cards)
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
@@ -22225,6 +22226,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
                       const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment, shareholders, deepBench } = bd.overview;
+                      const OV_TAB_DEFS = [
+                        { id:'company',    label:'COMPANY',    keys:['identity','headquarters','buffettFraming'] },
+                        { id:'business',   label:'BUSINESS',   keys:['businessLines','operatingSegments','customers','distribution','supplyChain','reinvestment'] },
+                        { id:'operations', label:'OPERATIONS', keys:['rawMaterials','rawMaterialsCategories','properties','facilityMatrix','bottlerAgreements','bottlingInvestments','topBottlers','acquisitions','reece'] },
+                        { id:'leadership', label:'LEADERSHIP', keys:['leadership','deepBench'] },
+                        { id:'ownership',  label:'OWNERSHIP',  keys:['equityStructure','shareholders','regulatory'] },
+                      ];
+                      const ovPresent = { identity, headquarters, buffettFraming, businessLines, operatingSegments, customers, distribution, supplyChain, reinvestment, rawMaterials, rawMaterialsCategories, properties, facilityMatrix, bottlerAgreements, bottlingInvestments, topBottlers, acquisitions, reece, leadership, deepBench, equityStructure, shareholders, regulatory };
+                      const ovTabs = OV_TAB_DEFS.filter(t => t.keys.some(k => ovPresent[k]));
+                      const activeOvTab = ovTabs.length ? (ovTabs.find(t => t.id === overviewSubTab) || ovTabs[0]) : null;
+                      const showOv = (k) => ovTabs.length < 2 || (activeOvTab && activeOvTab.keys.includes(k));
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -22290,6 +22302,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* HEADLINE STATS */}
                           <SectionHeading>// HEADLINE STATS</SectionHeading>
                           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px',marginBottom:'4px'}}>
+                            {ovTabs.length > 1 && (
+                              <div style={{display:'flex',gap:'6px',overflowX:'auto',paddingBottom:'4px'}}>
+                                {ovTabs.map(t => {
+                                  const on = activeOvTab && activeOvTab.id === t.id;
+                                  return (
+                                    <button key={t.id} onClick={() => setOverviewSubTab(t.id)} style={{padding:'8px 14px',background:on?'rgba(245,158,11,0.16)':'rgba(0,0,0,0.35)',border:`0.5px solid ${on?'rgba(245,158,11,0.8)':'rgba(245,158,11,0.25)'}`,borderRadius:'4px',color:on?'rgba(245,158,11,0.95)':'rgba(224,234,255,0.6)',fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}}>// {t.label}</button>
+                                  );
+                                })}
+                              </div>
+                            )}
                             {(() => {
                               // Parse founded: "1894 by Milton S. Hershey" → value "1894", sub "by Milton S. Hershey"
                               const parseFact = (str) => {
@@ -22372,12 +22394,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
 
                           {/* IDENTITY & POSITIONING */}
-                          <SectionHeading>// IDENTITY & POSITIONING</SectionHeading>
-                          <InfoPanel label="// CORE IDENTITY">{identity.coreIdentity}</InfoPanel>
-                          <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
+                          {showOv('identity') && identity && (
+                            <>
+                              <SectionHeading>// IDENTITY & POSITIONING</SectionHeading>
+                              <InfoPanel label="// CORE IDENTITY">{identity.coreIdentity}</InfoPanel>
+                              <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
+                            </>
+                          )}
 
                           {/* CN: NETWORK BUILT BY ACQUISITION */}
-                          {acquisitions && (
+                          {showOv('acquisitions') && acquisitions && (
                             <>
                               <SectionHeading>// NETWORK BUILT BY ACQUISITION</SectionHeading>
                               {acquisitions.preamble && <InfoPanel label="// THE PLAYBOOK">{acquisitions.preamble}</InfoPanel>}
@@ -22438,7 +22464,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* CN: SUPPLY-CHAIN & NETWORK REACH */}
-                          {supplyChain && (
+                          {showOv('supplyChain') && supplyChain && (
                             <>
                               <SectionHeading>// SUPPLY-CHAIN & NETWORK REACH</SectionHeading>
                               {supplyChain.preamble && <InfoPanel label="// EDGE OF THE NETWORK">{supplyChain.preamble}</InfoPanel>}
@@ -22449,7 +22475,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* CN: PROPERTIES · NOTE 11 (properties.ppe shape) */}
-                          {properties && properties.ppe && (() => {
+                          {showOv('properties') && properties && properties.ppe && (() => {
                             const p = properties.ppe;
                             const fmt = (n) => (n === 0 ? '—' : n.toLocaleString('en-US'));
                             const Row = ({ r, bold }) => (
@@ -22521,7 +22547,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })()}
 
                           {/* CN: REINVESTMENT IN THE BUSINESS */}
-                          {reinvestment && (
+                          {showOv('reinvestment') && reinvestment && (
                             <>
                               <SectionHeading>// REINVESTMENT IN THE BUSINESS</SectionHeading>
                               {reinvestment.headline && (
@@ -22544,7 +22570,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* REECE-SPECIFIC: international footprint, milestones, acquisitions, letters, case studies */}
-                          {reece && (
+                          {showOv('reece') && reece && (
                             <>
                               {/* INTERNATIONAL FOOTPRINT */}
                               {reece.footprint && (
@@ -22847,7 +22873,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* CUSTOMERS & MARKETING */}
-                          {customers && (
+                          {showOv('customers') && customers && (
                             <>
                               <SectionHeading>// CUSTOMERS & MARKETING</SectionHeading>
                               <InfoPanel label="// MAIN CUSTOMERS">{customers.mainCustomers}</InfoPanel>
@@ -22881,7 +22907,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* RAW MATERIALS & PRICING */}
-                          {rawMaterials && rawMaterials.keyInput && (
+                          {showOv('rawMaterials') && rawMaterials && rawMaterials.keyInput && (
                             <>
                               <SectionHeading>// RAW MATERIALS & PRICING</SectionHeading>
 
@@ -22928,7 +22954,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* PROPERTIES / FACILITIES */}
-                          {properties && properties.facilities && (() => {
+                          {showOv('properties') && properties && properties.facilities && (() => {
                             // Group facilities by country, then sub-group by type within country
                             const typeOrder = [
                               { match: /Manufacturing.*confectionery/i, label: 'Manufacturing · Confectionery' },
@@ -23064,7 +23090,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })()}
 
                           {/* PROPERTIES (PEP shape) — significant facilities by division */}
-                          {properties && properties.byDivision && (
+                          {showOv('properties') && properties && properties.byDivision && (
                             <>
                               <SectionHeading>// SIGNIFICANT PROPERTIES · {properties.byDivision.length} FACILITIES</SectionHeading>
                               {properties.preamble && (
@@ -23117,7 +23143,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* DISTRIBUTION SYSTEM — global empire stats */}
-                          {distribution && distribution.headlineStats && (
+                          {showOv('distribution') && distribution && distribution.headlineStats && (
                             <>
                               <SectionHeading>// DISTRIBUTION SYSTEM · {distribution.asOf}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The empire by the numbers — how much Coca-Cola moves through the world each day.</div>
@@ -23190,7 +23216,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
                           {/* OPERATING SEGMENTS — organisational structure */}
-                          {operatingSegments && operatingSegments.segments && (
+                          {showOv('operatingSegments') && operatingSegments && operatingSegments.segments && (
                             <>
                               <SectionHeading>// OPERATING SEGMENTS · {operatingSegments.asOf}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.description}</div>
@@ -23254,7 +23280,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BUSINESS LINES — concentrate vs finished product */}
-                          {businessLines && (
+                          {showOv('businessLines') && businessLines && (
                             <>
                               <SectionHeading>// BUSINESS LINES · {businessLines.lines.length}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{businessLines.description}</div>
@@ -23301,7 +23327,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BOTTLER'S AGREEMENTS — US vs Outside US comparison */}
-                          {bottlerAgreements && (
+                          {showOv('bottlerAgreements') && bottlerAgreements && (
                             <>
                               <SectionHeading>// BOTTLER'S AGREEMENTS · U.S. VS OUTSIDE U.S.</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlerAgreements.description}</div>
@@ -23338,7 +23364,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BOTTLING INVESTMENTS — KO's stake structure */}
-                          {bottlingInvestments && (
+                          {showOv('bottlingInvestments') && bottlingInvestments && (
                             <>
                               <SectionHeading>// BOTTLING INVESTMENTS · {bottlingInvestments.types.length} TYPES</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlingInvestments.description}</div>
@@ -23388,7 +23414,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* TOP BOTTLERS — 5 independent bottling partners */}
-                          {topBottlers && (
+                          {showOv('topBottlers') && topBottlers && (
                             <>
                               <SectionHeading>// TOP {topBottlers.bottlers.length} INDEPENDENT BOTTLING PARTNERS · {topBottlers.asOf}</SectionHeading>
                               {topBottlers.shareNote && (
@@ -23436,7 +23462,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* RAW MATERIALS CATEGORIES — KO's diverse inputs */}
-                          {rawMaterialsCategories && (
+                          {showOv('rawMaterialsCategories') && rawMaterialsCategories && (
                             <>
                               <SectionHeading>// RAW MATERIALS · {rawMaterialsCategories.categories.length} CATEGORIES</SectionHeading>
                               {rawMaterialsCategories.description && (
@@ -23473,7 +23499,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* HEADQUARTERS */}
-                          {headquarters && (
+                          {showOv('headquarters') && headquarters && (
                             <>
                               <SectionHeading>// WORLDWIDE HEADQUARTERS</SectionHeading>
                               <div style={{
@@ -23507,7 +23533,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* FACILITY MATRIX — principal facilities by segment × type */}
-                          {facilityMatrix && (
+                          {showOv('facilityMatrix') && facilityMatrix && (
                             <>
                               <SectionHeading>// PRINCIPAL FACILITIES · {facilityMatrix.asOf}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Headcount of Coca-Cola’s physical footprint by operating segment and site type. "Principal" = significant sites only; owned vs leased reflects capital strategy.</div>
@@ -23626,7 +23652,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* ════════════════════════════════════════════════ */}
 
                           {/* BUFFETT FRAMING — featured panel positioning PEP vs KO */}
-                          {buffettFraming && (
+                          {showOv('buffettFraming') && buffettFraming && (
                             <>
                               <SectionHeading>// THE BUFFETT FRAMING</SectionHeading>
                               <div style={{
@@ -23690,7 +23716,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* OPERATING SEGMENTS (PEP shape) — current + 2025 restructuring */}
-                          {operatingSegments && operatingSegments.current && (
+                          {showOv('operatingSegments') && operatingSegments && operatingSegments.current && (
                             <>
                               <SectionHeading>// OPERATING SEGMENTS · {operatingSegments.asOf || 'CURRENT'}</SectionHeading>
                               {operatingSegments.preamble && (
@@ -23775,7 +23801,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* DISTRIBUTION (PEP shape) — 4 channels + DSD moat callout */}
-                          {distribution && distribution.channels && (
+                          {showOv('distribution') && distribution && distribution.channels && (
                             <>
                               <SectionHeading>// DISTRIBUTION CHANNELS · {distribution.channels.length}</SectionHeading>
                               {distribution.preamble && (
@@ -23831,7 +23857,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* RAW MATERIALS (PEP shape) — categories + risk management */}
-                          {rawMaterials && rawMaterials.categories && (
+                          {showOv('rawMaterials') && rawMaterials && rawMaterials.categories && (
                             <>
                               <SectionHeading>// RAW MATERIALS & INGREDIENTS</SectionHeading>
                               {rawMaterials.preamble && (
@@ -23882,7 +23908,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* REGULATORY — 6 areas, collapsible */}
-                          {regulatory && regulatory.areas && (
+                          {showOv('regulatory') && regulatory && regulatory.areas && (
                             <>
                               <SectionHeading>// REGULATORY ENVIRONMENT</SectionHeading>
                               {regulatory.preamble && (
@@ -23950,7 +23976,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* LEADERSHIP — senior executives + board of directors */}
-                          {leadership && (
+                          {showOv('leadership') && leadership && (
                             <>
                               {/* SENIOR EXECUTIVES */}
                               {leadership.executives && leadership.executives.length > 0 && (
@@ -24099,7 +24125,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — OPERATING BENCH (deep-bench roster) */}
-                          {deepBench && (
+                          {showOv('deepBench') && deepBench && (
                             <>
                               <SectionHeading>// OPERATING BENCH</SectionHeading>
                               {deepBench.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'14px',lineHeight:1.5,letterSpacing:'0.3px'}}>{deepBench.note}</div>}
@@ -24122,7 +24148,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* UMG — SHAREHOLDER REGISTER (capital vs voting) */}
-                          {shareholders && (
+                          {showOv('shareholders') && shareholders && (
                             <>
                               <SectionHeading>// SHAREHOLDER REGISTER · {shareholders.asOf}</SectionHeading>
                               {shareholders.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'14px',lineHeight:1.5,letterSpacing:'0.3px'}}>{shareholders.note}</div>}
@@ -24168,7 +24194,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* EQUITY STRUCTURE — dual-class share system */}
-                          {equityStructure && (
+                          {showOv('equityStructure') && equityStructure && (
                             <>
                               <SectionHeading>// EQUITY STRUCTURE · DUAL-CLASS</SectionHeading>
                               {equityStructure.summary && (
