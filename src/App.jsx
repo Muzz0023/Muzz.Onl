@@ -31080,7 +31080,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]);
                   const maxInd = inds.length ? inds[0][1] : 1;
                   return (
-                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px",alignItems:"start"}}>
+                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px"}}>
                       <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
                         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// MARKET FEED</span>
@@ -31110,16 +31110,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                         ))}
                       </div>
-                      <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
+                      <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden",display:"flex",flexDirection:"column"}}>
                         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// COVERAGE MATRIX</span>
                           <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>BY INDUSTRY</span>
                         </div>
-                        <div style={{padding:"10px 14px 12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                        <div style={{padding:"12px 16px",flex:1,display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",columnGap:"24px",rowGap:"8px",alignContent:"space-evenly"}}>
                           {inds.map(([name, n]) => (
                             <div key={name} style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                              <span style={{fontSize:"8.5px",color:"rgba(224,234,255,0.7)",letterSpacing:"1px",width:"110px",flexShrink:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",textTransform:"uppercase"}}>{name}</span>
-                              <span style={{flex:1,height:"8px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
+                              <span style={{fontSize:"8px",color:"rgba(224,234,255,0.7)",letterSpacing:"0.8px",width:"96px",flexShrink:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",textTransform:"uppercase"}}>{name}</span>
+                              <span style={{flex:1,height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
                                 <span style={{display:"block",height:"100%",width:`${(n / maxInd) * 100}%`,background:"linear-gradient(90deg, rgba(245,158,11,0.85), rgba(245,158,11,0.4))"}}/>
                               </span>
                               <span style={{fontSize:"10px",color:rAmber,fontWeight:700,width:"22px",textAlign:"right",flexShrink:0}}>{n}</span>
