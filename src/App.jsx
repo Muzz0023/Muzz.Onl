@@ -22299,19 +22299,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
+                          {ovTabs.length > 1 && (
+                            <div style={{display:'flex',gap:'6px',overflowX:'auto',paddingBottom:'4px'}}>
+                              {ovTabs.map(t => {
+                                const on = activeOvTab && activeOvTab.id === t.id;
+                                return (
+                                  <button key={t.id} onClick={() => setOverviewSubTab(t.id)} style={{padding:'8px 14px',background:on?'rgba(245,158,11,0.16)':'rgba(0,0,0,0.35)',border:`0.5px solid ${on?'rgba(245,158,11,0.8)':'rgba(245,158,11,0.25)'}`,borderRadius:'4px',color:on?'rgba(245,158,11,0.95)':'rgba(224,234,255,0.6)',fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}}>// {t.label}</button>
+                                );
+                              })}
+                            </div>
+                          )}
                           {/* HEADLINE STATS */}
                           <SectionHeading>// HEADLINE STATS</SectionHeading>
                           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px',marginBottom:'4px'}}>
-                            {ovTabs.length > 1 && (
-                              <div style={{display:'flex',gap:'6px',overflowX:'auto',paddingBottom:'4px'}}>
-                                {ovTabs.map(t => {
-                                  const on = activeOvTab && activeOvTab.id === t.id;
-                                  return (
-                                    <button key={t.id} onClick={() => setOverviewSubTab(t.id)} style={{padding:'8px 14px',background:on?'rgba(245,158,11,0.16)':'rgba(0,0,0,0.35)',border:`0.5px solid ${on?'rgba(245,158,11,0.8)':'rgba(245,158,11,0.25)'}`,borderRadius:'4px',color:on?'rgba(245,158,11,0.95)':'rgba(224,234,255,0.6)',fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}}>// {t.label}</button>
-                                  );
-                                })}
-                              </div>
-                            )}
                             {(() => {
                               // Parse founded: "1894 by Milton S. Hershey" → value "1894", sub "by Milton S. Hershey"
                               const parseFact = (str) => {
