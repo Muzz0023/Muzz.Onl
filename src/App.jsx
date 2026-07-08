@@ -11877,6 +11877,8 @@ function MuzzApp() {
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
   const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
+  // Always open sections/pages from the top — prevents landing mid-scroll after navigating
+  useEffect(() => { try { window.scrollTo(0, 0); } catch(e) {} }, [activeView, investmentsSubTab]);
   // === STOCK SCREEN — user price board seeded from holdings (same API as Live Prices) ===
   const [screenTickers, setScreenTickers] = useState(null); // null = not yet seeded from holdings
   const [screenPrices, setScreenPrices] = useState({});
