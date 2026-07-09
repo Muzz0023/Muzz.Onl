@@ -12661,6 +12661,7 @@ function MuzzApp() {
           const d = result.data_json;
           // Read elite status from dedicated columns, not data_json
           if (result.stripe_elite !== undefined) setStripeElite(result.stripe_elite);
+          if (result.stripe_research !== undefined && result.stripe_research) setStripeResearch(true);
           if (d.subscriptions) setSubscriptions(d.subscriptions);
           if (d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
           if (d.billBuckets) setBillBuckets(d.billBuckets);
