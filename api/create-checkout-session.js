@@ -1,6 +1,9 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Elite price comes from the existing env var; Research falls back to the live price ID.
+const RESEARCH_PRICE_ID = process.env.STRIPE_RESEARCH_PRICE_ID || 'price_1TrDBp1gOtfSeAhJidfiM2t5';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -9,10 +12,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { userId, userEmail } = req.body;
+    const { userId, userEmail, tier } = req.body;
     if (!userId || !userEmail) return res.status(400).json({ error: 'Missing userId or userEmail' });
 
-    const priceId = process.env.STRIPE_PRICE_ID;
+    const plan = tier === 'research' ? 'research' : 'elite';
+    const priceId = plan === 'research' ? RESEARCH_PRICE_ID : process.env.STRIPE_PRICE_ID;
 
     const existingCustomers = await stripe.customers.list({ email: userEmail, limit: 1 });
     let customer;
@@ -29,8 +33,8 @@ export default async function handler(req, res) {
       mode: 'subscription',
       success_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=success',
       cancel_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=cancelled',
-      metadata: { supabase_user_id: userId, plan: 'elite' },
-      subscription_data: { metadata: { supabase_user_id: userId, plan: 'elite' } },
+      metadata: { supabase_user_id: userId, plan },
+      subscription_data: { metadata: { supabase_user_id: userId, plan } },
     });
 
     return res.status(200).json({ url: session.url });
