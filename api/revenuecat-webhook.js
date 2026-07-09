@@ -2,9 +2,12 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.s
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET;
 
-async function updateUserEliteStatus(userId, isElite) {
+const RESEARCH_PRODUCT_ID = 'muzz_research_monthly';
+
+// Patch only the fields provided, e.g. { stripe_elite: true, stripe_research: true }
+async function updateUserTier(userId, fields) {
   try {
-    const updateData = { stripe_elite: isElite, updated_at: new Date().toISOString() };
+    const updateData = { ...fields, updated_at: new Date().toISOString() };
     await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
       method: 'PATCH',
       headers: {
@@ -15,9 +18,9 @@ async function updateUserEliteStatus(userId, isElite) {
       },
       body: JSON.stringify(updateData),
     });
-    console.log(`Updated elite for ${userId}: ${isElite}`);
+    console.log(`Updated tier for ${userId}:`, JSON.stringify(fields));
   } catch (error) {
-    console.error('Error updating elite status:', error);
+    console.error('Error updating tier status:', error);
   }
 }
 
@@ -37,22 +40,36 @@ export default async function handler(req, res) {
 
   try {
     const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const { type, app_user_id, product_id } = event.event || {};
+    const { type, app_user_id, product_id, new_product_id } = event.event || {};
 
     if (!app_user_id) return res.status(400).json({ error: 'Missing app_user_id' });
 
     console.log(`RevenueCat webhook: type=${type}, user=${app_user_id}, product=${product_id}`);
 
+    const effectiveProduct = new_product_id || product_id;
+    const isResearchProduct = effectiveProduct === RESEARCH_PRODUCT_ID;
+
     switch (type) {
       case 'INITIAL_PURCHASE':
       case 'RENEWAL':
       case 'REACTIVATION':
-        await updateUserEliteStatus(app_user_id, true);
+      case 'PRODUCT_CHANGE': // Apple subscription-group upgrade/downgrade
+        if (isResearchProduct) {
+          await updateUserTier(app_user_id, { stripe_elite: true, stripe_research: true });
+        } else {
+          // Elite purchase — also clears research on a group downgrade,
+          // since Apple only allows one active sub per group.
+          await updateUserTier(app_user_id, { stripe_elite: true, stripe_research: false });
+        }
         break;
       case 'CANCELLATION':
       case 'EXPIRATION':
       case 'BILLING_ISSUE':
-        await updateUserEliteStatus(app_user_id, false);
+        if (isResearchProduct) {
+          await updateUserTier(app_user_id, { stripe_elite: false, stripe_research: false });
+        } else {
+          await updateUserTier(app_user_id, { stripe_elite: false });
+        }
         break;
       default:
         console.log(`Unhandled RevenueCat event type: ${type}`);
