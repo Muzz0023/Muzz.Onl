@@ -17651,20 +17651,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div>
               <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(0,200,255,0.04)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
                 <span style={{flex:1,fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Feature</span>
-                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Free</span>
-                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>MUZZ</span>
+                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Free</span>
+                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(0,200,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ELITE</span>
+                <span style={{width:"62px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>RESEARCH</span>
               </div>
               {[
-                { feature: 'Tasks & Daily Planner', free: true, elite: true },
-                { feature: 'Reminders & Birthdays', free: true, elite: true },
-                { feature: 'Work & Timesheet', free: false, elite: true },
-                { feature: 'Bills & Debt Management', free: false, elite: true },
-                { feature: 'Assets Management', free: false, elite: true },
-                { feature: 'Investment Management', free: false, elite: true },
-                { feature: 'Health & Sleep Tracker', free: false, elite: true },
-                { feature: 'Gym & Steps Tracker', free: false, elite: true },
-                { feature: 'Nutrition & Water Tracker', free: false, elite: true },
-                { feature: 'Elite Badge & Name', free: false, elite: true },
+                { feature: 'Tasks & Daily Planner', free: true, elite: true, research: true },
+                { feature: 'Reminders & Birthdays', free: true, elite: true, research: true },
+                { feature: 'Work & Timesheet', free: false, elite: true, research: true },
+                { feature: 'Bills & Debt Management', free: false, elite: true, research: true },
+                { feature: 'Assets Management', free: false, elite: true, research: true },
+                { feature: 'Investment Management', free: false, elite: true, research: true },
+                { feature: 'Health & Sleep Tracker', free: false, elite: true, research: true },
+                { feature: 'Gym & Steps Tracker', free: false, elite: true, research: true },
+                { feature: 'Nutrition & Water Tracker', free: false, elite: true, research: true },
+                { feature: 'Elite Badge & Name', free: false, elite: true, research: true },
+                { feature: 'Research OS — Analyst Desk', free: false, elite: false, research: true },
+                { feature: 'Company Coverage Library — deep-dive analysis', free: false, elite: false, research: true },
+                { feature: 'Holdings Research Files', free: false, elite: false, research: true },
+                { feature: 'Live Prices & Stock Screen', free: false, elite: false, research: true },
+                { feature: 'Holdings Constellation Map', free: false, elite: false, research: true },
+                { feature: 'Investing Guide — Buffett & Munger', free: false, elite: false, research: true },
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
                   ? <span style={{color:color,fontWeight:600}}>●</span>
@@ -17672,8 +17679,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div key={i} style={{display:"flex",alignItems:"center",padding:"9px 16px",borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
                     <span style={{flex:1,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT}}>{row.feature}</span>
-                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
-                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.elite, "rgba(245,158,11,0.9)")}</span>
+                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
+                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.elite, "rgba(0,200,255,0.85)")}</span>
+                    <span style={{width:"62px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.research, "rgba(245,158,11,0.95)")}</span>
                   </div>
                 );
               })}
