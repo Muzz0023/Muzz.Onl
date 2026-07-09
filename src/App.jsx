@@ -7,6 +7,8 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 const REVENUECAT_API_KEY = 'appl_QEohIcdAgxVGnNuXLmxwhyLClVD';
 const ELITE_ENTITLEMENT_ID = 'Muzz.onl Pro';
 const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
+const RESEARCH_ENTITLEMENT_ID = 'Muzz.onl Research';
+const RESEARCH_PRODUCT_ID = 'muzz_research_monthly';
 
 // RevenueCat helper for iOS purchases
 const RevenueCat = {
@@ -62,6 +64,17 @@ const RevenueCat = {
     }
   },
 
+  async checkResearchStatus() {
+    if (!this.initialized || !this.Purchases) return false;
+    try {
+      const { customerInfo } = await this.Purchases.getCustomerInfo();
+      return customerInfo.entitlements.active[RESEARCH_ENTITLEMENT_ID] !== undefined;
+    } catch (err) {
+      console.log('Error checking research status:', err);
+      return false;
+    }
+  },
+
   
   async purchaseElite() {
     if (!this.initialized || !this.Purchases) {
@@ -88,6 +101,30 @@ const RevenueCat = {
     }
   },
 
+  async purchaseResearch() {
+    if (!this.initialized || !this.Purchases) {
+      alert('Purchases not available on this device');
+      return { success: false };
+    }
+    try {
+      const { products } = await this.Purchases.getProducts({ productIdentifiers: [RESEARCH_PRODUCT_ID] });
+      if (!products || products.length === 0) {
+        alert('Product not found. Please try again later.');
+        return { success: false };
+      }
+      const product = products[0];
+      const { customerInfo } = await this.Purchases.purchaseStoreProduct({ product });
+      return { success: true, customerInfo };
+    } catch (err) {
+      if (err.code === '1' || err.userCancelled || err.code === 'PURCHASE_CANCELLED') {
+        return { success: false, cancelled: true };
+      }
+      console.log('Purchase error:', err);
+      alert('Purchase failed: ' + (err.message || err));
+      return { success: false, error: err };
+    }
+  },
+
 
   async restorePurchases() {
     if (!this.initialized || !this.Purchases) {
@@ -97,7 +134,8 @@ const RevenueCat = {
     try {
       const { customerInfo } = await this.Purchases.restorePurchases();
       const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
-      return { success: isElite, isElite, customerInfo };
+      const isResearch = customerInfo.entitlements.active[RESEARCH_ENTITLEMENT_ID] !== undefined;
+      return { success: isElite || isResearch, isElite, isResearch, customerInfo };
     } catch (err) {
       console.log('Restore error:', err);
       alert('Could not restore purchases. Please try again.');
@@ -1361,7 +1399,7 @@ function AuthScreen() {
             <defs><linearGradient id="authGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
           </svg>
           <div style={{fontFamily:'monospace',fontWeight:700,fontSize:'22px',color:'#e0eaff',letterSpacing:'6px',marginBottom:'6px'}}>MUZZ</div>
-          <div style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'2px'}}>LIFE & BUSINESS INTELLIGENCE SYSTEM</div>
+          <div style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'2px'}}>LIFE & INVESTMENT INTELLIGENCE SYSTEM</div>
         </div>
 
         {/* Panel */}
@@ -11576,7 +11614,9 @@ function MuzzApp() {
   const userEmail = authUser?.email?.toLowerCase() || '';
   const isVIP = VIP_EMAILS.includes(userEmail);
   const [stripeElite, setStripeElite] = useState(false);
-  const isElite = isVIP || stripeElite;
+  const [stripeResearch, setStripeResearch] = useState(false);
+  const isResearch = isVIP || stripeResearch;
+  const isElite = isVIP || stripeElite || stripeResearch;
   const [eliteName, setEliteName] = useState('');
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -12385,6 +12425,7 @@ function MuzzApp() {
       customCategories: d.customCategories||[],
       eliteName: d.eliteName||'',
       stripeElite: d.stripeElite||false,
+      stripeResearch: d.stripeResearch||false,
       timetableBlocks: d.timetableBlocks||[],
       habits: d.habits||[],
       habitLog: d.habitLog||{},
@@ -12453,6 +12494,7 @@ function MuzzApp() {
           setStripeElite(true);
           setSubscriptionInfo(data.subscription);
         }
+        if (data.isResearch) setStripeResearch(true);
         // Note: clearing is handled by Stripe webhook, not here
       } catch (e) {
         console.error('Subscription check error:', e);
@@ -12469,17 +12511,20 @@ function MuzzApp() {
       await RevenueCat.login(userId);
       const hasElite = await RevenueCat.checkEliteStatus();
       setStripeElite(hasElite);
+      const hasResearch = await RevenueCat.checkResearchStatus();
+      if (hasResearch) setStripeResearch(true);
     };
     initAndCheck();
   }, [userId, userEmail]);
 
   // Handle Stripe checkout
-  const handleUpgrade = async () => {
+  const handleUpgrade = async (tier = 'elite') => {
     if (isNative && window.Capacitor?.getPlatform() === 'ios') {
       try {
-        const result = await RevenueCat.purchaseElite();
+        const result = tier === 'research' ? await RevenueCat.purchaseResearch() : await RevenueCat.purchaseElite();
         if (result.success) {
           setStripeElite(true);
+          if (tier === 'research') setStripeResearch(true);
           try {
             const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
               headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -12489,17 +12534,17 @@ function MuzzApp() {
             await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
               method: 'PATCH',
               headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+              body: JSON.stringify({ data_json: { ...current, stripeElite: true, ...(tier === 'research' ? { stripeResearch: true } : {}) } })
             });
           } catch(e) { console.log('Supabase elite save error:', e); }
           try {
             await fetch(api('/api/sync-apple-purchase'), {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ userId, userEmail }),
+              body: JSON.stringify({ userId, userEmail, tier }),
             });
           } catch(e) { console.log('Sync API error:', e); }
-          alert('Welcome to Elite! 🎉');
+          alert(tier === 'research' ? 'Welcome to Muzz Research! 🎉' : 'Welcome to Elite! 🎉');
           setActiveView('home');
         } else if (result.cancelled) {
           // User cancelled - do nothing
@@ -12515,7 +12560,7 @@ function MuzzApp() {
       const res = await fetch(api('/api/create-checkout-session'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, userEmail }),
+        body: JSON.stringify({ userId, userEmail, tier }),
       });
       const data = await res.json();
       if (data.url) {
@@ -12535,6 +12580,7 @@ function MuzzApp() {
       const result = await RevenueCat.restorePurchases();
       if (result.success) {
         if (result.isElite) setStripeElite(true);
+        if (result.isResearch) setStripeResearch(true);
         try {
           const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -17506,8 +17552,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </svg>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0.5px"}}>{isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{isResearch?'MUZZ RESEARCH':isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0.5px"}}>{isResearch?"FULL ACCESS + RESEARCH OS":isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
               </div>
             </div>
           </div>
@@ -17516,7 +17562,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-3xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Pricing Cards */}
-          {!isElite && (
+          {!isResearch && (
             <div style={{display:"grid",gap:"12px",gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))'}}>
 
               {/* Muzz Elite Card */}
@@ -17541,7 +17587,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ))}
                 </div>
                 {!isElite && (
-                  <button onClick={handleUpgrade}
+                  <button onClick={() => handleUpgrade('elite')}
                     style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
                     SUBSCRIBE — $4.99/MONTH
                   </button>
@@ -17549,6 +17595,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {isElite && (
                   <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"10px",color:"rgba(245,158,11,0.7)",fontFamily:SANS_FONT,fontSize:"10px",textAlign:"center",letterSpacing:"0.3px",fontWeight:600}}>● ACTIVE PLAN</div>
                 )}
+              </div>
+
+
+              {/* Muzz Research Card */}
+              <div style={{position:"relative",background:"rgba(5,12,24,0.85)",border:"1px solid rgba(245,158,11,0.6)",borderLeft:"2px solid rgba(245,158,11,0.95)",borderRadius:"14px",padding:"20px",display:"flex",flexDirection:"column",gap:"14px",boxShadow:"0 0 24px rgba(245,158,11,0.12)"}}>
+                <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.14)",color:"rgba(245,158,11,0.95)",fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"1px",fontWeight:700,borderRadius:"3px",border:"0.5px solid rgba(245,158,11,0.5)"}}>MOST POPULAR</div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Tier 02</div>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"8px"}}>MUZZ RESEARCH</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
+                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>$9.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
+                  </div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"6px"}}>Everything in Elite + the full Research OS workspace</div>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
+                  {['Everything in Muzz Elite','Research OS — Analyst Desk','Company Coverage Library','Holdings Research Files','Live Prices & Stock Screen','Holdings Constellation Map','Investing Guide — Buffett & Munger'].map((f, i) => (
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT}}>
+                      <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => handleUpgrade('research')}
+                  style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.16)",border:"0.5px solid rgba(245,158,11,0.8)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.5px",fontWeight:700,cursor:"pointer"}}>
+                  SUBSCRIBE — $9.99/MONTH
+                </button>
               </div>
 
             </div>
@@ -19371,7 +19443,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INVESTMENTS</div>
               </div>
               <button
-                onClick={() => { setInvestmentsSubTab('researchHome'); setResearchMode(true); }}
+                onClick={() => { if (isResearch) { setInvestmentsSubTab('researchHome'); setResearchMode(true); } else { setActiveView('upgrade'); } }}
                 style={{position:"relative",textAlign:"right",cursor:"pointer",fontFamily:"monospace",padding:"12px 18px",background:"linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 100%)",border:"1px solid rgba(245,158,11,0.55)",borderRadius:"6px",boxShadow:"0 0 22px rgba(245,158,11,0.18)",transition:"all 0.2s ease"}}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 34px rgba(245,158,11,0.38)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.95)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.18)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.55)"; e.currentTarget.style.transform = "translateY(0)"; }}
