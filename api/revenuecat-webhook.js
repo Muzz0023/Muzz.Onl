@@ -2,7 +2,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.s
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET;
 
-const RESEARCH_PRODUCT_ID = 'muzz_research_monthly';
+const RESEARCH_PRODUCT_ID = 'muzz_research_1m';
 
 // Patch only the fields provided, e.g. { stripe_elite: true, stripe_research: true }
 async function updateUserTier(userId, fields) {
