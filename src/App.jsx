@@ -8,7 +8,7 @@ const REVENUECAT_API_KEY = 'appl_QEohIcdAgxVGnNuXLmxwhyLClVD';
 const ELITE_ENTITLEMENT_ID = 'Muzz.onl Pro';
 const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
 const RESEARCH_ENTITLEMENT_ID = 'Muzz.onl Research';
-const RESEARCH_PRODUCT_ID = 'muzz_research_monthly';
+const RESEARCH_PRODUCT_ID = 'muzz_research_1m';
 
 // RevenueCat helper for iOS purchases
 const RevenueCat = {
