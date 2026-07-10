@@ -2,7 +2,8 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.s
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET;
 
-const RESEARCH_PRODUCT_ID = 'muzz_research_1m';
+// Research product IDs across stores: Apple IAP + RevenueCat's Stripe product identifier
+const RESEARCH_PRODUCT_IDS = ['muzz_research_1m', 'prod_Uqv1CpL8npsrGF'];
 
 // Patch only the fields provided, e.g. { stripe_elite: true, stripe_research: true }
 async function updateUserTier(userId, fields) {
@@ -40,14 +41,15 @@ export default async function handler(req, res) {
 
   try {
     const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const { type, app_user_id, product_id, new_product_id } = event.event || {};
+    const { type, app_user_id, product_id, new_product_id, store } = event.event || {};
 
     if (!app_user_id) return res.status(400).json({ error: 'Missing app_user_id' });
 
     console.log(`RevenueCat webhook: type=${type}, user=${app_user_id}, product=${product_id}`);
 
     const effectiveProduct = new_product_id || product_id;
-    const isResearchProduct = effectiveProduct === RESEARCH_PRODUCT_ID;
+    const isResearchProduct = RESEARCH_PRODUCT_IDS.includes(effectiveProduct);
+    const isAppleStore = store === 'APP_STORE';
 
     switch (type) {
       case 'INITIAL_PURCHASE':
@@ -56,10 +58,14 @@ export default async function handler(req, res) {
       case 'PRODUCT_CHANGE': // Apple subscription-group upgrade/downgrade
         if (isResearchProduct) {
           await updateUserTier(app_user_id, { stripe_elite: true, stripe_research: true });
-        } else {
-          // Elite purchase — also clears research on a group downgrade,
-          // since Apple only allows one active sub per group.
+        } else if (isAppleStore) {
+          // Apple elite purchase/downgrade — clears research, since Apple only
+          // allows one active sub per group (a downgrade replaces Research).
           await updateUserTier(app_user_id, { stripe_elite: true, stripe_research: false });
+        } else {
+          // Stripe-sourced elite event — never clear research here; the Stripe
+          // webhook owns web-tier truth and handles multi-sub logic properly.
+          await updateUserTier(app_user_id, { stripe_elite: true });
         }
         break;
       case 'CANCELLATION':
