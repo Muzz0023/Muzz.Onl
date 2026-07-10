@@ -1,6 +1,17 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Stripe signature verification needs the RAW request body — stop Vercel parsing it.
+export const config = { api: { bodyParser: false } };
+
+async function getRawBody(req) {
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEARCH_PRICE_ID = process.env.STRIPE_RESEARCH_PRICE_ID || 'price_1TrDBp1gOtfSeAhJidfiM2t5';
@@ -122,10 +133,11 @@ export default async function handler(req, res) {
 
   let stripeEvent;
   try {
+    const rawBody = await getRawBody(req);
     if (process.env.STRIPE_WEBHOOK_SECRET) {
-      stripeEvent = stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
+      stripeEvent = stripe.webhooks.constructEvent(rawBody, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
     } else {
-      stripeEvent = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      stripeEvent = JSON.parse(rawBody.toString('utf8'));
     }
   } catch (err) {
     return res.status(400).send('Webhook Error: ' + err.message);
