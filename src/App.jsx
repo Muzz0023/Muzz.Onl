@@ -11923,34 +11923,6 @@ function MuzzApp() {
   const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
   // Always open sections/pages from the top — prevents landing mid-scroll after navigating
   useEffect(() => { try { window.scrollTo(0, 0); } catch(e) {} }, [activeView, investmentsSubTab]);
-  // === STOCK SCREEN — user price board seeded from holdings (same API as Live Prices) ===
-  const [screenTickers, setScreenTickers] = useState(null); // null = not yet seeded from holdings
-  const [screenPrices, setScreenPrices] = useState({});
-  const [screenLoading, setScreenLoading] = useState(false);
-  const [screenLastUpdated, setScreenLastUpdated] = useState(null);
-  const [screenQuery, setScreenQuery] = useState('');
-  const [screenSort, setScreenSort] = useState({ key: 'chg', dir: 'desc' });
-  const [screenView, setScreenView] = useState('board'); // 'board' | 'split'
-  const [screenAddInput, setScreenAddInput] = useState('');
-  const fetchScreenPrices = (list) => {
-    const tickers = Array.from(new Set((list || screenTickers || []).map(t => (t || '').trim().toUpperCase()).filter(Boolean)));
-    if (tickers.length === 0 || screenLoading) return;
-    setScreenLoading(true);
-    fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) })
-      .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
-      .then(data => { if (data.prices) { setScreenPrices(prev => ({ ...prev, ...data.prices })); setScreenLastUpdated(new Date().toLocaleTimeString()); } })
-      .catch(err => console.error('Failed to fetch screen prices:', err))
-      .finally(() => setScreenLoading(false));
-  };
-  useEffect(() => {
-    if (investmentsSubTab !== 'stockScreen' && investmentsSubTab !== 'researchHome') return;
-    if (screenTickers === null) {
-      const seed = Array.from(new Set((holdingsResearch || []).filter(h => h && h.ticker).map(h => h.ticker.trim().toUpperCase()).filter(Boolean)));
-      setScreenTickers(seed);
-      return;
-    }
-    if (Object.keys(screenPrices).length === 0 && !screenLoading && screenTickers.length > 0) fetchScreenPrices(screenTickers);
-  }, [investmentsSubTab, screenTickers]);
   const [openTooltipKey, setOpenTooltipKey] = useState(null); // Tracks which inline explainer is currently open (one at a time)
 
   // Plain-language explainers for the Holdings/Future Research fields. Tapped via the ⓘ icon next to each label.
@@ -12297,7 +12269,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,screenTickers,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
 
 
@@ -12319,7 +12291,6 @@ function MuzzApp() {
     if(d.smallGoals) setSmallGoals(d.smallGoals);
     if(d.bigGoals) setBigGoals(d.bigGoals);
     if(d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
-    if(d.screenTickers) setScreenTickers(d.screenTickers);
     if(d.futureStocks) setFutureStocks(d.futureStocks);
     if(d.futureResearch) setFutureResearch(d.futureResearch);
     if(d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
@@ -12388,7 +12359,6 @@ function MuzzApp() {
       smallGoals: d.smallGoals||[],
       bigGoals: d.bigGoals||[],
       holdingsResearch: d.holdingsResearch||[],
-      screenTickers: d.screenTickers||null,
       futureStocks: d.futureStocks||[],
       futureResearch: d.futureResearch||[],
       futureResearchColumns: d.futureResearchColumns||[],
@@ -12678,7 +12648,6 @@ function MuzzApp() {
           if (d.smallGoals) setSmallGoals(d.smallGoals);
           if (d.bigGoals) setBigGoals(d.bigGoals);
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
-          if (d.screenTickers) setScreenTickers(d.screenTickers);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
           if (d.futureResearch) setFutureResearch(d.futureResearch);
           if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
@@ -12808,7 +12777,6 @@ function MuzzApp() {
           smallGoals,
           bigGoals,
           holdingsResearch,
-          screenTickers,
           futureStocks,
           futureResearch,
           futureResearchColumns,
@@ -12873,7 +12841,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, screenTickers, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -15880,16 +15848,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="relative">
                     <svg width="220" height="220" viewBox="0 0 220 220">
                       {(() => {
-                        const sortedSubs = [...filledSubs].sort((a, b) => b.monthly - a.monthly);
+                        const annualOf = (s) => parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0;
+                        const sortedSubs = [...filledSubs].map(s => ({ ...s, _annual: annualOf(s) })).sort((a, b) => b._annual - a._annual);
                         const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16'];
                         let cumulative = 0;
-                        const remaining = Math.max(0, salaryNum - totalMonthly);
-                        const total = salaryNum;
+                        const totalAnnualBills = sortedSubs.reduce((t, s) => t + s._annual, 0);
+                        const annualIncome = salaryNum * 12;
+                        const total = Math.max(annualIncome, totalAnnualBills) || 1;
+                        const remaining = Math.max(0, annualIncome - totalAnnualBills);
                         
                         return (
                           <>
                             {sortedSubs.map((sub, idx) => {
-                              const percent = (sub.monthly / total) * 100;
+                              const percent = (sub._annual / total) * 100;
                               const startAngle = (cumulative / 100) * 360;
                               cumulative += percent;
                               const endAngle = (cumulative / 100) * 360;
@@ -15934,10 +15905,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             })()}
                             <circle cx="110" cy="110" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
                             <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:SANS_FONT}}>
-                              {((totalMonthly / salaryNum) * 100).toFixed(0)}%
+                              {salaryNum > 0 ? ((filledSubs.reduce((t, s) => t + (parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0), 0) / (salaryNum * 12)) * 100).toFixed(0) : 0}%
                             </text>
                             <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
-                              of income
+                              of annual income
                             </text>
                           </>
                         );
@@ -15946,9 +15917,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
                     {(() => {
-                      const sortedSubs = [...filledSubs].sort((a, b) => b.monthly - a.monthly);
+                      const annualOf = (s) => parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0;
+                      const sortedSubs = [...filledSubs].map(s => ({ ...s, _annual: annualOf(s) })).sort((a, b) => b._annual - a._annual);
                       const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16'];
-                      const remaining = Math.max(0, salaryNum - totalMonthly);
+                      const annualIncome = salaryNum * 12;
+                      const totalAnnualBills = sortedSubs.reduce((t, s) => t + s._annual, 0);
+                      const remaining = Math.max(0, annualIncome - totalAnnualBills);
                       
                       return (
                         <>
@@ -15956,14 +15930,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-2 text-sm">
                               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span style={{color:"rgba(148,163,184,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{sub.name}</span>
-                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((sub.monthly / salaryNum) * 100).toFixed(1)}%)</span>
+                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>(${Math.round(sub._annual).toLocaleString()}/yr · {((sub._annual / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
                             </div>
                           ))}
                           {remaining > 0 && (
                             <div className="flex items-center gap-2 text-sm">
                               <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(0,200,255,0.2)"}} />
                               <span style={{color:"rgba(148,163,184,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>Remaining</span>
-                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((remaining / salaryNum) * 100).toFixed(1)}%)</span>
+                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((remaining / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
                             </div>
                           )}
                         </>
@@ -15973,13 +15947,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               )}
 
-              {/* Total Bills to Total Income Bar */}
-              {salaryNum > 0 && (
+              {/* Total Bills to Total Income Bar — annual, frequency-normalised */}
+              {salaryNum > 0 && (() => {
+                const cbAnnualBills = filledSubs.reduce((t, s) => t + (parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0), 0);
+                const cbAnnualIncome = salaryNum * 12;
+                const cbRatio = cbAnnualIncome > 0 ? cbAnnualBills / cbAnnualIncome : 0;
+                return (
                 <div className="px-6 py-4 border-b">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Bills to Total Income</span>
+                    <span className="text-sm font-semibold text-gray-700">Total Bills to Total Income · annually</span>
                     <span className="text-sm font-bold text-indigo-600">
-                      ${totalMonthly.toLocaleString()} / ${salaryNum.toLocaleString()} ({((totalMonthly / salaryNum) * 100).toFixed(1)}%)
+                      ${Math.round(cbAnnualBills).toLocaleString()} / ${cbAnnualIncome.toLocaleString()} ({(cbRatio * 100).toFixed(1)}%)
                     </span>
                   </div>
                   <div style={{height:"12px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
@@ -15988,17 +15966,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         height:"100%",
                         borderRadius:"10px",
                         transition:"all 0.3s",
-                        background: (totalMonthly / salaryNum) > 0.8 ? "rgba(239,68,68,0.7)" : (totalMonthly / salaryNum) > 0.5 ? "rgba(234,179,8,0.7)" : "rgba(34,197,94,0.7)",
-                        width: `${Math.min((totalMonthly / salaryNum) * 100, 100)}%`
+                        background: cbRatio > 0.8 ? "rgba(239,68,68,0.7)" : cbRatio > 0.5 ? "rgba(234,179,8,0.7)" : "rgba(34,197,94,0.7)",
+                        width: `${Math.min(cbRatio * 100, 100)}%`
                       }}
                     />
                   </div>
                   <div className="flex justify-between mt-1">
                     <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>$0</span>
-                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${salaryNum.toLocaleString()}</span>
+                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${cbAnnualIncome.toLocaleString()}/yr</span>
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
@@ -16022,8 +16001,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       >
                         Due {billsSortBy === 'due' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
-                      <th className="text-right py-3 px-3 font-semibold">Daily</th>
-                      <th className="text-right py-3 px-3 font-semibold">Weekly</th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (billsSortBy === 'daily') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('daily'); setBillsSortDir('desc'); }
+                        }}
+                      >
+                        Daily {billsSortBy === 'daily' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (billsSortBy === 'weekly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('weekly'); setBillsSortDir('desc'); }
+                        }}
+                      >
+                        Weekly {billsSortBy === 'weekly' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
                       <th 
                         style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
@@ -16033,9 +16028,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       >
                         Monthly {billsSortBy === 'monthly' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
-                      <th className="text-right py-3 px-3 font-semibold">Quarterly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Half-Year</th>
-                      <th className="text-right py-3 px-3 font-semibold">Annually</th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (billsSortBy === 'quarterly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('quarterly'); setBillsSortDir('desc'); }
+                        }}
+                      >
+                        Quarterly {billsSortBy === 'quarterly' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (billsSortBy === 'halfyear') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('halfyear'); setBillsSortDir('desc'); }
+                        }}
+                      >
+                        Half-Year {billsSortBy === 'halfyear' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (billsSortBy === 'annually') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('annually'); setBillsSortDir('desc'); }
+                        }}
+                      >
+                        Annually {billsSortBy === 'annually' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -16053,8 +16072,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           };
                           comparison = parseDay(a.dueDate) - parseDay(b.dueDate);
                           break;
+                        case 'daily':
+                        case 'weekly':
                         case 'monthly':
-                          comparison = (parseFloat(a.monthly) || 0) - (parseFloat(b.monthly) || 0);
+                        case 'quarterly':
+                        case 'halfyear':
+                        case 'annually':
+                          comparison = (parseFloat(calcCost(a.monthly, 'monthly', a.freq || 'monthly')) || 0) - (parseFloat(calcCost(b.monthly, 'monthly', b.freq || 'monthly')) || 0);
                           break;
                         default:
                           comparison = 0;
@@ -17612,7 +17636,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"6px"}}>Everything in Elite + the full Research OS workspace</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Everything in Muzz Elite','Research OS — Analyst Desk','Company Coverage Library','Holdings Research Files','Live Prices & Stock Screen','Holdings Constellation Map','Investing Guide — Buffett & Munger'].map((f, i) => (
+                  {['Everything in Muzz Elite','Research OS — Analyst Desk','Company Coverage Library','Holdings Research Files','Live Prices & Global Markets','Holdings Constellation Map','Investing Guide — Buffett & Munger'].map((f, i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -17670,7 +17694,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Research OS — Analyst Desk', free: false, elite: false, research: true },
                 { feature: 'Company Coverage Library — deep-dive analysis', free: false, elite: false, research: true },
                 { feature: 'Holdings Research Files', free: false, elite: false, research: true },
-                { feature: 'Live Prices & Stock Screen', free: false, elite: false, research: true },
+                { feature: 'Live Prices & Global Markets', free: false, elite: false, research: true },
                 { feature: 'Holdings Constellation Map', free: false, elite: false, research: true },
                 { feature: 'Investing Guide — Buffett & Munger', free: false, elite: false, research: true },
               ].map((row, i, arr) => {
@@ -19382,7 +19406,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               title: 'LIVE DATA',
               items: [
                 { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Quickly see your investment returns' },
-                { id:'stockScreen', glyph:'⌗', label:'Stock Screen', desc:'Quick price board' },
                 { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
               ],
             },
@@ -31526,239 +31549,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* LIVE PRICES TAB */}
-          {/* === STOCK SCREEN — user price board, seeded from holdings === */}
-          {investmentsSubTab === 'stockScreen' && (() => {
-            const sAmber = 'rgba(245,158,11,0.95)';
-            const sDim = 'rgba(245,158,11,0.6)';
-            const sGlow = 'rgba(245,158,11,0.35)';
-            const green = 'rgba(34,197,94,0.95)';
-            const red = 'rgba(239,68,68,0.95)';
-            const isWideScr = typeof window !== 'undefined' && window.innerWidth >= 768;
-            const list = screenTickers || [];
-            const q = screenQuery.trim().toUpperCase();
-            const nameFor = (t) => {
-              const h = (holdingsResearch || []).find(x => x && x.ticker && x.ticker.trim().toUpperCase() === t);
-              if (h && h.name) return h.name;
-              const c = (COVERAGE_DATA || []).find(x => x.ticker && x.ticker.toUpperCase() === t);
-              return c ? c.name : '';
-            };
-            const industryFor = (t) => {
-              const h = (holdingsResearch || []).find(x => x && x.ticker && x.ticker.trim().toUpperCase() === t);
-              if (h && h.industry && h.industry.trim()) return h.industry.trim();
-              const c = (COVERAGE_DATA || []).find(x => x.ticker && x.ticker.toUpperCase() === t);
-              return (c && c.industry) ? c.industry : 'Other';
-            };
-            let rows = list.map(t => {
-              const p = screenPrices[t];
-              const c = p?.c || 0;
-              const pc = p?.pc || 0;
-              const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
-              return { ticker: t, name: nameFor(t), industry: industryFor(t), price: c, chg, currency: p?.currency || 'USD' };
-            }).filter(r => !q || r.ticker.includes(q) || (r.name || '').toUpperCase().includes(q));
-            const dirMul = screenSort.dir === 'asc' ? 1 : -1;
-            rows.sort((a, b) => {
-              if (screenSort.key === 'ticker') return a.ticker.localeCompare(b.ticker) * dirMul;
-              const av = screenSort.key === 'price' ? a.price : a.chg;
-              const bv = screenSort.key === 'price' ? b.price : b.chg;
-              const aa = (av === null || av === undefined) ? -Infinity : av;
-              const bb = (bv === null || bv === undefined) ? -Infinity : bv;
-              return (aa - bb) * dirMul;
-            });
-            const priced = rows.filter(r => r.chg !== null);
-            const gainers = priced.filter(r => r.chg > 0).sort((a, b) => b.chg - a.chg);
-            const losers = priced.filter(r => r.chg < 0).sort((a, b) => a.chg - b.chg);
-            const flat = rows.filter(r => r.chg === null || r.chg === 0);
-            const topMover = priced.length ? priced.reduce((m, r) => Math.abs(r.chg) > Math.abs(m.chg) ? r : m, priced[0]) : null;
-            const avgMove = priced.length ? priced.reduce((s, r) => s + r.chg, 0) / priced.length : null;
-            const addTicker = () => {
-              const t = screenAddInput.trim().toUpperCase();
-              if (!t) return;
-              setScreenTickers(prev => Array.from(new Set([...(prev || []), t])));
-              setScreenAddInput('');
-              setTimeout(() => fetchScreenPrices([t]), 60);
-            };
-            const removeTicker = (t) => setScreenTickers(prev => (prev || []).filter(x => x !== t));
-            const syncHoldings = () => {
-              const seed = Array.from(new Set((holdingsResearch || []).filter(h => h && h.ticker).map(h => h.ticker.trim().toUpperCase()).filter(Boolean)));
-              setScreenTickers(seed);
-              setTimeout(() => fetchScreenPrices(seed), 60);
-            };
-            const moveColor = (chg) => chg === null ? 'rgba(148,163,184,0.5)' : chg >= 0 ? green : red;
-            const chipBtn = (label, active, onClick, key) => (
-              <button key={key || label} onClick={onClick} style={{padding:"5px 11px",background: active ? "rgba(245,158,11,0.16)" : "rgba(255,255,255,0.03)",border:`0.5px solid ${active ? sAmber : "rgba(255,255,255,0.12)"}`,borderRadius:"3px",color: active ? sAmber : "rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>{label}</button>
-            );
-            return (
-              <div style={{position:"relative",background:"rgba(0,0,0,0.55)",border:`0.5px solid ${sGlow}`,borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"22px 22px",fontFamily:"monospace"}}>
-                <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:`1px solid ${sDim}`,borderLeft:`1px solid ${sDim}`,pointerEvents:"none"}}/>
-                <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:`1px solid ${sDim}`,borderRight:`1px solid ${sDim}`,pointerEvents:"none"}}/>
-                <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${sDim}`,borderLeft:`1px solid ${sDim}`,pointerEvents:"none"}}/>
-                <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${sDim}`,borderRight:`1px solid ${sDim}`,pointerEvents:"none"}}/>
-
-                {/* Header */}
-                <div style={{padding:"14px 18px 12px",borderBottom:`0.5px solid ${sGlow}`}}>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",marginBottom:"10px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:sDim,letterSpacing:"2px",fontWeight:600,marginBottom:"3px"}}>// LIVE MARKET BOARD</div>
-                      <div style={{fontSize:"16px",color:"#e0eaff",letterSpacing:"2px",fontWeight:600}}>STOCK SCREEN</div>
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                      {screenLastUpdated && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)"}}>UPDATED {screenLastUpdated}</span>}
-                      <button onClick={() => fetchScreenPrices()} disabled={screenLoading}
-                        style={{padding:"6px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:green,fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
-                        {screenLoading ? 'LOADING...' : 'REFRESH'}
-                      </button>
-                    </div>
-                  </div>
-                  <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
-                    <input value={screenQuery} onChange={(e) => setScreenQuery(e.target.value)} placeholder="FILTER"
-                      style={{padding:"7px 12px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRadius:"3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"150px",minWidth:"120px"}}/>
-                    <div style={{display:"flex",gap:"0"}}>
-                      <input value={screenAddInput} onChange={(e) => setScreenAddInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') addTicker(); }} placeholder="ADD TICKER"
-                        style={{padding:"7px 12px",background:"rgba(245,158,11,0.04)",border:`0.5px solid ${sGlow}`,borderRight:"none",borderRadius:"3px 0 0 3px",color:"#e0eaff",fontSize:"10px",letterSpacing:"1px",outline:"none",width:"170px",minWidth:"140px"}}/>
-                      <button onClick={addTicker} style={{padding:"7px 14px",background:"rgba(245,158,11,0.14)",border:`0.5px solid ${sAmber}`,borderRadius:"0 3px 3px 0",color:sAmber,fontSize:"10px",letterSpacing:"1.5px",fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>+ ADD</button>
-                    </div>
-                    {chipBtn('SYNC HOLDINGS', false, syncHoldings, 'sync')}
-                    <span style={{width:"1px",height:"18px",background:sGlow}}/>
-                    {chipBtn('BOARD', screenView === 'board', () => setScreenView('board'), 'vboard')}
-                    {chipBtn('SPLIT', screenView === 'split', () => setScreenView('split'), 'vsplit')}
-                    {chipBtn('INDUSTRY', screenView === 'industry', () => setScreenView('industry'), 'vind')}
-                    {screenView === 'board' && (<>
-                      <span style={{width:"1px",height:"18px",background:sGlow}}/>
-                      {chipBtn('% MOVE', screenSort.key === 'chg', () => setScreenSort(s => ({ key:'chg', dir: s.key==='chg' && s.dir==='desc' ? 'asc' : 'desc' })), 'schg')}
-                      {chipBtn('A–Z', screenSort.key === 'ticker', () => setScreenSort(s => ({ key:'ticker', dir: s.key==='ticker' && s.dir==='asc' ? 'desc' : 'asc' })), 'stick')}
-                      {chipBtn('PRICE', screenSort.key === 'price', () => setScreenSort(s => ({ key:'price', dir: s.key==='price' && s.dir==='desc' ? 'asc' : 'desc' })), 'sprice')}
-                    </>)}
-                  </div>
-                </div>
-
-                {/* Summary strip */}
-                <div style={{display:"grid",gridTemplateColumns:isWideScr ? "repeat(4,1fr)" : "repeat(2,1fr)",gap:"1px",background:sGlow,borderBottom:`0.5px solid ${sGlow}`}}>
-                  <div style={{background:"#000",padding:"10px 14px"}}>
-                    <div style={{fontSize:"8px",color:sDim,letterSpacing:"2px",fontWeight:600,marginBottom:"3px"}}>ADVANCING</div>
-                    <div style={{fontSize:"18px",color:green,fontWeight:700,lineHeight:1}}>{gainers.length}</div>
-                  </div>
-                  <div style={{background:"#000",padding:"10px 14px"}}>
-                    <div style={{fontSize:"8px",color:sDim,letterSpacing:"2px",fontWeight:600,marginBottom:"3px"}}>DECLINING</div>
-                    <div style={{fontSize:"18px",color:red,fontWeight:700,lineHeight:1}}>{losers.length}</div>
-                  </div>
-                  <div style={{background:"#000",padding:"10px 14px"}}>
-                    <div style={{fontSize:"8px",color:sDim,letterSpacing:"2px",fontWeight:600,marginBottom:"3px"}}>AVG MOVE</div>
-                    <div style={{fontSize:"18px",color: avgMove === null ? "rgba(148,163,184,0.5)" : moveColor(avgMove),fontWeight:700,lineHeight:1}}>{avgMove === null ? '—' : (avgMove >= 0 ? '+' : '') + avgMove.toFixed(2) + '%'}</div>
-                  </div>
-                  <div style={{background:"#000",padding:"10px 14px"}}>
-                    <div style={{fontSize:"8px",color:sDim,letterSpacing:"2px",fontWeight:600,marginBottom:"3px"}}>TOP MOVER</div>
-                    <div style={{fontSize:"18px",fontWeight:700,lineHeight:1,color: topMover ? moveColor(topMover.chg) : "rgba(148,163,184,0.5)"}}>{topMover ? `${topMover.ticker} ${topMover.chg >= 0 ? '+' : ''}${topMover.chg.toFixed(1)}%` : '—'}</div>
-                  </div>
-                </div>
-
-                {/* Body */}
-                <div style={{padding:"14px 18px 18px"}}>
-                  {list.length === 0 ? (
-                    <div style={{padding:"36px 16px",textAlign:"center"}}>
-                      <div style={{fontSize:"10px",color:sDim,letterSpacing:"2px",marginBottom:"8px"}}>SCREENER EMPTY</div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px",marginBottom:"14px"}}>SYNC YOUR HOLDINGS OR ADD TICKERS ABOVE</div>
-                      <button onClick={syncHoldings} style={{padding:"8px 18px",background:"rgba(245,158,11,0.12)",border:`0.5px solid ${sAmber}`,borderRadius:"3px",color:sAmber,fontSize:"10px",letterSpacing:"1.5px",fontWeight:700,cursor:"pointer"}}>SYNC HOLDINGS</button>
-                    </div>
-                  ) : screenView === 'board' ? (
-                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(155px, 1fr))",gap:"8px"}}>
-                      {rows.map(r => (
-                        <div key={r.ticker} style={{position:"relative",background:"rgba(5,12,24,0.7)",border:`0.5px solid ${sGlow}`,borderLeft:`3px solid ${moveColor(r.chg)}`,borderRadius:"5px",padding:"11px 12px 10px",boxShadow: r.chg !== null && Math.abs(r.chg) >= 2 ? `0 0 14px ${r.chg >= 0 ? 'rgba(34,197,94,0.14)' : 'rgba(239,68,68,0.14)'}` : "none"}}>
-                          <button onClick={() => removeTicker(r.ticker)} title="Remove"
-                            style={{position:"absolute",top:"6px",right:"7px",background:"none",border:"none",color:"rgba(148,163,184,0.4)",fontSize:"11px",cursor:"pointer",padding:"2px",lineHeight:1}}
-                            onMouseEnter={(e) => e.currentTarget.style.color = red}
-                            onMouseLeave={(e) => e.currentTarget.style.color = "rgba(148,163,184,0.4)"}>×</button>
-                          <div style={{fontSize:"13px",color:sAmber,fontWeight:700,letterSpacing:"1px",marginBottom:"2px"}}>{r.ticker}</div>
-                          <div style={{fontSize:"8.5px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",marginBottom:"8px",minHeight:"11px"}}>{r.name || ' '}</div>
-                          <div style={{fontSize:"17px",color:"#e0eaff",fontWeight:700,lineHeight:1,marginBottom:"7px"}}>
-                            {r.price > 0 ? r.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
-                            {r.price > 0 && <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontWeight:400,marginLeft:"4px"}}>{r.currency}</span>}
-                          </div>
-                          <span style={{display:"inline-block",padding:"2px 8px",borderRadius:"3px",fontSize:"10px",fontWeight:700,letterSpacing:"0.5px",color:moveColor(r.chg),background: r.chg === null ? "rgba(148,163,184,0.08)" : r.chg >= 0 ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",border:`0.5px solid ${r.chg === null ? "rgba(148,163,184,0.2)" : r.chg >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`}}>
-                            {r.chg === null ? 'NO DATA' : (r.chg >= 0 ? '▲ +' : '▼ ') + r.chg.toFixed(2) + '%'}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : screenView === 'split' ? (
-                    <>
-                      <div style={{display:"grid",gridTemplateColumns:isWideScr ? "1fr 1fr" : "1fr",gap:"10px"}}>
-                        {[{title:'▲ GAINERS',items:gainers,accent:green,bg:'rgba(34,197,94,0.05)'},{title:'▼ DECLINERS',items:losers,accent:red,bg:'rgba(239,68,68,0.05)'}].map(col => (
-                          <div key={col.title} style={{background:col.bg,border:`0.5px solid ${sGlow}`,borderTop:`2px solid ${col.accent}`,borderRadius:"5px",overflow:"hidden"}}>
-                            <div style={{padding:"9px 13px",borderBottom:`0.5px solid ${sGlow}`,fontSize:"10px",color:col.accent,letterSpacing:"2px",fontWeight:700}}>{col.title} · {col.items.length}</div>
-                            <div>
-                              {col.items.length === 0 && <div style={{padding:"18px 13px",fontSize:"9px",color:"rgba(148,163,184,0.4)",letterSpacing:"1.5px",textAlign:"center"}}>NONE TODAY</div>}
-                              {col.items.map(r => (
-                                <div key={r.ticker} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 13px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                                  <span style={{fontSize:"11px",color:sAmber,fontWeight:700,letterSpacing:"0.5px",width:"52px",flexShrink:0}}>{r.ticker}</span>
-                                  <span style={{flex:1,fontSize:"9px",color:"rgba(148,163,184,0.55)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}</span>
-                                  <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{r.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                  <span style={{fontSize:"11px",color:col.accent,fontWeight:700,width:"64px",textAlign:"right",flexShrink:0}}>{(r.chg >= 0 ? '+' : '') + r.chg.toFixed(2)}%</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      {flat.length > 0 && (
-                        <div style={{marginTop:"10px",padding:"9px 13px",border:`0.5px solid ${sGlow}`,borderRadius:"5px",display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
-                          <span style={{fontSize:"8px",color:sDim,letterSpacing:"2px",fontWeight:600}}>FLAT / NO DATA</span>
-                          {flat.map(r => (
-                            <span key={r.ticker} style={{padding:"3px 9px",background:"rgba(148,163,184,0.06)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",fontSize:"9px",color:"rgba(224,234,255,0.6)",letterSpacing:"0.5px"}}>{r.ticker}</span>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    (() => {
-                      const groupMap = {};
-                      rows.forEach(r => { const ind = r.industry || 'Other'; if (!groupMap[ind]) groupMap[ind] = []; groupMap[ind].push(r); });
-                      const groups = Object.keys(groupMap).map(ind => {
-                        const items = groupMap[ind];
-                        const pr = items.filter(x => x.chg !== null);
-                        const avg = pr.length ? pr.reduce((s, x) => s + x.chg, 0) / pr.length : null;
-                        const up = pr.filter(x => x.chg > 0).length;
-                        const down = pr.filter(x => x.chg < 0).length;
-                        const sorted = items.slice().sort((a, b) => ((b.chg === null ? -Infinity : b.chg) - (a.chg === null ? -Infinity : a.chg)));
-                        return { ind, items: sorted, avg, up, down };
-                      }).sort((a, b) => ((b.avg === null ? -Infinity : b.avg) - (a.avg === null ? -Infinity : a.avg)));
-                      return (
-                        <div style={{display:"grid",gridTemplateColumns:isWideScr ? "repeat(auto-fill, minmax(330px, 1fr))" : "1fr",gap:"10px",alignItems:"start"}}>
-                          {groups.map(g => (
-                            <div key={g.ind} style={{background:"rgba(5,12,24,0.7)",border:`0.5px solid ${sGlow}`,borderTop:`2px solid ${moveColor(g.avg)}`,borderRadius:"5px",overflow:"hidden"}}>
-                              <div style={{padding:"10px 13px",borderBottom:`0.5px solid ${sGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
-                                <div>
-                                  <div style={{fontSize:"11px",color:sAmber,letterSpacing:"1.5px",fontWeight:700,textTransform:"uppercase"}}>{g.ind}</div>
-                                  <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",letterSpacing:"1px",marginTop:"3px"}}>
-                                    {g.items.length} TICKER{g.items.length !== 1 ? 'S' : ''}
-                                    {(g.up > 0 || g.down > 0) && <span> · <span style={{color:green}}>▲ {g.up}</span> <span style={{color:red}}>▼ {g.down}</span></span>}
-                                  </div>
-                                </div>
-                                <span style={{padding:"4px 10px",borderRadius:"3px",fontSize:"13px",fontWeight:700,letterSpacing:"0.5px",color:moveColor(g.avg),background: g.avg === null ? "rgba(148,163,184,0.08)" : g.avg >= 0 ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",border:`0.5px solid ${g.avg === null ? "rgba(148,163,184,0.2)" : g.avg >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,whiteSpace:"nowrap"}}>
-                                  {g.avg === null ? '—' : (g.avg >= 0 ? '+' : '') + g.avg.toFixed(2) + '%'}
-                                </span>
-                              </div>
-                              <div>
-                                {g.items.map(r => (
-                                  <div key={r.ticker} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 13px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                                    <span style={{fontSize:"11px",color:sAmber,fontWeight:700,letterSpacing:"0.5px",width:"52px",flexShrink:0}}>{r.ticker}</span>
-                                    <span style={{flex:1,fontSize:"9px",color:"rgba(148,163,184,0.55)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}</span>
-                                    <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{r.price > 0 ? r.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</span>
-                                    <span style={{fontSize:"11px",fontWeight:700,width:"64px",textAlign:"right",flexShrink:0,color:moveColor(r.chg)}}>{r.chg === null ? '—' : (r.chg >= 0 ? '+' : '') + r.chg.toFixed(2) + '%'}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      );
-                    })()
-                  )}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* === RESEARCH OS — COMMAND DASHBOARD === */}
           {investmentsSubTab === 'researchHome' && (() => {
             const rAmber = 'rgba(245,158,11,0.95)';
             const rDim = 'rgba(245,158,11,0.6)';
@@ -31772,7 +31562,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               ]},
               { title:'LIVE DATA', items:[
                 { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
-                { id:'stockScreen',     glyph:'⌗', label:'STOCK SCREEN',      desc:'Market board' },
                 { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
               ]},
               { title:'INFORMATION', items:[
@@ -31785,7 +31574,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               { key:'rd-holdings', label:'HOLDINGS', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'POSITIONS TRACKED', info:'Positions you currently own — synced live from the stocks in your Current Portfolio.' },
               { key:'rd-files', label:'RESEARCH FILES', value:(holdingsResearch||[]).filter(h=>h&&h.ticker).length, sub:'HOLDINGS RESEARCH', info:'Companies you\u2019ve built research notes on inside Holdings Research — your own analysis files.' },
               { key:'rd-coverage', label:'COVERAGE', value:(COVERAGE_DATA||[]).length, sub:'COMPANIES ANALYSED', info:'Companies fully analysed in the muzz coverage library — moats, financials, risks and thesis.' },
-              { key:'rd-screen', label:'SCREEN', value:(screenTickers||[]).length, sub:'TICKERS ON BOARD', info:'Tickers on your Stock Screen — the live price board seeded from your holdings.' },
+              { key:'rd-industries', label:'INDUSTRIES', value:Object.keys((COVERAGE_DATA||[]).reduce((m,c)=>{ m[c.industry||'Other']=1; return m; },{})).length, sub:'SECTORS COVERED', info:'Distinct industries represented across the muzz coverage library.' },
             ];
             const isWideRd = typeof window !== 'undefined' && window.innerWidth >= 768;
             return (
@@ -31815,14 +31604,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {(() => {
-                  const feed = (screenTickers || []).map(t => {
-                    const p = screenPrices[t];
-                    const c = p?.c || 0; const pc = p?.pc || 0;
-                    const chg = (c > 0 && pc > 0) ? ((c - pc) / pc * 100) : null;
-                    return { t, c, chg };
-                  }).filter(x => x.chg !== null);
-                  const feedGainers = feed.filter(x => x.chg > 0).sort((a, b) => b.chg - a.chg).slice(0, 5);
-                  const feedLosers = feed.filter(x => x.chg < 0).sort((a, b) => a.chg - b.chg).slice(0, 5);
                   const indCounts = {};
                   (COVERAGE_DATA || []).forEach(c => { const k = c.industry || 'Other'; indCounts[k] = (indCounts[k] || 0) + 1; });
                   const inds = Object.entries(indCounts).sort((a, b) => b[1] - a[1]);
@@ -31831,36 +31612,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   (COVERAGE_DATA || []).forEach(c => { const k = c.country || 'Other'; ctryCounts[k] = (ctryCounts[k] || 0) + 1; });
                   const ctrys = Object.entries(ctryCounts).sort((a, b) => b[1] - a[1]);
                   return (
-                    <div style={{display:"grid",gridTemplateColumns:isWideRd ? "1fr 1fr" : "1fr",gap:"14px"}}>
-                      <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
-                        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                          <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// MARKET FEED</span>
-                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>{screenLoading ? 'SYNCING…' : feed.length ? 'TOP 5 · EACH WAY' : 'STANDBY'}</span>
-                        </div>
-                        {feed.length === 0 && (
-                          <div style={{padding:"18px 14px",fontSize:"9px",color:rDim,letterSpacing:"2px",textAlign:"center"}}>{screenLoading ? '● ACQUIRING PRICE FEED…' : 'NO FEED — ADD TICKERS IN STOCK SCREEN'}</div>
-                        )}
-                        {[{title:'▲ GAINERS', items: feedGainers, accent:'rgba(34,197,94,0.95)'},{title:'▼ DECLINERS', items: feedLosers, accent:'rgba(239,68,68,0.95)'}].map(grp => (
-                          <div key={grp.title}>
-                            {feed.length > 0 && (
-                              <div style={{padding:"7px 14px 4px",fontSize:"8px",color:grp.accent,letterSpacing:"2px",fontWeight:700,borderTop:"0.5px solid rgba(255,255,255,0.04)"}}>{grp.title} · {grp.items.length}</div>
-                            )}
-                            {feed.length > 0 && grp.items.length === 0 && (
-                              <div style={{padding:"6px 14px 8px",fontSize:"8.5px",color:"rgba(148,163,184,0.45)",letterSpacing:"1.5px"}}>NONE TODAY</div>
-                            )}
-                            {grp.items.map(f => (
-                              <div key={f.t} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 14px"}}>
-                                <span style={{fontSize:"11px",color:rAmber,fontWeight:700,letterSpacing:"0.5px",width:"56px",flexShrink:0}}>{f.t}</span>
-                                <span style={{flex:1,height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",overflow:"hidden"}}>
-                                  <span style={{display:"block",height:"100%",width:`${Math.min(100, Math.abs(f.chg) * 20)}%`,background: f.chg >= 0 ? "rgba(34,197,94,0.8)" : "rgba(239,68,68,0.8)"}}/>
-                                </span>
-                                <span style={{fontSize:"11px",color:"#e0eaff",fontWeight:600,whiteSpace:"nowrap"}}>{f.c.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
-                                <span style={{fontSize:"11px",fontWeight:700,width:"62px",textAlign:"right",flexShrink:0,color: f.chg >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>{(f.chg >= 0 ? '+' : '') + f.chg.toFixed(2)}%</span>
-                              </div>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr",gap:"14px"}}>
                       <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden",display:"flex",flexDirection:"column"}}>
                         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// COVERAGE MATRIX</span>
