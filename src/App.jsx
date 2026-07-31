@@ -1006,7 +1006,6 @@ const api = (path) => `${API_BASE}${path}`;
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
-// Gemini key is now server-side in /api/chat.js
 
 // VIP Users - Always Elite, no subscription needed
 
@@ -1490,9 +1489,6 @@ const getHoldingDuration = (dateAdded) => {
 };
 
 // Floating Chat Component — DISABLED (chat feature removed to save API tokens)
-function FloatingChat() {
-  return null;
-}
 
 
 
@@ -12876,100 +12872,6 @@ function MuzzApp() {
   }, [pomodoroRunning, pomodoroMode, pomodoroSessions]);
 
   // Send message to Muzz AI
-  const sendMessageToMuzz = async (userMessage) => {
-    if (!userMessage.trim() || isTyping) return;
-
-    // Check AI daily limit
-    if (isAiLimitReached()) {
-      setChatMessages(prev => [...prev, 
-        { role: 'user', text: userMessage.trim() },
-        { role: 'muzz', text: `Oi mate, you've hit your daily limit of ${AI_DAILY_LIMIT} messages! 🦘\n\nThis resets at midnight so come back tomorrow for another yarn. Upgrade to Elite for more chats!` }
-      ]);
-      setHomeInput('');
-      return;
-    }
-    
-    const msg = userMessage.trim();
-    setChatMessages(prev => [...prev, { role: 'user', text: msg }]);
-    setHomeInput('');
-    setIsTyping(true);
-
-    // Build context about user's financial data
-    const totalBills = subscriptions.reduce((sum, s) => sum + (parseFloat(s.cost) || 0), 0);
-    const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
-    const totalStocksVal = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
-    const salaryNum = parseFloat(monthlySalary) || 0;
-
-    const financialContext = `
-USER'S FINANCIAL DATA (reference this when relevant):
-- Monthly Income: $${salaryNum.toLocaleString()}
-- Monthly Bills: $${totalBills.toFixed(2)} (${subscriptions.filter(s => s.name).length} bills tracked)
-- Total Assets: $${totalAssets.toLocaleString()}
-- Investment Portfolio: $${totalStocksVal.toLocaleString()} (${stocks.filter(s => s.name).length} holdings)
-${salaryNum > 0 ? `- Bills as % of Income: ${((totalBills / salaryNum) * 100).toFixed(1)}%` : ''}
-`;
-
-    const brainRotMode = muzzPersonality;
-
-    const systemPrompt = brainRotMode
-    ? `You are Muzz, a friendly Australian kangaroo financial advisor. You live inside a budgeting app called "Muzz".
-
-PERSONALITY:
-- Use Aussie slang naturally (mate, legend, ripper, no worries)
-- You can use ONE gen-z term per response MAX: W, L, no cap, fr, bussin, lowkey, based, bet, aura
-- Keep responses SHORT - 2-3 sentences max
-- Give legit advice on ANY topic
-- NEVER say "g'day mate" or "no cap" in every response - vary your language
-- NEVER repeat the same phrases over and over
-
-${financialContext}
-
-IMPORTANT: Be natural and varied. Don't spam the same slang repeatedly. Short and punchy! 🦘`
-    : `You are Muzz, a friendly Australian kangaroo who's a financial advisor and budgeting expert. You live inside a budgeting app called "Muzz".
-
-PERSONALITY:
-- Warm, encouraging, casual Aussie slang (mate, legend, no worries)
-- Knowledgeable about personal finance and investing
-- Give practical, actionable advice
-- Keep responses SHORT (2-3 sentences max)
-- Can discuss ANY topic, not just finance
-- NEVER say "g'day mate" in every message - vary your greetings
-- NEVER repeat the same phrases over and over
-
-${financialContext}
-
-Remember: Be natural and varied. Don't spam the same phrases. Keep it short, helpful, and real! 🦘`;
-
-    try {
-      // Build conversation history as proper Gemini multi-turn format
-      const geminiContents = [];
-      chatMessages.slice(-10).forEach(m => {
-        geminiContents.push({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.text }]
-        });
-      });
-      geminiContents.push({ role: 'user', parts: [{ text: msg }] });
-      
-      const response = await fetch(api('/api/chat'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: systemPrompt,
-          contents: geminiContents
-        })
-      });
-
-      const data = await response.json();
-      const reply = data.reply || "No worries, give me another crack at that question!";
-      setChatMessages(prev => [...prev, { role: 'muzz', text: reply }]);
-      incrementAiUsage();
-    } catch (e) {
-      setChatMessages(prev => [...prev, { role: 'muzz', text: `Aw mate, hit a snag there. Give it another go!` }]);
-    }
-    
-    setIsTyping(false);
-  };
 
   // Chat drag handlers
   const handleMouseDown = (e) => {
@@ -13916,7 +13818,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
         </div>
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
@@ -15143,7 +15044,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         </div>
 
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
@@ -17797,20 +17697,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textDecoration:"none"}}>Terms of Use</a>
           </div>
         </div>
-        <FloatingChat 
-          isChatOpen={isChatOpen}
-          setIsChatOpen={setIsChatOpen}
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-          isTyping={isTyping}
-          setIsTyping={setIsTyping}
-          financialContext={financialContext}
-          isAiLimitReached={isAiLimitReached}
-          incrementAiUsage={incrementAiUsage}
-          getAiRemaining={getAiRemaining}
-          AI_DAILY_LIMIT={AI_DAILY_LIMIT}
-          muzzPersonality={muzzPersonality}
-        />
       </div>
     );
   }
@@ -35718,7 +35604,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })}
         </div>
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
@@ -35979,7 +35864,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           );
         })()}
 
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
@@ -36085,20 +35969,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <p className="text-xl text-gray-400">Coming soon</p>
         </div>
       </div>
-      <FloatingChat 
-        isChatOpen={isChatOpen}
-        setIsChatOpen={setIsChatOpen}
-        chatMessages={chatMessages}
-        setChatMessages={setChatMessages}
-        isTyping={isTyping}
-        setIsTyping={setIsTyping}
-        financialContext={financialContext}
-        isAiLimitReached={isAiLimitReached}
-        incrementAiUsage={incrementAiUsage}
-        getAiRemaining={getAiRemaining}
-        AI_DAILY_LIMIT={AI_DAILY_LIMIT}
-        muzzPersonality={muzzPersonality}
-      />
 
 
     </div>
