@@ -11420,18 +11420,65 @@ const UMG_BREAKDOWN = {
   },
 };
 
+// === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
+const RESEARCH_LOG = [
+  { date: '01 AUG 2026', type: 'DESK',     text: 'Superinvestors module launched — eight tracked legends with verified holdings' },
+  { date: '01 AUG 2026', type: 'DESK',     text: 'Research Log added — every library update now visible here' },
+  { date: '10 JUL 2026', type: 'RELEASE',  text: 'Muzz Research tier launched — Research OS live on web + iOS' },
+  { date: '08 JUL 2026', type: 'PIPELINE', text: 'UBER, META, PM & MO added to the pipeline — Tobacco industry opens' },
+  { date: '08 JUL 2026', type: 'COVERAGE', text: 'OVERVIEW sub-segments shipped across all 8 built companies' },
+  { date: '08 JUL 2026', type: 'DESK',     text: 'Analyst Desk launched — live coverage matrix & global reach' },
+];
+
+// === SUPERINVESTORS — tracked legends, holdings as at last verified 13F filings ===
+// NOTE: verify against the Dataroma-checked database before treating as current.
+const SUPERINVESTOR_DATA = [
+  { name: 'Warren Buffett', firm: 'Berkshire Hathaway', status: 'active',
+    style: 'Wonderful businesses at fair prices, held forever',
+    note: 'KO held since 1988, AXP roots back to the 1960s — the compounding proof.',
+    holdings: ['AAPL','KO','AXP','BAC','CVX','OXY','MCO'] },
+  { name: 'Li Lu', firm: 'Himalaya Capital', status: 'active',
+    style: 'Deep fundamental research, extreme concentration, decade horizons',
+    note: 'The only outside manager Munger ever gave money to.',
+    holdings: ['BAC','BRK.B','GOOG','EWBC'] },
+  { name: 'Gates Foundation Trust', firm: 'Managed by Michael Larson', status: 'active',
+    style: 'Concentrated blue-chip quality, built to fund giving for decades',
+    note: 'Waste, railroads and machinery — toll booths on the physical economy.',
+    holdings: ['MSFT','BRK.B','WM','CNI','CAT','DE','ECL'] },
+  { name: 'Bill Ackman', firm: 'Pershing Square', status: 'active',
+    style: 'Large concentrated stakes in simple, predictable, cash-generative businesses',
+    note: 'UMG is the fund’s signature music-royalty toll booth.',
+    holdings: ['UMG','GOOG','HLT','QSR','CMG','NKE'] },
+  { name: 'Guy Spier', firm: 'Aquamarine Fund', status: 'active',
+    style: 'Buffett-inspired compounding, low turnover, checklist discipline',
+    note: 'Author of The Education of a Value Investor.',
+    holdings: ['BRK.B','AXP','MA','V','BAC'] },
+  { name: 'Mohnish Pabrai', firm: 'Pabrai Investment Funds', status: 'active',
+    style: 'Dhandho — heads I win, tails I don’t lose much. Few bets, big bets.',
+    note: 'Recent years concentrated in deep-value energy & coal.',
+    holdings: ['AMR','CEIX'] },
+  { name: 'Nick Sleep', firm: 'Nomad Investment Partnership', status: 'historical',
+    style: 'Scale economics shared — businesses that give margin back to customers',
+    note: 'Closed Nomad in 2014 and told partners to hold three stocks forever.',
+    holdings: ['AMZN','COST','BRK.B'] },
+  { name: 'Lou Simpson', firm: 'GEICO / SQ Advisors', status: 'historical',
+    style: 'Think independently, invest in high-return businesses run for shareholders',
+    note: 'The only manager Buffett trusted with GEICO’s float.',
+    holdings: ['BRK.B','CHTR','LBRDK','V'] },
+];
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
-  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true },
-  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null , locked: true },
-  { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null , locked: true },
-  { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null , locked: true },
-  { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null , locked: true },
+  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null , locked: true, progress: 'research' },
   { ticker: 'UBER',  name: 'Uber Technologies',              industry: 'Technology',    country: 'United States', marketCap: 175000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Global rideshare and delivery network \u2014 a two-sided marketplace toll on urban movement.',       breakdown: null, locked: true },
   { ticker: 'META',  name: 'Meta Platforms',                 industry: 'Technology',    country: 'United States', marketCap: 1500000000000, marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Facebook, Instagram and WhatsApp \u2014 the world\u2019s largest social advertising machine.',            breakdown: null, locked: true },
   { ticker: 'PM',    name: 'Philip Morris International',    industry: 'Tobacco',       country: 'United States', marketCap: 280000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'International tobacco and smoke-free products (IQOS, ZYN) \u2014 pricing power on addiction.',        breakdown: null, locked: true },
   { ticker: 'MO',    name: 'Altria Group',                   industry: 'Tobacco',       country: 'United States', marketCap: 100000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'US tobacco (Marlboro domestic) \u2014 high-yield cash machine with a shrinking volume base.',        breakdown: null, locked: true },
-  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null, locked: true },
+  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null, locked: true, progress: 'research' },
 
   // === RAILWAYS · CANADA & USA ===
   { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
@@ -11440,10 +11487,10 @@ const COVERAGE_DATA = [
   { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: CNI_BREAKDOWN },
 
   // === FINANCIAL SERVICES · USA ===
-  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null , locked: true },
-  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null , locked: true },
-  { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true },
-  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true },
+  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
 
   // === MEDIA/PRESS · USA ===
   { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media/Press',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
@@ -11459,7 +11506,7 @@ const COVERAGE_DATA = [
   { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste & Recycling',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null, locked: true },
 
   // === CONGLOMERATE · USA ===
-  { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true },
+  { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true, progress: 'research' },
 
   // === RETAIL · USA ===
   { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: COST_BREAKDOWN },
@@ -31162,7 +31209,7 @@ function MuzzApp() {
                     <button key={c.ticker} onClick={handleClick}
                       style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(15,10,2,0.5)' : 'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${isLocked ? amberDim : amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
                       {isLocked && (
-                        <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>🔒 LOCKED</span>
+                        <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background: c.progress === 'research' ? 'rgba(245,158,11,0.14)' : 'rgba(148,163,184,0.08)',border: c.progress === 'research' ? `0.5px solid ${amber}` : '0.5px solid rgba(148,163,184,0.3)',borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color: c.progress === 'research' ? amber : 'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{c.progress === 'research' ? '\u25cf IN RESEARCH' : '🔒 QUEUED'}</span>
                       )}
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                         <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
@@ -31390,7 +31437,7 @@ function MuzzApp() {
                       <button key={c.ticker} onClick={handleClick}
                         style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(15,10,2,0.5)' : 'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${isLocked ? amberDim : amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
                         {isLocked && (
-                          <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>🔒 LOCKED</span>
+                          <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background: c.progress === 'research' ? 'rgba(245,158,11,0.14)' : 'rgba(148,163,184,0.08)',border: c.progress === 'research' ? `0.5px solid ${amber}` : '0.5px solid rgba(148,163,184,0.3)',borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color: c.progress === 'research' ? amber : 'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{c.progress === 'research' ? '\u25cf IN RESEARCH' : '🔒 QUEUED'}</span>
                         )}
                         {!isLocked && c.tier && (() => {
                           const tierColors = {
@@ -31435,6 +31482,83 @@ function MuzzApp() {
           })()}
 
           {/* LIVE PRICES TAB */}
+          {/* ============ SUPERINVESTORS — tracked legends & holdings ============ */}
+          {investmentsSubTab === 'superinvestors' && (() => {
+            const svAmber = 'rgba(245,158,11,0.95)';
+            const svDim = 'rgba(245,158,11,0.55)';
+            const svGlow = 'rgba(245,158,11,0.25)';
+            return (
+              <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                {/* Header */}
+                <div style={{border:`0.5px solid ${svGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',padding:'16px 18px'}}>
+                  <div style={{fontSize:'9px',color:svDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS · SUPERINVESTORS</div>
+                  <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TRACKED LEGENDS</div>
+                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
+                    Eight investors worth studying — their style, their reasoning, and the businesses they actually own.
+                    Holdings as at last verified 13F filings; positions change, filings lag by up to 45 days. Do your own research.
+                  </div>
+                </div>
+
+                {/* Investor cards */}
+                {(SUPERINVESTOR_DATA || []).map((inv, idx) => (
+                  <div key={inv.name} style={{border:`0.5px solid ${svGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',overflow:'hidden'}}>
+                    <div style={{padding:'12px 16px',borderBottom:`0.5px solid ${svGlow}`,display:'flex',alignItems:'baseline',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                      <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                        <span style={{fontSize:'10px',color:svDim,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{String(idx + 1).padStart(2, '0')}</span>
+                        <span style={{fontSize:'15px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{inv.name}</span>
+                        <span style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace'}}>{inv.firm}</span>
+                      </div>
+                      {inv.status === 'historical' && (
+                        <span style={{fontSize:'7px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,padding:'2px 7px',border:'0.5px solid rgba(148,163,184,0.35)',borderRadius:'3px'}}>HISTORICAL</span>
+                      )}
+                    </div>
+                    <div style={{padding:'12px 16px',display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <div style={{fontSize:'11px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55}}>{inv.style}</div>
+                      <div style={{fontSize:'10px',color:'rgba(148,163,184,0.65)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55,fontStyle:'italic'}}>{inv.note}</div>
+                      <div>
+                        <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'7px'}}>// KEY HOLDINGS</div>
+                        <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                          {(inv.holdings || []).map(t => {
+                            const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === t);
+                            const inLibrary = !!cov;
+                            const openable = cov && !cov.locked;
+                            return (
+                              <button key={t}
+                                onClick={() => { if (openable) { setCoverageCompany(t); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
+                                style={{
+                                  padding:'4px 10px',borderRadius:'3px',fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',
+                                  cursor: openable ? 'pointer' : 'default',
+                                  background: openable ? 'rgba(245,158,11,0.14)' : inLibrary ? 'rgba(245,158,11,0.05)' : 'rgba(148,163,184,0.06)',
+                                  border: openable ? `0.5px solid ${svAmber}` : inLibrary ? `0.5px solid ${svGlow}` : '0.5px solid rgba(148,163,184,0.25)',
+                                  color: openable ? svAmber : inLibrary ? svDim : 'rgba(148,163,184,0.7)',
+                                }}>
+                                {t}{openable ? ' \u2192' : ''}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div style={{fontSize:'8px',color:'rgba(148,163,184,0.45)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'7px'}}>
+                          {(inv.holdings || []).some(t => { const cc = (COVERAGE_DATA || []).find(x => x.ticker === t); return cc && !cc.locked; })
+                            ? 'Amber \u2192 = full coverage in the library · tap to open'
+                            : 'Dim amber = in the coverage pipeline'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Footer disclaimer */}
+                <div style={{border:`0.5px solid ${svGlow}`,borderRadius:'6px',background:'rgba(245,158,11,0.04)',padding:'12px 16px'}}>
+                  <div style={{fontSize:'9px',color:svAmber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>⚠ DO YOUR OWN RESEARCH</div>
+                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.6}}>
+                    Cloning trades blindly is not a strategy — these investors buy at prices and position sizes you can't see, and sell without telling you.
+                    Study the reasoning, not the tickers. This is education, not financial advice.
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {investmentsSubTab === 'researchHome' && (() => {
             const rAmber = 'rgba(245,158,11,0.95)';
             const rDim = 'rgba(245,158,11,0.6)';
@@ -31451,6 +31575,7 @@ function MuzzApp() {
                 { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
               ]},
               { title:'INFORMATION', items:[
+                { id:'superinvestors',  glyph:'♕', label:'SUPERINVESTORS',    desc:'Tracked legends & holdings' },
                 { id:'accounting',      glyph:'◳', label:'ACCOUNTING',        desc:'Financial statements' },
                 { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',   desc:'Buffett & Munger' },
                 { id:'sp500',           glyph:'★', label:'S&P 500',           desc:'Index data' },
@@ -31529,6 +31654,23 @@ function MuzzApp() {
                     </div>
                   );
                 })()}
+
+                {/* RESEARCH LOG — the library's heartbeat */}
+                <div style={{background:"rgba(0,0,0,0.45)",border:`0.5px solid ${rGlow}`,borderRadius:"6px",overflow:"hidden"}}>
+                  <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${rGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"9px",color:rDim,letterSpacing:"2.5px",fontWeight:600}}>// RESEARCH LOG</span>
+                    <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1.5px"}}>LATEST UPDATES</span>
+                  </div>
+                  <div style={{padding:"10px 14px 12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                    {(RESEARCH_LOG || []).slice(0, 5).map((entry, i) => (
+                      <div key={i} style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
+                        <span style={{fontSize:"8px",color:rAmber,letterSpacing:"1px",fontWeight:700,flexShrink:0,width:"78px"}}>{entry.date}</span>
+                        <span style={{fontSize:"7px",color:"rgba(148,163,184,0.55)",letterSpacing:"1.5px",fontWeight:600,flexShrink:0,width:"64px"}}>{entry.type}</span>
+                        <span style={{fontSize:"10px",color:"rgba(224,234,255,0.8)",letterSpacing:"0.3px",lineHeight:1.5}}>{entry.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 {rdModuleGroups.map(grp => (
                 <div key={grp.title}>
