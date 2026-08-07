@@ -11430,41 +11430,37 @@ const RESEARCH_LOG = [
   { date: '08 JUL 2026', type: 'DESK',     text: 'Analyst Desk launched — live coverage matrix & global reach' },
 ];
 
-// === SUPERINVESTORS — tracked legends, holdings as at last verified 13F filings ===
-// NOTE: verify against the Dataroma-checked database before treating as current.
+// === SUPERINVESTORS — verified against Dataroma / 13F filings ===
+// Top 10 holdings shown per investor (or entire portfolio where smaller).
 const SUPERINVESTOR_DATA = [
-  { name: 'Warren Buffett', firm: 'Berkshire Hathaway', status: 'active',
+  { name: 'Warren Buffett', firm: 'Berkshire Hathaway', status: 'active', total: 29,
     style: 'Wonderful businesses at fair prices, held forever',
     note: 'KO held since 1988, AXP roots back to the 1960s — the compounding proof.',
-    holdings: ['AAPL','KO','AXP','BAC','CVX','OXY','MCO'] },
-  { name: 'Li Lu', firm: 'Himalaya Capital', status: 'active',
+    holdings: ['AAPL','AXP','KO','BAC','CVX','OXY','GOOGL','CB','MCO','KHC'] },
+  { name: 'Li Lu', firm: 'Himalaya Capital', status: 'active', total: 14,
     style: 'Deep fundamental research, extreme concentration, decade horizons',
     note: 'The only outside manager Munger ever gave money to.',
-    holdings: ['BAC','BRK.B','GOOG','EWBC'] },
-  { name: 'Gates Foundation Trust', firm: 'Managed by Michael Larson', status: 'active',
+    holdings: ['GOOGL','GOOG','PDD','BRK.B','EWBC','BAC','OXY','CROX','TME','MCO'] },
+  { name: 'Gates Foundation Trust', firm: 'Managed by Michael Larson', status: 'active', total: 22,
     style: 'Concentrated blue-chip quality, built to fund giving for decades',
     note: 'Waste, railroads and machinery — toll booths on the physical economy.',
-    holdings: ['MSFT','BRK.B','WM','CNI','CAT','DE','ECL'] },
-  { name: 'Bill Ackman', firm: 'Pershing Square', status: 'active',
+    holdings: ['BRK.B','WM','CNI','CAT','DE','ECL','WMT','FDX','KOF','WCN'] },
+  { name: 'Bill Ackman', firm: 'Pershing Square', status: 'active', total: 11,
     style: 'Large concentrated stakes in simple, predictable, cash-generative businesses',
-    note: 'UMG is the fund’s signature music-royalty toll booth.',
-    holdings: ['UMG','GOOG','HLT','QSR','CMG','NKE'] },
-  { name: 'Guy Spier', firm: 'Aquamarine Fund', status: 'active',
-    style: 'Buffett-inspired compounding, low turnover, checklist discipline',
-    note: 'Author of The Education of a Value Investor.',
-    holdings: ['BRK.B','AXP','MA','V','BAC'] },
-  { name: 'Mohnish Pabrai', firm: 'Pabrai Investment Funds', status: 'active',
+    note: 'Brookfield, big tech and Hertz — the book has shifted hard since the UMG era.',
+    holdings: ['BN','AMZN','UBER','MSFT','QSR','META','HHH','SEG','GOOG','HTZ'] },
+  { name: 'Mohnish Pabrai', firm: 'Pabrai Investment Funds', status: 'active', total: null,
     style: 'Dhandho — heads I win, tails I don’t lose much. Few bets, big bets.',
     note: 'Recent years concentrated in deep-value energy & coal.',
     holdings: ['AMR','CEIX'] },
-  { name: 'Nick Sleep', firm: 'Nomad Investment Partnership', status: 'historical',
+  { name: 'Guy Spier', firm: 'Aquamarine Fund', status: 'retired', total: 7, asOf: '2026 Q2',
+    style: 'Buffett-inspired compounding, low turnover, checklist discipline',
+    note: 'Author of The Education of a Value Investor. Now retired — this was the entire final book.',
+    holdings: ['BRK.B','BRK.A','AXP','MA','MCO','RACE','DJCO'] },
+  { name: 'Nick Sleep & Qais Zakaria', firm: 'Nomad Investment Partnership', status: 'retired', total: 3, asOf: '2013–2014',
     style: 'Scale economics shared — businesses that give margin back to customers',
-    note: 'Closed Nomad in 2014 and told partners to hold three stocks forever.',
+    note: 'Closed Nomad in 2014 and told partners to hold three stocks forever. Now retired.',
     holdings: ['AMZN','COST','BRK.B'] },
-  { name: 'Lou Simpson', firm: 'GEICO / SQ Advisors', status: 'historical',
-    style: 'Think independently, invest in high-return businesses run for shareholders',
-    note: 'The only manager Buffett trusted with GEICO’s float.',
-    holdings: ['BRK.B','CHTR','LBRDK','V'] },
 ];
 
 const COVERAGE_DATA = [
@@ -31494,8 +31490,9 @@ function MuzzApp() {
                   <div style={{fontSize:'9px',color:svDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS · SUPERINVESTORS</div>
                   <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TRACKED LEGENDS</div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
-                    Eight investors worth studying — their style, their reasoning, and the businesses they actually own.
-                    Holdings as at last verified 13F filings; positions change, filings lag by up to 45 days. Do your own research.
+                    Investors worth studying — their style, their reasoning, and the businesses they actually own.
+                    We show each investor's top 10 holdings (or their entire portfolio where it's smaller), verified against 13F filings.
+                    Positions change and filings lag by up to 45 days. Want to go deeper on these investors — or discover other superinvestors — head to Dataroma.
                   </div>
                 </div>
 
@@ -31508,23 +31505,24 @@ function MuzzApp() {
                         <span style={{fontSize:'15px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{inv.name}</span>
                         <span style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace'}}>{inv.firm}</span>
                       </div>
-                      {inv.status === 'historical' && (
-                        <span style={{fontSize:'7px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,padding:'2px 7px',border:'0.5px solid rgba(148,163,184,0.35)',borderRadius:'3px'}}>HISTORICAL</span>
+                      {inv.status !== 'active' && (
+                        <span style={{fontSize:'7px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,padding:'2px 7px',border:'0.5px solid rgba(148,163,184,0.35)',borderRadius:'3px'}}>{String(inv.status).toUpperCase()}{inv.asOf ? ' · ' + inv.asOf : ''}</span>
                       )}
                     </div>
                     <div style={{padding:'12px 16px',display:'flex',flexDirection:'column',gap:'10px'}}>
                       <div style={{fontSize:'11px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55}}>{inv.style}</div>
                       <div style={{fontSize:'10px',color:'rgba(148,163,184,0.65)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55,fontStyle:'italic'}}>{inv.note}</div>
                       <div>
-                        <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'7px'}}>// KEY HOLDINGS</div>
+                        <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'7px'}}>// {inv.total && inv.holdings.length >= inv.total ? `ENTIRE PORTFOLIO · ${inv.total} HOLDINGS` : inv.total ? `TOP ${inv.holdings.length} OF ${inv.total} HOLDINGS` : 'KEY HOLDINGS'}</div>
                         <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
                           {(inv.holdings || []).map(t => {
-                            const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === t);
+                            const covT = t === 'GOOGL' ? 'GOOG' : t;
+                            const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === covT);
                             const inLibrary = !!cov;
                             const openable = cov && !cov.locked;
                             return (
                               <button key={t}
-                                onClick={() => { if (openable) { setCoverageCompany(t); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
+                                onClick={() => { if (openable) { setCoverageCompany(covT); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
                                 style={{
                                   padding:'4px 10px',borderRadius:'3px',fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',
                                   cursor: openable ? 'pointer' : 'default',
@@ -31552,7 +31550,8 @@ function MuzzApp() {
                   <div style={{fontSize:'9px',color:svAmber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>⚠ DO YOUR OWN RESEARCH</div>
                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.6}}>
                     Cloning trades blindly is not a strategy — these investors buy at prices and position sizes you can't see, and sell without telling you.
-                    Study the reasoning, not the tickers. This is education, not financial advice.
+                    Study the reasoning, not the tickers. For deeper dives on these investors and the full universe of tracked superinvestors, dataroma.com is the best free resource going.
+                    This is education, not financial advice.
                   </div>
                 </div>
               </div>
