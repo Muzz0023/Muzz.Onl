@@ -12100,10 +12100,11 @@ function MuzzApp() {
   const [perfTicker, setPerfTicker] = useState('');
   const [perfData, setPerfData] = useState(null);
   const [perfLoading, setPerfLoading] = useState(false);
+  const [perfSaved, setPerfSaved] = useState([]); // saved performance lookups: {ticker, industry}
   const [perfError, setPerfError] = useState('');
 
-  const fetchPerformance = async () => {
-    const ticker = perfTicker.trim().toUpperCase();
+  const fetchPerformance = async (tOverride) => {
+    const ticker = (typeof tOverride === 'string' ? tOverride : perfTicker).trim().toUpperCase();
     if (!ticker) return;
     setPerfLoading(true);
     setPerfError('');
@@ -12128,6 +12129,12 @@ function MuzzApp() {
         return closes[0].v;
       };
       const calcChange = (old) => old ? ((currentPrice - old) / old * 100) : null;
+      // Save this lookup (deduped), grouped by coverage industry where known
+      setPerfSaved(prev => {
+        if ((prev || []).some(p => p.ticker === ticker)) return prev;
+        const covMatch = (COVERAGE_DATA || []).find(cc => cc.ticker === ticker || (ticker === 'GOOGL' && cc.ticker === 'GOOG') || (ticker === 'BRK-B' && cc.ticker === 'BRK.B'));
+        return [...(prev || []), { ticker, industry: covMatch ? covMatch.industry : 'Other' }];
+      });
       setPerfData({
         ticker,
         currentPrice,
@@ -12304,7 +12311,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,perfSaved,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
 
 
@@ -12327,6 +12334,7 @@ function MuzzApp() {
     if(d.bigGoals) setBigGoals(d.bigGoals);
     if(d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
     if(d.futureStocks) setFutureStocks(d.futureStocks);
+    if(d.perfSaved) setPerfSaved(d.perfSaved);
     if(d.futureResearch) setFutureResearch(d.futureResearch);
     if(d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
     if(d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
@@ -12395,6 +12403,7 @@ function MuzzApp() {
       bigGoals: d.bigGoals||[],
       holdingsResearch: d.holdingsResearch||[],
       futureStocks: d.futureStocks||[],
+      perfSaved: d.perfSaved||[],
       futureResearch: d.futureResearch||[],
       futureResearchColumns: d.futureResearchColumns||[],
       investmentSmallGoals: d.investmentSmallGoals||[],
@@ -12684,6 +12693,7 @@ function MuzzApp() {
           if (d.bigGoals) setBigGoals(d.bigGoals);
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
+          if (d.perfSaved) setPerfSaved(d.perfSaved);
           if (d.futureResearch) setFutureResearch(d.futureResearch);
           if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
           if (d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
@@ -12813,6 +12823,7 @@ function MuzzApp() {
           bigGoals,
           holdingsResearch,
           futureStocks,
+          perfSaved,
           futureResearch,
           futureResearchColumns,
           investmentSmallGoals,
@@ -12876,7 +12887,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, perfSaved, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -19321,9 +19332,9 @@ function MuzzApp() {
               title: 'CORE RESEARCH',
               items: [
                 { id:'researchHome',    glyph:'⌂', label:'Dashboard',        desc:'Command overview' },
-                { id:'research',        glyph:'≡', label:'Holdings Research', desc:'Your positions' },
+                { id:'research',        glyph:'≡', label:'Holdings Research', desc:'Interested positions' },
+                { id:'researchMap',     glyph:'⊞', label:'Holdings Map',     desc:'Interested positions mapped out' },
                 { id:'futurePortfolio', glyph:'◬', label:'Future Portfolio', desc:'Watchlist' },
-                { id:'researchMap',     glyph:'⊞', label:'Holdings Map',     desc:'Constellation graph' },
                 { id:'coverage',        glyph:'◇', label:'Coverage',         desc:'Company library' },
               ],
             },
@@ -31560,9 +31571,9 @@ function MuzzApp() {
             const rGlow = 'rgba(245,158,11,0.35)';
             const rdModuleGroups = [
               { title:'CORE RESEARCH', items:[
-                { id:'research',        glyph:'≡', label:'HOLDINGS RESEARCH', desc:'Your positions' },
+                { id:'research',        glyph:'≡', label:'HOLDINGS RESEARCH', desc:'Interested positions' },
+                { id:'researchMap',     glyph:'⊞', label:'HOLDINGS MAP',      desc:'Interested positions mapped out' },
                 { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO',  desc:'Watchlist' },
-                { id:'researchMap',     glyph:'⊞', label:'HOLDINGS MAP',      desc:'Constellation graph' },
                 { id:'coverage',        glyph:'◇', label:'COVERAGE',          desc:'Company library' },
               ]},
               { title:'LIVE DATA', items:[
@@ -33470,6 +33481,28 @@ function MuzzApp() {
                 </div>
                 {perfError && <div className="text-sm" style={{color:'rgba(239,68,68,0.8)'}}>{perfError}</div>}
               </div>
+              {/* SAVED LOOKUPS — grouped by industry, tap to re-run */}
+              {(perfSaved || []).length > 0 && (
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"14px",padding:"14px 16px"}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)',letterSpacing:'1.5px',marginBottom:'10px'}}>// SAVED LOOKUPS</div>
+                  {Object.entries((perfSaved || []).reduce((m, p) => { const k = p.industry || 'Other'; (m[k] = m[k] || []).push(p); return m; }, {})).sort((a, b) => a[0].localeCompare(b[0])).map(([ind, rows]) => (
+                    <div key={ind} style={{marginBottom:'10px'}}>
+                      <div style={{fontSize:'8px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,textTransform:'uppercase',marginBottom:'6px'}}>{ind} · {rows.length}</div>
+                      <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                        {rows.map(p => (
+                          <span key={p.ticker} style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'4px 8px 4px 10px',background: perfData && perfData.ticker === p.ticker ? 'rgba(0,200,255,0.16)' : 'rgba(0,200,255,0.05)',border:`1px solid ${perfData && perfData.ticker === p.ticker ? 'rgba(0,200,255,0.7)' : 'rgba(0,200,255,0.2)'}`,borderRadius:'6px'}}>
+                            <button onClick={() => { setPerfTicker(p.ticker); fetchPerformance(p.ticker); }}
+                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'11px',color:'#00c8ff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{p.ticker}</button>
+                            <button onClick={() => setPerfSaved(prev => (prev || []).filter(x => x.ticker !== p.ticker))}
+                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'10px',color:'rgba(148,163,184,0.5)',lineHeight:1}}>✕</button>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {perfData && (
                 <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
