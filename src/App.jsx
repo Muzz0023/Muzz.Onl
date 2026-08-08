@@ -11459,6 +11459,33 @@ const SUPERINVESTOR_DATA = [
     holdings: ['AMZN','COST','BRK.B'] },
 ];
 
+// === MARKET CAPS — top companies per industry by market cap. Static, curated. ===
+// marketCap in USD. Update the 'updated' stamp whenever figures are refreshed.
+const MARKETCAP_DATA = [
+  { industry: 'Technology', updated: '01 AUG 2026', companies: [
+    { rank: 1, ticker: 'AAPL',  name: 'Apple',      marketCap: 4530000000000, country: 'USA' },
+    { rank: 2, ticker: 'GOOG',  name: 'Alphabet',   marketCap: 4350000000000, country: 'USA' },
+    { rank: 3, ticker: 'MSFT',  name: 'Microsoft',  marketCap: 2900000000000, country: 'USA' },
+    { rank: 4, ticker: 'AMZN',  name: 'Amazon',     marketCap: 2610000000000, country: 'USA' },
+    { rank: 5, ticker: 'META',  name: 'Meta',       marketCap: 1480000000000, country: 'USA' },
+    { rank: 6, ticker: 'ORCL',  name: 'Oracle',     marketCap: 404000000000,  country: 'USA' },
+    { rank: 7, ticker: 'PLTR',  name: 'Palantir',   marketCap: 310000000000,  country: 'USA' },
+    { rank: 8, ticker: 'UBER',  name: 'Uber',       marketCap: 152000000000,  country: 'USA' },
+  ]},
+  { industry: 'Railways', updated: '01 AUG 2026', companies: [
+    { rank: 1, ticker: 'UNP', name: 'Union Pacific',              marketCap: 170000000000, country: 'USA' },
+    { rank: 2, ticker: 'CSX', name: 'CSX',                        marketCap: 93000000000,  country: 'USA' },
+    { rank: 3, ticker: 'CP',  name: 'Canadian Pacific KC',        marketCap: 78000000000,  country: 'Canada' },
+    { rank: 4, ticker: 'CNI', name: 'Canadian National Railway',  marketCap: 77000000000,  country: 'Canada' },
+  ]},
+  { industry: 'Financial Services', updated: '01 AUG 2026', companies: [
+    { rank: 1, ticker: 'V',   name: 'Visa',              marketCap: 689000000000, country: 'USA' },
+    { rank: 2, ticker: 'MA',  name: 'Mastercard',        marketCap: 477000000000, country: 'USA' },
+    { rank: 3, ticker: 'AXP', name: 'American Express',  marketCap: 240000000000, country: 'USA' },
+    { rank: 4, ticker: 'MCO', name: "Moody's",           marketCap: 80000000000,  country: 'USA' },
+  ]},
+];
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -19343,6 +19370,7 @@ function MuzzApp() {
               items: [
                 { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Quickly see your investment returns' },
                 { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
+                { id:'marketCaps',  glyph:'▤', label:'Market Caps',  desc:'Top companies by industry' },
               ],
             },
             {
@@ -31485,6 +31513,67 @@ function MuzzApp() {
           })()}
 
           {/* LIVE PRICES TAB */}
+          {/* ============ MARKET CAPS — top companies per industry ============ */}
+          {investmentsSubTab === 'marketCaps' && (() => {
+            const mcAmber = 'rgba(245,158,11,0.95)';
+            const mcDim = 'rgba(245,158,11,0.55)';
+            const mcGlow = 'rgba(245,158,11,0.25)';
+            const fmtCap = (n) => {
+              if (!n && n !== 0) return '—';
+              if (n >= 1e12) return '$' + (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
+              if (n >= 1e9) return '$' + Math.round(n / 1e9) + 'B';
+              return '$' + Math.round(n / 1e6) + 'M';
+            };
+            return (
+              <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                <div style={{border:`0.5px solid ${mcGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',padding:'16px 18px'}}>
+                  <div style={{fontSize:'9px',color:mcDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS · MARKET CAPS</div>
+                  <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>BY INDUSTRY</div>
+                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
+                    The biggest companies in each industry we track, ranked by market cap. All figures USD. Amber tickers have full coverage in the library — tap to open.
+                  </div>
+                </div>
+
+                {(MARKETCAP_DATA || []).map(sec => {
+                  const maxCap = Math.max(...sec.companies.map(cp => cp.marketCap || 0), 1);
+                  return (
+                    <div key={sec.industry} style={{border:`0.5px solid ${mcGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',overflow:'hidden'}}>
+                      <div style={{padding:'11px 16px',borderBottom:`0.5px solid ${mcGlow}`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase'}}>{sec.industry}</span>
+                        <span style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>AS AT {sec.updated}</span>
+                      </div>
+                      <div style={{padding:'10px 16px 12px',display:'flex',flexDirection:'column',gap:'7px'}}>
+                        {sec.companies.map(cp => {
+                          const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === cp.ticker);
+                          const openable = cov && !cov.locked;
+                          return (
+                            <div key={cp.ticker} style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                              <span style={{fontSize:'9px',color:mcDim,fontFamily:'monospace',fontWeight:700,width:'18px',flexShrink:0}}>{cp.rank}</span>
+                              <button onClick={() => { if (openable) { setCoverageCompany(cp.ticker); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
+                                style={{background:'none',border:'none',padding:0,cursor: openable ? 'pointer' : 'default',fontSize:'11px',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',width:'62px',textAlign:'left',flexShrink:0,color: openable ? mcAmber : 'rgba(224,234,255,0.85)'}}>
+                                {cp.ticker}{openable ? ' →' : ''}
+                              </button>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',flex:1,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{cp.name}</span>
+                              <span style={{flex:2,height:'6px',background:'rgba(255,255,255,0.05)',borderRadius:'2px',overflow:'hidden',minWidth:'50px'}}>
+                                <span style={{display:'block',height:'100%',width:`${Math.max((cp.marketCap / maxCap) * 100, 2)}%`,background:'linear-gradient(90deg, rgba(245,158,11,0.85), rgba(245,158,11,0.35))',borderRadius:'2px'}} />
+                              </span>
+                              <span style={{fontSize:'8px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',letterSpacing:'0.5px',width:'52px',textAlign:'right',flexShrink:0}}>{cp.country}</span>
+                              <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,width:'62px',textAlign:'right',flexShrink:0}}>{fmtCap(cp.marketCap)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'0.5px',lineHeight:1.6,padding:'0 4px'}}>
+                  Figures curated and dated — not live quotes. Market caps drift daily; treat these as the map, not the tide.
+                </div>
+              </div>
+            );
+          })()}
+
           {/* ============ SUPERINVESTORS — tracked legends & holdings ============ */}
           {investmentsSubTab === 'superinvestors' && (() => {
             const svAmber = 'rgba(245,158,11,0.95)';
@@ -31579,6 +31668,7 @@ function MuzzApp() {
               { title:'LIVE DATA', items:[
                 { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
                 { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
+                { id:'marketCaps',      glyph:'▤', label:'MARKET CAPS',       desc:'Top companies by industry' },
               ]},
               { title:'INFORMATION', items:[
                 { id:'superinvestors',  glyph:'♕', label:'SUPERINVESTORS',    desc:'Tracked legends & holdings' },
