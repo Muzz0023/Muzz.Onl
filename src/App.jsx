@@ -33462,8 +33462,8 @@ function MuzzApp() {
 
           {investmentsSubTab === 'performance' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.15)",borderLeft:"2px solid rgba(245,158,11,0.5)",borderRadius:"6px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div className="text-xs font-mono" style={{color:'rgba(245,158,11,0.6)'}}>// COMPANY PERFORMANCE</div>
                 <div className="flex gap-3">
                   <input
                     value={perfTicker}
@@ -33471,11 +33471,11 @@ function MuzzApp() {
                     onKeyDown={e => e.key === 'Enter' && fetchPerformance()}
                     placeholder="e.g. AAPL, GOOG, BRK-B"
                     className="flex-1 px-4 py-3 rounded-xl bg-transparent text-white font-bold text-lg focus:outline-none"
-                    style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}}
+                    style={{background:'rgba(245,158,11,0.05)',border:'1px solid rgba(245,158,11,0.2)'}}
                   />
                   <button onClick={fetchPerformance} disabled={perfLoading || !perfTicker.trim()}
                     className="px-5 py-3 rounded-xl font-bold text-white flex-shrink-0"
-                    style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))' : 'rgba(255,255,255,0.06)'}}>
+                    style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(245,158,11,0.9),rgba(180,110,10,0.9))' : 'rgba(255,255,255,0.06)'}}>
                     {perfLoading ? '⏳' : '→ Go'}
                   </button>
                 </div>
@@ -33483,16 +33483,16 @@ function MuzzApp() {
               </div>
               {/* SAVED LOOKUPS — grouped by industry, tap to re-run */}
               {(perfSaved || []).length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"14px",padding:"14px 16px"}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)',letterSpacing:'1.5px',marginBottom:'10px'}}>// SAVED LOOKUPS</div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.15)",borderRadius:"14px",padding:"14px 16px"}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(245,158,11,0.6)',letterSpacing:'1.5px',marginBottom:'10px'}}>// SAVED LOOKUPS</div>
                   {Object.entries((perfSaved || []).reduce((m, p) => { const k = p.industry || 'Other'; (m[k] = m[k] || []).push(p); return m; }, {})).sort((a, b) => a[0].localeCompare(b[0])).map(([ind, rows]) => (
                     <div key={ind} style={{marginBottom:'10px'}}>
                       <div style={{fontSize:'8px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,textTransform:'uppercase',marginBottom:'6px'}}>{ind} · {rows.length}</div>
                       <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
                         {rows.map(p => (
-                          <span key={p.ticker} style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'4px 8px 4px 10px',background: perfData && perfData.ticker === p.ticker ? 'rgba(0,200,255,0.16)' : 'rgba(0,200,255,0.05)',border:`1px solid ${perfData && perfData.ticker === p.ticker ? 'rgba(0,200,255,0.7)' : 'rgba(0,200,255,0.2)'}`,borderRadius:'6px'}}>
+                          <span key={p.ticker} style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'4px 8px 4px 10px',background: perfData && perfData.ticker === p.ticker ? 'rgba(245,158,11,0.16)' : 'rgba(245,158,11,0.05)',border:`1px solid ${perfData && perfData.ticker === p.ticker ? 'rgba(245,158,11,0.7)' : 'rgba(245,158,11,0.2)'}`,borderRadius:'6px'}}>
                             <button onClick={() => { setPerfTicker(p.ticker); fetchPerformance(p.ticker); }}
-                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'11px',color:'#00c8ff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{p.ticker}</button>
+                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'11px',color:'#f59e0b',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{p.ticker}</button>
                             <button onClick={() => setPerfSaved(prev => (prev || []).filter(x => x.ticker !== p.ticker))}
                               style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'10px',color:'rgba(148,163,184,0.5)',lineHeight:1}}>✕</button>
                           </span>
@@ -33505,15 +33505,15 @@ function MuzzApp() {
 
               {perfData && (
                 <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.2)",borderLeft:"2px solid rgba(245,158,11,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div className="flex items-center justify-between mb-1">
-                      <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff'}}>{perfData.ticker}</div>
+                      <div className="text-2xl font-black tracking-widest" style={{color:'#f59e0b'}}>{perfData.ticker}</div>
                       <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
                     </div>
                     <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Current Price (USD)</div>
                   </div>
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(0,200,255,0.05)',borderBottom:'1px solid rgba(0,200,255,0.1)',color:'rgba(0,200,255,0.5)'}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(245,158,11,0.05)',borderBottom:'1px solid rgba(245,158,11,0.1)',color:'rgba(245,158,11,0.5)'}}>
                       <div>PERIOD</div><div style={{textAlign:"center"}}>CHANGE</div><div className="text-right">RETURN</div>
                     </div>
                     {[
@@ -33549,13 +33549,13 @@ function MuzzApp() {
                       );
                     })}
                   </div>
-                  <div style={{padding:"12px 14px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",textAlign:"center"}}>
+                  <div style={{padding:"12px 14px",background:"rgba(245,158,11,0.05)",border:"0.5px solid rgba(245,158,11,0.1)",borderRadius:"3px",fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",textAlign:"center"}}>
                     💡 Yahoo Finance data · USD · Not financial advice
                   </div>
                 </div>
               )}
               {!perfData && !perfLoading && (
-                <div style={{padding:"32px 16px",background:"rgba(5,12,24,0.5)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",textAlign:"center"}}>
+                <div style={{padding:"32px 16px",background:"rgba(5,12,24,0.5)",border:"0.5px solid rgba(245,158,11,0.1)",borderRadius:"6px",textAlign:"center"}}>
                   
                   <div className="text-white font-bold mb-1">Search any stock</div>
                   <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
