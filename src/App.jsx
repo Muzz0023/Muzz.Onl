@@ -11422,6 +11422,7 @@ const UMG_BREAKDOWN = {
 
 // === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
 const RESEARCH_LOG = [
+  { date: '16 AUG 2026', type: 'DESK',     text: 'All Assets board added \u2014 the top 30 assets on Earth by market cap' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Superinvestors module launched — eight tracked legends with verified holdings' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Research Log added — every library update now visible here' },
   { date: '10 JUL 2026', type: 'RELEASE',  text: 'Muzz Research tier launched — Research OS live on web + iOS' },
@@ -11485,6 +11486,43 @@ const MARKETCAP_DATA = [
     { rank: 4, ticker: 'MCO', name: "Moody's",           marketCap: 80000000000,  country: 'USA' },
   ]},
 ];
+
+// === ALL ASSETS — top 30 assets on Earth by market cap: companies, metals, crypto, ETFs ===
+const ALL_ASSETS_DATA = {
+  updated: '16 AUG 2026',
+  assets: [
+    { rank: 1,  name: 'Gold',                              marketCap: 31000000000000, country: '\u2014' },
+    { rank: 2,  name: 'Nvidia',            ticker: 'NVDA', marketCap: 5500000000000,  country: '🇺🇸 USA' },
+    { rank: 3,  name: 'Apple',             ticker: 'AAPL', marketCap: 4500000000000,  country: '🇺🇸 USA' },
+    { rank: 4,  name: 'Google',            ticker: 'GOOG', marketCap: 4200000000000,  country: '🇺🇸 USA' },
+    { rank: 5,  name: 'Microsoft',         ticker: 'MSFT', marketCap: 3700000000000,  country: '🇺🇸 USA' },
+    { rank: 6,  name: 'Silver',                            marketCap: 3500000000000,  country: '\u2014' },
+    { rank: 7,  name: 'Amazon',            ticker: 'AMZN', marketCap: 2800000000000,  country: '🇺🇸 USA' },
+    { rank: 8,  name: 'TSMC',              ticker: 'TSM',  marketCap: 2200000000000,  country: '🇹🇼 Taiwan' },
+    { rank: 9,  name: 'Broadcom',          ticker: 'AVGO', marketCap: 1900000000000,  country: '🇺🇸 USA' },
+    { rank: 10, name: 'SpaceX',                            marketCap: 1800000000000,  country: '🇺🇸 USA' },
+    { rank: 11, name: 'Saudi Aramco',                      marketCap: 1700000000000,  country: '🇸🇦 S. Arabia' },
+    { rank: 12, name: 'Meta',              ticker: 'META', marketCap: 1500000000000,  country: '🇺🇸 USA' },
+    { rank: 13, name: 'Tesla',             ticker: 'TSLA', marketCap: 1300000000000,  country: '🇺🇸 USA' },
+    { rank: 14, name: 'Samsung',                           marketCap: 1300000000000,  country: '🇰🇷 S. Korea' },
+    { rank: 15, name: 'Bitcoin',                           marketCap: 1300000000000,  country: '\u2014' },
+    { rank: 16, name: 'Micron Technology', ticker: 'MU',   marketCap: 1000000000000,  country: '🇺🇸 USA' },
+    { rank: 17, name: 'Berkshire Hathaway', ticker: 'BRK.B', marketCap: 1000000000000, country: '🇺🇸 USA' },
+    { rank: 18, name: 'Eli Lilly',         ticker: 'LLY',  marketCap: 1000000000000,  country: '🇺🇸 USA' },
+    { rank: 19, name: 'Vanguard S&P 500 ETF', ticker: 'VOO', marketCap: 1000000000000, country: '\u2014' },
+    { rank: 20, name: 'JPMorgan Chase',    ticker: 'JPM',  marketCap: 965000000000,   country: '🇺🇸 USA' },
+    { rank: 21, name: 'Walmart',           ticker: 'WMT',  marketCap: 920000000000,   country: '🇺🇸 USA' },
+    { rank: 22, name: 'iShares Core S&P 500 ETF', ticker: 'IVV', marketCap: 905000000000, country: '\u2014' },
+    { rank: 23, name: 'AMD',               ticker: 'AMD',  marketCap: 840000000000,   country: '🇺🇸 USA' },
+    { rank: 24, name: 'SK Hynix',                          marketCap: 825000000000,   country: '🇰🇷 S. Korea' },
+    { rank: 25, name: 'SPDR S&P 500 ETF',  ticker: 'SPY',  marketCap: 820000000000,   country: '\u2014' },
+    { rank: 26, name: 'ASML',              ticker: 'ASML', marketCap: 710000000000,   country: '🇳🇱 Netherlands' },
+    { rank: 27, name: 'Vanguard Total Stock Market ETF', ticker: 'VTI', marketCap: 680000000000, country: '\u2014' },
+    { rank: 28, name: 'Visa',              ticker: 'V',    marketCap: 680000000000,   country: '🇺🇸 USA' },
+    { rank: 29, name: 'Exxon Mobil',       ticker: 'XOM',  marketCap: 660000000000,   country: '🇺🇸 USA' },
+    { rank: 30, name: 'Johnson & Johnson', ticker: 'JNJ',  marketCap: 630000000000,   country: '🇺🇸 USA' },
+  ],
+};
 
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
@@ -19371,6 +19409,7 @@ function MuzzApp() {
                 { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Quickly see your investment returns' },
                 { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
                 { id:'marketCaps',  glyph:'▤', label:'Market Caps',  desc:'Top companies by industry' },
+                { id:'allAssets',   glyph:'◈', label:'All Assets',   desc:'Top 30 by market cap' },
               ],
             },
             {
@@ -31513,6 +31552,63 @@ function MuzzApp() {
           })()}
 
           {/* LIVE PRICES TAB */}
+          {/* ============ ALL ASSETS \u2014 top 30 by market cap ============ */}
+          {investmentsSubTab === 'allAssets' && (() => {
+            const aaAmber = 'rgba(245,158,11,0.95)';
+            const aaDim = 'rgba(245,158,11,0.55)';
+            const aaGlow = 'rgba(245,158,11,0.25)';
+            const fmtCap = (n) => {
+              if (!n && n !== 0) return '\u2014';
+              if (n >= 1e12) return '$' + (n / 1e12).toFixed(n % 1e12 === 0 ? 0 : 1) + 'T';
+              if (n >= 1e9) return '$' + Math.round(n / 1e9) + 'B';
+              return '$' + Math.round(n / 1e6) + 'M';
+            };
+            const maxCap = Math.max(...(ALL_ASSETS_DATA.assets || []).map(a => a.marketCap || 0), 1);
+            return (
+              <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                <div style={{border:`0.5px solid ${aaGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',padding:'16px 18px'}}>
+                  <div style={{fontSize:'9px',color:aaDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS \u00b7 ALL ASSETS</div>
+                  <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TOP 30 BY MARKET CAP</div>
+                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
+                    Everything on one board \u2014 public companies, precious metals, crypto and ETFs, ranked by market cap in USD.
+                    Bars are scaled to gold, the biggest asset on Earth. Amber tickers have full coverage in the library \u2014 tap to open.
+                  </div>
+                </div>
+
+                <div style={{border:`0.5px solid ${aaGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',overflow:'hidden'}}>
+                  <div style={{padding:'11px 16px',borderBottom:`0.5px solid ${aaGlow}`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                    <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'2px'}}>ALL ASSETS</span>
+                    <span style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>AS AT {ALL_ASSETS_DATA.updated}</span>
+                  </div>
+                  <div style={{padding:'10px 16px 12px',display:'flex',flexDirection:'column',gap:'7px'}}>
+                    {(ALL_ASSETS_DATA.assets || []).map(a => {
+                      const cov = a.ticker ? (COVERAGE_DATA || []).find(cc => cc.ticker === a.ticker) : null;
+                      const openable = cov && !cov.locked;
+                      return (
+                        <div key={a.rank} style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                          <span style={{fontSize:'9px',color:aaDim,fontFamily:'monospace',fontWeight:700,width:'22px',flexShrink:0,textAlign:'right'}}>{a.rank}</span>
+                          <button onClick={() => { if (openable) { setCoverageCompany(a.ticker); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
+                            style={{background:'none',border:'none',padding:0,cursor: openable ? 'pointer' : 'default',fontSize:'10px',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',flex:1,minWidth:0,textAlign:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',color: openable ? aaAmber : 'rgba(224,234,255,0.85)'}}>
+                            {a.name}{openable ? ' \u2192' : ''}
+                          </button>
+                          <span style={{flex:2,height:'6px',background:'rgba(255,255,255,0.05)',borderRadius:'2px',overflow:'hidden',minWidth:'40px'}}>
+                            <span style={{display:'block',height:'100%',width:`${Math.max((a.marketCap / maxCap) * 100, 1.5)}%`,background:'linear-gradient(90deg, rgba(245,158,11,0.85), rgba(245,158,11,0.35))',borderRadius:'2px'}} />
+                          </span>
+                          <span style={{fontSize:'8px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',letterSpacing:'0.5px',width:'88px',textAlign:'right',flexShrink:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.country}</span>
+                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,width:'54px',textAlign:'right',flexShrink:0}}>{fmtCap(a.marketCap)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'0.5px',lineHeight:1.6,padding:'0 4px'}}>
+                  Figures curated and dated \u2014 not live quotes. Gold at $31T is worth more than the next five assets combined; perspective matters.
+                </div>
+              </div>
+            );
+          })()}
+
           {/* ============ MARKET CAPS — top companies per industry ============ */}
           {investmentsSubTab === 'marketCaps' && (() => {
             const mcAmber = 'rgba(245,158,11,0.95)';
@@ -31669,6 +31765,7 @@ function MuzzApp() {
                 { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',       desc:'Investment returns' },
                 { id:'performance',     glyph:'↗', label:'PERFORMANCE',       desc:'Returns over time' },
                 { id:'marketCaps',      glyph:'▤', label:'MARKET CAPS',       desc:'Top companies by industry' },
+                { id:'allAssets',       glyph:'◈', label:'ALL ASSETS',        desc:'Top 30 by market cap' },
               ]},
               { title:'INFORMATION', items:[
                 { id:'superinvestors',  glyph:'♕', label:'SUPERINVESTORS',    desc:'Tracked legends & holdings' },
