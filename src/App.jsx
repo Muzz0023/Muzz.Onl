@@ -11422,6 +11422,7 @@ const UMG_BREAKDOWN = {
 
 // === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
 const RESEARCH_LOG = [
+  { date: '16 AUG 2026', type: 'LIVE DATA', text: 'Market Caps board complete — 25 industries, top 10 companies each, superinvestor links wired' },
   { date: '16 AUG 2026', type: 'DESK',     text: 'All Assets board added \u2014 the top 30 assets on Earth by market cap' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Superinvestors module launched — eight tracked legends with verified holdings' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Research Log added — every library update now visible here' },
@@ -11460,30 +11461,308 @@ const SUPERINVESTOR_DATA = [
     holdings: ['AMZN','COST','BRK.B'] },
 ];
 
-// === MARKET CAPS — top companies per industry by market cap. Static, curated. ===
-// marketCap in USD. Update the 'updated' stamp whenever figures are refreshed.
+// === MARKET CAPS — top 10 companies per industry by market cap. Static, curated. ===
+// 25 industries. marketCap in USD. tickers set where the name is library-covered or superinvestor-held.
 const MARKETCAP_DATA = [
-  { industry: 'Technology', updated: '01 AUG 2026', companies: [
-    { rank: 1, ticker: 'AAPL',  name: 'Apple',      marketCap: 4530000000000, country: 'USA' },
-    { rank: 2, ticker: 'GOOG',  name: 'Alphabet',   marketCap: 4350000000000, country: 'USA' },
-    { rank: 3, ticker: 'MSFT',  name: 'Microsoft',  marketCap: 2900000000000, country: 'USA' },
-    { rank: 4, ticker: 'AMZN',  name: 'Amazon',     marketCap: 2610000000000, country: 'USA' },
-    { rank: 5, ticker: 'META',  name: 'Meta',       marketCap: 1480000000000, country: 'USA' },
-    { rank: 6, ticker: 'ORCL',  name: 'Oracle',     marketCap: 404000000000,  country: 'USA' },
-    { rank: 7, ticker: 'PLTR',  name: 'Palantir',   marketCap: 310000000000,  country: 'USA' },
-    { rank: 8, ticker: 'UBER',  name: 'Uber',       marketCap: 152000000000,  country: 'USA' },
+  { industry: 'Automakers', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Tesla', marketCap: 1300000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Toyota', marketCap: 225000000000, country: '🇯🇵 Japan' },
+    { rank: 3, name: 'BYD', marketCap: 125000000000, country: '🇨🇳 China' },
+    { rank: 4, name: 'Xiaomi', marketCap: 95000000000, country: '🇨🇳 China' },
+    { rank: 5, name: 'General Motors', marketCap: 80000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Hyundai', marketCap: 75000000000, country: '🇰🇷 S. Korea' },
+    { rank: 7, name: 'Ferrari', ticker: 'RACE', marketCap: 70000000000, country: '🇮🇹 Italy' },
+    { rank: 8, name: 'Ford', marketCap: 55000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Mercedes-Benz', marketCap: 50000000000, country: '🇩🇪 Germany' },
+    { rank: 10, name: 'Porsche', marketCap: 45000000000, country: '🇩🇪 Germany' },
   ]},
-  { industry: 'Railways', updated: '01 AUG 2026', companies: [
-    { rank: 1, ticker: 'UNP', name: 'Union Pacific',              marketCap: 170000000000, country: 'USA' },
-    { rank: 2, ticker: 'CSX', name: 'CSX',                        marketCap: 93000000000,  country: 'USA' },
-    { rank: 3, ticker: 'CP',  name: 'Canadian Pacific KC',        marketCap: 78000000000,  country: 'Canada' },
-    { rank: 4, ticker: 'CNI', name: 'Canadian National Railway',  marketCap: 77000000000,  country: 'Canada' },
+  { industry: 'Airlines', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Delta Air Lines', marketCap: 60000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'United Airlines Holdings', marketCap: 40000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Ryanair', marketCap: 30000000000, country: '🇮🇪 Ireland' },
+    { rank: 4, name: 'International Consolidated Airlines', marketCap: 25000000000, country: '🇪🇸 Spain' },
+    { rank: 5, name: 'Southwest Airlines', marketCap: 22000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'InterGlobe Aviation', marketCap: 20000000000, country: '🇮🇳 India' },
+    { rank: 7, name: 'Air China', marketCap: 18000000000, country: '🇨🇳 China' },
+    { rank: 8, name: 'Singapore Airlines', marketCap: 17000000000, country: '🇸🇬 Singapore' },
+    { rank: 9, name: 'LATAM Airlines', marketCap: 15000000000, country: '🇨🇱 Chile' },
+    { rank: 10, name: 'China Southern Airlines', marketCap: 13000000000, country: '🇨🇳 China' },
   ]},
-  { industry: 'Financial Services', updated: '01 AUG 2026', companies: [
-    { rank: 1, ticker: 'V',   name: 'Visa',              marketCap: 689000000000, country: 'USA' },
-    { rank: 2, ticker: 'MA',  name: 'Mastercard',        marketCap: 477000000000, country: 'USA' },
-    { rank: 3, ticker: 'AXP', name: 'American Express',  marketCap: 240000000000, country: 'USA' },
-    { rank: 4, ticker: 'MCO', name: "Moody's",           marketCap: 80000000000,  country: 'USA' },
+  { industry: 'Airports', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Aena', marketCap: 46000000000, country: '🇪🇸 Spain' },
+    { rank: 2, name: 'Airports of Thailand', marketCap: 27000000000, country: '🇹🇭 Thailand' },
+    { rank: 3, name: 'Aéroports de Paris', marketCap: 13000000000, country: '🇫🇷 France' },
+    { rank: 4, name: 'Grupo Aeroportuario del Pacífico', marketCap: 12000000000, country: '🇲🇽 Mexico' },
+    { rank: 5, name: 'GMR Airports', marketCap: 11000000000, country: '🇮🇳 India' },
+    { rank: 6, name: 'Zurich Airport', marketCap: 8000000000, country: '🇨🇭 Switzerland' },
+    { rank: 7, name: 'Shanghai Airport', marketCap: 8000000000, country: '🇨🇳 China' },
+    { rank: 8, name: 'Auckland Airport', marketCap: 8000000000, country: '🇳🇿 New Zealand' },
+    { rank: 9, name: 'Grupo Aeroportuario del Sureste', marketCap: 8000000000, country: '🇲🇽 Mexico' },
+    { rank: 10, name: 'Fraport', marketCap: 7000000000, country: '🇩🇪 Germany' },
+  ]},
+  { industry: 'Banks', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'JPMorgan Chase', marketCap: 960000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Bank of America', ticker: 'BAC', marketCap: 450000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'China Construction Bank', marketCap: 400000000000, country: '🇨🇳 China' },
+    { rank: 4, name: 'HSBC', marketCap: 355000000000, country: '🇬🇧 UK' },
+    { rank: 5, name: 'Morgan Stanley', marketCap: 340000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Agricultural Bank of China', marketCap: 335000000000, country: '🇨🇳 China' },
+    { rank: 7, name: 'ICBC', marketCap: 325000000000, country: '🇨🇳 China' },
+    { rank: 8, name: 'Goldman Sachs', marketCap: 300000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Royal Bank of Canada', marketCap: 290000000000, country: '🇨🇦 Canada' },
+    { rank: 10, name: 'Bank of China', marketCap: 280000000000, country: '🇨🇳 China' },
+  ]},
+  { industry: 'Hotels', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Marriott International', ticker: 'MAR', marketCap: 90000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Hilton', ticker: 'HLT', marketCap: 70000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Oriental Land', marketCap: 30000000000, country: '🇯🇵 Japan' },
+    { rank: 4, name: 'Las Vegas Sands', marketCap: 30000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'InterContinental Hotels Group', marketCap: 22000000000, country: '🇬🇧 UK' },
+    { rank: 6, name: 'Galaxy Entertainment', marketCap: 20000000000, country: '🇭🇰 Hong Kong' },
+    { rank: 7, name: 'Hyatt Hotels', marketCap: 16000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Host Hotels & Resorts', marketCap: 15000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'H World Group Limited', marketCap: 12000000000, country: '🇨🇳 China' },
+    { rank: 10, name: 'Accor', marketCap: 12000000000, country: '🇫🇷 France' },
+  ]},
+  { industry: 'Pharmaceuticals', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Eli Lilly', marketCap: 1000000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Johnson & Johnson', marketCap: 625000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'AbbVie', marketCap: 440000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Roche', marketCap: 205000000000, country: '🇨🇭 Switzerland' },
+    { rank: 5, name: 'Merck', marketCap: 320000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Novartis', marketCap: 290000000000, country: '🇨🇭 Switzerland' },
+    { rank: 7, name: 'AstraZeneca', marketCap: 245000000000, country: '🇬🇧 UK' },
+    { rank: 8, name: 'Amgen', marketCap: 225000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Novo Nordisk', marketCap: 205000000000, country: '🇩🇰 Denmark' },
+    { rank: 10, name: 'Gilead Sciences', marketCap: 170000000000, country: '🇺🇸 USA' },
+  ]},
+  { industry: 'Courier Services', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'United Parcel Service', marketCap: 90000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'FedEx', ticker: 'FDX', marketCap: 75000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'DHL Group', marketCap: 70000000000, country: '🇩🇪 Germany' },
+    { rank: 4, name: 'Japan Post Holdings', marketCap: 40000000000, country: '🇯🇵 Japan' },
+    { rank: 5, name: 'Poste Italiane', marketCap: 40000000000, country: '🇮🇹 Italy' },
+    { rank: 6, name: 'S.F. Express', marketCap: 25000000000, country: '🇨🇳 China' },
+    { rank: 7, name: 'ZTO Express', marketCap: 17000000000, country: '🇨🇳 China' },
+    { rank: 8, name: 'J&T Global Express', marketCap: 12000000000, country: '🇨🇳 China' },
+    { rank: 9, name: 'TFI International', marketCap: 11000000000, country: '🇨🇦 Canada' },
+    { rank: 10, name: 'InPost', marketCap: 9000000000, country: '🇱🇺 Luxembourg' },
+  ]},
+  { industry: 'Media/Press', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Comcast', marketCap: 90000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Warner Bros. Discovery', marketCap: 70000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Thomson Reuters', marketCap: 45000000000, country: '🇨🇦 Canada' },
+    { rank: 4, name: 'Naspers', marketCap: 40000000000, country: '🇿🇦 South Africa' },
+    { rank: 5, name: 'Fox Corporation', ticker: 'FOX', marketCap: 25000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'BCE Inc.', marketCap: 20000000000, country: '🇨🇦 Canada' },
+    { rank: 7, name: 'Rogers Communications', marketCap: 19000000000, country: '🇨🇦 Canada' },
+    { rank: 8, name: 'News Corp', ticker: 'NWS', marketCap: 17000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Millicom', marketCap: 15000000000, country: '🇱🇺 Luxembourg' },
+    { rank: 10, name: 'Quebecor', marketCap: 10000000000, country: '🇨🇦 Canada' },
+  ]},
+  { industry: 'Beverages', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Coca-Cola', ticker: 'KO', marketCap: 370000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Kweichow Moutai', marketCap: 250000000000, country: '🇨🇳 China' },
+    { rank: 3, name: 'PepsiCo', ticker: 'PEP', marketCap: 190000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Anheuser-Busch InBev', marketCap: 160000000000, country: '🇧🇪 Belgium' },
+    { rank: 5, name: 'Starbucks', marketCap: 120000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Monster Beverage', marketCap: 90000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Nongfu Spring', marketCap: 60000000000, country: '🇨🇳 China' },
+    { rank: 8, name: 'Diageo', marketCap: 50000000000, country: '🇬🇧 UK' },
+    { rank: 9, name: 'Heineken', marketCap: 45000000000, country: '🇳🇱 Netherlands' },
+    { rank: 10, name: 'Coca-Cola European Partners', marketCap: 45000000000, country: '🇬🇧 UK' },
+  ]},
+  { industry: 'Clothing', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'LVMH', marketCap: 265000000000, country: '🇫🇷 France' },
+    { rank: 2, name: 'Inditex', marketCap: 210000000000, country: '🇪🇸 Spain' },
+    { rank: 3, name: 'Hermès', marketCap: 195000000000, country: '🇫🇷 France' },
+    { rank: 4, name: 'TJX Companies', marketCap: 170000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Fast Retailing', marketCap: 150000000000, country: '🇯🇵 Japan' },
+    { rank: 6, name: 'Dior', marketCap: 90000000000, country: '🇫🇷 France' },
+    { rank: 7, name: 'Cintas', marketCap: 85000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Ross Stores', marketCap: 80000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Nike', marketCap: 60000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Kering', marketCap: 40000000000, country: '🇫🇷 France' },
+  ]},
+  { industry: 'Mining', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'BHP Group', marketCap: 230000000000, country: '🇦🇺 Australia' },
+    { rank: 2, name: 'Rio Tinto', marketCap: 165000000000, country: '🇬🇧 UK' },
+    { rank: 3, name: 'Southern Copper', marketCap: 165000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'China Shenhua Energy', marketCap: 140000000000, country: '🇨🇳 China' },
+    { rank: 5, name: 'Zijin Mining', marketCap: 130000000000, country: '🇨🇳 China' },
+    { rank: 6, name: 'Newmont', marketCap: 125000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Grupo Mexico', marketCap: 100000000000, country: '🇲🇽 Mexico' },
+    { rank: 8, name: 'Freeport-McMoRan', marketCap: 95000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Agnico Eagle Mines', marketCap: 95000000000, country: '🇨🇦 Canada' },
+    { rank: 10, name: 'Glencore', marketCap: 90000000000, country: '🇨🇭 Switzerland' },
+  ]},
+  { industry: 'Railways', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Union Pacific Corporation', ticker: 'UNP', marketCap: 175000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'CSX Corporation', ticker: 'CSX', marketCap: 95000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'CPKC', ticker: 'CP', marketCap: 80000000000, country: '🇨🇦 Canada' },
+    { rank: 4, name: 'Canadian National Railway', ticker: 'CNI', marketCap: 75000000000, country: '🇨🇦 Canada' },
+    { rank: 5, name: 'Norfolk Southern', marketCap: 75000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'East Japan Railway', marketCap: 25000000000, country: '🇯🇵 Japan' },
+    { rank: 7, name: 'Central Japan Railway', marketCap: 20000000000, country: '🇯🇵 Japan' },
+    { rank: 8, name: 'China Railway Corporation', marketCap: 10000000000, country: '🇨🇳 China' },
+    { rank: 9, name: 'Indian Railway Finance', marketCap: 10000000000, country: '🇮🇳 India' },
+    { rank: 10, name: 'Getlink', marketCap: 10000000000, country: '🇫🇷 France' },
+  ]},
+  { industry: 'Insurance', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'UnitedHealth', marketCap: 360000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Allianz SE', marketCap: 190000000000, country: '🇩🇪 Germany' },
+    { rank: 3, name: 'China Life Insurance', marketCap: 155000000000, country: '🇨🇳 China' },
+    { rank: 4, name: 'Ping An Insurance', marketCap: 140000000000, country: '🇨🇳 China' },
+    { rank: 5, name: 'Chubb', ticker: 'CB', marketCap: 135000000000, country: '🇨🇭 Switzerland' },
+    { rank: 6, name: 'Progressive', marketCap: 125000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Zurich Insurance Group', marketCap: 110000000000, country: '🇨🇭 Switzerland' },
+    { rank: 8, name: 'AXA', marketCap: 105000000000, country: '🇫🇷 France' },
+    { rank: 9, name: 'AIA', marketCap: 95000000000, country: '🇭🇰 Hong Kong' },
+    { rank: 10, name: 'Tokio Marine', marketCap: 90000000000, country: '🇯🇵 Japan' },
+  ]},
+  { industry: 'Real Estate', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Welltower', marketCap: 165000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Prologis', marketCap: 135000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Equinix', marketCap: 100000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Simon Property Group', marketCap: 85000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'American Tower', marketCap: 80000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Digital Realty', marketCap: 70000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Public Storage', marketCap: 60000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Realty Income', marketCap: 60000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Ventas', marketCap: 45000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Sun Hung Kai Properties', marketCap: 45000000000, country: '🇭🇰 Hong Kong' },
+  ]},
+  { industry: 'Ports', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Adani Ports & SEZ', marketCap: 40000000000, country: '🇮🇳 India' },
+    { rank: 2, name: 'CK Hutchison Holdings', marketCap: 35000000000, country: '🇭🇰 Hong Kong' },
+    { rank: 3, name: 'International Container Terminal Services', marketCap: 35000000000, country: '🇵🇭 Philippines' },
+    { rank: 4, name: 'Shanghai International Port Group', marketCap: 15000000000, country: '🇨🇳 China' },
+    { rank: 5, name: 'Qingdao Port International', marketCap: 8000000000, country: '🇨🇳 China' },
+    { rank: 6, name: 'China Merchants Port', marketCap: 8000000000, country: '🇭🇰 Hong Kong' },
+    { rank: 7, name: 'Abu Dhabi Ports', marketCap: 7000000000, country: '🇦🇪 UAE' },
+    { rank: 8, name: 'Westports', marketCap: 6000000000, country: '🇲🇾 Malaysia' },
+    { rank: 9, name: 'Port of Tauranga', marketCap: 3000000000, country: '🇳🇿 New Zealand' },
+    { rank: 10, name: 'Westshore Terminals Investment', marketCap: 2000000000, country: '🇨🇦 Canada' },
+  ]},
+  { industry: 'Food', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Nestlé', marketCap: 250000000000, country: '🇨🇭 Switzerland' },
+    { rank: 2, name: 'McDonald\'s', marketCap: 195000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Unilever', marketCap: 135000000000, country: '🇬🇧 UK' },
+    { rank: 4, name: 'DoorDash', marketCap: 90000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Mondelez International', ticker: 'MDLZ', marketCap: 80000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Compass Group', marketCap: 55000000000, country: '🇬🇧 UK' },
+    { rank: 7, name: 'Hindustan Unilever', marketCap: 50000000000, country: '🇮🇳 India' },
+    { rank: 8, name: 'Danone', marketCap: 50000000000, country: '🇫🇷 France' },
+    { rank: 9, name: 'JBS N.V.', marketCap: 45000000000, country: '🇧🇷 Brazil' },
+    { rank: 10, name: 'Chipotle Mexican Grill', marketCap: 40000000000, country: '🇺🇸 USA' },
+  ]},
+  { industry: 'Software', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Apple', ticker: 'AAPL', marketCap: 4500000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Google', ticker: 'GOOG', marketCap: 4000000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Microsoft', ticker: 'MSFT', marketCap: 3500000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Palantir', ticker: 'PLTR', marketCap: 420000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Oracle', ticker: 'ORCL', marketCap: 420000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'Palo Alto Networks', marketCap: 315000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'SAP', marketCap: 240000000000, country: '🇩🇪 Germany' },
+    { rank: 8, name: 'CrowdStrike', marketCap: 225000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'IBM', marketCap: 225000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Schneider Electric', marketCap: 200000000000, country: '🇫🇷 France' },
+  ]},
+  { industry: 'Tobacco', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Philip Morris International', ticker: 'PM', marketCap: 290000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'British American Tobacco', marketCap: 125000000000, country: '🇬🇧 UK' },
+    { rank: 3, name: 'Altria Group', ticker: 'MO', marketCap: 110000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Japan Tobacco', marketCap: 80000000000, country: '🇯🇵 Japan' },
+    { rank: 5, name: 'ITC', marketCap: 35000000000, country: '🇮🇳 India' },
+    { rank: 6, name: 'Imperial Brands', marketCap: 25000000000, country: '🇬🇧 UK' },
+    { rank: 7, name: 'KT&G', marketCap: 15000000000, country: '🇰🇷 S. Korea' },
+    { rank: 8, name: 'Smoore International Holdings', marketCap: 7000000000, country: '🇨🇳 China' },
+    { rank: 9, name: 'Sampoerna', marketCap: 5000000000, country: '🇮🇩 Indonesia' },
+    { rank: 10, name: 'Philip Morris CR', marketCap: 3000000000, country: '🇨🇿 Czech Republic' },
+  ]},
+  { industry: 'Financial Services', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'JPMorgan Chase', marketCap: 960000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Visa', ticker: 'V', marketCap: 680000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Mastercard', ticker: 'MA', marketCap: 490000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Bank of America', ticker: 'BAC', marketCap: 450000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'China Construction Bank', marketCap: 400000000000, country: '🇨🇳 China' },
+    { rank: 6, name: 'HSBC', marketCap: 355000000000, country: '🇬🇧 UK' },
+    { rank: 7, name: 'Morgan Stanley', marketCap: 340000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Agricultural Bank of China', marketCap: 335000000000, country: '🇨🇳 China' },
+    { rank: 9, name: 'ICBC', marketCap: 325000000000, country: '🇨🇳 China' },
+    { rank: 10, name: 'Goldman Sachs', marketCap: 300000000000, country: '🇺🇸 USA' },
+  ]},
+  { industry: 'Oil & Gas', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Saudi Aramco', marketCap: 1700000000000, country: '🇸🇦 S. Arabia' },
+    { rank: 2, name: 'Exxon Mobil', marketCap: 655000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Chevron', ticker: 'CVX', marketCap: 385000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Shell', marketCap: 250000000000, country: '🇬🇧 UK' },
+    { rank: 5, name: 'PetroChina', marketCap: 220000000000, country: '🇨🇳 China' },
+    { rank: 6, name: 'TotalEnergies', marketCap: 195000000000, country: '🇫🇷 France' },
+    { rank: 7, name: 'ConocoPhillips', marketCap: 150000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'CNOOC', marketCap: 145000000000, country: '🇨🇳 China' },
+    { rank: 9, name: 'Petrobras', marketCap: 115000000000, country: '🇧🇷 Brazil' },
+    { rank: 10, name: 'Enbridge', marketCap: 110000000000, country: '🇨🇦 Canada' },
+  ]},
+  { industry: 'Chemicals', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Linde', marketCap: 225000000000, country: '🇬🇧 UK' },
+    { rank: 2, name: 'Air Liquide', marketCap: 125000000000, country: '🇫🇷 France' },
+    { rank: 3, name: 'Shin-Etsu Chemical', marketCap: 75000000000, country: '🇯🇵 Japan' },
+    { rank: 4, name: 'Wesfarmers', ticker: 'WES', marketCap: 70000000000, country: '🇦🇺 Australia' },
+    { rank: 5, name: 'Merck KGaA', marketCap: 70000000000, country: '🇩🇪 Germany' },
+    { rank: 6, name: 'Air Products & Chemicals', marketCap: 70000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Bayer', marketCap: 55000000000, country: '🇩🇪 Germany' },
+    { rank: 8, name: 'BASF', marketCap: 55000000000, country: '🇩🇪 Germany' },
+    { rank: 9, name: 'Corteva', marketCap: 50000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Nan Ya Plastics', marketCap: 45000000000, country: '🇹🇼 Taiwan' },
+  ]},
+  { industry: 'Investment', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Berkshire Hathaway', ticker: 'BRK.B', marketCap: 1000000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Morgan Stanley', marketCap: 340000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'International Holding Company', marketCap: 225000000000, country: '🇦🇪 UAE' },
+    { rank: 4, name: 'Prosus', marketCap: 200000000000, country: '🇳🇱 Netherlands' },
+    { rank: 5, name: 'SoftBank Group', marketCap: 200000000000, country: '🇯🇵 Japan' },
+    { rank: 6, name: 'BlackRock', marketCap: 185000000000, country: '🇺🇸 USA' },
+    { rank: 7, name: 'Blackstone Group', marketCap: 175000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Welltower', marketCap: 160000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Prologis', marketCap: 135000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Investor AB', marketCap: 135000000000, country: '🇸🇪 Sweden' },
+  ]},
+  { industry: 'Retail', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Amazon', ticker: 'AMZN', marketCap: 3000000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Walmart', ticker: 'WMT', marketCap: 900000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Costco', ticker: 'COST', marketCap: 420000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Home Depot', marketCap: 350000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Alibaba', marketCap: 300000000000, country: '🇨🇳 China' },
+    { rank: 6, name: 'Inditex', marketCap: 210000000000, country: '🇪🇸 Spain' },
+    { rank: 7, name: 'TJX Companies', marketCap: 170000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Fast Retailing', marketCap: 150000000000, country: '🇯🇵 Japan' },
+    { rank: 9, name: 'Lowe\'s Companies', marketCap: 125000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'CVS Health', marketCap: 120000000000, country: '🇺🇸 USA' },
+  ]},
+  { industry: 'Construction', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Vinci', marketCap: 80000000000, country: '🇫🇷 France' },
+    { rank: 2, name: 'Larsen & Toubro', marketCap: 60000000000, country: '🇮🇳 India' },
+    { rank: 3, name: 'Ferrovial', marketCap: 45000000000, country: '🇪🇸 Spain' },
+    { rank: 4, name: 'D.R. Horton', marketCap: 40000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Samsung C&T Corporation', marketCap: 40000000000, country: '🇰🇷 S. Korea' },
+    { rank: 6, name: 'Hochtief', marketCap: 40000000000, country: '🇩🇪 Germany' },
+    { rank: 7, name: 'EMCOR', marketCap: 35000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'Grupo ACS', marketCap: 35000000000, country: '🇪🇸 Spain' },
+    { rank: 9, name: 'China State Construction Engineering', marketCap: 25000000000, country: '🇨🇳 China' },
+    { rank: 10, name: 'PulteGroup', marketCap: 25000000000, country: '🇺🇸 USA' },
+  ]},
+  { industry: 'Technology', updated: '16 AUG 2026', companies: [
+    { rank: 1, name: 'Nvidia', marketCap: 5500000000000, country: '🇺🇸 USA' },
+    { rank: 2, name: 'Apple', ticker: 'AAPL', marketCap: 4500000000000, country: '🇺🇸 USA' },
+    { rank: 3, name: 'Google', ticker: 'GOOG', marketCap: 4200000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Microsoft', ticker: 'MSFT', marketCap: 3700000000000, country: '🇺🇸 USA' },
+    { rank: 5, name: 'Amazon', ticker: 'AMZN', marketCap: 2800000000000, country: '🇺🇸 USA' },
+    { rank: 6, name: 'TSMC', marketCap: 2200000000000, country: '🇹🇼 Taiwan' },
+    { rank: 7, name: 'Broadcom', marketCap: 1900000000000, country: '🇺🇸 USA' },
+    { rank: 8, name: 'SpaceX', marketCap: 1800000000000, country: '🇺🇸 USA' },
+    { rank: 9, name: 'Meta', ticker: 'META', marketCap: 1500000000000, country: '🇺🇸 USA' },
+    { rank: 10, name: 'Tesla', marketCap: 1300000000000, country: '🇺🇸 USA' },
   ]},
 ];
 
@@ -31643,6 +31922,8 @@ function MuzzApp() {
             const mcAmber = 'rgba(245,158,11,0.95)';
             const mcDim = 'rgba(245,158,11,0.55)';
             const mcGlow = 'rgba(245,158,11,0.25)';
+            const SV_SHORT = { 'Warren Buffett':'BUFFETT', 'Li Lu':'LI LU', 'Gates Foundation Trust':'GATES TRUST', 'Bill Ackman':'ACKMAN', 'Guy Spier':'SPIER', 'Nick Sleep & Qais Zakaria':'SLEEP & ZAKARIA' };
+            const normT = (t) => t === 'GOOGL' ? 'GOOG' : t === 'BRK.A' ? 'BRK.B' : t;
             const fmtCap = (n) => {
               if (!n && n !== 0) return '—';
               if (n >= 1e12) return '$' + (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
@@ -31655,30 +31936,45 @@ function MuzzApp() {
                   <div style={{fontSize:'9px',color:mcDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS · MARKET CAPS</div>
                   <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>BY INDUSTRY</div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
-                    The biggest companies in each industry we track, ranked by market cap. All figures USD. Amber tickers have full coverage in the library — tap to open.
+                    The top 10 companies in each of the 25 industries Muzz covers, ranked by market cap. All figures USD. Amber names have full coverage in the library — tap to open. ♕ rows show which tracked superinvestors hold names in that industry.
                   </div>
                 </div>
 
                 {(MARKETCAP_DATA || []).map(sec => {
                   const maxCap = Math.max(...sec.companies.map(cp => cp.marketCap || 0), 1);
+                  const secTickers = sec.companies.filter(cp => cp.ticker).map(cp => normT(cp.ticker));
+                  const svMatches = (SUPERINVESTOR_DATA || []).map(inv => ({
+                    short: SV_SHORT[inv.name] || inv.name,
+                    hits: [...new Set((inv.holdings || []).map(normT))].filter(t => secTickers.includes(t)),
+                  })).filter(m => m.hits.length > 0);
                   return (
                     <div key={sec.industry} style={{border:`0.5px solid ${mcGlow}`,borderRadius:'6px',background:'rgba(0,0,0,0.45)',overflow:'hidden'}}>
                       <div style={{padding:'11px 16px',borderBottom:`0.5px solid ${mcGlow}`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                         <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase'}}>{sec.industry}</span>
                         <span style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>AS AT {sec.updated}</span>
                       </div>
+                      {svMatches.length > 0 && (
+                        <div style={{padding:'8px 16px',borderBottom:`0.5px solid ${mcGlow}`,display:'flex',flexWrap:'wrap',alignItems:'center',gap:'6px'}}>
+                          <span style={{fontSize:'7px',color:mcDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginRight:'2px'}}>{'♕ SUPERINVESTORS IN'}</span>
+                          {svMatches.map(m => (
+                            <span key={m.short} style={{display:'inline-flex',alignItems:'center',gap:'5px',padding:'3px 8px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${mcGlow}`,borderRadius:'3px',fontSize:'8px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600}}>
+                              {m.short} <span style={{color:mcAmber,fontWeight:700}}>{'×'}{m.hits.length}</span>
+                              <span style={{color:'rgba(148,163,184,0.6)'}}>{m.hits.join(', ')}</span>
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <div style={{padding:'10px 16px 12px',display:'flex',flexDirection:'column',gap:'7px'}}>
                         {sec.companies.map(cp => {
                           const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === cp.ticker);
                           const openable = cov && !cov.locked;
                           return (
-                            <div key={cp.ticker} style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                            <div key={cp.rank} style={{display:'flex',alignItems:'center',gap:'10px'}}>
                               <span style={{fontSize:'9px',color:mcDim,fontFamily:'monospace',fontWeight:700,width:'18px',flexShrink:0}}>{cp.rank}</span>
                               <button onClick={() => { if (openable) { setCoverageCompany(cp.ticker); setCoverageBreakdownTab('overview'); setInvestmentsSubTab('coverage'); } }}
-                                style={{background:'none',border:'none',padding:0,cursor: openable ? 'pointer' : 'default',fontSize:'11px',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',width:'62px',textAlign:'left',flexShrink:0,color: openable ? mcAmber : 'rgba(224,234,255,0.85)'}}>
-                                {cp.ticker}{openable ? ' →' : ''}
+                                style={{background:'none',border:'none',padding:0,cursor: openable ? 'pointer' : 'default',fontSize:'10px',fontFamily:'monospace',fontWeight: openable ? 700 : 500,letterSpacing:'0.5px',flex:1,minWidth:0,textAlign:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',color: openable ? mcAmber : 'rgba(224,234,255,0.85)'}}>
+                                {cp.ticker ? cp.ticker + ' · ' + cp.name : cp.name}{openable ? ' →' : ''}
                               </button>
-                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',flex:1,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{cp.name}</span>
                               <span style={{flex:2,height:'6px',background:'rgba(255,255,255,0.05)',borderRadius:'2px',overflow:'hidden',minWidth:'50px'}}>
                                 <span style={{display:'block',height:'100%',width:`${Math.max((cp.marketCap / maxCap) * 100, 2)}%`,background:'linear-gradient(90deg, rgba(245,158,11,0.85), rgba(245,158,11,0.35))',borderRadius:'2px'}} />
                               </span>
@@ -31693,7 +31989,7 @@ function MuzzApp() {
                 })}
 
                 <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'0.5px',lineHeight:1.6,padding:'0 4px'}}>
-                  Figures curated and dated — not live quotes. Market caps drift daily; treat these as the map, not the tide.
+                  ⚠ Market caps move every single day — these figures are a dated snapshot and won't be perfectly current. Do your own research, and for live rankings check companiesmarketcap.com, the best free resource for this data.
                 </div>
               </div>
             );
