@@ -32181,8 +32181,9 @@ function MuzzApp() {
                   <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TRACKED LEGENDS</div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
                     Seven investors worth studying — their style, their reasoning, and the businesses they actually own.
-                    Each card shows their current top 10 (verified against 13F filings) and their full portfolio history year by year.
-                    Positions change and filings lag by up to 45 days. Want to go deeper, or discover other superinvestors? Head to Dataroma.
+                    Each card shows their current top 10 (verified against 13F filings) and their top 10 holdings history year by year —
+                    not their full books, as most hold more than 10 positions. Positions change and filings lag by up to 45 days.
+                    Want to go deeper, or discover other superinvestors? Head to Dataroma.
                   </div>
                 </div>
 
@@ -32248,6 +32249,7 @@ function MuzzApp() {
                               <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.65)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55,fontStyle:'italic',paddingBottom:'4px',borderBottom:`0.5px solid ${svGlow}`}}>{inv.history.note}</div>
                             )}
                             <div style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>YEAR-END TOP HOLDINGS · #1 FIRST</div>
+                            <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55}}>Only the top 10 holdings are shown for each year — most of these investors held (and hold) more than 10 positions, so smaller stakes never appear here.</div>
                             {inv.history.rows.map(r => (
                               <div key={r.y} style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
                                 <span style={{fontSize:'9px',color:svAmber,fontFamily:'monospace',fontWeight:700,width:'62px',flexShrink:0}}>{r.y}</span>
