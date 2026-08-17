@@ -11423,7 +11423,7 @@ const UMG_BREAKDOWN = {
 // === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
 const RESEARCH_LOG = [
   { date: '17 AUG 2026', type: 'RESEARCH', text: 'Q3 2026 13Fs — every current top 10 updated · Seth Klarman (Baupost) joins the tracked seven' },
-  { date: '17 AUG 2026', type: 'RESEARCH', text: 'Full portfolio histories added — up to 20 years of year-end 13Fs per investor, with top-5 verdicts' },
+  { date: '17 AUG 2026', type: 'RESEARCH', text: 'Full portfolio histories added — up to 20 years of year-end 13Fs per investor' },
   { date: '16 AUG 2026', type: 'LIVE DATA', text: 'Market Caps board complete — 25 industries, top 10 companies each, superinvestor links wired' },
   { date: '16 AUG 2026', type: 'DESK',     text: 'All Assets board added \u2014 the top 30 assets on Earth by market cap' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Superinvestors module launched — eight tracked legends with verified holdings' },
@@ -11435,7 +11435,7 @@ const RESEARCH_LOG = [
 ];
 
 // === SUPERINVESTORS — verified against Dataroma / 13F filings ===
-// Current top 10 shown per investor (or entire portfolio where smaller), plus full portfolio history and Muzz's top-5 appearance verdicts.
+// Current top 10 shown per investor (or entire portfolio where smaller) plus full portfolio history.
 const SUPERINVESTOR_DATA = [
   { name: "Warren Buffett", firm: "Berkshire Hathaway", status: "active", total: 29,
     currentPeriod: "2026 Q3",
@@ -11468,24 +11468,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2006", h: ["KO","AXP","WFC","PG","MCO","WSC-OLD","BUD","JNJ","COP","GHC"] },
       ],
     },
-    appearances: {
-      span: "2006–2025 year-ends, 20 yrs",
-      rows: [
-        { n: "Coca-Cola", c: "20/20 — never left, #1 for the first 6", v: "✅" },
-        { n: "American Express", c: "18 — missed only ’08, ’17", v: "✅" },
-        { n: "Wells Fargo", c: "14 (’06–’19, #1 four times)", v: "❌" },
-        { n: "Apple", c: "9 — #1 every year since ’17", v: "✅" },
-        { n: "Bank of America", c: "9", v: "❌" },
-        { n: "Procter & Gamble", c: "8", v: "✅" },
-        { n: "IBM", c: "6 — the expensive lesson", v: "❌" },
-        { n: "Kraft Heinz", c: "5 (#1 in ’16)", v: "❌" },
-        { n: "Chevron", c: "4", v: "✅" },
-        { n: "BNSF", c: "3 — then bought the whole thing", v: "✅" },
-        { n: "ConocoPhillips", c: "1 — the admitted mistake", v: "❌" },
-        { n: "Kraft (MDLZ)", c: "1", v: "✅" },
-        { n: "Walmart", c: "1", v: "❌" },
-      ],
-    },
   },
   { name: "Li Lu", firm: "Himalaya Capital", status: "active", total: 8,
     currentPeriod: "2026 Q3",
@@ -11502,19 +11484,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2021", h: ["MU","BAC","META","BRK.B","GOOG","AAPL"] },
         { y: "2020", h: ["MU","BAC","META","GOOG","AAPL","PDD"] },
         { y: "2019", h: ["MU"] },
-      ],
-    },
-    appearances: {
-      span: "2019–2025",
-      rows: [
-        { n: "Alphabet", c: "6", v: "✅" },
-        { n: "Bank of America", c: "6", v: "❌" },
-        { n: "Berkshire Hathaway", c: "5", v: "✅" },
-        { n: "Micron", c: "4", v: "❌" },
-        { n: "Meta", c: "2 (was 3)", v: "✅" },
-        { n: "East West Bancorp", c: "2", v: "❌" },
-        { n: "Apple", c: "1", v: "✅" },
-        { n: "PDD", c: "1", v: "❌" },
       ],
     },
   },
@@ -11548,25 +11517,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2007", h: ["BRK.B","MRK","SGP","COST","XOM","CNI","BP","CAT","WM","WMT"] },
       ],
     },
-    appearances: {
-      span: "2007–2026 Q1, 20 periods",
-      rows: [
-        { n: "Berkshire Hathaway", c: "20/20 — never below #2", v: "✅" },
-        { n: "Caterpillar", c: "18", v: "✅" },
-        { n: "Canadian National Rail", c: "17", v: "✅" },
-        { n: "Waste Management", c: "15", v: "✅" },
-        { n: "Microsoft", c: "6", v: "✅" },
-        { n: "McDonald’s", c: "6 (2026 return is outside top 5)", v: "❌" },
-        { n: "Walmart", c: "5", v: "✅" },
-        { n: "Coca-Cola", c: "4", v: "✅" },
-        { n: "Exxon Mobil", c: "2", v: "🤔" },
-        { n: "Costco", c: "2", v: "✅" },
-        { n: "Deere", c: "1 — new entrant, #5 in 2026 Q1", v: "✅" },
-        { n: "Merck", c: "1", v: "🤔" },
-        { n: "Schering-Plough", c: "1", v: "❌" },
-        { n: "Ecolab", c: "1", v: "❌" },
-      ],
-    },
   },
   { name: "Bill Ackman", firm: "Pershing Square", status: "active", total: 11,
     currentPeriod: "2026 Q3",
@@ -11596,29 +11546,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2009", h: ["TGT","YUM","CXW","H","LNY","BGP","GLRE","ADP"] },
         { y: "2008", h: ["TGT","EMC","V","WEN","DPS","GGP","SHLDQ-OLD","SKS","AIV","BGP"] },
         { y: "2007", h: ["SHLDQ-OLD","TGT","BKS","BGP","GLRE","CSG"] },
-      ],
-    },
-    appearances: {
-      span: "2007–2026 Q1, 20 periods",
-      rows: [
-        { n: "QSR (incl. BKW ’13)", c: "12", v: "❌" },
-        { n: "Chipotle", c: "9", v: "❌" },
-        { n: "Howard Hughes", c: "6 — held continuously since 2010, longest tenure", v: "❌" },
-        { n: "Hilton", c: "6", v: "✅" },
-        { n: "CP Rail", c: "5 (two stints: ’11–’16, ’21–’25)", v: "✅" },
-        { n: "Lowe’s", c: "5", v: "❌" },
-        { n: "Kraft/Mondelez", c: "5", v: "✅" },
-        { n: "Air Products", c: "4", v: "❌" },
-        { n: "GGP", c: "4", v: "❌" },
-        { n: "Beam (incl. FO)", c: "4", v: "❌" },
-        { n: "Brookfield Corp", c: "3 — #1 all three", v: "❌" },
-        { n: "Target", c: "3", v: "❌" },
-        { n: "JCPenney", c: "3", v: "❌" },
-        { n: "Alphabet", c: "3", v: "✅" },
-        { n: "Amazon", c: "2", v: "✅" },
-        { n: "Uber", c: "2", v: "✅" },
-        { n: "Zoetis", c: "2", v: "❌" },
-        { n: "1 appearance", c: "MSFT ✅ (’26 — new entrant), META ✅ (’25), AGN (’14 #1), Valeant (’15), P&G (’12), ADP (’17), SBUX (’18), BRK.B ✅ (’19), Agilent (’20), Citi (’10), V ✅ / EMC / Wendy’s / DPS (’08), YUM / CXW / Hyatt / Landry’s (’09), Sears / BKS / Borders / GLRE (’07)", v: "" },
       ],
     },
   },
@@ -11678,21 +11605,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2014", h: ["AXP","STLA","BRK.B","ZINC","BAC","BRK.A","WFC","GS","C","MA"] },
       ],
     },
-    appearances: {
-      span: "2014–2025, year-end basis",
-      rows: [
-        { n: "Berkshire Hathaway", c: "12", v: "" },
-        { n: "American Express", c: "11", v: "" },
-        { n: "Bank of America", c: "8", v: "" },
-        { n: "Ferrari", c: "8", v: "" },
-        { n: "Mastercard", c: "6", v: "" },
-        { n: "Stellantis (FCAU)", c: "6", v: "" },
-        { n: "BRK.A (if counted separately)", c: "4", v: "" },
-        { n: "GM Warrants B", c: "2", v: "" },
-        { n: "Horsehead (ZINC)", c: "2", v: "" },
-        { n: "Moody’s", c: "1", v: "" },
-      ],
-    },
   },
   { name: "Nick Sleep & Qais Zakaria", firm: "Nomad Investment Partnership", status: "retired", total: 3,
     asOf: "2013–2014",
@@ -11717,18 +11629,6 @@ const SUPERINVESTOR_DATA = [
         { y: "2003", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
         { y: "2002", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
         { y: "2001", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
-      ],
-    },
-    appearances: {
-      span: "2001–2014, era appearances of 6",
-      rows: [
-        { n: "Costco", c: "6", v: "✅" },
-        { n: "Berkshire Hathaway", c: "5", v: "✅" },
-        { n: "Amazon", c: "5", v: "✅" },
-        { n: "Stagecoach", c: "1", v: "🤔" },
-        { n: "Int'l Speedway", c: "1", v: "🤔" },
-        { n: "Matichon", c: "1", v: "🤔" },
-        { n: "Xerox", c: "1", v: "🤔" },
       ],
     },
   },
@@ -32281,9 +32181,8 @@ function MuzzApp() {
                   <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TRACKED LEGENDS</div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
                     Seven investors worth studying — their style, their reasoning, and the businesses they actually own.
-                    Each card shows their current top 10 (verified against 13F filings), their full portfolio history year by year,
-                    and which names kept earning a top-5 spot — with the Muzz verdict on each. Positions change and filings lag by up to 45 days.
-                    Want to go deeper, or discover other superinvestors? Head to Dataroma.
+                    Each card shows their current top 10 (verified against 13F filings) and their full portfolio history year by year.
+                    Positions change and filings lag by up to 45 days. Want to go deeper, or discover other superinvestors? Head to Dataroma.
                   </div>
                 </div>
 
@@ -32359,21 +32258,6 @@ function MuzzApp() {
                         </details>
                       )}
 
-                      {inv.appearances && (
-                        <details style={{border:`0.5px solid ${svGlow}`,borderRadius:'4px',background:'rgba(245,158,11,0.03)',overflow:'hidden'}}>
-                          <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>{'// TOP-5 APPEARANCES · ' + inv.appearances.span + '  ▾'}</summary>
-                          <div style={{padding:'4px 12px 12px',display:'flex',flexDirection:'column',gap:'6px'}}>
-                            <div style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>{'✅ PASSES THE MUZZ FILTER · ❌ FAILS · 🤔 UNDECIDED'}</div>
-                            {inv.appearances.rows.map((r, ri) => (
-                              <div key={ri} style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
-                                <span style={{fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700,width:'150px',flexShrink:0}}>{r.n}</span>
-                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',flex:1,lineHeight:1.55}}>{r.c}</span>
-                                {r.v && <span style={{fontSize:'11px',flexShrink:0}}>{r.v}</span>}
-                              </div>
-                            ))}
-                          </div>
-                        </details>
-                      )}
                     </div>
                   </div>
                 ))}
