@@ -11905,7 +11905,7 @@ const MARKETCAP_DATA = [
     { rank: 1, name: 'Amazon', ticker: 'AMZN', marketCap: 3000000000000, country: '🇺🇸 USA' },
     { rank: 2, name: 'Walmart', ticker: 'WMT', marketCap: 900000000000, country: '🇺🇸 USA' },
     { rank: 3, name: 'Costco', ticker: 'COST', marketCap: 420000000000, country: '🇺🇸 USA' },
-    { rank: 4, name: 'Home Depot', marketCap: 350000000000, country: '🇺🇸 USA' },
+    { rank: 4, name: 'Home Depot', ticker: 'HD', marketCap: 350000000000, country: '🇺🇸 USA' },
     { rank: 5, name: 'Alibaba', marketCap: 300000000000, country: '🇨🇳 China' },
     { rank: 6, name: 'Inditex', marketCap: 210000000000, country: '🇪🇸 Spain' },
     { rank: 7, name: 'TJX Companies', marketCap: 170000000000, country: '🇺🇸 USA' },
