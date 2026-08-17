@@ -11422,6 +11422,8 @@ const UMG_BREAKDOWN = {
 
 // === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
 const RESEARCH_LOG = [
+  { date: '17 AUG 2026', type: 'RESEARCH', text: 'Q3 2026 13Fs — every current top 10 updated · Seth Klarman (Baupost) joins the tracked seven' },
+  { date: '17 AUG 2026', type: 'RESEARCH', text: 'Full portfolio histories added — up to 20 years of year-end 13Fs per investor, with top-5 verdicts' },
   { date: '16 AUG 2026', type: 'LIVE DATA', text: 'Market Caps board complete — 25 industries, top 10 companies each, superinvestor links wired' },
   { date: '16 AUG 2026', type: 'DESK',     text: 'All Assets board added \u2014 the top 30 assets on Earth by market cap' },
   { date: '01 AUG 2026', type: 'DESK',     text: 'Superinvestors module launched — eight tracked legends with verified holdings' },
@@ -11433,32 +11435,303 @@ const RESEARCH_LOG = [
 ];
 
 // === SUPERINVESTORS — verified against Dataroma / 13F filings ===
-// Top 10 holdings shown per investor (or entire portfolio where smaller).
+// Current top 10 shown per investor (or entire portfolio where smaller), plus full portfolio history and Muzz's top-5 appearance verdicts.
 const SUPERINVESTOR_DATA = [
-  { name: 'Warren Buffett', firm: 'Berkshire Hathaway', status: 'active', total: 29,
-    style: 'Wonderful businesses at fair prices, held forever',
-    note: 'KO held since 1988, AXP roots back to the 1960s — the compounding proof.',
-    holdings: ['AAPL','AXP','KO','BAC','CVX','OXY','GOOGL','CB','MCO','KHC'] },
-  { name: 'Li Lu', firm: 'Himalaya Capital', status: 'active', total: 14,
-    style: 'Deep fundamental research, extreme concentration, decade horizons',
-    note: 'The only outside manager Munger ever gave money to.',
-    holdings: ['GOOGL','GOOG','PDD','BRK.B','EWBC','BAC','OXY','CROX','TME','MCO'] },
-  { name: 'Gates Foundation Trust', firm: 'Managed by Michael Larson', status: 'active', total: 22,
-    style: 'Concentrated blue-chip quality, built to fund giving for decades',
-    note: 'Waste, railroads and machinery — toll booths on the physical economy.',
-    holdings: ['BRK.B','WM','CNI','CAT','DE','ECL','WMT','FDX','KOF','WCN'] },
-  { name: 'Bill Ackman', firm: 'Pershing Square', status: 'active', total: 11,
-    style: 'Large concentrated stakes in simple, predictable, cash-generative businesses',
-    note: 'Brookfield, big tech and Hertz — the book has shifted hard since the UMG era.',
-    holdings: ['BN','AMZN','UBER','MSFT','QSR','META','HHH','SEG','GOOG','HTZ'] },
-  { name: 'Guy Spier', firm: 'Aquamarine Fund', status: 'retired', total: 7, asOf: '2026 Q2',
-    style: 'Buffett-inspired compounding, low turnover, checklist discipline',
-    note: 'Author of The Education of a Value Investor. Now retired — this was the entire final book.',
-    holdings: ['BRK.B','BRK.A','AXP','MA','MCO','RACE','DJCO'] },
-  { name: 'Nick Sleep & Qais Zakaria', firm: 'Nomad Investment Partnership', status: 'retired', total: 3, asOf: '2013–2014',
-    style: 'Scale economics shared — businesses that give margin back to customers',
-    note: 'Closed Nomad in 2014 and told partners to hold three stocks forever. Now retired.',
-    holdings: ['AMZN','COST','BRK.B'] },
+  { name: "Warren Buffett", firm: "Berkshire Hathaway", status: "active", total: 29,
+    currentPeriod: "2026 Q3",
+    style: "Wonderful businesses at fair prices, held forever",
+    note: "KO held since 1988, AXP roots back to the 1960s — the compounding proof.",
+    holdings: ["AAPL","AXP","KO","GOOGL","BAC","CVX","OXY","CB","MCO","GOOG"],
+    history: {
+      span: "2006–2025",
+      note: "⚠ US-listed equity sleeve only — excludes wholly-owned subs, BYD, the Japanese sogo shosha, preferreds/warrants until converted, and the record cash pile. Includes Combs/Weschler picks post-2011. WSC-OLD = Munger’s Wesco (folded in mid-’11). Visible trail starts Q4 2006 ($52.8B).",
+      rows: [
+        { y: "2025", h: ["AAPL","AXP","BAC","KO","CVX","MCO","OXY","CB","KHC","GOOGL"] },
+        { y: "2024", h: ["AAPL","AXP","BAC","KO","CVX","OXY","MCO","KHC","CB","DVA"] },
+        { y: "2023", h: ["AAPL","BAC","AXP","KO","CVX","OXY","KHC","MCO","CB","DVA"] },
+        { y: "2022", h: ["AAPL","BAC","CVX","KO","AXP","KHC","OXY","MCO","ATVI","HPQ"] },
+        { y: "2021", h: ["AAPL","BAC","AXP","KO","KHC","MCO","VZ","USB","CVX","BNY"] },
+        { y: "2020", h: ["AAPL","BAC","KO","AXP","KHC","VZ","MCO","USB","DVA","CVX"] },
+        { y: "2019", h: ["AAPL","BAC","KO","AXP","WFC","KHC","JPM","USB","MCO","DAL"] },
+        { y: "2018", h: ["AAPL","BAC","WFC","KO","AXP","KHC","USB","JPM","BNY","MCO"] },
+        { y: "2017", h: ["AAPL","WFC","KHC","BAC","KO","AXP","PSX","USB","MCO","BNY"] },
+        { y: "2016", h: ["KHC","WFC","KO","IBM","AXP","PSX","AAPL","USB","DAL","CHTR"] },
+        { y: "2015", h: ["WFC","KHC","KO","IBM","AXP","PSX","PG","USB","WMT","DVA"] },
+        { y: "2014", h: ["WFC","KO","AXP","IBM","WMT","PG","USB","DVA","DTV","GS"] },
+        { y: "2013", h: ["WFC","KO","AXP","IBM","PG","XOM","WMT","USB","DTV","DVA"] },
+        { y: "2012", h: ["WFC","KO","IBM","AXP","PG","WMT","USB","DTV","DVA","PSX"] },
+        { y: "2011", h: ["KO","IBM","WFC","AXP","PG","MDLZ","WMT","COP","JNJ","USB"] },
+        { y: "2010", h: ["KO","WFC","AXP","PG","MDLZ","JNJ","WMT","WSC-OLD","COP","USB"] },
+        { y: "2009", h: ["KO","WFC","BNI","AXP","PG","MDLZ","WMT","WSC-OLD","COP","JNJ"] },
+        { y: "2008", h: ["KO","WFC","PG","BNI","COP","MDLZ","AXP","JNJ","USB","WSC-OLD"] },
+        { y: "2007", h: ["KO","WFC","AXP","PG","BNI","MDLZ","JNJ","WSC-OLD","USB","BUD"] },
+        { y: "2006", h: ["KO","AXP","WFC","PG","MCO","WSC-OLD","BUD","JNJ","COP","GHC"] },
+      ],
+    },
+    appearances: {
+      span: "2006–2025 year-ends, 20 yrs",
+      rows: [
+        { n: "Coca-Cola", c: "20/20 — never left, #1 for the first 6", v: "✅" },
+        { n: "American Express", c: "18 — missed only ’08, ’17", v: "✅" },
+        { n: "Wells Fargo", c: "14 (’06–’19, #1 four times)", v: "❌" },
+        { n: "Apple", c: "9 — #1 every year since ’17", v: "✅" },
+        { n: "Bank of America", c: "9", v: "❌" },
+        { n: "Procter & Gamble", c: "8", v: "✅" },
+        { n: "IBM", c: "6 — the expensive lesson", v: "❌" },
+        { n: "Kraft Heinz", c: "5 (#1 in ’16)", v: "❌" },
+        { n: "Chevron", c: "4", v: "✅" },
+        { n: "BNSF", c: "3 — then bought the whole thing", v: "✅" },
+        { n: "ConocoPhillips", c: "1 — the admitted mistake", v: "❌" },
+        { n: "Kraft (MDLZ)", c: "1", v: "✅" },
+        { n: "Walmart", c: "1", v: "❌" },
+      ],
+    },
+  },
+  { name: "Li Lu", firm: "Himalaya Capital", status: "active", total: 8,
+    currentPeriod: "2026 Q3",
+    style: "Deep fundamental research, extreme concentration, decade horizons",
+    note: "The only outside manager Munger ever gave money to.",
+    holdings: ["GOOGL","GOOG","PDD","BRK.B","EWBC","CROX","TME","AAPL"],
+    history: {
+      span: "2019–2025",
+      rows: [
+        { y: "2025", h: ["GOOGL","GOOG","BAC","PDD","BRK.B","EWBC","OXY","CROX","AAPL"] },
+        { y: "2024", h: ["BAC","GOOG","GOOGL","BRK.B","EWBC","AAPL","OXY","SOC"] },
+        { y: "2023", h: ["BAC","GOOG","GOOGL","BRK.B","EWBC","AAPL"] },
+        { y: "2022", h: ["MU","BAC","BRK.B","GOOG","GOOGL","AAPL"] },
+        { y: "2021", h: ["MU","BAC","META","BRK.B","GOOG","AAPL"] },
+        { y: "2020", h: ["MU","BAC","META","GOOG","AAPL","PDD"] },
+        { y: "2019", h: ["MU"] },
+      ],
+    },
+    appearances: {
+      span: "2019–2025",
+      rows: [
+        { n: "Alphabet", c: "6", v: "✅" },
+        { n: "Bank of America", c: "6", v: "❌" },
+        { n: "Berkshire Hathaway", c: "5", v: "✅" },
+        { n: "Micron", c: "4", v: "❌" },
+        { n: "Meta", c: "2 (was 3)", v: "✅" },
+        { n: "East West Bancorp", c: "2", v: "❌" },
+        { n: "Apple", c: "1", v: "✅" },
+        { n: "PDD", c: "1", v: "❌" },
+      ],
+    },
+  },
+  { name: "Gates Foundation Trust", firm: "Managed by Michael Larson", status: "active", total: 22,
+    currentPeriod: "2026 Q3",
+    style: "Concentrated blue-chip quality, built to fund giving for decades",
+    note: "Waste, railroads and machinery — toll booths on the physical economy.",
+    holdings: ["BRK.B","CAT","CNI","WM","DE","ECL","WMT","FDX","KOF","HD"],
+    history: {
+      span: "2007–2025",
+      note: "⚠ Not a stock-picking vehicle — run by Michael Larson; funded by Buffett’s annual BRK gifts + Gates’ MSFT gifts; sells continuously to fund ~$7–9B/yr in grants. 13F = US-listed only. Visible trail starts Q2 2007 ($6.64B).",
+      rows: [
+        { y: "2025", h: ["BRK.B","WM","CNI","MSFT","CAT","DE","ECL","WMT","FDX","KOF"] },
+        { y: "2024", h: ["MSFT","BRK.B","WM","CNI","CAT","DE","ECL","WMT","FDX","KOF"] },
+        { y: "2023", h: ["MSFT","BRK.B","CNI","WM","CAT","DE","ECL","KOF","WMT","FDX"] },
+        { y: "2022", h: ["MSFT","BRK.B","CNI","WM","CAT","DE","ECL","WMT","KOF","WCN"] },
+        { y: "2021", h: ["BRK.B","WM","CAT","CNI","ECL","WMT","CCI","MSFT","UPS","FDX"] },
+        { y: "2020", h: ["BRK.B","WM","CAT","CNI","WMT","ECL","CCI","FDX","UPS","SDGR"] },
+        { y: "2019", h: ["BRK.B","WM","CAT","CNI","WMT","ECL","CCI","UPS","FDX","KOF"] },
+        { y: "2018", h: ["BRK.B","WM","MSFT","CAT","CNI","WMT","ECL","CCI","FDX","UPS"] },
+        { y: "2017", h: ["BRK.B","MSFT","CAT","WM","CNI","WMT","FDX","CCI","ECL","UPS"] },
+        { y: "2016", h: ["BRK.B","WM","CNI","CAT","WMT","FDX","UPS","ECL","CCI","KOF"] },
+        { y: "2015", h: ["BRK.B","WM","CNI","CAT","WMT","ECL","CCI","TV","FDX","KOF"] },
+        { y: "2014", h: ["BRK.B","CNI","CAT","WMT","WM","TV","KOF","FDX","UPS","ECL"] },
+        { y: "2013", h: ["BRK.B","KO","MCD","CAT","CNI","WMT","WM","XOM","KOF","TV"] },
+        { y: "2012", h: ["BRK.B","KO","KOF","CAT","MCD","CNI","WMT","XOM","WM","TV"] },
+        { y: "2011", h: ["BRK.B","MCD","CAT","KO","CNI","XOM","WM","KOF","WMT","COST"] },
+        { y: "2010", h: ["BRK.B","CAT","KO","MCD","WM","CNI","XOM","WMT","KOF","COST"] },
+        { y: "2009", h: ["BRK.B","WM","MCD","CNI","CAT","KO","COST","KOF","XOM","BP"] },
+        { y: "2008", h: ["BRK.B","MCD","XOM","COST","CNI","WMT","WM","KO","SGP","MRK"] },
+        { y: "2007", h: ["BRK.B","MRK","SGP","COST","XOM","CNI","BP","CAT","WM","WMT"] },
+      ],
+    },
+    appearances: {
+      span: "2007–2026 Q1, 20 periods",
+      rows: [
+        { n: "Berkshire Hathaway", c: "20/20 — never below #2", v: "✅" },
+        { n: "Caterpillar", c: "18", v: "✅" },
+        { n: "Canadian National Rail", c: "17", v: "✅" },
+        { n: "Waste Management", c: "15", v: "✅" },
+        { n: "Microsoft", c: "6", v: "✅" },
+        { n: "McDonald’s", c: "6 (2026 return is outside top 5)", v: "❌" },
+        { n: "Walmart", c: "5", v: "✅" },
+        { n: "Coca-Cola", c: "4", v: "✅" },
+        { n: "Exxon Mobil", c: "2", v: "🤔" },
+        { n: "Costco", c: "2", v: "✅" },
+        { n: "Deere", c: "1 — new entrant, #5 in 2026 Q1", v: "✅" },
+        { n: "Merck", c: "1", v: "🤔" },
+        { n: "Schering-Plough", c: "1", v: "❌" },
+        { n: "Ecolab", c: "1", v: "❌" },
+      ],
+    },
+  },
+  { name: "Bill Ackman", firm: "Pershing Square", status: "active", total: 11,
+    currentPeriod: "2026 Q3",
+    style: "Large concentrated stakes in simple, predictable, cash-generative businesses",
+    note: "Uber, Brookfield and big tech — the book has shifted hard since the UMG era.",
+    holdings: ["UBER","BN","MSFT","AMZN","HHH","QSR","META","V","MA","SPGI"],
+    history: {
+      span: "2007–2025",
+      note: "⚠ Longs only — shorts & hedges (MBIA, Herbalife, the 2020/2022 macro hedges) never appear in 13Fs. Concentrated 6–11 name book; permanent capital via listed PSH vehicle. Visible trail starts Q2 2007 ($2.44B).",
+      rows: [
+        { y: "2025", h: ["BN","UBER","AMZN","GOOG","META","QSR","HHH","HLT","GOOGL","SEG"] },
+        { y: "2024", h: ["BN","QSR","CMG","HHH","GOOG","NKE","HLT","CP","GOOGL","SEG"] },
+        { y: "2023", h: ["CMG","QSR","HLT","HHH","GOOG","CP","GOOGL","LOW"] },
+        { y: "2022", h: ["LOW","QSR","CMG","HLT","HHH","CP"] },
+        { y: "2021", h: ["LOW","HLT","CMG","QSR","HHH","DPZ","CP"] },
+        { y: "2020", h: ["LOW","CMG","QSR","HLT","A (Agilent)","SBUX","HHH"] },
+        { y: "2019", h: ["CMG","HLT","LOW","QSR","BRK.B","SBUX","HHH","A"] },
+        { y: "2018", h: ["QSR","LOW","CMG","HLT","SBUX","RTX","ADP","PAH","HHH"] },
+        { y: "2017", h: ["QSR","ADP","MDLZ","CMG","HHH","PAH","NKE"] },
+        { y: "2016", h: ["QSR","CMG","MDLZ","APD","HHH","PAH","NOMD","BHC"] },
+        { y: "2015", h: ["APD","ZTS","MDLZ","CP","BHC","QSR","PAH","HHH"] },
+        { y: "2014", h: ["AGN","APD","CP","ZTS","QSR","PAH","HHH"] },
+        { y: "2013", h: ["CP","APD","BEAM","BKW","GGP","HHH","PG"] },
+        { y: "2012", h: ["CP","PG","GGP","BEAM","JCP","BKW-OLD","HHH","MDLZ","MATX"] },
+        { y: "2011", h: ["CP","JCP","GGP","BEAM","MDLZ","C","FDO","FBIN","HHH","ALEX-OLD"] },
+        { y: "2010", h: ["JCP","GGP","FO","C","MDLZ (Kraft)","TGT","GM","CXW","HHH","ADP"] },
+        { y: "2009", h: ["TGT","YUM","CXW","H","LNY","BGP","GLRE","ADP"] },
+        { y: "2008", h: ["TGT","EMC","V","WEN","DPS","GGP","SHLDQ-OLD","SKS","AIV","BGP"] },
+        { y: "2007", h: ["SHLDQ-OLD","TGT","BKS","BGP","GLRE","CSG"] },
+      ],
+    },
+    appearances: {
+      span: "2007–2026 Q1, 20 periods",
+      rows: [
+        { n: "QSR (incl. BKW ’13)", c: "12", v: "❌" },
+        { n: "Chipotle", c: "9", v: "❌" },
+        { n: "Howard Hughes", c: "6 — held continuously since 2010, longest tenure", v: "❌" },
+        { n: "Hilton", c: "6", v: "✅" },
+        { n: "CP Rail", c: "5 (two stints: ’11–’16, ’21–’25)", v: "✅" },
+        { n: "Lowe’s", c: "5", v: "❌" },
+        { n: "Kraft/Mondelez", c: "5", v: "✅" },
+        { n: "Air Products", c: "4", v: "❌" },
+        { n: "GGP", c: "4", v: "❌" },
+        { n: "Beam (incl. FO)", c: "4", v: "❌" },
+        { n: "Brookfield Corp", c: "3 — #1 all three", v: "❌" },
+        { n: "Target", c: "3", v: "❌" },
+        { n: "JCPenney", c: "3", v: "❌" },
+        { n: "Alphabet", c: "3", v: "✅" },
+        { n: "Amazon", c: "2", v: "✅" },
+        { n: "Uber", c: "2", v: "✅" },
+        { n: "Zoetis", c: "2", v: "❌" },
+        { n: "1 appearance", c: "MSFT ✅ (’26 — new entrant), META ✅ (’25), AGN (’14 #1), Valeant (’15), P&G (’12), ADP (’17), SBUX (’18), BRK.B ✅ (’19), Agilent (’20), Citi (’10), V ✅ / EMC / Wendy’s / DPS (’08), YUM / CXW / Hyatt / Landry’s (’09), Sears / BKS / Borders / GLRE (’07)", v: "" },
+      ],
+    },
+  },
+  { name: "Seth Klarman", firm: "Baupost Group", status: "active", total: null,
+    currentPeriod: "2026 Q3",
+    style: "Deep value with an absolute margin of safety — cash is a position, patience is the edge",
+    note: "Author of Margin of Safety — the out-of-print bible that trades second-hand for four figures.",
+    holdings: ["AMZN","ELV","QSR","GOOG","FREG","GPC","UNP","V","WCC","AON"],
+    history: {
+      span: "2006–2025",
+      rows: [
+        { y: "2025", h: ["QSR","AMZN","WTW","ELV","UNP","WCC","GOOG","FIS","DG","FREG"] },
+        { y: "2024", h: ["WTW","LBTYK","GOOG","WCC","CRH","FERG","QSR","CLVT","EXP","DG"] },
+        { y: "2023", h: ["LBTYK","VSAT","LSXMK","GOOG","FIS","WTW","WBD","CLVT","LSXMA","CRH"] },
+        { y: "2022", h: ["LBTYK","LSXMK","QRVO","VSAT","VRTV-OLD","GOOG","WTW","LSXMA","WBD","META"] },
+        { y: "2021", h: ["LBTYK","QRVO","INTC","VSAT","GOOG","LSXMK","VRTV-OLD","META","FISV","SSNC"] },
+        { y: "2020", h: ["EBAY","LBTYK","INTC","QRVO","FOXA","VSAT","MU","PCG","PSTH-OLD","TBIO"] },
+        { y: "2019", h: ["LBTYK","FOXA","VSAT","EBAY","PARA-OLD","LNG","QRVO","BMY","TBPH","DBRG"] },
+        { y: "2018", h: ["FOXA","LNG","FOX","VSAT","QRVO","AGN","LBTYK","PXD-OLD","EBAY","PCG"] },
+        { y: "2017", h: ["SYF","LNG","VSAT","FOXA","TWX","AGN","QRVO","CLNS","AR","PBF"] },
+        { y: "2016", h: ["LNG","VSAT","SYF","AGN","FOXA","PBF","DVMT-OLD","AR","TBPH","NSAM"] },
+        { y: "2015", h: ["LNG","EMC","VSAT","AR","PBF","PYPL","INVA","FOX","ATRA","KERX"] },
+        { y: "2014", h: ["LNG","VSAT","MU","EBAY","AR","INVA","KERX","PBF","VRTV-OLD","FWP-OLD"] },
+        { y: "2013", h: ["MU","INVA","VSAT","BP","IDIX","FNF","IMOS","PBF","NG","ELOS"] },
+        { y: "2012", h: ["BP","VSAT","ORCL","NWS","INVA","AIG","NWSA","GNW","IDIX","NG"] },
+        { y: "2011", h: ["BP","VSAT","HPQ","INVA","MSFT","NWSA","NWS","ANV","AVEO-OLD","GNW"] },
+        { y: "2010", h: ["VSAT","INVA","NWSA","CSE","ALR-OLD","ENZN-OLD","BBEP","PYX","PDLI","REGN"] },
+        { y: "2009", h: ["NWSA","UFS","VSAT","INVA","BBEP","ENZN-OLD","CSE","CIT","FACT-OLD","DTV"] },
+        { y: "2008", h: ["NWSA","LINE-OLD","INVA","AROC","PDLI","LMDIA","BBEP","UFS","NWS","PPFI"] },
+        { y: "2007", h: ["SLM","NWSA","LINE-OLD","UFS","FAF","APL","AROC","HRZ","MAQ","HEK"] },
+        { y: "2006", h: ["MLS","NWSA","HD","APOL","ELOS","INSP-OLD","OMN","SEA","HRZ","MAQ"] },
+      ],
+    },
+  },
+  { name: "Guy Spier", firm: "Aquamarine Fund", status: "retired", total: 7,
+    currentPeriod: "2026 Q2",
+    asOf: "2026 Q2",
+    style: "Buffett-inspired compounding, low turnover, checklist discipline",
+    note: "Author of The Education of a Value Investor. Now retired — this was the entire final book.",
+    holdings: ["BRK.B","BRK.A","AXP","MA","MCO","RACE","DJCO"],
+    metrics: ["Lifetime return: 1,186% cumulative (1997–2026)","Every $1 invested in 1997 → ~$13 by 2026","Peak assets: $470M"],
+    history: {
+      span: "2014–2026 Q2",
+      rows: [
+        { y: "2026 (Q2)", h: ["BRK.B","BRK.A","AXP","MA","MCO","RACE","DJCO"] },
+        { y: "2025", h: ["BRK.B","AXP","MA","BRK.A","MCO","RACE","DJCO"] },
+        { y: "2024", h: ["BRK.B","AXP","MA","BAC","RACE","BRK.A","MU","MCO","DJCO","BABA"] },
+        { y: "2023", h: ["BRK.B","AXP","MA","RACE","BAC","MU","BRK.A","MCO","SRG","DJCO"] },
+        { y: "2022", h: ["BRK.B","AXP","BAC","MA","RACE","BRK.A","MU","MCO","SRG","BABA"] },
+        { y: "2021", h: ["BRK.B","AXP","BAC","MA","RACE","MU","BRK.A","MCO","SRG","BABA"] },
+        { y: "2020", h: ["BRK.B","AXP","MA","BAC","RACE","MU","BRK.A","MCO","SRG","WFC"] },
+        { y: "2019", h: ["RACE","BRK.B","STLA","AXP","BAC","MA","SRG","BRK.A","WFC","MU"] },
+        { y: "2018", h: ["STLA","BRK.B","AXP","RACE","GM.WS.B","BAC","MA","BRK.A","SRG","WFC"] },
+        { y: "2017", h: ["STLA","BRK.B","AXP","GM.WS.B","RACE","BAC","MA","BRK.A","C","WFC"] },
+        { y: "2016", h: ["BRK.B","AXP","STLA","GM.WS.B","BAC","RACE","SRG","BRK.A","MA","WFC"] },
+        { y: "2015", h: ["STLA","AXP","BRK.B","GM.WS.B","BAC","MA","WFC","BRK.A","C","ZINC"] },
+        { y: "2014", h: ["AXP","STLA","BRK.B","ZINC","BAC","BRK.A","WFC","GS","C","MA"] },
+      ],
+    },
+    appearances: {
+      span: "2014–2025, year-end basis",
+      rows: [
+        { n: "Berkshire Hathaway", c: "12", v: "" },
+        { n: "American Express", c: "11", v: "" },
+        { n: "Bank of America", c: "8", v: "" },
+        { n: "Ferrari", c: "8", v: "" },
+        { n: "Mastercard", c: "6", v: "" },
+        { n: "Stellantis (FCAU)", c: "6", v: "" },
+        { n: "BRK.A (if counted separately)", c: "4", v: "" },
+        { n: "GM Warrants B", c: "2", v: "" },
+        { n: "Horsehead (ZINC)", c: "2", v: "" },
+        { n: "Moody’s", c: "1", v: "" },
+      ],
+    },
+  },
+  { name: "Nick Sleep & Qais Zakaria", firm: "Nomad Investment Partnership", status: "retired", total: 3,
+    asOf: "2013–2014",
+    style: "Scale economics shared — businesses that give margin back to customers",
+    note: "Closed Nomad in 2014 and told partners to hold three stocks forever. Now retired.",
+    holdings: ["AMZN","COST","BRK.B"],
+    history: {
+      span: "2001–2014",
+      note: "Core holdings only — Nomad reported concentrated books, not full 13F sleeves.",
+      rows: [
+        { y: "2014", h: ["Amazon","Costco","Berkshire"] },
+        { y: "2013", h: ["Amazon","Costco","Berkshire"] },
+        { y: "2012", h: ["Costco","Amazon","Berkshire"] },
+        { y: "2011", h: ["Costco","Amazon","Berkshire"] },
+        { y: "2010", h: ["Costco","Amazon","Berkshire"] },
+        { y: "2009", h: ["Costco","Amazon","Berkshire"] },
+        { y: "2008", h: ["Costco","Berkshire","Amazon"] },
+        { y: "2007", h: ["Costco","Berkshire","Amazon"] },
+        { y: "2006", h: ["Costco","Berkshire","Amazon"] },
+        { y: "2005", h: ["Costco","Berkshire","Amazon"] },
+        { y: "2004", h: ["Costco","Berkshire","Amazon"] },
+        { y: "2003", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
+        { y: "2002", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
+        { y: "2001", h: ["Stagecoach","Costco","Int'l Speedway","Matichon","Xerox"] },
+      ],
+    },
+    appearances: {
+      span: "2001–2014, era appearances of 6",
+      rows: [
+        { n: "Costco", c: "6", v: "✅" },
+        { n: "Berkshire Hathaway", c: "5", v: "✅" },
+        { n: "Amazon", c: "5", v: "✅" },
+        { n: "Stagecoach", c: "1", v: "🤔" },
+        { n: "Int'l Speedway", c: "1", v: "🤔" },
+        { n: "Matichon", c: "1", v: "🤔" },
+        { n: "Xerox", c: "1", v: "🤔" },
+      ],
+    },
+  },
 ];
 
 // === MARKET CAPS — top 10 companies per industry by market cap. Static, curated. ===
@@ -32007,9 +32280,10 @@ function MuzzApp() {
                   <div style={{fontSize:'9px',color:svDim,fontFamily:'monospace',letterSpacing:'2.5px',fontWeight:600,marginBottom:'6px'}}>// RESEARCH OS · SUPERINVESTORS</div>
                   <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'3px'}}>TRACKED LEGENDS</div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',marginTop:'8px',lineHeight:1.6}}>
-                    Investors worth studying — their style, their reasoning, and the businesses they actually own.
-                    We show each investor's top 10 holdings (or their entire portfolio where it's smaller), verified against 13F filings.
-                    Positions change and filings lag by up to 45 days. Want to go deeper on these investors — or discover other superinvestors — head to Dataroma.
+                    Seven investors worth studying — their style, their reasoning, and the businesses they actually own.
+                    Each card shows their current top 10 (verified against 13F filings), their full portfolio history year by year,
+                    and which names kept earning a top-5 spot — with the Muzz verdict on each. Positions change and filings lag by up to 45 days.
+                    Want to go deeper, or discover other superinvestors? Head to Dataroma.
                   </div>
                 </div>
 
@@ -32030,7 +32304,7 @@ function MuzzApp() {
                       <div style={{fontSize:'11px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55}}>{inv.style}</div>
                       <div style={{fontSize:'10px',color:'rgba(148,163,184,0.65)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55,fontStyle:'italic'}}>{inv.note}</div>
                       <div>
-                        <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'7px'}}>// {inv.total && inv.holdings.length >= inv.total ? `ENTIRE PORTFOLIO · ${inv.total} HOLDINGS` : inv.total ? `TOP ${inv.holdings.length} OF ${inv.total} HOLDINGS` : 'KEY HOLDINGS'}</div>
+                        <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'7px'}}>// {inv.total && inv.holdings.length >= inv.total ? `ENTIRE PORTFOLIO · ${inv.total} HOLDINGS` : inv.total ? `TOP ${inv.holdings.length} OF ${inv.total} HOLDINGS` : `TOP ${inv.holdings.length} HOLDINGS`}{inv.currentPeriod ? ` · AS AT ${inv.currentPeriod}` : ''}</div>
                         <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
                           {(inv.holdings || []).map(t => {
                             const covT = t === 'GOOGL' ? 'GOOG' : t;
@@ -32058,6 +32332,48 @@ function MuzzApp() {
                             : 'Dim amber = in the coverage pipeline'}
                         </div>
                       </div>
+
+                      {inv.metrics && (
+                        <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                          {inv.metrics.map((m, mi) => (
+                            <span key={mi} style={{padding:'4px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${svGlow}`,borderRadius:'3px',fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{m}</span>
+                          ))}
+                        </div>
+                      )}
+
+                      {inv.history && (
+                        <details style={{border:`0.5px solid ${svGlow}`,borderRadius:'4px',background:'rgba(245,158,11,0.03)',overflow:'hidden'}}>
+                          <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>{'// PORTFOLIO HISTORY · ' + inv.history.span + '  ▾'}</summary>
+                          <div style={{padding:'4px 12px 12px',display:'flex',flexDirection:'column',gap:'6px'}}>
+                            {inv.history.note && (
+                              <div style={{fontSize:'8.5px',color:'rgba(148,163,184,0.65)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.55,fontStyle:'italic',paddingBottom:'4px',borderBottom:`0.5px solid ${svGlow}`}}>{inv.history.note}</div>
+                            )}
+                            <div style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>YEAR-END TOP HOLDINGS · #1 FIRST</div>
+                            {inv.history.rows.map(r => (
+                              <div key={r.y} style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
+                                <span style={{fontSize:'9px',color:svAmber,fontFamily:'monospace',fontWeight:700,width:'62px',flexShrink:0}}>{r.y}</span>
+                                <span style={{fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px',lineHeight:1.6}}>{r.h.join(' · ')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      )}
+
+                      {inv.appearances && (
+                        <details style={{border:`0.5px solid ${svGlow}`,borderRadius:'4px',background:'rgba(245,158,11,0.03)',overflow:'hidden'}}>
+                          <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>{'// TOP-5 APPEARANCES · ' + inv.appearances.span + '  ▾'}</summary>
+                          <div style={{padding:'4px 12px 12px',display:'flex',flexDirection:'column',gap:'6px'}}>
+                            <div style={{fontSize:'7px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px'}}>{'✅ PASSES THE MUZZ FILTER · ❌ FAILS · 🤔 UNDECIDED'}</div>
+                            {inv.appearances.rows.map((r, ri) => (
+                              <div key={ri} style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
+                                <span style={{fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700,width:'150px',flexShrink:0}}>{r.n}</span>
+                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',flex:1,lineHeight:1.55}}>{r.c}</span>
+                                {r.v && <span style={{fontSize:'11px',flexShrink:0}}>{r.v}</span>}
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      )}
                     </div>
                   </div>
                 ))}
