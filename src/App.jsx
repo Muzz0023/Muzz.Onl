@@ -11357,31 +11357,6 @@ const UMG_BREAKDOWN = {
         series: [ { year: 2020, value: 2.4 }, { year: 2021, value: 0.9 }, { year: 2022, value: 2.1 }, { year: 2023, value: 3.3 }, { year: 2024, value: 5.1 } ],
         note: 'Runs ~1\u20135% of operating cash \u2014 elite capital efficiency. The business barely needs to reinvest to keep earning.',
       },
-      ownerEarnings: {
-        headline: 'Owner earnings \u2014 the true earning power',
-        intro: 'Owner earnings = net profit + non-cash charges \u2212 capex. For UMG the non-cash adjustments are material (heavy catalogue amortisation) and capex is tiny, so owner earnings run well ABOVE reported net profit \u2014 and never collapsed the way net profit did in 2022\u201323.',
-        rows: [
-          { year: 2024, np: 2093, adj: 520, capex: 91, oe: 2522, oeps: 1.38 },
-          { year: 2023, np: 1263, adj: 796, capex: 47, oe: 2012, oeps: 1.10 },
-          { year: 2022, np: 785,  adj: 461, capex: 33, oe: 1213, oeps: 0.66 },
-          { year: 2021, np: 888,  adj: 280, capex: 13, oe: 1155, oeps: 0.63 },
-          { year: 2020, np: 1369, adj: 213, capex: 29, oe: 1553, oeps: 0.85 },
-        ],
-        cagr: 'Owner-earnings CAGR \u2248 12.9% / yr (2020\u201324). OEPS on 1,827m shares: \u20ac0.85 \u2192 \u20ac1.38.',
-        multiples: [
-          { year: 2024, oeps: 1.38, price: 21, mult: 15.2 },
-          { year: 2023, oeps: 1.10, price: 18, mult: 16.4 },
-          { year: 2022, oeps: 0.66, price: 17, mult: 25.8 },
-          { year: 2021, oeps: 0.63, price: 23, mult: 36.5 },
-        ],
-        multiplesNote: 'Owner-earnings multiple on each year\u2019s low price. Average \u2248 19\u00d7 excluding 2021 (the distorted listing year). On its 2024 low UMG traded at ~15\u00d7 owner earnings.',
-        interpretation: [
-          'Net profit is misleading on its own \u2014 2022\u201323 look weak at the net-profit level, but owner earnings show the true earning power never collapsed.',
-          'Non-cash charges matter a lot here \u2014 adjustments are material (especially 2023), because this business is amortisation-driven, not cash-draining.',
-          'CapEx is tiny \u2014 ~1\u20135% of owner earnings. That is elite capital efficiency.',
-        ],
-        anchor: 'True earning power is ~\u20ac2.0\u20132.5bn in recent years; 2024 is a recovery to normalised strength, not an outlier. Buffett would anchor valuation on ~\u20ac2.2bn normalised owner earnings \u2014 not reported FCF or GAAP net income. Growth rates to stress-test: 5% / 4% / 3%.',
-      },
     },
   },
   risks: {
@@ -12258,13 +12233,6 @@ const MSFT_BREAKDOWN = {
         { label: 'Deferred Income Taxes', unit: 'M USD', series: [ {year:2011,value:2294}, {year:2012,value:3711}, {year:2013,value:2313}, {year:2014,value:2255}, {year:2015,value:376}, {year:2016,value:8906}, {year:2017,value:-829}, {year:2018,value:-5143}, {year:2019,value:-6463}, {year:2020,value:11}, {year:2021,value:-150}, {year:2022,value:-5702}, {year:2023,value:-6059}, {year:2024,value:-4738}, {year:2025,value:-7056} ] },
         { label: 'Free Cash Flow (OCF less CapEx)', unit: 'M USD', series: [ {year:2011,value:24639}, {year:2012,value:29321}, {year:2013,value:24576}, {year:2014,value:27017}, {year:2015,value:23724}, {year:2016,value:24982}, {year:2017,value:31378}, {year:2018,value:32252}, {year:2019,value:38260}, {year:2020,value:45234}, {year:2021,value:56118}, {year:2022,value:65149}, {year:2023,value:59475}, {year:2024,value:74071}, {year:2025,value:71611} ] },
       ],
-      ownerEarnings: {
-        currency: '$',
-        headline: 'Owner Earnings — FY2011 to FY2025',
-        intro: 'Net profit plus depreciation, amortization and other, plus stock-based compensation, plus net recognized losses on investments and derivatives, plus deferred income taxes, less capital expenditures. The ADJ column is the sum of those four add-backs. OEPS is owner earnings divided by weighted average diluted shares.',
-        rows: [ {year:2011,np:23150,adj:6847,capex:2355,oe:27642,oeps:3.22}, {year:2012,np:16978,adj:14822,capex:2305,oe:29495,oeps:3.47}, {year:2013,np:21863,adj:8345,capex:4257,oe:25951,oeps:3.06}, {year:2014,np:22074,adj:9804,capex:5485,oe:26393,oeps:3.14}, {year:2015,np:12193,adj:15962,capex:5944,oe:22211,oeps:2.69}, {year:2016,np:16798,adj:18603,capex:8343,oe:27058,oeps:3.38}, {year:2017,np:25489,adj:9142,capex:8129,oe:26502,oeps:3.38}, {year:2018,np:16571,adj:6846,capex:11632,oe:11785,oeps:1.51}, {year:2019,np:39240,adj:9079,capex:13925,oe:34394,oeps:4.44}, {year:2020,np:44281,adj:17877,capex:15441,oe:46717,oeps:6.08}, {year:2021,np:61271,adj:16405,capex:20622,oe:57054,oeps:7.50}, {year:2022,np:72738,adj:15851,capex:23886,oe:64703,oeps:8.58}, {year:2023,np:72361,adj:17609,capex:28107,oe:61863,oeps:8.28}, {year:2024,np:88136,adj:28588,capex:44477,oe:72247,oeps:9.67}, {year:2025,np:101832,adj:39680,capex:64551,oe:76961,oeps:10.31} ],
-        cagr: 'Owner earnings CAGR FY2011–FY2025 (14 years): 7.6% — $27,642M to $76,961M. Halved for conservatism: 7.6 ÷ 2 = 3.8, rounded to 4%. Growth scenarios to use: 5%, 4%, 3%.',
-      },
     },
   },
 };
@@ -12472,13 +12440,6 @@ const AMZN_BREAKDOWN = {
         { label: 'Deferred Income Taxes', unit: 'M USD', series: [ {year:2010,value:4}, {year:2011,value:136}, {year:2012,value:-265}, {year:2013,value:-156}, {year:2014,value:-316}, {year:2015,value:81}, {year:2016,value:-246}, {year:2017,value:-29}, {year:2018,value:441}, {year:2019,value:796}, {year:2020,value:-554}, {year:2021,value:-310}, {year:2022,value:-8148}, {year:2023,value:-5876}, {year:2024,value:-4648} ] },
         { label: 'Free Cash Flow (OCF less CapEx)', unit: 'M USD', series: [ {year:2010,value:2516}, {year:2011,value:2092}, {year:2012,value:395}, {year:2013,value:2031}, {year:2014,value:1949}, {year:2015,value:7331}, {year:2016,value:9399}, {year:2017,value:6410}, {year:2018,value:17296}, {year:2019,value:21653}, {year:2020,value:25924}, {year:2021,value:-14726}, {year:2022,value:-16893}, {year:2023,value:32217}, {year:2024,value:32878} ], note: 'Negative in 2021 and 2022 on the capex build.' },
       ],
-      ownerEarnings: {
-        currency: '$',
-        headline: 'Owner Earnings — FY2010 to FY2024',
-        intro: 'Owner earnings as supplied in the workbook. The ADJ column is the residual that reconciles net profit and capex to the stated owner-earnings figure. OEPS is shown for 2022 onward only — the pre-split share counts before then are not comparable, so those cells are left blank rather than printing a misleading per-share number.',
-        rows: [ {year:2010,np:1152,adj:996,capex:979,oe:1169,oeps:null}, {year:2011,np:631,adj:1882,capex:1811,oe:702,oeps:null}, {year:2012,np:-39,adj:2881,capex:3785,oe:-943,oeps:null}, {year:2013,np:274,adj:4385,capex:3444,oe:1215,oeps:null}, {year:2014,np:-241,adj:6041,capex:4893,oe:907,oeps:null}, {year:2015,np:596,adj:8610,capex:4589,oe:4617,oeps:null}, {year:2016,np:2371,adj:11000,capex:7804,oe:5567,oeps:null}, {year:2017,np:3033,adj:15824,capex:11955,oe:6902,oeps:null}, {year:2018,np:10073,adj:21402,capex:13427,oe:18048,oeps:null}, {year:2019,np:11588,adj:29723,capex:16861,oe:24450,oeps:null}, {year:2020,np:21331,adj:34069,capex:40140,oe:15260,oeps:null}, {year:2021,np:33364,adj:46672,capex:61053,oe:18983,oeps:null}, {year:2022,np:-2722,adj:53531,capex:63645,oe:-12836,oeps:-1.26}, {year:2023,np:30425,adj:83776,capex:52729,oe:61472,oeps:5.86}, {year:2024,np:59248,adj:69410,capex:82999,oe:45659,oeps:4.26} ],
-        cagr: 'Owner earnings CAGR FY2010–FY2024 (14 years): 29.93% — $1,169M to $45,659M, treating the series as a growth trajectory despite the interim negative and loss years (2012 −$943M, 2022 −$12,836M). Note 2023 ($61,472M) is the peak, ahead of 2024, as the capex step-up landed.',
-      },
     },
   },
 };
@@ -12647,15 +12608,7 @@ const PLTR_BREAKDOWN = {
         { label: 'Other Operating Activities', unit: 'K USD', series: [ {year:2018,value:420}, {year:2019,value:2769}, {year:2020,value:4417}, {year:2021,value:2722}, {year:2022,value:6677}, {year:2023,value:12764}, {year:2024,value:66034}, {year:2025,value:15630} ] },
         { label: 'Free Cash Flow', unit: 'K USD', series: [ {year:2018,value:-52016}, {year:2019,value:-178311}, {year:2020,value:-308844}, {year:2021,value:321224}, {year:2022,value:183710}, {year:2023,value:697069}, {year:2024,value:1141231}, {year:2025,value:2100591} ] },
         { label: 'FCF Conversion (FCF / OCF)', unit: '%', series: [ {year:2021,value:96.2}, {year:2022,value:82.1}, {year:2023,value:97.9}, {year:2024,value:98.9}, {year:2025,value:98.4} ], note: '98.4% in 2025. Not meaningful in the negative-cash-flow years.' },
-        { label: 'Owner Earnings Margin', unit: '%', series: [ {year:2018,value:-97.3}, {year:2019,value:-78.2}, {year:2020,value:-106.6}, {year:2021,value:-38.4}, {year:2022,value:-34.7}, {year:2023,value:12.1}, {year:2024,value:18.1}, {year:2025,value:36.7} ], note: '−106.6% (2020) → +36.7% (2025).' },
       ],
-      ownerEarnings: {
-        currency: '$',
-        headline: 'Owner Earnings — Strict Buffett, FY2018 to FY2025',
-        intro: 'Strict Buffett treatment: stock-based compensation is counted as a real expense and is NOT added back. Net income, plus D&A, less the unrealized/realized gain or loss on securities, plus noncash consideration, less capital expenditure. The ADJ column is the sum of those adjustments. Figures in $ thousands; OEPS in dollars per diluted share.',
-        rows: [ {year:2018,np:-580027,adj:13910,capex:13004,oe:-579121,oeps:-1.06}, {year:2019,np:-579646,adj:12255,capex:13096,oe:-580487,oeps:-1.01}, {year:2020,np:-1166391,adj:13871,capex:12236,oe:-1164756,oeps:-1.19}, {year:2021,np:-520379,adj:-58414,capex:12627,oe:-591420,oeps:-0.31}, {year:2022,np:-371094,adj:-249586,capex:40027,oe:-660707,oeps:-0.32}, {year:2023,np:217375,adj:66803,capex:15114,oe:269064,oeps:0.12}, {year:2024,np:467918,adj:64802,capex:12634,oe:520086,oeps:0.21}, {year:2025,np:1634644,adj:42161,capex:33882,oe:1642923,oeps:0.64} ],
-        cagr: 'Owner earnings turned positive in 2023 after five straight negative years, then went $269.1m → $520.1m → $1.643bn. Because SBC is expensed rather than added back, this is a far more conservative figure than the reported free cash flow of $2.101bn in 2025 — the $684.0m gap between them is almost exactly the year’s stock-based compensation.',
-      },
     },
   },
 };
@@ -12996,14 +12949,6 @@ const ORCL_BREAKDOWN = {
         { label: 'Other, Net', unit: 'M USD', series: [ {year:2011,value:342}, {year:2012,value:261}, {year:2013,value:442}, {year:2014,value:433}, {year:2015,value:383}, {year:2016,value:273}, {year:2017,value:255}, {year:2018,value:119}, {year:2019,value:347}, {year:2020,value:239}, {year:2021,value:-39}, {year:2022,value:220}, {year:2023,value:661}, {year:2024,value:720}, {year:2025,value:667} ] },
         { label: 'Total Non-Cash Charges', unit: 'M USD', series: [ {year:2011,value:3395}, {year:2012,value:3845}, {year:2013,value:4011}, {year:2014,value:3898}, {year:2015,value:3629}, {year:2016,value:3714}, {year:2017,value:3616}, {year:2018,value:3664}, {year:2019,value:3728}, {year:2020,value:3946}, {year:2021,value:2289}, {year:2022,value:4809}, {year:2023,value:8149}, {year:2024,value:8694}, {year:2025,value:9878} ], note: 'A clear step-change post-2022: from $3–4bn historically to $8–10bn by FY2023–FY2025, driven mainly by depreciation on cloud data centres, stock-based compensation, and amortisation from acquisitions. These are not cash drains — they reduce GAAP earnings but not operating cash flow, which is why cash flow now runs so far above net income. In Buffett terms they are added back first, then compared against true maintenance capex.' },
       ],
-      ownerEarnings: {
-        currency: '$',
-        headline: 'Owner Earnings (Proxy) — FY2011 to FY2025',
-        intro: 'Net income plus total non-cash charges (depreciation, amortisation, deferred taxes, stock-based compensation and other) less capital expenditure. The ADJ column is total non-cash charges. Figures in $M; OEPS in dollars per diluted share.',
-        rows: [ {year:2011,np:8547,adj:3395,capex:450,oe:11492,oeps:2.24}, {year:2012,np:9981,adj:3845,capex:648,oe:13178,oeps:2.59}, {year:2013,np:10925,adj:4011,capex:650,oe:14286,oeps:2.95}, {year:2014,np:10955,adj:3898,capex:580,oe:14273,oeps:3.10}, {year:2015,np:9938,adj:3629,capex:1391,oe:12176,oeps:2.70}, {year:2016,np:8901,adj:3714,capex:1189,oe:11426,oeps:2.65}, {year:2017,np:9452,adj:3616,capex:2021,oe:11047,oeps:2.62}, {year:2018,np:3587,adj:3664,capex:1736,oe:5515,oeps:1.30}, {year:2019,np:11083,adj:3728,capex:1660,oe:13151,oeps:3.52}, {year:2020,np:10135,adj:3946,capex:1564,oe:12517,oeps:3.80}, {year:2021,np:13746,adj:2289,capex:2135,oe:13900,oeps:4.60}, {year:2022,np:6717,adj:4809,capex:4511,oe:7015,oeps:2.52}, {year:2023,np:8503,adj:8149,capex:8695,oe:7957,oeps:2.88}, {year:2024,np:10467,adj:8694,capex:6866,oe:12295,oeps:4.36}, {year:2025,np:12443,adj:9878,capex:21215,oe:1106,oeps:0.39} ],
-        cagr: 'Three things to read here. FY2025 collapses to $1,106M only because of growth capex — $21bn dwarfs historical levels, and treating all of it as maintenance is intentionally punitive; it does not mean the business stopped generating cash. Pre-cloud Oracle was a $12–14bn owner-earnings machine: from FY2012 to FY2021 the figure clustered at $11–14bn, extremely stable, with minimal reinvestment required — classic toll-booth economics. FY2022–FY2025 is a reinvestment phase where owner earnings appear lower because Oracle is building data centres, buying GPUs and front-loading depreciation and SBC; cash is being reinvested, not destroyed. Buffett would not ask what owner earnings are this year, but what they are once the investment phase ends — based on history, normalised OE likely returns to $12–15bn, possibly higher if OCI scales.',
-      },
-      ownerEarningsPerShareNote: 'OEPS trends upward over time even when total owner earnings fluctuate, because the share count fell from ~5.1bn to ~2.9bn — classic per-share compounding. The weak years have explanations: FY2018 is tax-reform distortion and accounting noise, FY2022\u2013FY2023 the heavy capex phase, FY2025 an extreme capex spike overwhelming owner earnings temporarily. These are capital timing effects, not business collapse. Ignoring the distorted years, the core OEPS band is about $3.00\u2013$4.50, with high-quality years at $4.50\u2013$4.60 (FY2021 and FY2024).',
     },
     segments: {
       lineGroups: [
