@@ -12483,6 +12483,183 @@ const AMZN_BREAKDOWN = {
   },
 };
 
+// ════════════════════════════════════════════════════════════════════
+// PLTR_BREAKDOWN — Palantir Technologies Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied workbooks — Income / Balance / Cash
+// Every series is his data. Derived columns the renderers require
+// (owner-earnings ADJ residual, OEPS) are arithmetic on his own series.
+// Fiscal year ends 31 December. ALL FIGURES IN $ THOUSANDS, as supplied.
+// Income + cash flow run FY2018-FY2025; balance sheet FY2020-FY2025.
+// ROA/ROE/ROIC and margins are rendered as tables rather than the SVG
+// line charts, because the loss-year values (ROIC -170.9%) fall far
+// outside the chart's positive-only scale.
+// ════════════════════════════════════════════════════════════════════
+const PLTR_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'K USD', series: [ {year:2018,value:595409}, {year:2019,value:742555}, {year:2020,value:1092673}, {year:2021,value:1541889}, {year:2022,value:1905871}, {year:2023,value:2225012}, {year:2024,value:2865507}, {year:2025,value:4475446} ],
+        note: '$595.4m (2018) → $4.475bn (2025). Revenue grew 56.2% in 2025 alone, the fastest year in the series.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'K USD', series: [ {year:2018,value:165401}, {year:2019,value:242373}, {year:2020,value:352547}, {year:2021,value:339404}, {year:2022,value:408549}, {year:2023,value:431105}, {year:2024,value:565990}, {year:2025,value:789177} ] },
+      grossProfit: { label: 'Gross Profit', unit: 'K USD', series: [ {year:2018,value:430008}, {year:2019,value:500182}, {year:2020,value:740126}, {year:2021,value:1202485}, {year:2022,value:1497322}, {year:2023,value:1793907}, {year:2024,value:2299517}, {year:2025,value:3686269} ] },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2018,value:72.2}, {year:2019,value:67.4}, {year:2020,value:67.7}, {year:2021,value:78}, {year:2022,value:78.6}, {year:2023,value:80.6}, {year:2024,value:80.2}, {year:2025,value:82.4} ],
+        note: '67.4% at the 2019 trough → 82.4% (2025). Cost of revenue fell from 32.6% of revenue to 17.6% over the same span.'
+      },
+      opexLines: [
+        { label: 'Cost of Revenue % of Revenue', unit: '%', series: [ {year:2018,value:27.8}, {year:2019,value:32.6}, {year:2020,value:32.3}, {year:2021,value:22}, {year:2022,value:21.4}, {year:2023,value:19.4}, {year:2024,value:19.8}, {year:2025,value:17.6} ] },
+        { label: 'Research & Development', unit: 'K USD', series: [ {year:2018,value:285451}, {year:2019,value:305563}, {year:2020,value:560660}, {year:2021,value:387487}, {year:2022,value:359679}, {year:2023,value:404624}, {year:2024,value:507878}, {year:2025,value:557677} ] },
+        { label: 'R&D % of Gross Profit', unit: '%', series: [ {year:2018,value:66.4}, {year:2019,value:61.1}, {year:2020,value:75.8}, {year:2021,value:32.2}, {year:2022,value:24}, {year:2023,value:22.6}, {year:2024,value:22.1}, {year:2025,value:15.1} ], note: '75.8% of gross profit in 2020 down to 15.1% in 2025 — the clearest operating-leverage line in the file.' },
+        { label: 'General & Administrative', unit: 'K USD', series: [ {year:2018,value:306235}, {year:2019,value:320943}, {year:2020,value:669444}, {year:2021,value:611532}, {year:2022,value:596333}, {year:2023,value:524325}, {year:2024,value:593481}, {year:2025,value:657718} ] },
+        { label: 'G&A % of Gross Profit', unit: '%', series: [ {year:2018,value:71.2}, {year:2019,value:64.2}, {year:2020,value:90.4}, {year:2021,value:50.9}, {year:2022,value:39.8}, {year:2023,value:29.2}, {year:2024,value:25.8}, {year:2025,value:17.8} ], note: '90.4% (2020) → 17.8% (2025).' },
+      ],
+      smaExpense: { label: 'Sales & Marketing', unit: 'K USD', series: [ {year:2018,value:461762}, {year:2019,value:450120}, {year:2020,value:683701}, {year:2021,value:614512}, {year:2022,value:702511}, {year:2023,value:744992}, {year:2024,value:887755}, {year:2025,value:1056859} ] },
+      smaToGrossProfit: { label: 'Sales & Marketing % of Gross Profit', unit: '%', series: [ {year:2018,value:107.4}, {year:2019,value:90}, {year:2020,value:92.4}, {year:2021,value:51.1}, {year:2022,value:46.9}, {year:2023,value:41.5}, {year:2024,value:38.6}, {year:2025,value:28.7} ],
+        note: '107.4% of gross profit in 2018 — the sales effort cost more than the gross profit it produced — down to 28.7% by 2025.'
+      },
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'K USD', series: [ {year:2018,value:1053448}, {year:2019,value:1076626}, {year:2020,value:1913805}, {year:2021,value:1613531}, {year:2022,value:1658523}, {year:2023,value:1673941}, {year:2024,value:1989114}, {year:2025,value:2272254} ] },
+      expensesToRevenue: { label: 'Total OpEx % of Gross Profit', unit: '%', series: [ {year:2018,value:245}, {year:2019,value:215.2}, {year:2020,value:258.6}, {year:2021,value:134.2}, {year:2022,value:110.8}, {year:2023,value:93.3}, {year:2024,value:86.5}, {year:2025,value:61.6} ],
+        note: '258.6% of gross profit in 2020, 61.6% in 2025. The single number that captures the whole turn: opex fell below gross profit for the first time in 2023 (93.3%), which is the year operating income went positive.'
+      },
+      operatingProfit: { label: 'Operating Income (Loss)', unit: 'K USD', series: [ {year:2018,value:-623440}, {year:2019,value:-576444}, {year:2020,value:-1173679}, {year:2021,value:-411046}, {year:2022,value:-161201}, {year:2023,value:119966}, {year:2024,value:310403}, {year:2025,value:1414015} ],
+        note: 'Negative every year from 2018 through 2022, crossing into profit in 2023 at $120.0m and reaching $1.414bn in 2025.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'K USD', series: [ {year:2018,value:-3440}, {year:2019,value:-3061}, {year:2020,value:-14139}, {year:2021,value:-3640}, {year:2022,value:-4058} ],
+        note: 'Only reported 2018–2022. Nil from 2023 onward — the debt was repaid.'
+      },
+      otherIncomeExpense: { label: 'Other Income (Expense)', unit: 'K USD', series: [ {year:2018,value:-2638}, {year:2019,value:-2853}, {year:2020,value:3300}, {year:2021,value:-75415}, {year:2022,value:-216077}, {year:2023,value:-15447}, {year:2024,value:-18022}, {year:2025,value:14172} ],
+        note: 'The $(216.1)m in 2022 and $(75.4)m in 2021 are the large negative swings in the series.'
+      },
+      provisionForTaxes: { label: 'Tax Provision', unit: 'K USD', series: [ {year:2018,value:9102}, {year:2019,value:12375}, {year:2020,value:-12636}, {year:2021,value:31885}, {year:2022,value:10067}, {year:2023,value:19716}, {year:2024,value:21255}, {year:2025,value:22724} ] },
+      taxRate: { label: 'Tax as % of Pre-tax Income', unit: '%', series: [ {year:2018,value:-1.6}, {year:2019,value:-2.2}, {year:2020,value:1.1}, {year:2021,value:-6.5}, {year:2022,value:-2.8}, {year:2023,value:8.3}, {year:2024,value:4.3}, {year:2025,value:1.4} ],
+        note: '1.4% in 2025. The tax provision has stayed near-flat in dollar terms ($19–23m) while pre-tax income went from $237m to $1.66bn, so the rate collapses. Loss-year percentages are not meaningful.'
+      },
+      netIncome: { label: 'Net Income (Loss)', unit: 'K USD', series: [ {year:2018,value:-580027}, {year:2019,value:-579646}, {year:2020,value:-1166391}, {year:2021,value:-520379}, {year:2022,value:-371094}, {year:2023,value:217375}, {year:2024,value:467918}, {year:2025,value:1634644} ],
+        note: 'First profitable year was 2023. $1.635bn in 2025 against a $1.166bn loss in 2020.'
+      },
+      profitMargin: { label: 'Net Margin', unit: '%', series: [ {year:2018,value:-97.4}, {year:2019,value:-78.1}, {year:2020,value:-106.7}, {year:2021,value:-33.7}, {year:2022,value:-19.5}, {year:2023,value:9.8}, {year:2024,value:16.3}, {year:2025,value:36.5} ],
+        note: '−106.7% (2020) → +36.5% (2025).'
+      },
+      eps: { label: 'Diluted EPS', unit: 'USD per share', series: [ {year:2018,value:-1.17}, {year:2019,value:-1.02}, {year:2020,value:-1.2}, {year:2021,value:-0.27}, {year:2022,value:-0.18}, {year:2023,value:0.09}, {year:2024,value:0.19}, {year:2025,value:0.63} ] },
+      sharesOutstanding: { label: 'Diluted Shares', unit: 'K USD', series: [ {year:2018,value:544014}, {year:2019,value:576959}, {year:2020,value:979330}, {year:2021,value:1923617}, {year:2022,value:2063793}, {year:2023,value:2297927}, {year:2024,value:2450818}, {year:2025,value:2565197} ],
+        note: '544.0m (2018) → 2,565.2m (2025) — the share count has grown 4.7× over eight years. Direct listing in 2020 plus sustained stock-based compensation. APIC of $10.9bn is the running tally of all capital raised and stock comp ever issued.'
+      },
+      extraLines: [
+        { label: 'Interest Income', unit: 'K USD', series: [ {year:2018,value:10500}, {year:2019,value:15090}, {year:2020,value:4680}, {year:2021,value:1607}, {year:2022,value:20309}, {year:2023,value:132572}, {year:2024,value:196792}, {year:2025,value:229181} ], note: '$229.2m in 2025 — the return on the $7.18bn cash and securities pile, now a meaningful earnings contributor in its own right.' },
+        { label: 'Change in Fair Value of Warrants', unit: 'K USD', series: [ {year:2018,value:48093}, {year:2019,value:-3}, {year:2020,value:811} ], note: 'Only reported 2018–2020.' },
+        { label: 'Pre-tax Income (Loss)', unit: 'K USD', series: [ {year:2018,value:-570925}, {year:2019,value:-567271}, {year:2020,value:-1179027}, {year:2021,value:-488494}, {year:2022,value:-361027}, {year:2023,value:237091}, {year:2024,value:489173}, {year:2025,value:1657368} ] },
+        { label: 'Net Income Attributable to Non-Controlling Interests', unit: 'K USD', series: [ {year:2022,value:2611}, {year:2023,value:7550}, {year:2024,value:5728}, {year:2025,value:9611} ], note: 'First reported 2022.' },
+        { label: 'NCI % of Net Income', unit: '%', series: [ {year:2022,value:-0.7}, {year:2023,value:3.5}, {year:2024,value:1.2}, {year:2025,value:0.6} ] },
+        { label: 'Net Income to Common Stockholders', unit: 'K USD', series: [ {year:2018,value:-598125}, {year:2019,value:-588127}, {year:2020,value:-1166391}, {year:2021,value:-520379}, {year:2022,value:-373705}, {year:2023,value:209825}, {year:2024,value:462190}, {year:2025,value:1625033} ] },
+        { label: 'NI to Common % of Net Income', unit: '%', series: [ {year:2018,value:103.1}, {year:2019,value:101.5}, {year:2020,value:100}, {year:2021,value:100}, {year:2022,value:100.7}, {year:2023,value:96.5}, {year:2024,value:98.8}, {year:2025,value:99.4} ] },
+        { label: 'Dec 31 Closing Price', unit: 'USD per share', series: [ {year:2020,value:23.55}, {year:2021,value:18.21}, {year:2022,value:6.42}, {year:2023,value:17.17}, {year:2024,value:75.63}, {year:2025,value:177.75} ] },
+        { label: 'Price-to-Earnings', unit: 'x', series: [ {year:2023,value:190.8}, {year:2024,value:398.1}, {year:2025,value:282.1} ], note: 'Only meaningful from 2023, the first profitable year. 190.8× (2023), 398.1× (2024), 282.1× (2025). 2020–2022 are loss years — not meaningful.' },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'K USD', series: [ {year:2020,value:2011323}, {year:2021,value:2290674}, {year:2022,value:2598540}, {year:2023,value:831047}, {year:2024,value:2098524}, {year:2025,value:1423796} ] },
+      accountsReceivable: { label: 'Accounts Receivable, Net', unit: 'K USD', series: [ {year:2020,value:156932}, {year:2021,value:190923}, {year:2022,value:258346}, {year:2023,value:364784}, {year:2024,value:575048}, {year:2025,value:1042065} ] },
+      dso: { label: 'Days Sales Outstanding', unit: 'days', series: [ {year:2020,value:52.4}, {year:2021,value:45.2}, {year:2022,value:49.5}, {year:2023,value:59.8}, {year:2024,value:73.2}, {year:2025,value:85} ],
+        note: 'Climbing meaningfully — 45 days (2021) to 85 days (2025), nearly doubling. Likely explanations: mix shift toward government and large enterprise contracts, which typically pay on 60–90 day terms versus 30 for commercial, and government work (especially DoD) is notoriously slow to pay; larger contract sizes leaving larger individual receivables on the books; and possibly tighter customer cash management, with corporates stretching payment terms across the board since rates rose. 85 days is on the high end but not alarming for a government-heavy enterprise software business — Lockheed, Booz Allen and Leidos all run 70–100 days. What to watch is whether it keeps creeping up: past 100 days would be a yellow flag that revenue quality might be deteriorating.'
+      },
+      prepaidAndOther: { label: 'Prepaid & Other Current Assets', unit: 'K USD', series: [ {year:2020,value:51889}, {year:2021,value:110872}, {year:2022,value:149556}, {year:2023,value:99655}, {year:2024,value:129254}, {year:2025,value:139066} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'K USD', series: [ {year:2020,value:2257429}, {year:2021,value:2863250}, {year:2022,value:3041577}, {year:2023,value:4138618}, {year:2024,value:5934289}, {year:2025,value:8358174} ] },
+      ppeNet: { label: 'Property & Equipment, Net', unit: 'K USD', series: [ {year:2020,value:29541}, {year:2021,value:31304}, {year:2022,value:69170}, {year:2023,value:47758}, {year:2024,value:39638}, {year:2025,value:51960} ],
+        note: 'Never above $70m on a balance sheet approaching $9bn — the asset-light model in one line.'
+      },
+      otherNonCurrentAssets: { label: 'Other Assets', unit: 'K USD', series: [ {year:2020,value:106921}, {year:2021,value:96386}, {year:2022,value:150252}, {year:2023,value:153186}, {year:2024,value:166217}, {year:2025,value:290153} ] },
+      totalAssets: { label: 'Total Assets', unit: 'K USD', series: [ {year:2020,value:2690504}, {year:2021,value:3247450}, {year:2022,value:3461239}, {year:2023,value:4522425}, {year:2024,value:6340884}, {year:2025,value:8900392} ] },
+      accountsPayable: { label: 'Accounts Payable', unit: 'K USD', series: [ {year:2020,value:16358}, {year:2021,value:74907}, {year:2022,value:44788}, {year:2023,value:12122}, {year:2024,value:103}, {year:2025,value:8064} ] },
+      dpo: { label: 'Days Payable Outstanding', unit: 'days', series: [ {year:2020,value:16.9}, {year:2021,value:80.6}, {year:2022,value:40}, {year:2023,value:10.3}, {year:2024,value:0.07}, {year:2025,value:3.7} ],
+        note: 'Essentially noise for this business. The 2021 spike to 80.6 days reflects a temporary bulge in payables ($74.9m), and the 2024 figure of 0.07 days is mathematically real but economically meaningless — Palantir doesn’t run on supplier credit because it doesn’t buy much from suppliers. The cost structure is almost entirely employee compensation, paid fortnightly through payroll, not invoiced on 60-day terms. DPO matters for retailers, manufacturers and distributors; it doesn’t really apply here. The consequence: the cash conversion cycle is essentially just DSO, since there is no inventory and trivial payables — Palantir is financing its customers for about 85 days of revenue, roughly $1.04bn of capital tied up in receivables. That is why operating cash flow ($2.13bn) is lower than the income statement might suggest: a chunk of recognised revenue hasn’t been collected yet. Worth keeping in mind on quality of earnings.'
+      },
+      accruedLiabilities: { label: 'Accrued Liabilities', unit: 'K USD', series: [ {year:2020,value:158546}, {year:2021,value:155806}, {year:2022,value:172715}, {year:2023,value:222991}, {year:2024,value:427046}, {year:2025,value:355624} ] },
+      totalCurrentLiabilities: { label: 'Total Current Liabilities', unit: 'K USD', series: [ {year:2020,value:603823}, {year:2021,value:660061}, {year:2022,value:587941}, {year:2023,value:746018}, {year:2024,value:996018}, {year:2025,value:1175581} ] },
+      currentRatio: { label: 'Current Liabilities to Current Assets', unit: 'x', series: [ {year:2020,value:0.27}, {year:2021,value:0.23}, {year:2022,value:0.19}, {year:2023,value:0.18}, {year:2024,value:0.17}, {year:2025,value:0.14} ],
+        note: '0.27 (2020) down to 0.14 (2025) — current assets now more than seven times current liabilities.'
+      },
+      longTermDebt: { label: 'Debt, Non-Current', unit: 'K USD', series: [ {year:2020,value:197977} ],
+        note: 'Fully repaid in 2021. $197.977m of non-current debt at the end of 2020, zero ever since — a clean balance sheet.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'K USD', series: [ {year:2020,value:4316}, {year:2021,value:2297}, {year:2022,value:12655}, {year:2023,value:10702}, {year:2024,value:13685}, {year:2025,value:7092} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'K USD', series: [ {year:2020,value:1167954}, {year:2021,value:956420}, {year:2022,value:818802}, {year:2023,value:961460}, {year:2024,value:1246477}, {year:2025,value:1412381} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'K USD', series: [ {year:2020,value:6488857}, {year:2021,value:7777085}, {year:2022,value:8427998}, {year:2023,value:9122173}, {year:2024,value:10193970}, {year:2025,value:10933325} ],
+        note: '$10.9bn by 2025 — the running tally of all capital raised plus stock-based comp ever issued. Useful context when thinking about share dilution over the long run.'
+      },
+      retainedEarnings: { label: 'Accumulated Deficit', unit: 'K USD', series: [ {year:2020,value:-4965354}, {year:2021,value:-5485733}, {year:2022,value:-5859438}, {year:2023,value:-5649613}, {year:2024,value:-5187423}, {year:2025,value:-3562390} ],
+        note: 'Shrinking for the first time — $(5.19bn) in 2024 to $(3.56bn) in 2025. That is $1.63bn of retained earnings flowing in, matching 2025 net income, so the deficit is finally being chewed through after years of losses compounding it.'
+      },
+      shareholderEquity: { label: 'Total Equity', unit: 'K USD', series: [ {year:2020,value:1522550}, {year:2021,value:2291030}, {year:2022,value:2642437}, {year:2023,value:3560965}, {year:2024,value:5094407}, {year:2025,value:7488011} ] },
+      investedCapital: { label: 'Invested Capital', unit: 'K USD', series: [ {year:2020,value:679181}, {year:2021,value:722623}, {year:2022,value:827564}, {year:2023,value:848246}, {year:2024,value:1110897}, {year:2025,value:1723349} ],
+        note: 'Total assets less cash and less marketable securities — the capital actually working in the business. Only $1.72bn of a $8.90bn balance sheet in 2025.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2020,value:1.55}, {year:2021,value:1.19}, {year:2022,value:1.28}, {year:2023,value:1.55}, {year:2024,value:2.08}, {year:2025,value:2.92} ],
+        note: 'Fell 23.4% in 2021 as the share count more than doubled, then compounded: +7.4%, +21.1%, +34.2%, +40.6%.'
+      },
+      tangibleRoic: {
+        rows: [ {year:2020,nopat:-1160769,ic:679181,intangibles:0,tangibleIc:679181,roic:-170.90}, {year:2021,nopat:-437764,ic:722623,intangibles:0,tangibleIc:722623,roic:-60.60}, {year:2022,nopat:-165715,ic:827564,intangibles:0,tangibleIc:827564,roic:-20.00}, {year:2023,nopat:110009,ic:848246,intangibles:0,tangibleIc:848246,roic:13.00}, {year:2024,nopat:297055,ic:1110897,intangibles:0,tangibleIc:1110897,roic:26.70}, {year:2025,nopat:1394219,ic:1723349,intangibles:0,tangibleIc:1723349,roic:80.90} ],
+        note: 'Invested capital is total assets less cash and marketable securities; there is no goodwill or intangibles to deduct, so tangible invested capital equals invested capital. NOPAT is operating income at the reported tax rate. ROIC swung from −170.9% (2020) to +80.9% (2025) — the denominator stays small because the business is asset-light and the balance sheet is mostly cash.'
+      },
+      priceToBook: {
+        rows: [ {year:2020,bvps:1.55,price:23.55,pb:15.20,underAvg:true}, {year:2021,bvps:1.19,price:18.21,pb:15.30,underAvg:true}, {year:2022,bvps:1.28,price:6.42,pb:5.00,underAvg:true}, {year:2023,bvps:1.55,price:17.17,pb:11.10,underAvg:true}, {year:2024,bvps:2.08,price:75.63,pb:36.40,underAvg:false}, {year:2025,bvps:2.92,price:177.75,pb:60.90,underAvg:false} ],
+        avgExclOutlier: '23.98',
+        currentNote: 'Average P/B 2020–2025 is 23.98×; excluding 2024 and 2025 the 2020–2023 average is 11.65×. Marked under = cheaper than the full-period mean.'
+      },
+      extraLines: [
+        { label: 'Marketable Securities', unit: 'K USD', series: [ {year:2021,value:234153}, {year:2022,value:35135}, {year:2023,value:2843132}, {year:2024,value:3131463}, {year:2025,value:5753247} ], note: 'Cash plus marketable securities went from $2.05bn (2020) to $7.18bn (2025) — the war chest, now almost entirely funded by operating cash flow rather than equity raises.' },
+        { label: 'Restricted Cash, Current', unit: 'K USD', series: [ {year:2020,value:37285}, {year:2021,value:36628} ], note: 'Only reported 2020–2021.' },
+        { label: 'Restricted Cash, Non-Current', unit: 'K USD', series: [ {year:2020,value:79538}, {year:2021,value:39612} ], note: 'Only reported 2020–2021.' },
+        { label: 'Operating Lease Right-of-Use Assets', unit: 'K USD', series: [ {year:2020,value:217075}, {year:2021,value:216898}, {year:2022,value:200240}, {year:2023,value:182863}, {year:2024,value:200740}, {year:2025,value:200105} ] },
+        { label: 'Deferred Revenue, Current', unit: 'K USD', series: [ {year:2020,value:189520}, {year:2021,value:227816}, {year:2022,value:183350}, {year:2023,value:246901}, {year:2024,value:259624}, {year:2025,value:408963} ] },
+        { label: 'Customer Deposits, Current', unit: 'K USD', series: [ {year:2020,value:210320}, {year:2021,value:161605}, {year:2022,value:141989}, {year:2023,value:209828}, {year:2024,value:265252}, {year:2025,value:357066} ] },
+        { label: 'Operating Lease Liabilities, Current', unit: 'K USD', series: [ {year:2020,value:29079}, {year:2021,value:39927}, {year:2022,value:45099}, {year:2023,value:54176}, {year:2024,value:43993}, {year:2025,value:45864} ] },
+        { label: 'Deferred Revenue, Non-Current', unit: 'K USD', series: [ {year:2020,value:50525}, {year:2021,value:40217}, {year:2022,value:9965}, {year:2023,value:28047}, {year:2024,value:39885}, {year:2025,value:46216} ] },
+        { label: 'Customer Deposits, Non-Current', unit: 'K USD', series: [ {year:2020,value:81513}, {year:2021,value:33699}, {year:2022,value:3936}, {year:2023,value:1477}, {year:2024,value:1663}, {year:2025,value:18} ] },
+        { label: 'Operating Lease Liabilities, Non-Current', unit: 'K USD', series: [ {year:2020,value:229800}, {year:2021,value:220146}, {year:2022,value:204305}, {year:2023,value:175216}, {year:2024,value:195226}, {year:2025,value:183474} ] },
+        { label: 'Common Stock', unit: 'K USD', series: [ {year:2020,value:1792}, {year:2021,value:2027}, {year:2022,value:2099}, {year:2023,value:2200}, {year:2024,value:2339}, {year:2025,value:2391} ] },
+        { label: 'Accumulated Other Comprehensive Income (Loss)', unit: 'K USD', series: [ {year:2020,value:-2745}, {year:2021,value:-2349}, {year:2022,value:-5333}, {year:2023,value:801}, {year:2024,value:-5611}, {year:2025,value:13942} ] },
+        { label: 'Palantir Stockholders’ Equity', unit: 'K USD', series: [ {year:2020,value:1522550}, {year:2021,value:2291030}, {year:2022,value:2565326}, {year:2023,value:3475561}, {year:2024,value:5003275}, {year:2025,value:7387268} ] },
+        { label: 'Non-Controlling Interests (Equity)', unit: 'K USD', series: [ {year:2022,value:77111}, {year:2023,value:85404}, {year:2024,value:91132}, {year:2025,value:100743} ], note: 'First reported 2022.' },
+        { label: 'Total Liabilities & Equity', unit: 'K USD', series: [ {year:2020,value:2690504}, {year:2021,value:3247450}, {year:2022,value:3461239}, {year:2023,value:4522425}, {year:2024,value:6340884}, {year:2025,value:8900392} ] },
+        { label: 'Return on Assets (ROA)', unit: '%', series: [ {year:2020,value:-43.4}, {year:2021,value:-16}, {year:2022,value:-10.7}, {year:2023,value:4.8}, {year:2024,value:7.4}, {year:2025,value:18.4} ], note: 'Ending-balance basis.' },
+        { label: 'Return on Equity (ROE)', unit: '%', series: [ {year:2020,value:-76.6}, {year:2021,value:-22.7}, {year:2022,value:-14}, {year:2023,value:6.1}, {year:2024,value:9.2}, {year:2025,value:21.8} ], note: 'Ending-balance basis.' },
+        { label: 'NOPAT', unit: 'K USD', series: [ {year:2020,value:-1160769}, {year:2021,value:-437764}, {year:2022,value:-165715}, {year:2023,value:110009}, {year:2024,value:297055}, {year:2025,value:1394219} ], note: 'Operating income at the reported tax rate.' },
+        { label: 'Return on Invested Capital (ROIC)', unit: '%', series: [ {year:2020,value:-170.9}, {year:2021,value:-60.6}, {year:2022,value:-20}, {year:2023,value:13}, {year:2024,value:26.7}, {year:2025,value:80.9} ] },
+        { label: 'Total Liabilities to Total Assets', unit: 'x', series: [ {year:2020,value:0.43}, {year:2021,value:0.29}, {year:2022,value:0.24}, {year:2023,value:0.21}, {year:2024,value:0.2}, {year:2025,value:0.16} ], note: '0.43 (2020) down to 0.16 (2025).' },
+        { label: 'Book Value Per Share YoY Growth', unit: '%', series: [ {year:2021,value:-23.4}, {year:2022,value:7.4}, {year:2023,value:21.1}, {year:2024,value:34.2}, {year:2025,value:40.6} ] },
+        { label: 'Price-to-Book', unit: 'x', series: [ {year:2020,value:15.2}, {year:2021,value:15.3}, {year:2022,value:5}, {year:2023,value:11.1}, {year:2024,value:36.4}, {year:2025,value:60.9} ] },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Operating Cash Flow', unit: 'K USD', series: [ {year:2018,value:-39012}, {year:2019,value:-165215}, {year:2020,value:-296608}, {year:2021,value:333851}, {year:2022,value:223737}, {year:2023,value:712183}, {year:2024,value:1153865}, {year:2025,value:2134473} ],
+        note: 'Flipped positive in 2021 and has compounded hard since: $223.7m (2022) → $712.2m (2023) → $1.154bn (2024) → $2.134bn (2025). Roughly 3× per year for the last two years, tracking operating income going black.'
+      },
+      capex: { label: 'Capital Expenditures', unit: 'K USD', series: [ {year:2018,value:13004}, {year:2019,value:13096}, {year:2020,value:12236}, {year:2021,value:12627}, {year:2022,value:40027}, {year:2023,value:15114}, {year:2024,value:12634}, {year:2025,value:33882} ],
+        note: 'Tiny relative to revenue — under 1% in 2024 and 2025. Asset-light is the right description, and free cash flow is effectively operating cash flow for this business. That is a quality signal Munger would like, even if the multiple isn’t.'
+      },
+      capexRatio: { label: 'CapEx % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:3.8}, {year:2022,value:17.9}, {year:2023,value:2.1}, {year:2024,value:1.1}, {year:2025,value:1.6} ],
+        note: '1.6% in 2025. Not meaningful in 2018–2020 when operating cash flow was negative.'
+      },
+      extraLines: [
+        { label: 'Depreciation & Amortization', unit: 'K USD', series: [ {year:2018,value:13910}, {year:2019,value:12255}, {year:2020,value:13871}, {year:2021,value:14897}, {year:2022,value:22522}, {year:2023,value:33354}, {year:2024,value:31587}, {year:2025,value:26145} ] },
+        { label: 'Stock-Based Compensation', unit: 'K USD', series: [ {year:2018,value:248503}, {year:2019,value:241970}, {year:2020,value:1270702}, {year:2021,value:778215}, {year:2022,value:564798}, {year:2023,value:475903}, {year:2024,value:691638}, {year:2025,value:684033} ], note: '2020 is the big outlier at $1.271bn — more than 100% of revenue that year. That was the direct-listing vesting cliff, not a recurring pattern. Note that SBC is NOT added back in the owner-earnings table below: it is treated as a real expense.' },
+        { label: 'Unrealized / Realized (Gain) Loss on Securities', unit: 'K USD', series: [ {year:2021,value:73311}, {year:2022,value:272108}, {year:2023,value:13160}, {year:2024,value:19306}, {year:2025,value:21228} ] },
+        { label: 'Noncash Consideration', unit: 'K USD', series: [ {year:2023,value:-46609}, {year:2024,value:-52521}, {year:2025,value:-37244} ] },
+        { label: 'Other Operating Activities', unit: 'K USD', series: [ {year:2018,value:420}, {year:2019,value:2769}, {year:2020,value:4417}, {year:2021,value:2722}, {year:2022,value:6677}, {year:2023,value:12764}, {year:2024,value:66034}, {year:2025,value:15630} ] },
+        { label: 'Free Cash Flow', unit: 'K USD', series: [ {year:2018,value:-52016}, {year:2019,value:-178311}, {year:2020,value:-308844}, {year:2021,value:321224}, {year:2022,value:183710}, {year:2023,value:697069}, {year:2024,value:1141231}, {year:2025,value:2100591} ] },
+        { label: 'FCF Conversion (FCF / OCF)', unit: '%', series: [ {year:2021,value:96.2}, {year:2022,value:82.1}, {year:2023,value:97.9}, {year:2024,value:98.9}, {year:2025,value:98.4} ], note: '98.4% in 2025. Not meaningful in the negative-cash-flow years.' },
+        { label: 'Owner Earnings Margin', unit: '%', series: [ {year:2018,value:-97.3}, {year:2019,value:-78.2}, {year:2020,value:-106.6}, {year:2021,value:-38.4}, {year:2022,value:-34.7}, {year:2023,value:12.1}, {year:2024,value:18.1}, {year:2025,value:36.7} ], note: '−106.6% (2020) → +36.7% (2025).' },
+      ],
+      ownerEarnings: {
+        currency: '$',
+        headline: 'Owner Earnings — Strict Buffett, FY2018 to FY2025',
+        intro: 'Strict Buffett treatment: stock-based compensation is counted as a real expense and is NOT added back. Net income, plus D&A, less the unrealized/realized gain or loss on securities, plus noncash consideration, less capital expenditure. The ADJ column is the sum of those adjustments. Figures in $ thousands; OEPS in dollars per diluted share.',
+        rows: [ {year:2018,np:-580027,adj:13910,capex:13004,oe:-579121,oeps:-1.06}, {year:2019,np:-579646,adj:12255,capex:13096,oe:-580487,oeps:-1.01}, {year:2020,np:-1166391,adj:13871,capex:12236,oe:-1164756,oeps:-1.19}, {year:2021,np:-520379,adj:-58414,capex:12627,oe:-591420,oeps:-0.31}, {year:2022,np:-371094,adj:-249586,capex:40027,oe:-660707,oeps:-0.32}, {year:2023,np:217375,adj:66803,capex:15114,oe:269064,oeps:0.12}, {year:2024,np:467918,adj:64802,capex:12634,oe:520086,oeps:0.21}, {year:2025,np:1634644,adj:42161,capex:33882,oe:1642923,oeps:0.64} ],
+        cagr: 'Owner earnings turned positive in 2023 after five straight negative years, then went $269.1m → $520.1m → $1.643bn. Because SBC is expensed rather than added back, this is a far more conservative figure than the reported free cash flow of $2.101bn in 2025 — the $684.0m gap between them is almost exactly the year’s stock-based compensation.',
+      },
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -12494,7 +12671,7 @@ const COVERAGE_DATA = [
   { ticker: 'META',  name: 'Meta Platforms',                 industry: 'Technology',    country: 'United States', marketCap: 1500000000000, marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Facebook, Instagram and WhatsApp \u2014 the world\u2019s largest social advertising machine.',            breakdown: null, locked: true },
   { ticker: 'PM',    name: 'Philip Morris International',    industry: 'Tobacco',       country: 'United States', marketCap: 280000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'International tobacco and smoke-free products (IQOS, ZYN) \u2014 pricing power on addiction.',        breakdown: null, locked: true },
   { ticker: 'MO',    name: 'Altria Group',                   industry: 'Tobacco',       country: 'United States', marketCap: 100000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'US tobacco (Marlboro domestic) \u2014 high-yield cash machine with a shrinking volume base.',        breakdown: null, locked: true },
-  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: null, locked: true, progress: 'research' },
+  { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, tier: 2, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: PLTR_BREAKDOWN },
 
   // === RAILWAYS · CANADA & USA ===
   { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
@@ -22443,6 +22620,7 @@ function MuzzApp() {
                     // Shared format helper — used by chart components across all tabs
                     const fmtVal = (v, unit) => {
                       if (unit === 'B USD')          return '$' + v + 'B';
+                      if (unit === 'K USD')          return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'K';
                       if (unit === 'M USD') {
                         // Keep fractional precision when present (eg 2531.596 → $2,531.6M)
                         const hasDecimals = v !== Math.floor(v);
