@@ -12686,21 +12686,6 @@ const ORCL_BREAKDOWN = {
           ],
         },
         {
-          id: 'orclGeoProj',
-          label: 'PROJECTIONS',
-          preamble: 'Forward revenue projections FY2026\u2013FY2035. These are modelled assumptions, NOT reported figures \u2014 kept in a separate sub-tab so they are never mistaken for actuals.',
-          callout: 'Two things to be aware of before leaning on these. First, the projected regional lines do not sum to the projected total: FY2026 regions add to $59,955M against a projected total of $59,647M, a $308M gap, so the total is modelled independently rather than built up from the parts. Second, the projected FY2026 applications line ($19,159M) sits BELOW the FY2025 actual ($19,383M) despite carrying a +4% growth label.',
-          lines: [
-            { label: 'Americas — Projected', unit: 'M USD', series: [ {year:2026,value:38615}, {year:2027,value:39916}, {year:2028,value:41270}, {year:2029,value:42678}, {year:2030,value:44142}, {year:2031,value:45664}, {year:2032,value:47246}, {year:2033,value:48890}, {year:2034,value:50598}, {year:2035,value:52373} ], note: 'Assumed +3.5% a year. Note the step from the FY2025 actual of $36,339M to the FY2026 projection of $38,615M is +6.26%, not +3.5% \u2014 the 3.5% rate applies from FY2027 onward.' },
-            { label: 'EMEA — Projected', unit: 'M USD', series: [ {year:2026,value:14235}, {year:2027,value:14561}, {year:2028,value:14772}, {year:2029,value:14986}, {year:2030,value:15205}, {year:2031,value:15428}, {year:2032,value:15655}, {year:2033,value:15887}, {year:2034,value:16123}, {year:2035,value:16364} ], note: 'Assumed +1.5% a year.' },
-            { label: 'Asia Pacific — Projected', unit: 'M USD', series: [ {year:2026,value:7105}, {year:2027,value:7158}, {year:2028,value:7230}, {year:2029,value:7302}, {year:2030,value:7376}, {year:2031,value:7449}, {year:2032,value:7524}, {year:2033,value:7599}, {year:2034,value:7675}, {year:2035,value:7752} ], note: 'Assumed +1.0% a year.' },
-            { label: 'Total Revenue — Projected', unit: 'M USD', series: [ {year:2026,value:59647}, {year:2027,value:61128}, {year:2028,value:62647}, {year:2029,value:64205}, {year:2030,value:65803}, {year:2031,value:67442}, {year:2032,value:69123}, {year:2033,value:70846}, {year:2034,value:72613}, {year:2035,value:74425} ], note: 'Assumed +2.5% a year. The FY2025-to-FY2026 step is +3.92%.' },
-            { label: 'Applications Cloud & Support — Projected', unit: 'M USD', series: [ {year:2026,value:19159}, {year:2027,value:20563}, {year:2028,value:21386}, {year:2029,value:22241}, {year:2030,value:23131}, {year:2031,value:24056}, {year:2032,value:25018}, {year:2033,value:26018}, {year:2034,value:27059}, {year:2035,value:28141} ], note: 'Assumed +4% a year.' },
-            { label: 'Infrastructure Cloud & Support — Projected', unit: 'M USD', series: [ {year:2026,value:24893}, {year:2027,value:25096}, {year:2028,value:25347}, {year:2029,value:25600}, {year:2030,value:25856}, {year:2031,value:26114}, {year:2032,value:26375}, {year:2033,value:26639}, {year:2034,value:26905}, {year:2035,value:27174} ], note: 'Assumed +1% a year.' },
-            { label: 'Total Cloud Services & License Support — Projected', unit: 'M USD', series: [ {year:2026,value:44910}, {year:2027,value:46128}, {year:2028,value:47051}, {year:2029,value:47992}, {year:2030,value:48962}, {year:2031,value:49941}, {year:2032,value:50940}, {year:2033,value:51959}, {year:2034,value:52998}, {year:2035,value:54058} ], note: 'Assumed +2% a year. Applications plus infrastructure add to $44,052M in FY2026 against this projected total of $44,910M \u2014 again modelled independently.' },
-          ],
-        },
-        {
           id: 'orclOfferings',
           label: 'CLOUD & SUPPORT MIX',
           preamble: 'Cloud services and license support revenue, split two ways: by offering (cloud versus support) and by ecosystem (applications versus infrastructure).',
