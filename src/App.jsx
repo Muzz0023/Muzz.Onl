@@ -11976,11 +11976,304 @@ const ALL_ASSETS_DATA = {
   ],
 };
 
+// ════════════════════════════════════════════════════════════════════
+// MSFT_BREAKDOWN — Microsoft Corporation Coverage data (Tier 2)
+// SOURCE: Muzz's supplied workbooks — Income / Balance / Cash / Subsidiaries
+// Every series is his data. Derived columns required by the renderers
+// (owner-earnings adj, OEPS, tangible IC, ROE/ROIC/ROA averages) are
+// arithmetic on his own series — no external figures introduced.
+// Fiscal year ends 30 June. All dollar figures in $M unless noted.
+// ════════════════════════════════════════════════════════════════════
+const MSFT_BREAKDOWN = {
+  overview: {
+    acquisitions: {
+      heading: 'SUBSIDIARIES & ACQUISITIONS',
+      preamble: '63 acquired companies and subsidiaries, listed in workbook order. Category and country as recorded; the note gives the business acquired.',
+      timeline: [
+        { year: 2016, target: 'LinkedIn', price: 'Social/Comms', note: '#1 · USA — Professional networking', featured: true },
+        { year: 2018, target: 'GitHub', price: 'Software', note: '#2 · USA — Code hosting & developer collaboration', featured: true },
+        { year: 2023, target: 'Activision Blizzard', price: 'Gaming', note: '#3 · USA — Call of Duty, World of Warcraft, Candy Crush', featured: true },
+        { year: 2021, target: 'ZeniMax Media', price: 'Gaming', note: '#4 · USA — Bethesda, id Software, Arkane, MachineGames', featured: true },
+        { year: 2014, target: 'Mojang Studios', price: 'Gaming', note: '#5 · Sweden — Minecraft' },
+        { year: 2022, target: 'Nuance Communications', price: 'AI', note: '#6 · USA — AI for healthcare & voice recognition', featured: true },
+        { year: 2011, target: 'Skype Technologies', price: 'Social/Comms', note: '#7 · Luxembourg — VoIP & video calling (retired 2025)' },
+        { year: 2012, target: 'Yammer', price: 'Social/Comms', note: '#8 · USA — Enterprise social networking' },
+        { year: 2000, target: 'Bungie', price: 'Gaming', note: '#9 · USA — Halo franchise (later divested)' },
+        { year: 2002, target: 'Rare', price: 'Gaming', note: '#10 · UK — Banjo-Kazooie, Sea of Thieves' },
+        { year: 2001, target: 'Ensemble Studios', price: 'Gaming', note: '#11 · USA — Age of Empires' },
+        { year: 2006, target: 'Lionhead Studios', price: 'Gaming', note: '#12 · UK — Fable series' },
+        { year: 2019, target: 'Double Fine Productions', price: 'Gaming', note: '#13 · USA — Psychonauts, Brutal Legend' },
+        { year: 2018, target: 'Obsidian Entertainment', price: 'Gaming', note: '#14 · USA — The Outer Worlds, Fallout: New Vegas' },
+        { year: 2018, target: 'inXile Entertainment', price: 'Gaming', note: '#15 · USA — Wasteland, Torment' },
+        { year: 2018, target: 'Ninja Theory', price: 'Gaming', note: '#16 · UK — Hellblade: Senua’s Sacrifice' },
+        { year: 2018, target: 'Playground Games', price: 'Gaming', note: '#17 · UK — Forza Horizon' },
+        { year: 2018, target: 'Compulsion Games', price: 'Gaming', note: '#18 · Canada — We Happy Few' },
+        { year: 2001, target: 'Turn 10 Studios', price: 'Gaming', note: '#19 · USA — Forza Motorsport' },
+        { year: 2021, target: 'Bethesda Softworks', price: 'Gaming', note: '#20 · USA — Elder Scrolls, Fallout' },
+        { year: 2021, target: 'id Software', price: 'Gaming', note: '#21 · USA — Doom, Quake' },
+        { year: 2021, target: 'Arkane Studios', price: 'Gaming', note: '#22 · France — Dishonored, Prey' },
+        { year: 2021, target: 'MachineGames', price: 'Gaming', note: '#23 · Sweden — Wolfenstein' },
+        { year: 2021, target: 'Tango Gameworks', price: 'Gaming', note: '#24 · Japan — Hi-Fi Rush, Evil Within' },
+        { year: 2000, target: 'Visio Corporation', price: 'Software', note: '#25 · USA — Diagramming → Microsoft Visio' },
+        { year: 2001, target: 'Great Plains Software', price: 'Enterprise', note: '#26 · USA — ERP → Microsoft Dynamics' },
+        { year: 2002, target: 'Navision', price: 'Enterprise', note: '#27 · Denmark — ERP → Microsoft Dynamics NAV' },
+        { year: 2007, target: 'aQuantive', price: 'Advertising', note: '#28 · USA — Digital marketing & ad agency' },
+        { year: 2008, target: 'Fast Search & Transfer', price: 'Software', note: '#29 · Norway — Enterprise search' },
+        { year: 2014, target: 'Nokia Devices Division', price: 'Hardware', note: '#30 · Finland — Windows Phone hardware (later sold)' },
+        { year: 2020, target: 'Affirmed Networks', price: 'Cloud', note: '#31 · USA — Cloud-native 5G networking' },
+        { year: 2020, target: 'CyberX', price: 'Security', note: '#32 · USA — Industrial IoT security' },
+        { year: 2021, target: 'RiskIQ', price: 'Security', note: '#33 · USA — Threat intelligence' },
+        { year: 2021, target: 'CloudKnox Security', price: 'Security', note: '#34 · USA — Cloud infrastructure security' },
+        { year: 2022, target: 'Xandr', price: 'Advertising', note: '#35 · USA — Digital advertising platform' },
+        { year: 2021, target: 'Clipchamp', price: 'Software', note: '#36 · Australia — Online video editor' },
+        { year: 2020, target: 'Metaswitch Networks', price: 'Cloud', note: '#37 · UK — Cloud-native telecoms software' },
+        { year: 1994, target: 'Softimage', price: 'Software', note: '#38 · Canada — 3D animation software' },
+        { year: 1997, target: 'Hotmail', price: 'Social/Comms', note: '#39 · USA — Webmail → Outlook.com' },
+        { year: 1997, target: 'WebTV Networks', price: 'Software', note: '#40 · USA — Internet TV' },
+        { year: 1998, target: 'LinkExchange', price: 'Advertising', note: '#41 · USA — Internet ad network' },
+        { year: 2005, target: 'Groove Networks', price: 'Enterprise', note: '#42 · USA — Collaboration → SharePoint' },
+        { year: 2005, target: 'Sybari Software', price: 'Security', note: '#43 · USA — Email antivirus' },
+        { year: 2005, target: 'FrontBridge Technologies', price: 'Security', note: '#44 · USA — Email protection' },
+        { year: 2006, target: 'Winternals Software', price: 'Security', note: '#45 · USA — System tools → Sysinternals' },
+        { year: 2006, target: 'Massive Incorporated', price: 'Advertising', note: '#46 · USA — In-game advertising' },
+        { year: 2007, target: 'Tellme Networks', price: 'Software', note: '#47 · USA — Mobile voice software' },
+        { year: 2008, target: 'Farecast', price: 'Software', note: '#48 · USA — Travel price prediction' },
+        { year: 2008, target: 'Danger', price: 'Software', note: '#49 · USA — Mobile internet platform' },
+        { year: 2004, target: 'GIANT Company Software', price: 'Security', note: '#50 · USA — Anti-spyware → Windows Defender' },
+        { year: 2003, target: 'PlaceWare', price: 'Software', note: '#51 · USA — Web conferencing → Live Meeting' },
+        { year: 2003, target: 'GeCAD Software', price: 'Security', note: '#52 · Romania — Antivirus technology' },
+        { year: 1987, target: 'Forethought Inc.', price: 'Software', note: '#53 · USA — Created PowerPoint' },
+        { year: 2023, target: 'Fungible', price: 'Hardware', note: '#54 · USA — Chip design / data processing' },
+        { year: 2022, target: 'Lumenisity', price: 'Hardware', note: '#55 · UK — Hollow core fibre optic cable' },
+        { year: 2021, target: 'TwoHat', price: 'Security', note: '#56 · Canada — Content moderation AI' },
+        { year: 2022, target: 'Miburo', price: 'Security', note: '#57 · USA — Threat analysis' },
+        { year: 2005, target: 'Teleo', price: 'Social/Comms', note: '#58 · USA — VoIP' },
+        { year: 2004, target: 'Lookout Software', price: 'Software', note: '#59 · USA — Personal search tools' },
+        { year: 2006, target: 'Onfolio', price: 'Software', note: '#60 · USA — Information management' },
+        { year: 2000, target: 'Digital Anvil', price: 'Gaming', note: '#61 · USA — Space sim games' },
+        { year: 1999, target: 'Access Software', price: 'Gaming', note: '#62 · USA — Links golf games' },
+        { year: 2026, target: 'Osmos', price: 'Cloud/AI', note: '#63 · USA — AI-powered data engineering platform' },
+      ],
+    },
+  },
+
+  numbers: {
+    incomeStatement: {
+      netSales: { label: 'Product Revenue', unit: 'M USD', series: [ {year:2014,value:72948}, {year:2015,value:75956}, {year:2016,value:61502}, {year:2017,value:63811}, {year:2018,value:64497}, {year:2019,value:66069}, {year:2020,value:68041}, {year:2021,value:71074}, {year:2022,value:72732}, {year:2023,value:64699}, {year:2024,value:64773}, {year:2025,value:63946} ],
+        note: 'Stuff bought once (or occasionally) — perpetual Windows licences, perpetual Office, Xbox consoles and boxed games, Surface hardware, other one-time software sales. Flat to slowly declining as customers move to subscriptions.'
+      },
+      membershipFees: { label: 'Service & Other Revenue', unit: 'M USD', series: [ {year:2014,value:13885}, {year:2015,value:17624}, {year:2016,value:23818}, {year:2017,value:32760}, {year:2018,value:45863}, {year:2019,value:59774}, {year:2020,value:74974}, {year:2021,value:97014}, {year:2022,value:125538}, {year:2023,value:147216}, {year:2024,value:180349}, {year:2025,value:217778} ],
+        note: 'The subscription and cloud line — Microsoft 365 / Office 365, Azure consumption, Xbox Game Pass, LinkedIn Premium, Dynamics 365. Grew from $13.9bn (FY14) to $217.8bn (FY25).'
+      },
+      totalRevenue: { label: 'Total Revenue', unit: 'M USD', series: [ {year:2011,value:69943}, {year:2012,value:73723}, {year:2013,value:77849}, {year:2014,value:86833}, {year:2015,value:93580}, {year:2016,value:85320}, {year:2017,value:96571}, {year:2018,value:110360}, {year:2019,value:125843}, {year:2020,value:143015}, {year:2021,value:168088}, {year:2022,value:198270}, {year:2023,value:211915}, {year:2024,value:245122}, {year:2025,value:281724} ],
+        note: 'A long time ago most of the money came from Product (buy once). Now it has flipped: ~77% of revenue is subscription/cloud, only ~23% traditional Product. Subscriptions are more predictable, recurring, and usually higher margin — which is what people mean when they say Microsoft is now a cloud company.'
+      },
+      costOfSales: { label: 'Total Cost of Revenue', unit: 'M USD', series: [ {year:2011,value:15577}, {year:2012,value:17530}, {year:2013,value:20249}, {year:2014,value:27078}, {year:2015,value:33038}, {year:2016,value:32780}, {year:2017,value:34261}, {year:2018,value:38353}, {year:2019,value:42910}, {year:2020,value:46078}, {year:2021,value:52232}, {year:2022,value:62650}, {year:2023,value:65863}, {year:2024,value:74114}, {year:2025,value:87831} ],
+        note: 'Total COR as a share of total revenue ran 22.3% (FY11) → 38.4% (FY16) → 31.2% (FY25). The Product / Service split and their individual cost ratios follow below.'
+      },
+      grossProfit: { label: 'Gross Profit', unit: 'M USD', series: [ {year:2011,value:54366}, {year:2012,value:56193}, {year:2013,value:57600}, {year:2014,value:59755}, {year:2015,value:60542}, {year:2016,value:52540}, {year:2017,value:62310}, {year:2018,value:72007}, {year:2019,value:82933}, {year:2020,value:96937}, {year:2021,value:115856}, {year:2022,value:135620}, {year:2023,value:146052}, {year:2024,value:171008}, {year:2025,value:193893} ] },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2011,value:77.7}, {year:2012,value:76.2}, {year:2013,value:74}, {year:2014,value:68.8}, {year:2015,value:64.7}, {year:2016,value:61.6}, {year:2017,value:64.5}, {year:2018,value:65.2}, {year:2019,value:65.9}, {year:2020,value:67.8}, {year:2021,value:68.9}, {year:2022,value:68.4}, {year:2023,value:68.9}, {year:2024,value:69.8}, {year:2025,value:68.8} ],
+        note: 'Gross margin fell from 77.7% (FY11) to a 61.6% trough (FY16) as hardware and early cloud build-out weighed, then recovered to ~68–70% as high-margin subscription revenue took over the mix.'
+      },
+      opexLines: [
+        { label: 'Cost of Revenue: Product', unit: 'M USD', series: [ {year:2014,value:16681}, {year:2015,value:21410}, {year:2016,value:17880}, {year:2017,value:15175}, {year:2018,value:15420}, {year:2019,value:16273}, {year:2020,value:16017}, {year:2021,value:18219}, {year:2022,value:19064}, {year:2023,value:17804}, {year:2024,value:15272}, {year:2025,value:13501} ] },
+        { label: 'Product COR % of Product Revenue', unit: '%', series: [ {year:2014,value:22.9}, {year:2015,value:28.2}, {year:2016,value:29.1}, {year:2017,value:23.8}, {year:2018,value:23.9}, {year:2019,value:24.6}, {year:2020,value:23.5}, {year:2021,value:25.6}, {year:2022,value:26.2}, {year:2023,value:27.5}, {year:2024,value:23.6}, {year:2025,value:21.1} ], note: 'Cost of the buy-once business. 22.9% (FY14) → 29.1% (FY16) peak → 21.1% (FY25) — the most efficient year in the series.' },
+        { label: 'Cost of Revenue: Service & Other', unit: 'M USD', series: [ {year:2014,value:10397}, {year:2015,value:11628}, {year:2016,value:14900}, {year:2017,value:19086}, {year:2018,value:22933}, {year:2019,value:26637}, {year:2020,value:30061}, {year:2021,value:34013}, {year:2022,value:43586}, {year:2023,value:48059}, {year:2024,value:58842}, {year:2025,value:74330} ] },
+        { label: 'Service & Other COR % of Revenue', unit: '%', series: [ {year:2014,value:74.9}, {year:2015,value:66}, {year:2016,value:62.6}, {year:2017,value:58.3}, {year:2018,value:50}, {year:2019,value:44.6}, {year:2020,value:40.1}, {year:2021,value:35.1}, {year:2022,value:34.7}, {year:2023,value:32.6}, {year:2024,value:32.6}, {year:2025,value:34.1} ], note: 'The single clearest operating-leverage story in the file: 74.9% of service revenue went to cost in FY14, 34.1% in FY25. Scale in Azure and M365 has more than halved the cost of a dollar of subscription revenue.' },
+        { label: 'Total COR % of Total Revenue', unit: '%', series: [ {year:2011,value:22.3}, {year:2012,value:23.8}, {year:2013,value:26}, {year:2014,value:31.2}, {year:2015,value:35.3}, {year:2016,value:38.4}, {year:2017,value:35.5}, {year:2018,value:34.8}, {year:2019,value:34.1}, {year:2020,value:32.2}, {year:2021,value:31.1}, {year:2022,value:31.6}, {year:2023,value:31.1}, {year:2024,value:30.2}, {year:2025,value:31.2} ] },
+        { label: 'Product % of Total Revenue', unit: '%', series: [ {year:2014,value:84}, {year:2015,value:81.2}, {year:2016,value:72.1}, {year:2017,value:66.1}, {year:2018,value:58.4}, {year:2019,value:52.5}, {year:2020,value:47.6}, {year:2021,value:42.3}, {year:2022,value:36.7}, {year:2023,value:30.5}, {year:2024,value:26.4}, {year:2025,value:22.7} ] },
+        { label: 'Service & Other % of Total Revenue', unit: '%', series: [ {year:2014,value:16}, {year:2015,value:18.8}, {year:2016,value:27.9}, {year:2017,value:33.9}, {year:2018,value:41.6}, {year:2019,value:47.5}, {year:2020,value:52.4}, {year:2021,value:57.7}, {year:2022,value:63.3}, {year:2023,value:69.5}, {year:2024,value:73.6}, {year:2025,value:77.3} ], note: 'The mix flip: 16.0% of revenue in FY14, 77.3% in FY25.' },
+        { label: 'Research and Development', unit: 'M USD', series: [ {year:2011,value:9043}, {year:2012,value:9811}, {year:2013,value:10411}, {year:2014,value:11381}, {year:2015,value:12046}, {year:2016,value:11988}, {year:2017,value:13037}, {year:2018,value:14726}, {year:2019,value:16876}, {year:2020,value:19269}, {year:2021,value:20716}, {year:2022,value:24512}, {year:2023,value:27195}, {year:2024,value:29510}, {year:2025,value:32488} ], note: 'Main areas: (1) AI — the biggest chunk, building and improving models behind Copilot and integrating AI across Windows, Office, Teams, Xbox and Azure; (2) Cloud — next-gen Azure infrastructure, security and efficiency for AI workloads; (3) Productivity & business tools — M365, collaboration, Dynamics 365, Power Platform; (4) Windows, devices & gaming — Windows 11/12, Copilot+ PCs, Surface, Xbox cloud gaming and Game Pass; (5) frontier bets — quantum (the first Level 2 operational quantum computer deployed in 2025 with Atom Computing), advanced security, mixed reality.' },
+        { label: 'R&D % of Gross Profit', unit: '%', series: [ {year:2011,value:16.6}, {year:2012,value:17.5}, {year:2013,value:18.1}, {year:2014,value:19}, {year:2015,value:19.9}, {year:2016,value:22.8}, {year:2017,value:20.9}, {year:2018,value:20.5}, {year:2019,value:20.3}, {year:2020,value:19.9}, {year:2021,value:17.9}, {year:2022,value:18.1}, {year:2023,value:18.6}, {year:2024,value:17.3}, {year:2025,value:16.8} ] },
+        { label: 'General and Administrative', unit: 'M USD', series: [ {year:2011,value:4222}, {year:2012,value:4569}, {year:2013,value:5149}, {year:2014,value:4677}, {year:2015,value:4611}, {year:2016,value:4563}, {year:2017,value:4481}, {year:2018,value:4885}, {year:2019,value:4885}, {year:2020,value:5111}, {year:2021,value:5107}, {year:2022,value:5900}, {year:2023,value:7575}, {year:2024,value:7609}, {year:2025,value:7223} ], note: 'The running-the-company cost: executive, HR, finance, accounting and legal salaries; headquarters and office costs; outside lawyers, auditors and consultants; insurance, regulatory fees and compliance; corporate travel and internal IT.' },
+        { label: 'G&A % of Gross Profit', unit: '%', series: [ {year:2011,value:7.8}, {year:2012,value:8.1}, {year:2013,value:8.9}, {year:2014,value:7.8}, {year:2015,value:7.6}, {year:2016,value:8.7}, {year:2017,value:7.2}, {year:2018,value:6.8}, {year:2019,value:5.9}, {year:2020,value:5.3}, {year:2021,value:4.4}, {year:2022,value:4.4}, {year:2023,value:5.2}, {year:2024,value:4.4}, {year:2025,value:3.7} ], note: 'Fell from 8.9% of gross profit (FY13) to 3.7% (FY25) — overhead has not scaled with the business.' },
+      ],
+      smaExpense: { label: 'Sales and Marketing', unit: 'M USD', series: [ {year:2011,value:13940}, {year:2012,value:13857}, {year:2013,value:15276}, {year:2014,value:15811}, {year:2015,value:15713}, {year:2016,value:14697}, {year:2017,value:15461}, {year:2018,value:17469}, {year:2019,value:18213}, {year:2020,value:19598}, {year:2021,value:20117}, {year:2022,value:21825}, {year:2023,value:22759}, {year:2024,value:24456}, {year:2025,value:25654} ],
+        note: 'The sales team plus advertising budget: ~44,000 people in sales and marketing roles as of 2025 (salaries, commissions, bonuses) selling enterprise deals; TV, online and event advertising; partner and channel incentives to OEMs and resellers; Ignite and Build events, webinars and customer success; brand and digital marketing.'
+      },
+      smaToGrossProfit: { label: 'Sales & Marketing % of Gross Profit', unit: '%', series: [ {year:2011,value:25.6}, {year:2012,value:24.7}, {year:2013,value:26.5}, {year:2014,value:26.5}, {year:2015,value:26}, {year:2016,value:28}, {year:2017,value:24.8}, {year:2018,value:24.3}, {year:2019,value:22}, {year:2020,value:20.2}, {year:2021,value:17.4}, {year:2022,value:16.1}, {year:2023,value:15.6}, {year:2024,value:14.3}, {year:2025,value:13.2} ],
+        note: 'Halved over the period — 28.0% of gross profit in FY16 down to 13.2% in FY25. Subscription renewal costs far less than winning a new perpetual licence.'
+      },
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2011,value:27205}, {year:2012,value:28237}, {year:2013,value:30836}, {year:2014,value:31869}, {year:2015,value:32370}, {year:2016,value:31248}, {year:2017,value:32979}, {year:2018,value:37080}, {year:2019,value:39974}, {year:2020,value:43978}, {year:2021,value:45940}, {year:2022,value:52237}, {year:2023,value:57529}, {year:2024,value:61575}, {year:2025,value:65365} ],
+        note: 'R&D + Sales & Marketing + G&A.'
+      },
+      expensesToRevenue: { label: 'Total OpEx % of Gross Profit', unit: '%', series: [ {year:2011,value:50}, {year:2012,value:50.3}, {year:2013,value:53.5}, {year:2014,value:53.3}, {year:2015,value:53.5}, {year:2016,value:59.5}, {year:2017,value:52.9}, {year:2018,value:51.5}, {year:2019,value:48.2}, {year:2020,value:45.4}, {year:2021,value:39.7}, {year:2022,value:38.5}, {year:2023,value:39.4}, {year:2024,value:36}, {year:2025,value:33.7} ],
+        note: 'The operating-leverage headline: 59.5% of gross profit consumed by opex in FY16, 33.7% in FY25.'
+      },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2011,value:27161}, {year:2012,value:21763}, {year:2013,value:26764}, {year:2014,value:27759}, {year:2015,value:18161}, {year:2016,value:20182}, {year:2017,value:29025}, {year:2018,value:35058}, {year:2019,value:42959}, {year:2020,value:52959}, {year:2021,value:69916}, {year:2022,value:83383}, {year:2023,value:88523}, {year:2024,value:109433}, {year:2025,value:128528} ] },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2011,value:38.8}, {year:2012,value:29.5}, {year:2013,value:34.4}, {year:2014,value:32}, {year:2015,value:19.4}, {year:2016,value:23.7}, {year:2017,value:30.1}, {year:2018,value:31.8}, {year:2019,value:34.1}, {year:2020,value:37}, {year:2021,value:41.6}, {year:2022,value:42.1}, {year:2023,value:41.8}, {year:2024,value:44.6}, {year:2025,value:45.6} ],
+        note: 'From a 19.4% trough (FY15) to 45.6% (FY25) — gross margin recovery plus opex discipline compounding together.'
+      },
+      otherIncomeExpense: { label: 'Other Income (Expense), Net', unit: 'M USD', series: [ {year:2011,value:910}, {year:2012,value:504}, {year:2013,value:288}, {year:2014,value:61}, {year:2015,value:346}, {year:2016,value:-431}, {year:2017,value:876}, {year:2018,value:1416}, {year:2019,value:729}, {year:2020,value:77}, {year:2021,value:1186}, {year:2022,value:333}, {year:2023,value:788}, {year:2024,value:-1646}, {year:2025,value:-4901} ],
+        note: 'Typically interest income on the cash pile, interest expense on borrowings, gains/losses on equity and venture investments, foreign currency movements, and other non-operating items such as legal settlements or asset sales. Swung to −$4,901M in FY25.'
+      },
+      provisionForTaxes: { label: 'Provision for Income Taxes', unit: 'M USD', series: [ {year:2011,value:4921}, {year:2012,value:5289}, {year:2013,value:5189}, {year:2014,value:5746}, {year:2015,value:6314}, {year:2016,value:2953}, {year:2017,value:4412}, {year:2018,value:19903}, {year:2019,value:4448}, {year:2020,value:8755}, {year:2021,value:9831}, {year:2022,value:10978}, {year:2023,value:16950}, {year:2024,value:19651}, {year:2025,value:21795} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2011,value:17.5}, {year:2012,value:23.8}, {year:2013,value:19.2}, {year:2014,value:20.7}, {year:2015,value:34.1}, {year:2016,value:15}, {year:2017,value:14.8}, {year:2018,value:54.6}, {year:2019,value:10.2}, {year:2020,value:16.5}, {year:2021,value:13.8}, {year:2022,value:13.1}, {year:2023,value:19}, {year:2024,value:18.2}, {year:2025,value:17.6} ],
+        note: 'FY18 shows 54.6% on the one-off charge and FY19 10.2% on the rebound — both distortions, not run-rate. Recent years sit ~17–19%.'
+      },
+      nopat: { label: 'NOPAT', unit: 'M USD', series: [ {year:2011,value:22408}, {year:2012,value:16583}, {year:2013,value:21625}, {year:2014,value:22013}, {year:2015,value:11968}, {year:2016,value:17155}, {year:2017,value:24729}, {year:2018,value:15916}, {year:2019,value:38577}, {year:2020,value:44221}, {year:2021,value:60268}, {year:2022,value:72460}, {year:2023,value:71704}, {year:2024,value:89516}, {year:2025,value:105907} ],
+        note: 'Operating income after the effective tax rate.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2011,value:23150}, {year:2012,value:16978}, {year:2013,value:21863}, {year:2014,value:22074}, {year:2015,value:12193}, {year:2016,value:16798}, {year:2017,value:25489}, {year:2018,value:16571}, {year:2019,value:39240}, {year:2020,value:44281}, {year:2021,value:61271}, {year:2022,value:72738}, {year:2023,value:72361}, {year:2024,value:88136}, {year:2025,value:101832} ],
+        note: 'FY11 $23,150M → FY25 $101,832M, an 11.2% CAGR across 14 years.'
+      },
+      eps: { label: 'Diluted EPS', unit: 'USD per share', series: [ {year:2011,value:2.69}, {year:2012,value:2}, {year:2013,value:2.58}, {year:2014,value:2.63}, {year:2015,value:1.48}, {year:2016,value:2.1}, {year:2017,value:3.25}, {year:2018,value:2.13}, {year:2019,value:5.06}, {year:2020,value:5.76}, {year:2021,value:8.05}, {year:2022,value:9.65}, {year:2023,value:9.68}, {year:2024,value:11.8}, {year:2025,value:13.64} ],
+        note: 'FY11 $2.69 → FY25 $13.64 — a 12.3% CAGR over 14 years, ahead of the 11.2% net income CAGR because the share count shrank.'
+      },
+      profitMargin: { label: 'Profit Margin', unit: '%', series: [ {year:2011,value:33.1}, {year:2012,value:23}, {year:2013,value:28.1}, {year:2014,value:25.4}, {year:2015,value:13}, {year:2016,value:19.7}, {year:2017,value:26.4}, {year:2018,value:15}, {year:2019,value:31.2}, {year:2020,value:31}, {year:2021,value:36.5}, {year:2022,value:36.7}, {year:2023,value:34.1}, {year:2024,value:36}, {year:2025,value:36.1} ] },
+      margins: {
+        gross:     [ {year:2011,value:77.7}, {year:2012,value:76.2}, {year:2013,value:74}, {year:2014,value:68.8}, {year:2015,value:64.7}, {year:2016,value:61.6}, {year:2017,value:64.5}, {year:2018,value:65.2}, {year:2019,value:65.9}, {year:2020,value:67.8}, {year:2021,value:68.9}, {year:2022,value:68.4}, {year:2023,value:68.9}, {year:2024,value:69.8}, {year:2025,value:68.8} ],
+        operating: [ {year:2011,value:38.8}, {year:2012,value:29.5}, {year:2013,value:34.4}, {year:2014,value:32}, {year:2015,value:19.4}, {year:2016,value:23.7}, {year:2017,value:30.1}, {year:2018,value:31.8}, {year:2019,value:34.1}, {year:2020,value:37}, {year:2021,value:41.6}, {year:2022,value:42.1}, {year:2023,value:41.8}, {year:2024,value:44.6}, {year:2025,value:45.6} ],
+        profit:    [ {year:2011,value:33.1}, {year:2012,value:23}, {year:2013,value:28.1}, {year:2014,value:25.4}, {year:2015,value:13}, {year:2016,value:19.7}, {year:2017,value:26.4}, {year:2018,value:15}, {year:2019,value:31.2}, {year:2020,value:31}, {year:2021,value:36.5}, {year:2022,value:36.7}, {year:2023,value:34.1}, {year:2024,value:36}, {year:2025,value:36.1} ],
+      },
+      sharesOutstanding: { label: 'Weighted Average Diluted Shares', unit: 'M shares', series: [ {year:2011,value:8593}, {year:2012,value:8506}, {year:2013,value:8470}, {year:2014,value:8399}, {year:2015,value:8254}, {year:2016,value:8013}, {year:2017,value:7832}, {year:2018,value:7794}, {year:2019,value:7753}, {year:2020,value:7683}, {year:2021,value:7608}, {year:2022,value:7540}, {year:2023,value:7472}, {year:2024,value:7469}, {year:2025,value:7465} ],
+        note: 'Down every single year: 8,593M (FY11) → 7,465M (FY25), a −1.00% CAGR. Fourteen straight years of net buyback.'
+      },
+      extraLines: [
+        { label: 'Dec 31 Closing Price', unit: 'USD per share', series: [ {year:2011,value:24.86}, {year:2012,value:25.58}, {year:2013,value:35.81}, {year:2014,value:44.48}, {year:2015,value:53.12}, {year:2016,value:59.5}, {year:2017,value:81.85}, {year:2018,value:97.15}, {year:2019,value:151.07}, {year:2020,value:213.32}, {year:2021,value:325.42}, {year:2022,value:234.22}, {year:2023,value:370.52}, {year:2024,value:418.41}, {year:2025,value:483.62} ] },
+        { label: 'Price-to-Earnings (trailing)', unit: 'x', series: [ {year:2011,value:9.24}, {year:2012,value:12.79}, {year:2013,value:13.88}, {year:2014,value:16.91}, {year:2015,value:35.89}, {year:2016,value:28.33}, {year:2017,value:25.18}, {year:2018,value:45.61}, {year:2019,value:29.86}, {year:2020,value:37.03}, {year:2021,value:40.42}, {year:2022,value:24.27}, {year:2023,value:38.28}, {year:2024,value:35.46}, {year:2025,value:35.46} ], note: 'Average P/E 2010–2025 excluding the FY18 outlier (45.61×): 25.68×. Years above that average: 2015, 2016, 2019, 2020, 2021, 2023, 2024, 2025.' },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash and Cash Equivalents', unit: 'M USD', series: [ {year:2010,value:5505}, {year:2011,value:9610}, {year:2012,value:6938}, {year:2013,value:3804}, {year:2014,value:8669}, {year:2015,value:5595}, {year:2016,value:6510}, {year:2017,value:7663}, {year:2018,value:11946}, {year:2019,value:11356}, {year:2020,value:13576}, {year:2021,value:14224}, {year:2022,value:13931}, {year:2023,value:34704}, {year:2024,value:18315}, {year:2025,value:30242} ] },
+      accountsReceivable: { label: 'Accounts Receivable', unit: 'M USD', series: [ {year:2010,value:13014}, {year:2011,value:14987}, {year:2012,value:15780}, {year:2013,value:17486}, {year:2014,value:19544}, {year:2015,value:17908}, {year:2016,value:18277}, {year:2017,value:19792}, {year:2018,value:26481}, {year:2019,value:29524}, {year:2020,value:32011}, {year:2021,value:38043}, {year:2022,value:44261}, {year:2023,value:48688}, {year:2024,value:56924}, {year:2025,value:69905} ],
+        note: 'Allowance for doubtful accounts: $944M (2025), $830M (2024), $650M (2023), $633M (2022), $751M (2021), $788M (2020), $411M (2019), $377M (2018), $405M (2017), $426M (2016), $335M (2015), $301M (2014), $336M (2013), $389M (2012), $333M (2011), $375M (2010).'
+      },
+      dso: { label: 'Days Sales Outstanding', unit: 'days', series: [ {year:2011,value:78.23}, {year:2012,value:78.14}, {year:2013,value:82}, {year:2014,value:82.18}, {year:2015,value:69.88}, {year:2016,value:78.22}, {year:2017,value:74.85}, {year:2018,value:87.58}, {year:2019,value:85.68}, {year:2020,value:81.75}, {year:2021,value:82.63}, {year:2022,value:81.47}, {year:2023,value:83.93}, {year:2024,value:84.77}, {year:2025,value:90.58} ],
+        note: '15-year simple average 81.46 days. DSO rose from ~82 to 90.58 days between 2021 and 2025 — still reasonable for enterprise software and cloud, where large customers and governments negotiate longer terms, but the uptick suggests slightly slower collections relative to revenue growth, likely mix shift toward long-term enterprise contracts. Strongest year was 2015 at ~70 days. Range mostly 78–90 days over the decade — healthy for the industry, no red flags.'
+      },
+      inventory: { label: 'Inventories', unit: 'M USD', series: [ {year:2010,value:740}, {year:2011,value:1372}, {year:2012,value:1137}, {year:2013,value:1938}, {year:2014,value:2660}, {year:2015,value:2902}, {year:2016,value:2251}, {year:2017,value:2181}, {year:2018,value:2662}, {year:2019,value:2063}, {year:2020,value:1895}, {year:2021,value:2636}, {year:2022,value:3742}, {year:2023,value:2500}, {year:2024,value:1246}, {year:2025,value:938} ] },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2011,value:32.15}, {year:2012,value:23.68}, {year:2013,value:34.94}, {year:2014,value:35.85}, {year:2015,value:32.06}, {year:2016,value:25.06}, {year:2017,value:23.23}, {year:2018,value:25.33}, {year:2019,value:17.55}, {year:2020,value:15.01}, {year:2021,value:18.42}, {year:2022,value:21.8}, {year:2023,value:13.85}, {year:2024,value:6.14}, {year:2025,value:3.9} ],
+        note: 'Average 24.62 days across 2011–2023 (excluding 2024 and 2025). By 2025 DIO is just 3.9 days — the shift to a software, cloud and services business where physical inventory (Surface, Xbox) is a tiny fraction of COGS. Peak intensity was the mid-2010s at 32–36 days during the Surface and Lumia era; the 2022 spike to 21.8 days ties to pandemic supply-chain issues and normalised quickly.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover', unit: 'x', series: [ {year:2011,value:11.35}, {year:2012,value:15.42}, {year:2013,value:10.45}, {year:2014,value:10.18}, {year:2015,value:11.38}, {year:2016,value:14.56}, {year:2017,value:15.71}, {year:2018,value:14.41}, {year:2019,value:20.8}, {year:2020,value:24.32}, {year:2021,value:19.81}, {year:2022,value:16.74}, {year:2023,value:26.35}, {year:2024,value:59.48}, {year:2025,value:93.64} ],
+        note: 'Average 16.35× across 2011–2023 (excluding 2024 and 2025). FY25 turnover of ~94× is outstanding — very few companies achieve turnover above 50× at this scale.'
+      },
+      prepaidAndOther: { label: 'Other Current Assets', unit: 'M USD', series: [ {year:2010,value:2167}, {year:2011,value:3320}, {year:2012,value:3092}, {year:2013,value:3388}, {year:2014,value:4392}, {year:2015,value:5461}, {year:2016,value:5892}, {year:2017,value:4897}, {year:2018,value:6751}, {year:2019,value:10146}, {year:2020,value:11482}, {year:2021,value:13393}, {year:2022,value:16924}, {year:2023,value:21807}, {year:2024,value:26021}, {year:2025,value:25723} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2010,value:55676}, {year:2011,value:74918}, {year:2012,value:85084}, {year:2013,value:101466}, {year:2014,value:114246}, {year:2015,value:124712}, {year:2016,value:139660}, {year:2017,value:159851}, {year:2018,value:169662}, {year:2019,value:175552}, {year:2020,value:181915}, {year:2021,value:184406}, {year:2022,value:169684}, {year:2023,value:184257}, {year:2024,value:159734}, {year:2025,value:191131} ] },
+      ppeNet: { label: 'Property and Equipment, Net', unit: 'M USD', series: [ {year:2010,value:7630}, {year:2011,value:8162}, {year:2012,value:8269}, {year:2013,value:9991}, {year:2014,value:13011}, {year:2015,value:14731}, {year:2016,value:18356}, {year:2017,value:23734}, {year:2018,value:29460}, {year:2019,value:36477}, {year:2020,value:44151}, {year:2021,value:59715}, {year:2022,value:74398}, {year:2023,value:95641}, {year:2024,value:135591}, {year:2025,value:204966} ],
+        note: 'Net of accumulated depreciation: $93,653M (2025), $76,421M (2024), $68,251M (2023), $59,660M (2022), $51,351M (2021), $43,197M (2020), $35,330M (2019), $29,223M (2018), $24,179M (2017), $19,800M (2016), $17,606M (2015), $14,793M (2014), $12,513M (2013), $10,962M (2012), $9,829M (2011), $8,629M (2010).'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2010,value:12394}, {year:2011,value:12581}, {year:2012,value:13452}, {year:2013,value:14655}, {year:2014,value:20127}, {year:2015,value:16939}, {year:2016,value:17872}, {year:2017,value:35122}, {year:2018,value:35683}, {year:2019,value:42026}, {year:2020,value:43351}, {year:2021,value:49711}, {year:2022,value:67524}, {year:2023,value:67886}, {year:2024,value:119220}, {year:2025,value:119509} ],
+        note: 'Steps up with the big deals — 2016/17 (LinkedIn), 2021/22 (Nuance, ZeniMax), 2024 (Activision Blizzard, goodwill nearly doubling to $119,220M).'
+      },
+      otherIntangibles: { label: 'Intangible Assets, Net', unit: 'M USD', series: [ {year:2010,value:1158}, {year:2011,value:744}, {year:2012,value:3170}, {year:2013,value:3083}, {year:2014,value:6981}, {year:2015,value:4835}, {year:2016,value:3733}, {year:2017,value:10106}, {year:2018,value:8053}, {year:2019,value:7750}, {year:2020,value:7038}, {year:2021,value:7800}, {year:2022,value:11298}, {year:2023,value:9366}, {year:2024,value:27597}, {year:2025,value:22604} ] },
+      otherNonCurrentAssets: { label: 'Other Long-term Assets', unit: 'M USD', series: [ {year:2010,value:1501}, {year:2011,value:1434}, {year:2012,value:1520}, {year:2013,value:2392}, {year:2014,value:3422}, {year:2015,value:2953}, {year:2016,value:3416}, {year:2017,value:6250}, {year:2018,value:7442}, {year:2019,value:14723}, {year:2020,value:13138}, {year:2021,value:15075}, {year:2022,value:21897}, {year:2023,value:30601}, {year:2024,value:36460}, {year:2025,value:40565} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2010,value:86113}, {year:2011,value:108704}, {year:2012,value:121271}, {year:2013,value:142431}, {year:2014,value:172384}, {year:2015,value:176223}, {year:2016,value:193468}, {year:2017,value:241086}, {year:2018,value:258848}, {year:2019,value:286556}, {year:2020,value:301311}, {year:2021,value:333779}, {year:2022,value:364840}, {year:2023,value:411976}, {year:2024,value:512163}, {year:2025,value:619003} ] },
+      accountsPayable: { label: 'Accounts Payable', unit: 'M USD', series: [ {year:2010,value:4025}, {year:2011,value:4197}, {year:2012,value:4175}, {year:2013,value:4828}, {year:2014,value:7432}, {year:2015,value:6591}, {year:2016,value:6898}, {year:2017,value:7390}, {year:2018,value:8617}, {year:2019,value:9382}, {year:2020,value:12530}, {year:2021,value:15163}, {year:2022,value:19000}, {year:2023,value:18095}, {year:2024,value:21996}, {year:2025,value:27724} ] },
+      dpo: { label: 'Days Payable Outstanding', unit: 'days', series: [ {year:2011,value:98.3}, {year:2012,value:86.9}, {year:2013,value:87}, {year:2014,value:100.2}, {year:2015,value:72.85}, {year:2016,value:76.8}, {year:2017,value:78.75}, {year:2018,value:82}, {year:2019,value:79.8}, {year:2020,value:99.28}, {year:2021,value:105.97}, {year:2022,value:110.7}, {year:2023,value:100.25}, {year:2024,value:108.32}, {year:2025,value:115.2} ],
+        note: '15-year simple average 92.19 days. Stretched to 115.20 days by 2025.'
+      },
+      accruedLiabilities: { label: 'Accrued Compensation', unit: 'M USD', series: [ {year:2010,value:3283}, {year:2011,value:3575}, {year:2012,value:3875}, {year:2013,value:4117}, {year:2014,value:4797}, {year:2015,value:5096}, {year:2016,value:5264}, {year:2017,value:5819}, {year:2018,value:6103}, {year:2019,value:6830}, {year:2020,value:7874}, {year:2021,value:10057}, {year:2022,value:10661}, {year:2023,value:11009}, {year:2024,value:12564}, {year:2025,value:13709} ] },
+      accruedIncomeTaxes: { label: 'Short-term Income Taxes', unit: 'M USD', series: [ {year:2010,value:1074}, {year:2011,value:580}, {year:2018,value:2121}, {year:2019,value:5665}, {year:2020,value:2130}, {year:2021,value:2174}, {year:2022,value:4058}, {year:2023,value:4152}, {year:2024,value:5017}, {year:2025,value:7021} ],
+        note: 'Not separately reported 2012–2017 (combined in other).'
+      },
+      shortTermDebt: { label: 'Short-term Debt', unit: 'M USD', series: [ {year:2014,value:2000}, {year:2015,value:4985}, {year:2016,value:12904}, {year:2017,value:9072} ],
+        note: 'Only separately reported 2014–2017; not separately reported before or since.'
+      },
+      currentLongTermDebt: { label: 'Current Portion of Long-term Debt', unit: 'M USD', series: [ {year:2010,value:1000}, {year:2011,value:0}, {year:2012,value:1231}, {year:2013,value:2999}, {year:2014,value:0}, {year:2015,value:2499}, {year:2016,value:0}, {year:2017,value:1049}, {year:2018,value:3998}, {year:2019,value:5516}, {year:2020,value:3749}, {year:2021,value:8072}, {year:2022,value:2749}, {year:2023,value:5247}, {year:2024,value:6693}, {year:2025,value:2999} ] },
+      totalCurrentLiabilities: { label: 'Total Current Liabilities', unit: 'M USD', series: [ {year:2010,value:26147}, {year:2011,value:28774}, {year:2012,value:32688}, {year:2013,value:37417}, {year:2014,value:45625}, {year:2015,value:49858}, {year:2016,value:59357}, {year:2017,value:64527}, {year:2018,value:58488}, {year:2019,value:69420}, {year:2020,value:72310}, {year:2021,value:88657}, {year:2022,value:95082}, {year:2023,value:104149}, {year:2024,value:125286}, {year:2025,value:141218} ] },
+      currentRatio: { label: 'Current Liabilities to Current Assets', unit: 'x', series: [ {year:2010,value:0.47}, {year:2011,value:0.38}, {year:2012,value:0.38}, {year:2013,value:0.37}, {year:2014,value:0.4}, {year:2015,value:0.4}, {year:2016,value:0.43}, {year:2017,value:0.4}, {year:2018,value:0.34}, {year:2019,value:0.4}, {year:2020,value:0.4}, {year:2021,value:0.48}, {year:2022,value:0.56}, {year:2023,value:0.57}, {year:2024,value:0.78}, {year:2025,value:0.74} ],
+        note: '16-year simple average 0.465. The ratio has climbed sharply since 2021 — 0.48 → 0.74 — tracking the growth in short-term unearned revenue and payables alongside the capital build.'
+      },
+      longTermDebt: { label: 'Long-term Debt', unit: 'M USD', series: [ {year:2010,value:26147}, {year:2011,value:28774}, {year:2012,value:32688}, {year:2013,value:37417}, {year:2014,value:45625}, {year:2015,value:49858}, {year:2016,value:59357}, {year:2017,value:64527}, {year:2018,value:58488}, {year:2019,value:69420}, {year:2020,value:72310}, {year:2021,value:88657}, {year:2022,value:95082}, {year:2023,value:104149}, {year:2024,value:125286}, {year:2025,value:141218} ] },
+      ltDebtToEquity: { label: 'LT Debt / Equity', unit: 'x', series: [ {year:2010,value:0.56}, {year:2011,value:0.5}, {year:2012,value:0.49}, {year:2013,value:0.47}, {year:2014,value:0.5}, {year:2015,value:0.62}, {year:2016,value:0.82}, {year:2017,value:0.89}, {year:2018,value:0.7}, {year:2019,value:0.67}, {year:2020,value:0.61}, {year:2021,value:0.62}, {year:2022,value:0.57}, {year:2023,value:0.5}, {year:2024,value:0.46}, {year:2025,value:0.41} ],
+        note: '16-year simple average 0.58. Peak leverage was 0.89 in 2017; the ratio has fallen every year since to 0.41 in 2025 as equity compounded faster than debt.'
+      },
+      ltDebtToNetIncome: { label: 'LT Debt / Net Income', unit: 'x', series: [ {year:2011,value:1.24}, {year:2012,value:1.93}, {year:2013,value:1.71}, {year:2014,value:2.07}, {year:2015,value:4.09}, {year:2016,value:3.53}, {year:2017,value:2.53}, {year:2018,value:3.53}, {year:2019,value:1.77}, {year:2020,value:1.63}, {year:2021,value:1.45}, {year:2022,value:1.31}, {year:2023,value:1.44}, {year:2024,value:1.42}, {year:2025,value:1.39} ],
+        note: '15-year simple average 2.14×. The 2015–18 readings above 3.5× reflect depressed net income years, not a debt spike.'
+      },
+      deferredTaxesNonCurrent: { label: 'Deferred Income Taxes', unit: 'M USD', series: [ {year:2010,value:229}, {year:2011,value:2467}, {year:2012,value:2035}, {year:2013,value:1709}, {year:2014,value:2264}, {year:2015,value:2243}, {year:2016,value:1476}, {year:2017,value:531}, {year:2018,value:541}, {year:2019,value:233}, {year:2020,value:204}, {year:2021,value:198}, {year:2022,value:230}, {year:2023,value:433}, {year:2024,value:2618}, {year:2025,value:2335} ] },
+      otherLongTermLiabilities: { label: 'Other Long-term Liabilities', unit: 'M USD', series: [ {year:2010,value:7445}, {year:2011,value:8072}, {year:2012,value:8208}, {year:2013,value:10000}, {year:2014,value:11594}, {year:2015,value:13544}, {year:2016,value:13640}, {year:2017,value:17184}, {year:2018,value:5211}, {year:2019,value:7581}, {year:2020,value:10632}, {year:2021,value:13427}, {year:2022,value:15526}, {year:2023,value:17981}, {year:2024,value:27064}, {year:2025,value:45186} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2010,value:39938}, {year:2011,value:51621}, {year:2012,value:54908}, {year:2013,value:63487}, {year:2014,value:82600}, {year:2015,value:96140}, {year:2016,value:121471}, {year:2017,value:168692}, {year:2018,value:176130}, {year:2019,value:184226}, {year:2020,value:183007}, {year:2021,value:191791}, {year:2022,value:198298}, {year:2023,value:205753}, {year:2024,value:243686}, {year:2025,value:275524} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2010,value:-1055}, {year:2011,value:0}, {year:2012,value:856}, {year:2013,value:9895}, {year:2014,value:17710}, {year:2015,value:9096}, {year:2016,value:2282}, {year:2017,value:2648}, {year:2018,value:13682}, {year:2019,value:24150}, {year:2020,value:34566}, {year:2021,value:57055}, {year:2022,value:84281}, {year:2023,value:118848}, {year:2024,value:173144}, {year:2025,value:237731} ],
+        note: 'A deficit of −$1,055M in 2010 and zero in 2011, then a climb to $237,731M by 2025 — the dividend and buyback policy no longer consumes everything earned.'
+      },
+      shareholderEquity: { label: 'Total Stockholders\' Equity', unit: 'M USD', series: [ {year:2010,value:46175}, {year:2011,value:57083}, {year:2012,value:66363}, {year:2013,value:78944}, {year:2014,value:89784}, {year:2015,value:80083}, {year:2016,value:71997}, {year:2017,value:72394}, {year:2018,value:82718}, {year:2019,value:102330}, {year:2020,value:118304}, {year:2021,value:141988}, {year:2022,value:166542}, {year:2023,value:206223}, {year:2024,value:268477}, {year:2025,value:343479} ] },
+      investedCapital: { label: 'Invested Capital', unit: 'M USD', series: [ {year:2010,value:49325}, {year:2011,value:55932}, {year:2012,value:58231}, {year:2013,value:65409}, {year:2014,value:86675}, {year:2015,value:79697}, {year:2016,value:80228}, {year:2017,value:108105}, {year:2018,value:125080}, {year:2019,value:152737}, {year:2020,value:164784}, {year:2021,value:203445}, {year:2022,value:260083}, {year:2023,value:300714}, {year:2024,value:436620}, {year:2025,value:524438} ],
+        note: 'Total liabilities and equity less cash and short-term investments.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2011,value:6.64}, {year:2012,value:7.8}, {year:2013,value:9.32}, {year:2014,value:10.69}, {year:2015,value:9.7}, {year:2016,value:8.98}, {year:2017,value:9.24}, {year:2018,value:10.61}, {year:2019,value:13.2}, {year:2020,value:15.4}, {year:2021,value:18.66}, {year:2022,value:22.09}, {year:2023,value:27.6}, {year:2024,value:35.95}, {year:2025,value:46.01} ],
+        note: 'Equity divided by weighted average diluted shares: $6.64 (2011) → $46.01 (2025).'
+      },
+      ccc: { label: 'Cash Conversion Cycle', unit: 'days', series: [ {year:2011,value:12.08}, {year:2012,value:14.92}, {year:2013,value:29.94}, {year:2014,value:17.83}, {year:2015,value:29.09}, {year:2016,value:26.48}, {year:2017,value:19.33}, {year:2018,value:30.91}, {year:2019,value:23.43}, {year:2020,value:-2.52}, {year:2021,value:-4.92}, {year:2022,value:-7.43}, {year:2023,value:-2.47}, {year:2024,value:-17.41}, {year:2025,value:-20.72} ],
+        note: 'Negative and getting more negative since 2020, reaching −20.72 days in 2025. Microsoft collects from customers (DSO ~90 days), turns inventory in ~4 days, and stretches payables to ~115 days — it effectively gets paid before it pays suppliers. From positive 20–30 days in the hardware-heavy mid-2010s to consistently negative post-2020. Negative CCC at this scale funds growth internally and supports the buyback and dividend.'
+      },
+      returns: {
+        roe:  [ {year:2011,value:40.55}, {year:2012,value:27.51}, {year:2013,value:30.09}, {year:2014,value:26.17}, {year:2015,value:14.36}, {year:2016,value:22.09}, {year:2017,value:35.31}, {year:2018,value:21.37}, {year:2019,value:42.41}, {year:2020,value:40.14}, {year:2021,value:47.08}, {year:2022,value:47.15}, {year:2023,value:38.82}, {year:2024,value:37.13}, {year:2025,value:33.28} ],
+        roic: [ {year:2011,value:40.06}, {year:2012,value:28.48}, {year:2013,value:33.06}, {year:2014,value:25.4}, {year:2015,value:15.02}, {year:2016,value:21.38}, {year:2017,value:22.87}, {year:2018,value:12.72}, {year:2019,value:25.26}, {year:2020,value:26.84}, {year:2021,value:29.62}, {year:2022,value:27.86}, {year:2023,value:23.84}, {year:2024,value:20.5}, {year:2025,value:20.19} ],
+        roa:  [ {year:2011,value:21.3}, {year:2012,value:14.77}, {year:2013,value:16.58}, {year:2014,value:14.02}, {year:2015,value:7}, {year:2016,value:9.09}, {year:2017,value:11.73}, {year:2018,value:6.63}, {year:2019,value:14.39}, {year:2020,value:15.06}, {year:2021,value:19.3}, {year:2022,value:20.82}, {year:2023,value:18.63}, {year:2024,value:19.07}, {year:2025,value:18} ],
+        averages: { roe: 33.56, roic: 24.87, roa: 15.09 },
+      },
+      retainedEarningsTest: {
+        period: 'FY2015 – FY2025',
+        startYear: 2015, endYear: 2025,
+        retainedEarningsStart: 9096, retainedEarningsEnd: 237731,
+        retainedEarningsIncrease: 228.635,
+        marketCapIncrease: 3154.000,
+        multiplier: 13.79,
+        verdict: 'Retained earnings grew $228.6B over the ten years to FY2025 while market cap grew $3.154 trillion — $13.79 of market value created for every $1 retained. Comfortably above the $1 hurdle.',
+      },
+      tangibleRoic: {
+        rows: [ {year:2011,nopat:22408,ic:55932,intangibles:13325,tangibleIc:42607,roic:52.59}, {year:2012,nopat:16583,ic:58231,intangibles:16622,tangibleIc:41609,roic:39.85}, {year:2013,nopat:21625,ic:65409,intangibles:17738,tangibleIc:47671,roic:45.36}, {year:2014,nopat:22013,ic:86675,intangibles:27108,tangibleIc:59567,roic:36.96}, {year:2015,nopat:11968,ic:79697,intangibles:21774,tangibleIc:57923,roic:20.66}, {year:2016,nopat:17155,ic:80228,intangibles:21605,tangibleIc:58623,roic:29.26}, {year:2017,nopat:24729,ic:108105,intangibles:45228,tangibleIc:62877,roic:39.33}, {year:2018,nopat:15916,ic:125080,intangibles:43736,tangibleIc:81344,roic:19.57}, {year:2019,nopat:38577,ic:152737,intangibles:49776,tangibleIc:102961,roic:37.47}, {year:2020,nopat:44221,ic:164784,intangibles:50389,tangibleIc:114395,roic:38.66}, {year:2021,nopat:60268,ic:203445,intangibles:57511,tangibleIc:145934,roic:41.30}, {year:2022,nopat:72460,ic:260083,intangibles:78822,tangibleIc:181261,roic:39.98}, {year:2023,nopat:71704,ic:300714,intangibles:77252,tangibleIc:223462,roic:32.09}, {year:2024,nopat:89516,ic:436620,intangibles:146817,tangibleIc:289803,roic:30.89}, {year:2025,nopat:105907,ic:524438,intangibles:142113,tangibleIc:382325,roic:27.70} ],
+        note: 'Invested capital less goodwill and intangibles. Tangible ROIC has run well above reported ROIC throughout — 52.59% (2011), 19.57% at the FY18 trough, 27.70% (2025). The gap between the two widens after every large acquisition.'
+      },
+      priceToBook: {
+        rows: [ {year:2011,bvps:6.64,price:24.86,pb:3.74,underAvg:true}, {year:2012,bvps:7.80,price:25.58,pb:3.28,underAvg:true}, {year:2013,bvps:9.32,price:35.81,pb:3.84,underAvg:true}, {year:2014,bvps:10.69,price:44.48,pb:4.16,underAvg:true}, {year:2015,bvps:9.70,price:53.12,pb:5.48,underAvg:true}, {year:2016,bvps:8.98,price:59.50,pb:6.63,underAvg:true}, {year:2017,bvps:9.24,price:81.85,pb:8.86,underAvg:true}, {year:2018,bvps:10.61,price:97.15,pb:9.16,underAvg:false}, {year:2019,bvps:13.20,price:151.07,pb:11.44,underAvg:false}, {year:2020,bvps:15.40,price:213.32,pb:13.85,underAvg:false}, {year:2021,bvps:18.66,price:325.42,pb:17.44,underAvg:false}, {year:2022,bvps:22.09,price:234.22,pb:10.60,underAvg:false}, {year:2023,bvps:27.60,price:370.52,pb:13.42,underAvg:false}, {year:2024,bvps:35.95,price:418.41,pb:11.64,underAvg:false}, {year:2025,bvps:46.01,price:483.62,pb:10.51,underAvg:false} ],
+        avgExclOutlier: '8.94',
+        currentNote: 'Average P/B across 2011–2025 is 8.94×. Ticks marked under are cheaper than that mean — every year from 2011 to 2018 qualifies, none since.'
+      },
+      extraLines: [
+        { label: 'Short-term Investments', unit: 'M USD', series: [ {year:2010,value:31283}, {year:2011,value:43162}, {year:2012,value:56102}, {year:2013,value:73218}, {year:2014,value:77040}, {year:2015,value:90931}, {year:2016,value:106730}, {year:2017,value:125318}, {year:2018,value:121822}, {year:2019,value:122463}, {year:2020,value:122951}, {year:2021,value:116110}, {year:2022,value:90826}, {year:2023,value:76558}, {year:2024,value:57228}, {year:2025,value:64323} ] },
+        { label: 'Total Cash, Equivalents & Short-term Investments', unit: 'M USD', series: [ {year:2010,value:36788}, {year:2011,value:52772}, {year:2012,value:63040}, {year:2013,value:77022}, {year:2014,value:85709}, {year:2015,value:96526}, {year:2016,value:113240}, {year:2017,value:132981}, {year:2018,value:133768}, {year:2019,value:133819}, {year:2020,value:136527}, {year:2021,value:130334}, {year:2022,value:104757}, {year:2023,value:111262}, {year:2024,value:75543}, {year:2025,value:94565} ] },
+        { label: 'Operating Lease Right-of-Use Assets', unit: 'M USD', series: [ {year:2019,value:7379}, {year:2020,value:8753}, {year:2021,value:11088}, {year:2022,value:13148}, {year:2023,value:14346}, {year:2024,value:18991}, {year:2025,value:24823} ], note: 'First reported in 2019 under the current lease standard.' },
+        { label: 'Equity and Other Investments', unit: 'M USD', series: [ {year:2010,value:7754}, {year:2011,value:10865}, {year:2012,value:9776}, {year:2013,value:10844}, {year:2014,value:14597}, {year:2015,value:12053}, {year:2016,value:10431}, {year:2017,value:6023}, {year:2018,value:1862}, {year:2019,value:2649}, {year:2020,value:2965}, {year:2021,value:5984}, {year:2022,value:6891}, {year:2023,value:9879}, {year:2024,value:14600}, {year:2025,value:15405} ] },
+        { label: 'Short-term Unearned Revenue', unit: 'M USD', series: [ {year:2010,value:13652}, {year:2011,value:15722}, {year:2012,value:18653}, {year:2013,value:20639}, {year:2014,value:23150}, {year:2015,value:23223}, {year:2016,value:27468}, {year:2017,value:34102}, {year:2018,value:28905}, {year:2019,value:32676}, {year:2020,value:36000}, {year:2021,value:41525}, {year:2022,value:45538}, {year:2023,value:50901}, {year:2024,value:57582}, {year:2025,value:64555} ], note: 'Cash collected ahead of revenue recognition — the subscription model showing up on the balance sheet. $13,652M (2010) → $64,555M (2025).' },
+        { label: 'Long-term Unearned Revenue', unit: 'M USD', series: [ {year:2010,value:1178}, {year:2011,value:1398}, {year:2012,value:1406}, {year:2013,value:1760}, {year:2014,value:2008}, {year:2015,value:2095}, {year:2016,value:6441}, {year:2017,value:10377}, {year:2018,value:3815}, {year:2019,value:4530}, {year:2020,value:3180}, {year:2021,value:2616}, {year:2022,value:2870}, {year:2023,value:2912}, {year:2024,value:2602}, {year:2025,value:2710} ] },
+        { label: 'Long-term Income Taxes', unit: 'M USD', series: [ {year:2010,value:1178}, {year:2011,value:1456}, {year:2014,value:1728}, {year:2015,value:2835}, {year:2016,value:5158}, {year:2017,value:13485}, {year:2018,value:30265}, {year:2019,value:29612}, {year:2020,value:29432}, {year:2021,value:27190}, {year:2022,value:26069}, {year:2023,value:25560}, {year:2024,value:27931}, {year:2025,value:25086} ], note: 'Not separately reported in 2012 and 2013.' },
+        { label: 'Operating Lease Liabilities', unit: 'M USD', series: [ {year:2019,value:6188}, {year:2020,value:7671}, {year:2021,value:9629}, {year:2022,value:11489}, {year:2023,value:12728}, {year:2024,value:15497}, {year:2025,value:17437} ] },
+        { label: 'Accumulated Depreciation', unit: 'M USD', series: [ {year:2010,value:8629}, {year:2011,value:9829}, {year:2012,value:10962}, {year:2013,value:12513}, {year:2014,value:14793}, {year:2015,value:17606}, {year:2016,value:19800}, {year:2017,value:24179}, {year:2018,value:29223}, {year:2019,value:35330}, {year:2020,value:43197}, {year:2021,value:51351}, {year:2022,value:59660}, {year:2023,value:68251}, {year:2024,value:76421}, {year:2025,value:93653} ] },
+        { label: 'Return on Tangible Equity (ROTE)', unit: '%', series: [ {year:2011,value:52.9}, {year:2012,value:37.47}, {year:2013,value:40.74}, {year:2014,value:37.53}, {year:2015,value:20.55}, {year:2016,value:35.6}, {year:2017,value:89.54}, {year:2018,value:46.8}, {year:2019,value:86.96}, {year:2020,value:76.31}, {year:2021,value:88.81}, {year:2022,value:102.85}, {year:2023,value:65.94}, {year:2024,value:85.19}, {year:2025,value:62.67} ] },
+        { label: 'Return on Tangible Assets (ROTA)', unit: '%', series: [ {year:2011,value:24.27}, {year:2012,value:17.63}, {year:2013,value:19.28}, {year:2014,value:16.36}, {year:2015,value:8.14}, {year:2016,value:10.46}, {year:2017,value:14.31}, {year:2018,value:8.13}, {year:2019,value:17.82}, {year:2020,value:19.01}, {year:2021,value:24.7}, {year:2022,value:28.77}, {year:2023,value:24.77}, {year:2024,value:28.03}, {year:2025,value:23.99} ] },
+        { label: 'Tangible Invested Capital (excl. GW + Intangibles)', unit: 'M USD', series: [ {year:2011,value:42607}, {year:2012,value:41609}, {year:2013,value:47671}, {year:2014,value:59567}, {year:2015,value:57923}, {year:2016,value:58623}, {year:2017,value:62877}, {year:2018,value:81344}, {year:2019,value:102961}, {year:2020,value:114395}, {year:2021,value:145934}, {year:2022,value:181261}, {year:2023,value:223462}, {year:2024,value:289803}, {year:2025,value:382325} ] },
+        { label: 'Return on Tangible Invested Capital (ROTIC)', unit: '%', series: [ {year:2011,value:52.59}, {year:2012,value:39.85}, {year:2013,value:45.36}, {year:2014,value:36.96}, {year:2015,value:20.66}, {year:2016,value:29.26}, {year:2017,value:39.33}, {year:2018,value:19.57}, {year:2019,value:37.47}, {year:2020,value:38.66}, {year:2021,value:41.3}, {year:2022,value:39.98}, {year:2023,value:32.09}, {year:2024,value:30.89}, {year:2025,value:27.7} ] },
+        { label: 'Market Capitalisation at Dec 31', unit: 'M USD', series: [ {year:2011,value:230000}, {year:2012,value:240000}, {year:2013,value:300000}, {year:2014,value:382000}, {year:2015,value:440000}, {year:2016,value:483000}, {year:2017,value:660000}, {year:2018,value:780000}, {year:2019,value:1200000}, {year:2020,value:1680000}, {year:2021,value:2530000}, {year:2022,value:1790000}, {year:2023,value:2790000}, {year:2024,value:3130000}, {year:2025,value:3594000} ] },
+        { label: 'Price-to-Book', unit: 'x', series: [ {year:2011,value:3.74}, {year:2012,value:3.28}, {year:2013,value:3.84}, {year:2014,value:4.16}, {year:2015,value:5.48}, {year:2016,value:6.63}, {year:2017,value:8.86}, {year:2018,value:9.16}, {year:2019,value:11.44}, {year:2020,value:13.85}, {year:2021,value:17.44}, {year:2022,value:10.6}, {year:2023,value:13.42}, {year:2024,value:11.64}, {year:2025,value:10.51} ], note: 'Average 2011–2025: 8.94×.' },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Operating Cash Flow', unit: 'M USD', series: [ {year:2011,value:26994}, {year:2012,value:31626}, {year:2013,value:28833}, {year:2014,value:32502}, {year:2015,value:29668}, {year:2016,value:33325}, {year:2017,value:39507}, {year:2018,value:43884}, {year:2019,value:52185}, {year:2020,value:60675}, {year:2021,value:76740}, {year:2022,value:89035}, {year:2023,value:87582}, {year:2024,value:118548}, {year:2025,value:136162} ],
+        note: '$26,994M (FY11) → $136,162M (FY25), a 12.3% CAGR over 14 years.'
+      },
+      capex: { label: 'Capital Expenditures', unit: 'M USD', series: [ {year:2011,value:2355}, {year:2012,value:2305}, {year:2013,value:4257}, {year:2014,value:5485}, {year:2015,value:5944}, {year:2016,value:8343}, {year:2017,value:8129}, {year:2018,value:11632}, {year:2019,value:13925}, {year:2020,value:15441}, {year:2021,value:20622}, {year:2022,value:23886}, {year:2023,value:28107}, {year:2024,value:44477}, {year:2025,value:64551} ],
+        note: '$2,355M (FY11) → $64,551M (FY25) — a 26.7% CAGR. Extremely strong long-term growth in capital spending, and the fastest-growing line in the whole file.'
+      },
+      capexRatio: { label: 'CapEx % of Operating Cash Flow', unit: '%', series: [ {year:2011,value:8.7}, {year:2012,value:7.3}, {year:2013,value:14.8}, {year:2014,value:16.9}, {year:2015,value:20}, {year:2016,value:25}, {year:2017,value:20.6}, {year:2018,value:26.5}, {year:2019,value:26.7}, {year:2020,value:25.5}, {year:2021,value:26.9}, {year:2022,value:26.8}, {year:2023,value:32.1}, {year:2024,value:37.5}, {year:2025,value:47.4} ],
+        note: '7.3% of operating cash flow in FY12, 47.4% in FY25. Nearly half of every operating dollar is now being reinvested in capital assets.'
+      },
+      extraLines: [
+        { label: 'Depreciation, Amortization and Other', unit: 'M USD', series: [ {year:2011,value:2766}, {year:2012,value:9160}, {year:2013,value:3755}, {year:2014,value:5212}, {year:2015,value:13455}, {year:2016,value:7252}, {year:2017,value:8778}, {year:2018,value:10261}, {year:2019,value:11682}, {year:2020,value:12796}, {year:2021,value:11686}, {year:2022,value:14460}, {year:2023,value:13861}, {year:2024,value:22287}, {year:2025,value:34153} ], note: '$2,766M (FY11) → $34,153M (FY25), a 19.3% CAGR — the depreciation tail of the capex programme starting to arrive.' },
+        { label: 'Stock-Based Compensation Expense', unit: 'M USD', series: [ {year:2011,value:2149}, {year:2012,value:2151}, {year:2013,value:2197}, {year:2014,value:2446}, {year:2015,value:2574}, {year:2016,value:2668}, {year:2017,value:3266}, {year:2018,value:3940}, {year:2019,value:4652}, {year:2020,value:5289}, {year:2021,value:6118}, {year:2022,value:7502}, {year:2023,value:9611}, {year:2024,value:10734}, {year:2025,value:11974} ], note: '$2,149M (FY11) → $11,974M (FY25), a 13.1% CAGR.' },
+        { label: 'Net Recognized Losses on Investments and Derivatives', unit: 'M USD', series: [ {year:2011,value:-362}, {year:2012,value:-200}, {year:2013,value:80}, {year:2014,value:-109}, {year:2015,value:-443}, {year:2016,value:-223}, {year:2017,value:-2073}, {year:2018,value:-2212}, {year:2019,value:-792}, {year:2020,value:-219}, {year:2021,value:-1249}, {year:2022,value:-409}, {year:2023,value:196}, {year:2024,value:305}, {year:2025,value:609} ] },
+        { label: 'Deferred Income Taxes', unit: 'M USD', series: [ {year:2011,value:2294}, {year:2012,value:3711}, {year:2013,value:2313}, {year:2014,value:2255}, {year:2015,value:376}, {year:2016,value:8906}, {year:2017,value:-829}, {year:2018,value:-5143}, {year:2019,value:-6463}, {year:2020,value:11}, {year:2021,value:-150}, {year:2022,value:-5702}, {year:2023,value:-6059}, {year:2024,value:-4738}, {year:2025,value:-7056} ] },
+        { label: 'Free Cash Flow (OCF less CapEx)', unit: 'M USD', series: [ {year:2011,value:24639}, {year:2012,value:29321}, {year:2013,value:24576}, {year:2014,value:27017}, {year:2015,value:23724}, {year:2016,value:24982}, {year:2017,value:31378}, {year:2018,value:32252}, {year:2019,value:38260}, {year:2020,value:45234}, {year:2021,value:56118}, {year:2022,value:65149}, {year:2023,value:59475}, {year:2024,value:74071}, {year:2025,value:71611} ] },
+      ],
+      ownerEarnings: {
+        currency: '$',
+        headline: 'Owner Earnings — FY2011 to FY2025',
+        intro: 'Net profit plus depreciation, amortization and other, plus stock-based compensation, plus net recognized losses on investments and derivatives, plus deferred income taxes, less capital expenditures. The ADJ column is the sum of those four add-backs. OEPS is owner earnings divided by weighted average diluted shares.',
+        rows: [ {year:2011,np:23150,adj:6847,capex:2355,oe:27642,oeps:3.22}, {year:2012,np:16978,adj:14822,capex:2305,oe:29495,oeps:3.47}, {year:2013,np:21863,adj:8345,capex:4257,oe:25951,oeps:3.06}, {year:2014,np:22074,adj:9804,capex:5485,oe:26393,oeps:3.14}, {year:2015,np:12193,adj:15962,capex:5944,oe:22211,oeps:2.69}, {year:2016,np:16798,adj:18603,capex:8343,oe:27058,oeps:3.38}, {year:2017,np:25489,adj:9142,capex:8129,oe:26502,oeps:3.38}, {year:2018,np:16571,adj:6846,capex:11632,oe:11785,oeps:1.51}, {year:2019,np:39240,adj:9079,capex:13925,oe:34394,oeps:4.44}, {year:2020,np:44281,adj:17877,capex:15441,oe:46717,oeps:6.08}, {year:2021,np:61271,adj:16405,capex:20622,oe:57054,oeps:7.50}, {year:2022,np:72738,adj:15851,capex:23886,oe:64703,oeps:8.58}, {year:2023,np:72361,adj:17609,capex:28107,oe:61863,oeps:8.28}, {year:2024,np:88136,adj:28588,capex:44477,oe:72247,oeps:9.67}, {year:2025,np:101832,adj:39680,capex:64551,oe:76961,oeps:10.31} ],
+        cagr: 'Owner earnings CAGR FY2011–FY2025 (14 years): 7.6% — $27,642M to $76,961M. Halved for conservatism: 7.6 ÷ 2 = 3.8, rounded to 4%. Growth scenarios to use: 5%, 4%, 3%.',
+      },
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null , locked: true, progress: 'research' },
   { ticker: 'UBER',  name: 'Uber Technologies',              industry: 'Technology',    country: 'United States', marketCap: 175000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Global rideshare and delivery network \u2014 a two-sided marketplace toll on urban movement.',       breakdown: null, locked: true },
@@ -22964,7 +23257,7 @@ function MuzzApp() {
                           {/* CN: NETWORK BUILT BY ACQUISITION */}
                           {showOv('acquisitions') && acquisitions && (
                             <>
-                              <SectionHeading>// NETWORK BUILT BY ACQUISITION</SectionHeading>
+                              <SectionHeading>// {acquisitions.heading || 'NETWORK BUILT BY ACQUISITION'}</SectionHeading>
                               {acquisitions.preamble && <InfoPanel label="// THE PLAYBOOK">{acquisitions.preamble}</InfoPanel>}
                               <div style={{display:'flex',flexDirection:'column',gap:'6px',margin:'8px 0'}}>
                                 {acquisitions.timeline.map((a, i) => (
@@ -29174,6 +29467,15 @@ function MuzzApp() {
                             </>
                           )}
 
+                          {BS.extraLines && BS.extraLines.length > 0 && (
+                            <>
+                              <SectionHeading>// ADDITIONAL BALANCE-SHEET LINES</SectionHeading>
+                              {BS.extraLines.map((ln, i) => (
+                                <div key={'bsx'+i}>{chartWithNote(ln, 'amber')}</div>
+                              ))}
+                            </>
+                          )}
+
                           {/* PENSION PLANS — U.S. + Non-U.S. investment strategy & asset table */}
                           {BS.pensionPlans && (
                             <>
@@ -29511,6 +29813,17 @@ function MuzzApp() {
                               )}
                             </>
                           )}
+                          {cashFlow.extraLines && cashFlow.extraLines.length > 0 && (
+                            <>
+                              <SectionHeading>// CASH-FLOW COMPONENTS</SectionHeading>
+                              {cashFlow.extraLines.map((ln, i) => (
+                                <div key={'cfx'+i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{ln.note}</div>}
+                                </div>
+                              ))}
+                            </>
+                          )}
                           {cashFlow.ownerEarnings && (() => {
                             const OE = cashFlow.ownerEarnings;
                             return (
@@ -29526,7 +29839,7 @@ function MuzzApp() {
                                       <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>+ ADJ</th>
                                       <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>− CAPEX</th>
                                       <th style={{textAlign:'right',padding:'5px 8px',color:amber,fontSize:'9px',fontWeight:700}}>= OWNER EARN</th>
-                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS (€)</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS ({OE.currency || '€'})</th>
                                     </tr></thead>
                                     <tbody>
                                       {OE.rows.map((r, i) => (
@@ -29536,19 +29849,20 @@ function MuzzApp() {
                                           <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(34,197,94,0.8)'}}>+{r.adj}</td>
                                           <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(239,68,68,0.7)'}}>({r.capex})</td>
                                           <td style={{padding:'4px 8px',textAlign:'right',color:amber,fontWeight:700}}>{r.oe.toLocaleString()}</td>
-                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:600}}>{r.oeps.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:600}}>{r.oeps != null ? r.oeps.toFixed(2) : '—'}</td>
                                         </tr>
                                       ))}
                                     </tbody>
                                   </table>
                                 </div>
                                 {OE.cagr && <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.82)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{OE.cagr}</div>}
+                                {OE.multiples && (<>
                                 <SectionHeading>// OWNER-EARNINGS MULTIPLE</SectionHeading>
                                 <div style={{overflowX:'auto',marginBottom:'8px'}}>
                                   <table style={{width:'100%',minWidth:'360px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
                                     <thead><tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
                                       <th style={{textAlign:'left',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>YEAR</th>
-                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS (€)</th>
+                                      <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>OEPS ({OE.currency || '€'})</th>
                                       <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(245,158,11,0.6)',fontSize:'9px',fontWeight:600}}>YEAR-LOW (€)</th>
                                       <th style={{textAlign:'right',padding:'5px 8px',color:amber,fontSize:'9px',fontWeight:700}}>OE MULTIPLE</th>
                                     </tr></thead>
@@ -29556,7 +29870,7 @@ function MuzzApp() {
                                       {OE.multiples.map((r, i) => (
                                         <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
                                           <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
-                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.oeps.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.oeps != null ? r.oeps.toFixed(2) : '—'}</td>
                                           <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>{r.price}</td>
                                           <td style={{padding:'4px 8px',textAlign:'right',color: r.mult <= 19 ? 'rgba(34,197,94,0.95)' : amber,fontWeight:700}}>{r.mult.toFixed(1)}×</td>
                                         </tr>
@@ -29564,6 +29878,7 @@ function MuzzApp() {
                                     </tbody>
                                   </table>
                                 </div>
+                                </>)}
                                 {OE.multiplesNote && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'9.5px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}><span style={{color:amber,fontWeight:600}}>Note — </span>{OE.multiplesNote}</div>}
                                 {OE.interpretation && (
                                   <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
