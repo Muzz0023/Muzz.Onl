@@ -12670,6 +12670,148 @@ const PLTR_BREAKDOWN = {
 // sub-tab, never blended into a reported-actuals series.
 // ════════════════════════════════════════════════════════════════════
 const ORCL_BREAKDOWN = {
+
+  overview: {
+    operatingSegments: {
+      asOf: 'Fiscal 2025',
+      description: 'Oracle reports three businesses. Cloud and license is the whole company in practical terms at 86% of fiscal 2025 revenue (84% in fiscal 2024); hardware and services are the declining remainder.',
+      segments: [
+        { number: '01', name: 'Cloud and License Business', shortName: 'CLOUD & LICENSE', type: '86% of FY25 revenue', detail: 'Markets, sells and delivers a broad spectrum of enterprise applications and infrastructure technologies through cloud and licence offerings. Two revenue streams: cloud services and licence support, and cloud licence and on-premise licence. Cloud services revenues were 43% of total revenue in fiscal 2025, up from 37% in 2024 and 32% in 2023.' },
+        { number: '02', name: 'Hardware Business', shortName: 'HARDWARE', type: '5% of FY25 revenue', detail: 'Enterprise hardware and hardware-related software: Oracle Engineered Systems, servers, storage, industry-specific hardware, operating systems, virtualisation and management software, plus hardware support. Down from 6% of revenue in fiscal 2024 \u2014 a declining share.' },
+        { number: '03', name: 'Services Business', shortName: 'SERVICES', type: '9% of FY25 revenue', detail: 'Helps customers and partners maximise the performance of their investments in Oracle applications and infrastructure. Consulting services and advanced customer services. 10% of revenue in fiscal 2024 \u2014 slightly declining share.' },
+      ],
+      operatingUnits: 'Margin ranks in the same order as strategic importance: cloud and license earns the highest operating margins, hardware lower (incremental costs to produce, distribute and support physical product, including direct materials and labour), and services lower still than both.',
+    },
+
+    businessLines: {
+      description: 'The three businesses, with how each actually recognises revenue \u2014 which matters more than usual at Oracle, because the mix of ratable versus point-in-time recognition drives how lumpy any given quarter looks.',
+      lines: [
+        {
+          name: 'Cloud Services & License Support',
+          description: 'Cloud services: subscription-based access to Oracle Cloud applications and infrastructure across SaaS, PaaS and IaaS. Billed in advance and recognised ratably over the contract period, typically one to four years, or as usage occurs. License support: ongoing technical support and updates for customers running on-premise, cloud or hybrid licences \u2014 billed in advance and recognised ratably over roughly a year, priced as a percentage of the net licence fee. Almost all customers renew.',
+          revenueProfile: 'Ratable, recurring, near-universal renewal',
+          highlight: true,
+        },
+        {
+          name: 'Cloud License & On-Premise License',
+          description: 'Perpetual or term licences for software \u2014 Oracle Database, Applications, Middleware, Java \u2014 deployed in the cloud, on-premise or elsewhere. Recognised upfront at the point in time the software is made available for download or use. Customers can purchase or renew related licence support on top. Because recognition is point-in-time, the timing of large transactions can significantly move quarterly revenue.',
+          revenueProfile: 'Point-in-time, lumpy, seeds the support annuity',
+          highlight: true,
+        },
+        {
+          name: 'Hardware',
+          description: 'Hardware products and related software are treated as a combined performance obligation, recognised at the point of delivery when ownership transfers. The majority is sold through indirect channels \u2014 independent distributors and value-added resellers. Hardware support provides unspecified software updates for components essential to the hardware\u2019s functionality, plus repairs, maintenance and technical support; contracts are entered and renewed at customer option, priced as a percentage of net hardware product fees, and recognised ratably. Quarterly hardware revenue is difficult to predict.',
+          revenueProfile: 'Point-in-time, indirect channel, lower margin',
+        },
+        {
+          name: 'Services',
+          description: 'Consulting and advanced customer services. Oracle positions this as differentiated on focus on its own technologies, extensive experience, breadth of intellectual property and best practices. Lower margin than both the cloud and license business and the hardware business.',
+          revenueProfile: 'Lowest margin, non-core, follows the licence sale',
+        },
+      ],
+    },
+  },
+
+  moat: {
+    preamble: 'The renewal rate on license support is the single most important number in the Oracle thesis, and Oracle never states it outright. What it does instead is repeat the same qualifier \u2014 "substantially all" \u2014 in four separate places across the filing: the forward-looking statements, the license support description, revenue recognition, and the cash flow discussion. Taken together that language implies roughly 90\u201395% of licence support customers renew when their contracts expire. That is the toll booth: revenue that arrives without being re-won each year, from customers whose systems of record already run on the software.',
+
+    summary: {
+      headline: 'Oracle never publishes a renewal rate. It says "substantially all" four times instead.',
+      breakdown: [
+        { division: 'License Support Renewal', moatStrength: 'Very Strong', biggestRisk: 'Generational migration off Oracle Database as new applications get built elsewhere', icon: '\uD83D\uDD01', featured: true },
+        { division: 'Cloud Services (SaaS/PaaS/IaaS)', moatStrength: 'Strong', biggestRisk: 'Capacity constraints; competing on price against larger hyperscalers', icon: '\u2601\uFE0F', featured: true },
+        { division: 'Cloud & On-Premise License', moatStrength: 'Strong', biggestRisk: 'Point-in-time recognition makes quarters lumpy; declining share of revenue', icon: '\uD83D\uDCDC' },
+        { division: 'Hardware', moatStrength: 'Weak', biggestRisk: 'Structural decline; customer demand shifting to cloud infrastructure', icon: '\uD83D\uDDA5\uFE0F' },
+        { division: 'Services', moatStrength: 'Weak', biggestRisk: 'Lowest margin; falls with customer IT budgets and discretionary spending', icon: '\uD83D\uDD27' },
+      ],
+      buffettTakeaways: [
+        'Filing language, forward-looking statements: Oracle expects that <substantially all of our customers will renew> their licence support contracts on expiration.',
+        'Filing language, licence support: substantially all support customers renew on expiration, to keep receiving technical support and the periodic unspecified updates and enhancements they are entitled to.',
+        'Filing language, revenue recognition: substantially all customers elect to purchase and renew their licence support contracts annually.',
+        'Filing language, operating cash flows: the largest source of operating cash is collections from customers following purchase and renewal of cloud services and licence support agreements \u2014 the annuity IS the cash flow.',
+        'Filing language, risk factors: Oracle states plainly that renewals of these contracts are important to its future success, and that customers may not renew if it fails to develop sufficiently differentiated products or price them to meet demand.',
+        'The same passage concedes Oracle cannot give assurance that the standards it chooses to build new products on will let it compete effectively in emerging areas \u2014 the honest counterweight to the renewal story.',
+      ],
+    },
+  },
+
+  risks: {
+    governmentalRegulation: {
+      summary: 'Three material enforcement actions across a decade, all of them about how overseas sales teams won government business \u2014 not about the software, the revenue or the accounting. Total roughly $224.5M, dominated by the 2011 False Claims Act settlement. Oracle admitted guilt in none of them.',
+      sections: [
+        {
+          number: '01',
+          name: '2012 \u00b7 SEC \u00b7 $2.0M \u00b7 FCPA (India)',
+          bullets: [
+            { label: 'Regulator', text: 'U.S. Securities and Exchange Commission.' },
+            { label: 'Amount', text: '$2.0M.' },
+            { label: 'Law', text: 'FCPA \u2014 books and records / internal controls.' },
+            { label: 'Jurisdiction', text: 'India.' },
+            { label: 'Misconduct', text: 'Improper payments via unauthorised funds.' },
+            { label: 'Mechanics', text: 'Oracle India employees set up off-books bank accounts to pay for travel, gifts and entertainment for government officials.' },
+            { label: 'Why', text: 'The SEC said Oracle failed to maintain effective internal controls over foreign subsidiaries.' },
+            { label: 'Admission', text: 'No admission of guilt.' },
+            { label: 'Investor relevance', text: 'Small fine, but the first red flag on international compliance.' },
+            { label: 'Plain english', text: 'Oracle workers in India made secret bank accounts that head office didn\u2019t know about, and used the money on flights, hotels, meals and gifts for government customers to help win or keep contracts. Oracle didn\u2019t watch its overseas teams closely enough.' },
+          ],
+        },
+        {
+          number: '02',
+          name: '2011 \u00b7 DOJ Civil \u00b7 $199.5M \u00b7 False Claims Act (US)',
+          bullets: [
+            { label: 'Regulator', text: 'U.S. Department of Justice (civil).' },
+            { label: 'Amount', text: '$199.5M \u2014 by far the largest of the three.' },
+            { label: 'Law', text: 'False Claims Act.' },
+            { label: 'Jurisdiction', text: 'United States \u2014 federal contracts.' },
+            { label: 'Misconduct', text: 'Government overbilling and pricing misrepresentation.' },
+            { label: 'Mechanics', text: 'Oracle gave commercial customers deeper discounts while certifying that the U.S. government received the best price under its GSA contracts.' },
+            { label: 'Why', text: 'The DOJ viewed this as false certifications that caused the government to overpay.' },
+            { label: 'Admission', text: 'No admission of guilt.' },
+            { label: 'Investor relevance', text: 'The most serious case of the three \u2014 goes to contract discipline and pricing governance.' },
+            { label: 'Plain english', text: 'Oracle told the U.S. government it was getting the best possible price, but quietly gave bigger discounts to other customers. The government only signed because it believed it was getting the cheapest deal.' },
+          ],
+        },
+        {
+          number: '03',
+          name: '2022 \u00b7 SEC \u00b7 $23.0M \u00b7 FCPA repeat (India, Turkey, UAE)',
+          bullets: [
+            { label: 'Regulator', text: 'U.S. Securities and Exchange Commission.' },
+            { label: 'Amount', text: '$23.0M.' },
+            { label: 'Law', text: 'FCPA \u2014 books and records / internal controls. A repeat offence.' },
+            { label: 'Jurisdiction', text: 'India, Turkey, UAE.' },
+            { label: 'Misconduct', text: 'Circumvention of compliance controls.' },
+            { label: 'Mechanics', text: 'Subsidiaries used side funds created out of distributor discounts to finance benefits for government customers.' },
+            { label: 'Why', text: 'The SEC explicitly cited repeat failure despite the 2012 enforcement action.' },
+            { label: 'Admission', text: 'No admission of guilt.' },
+            { label: 'Investor relevance', text: 'Reputational hit \u2014 shows weakness in control enforcement rather than fraud.' },
+            { label: 'Plain english', text: 'Employees found a workaround. Instead of secret bank accounts, they gave extra discounts to distributors, took the leftover money, and used it on travel, meals and perks for government customers. Oracle had already been warned in 2012 and it happened again.' },
+          ],
+        },
+      ],
+    },
+
+    contingencies: {
+      items: [
+        {
+          topic: 'What this was NOT',
+          detail: 'No fake revenue. No cooked books. No product issues. No customers harmed at scale.',
+          takeaway: 'None of the three actions touched Oracle\u2019s accounting, its software, or its long-term economics.',
+        },
+        {
+          topic: 'What this WAS',
+          detail: 'Sales pressure, weak oversight of overseas teams, and governance discipline \u2014 specifically around how government contracts get won.',
+          takeaway: 'Oracle\u2019s overseas sales teams kept finding ways to bend the rules to win government contracts, and Oracle didn\u2019t stop it fast enough.',
+        },
+        {
+          topic: 'The repeat-offence problem',
+          detail: 'The 2022 SEC action explicitly cited repeat failure despite the 2012 enforcement. Oracle fixed the first mechanism (off-books accounts) and employees found a second one (distributor side funds) to achieve the same end.',
+          takeaway: 'The pattern matters more than the dollar amounts \u2014 $25M of SEC fines is immaterial to a company earning $12bn, but a decade between the same finding twice says something about control enforcement.',
+        },
+      ],
+      plainEnglish: 'The engine was fine. The drivers overseas took shortcuts.',
+    },
+  },
+
   numbers: {
     incomeStatement: {
       netSales: { label: 'Cloud Services & License Support', unit: 'M USD', series: [ {year:2017,value:23758}, {year:2018,value:26222}, {year:2019,value:26707}, {year:2020,value:27392}, {year:2021,value:28700}, {year:2022,value:30174}, {year:2023,value:35307}, {year:2024,value:39383}, {year:2025,value:44029} ],
