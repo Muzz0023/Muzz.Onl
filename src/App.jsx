@@ -12660,13 +12660,108 @@ const PLTR_BREAKDOWN = {
   },
 };
 
+// ════════════════════════════════════════════════════════════════════
+// ORCL_BREAKDOWN — Oracle Corporation Coverage data (Tier 2)
+// SOURCE: Muzz's supplied revenue workbook (geographic + disaggregation
+// + business-line segment revenue). SEGMENTS tab only for now —
+// income statement, balance sheet and cash flow pending.
+// Fiscal year ends 31 May. All figures $M as supplied.
+// Muzz's forward projections (FY2026-FY2035) are kept in their own
+// sub-tab, never blended into a reported-actuals series.
+// ════════════════════════════════════════════════════════════════════
+const ORCL_BREAKDOWN = {
+  numbers: {
+    segments: {
+      lineGroups: [
+        {
+          id: 'orclGeo',
+          label: 'TOTAL BY GEOGRAPHY',
+          preamble: 'Total revenue by region, FY2017\u2013FY2025 as reported. Oracle\u2019s fiscal year ends 31 May. The three regions sum exactly to total revenue in every year.',
+          callout: 'Americas has done all the work: +7.02% CAGR over the eight years versus +3.55% for EMEA and +1.89% for Asia Pacific. The region went from 55.9% of revenue in FY2017 to 63.3% in FY2025.',
+          lines: [
+            { label: 'Americas Revenue', unit: 'M USD', series: [ {year:2017,value:21121}, {year:2018,value:21648}, {year:2019,value:21856}, {year:2020,value:21563}, {year:2021,value:21828}, {year:2022,value:23679}, {year:2023,value:31226}, {year:2024,value:33122}, {year:2025,value:36339} ], note: 'FY2017\u2013FY2025 CAGR +7.02%. Flat around $21\u201322bn from 2017 to 2021, then the step change: $23.7bn (2022) to $31.2bn (2023) as Cerner consolidated, and on to $36.3bn by 2025.' },
+            { label: 'EMEA Revenue', unit: 'M USD', series: [ {year:2017,value:10614}, {year:2018,value:11409}, {year:2019,value:11270}, {year:2020,value:11035}, {year:2021,value:11894}, {year:2022,value:12011}, {year:2023,value:12109}, {year:2024,value:13030}, {year:2025,value:14025} ], note: 'FY2017\u2013FY2025 CAGR +3.55%. Declined in 2019 and 2020 before resuming growth.' },
+            { label: 'Asia Pacific Revenue', unit: 'M USD', series: [ {year:2017,value:6057}, {year:2018,value:6326}, {year:2019,value:6380}, {year:2020,value:6470}, {year:2021,value:6757}, {year:2022,value:6750}, {year:2023,value:6619}, {year:2024,value:6809}, {year:2025,value:7035} ], note: 'FY2017\u2013FY2025 CAGR +1.89%. The slowest region \u2014 revenue actually fell in 2022 and 2023.' },
+            { label: 'Total Revenue', unit: 'M USD', series: [ {year:2017,value:37792}, {year:2018,value:39383}, {year:2019,value:39506}, {year:2020,value:39068}, {year:2021,value:40479}, {year:2022,value:42440}, {year:2023,value:49954}, {year:2024,value:52961}, {year:2025,value:57399} ], note: 'FY2017\u2013FY2025 CAGR +5.35%. The only down year in the series was FY2020.' },
+          ],
+        },
+        {
+          id: 'orclGeoProj',
+          label: 'PROJECTIONS',
+          preamble: 'Forward revenue projections FY2026\u2013FY2035. These are modelled assumptions, NOT reported figures \u2014 kept in a separate sub-tab so they are never mistaken for actuals.',
+          callout: 'Two things to be aware of before leaning on these. First, the projected regional lines do not sum to the projected total: FY2026 regions add to $59,955M against a projected total of $59,647M, a $308M gap, so the total is modelled independently rather than built up from the parts. Second, the projected FY2026 applications line ($19,159M) sits BELOW the FY2025 actual ($19,383M) despite carrying a +4% growth label.',
+          lines: [
+            { label: 'Americas — Projected', unit: 'M USD', series: [ {year:2026,value:38615}, {year:2027,value:39916}, {year:2028,value:41270}, {year:2029,value:42678}, {year:2030,value:44142}, {year:2031,value:45664}, {year:2032,value:47246}, {year:2033,value:48890}, {year:2034,value:50598}, {year:2035,value:52373} ], note: 'Assumed +3.5% a year. Note the step from the FY2025 actual of $36,339M to the FY2026 projection of $38,615M is +6.26%, not +3.5% \u2014 the 3.5% rate applies from FY2027 onward.' },
+            { label: 'EMEA — Projected', unit: 'M USD', series: [ {year:2026,value:14235}, {year:2027,value:14561}, {year:2028,value:14772}, {year:2029,value:14986}, {year:2030,value:15205}, {year:2031,value:15428}, {year:2032,value:15655}, {year:2033,value:15887}, {year:2034,value:16123}, {year:2035,value:16364} ], note: 'Assumed +1.5% a year.' },
+            { label: 'Asia Pacific — Projected', unit: 'M USD', series: [ {year:2026,value:7105}, {year:2027,value:7158}, {year:2028,value:7230}, {year:2029,value:7302}, {year:2030,value:7376}, {year:2031,value:7449}, {year:2032,value:7524}, {year:2033,value:7599}, {year:2034,value:7675}, {year:2035,value:7752} ], note: 'Assumed +1.0% a year.' },
+            { label: 'Total Revenue — Projected', unit: 'M USD', series: [ {year:2026,value:59647}, {year:2027,value:61128}, {year:2028,value:62647}, {year:2029,value:64205}, {year:2030,value:65803}, {year:2031,value:67442}, {year:2032,value:69123}, {year:2033,value:70846}, {year:2034,value:72613}, {year:2035,value:74425} ], note: 'Assumed +2.5% a year. The FY2025-to-FY2026 step is +3.92%.' },
+            { label: 'Applications Cloud & Support — Projected', unit: 'M USD', series: [ {year:2026,value:19159}, {year:2027,value:20563}, {year:2028,value:21386}, {year:2029,value:22241}, {year:2030,value:23131}, {year:2031,value:24056}, {year:2032,value:25018}, {year:2033,value:26018}, {year:2034,value:27059}, {year:2035,value:28141} ], note: 'Assumed +4% a year.' },
+            { label: 'Infrastructure Cloud & Support — Projected', unit: 'M USD', series: [ {year:2026,value:24893}, {year:2027,value:25096}, {year:2028,value:25347}, {year:2029,value:25600}, {year:2030,value:25856}, {year:2031,value:26114}, {year:2032,value:26375}, {year:2033,value:26639}, {year:2034,value:26905}, {year:2035,value:27174} ], note: 'Assumed +1% a year.' },
+            { label: 'Total Cloud Services & License Support — Projected', unit: 'M USD', series: [ {year:2026,value:44910}, {year:2027,value:46128}, {year:2028,value:47051}, {year:2029,value:47992}, {year:2030,value:48962}, {year:2031,value:49941}, {year:2032,value:50940}, {year:2033,value:51959}, {year:2034,value:52998}, {year:2035,value:54058} ], note: 'Assumed +2% a year. Applications plus infrastructure add to $44,052M in FY2026 against this projected total of $44,910M \u2014 again modelled independently.' },
+          ],
+        },
+        {
+          id: 'orclOfferings',
+          label: 'CLOUD & SUPPORT MIX',
+          preamble: 'Cloud services and license support revenue, split two ways: by offering (cloud versus support) and by ecosystem (applications versus infrastructure).',
+          callout: 'The offering split is the whole Oracle story in two lines. Cloud services grew from $15.9bn to $24.5bn in two years while license support went sideways and then fell slightly \u2014 $19,609M (FY2024) to $19,523M (FY2025), the first decline in the series. The annuity has stopped growing; the cloud line is now carrying everything.',
+          lines: [
+            { label: 'Cloud Services', unit: 'M USD', series: [ {year:2023,value:15881}, {year:2024,value:19774}, {year:2025,value:24506} ], note: 'Only disclosed separately from FY2023. Up 54.3% in two years.' },
+            { label: 'License Support', unit: 'M USD', series: [ {year:2023,value:19426}, {year:2024,value:19609}, {year:2025,value:19523} ], note: 'Only disclosed separately from FY2023. Fell in FY2025 \u2014 the first decline shown.' },
+            { label: 'Total Cloud Services & License Support (by offering)', unit: 'M USD', series: [ {year:2023,value:35307}, {year:2024,value:39383}, {year:2025,value:44029} ], note: 'FY2023\u2013FY2025 only, matching the offering disclosure.' },
+            { label: 'Applications Cloud Services & License Support', unit: 'M USD', series: [ {year:2017,value:9933}, {year:2018,value:11023}, {year:2019,value:11491}, {year:2020,value:11015}, {year:2021,value:11712}, {year:2022,value:12612}, {year:2023,value:16651}, {year:2024,value:18172}, {year:2025,value:19383} ], note: 'FY2017\u2013FY2025 CAGR +8.71%. The faster-growing ecosystem.' },
+            { label: 'Infrastructure Cloud Services & License Support', unit: 'M USD', series: [ {year:2017,value:20348}, {year:2018,value:20971}, {year:2019,value:21071}, {year:2020,value:16377}, {year:2021,value:16988}, {year:2022,value:17562}, {year:2023,value:18656}, {year:2024,value:21211}, {year:2025,value:24646} ], note: 'FY2017\u2013FY2025 CAGR +2.44%. Note the drop from $21,071M (FY2019) to $16,377M (FY2020) \u2014 a definitional restatement rather than a collapse in the business, then rebuilt to $24,646M by FY2025.' },
+            { label: 'Total Cloud Services & License Support (by ecosystem)', unit: 'M USD', series: [ {year:2018,value:31994}, {year:2019,value:32562}, {year:2020,value:27392}, {year:2021,value:28700}, {year:2022,value:30174}, {year:2023,value:35307}, {year:2024,value:39383}, {year:2025,value:44029} ], note: 'FY2018\u2013FY2025 CAGR +4.67%. The FY2020 dip mirrors the infrastructure restatement above.' },
+          ],
+        },
+        {
+          id: 'orclCloudLicense',
+          label: 'CLOUD & LICENSE BUSINESS',
+          preamble: 'The cloud and license business by region, FY2015\u2013FY2025 \u2014 the core of Oracle and roughly 86% of FY2025 total revenue.',
+          callout: 'Total cloud and license grew at +5.26% a year over the decade, but almost all of it is Americas (+6.69%) versus EMEA (+2.99%) and Asia Pacific (+3.42%).',
+          lines: [
+            { label: 'Americas', unit: 'M USD', series: [ {year:2015,value:16618}, {year:2016,value:16344}, {year:2017,value:17395}, {year:2018,value:18030}, {year:2019,value:18410}, {year:2020,value:18314}, {year:2021,value:18783}, {year:2022,value:20594}, {year:2023,value:25821}, {year:2024,value:28196}, {year:2025,value:31714} ], note: 'FY2015\u2013FY2025 CAGR +6.69%.' },
+            { label: 'EMEA', unit: 'M USD', series: [ {year:2015,value:8767}, {year:2016,value:8475}, {year:2017,value:8422}, {year:2018,value:9163}, {year:2019,value:9168}, {year:2020,value:9058}, {year:2021,value:9928}, {year:2022,value:10016}, {year:2023,value:9930}, {year:2024,value:10771}, {year:2025,value:11773} ], note: 'FY2015\u2013FY2025 CAGR +2.99%. Declined in 2016, 2017 and 2023.' },
+            { label: 'Asia Pacific', unit: 'M USD', series: [ {year:2015,value:4106}, {year:2016,value:4178}, {year:2017,value:4572}, {year:2018,value:4848}, {year:2019,value:5004}, {year:2020,value:5151}, {year:2021,value:5390}, {year:2022,value:5442}, {year:2023,value:5335}, {year:2024,value:5497}, {year:2025,value:5743} ], note: 'FY2015\u2013FY2025 CAGR +3.42%.' },
+            { label: 'Total Cloud & License Revenue', unit: 'M USD', series: [ {year:2015,value:29491}, {year:2016,value:28997}, {year:2017,value:30389}, {year:2018,value:32041}, {year:2019,value:32582}, {year:2020,value:32523}, {year:2021,value:34101}, {year:2022,value:36052}, {year:2023,value:41086}, {year:2024,value:44464}, {year:2025,value:49230} ], note: 'FY2015\u2013FY2025 CAGR +5.26%.' },
+          ],
+        },
+        {
+          id: 'orclServices',
+          label: 'SERVICES BUSINESS',
+          preamble: 'The services business by region, FY2015\u2013FY2025. Consulting and implementation work attached to the software.',
+          callout: 'The +6.01% Americas CAGR is misleading on its own: the line was in steady decline from $1,775M (FY2015) to $1,397M (FY2021), then jumped to $3,703M in FY2023 on the Cerner consolidation, and has fallen in each of the two years since. Strip the acquisition out and this is a shrinking business.',
+          lines: [
+            { label: 'Americas', unit: 'M USD', series: [ {year:2015,value:1775}, {year:2016,value:1728}, {year:2017,value:1725}, {year:2018,value:1654}, {year:2019,value:1576}, {year:2020,value:1496}, {year:2021,value:1397}, {year:2022,value:1527}, {year:2023,value:3703}, {year:2024,value:3432}, {year:2025,value:3184} ], note: 'FY2015\u2013FY2025 CAGR +6.01%, but the entire gain comes from the FY2022-to-FY2023 step. Declined in nine of the eleven years otherwise.' },
+            { label: 'EMEA', unit: 'M USD', series: [ {year:2015,value:1096}, {year:2016,value:1028}, {year:2017,value:987}, {year:2018,value:1046}, {year:2019,value:1021}, {year:2020,value:979}, {year:2021,value:977}, {year:2022,value:1046}, {year:2023,value:1246}, {year:2024,value:1338}, {year:2025,value:1359} ], note: 'FY2015\u2013FY2025 CAGR +2.17%.' },
+            { label: 'Asia Pacific', unit: 'M USD', series: [ {year:2015,value:682}, {year:2016,value:635}, {year:2017,value:646}, {year:2018,value:695}, {year:2019,value:643}, {year:2020,value:631}, {year:2021,value:647}, {year:2022,value:632}, {year:2023,value:645}, {year:2024,value:661}, {year:2025,value:690} ], note: 'FY2015\u2013FY2025 CAGR +0.12% \u2014 essentially flat for a decade. Will remain relatively flat and volatile if basing off history.' },
+            { label: 'Total Services Revenue', unit: 'M USD', series: [ {year:2015,value:3553}, {year:2016,value:3391}, {year:2017,value:3358}, {year:2018,value:3395}, {year:2019,value:3240}, {year:2020,value:3106}, {year:2021,value:3021}, {year:2022,value:3205}, {year:2023,value:5594}, {year:2024,value:5431}, {year:2025,value:5233} ], note: 'FY2015\u2013FY2025 CAGR +3.94%. Down in both FY2024 and FY2025.' },
+          ],
+        },
+        {
+          id: 'orclHardware',
+          label: 'HARDWARE BUSINESS',
+          preamble: 'The hardware business by region, FY2015\u2013FY2025 \u2014 the legacy Sun estate and engineered systems.',
+          callout: 'The only consistently shrinking part of Oracle, and it shrinks everywhere: \u22126.27% a year in the Americas, \u22125.21% EMEA, \u22124.42% Asia Pacific, \u22125.56% in total. Revenue nearly halved from $5,209M (FY2015) to $2,936M (FY2025), and the line fell in ten of the eleven years.',
+          lines: [
+            { label: 'Americas', unit: 'M USD', series: [ {year:2015,value:2741}, {year:2016,value:2405}, {year:2017,value:2089}, {year:2018,value:2003}, {year:2019,value:1889}, {year:2020,value:1758}, {year:2021,value:1650}, {year:2022,value:1558}, {year:2023,value:1702}, {year:2024,value:1494}, {year:2025,value:1441} ], note: 'FY2015\u2013FY2025 CAGR \u22126.27%.' },
+            { label: 'EMEA', unit: 'M USD', series: [ {year:2015,value:1519}, {year:2016,value:1377}, {year:2017,value:1221}, {year:2018,value:1201}, {year:2019,value:1082}, {year:2020,value:998}, {year:2021,value:989}, {year:2022,value:949}, {year:2023,value:933}, {year:2024,value:921}, {year:2025,value:893} ], note: 'FY2015\u2013FY2025 CAGR \u22125.21%. Fell every single year in the series.' },
+            { label: 'Asia Pacific', unit: 'M USD', series: [ {year:2015,value:949}, {year:2016,value:887}, {year:2017,value:842}, {year:2018,value:790}, {year:2019,value:733}, {year:2020,value:687}, {year:2021,value:720}, {year:2022,value:676}, {year:2023,value:639}, {year:2024,value:651}, {year:2025,value:602} ], note: 'FY2015\u2013FY2025 CAGR \u22124.42%.' },
+            { label: 'Total Hardware Revenue', unit: 'M USD', series: [ {year:2015,value:5209}, {year:2016,value:4669}, {year:2017,value:4152}, {year:2018,value:3994}, {year:2019,value:3704}, {year:2020,value:3443}, {year:2021,value:3359}, {year:2022,value:3183}, {year:2023,value:3274}, {year:2024,value:3066}, {year:2025,value:2936} ], note: 'FY2015\u2013FY2025 CAGR \u22125.56%. FY2023 was the only up year.' },
+          ],
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
-  { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: ORCL_BREAKDOWN },
   { ticker: 'UBER',  name: 'Uber Technologies',              industry: 'Technology',    country: 'United States', marketCap: 175000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Global rideshare and delivery network \u2014 a two-sided marketplace toll on urban movement.',       breakdown: null, locked: true },
   { ticker: 'META',  name: 'Meta Platforms',                 industry: 'Technology',    country: 'United States', marketCap: 1500000000000, marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'Facebook, Instagram and WhatsApp \u2014 the world\u2019s largest social advertising machine.',            breakdown: null, locked: true },
   { ticker: 'PM',    name: 'Philip Morris International',    industry: 'Tobacco',       country: 'United States', marketCap: 280000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'International tobacco and smoke-free products (IQOS, ZYN) \u2014 pricing power on addiction.',        breakdown: null, locked: true },
@@ -28496,6 +28591,7 @@ function MuzzApp() {
                         segments.railCommodity && { id: 'railCommodity', label: 'BY COMMODITY' },
                         segments.umgSegments && { id: 'umgSegments', label: 'SEGMENT OVERVIEW' },
                         segments.umgEvolution && { id: 'umgEvolution', label: 'FINANCIAL EVOLUTION' },
+                        ...((segments.lineGroups || []).map(g => ({ id: g.id, label: g.label }))),
                       ].filter(Boolean);
                       const hasSubTabs = subTabDefs.length > 1;
                       const activeSub = subTabDefs.length ? (subTabDefs.some(t => t.id === segmentsSubTab) ? segmentsSubTab : subTabDefs[0].id) : null;
@@ -28516,6 +28612,20 @@ function MuzzApp() {
                               ))}
                             </div>
                           )}
+                          {(segments.lineGroups || []).map(g => activeSub === g.id && (
+                            <React.Fragment key={g.id}>
+                              <SectionHeading>// {g.label}</SectionHeading>
+                              {g.preamble && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{g.preamble}</div>}
+                              {g.callout && <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:'0.5px solid rgba(245,158,11,0.6)',borderLeft:'2px solid rgba(245,158,11,0.95)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>{g.callout}</div>}
+                              {(g.lines || []).map((ln, i) => (
+                                <div key={i}>
+                                  <TimeSeriesTable data={ln} />
+                                  {ln.note && <div style={{padding:'7px 11px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(245,158,11,0.35)',borderRadius:'2px',fontSize:'9.5px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginTop:'-4px',marginBottom:'12px'}}>{ln.note}</div>}
+                                </div>
+                              ))}
+                            </React.Fragment>
+                          ))}
+
                           {/* ════ WM — REVENUE BY SERVICE LINE + OPERATING EXPENSES ════ */}
                           {/* CN — FREIGHT REVENUE BY COMMODITY */}
                           {segments.railCommodity && activeSub === 'railCommodity' && (
