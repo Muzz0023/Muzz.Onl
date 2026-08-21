@@ -12790,26 +12790,6 @@ const ORCL_BREAKDOWN = {
       ],
     },
 
-    contingencies: {
-      items: [
-        {
-          topic: 'What this was NOT',
-          detail: 'No fake revenue. No cooked books. No product issues. No customers harmed at scale.',
-          takeaway: 'None of the three actions touched Oracle\u2019s accounting, its software, or its long-term economics.',
-        },
-        {
-          topic: 'What this WAS',
-          detail: 'Sales pressure, weak oversight of overseas teams, and governance discipline \u2014 specifically around how government contracts get won.',
-          takeaway: 'Oracle\u2019s overseas sales teams kept finding ways to bend the rules to win government contracts, and Oracle didn\u2019t stop it fast enough.',
-        },
-        {
-          topic: 'The repeat-offence problem',
-          detail: 'The 2022 SEC action explicitly cited repeat failure despite the 2012 enforcement. Oracle fixed the first mechanism (off-books accounts) and employees found a second one (distributor side funds) to achieve the same end.',
-          takeaway: 'The pattern matters more than the dollar amounts \u2014 $25M of SEC fines is immaterial to a company earning $12bn, but a decade between the same finding twice says something about control enforcement.',
-        },
-      ],
-      plainEnglish: 'The engine was fine. The drivers overseas took shortcuts.',
-    },
   },
 
   numbers: {
