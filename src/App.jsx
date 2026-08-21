@@ -23162,6 +23162,7 @@ function MuzzApp() {
                             </div>
                           )}
                           {/* HEADLINE STATS */}
+                          {facts && (<>
                           <SectionHeading>// HEADLINE STATS</SectionHeading>
                           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px',marginBottom:'4px'}}>
                             {(() => {
@@ -23244,6 +23245,7 @@ function MuzzApp() {
                               );
                             })()}
                           </div>
+                          </>)}
 
                           {/* IDENTITY & POSITIONING */}
                           {showOv('identity') && identity && (
