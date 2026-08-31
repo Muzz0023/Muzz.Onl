@@ -13573,6 +13573,839 @@ const CP_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// FOX_BREAKDOWN — Fox Corporation (Class A) Coverage data (Tier 2)
+// SOURCE: Muzz's supplied media data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: buyback figures arrive as exact round billions in the
+// source and are almost certainly rounded, not actual.
+// ═════════════════════════════════════════════════════════════════
+const FOX_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2022,value:13970}, {year:2023,value:14910}, {year:2024,value:13980}, {year:2025,value:16300}, {year:2026,value:17130} ],
+        note: 'Revenue grew from $13.97B (FY2022) to $17.13B (FY2026), up 22.6%. The path is not smooth \u2014 FY2024 dipped to $13.98B, essentially back to the FY2022 starting point, before two strong years. FOX\u2019s revenue is election-cycle and sports-rights sensitive, and the FY2025\u201326 step-up reflects that.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2022,value:9120}, {year:2023,value:9690}, {year:2024,value:9090}, {year:2025,value:10520}, {year:2026,value:10850} ] },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2022,value:1940}, {year:2023,value:2080}, {year:2024,value:2050}, {year:2025,value:2180}, {year:2026,value:2380} ] },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2022,value:2370}, {year:2023,value:2550}, {year:2024,value:2450}, {year:2025,value:2650}, {year:2026,value:2800} ] },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2022,value:70}, {year:2023,value:60}, {year:2024,value:10}, {year:2025,value:91}, {year:2026,value:13} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2022,value:11490}, {year:2023,value:12240}, {year:2024,value:11540}, {year:2025,value:13170}, {year:2026,value:13650} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2022,value:2490}, {year:2023,value:2670}, {year:2024,value:2440}, {year:2025,value:3130}, {year:2026,value:3470} ],
+        note: 'Operating income rose from $2.49B to $3.47B, up 39.4% \u2014 comfortably ahead of the 22.6% revenue growth. Genuine operating leverage.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:17.82}, {year:2023,value:17.91}, {year:2024,value:17.45}, {year:2025,value:19.2}, {year:2026,value:20.26} ],
+        note: 'Operating margin improved from 17.8% to 20.3%, with the FY2024 trough at 17.5%. The trend over the last three years is clearly upward.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2022,value:-377}, {year:2023,value:-349}, {year:2024,value:-405}, {year:2025,value:-403}, {year:2026,value:-401} ],
+        note: 'Interest expense is remarkably stable at $349M\u2013$405M throughout \u2014 fixed-rate debt, unchanged in size.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2022,value:2}, {year:2023,value:-2}, {year:2024,value:2}, {year:2025,value:-1}, {year:2026,value:-1} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2022,value:461}, {year:2023,value:483}, {year:2024,value:550}, {year:2025,value:768}, {year:2026,value:551} ],
+        note: 'Tax expense peaked at $768M in FY2025 alongside peak pre-tax income.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:27.21}, {year:2023,value:27.82}, {year:2024,value:26.14}, {year:2025,value:25.09}, {year:2026,value:24.19} ],
+        note: 'The effective rate declined every year without exception: 27.21%, 27.82%, 26.14%, 25.09%, 24.19%.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2022,value:1210}, {year:2023,value:1240}, {year:2024,value:1500}, {year:2025,value:2260}, {year:2026,value:1690} ],
+        note: 'Net income peaked at $2.26B (FY2025) and fell to $1.69B (FY2026) even as revenue and operating income both hit record highs. The gap is below the operating line \u2014 see the unusual items and investment gains lines.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:8.62}, {year:2023,value:8.31}, {year:2024,value:10.74}, {year:2025,value:13.88}, {year:2026,value:9.84} ],
+        note: 'Net margin is volatile in a way operating margin is not: 8.62%, 8.31%, 10.74%, 13.88%, 9.84%. Below-the-line items are driving the swings, not the business.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:2.79}, {year:2023,value:3.51}, {year:2024,value:3.43}, {year:2025,value:4.78}, {year:2026,value:5.42} ],
+        note: 'EPS rose every year except FY2024, from $2.79 to $5.42 \u2014 up 94.3% while net income rose only 39.7%. The buyback is doing more than half the work. Note the FY2026 figure does not reconcile: $5.42 \u00d7 419.65M shares implies $2.27B against reported net income of $1.69B. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:549.12}, {year:2023,value:489.26}, {year:2024,value:460.23}, {year:2025,value:445.54}, {year:2026,value:419.65} ],
+        note: 'Share count fell from 549.12M to 419.65M \u2014 down 23.6% in five years, the most aggressive reduction of the four media names. Additional paid-in capital fell in step ($9.10B \u2192 $7.27B), which is how FOX retires stock rather than parking it in treasury.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2022,value:2870}, {year:2023,value:3100}, {year:2024,value:2830}, {year:2025,value:3510}, {year:2026,value:3880} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:20.54}, {year:2023,value:20.79}, {year:2024,value:20.24}, {year:2025,value:21.53}, {year:2026,value:22.65} ],
+          note: 'EBITDA margin ran 20.2%\u201322.7%, ending at the high of the period.'
+        },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2022,value:363}, {year:2023,value:411}, {year:2024,value:389}, {year:2025,value:385}, {year:2026,value:410} ],
+          note: 'Depreciation is stable at $363M\u2013$411M \u2014 roughly 2.4% of revenue, which is what an asset-light broadcaster looks like.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2022,value:1690}, {year:2023,value:1740}, {year:2024,value:2100}, {year:2025,value:3060}, {year:2026,value:2280} ],
+          note: 'Pre-tax income including unusual items is BELOW the excluding figure in four of five years \u2014 unusual items are persistently a drag, not a boost.'
+        },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2022,value:2120}, {year:2023,value:2460}, {year:2024,value:2180}, {year:2025,value:2870}, {year:2026,value:3180} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2022,value:-430}, {year:2023,value:-720}, {year:2024,value:-80}, {year:2025,value:190}, {year:2026,value:-900} ],
+          note: 'The gap between pre-tax income including and excluding unusual items swings hard \u2014 \u2212$430M (FY2022), \u2212$720M (FY2023), +$190M (FY2025), \u2212$900M (FY2026). This is the single biggest reason net income and operating income tell different stories.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:205.79}, {year:2023,value:215.32}, {year:2024,value:162.67}, {year:2025,value:138.5}, {year:2026,value:205.33} ],
+          note: 'Operating income runs 139%\u2013215% of net income across the period. A large and variable share of operating profit does not reach the bottom line.'
+        },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2022,value:6}, {year:2023,value:131}, {year:2024,value:189}, {year:2025,value:176}, {year:2026,value:127} ],
+          note: 'Interest income jumped from $6M (FY2022) to $189M (FY2024) as rates rose against a $4B\u2013$5B cash balance, easing to $127M by FY2026.'
+        },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2022,value:-371}, {year:2023,value:-218}, {year:2024,value:-216}, {year:2025,value:-227}, {year:2026,value:-274} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2022,value:-45}, {year:2024,value:-166} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:6.6}, {year:2023,value:7.65}, {year:2024,value:6.02}, {year:2025,value:7.77}, {year:2026,value:8.65} ],
+          note: 'Interest coverage improved from 6.60\u00d7 to 8.65\u00d7, with a dip to 6.02\u00d7 in FY2024. The strongest coverage of the four media names.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2022,value:5200}, {year:2023,value:4270}, {year:2024,value:4320}, {year:2025,value:5350}, {year:2026,value:4210} ],
+        note: 'Cash ran $4.21B\u2013$5.35B against $6.61B of debt \u2014 FOX carries roughly two-thirds of its debt in offsetting cash, an unusually liquid balance sheet for a media company.'
+      },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2022,value:2130}, {year:2023,value:2180}, {year:2024,value:2360}, {year:2025,value:2470}, {year:2026,value:3460} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2022,value:953}, {year:2023,value:808}, {year:2024,value:818}, {year:2025,value:606}, {year:2026,value:793} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2022,value:8280}, {year:2023,value:7260}, {year:2024,value:7500}, {year:2025,value:8430}, {year:2026,value:8450} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2022,value:2160}, {year:2023,value:2660}, {year:2024,value:2600}, {year:2025,value:2520}, {year:2026,value:2690} ],
+        note: 'Net PP&E of $2.69B on $22.48B of assets \u2014 asset-light relative to the railways, as broadcasting should be.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2022,value:3550}, {year:2023,value:3560}, {year:2024,value:3540}, {year:2025,value:3640}, {year:2026,value:3650} ],
+        note: 'Goodwill is stable at $3.54B\u2013$3.65B \u2014 no significant acquisitions or impairments across the period.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2022,value:3680}, {year:2023,value:3730}, {year:2024,value:3750}, {year:2025,value:3710}, {year:2026,value:3720} ],
+        note: 'Other intangibles flat at $3.68B\u2013$3.75B. Combined with goodwill, roughly $7.37B of the $22.48B balance sheet is intangible, which is why tangible book value ($4.27B) is barely a third of total common equity ($11.63B).'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2022,value:3440}, {year:2023,value:3090}, {year:2024,value:2880}, {year:2025,value:2720}, {year:2026,value:2440} ],
+        note: 'Presented as a long-term CURRENT deferred tax asset, exactly as supplied. It declines steadily from $3.44B to $2.44B and is a material 10.9% of total assets.'
+      },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2022,value:495}, {year:2023,value:545}, {year:2024,value:570}, {year:2025,value:555}, {year:2026,value:566} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2022,value:22190}, {year:2023,value:21870}, {year:2024,value:21970}, {year:2025,value:23200}, {year:2026,value:22480} ],
+        note: 'Total assets are flat across five years \u2014 $22.19B to $22.48B. FOX has not grown its balance sheet at all.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2022,value:302}, {year:2023,value:469}, {year:2024,value:408}, {year:2025,value:406}, {year:2026,value:345} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2022,value:992}, {year:2023,value:1030}, {year:2024,value:1010}, {year:2025,value:1080}, {year:2026,value:1200} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2023,value:1250}, {year:2024,value:599} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2022,value:7210}, {year:2023,value:5960}, {year:2024,value:6600}, {year:2025,value:6600}, {year:2026,value:6610} ],
+        note: 'Long-term debt is essentially frozen \u2014 $6.60B, $6.60B, $6.61B over the last three years. FOX is not using the balance sheet to grow.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2022,value:7210}, {year:2023,value:7210}, {year:2024,value:7199}, {year:2025,value:6600}, {year:2026,value:6610} ],
+        note: 'Total debt fell from $7.21B to $6.61B. The FY2023 and FY2024 current-portion figures ($1.25B and $599M) are maturities being rolled.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2022,value:268}, {year:2023,value:198}, {year:2024,value:211}, {year:2025,value:243}, {year:2026,value:215} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2022,value:10620}, {year:2023,value:11210}, {year:2024,value:10920}, {year:2025,value:10840}, {year:2026,value:10670} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2022,value:9100}, {year:2023,value:8250}, {year:2024,value:7680}, {year:2025,value:7600}, {year:2026,value:7270} ],
+        note: 'Falls every year, $9.10B \u2192 $7.27B. This is where the buyback lands on the balance sheet.'
+      },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2022,value:2460}, {year:2023,value:2270}, {year:2024,value:3140}, {year:2025,value:4480}, {year:2026,value:4460} ],
+        note: 'Retained earnings grew from $2.46B to $4.46B despite $7.00B of buybacks over the same period \u2014 the repurchases run through paid-in capital rather than retained earnings.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2022,value:11340}, {year:2023,value:10380}, {year:2024,value:10710}, {year:2025,value:11960}, {year:2026,value:11630} ],
+        note: 'Common equity is roughly flat, $11.34B to $11.63B, as five years of profit were almost entirely offset by buybacks.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:20.59}, {year:2023,value:20.82}, {year:2024,value:23.23}, {year:2025,value:26.8}, {year:2026,value:27.71} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:3.32}, {year:2023,value:3.29}, {year:2024,value:2.95}, {year:2025,value:2.55}, {year:2026,value:2.47} ],
+        note: 'Price to book compressed from 3.32\u00d7 to 2.47\u00d7 while book value per share rose 34.6% ($20.59 \u2192 $27.71).'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.64}, {year:2023,value:0.69}, {year:2024,value:0.67}, {year:2025,value:0.55}, {year:2026,value:0.57} ],
+        note: 'Total debt to equity fell from 0.64\u00d7 to 0.57\u00d7.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2022,value:2010}, {year:2023,value:2940}, {year:2024,value:2879}, {year:2025,value:1250}, {year:2026,value:2400} ],
+          note: 'Net debt of just $2.40B (FY2026) against $3.88B of EBITDA \u2014 leverage of well under 1\u00d7 on a net basis. This is the most conservatively financed of the four media names.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2022,value:578}, {year:2023,value:1030}, {year:2024,value:1130}, {year:2025,value:1620}, {year:2026,value:965} ],
+          note: 'Long-term investments nearly tripled from $578M to a peak of $1.62B (FY2025) before falling back to $965M.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2022,value:209}, {year:2023,value:160}, {year:2024,value:180}, {year:2025,value:299}, {year:2026,value:272} ],
+          note: 'Current unearned revenue rose from $209M to $299M then eased \u2014 small relative to revenue, so limited subscription prepayment.'
+        },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2022,value:405}, {year:2023,value:925}, {year:2024,value:879}, {year:2025,value:822}, {year:2026,value:917} ],
+          note: 'Long-term leases more than doubled from $405M to $917M.'
+        },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2022,value:107}, {year:2023,value:72}, {year:2024,value:76}, {year:2025,value:41}, {year:2026,value:45} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2022,value:-226}, {year:2023,value:-149}, {year:2024,value:-107}, {year:2025,value:-124}, {year:2026,value:-107} ] },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2022,value:11560}, {year:2023,value:10660}, {year:2024,value:11060}, {year:2025,value:12360}, {year:2026,value:11810} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2022,value:4110}, {year:2023,value:3090}, {year:2024,value:3420}, {year:2025,value:4610}, {year:2026,value:4270} ],
+          note: 'Tangible book value of $4.27B against $11.63B of common equity \u2014 the $7.37B difference is goodwill and intangibles.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2022,value:224}, {year:2023,value:280}, {year:2024,value:342}, {year:2025,value:393}, {year:2026,value:186} ],
+          note: 'Minority interest grew from $224M to $393M then halved to $186M in FY2026.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2022,value:447}, {year:2023,value:361}, {year:2024,value:276}, {year:2025,value:276}, {year:2026,value:263} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:6.89}, {year:2023,value:7.58}, {year:2024,value:6.96}, {year:2025,value:8.66}, {year:2026,value:9.5} ],
+          note: 'Return on assets improved from 6.89% to 9.50% on a flat asset base.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:7.95}, {year:2023,value:8.75}, {year:2024,value:8.02}, {year:2025,value:10.02}, {year:2026,value:11.07} ],
+          note: 'Return on capital rose every year bar FY2024, from 7.95% to 11.07%. Modest in absolute terms but the trend is the right one.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:10.75}, {year:2023,value:11.28}, {year:2024,value:14.31}, {year:2025,value:19.59}, {year:2026,value:14.29} ],
+          note: 'ROE improved from 10.75% to a peak of 19.59% (FY2025), settling at 14.29%. The improvement is real \u2014 equity is flat while earnings rose.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:2.51}, {year:2023,value:2.33}, {year:2024,value:2.54}, {year:2025,value:1.88}, {year:2026,value:1.7} ],
+          note: 'Gross leverage fell from 2.51\u00d7 to 1.70\u00d7 as EBITDA grew and debt stayed flat.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2022,value:1880}, {year:2023,value:1800}, {year:2024,value:1840}, {year:2025,value:3320}, {year:2026,value:1970} ],
+        note: 'Operating cash flow is lumpy: $1.88B, $1.80B, $1.84B, then a spike to $3.32B (FY2025), back to $1.97B (FY2026). The FY2025 spike coincides with a $521M working-capital inflow.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2022,value:1300}, {year:2023,value:1940}, {year:2024,value:1050}, {year:2025,value:2580}, {year:2026,value:555.38} ],
+        note: 'Free cash flow collapsed from $2.58B (FY2025) to $555.4M (FY2026) \u2014 down 78.5% in a single year, and this in the year revenue and operating income both hit records. Worth understanding before drawing conclusions from the income statement alone.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2022,value:1210}, {year:2023,value:1240}, {year:2024,value:1500}, {year:2025,value:2260}, {year:2026,value:1690} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2022,value:1540}, {year:2023,value:2160}, {year:2024,value:1300}, {year:2025,value:2830}, {year:2026,value:806} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:69.15}, {year:2023,value:107.78}, {year:2024,value:57.07}, {year:2025,value:77.71}, {year:2026,value:28.19} ],
+          note: 'Conversion swung from 77.7% (FY2025) to 28.2% (FY2026).'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:155.37}, {year:2023,value:145.16}, {year:2024,value:122.67}, {year:2025,value:146.9}, {year:2026,value:116.57} ],
+          note: 'Operating cash flow ran 123%\u2013155% of net income for four years, then 117% in FY2026 \u2014 consistently above reported earnings.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2022,value:-513}, {year:2023,value:-438}, {year:2024,value:-452}, {year:2025,value:-537}, {year:2026,value:-705} ],
+          note: 'Investing outflows are small and stable at $438M\u2013$705M \u2014 FOX is not capital-hungry.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2022,value:-2060}, {year:2023,value:-2290}, {year:2024,value:-1340}, {year:2025,value:-1760}, {year:2026,value:-2410} ],
+          note: 'Financing outflows of $1.34B\u2013$2.41B every year, driven almost entirely by the buyback.'
+        },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2022,value:-1000}, {year:2023,value:-2000}, {year:2024,value:-1000}, {year:2025,value:-1000}, {year:2026,value:-2000} ],
+          note: 'The supplied buyback figures are suspiciously round \u2014 exactly $1.00B, $2.00B, $1.00B, $1.00B, $2.00B. Almost certainly rounded in the source export rather than actual to the dollar. Total $7.00B over five years against a market value well under $20B.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2022,value:-307}, {year:2023,value:-299}, {year:2024,value:-281}, {year:2025,value:-277}, {year:2026,value:-287} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.56}, {year:2023,value:0.61}, {year:2024,value:0.61}, {year:2025,value:0.62}, {year:2026,value:0.68} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $0.56 to $0.68 as the share count shrank faster than the total dividend.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:25.37}, {year:2023,value:24.11}, {year:2024,value:18.73}, {year:2025,value:12.26}, {year:2026,value:16.98} ],
+          note: 'The dividend is modest and shrinking as a claim on earnings \u2014 25.4% of net income in FY2022 down to 17.0% in FY2026. The buyback is the primary return channel by a factor of roughly seven.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2022,value:1307}, {year:2023,value:2299}, {year:2024,value:1281}, {year:2025,value:1277}, {year:2026,value:2287} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:100.54}, {year:2023,value:118.51}, {year:2024,value:122}, {year:2025,value:49.5}, {year:2026,value:411.79} ],
+          note: 'Shareholder returns ran 50%\u2013122% of free cash flow for four years, then 411.8% in FY2026 when $2.29B was returned against $555.4M of free cash flow.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'M USD', series: [ {year:2022,value:-386}, {year:2023,value:403}, {year:2024,value:-189}, {year:2025,value:449}, {year:2026,value:-761} ],
+          note: 'Swings violently: \u2212$386M, +$403M, \u2212$189M, +$449M, \u2212$761M. These marks pass through net income and explain most of the divergence between operating and net results.'
+        },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2022,value:-301}, {year:2023,value:145}, {year:2024,value:-303}, {year:2025,value:521}, {year:2026,value:-493} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2022,value:45}, {year:2024,value:166} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2022,value:-243}, {year:2025,value:-97}, {year:2026,value:-8} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2022,value:-686}, {year:2023,value:-928}, {year:2024,value:47}, {year:2025,value:1030}, {year:2026,value:-1150} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// NWS_BREAKDOWN — News Corporation (Class A) Coverage data (Tier 2)
+// SOURCE: Muzz's supplied media data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: FY2022 revenue is not comparable with FY2023 onward.
+// Interest expense is supplied as zero for FY2025-26 despite ~$2B of
+// debt outstanding — flagged in-app, not corrected.
+// ═════════════════════════════════════════════════════════════════
+const NWS_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2022,value:10390}, {year:2023,value:8010}, {year:2024,value:8250}, {year:2025,value:8450}, {year:2026,value:9030} ],
+        note: 'Revenue drops from $10.39B (FY2022) to $8.01B (FY2023) \u2014 a 22.9% fall in one year. That is a portfolio change, not trading. FY2023\u201326 then grows steadily to $9.03B. Treat FY2022 as non-comparable with what follows.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2022,value:5080}, {year:2023,value:3890}, {year:2024,value:3800}, {year:2025,value:3730}, {year:2026,value:3870} ] },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2022,value:3630}, {year:2023,value:3030}, {year:2024,value:3230}, {year:2025,value:3310}, {year:2026,value:3520} ] },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2022,value:4320}, {year:2023,value:3450}, {year:2024,value:3670}, {year:2025,value:3770}, {year:2026,value:4000} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2022,value:9390}, {year:2023,value:7330}, {year:2024,value:7470}, {year:2025,value:7500}, {year:2026,value:7870} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2022,value:993}, {year:2023,value:678}, {year:2024,value:782}, {year:2025,value:956}, {year:2026,value:1160} ],
+        note: 'Operating income fell from $993M to $678M in FY2023 alongside the revenue drop, then rose every year to $1.16B (FY2026) \u2014 above the FY2022 level on materially lower revenue. A genuinely better business emerged from the reshaping.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:9.56}, {year:2023,value:8.46}, {year:2024,value:9.48}, {year:2025,value:11.31}, {year:2026,value:12.85} ],
+        note: 'The clearest signal in the NWS data: 9.56%, 8.46%, 9.48%, 11.31%, 12.85%. Margin improved every year from FY2023 and is now the highest of the period by a wide margin.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2022,value:-74}, {year:2023,value:-49}, {year:2024,value:-18} ],
+        note: 'Interest expense falls to zero in FY2025 and FY2026 as supplied, despite $1.94B\u2013$1.99B of long-term debt still on the balance sheet. That is unusual and worth verifying against the filed accounts \u2014 it may be a netting or presentation choice in the source rather than genuinely zero cost.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2022,value:-51}, {year:2023,value:24}, {year:2024,value:-19}, {year:2025,value:12}, {year:2026,value:18} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2022,value:52}, {year:2023,value:152}, {year:2024,value:206}, {year:2025,value:275}, {year:2026,value:303} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:6.4}, {year:2023,value:40}, {year:2024,value:35.21}, {year:2025,value:29.79}, {year:2026,value:28.97} ],
+        note: 'Wildly unstable: 6.40%, 40.00%, 35.21%, 29.79%, 28.97%. The FY2022 rate of 6.4% and the FY2023 rate of exactly 40.00% both look like the product of unusual items rather than a normalised tax position.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2022,value:623}, {year:2023,value:149}, {year:2024,value:266}, {year:2025,value:1180}, {year:2026,value:573} ],
+        note: 'Net income is erratic \u2014 $623M, $149M, $266M, $1.18B, $573M. The FY2025 figure sits far above the operating trend and does not repeat.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:6}, {year:2023,value:1.86}, {year:2024,value:3.22}, {year:2025,value:13.96}, {year:2026,value:6.35} ],
+        note: 'Ranges from 1.86% to 13.96%. Almost none of that variation comes from operations, where margin moved smoothly upward.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:1.2}, {year:2023,value:0.49}, {year:2024,value:0.7}, {year:2025,value:0.89}, {year:2026,value:1.18} ],
+        note: 'EPS does not reconcile to net income \u00f7 shares in several years \u2014 most starkly FY2025, where $0.89 \u00d7 564.97M implies $503M against reported net income of $1.18B. Minority interest of $615M\u2013$921M is part of the explanation. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:581.42}, {year:2023,value:571.42}, {year:2024,value:568.58}, {year:2025,value:564.97}, {year:2026,value:541.05} ],
+        note: 'Share count fell modestly from 581.42M to 541.05M, down 6.9% \u2014 the least aggressive buyback of the four media names until the FY2026 step-up.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2022,value:1420}, {year:2023,value:878}, {year:2024,value:970}, {year:2025,value:1130}, {year:2026,value:1340} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:13.67}, {year:2023,value:10.96}, {year:2024,value:11.76}, {year:2025,value:13.37}, {year:2026,value:14.84} ],
+          note: 'EBITDA margin fell to 10.96% (FY2023) then recovered to 14.84% (FY2026), the best of the period.'
+        },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2022,value:688}, {year:2023,value:415}, {year:2024,value:440}, {year:2025,value:459}, {year:2026,value:485} ],
+          note: 'Depreciation fell from $688M to $415M alongside the FY2023 portfolio change, then drifted up to $485M.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2022,value:812}, {year:2023,value:380}, {year:2024,value:585}, {year:2025,value:923}, {year:2026,value:1050} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2022,value:875}, {year:2023,value:526}, {year:2024,value:739}, {year:2025,value:956}, {year:2026,value:1200} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2022,value:-63}, {year:2023,value:-146}, {year:2024,value:-154}, {year:2025,value:-33}, {year:2026,value:-150} ],
+          note: 'Unusual items are a drag in every single year: \u2212$63M, \u2212$146M, \u2212$154M, \u2212$33M, \u2212$150M. Persistent rather than one-off.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:159.39}, {year:2023,value:455.03}, {year:2024,value:293.98}, {year:2025,value:81.02}, {year:2026,value:202.44} ],
+          note: 'Operating income runs 159%\u2013455% of net income in four of the five years \u2014 in FY2023 it was over four times reported net income. Only in FY2025 did net income exceed operating income, at 81%. Minority interests and below-the-line items absorb most of the operating profit.'
+        },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2022,value:20}, {year:2025,value:3}, {year:2026,value:29} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2022,value:-54}, {year:2023,value:-49}, {year:2024,value:-18}, {year:2025,value:3}, {year:2026,value:29} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2022,value:-98} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:13.42}, {year:2023,value:13.84}, {year:2024,value:43.44} ],
+          note: 'Coverage improved from 13.4\u00d7 to 43.4\u00d7 before the interest line went to zero \u2014 read alongside the caveat on that line.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2022,value:1820}, {year:2023,value:1830}, {year:2024,value:1870}, {year:2025,value:2400}, {year:2026,value:2100} ],
+        note: 'Cash grew from $1.82B to a peak of $2.40B (FY2025), ending at $2.10B \u2014 more than the $1.99B of long-term debt.'
+      },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2022,value:1500}, {year:2023,value:1430}, {year:2024,value:1420}, {year:2025,value:1560}, {year:2026,value:1770} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2022,value:311}, {year:2023,value:311}, {year:2024,value:266}, {year:2025,value:327}, {year:2026,value:302} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2022,value:397}, {year:2023,value:462}, {year:2024,value:800}, {year:2025,value:512}, {year:2026,value:305} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2022,value:4090}, {year:2023,value:4050}, {year:2024,value:4370}, {year:2025,value:4810}, {year:2026,value:4480} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2022,value:2420}, {year:2023,value:2490}, {year:2024,value:2080}, {year:2025,value:2120}, {year:2026,value:2150} ],
+        note: 'Net PP&E fell from $2.42B to $2.08B in FY2024 and has been flat since.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2022,value:5170}, {year:2023,value:5140}, {year:2024,value:4340}, {year:2025,value:4370}, {year:2026,value:4540} ],
+        note: 'Goodwill fell from $5.17B to $4.34B in FY2024 \u2014 an $800M reduction in one year \u2014 before stabilising around $4.5B.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2022,value:3240}, {year:2023,value:3080}, {year:2024,value:1950}, {year:2025,value:1930}, {year:2026,value:1840} ],
+        note: 'Other intangibles fell from $3.24B to $1.95B in FY2024, a $1.13B drop in a single year. Combined with the goodwill reduction, roughly $1.93B of intangible value came off the balance sheet in FY2024.'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2022,value:422}, {year:2023,value:393}, {year:2024,value:332}, {year:2025,value:254}, {year:2026,value:251} ],
+        note: 'Long-term current deferred tax assets, as supplied, declining steadily from $422M to $251M.'
+      },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2022,value:198}, {year:2023,value:163}, {year:2024,value:21}, {year:2025,value:57}, {year:2026,value:108} ],
+        note: 'Long-term non-current deferred tax assets, as supplied. Collapses from $198M to $21M in FY2024 then partially rebuilds.'
+      },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2022,value:1380}, {year:2023,value:1340}, {year:2024,value:3180}, {year:2025,value:1000}, {year:2026,value:1280} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2022,value:17220}, {year:2023,value:16920}, {year:2024,value:16680}, {year:2025,value:15500}, {year:2026,value:15540} ],
+        note: 'Total assets shrank from $17.22B to $15.54B \u2014 down 9.8% while operating income rose 16.8%. Doing more with less.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2022,value:411}, {year:2023,value:440}, {year:2024,value:254}, {year:2025,value:335}, {year:2026,value:412} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2022,value:1450}, {year:2023,value:1330}, {year:2024,value:1200}, {year:2025,value:1240}, {year:2026,value:1300} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'M USD', series: [ {year:2022,value:18} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2022,value:266}, {year:2023,value:3}, {year:2024,value:9}, {year:2025,value:25} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2022,value:2740}, {year:2023,value:2930}, {year:2024,value:2090}, {year:2025,value:1940}, {year:2026,value:1990} ],
+        note: 'Long-term debt fell from $2.93B (FY2023) to $1.99B (FY2026), down 32.1%. Deleveraging is the clearest capital-allocation theme here.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2022,value:3006}, {year:2023,value:2933}, {year:2024,value:2099}, {year:2025,value:1965}, {year:2026,value:1990} ],
+        note: 'Total debt fell from $3.01B to $1.99B, down 33.9% across the period.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2022,value:483}, {year:2023,value:446}, {year:2024,value:1470}, {year:2025,value:492}, {year:2026,value:513} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2022,value:8080}, {year:2023,value:7980}, {year:2024,value:7670}, {year:2025,value:6120}, {year:2026,value:6310} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2022,value:11780}, {year:2023,value:11450}, {year:2024,value:11250}, {year:2025,value:11060}, {year:2026,value:10380} ],
+        note: 'Paid-in capital of $10.38B against an accumulated deficit of \u2212$312M \u2014 the entire equity base is contributed capital, not retained profit.'
+      },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2022,value:-2290}, {year:2023,value:-2140}, {year:2024,value:-1890}, {year:2025,value:-747}, {year:2026,value:-312} ],
+        note: 'Retained earnings are NEGATIVE throughout \u2014 an accumulated deficit of \u2212$2.29B in FY2022, narrowing steadily to \u2212$312M by FY2026. Five profitable years have very nearly worked it off. Equity is supported by $10.38B of paid-in capital rather than retained profit.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2022,value:8220}, {year:2023,value:8060}, {year:2024,value:8120}, {year:2025,value:8770}, {year:2026,value:8530} ],
+        note: 'Common equity grew modestly from $8.22B to $8.53B.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:14.07}, {year:2023,value:14.1}, {year:2024,value:14.27}, {year:2025,value:15.52}, {year:2026,value:15.69} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:2.2}, {year:2023,value:2.2}, {year:2024,value:2.17}, {year:2025,value:2}, {year:2026,value:1.97} ],
+        note: 'Price to book compressed gently from 2.20\u00d7 to 1.97\u00d7 \u2014 the market has never paid much for this book.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.37}, {year:2023,value:0.36}, {year:2024,value:0.26}, {year:2025,value:0.22}, {year:2026,value:0.23} ],
+        note: 'Total debt to equity fell from 0.37\u00d7 to 0.23\u00d7 \u2014 the most conservative of the four.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2022,value:1186}, {year:2023,value:1103}, {year:2024,value:229}, {year:2025,value:-435}, {year:2026,value:-110} ],
+          note: 'NWS moved to a NET CASH position: total debt of $1.99B against $2.10B of cash in FY2026. Net cash of $110M, versus net debt of $1.19B in FY2022. The balance sheet was substantially de-risked across the period.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2022,value:488}, {year:2023,value:427}, {year:2024,value:443}, {year:2025,value:1020}, {year:2026,value:1000} ],
+          note: 'Long-term investments more than doubled in FY2025, from $443M to $1.02B.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2022,value:604}, {year:2023,value:622}, {year:2024,value:483}, {year:2025,value:498}, {year:2026,value:543} ],
+          note: 'Current unearned revenue is meaningful at $483M\u2013$622M \u2014 subscription prepayments, roughly 6% of revenue.'
+        },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2022,value:987}, {year:2023,value:1140}, {year:2024,value:912}, {year:2025,value:904}, {year:2026,value:840} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2022,value:166}, {year:2023,value:139}, {year:2024,value:89}, {year:2025,value:74}, {year:2026,value:86} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2022,value:-1270}, {year:2023,value:-1250}, {year:2024,value:-1250}, {year:2025,value:-1540}, {year:2026,value:-1550} ] },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2022,value:9140}, {year:2023,value:8950}, {year:2024,value:9010}, {year:2025,value:9390}, {year:2026,value:9240} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2022,value:-190}, {year:2023,value:-155}, {year:2024,value:1840}, {year:2025,value:2470}, {year:2026,value:2150} ],
+          note: 'Tangible book value was NEGATIVE in FY2022 and FY2023 (\u2212$190M, \u2212$155M) \u2014 goodwill and intangibles exceeded total equity. The FY2024 intangible writedowns flipped it positive to $1.84B, and it stands at $2.15B.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2022,value:921}, {year:2023,value:881}, {year:2024,value:891}, {year:2025,value:615}, {year:2026,value:710} ],
+          note: 'Minority interest is material at $615M\u2013$921M \u2014 a significant claim on earnings before anything reaches NWS shareholders, and part of why EPS sits below net income \u00f7 shares.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2022,value:155}, {year:2023,value:134}, {year:2024,value:125}, {year:2025,value:117}, {year:2026,value:97} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:3.65}, {year:2023,value:2.48}, {year:2024,value:2.91}, {year:2025,value:3.71}, {year:2026,value:4.66} ] },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:4.77}, {year:2023,value:3.2}, {year:2024,value:3.87}, {year:2025,value:4.89}, {year:2026,value:5.91} ],
+          note: 'Return on capital improved from 3.20% (FY2023) to 5.91% (FY2026), the best of the period but low in absolute terms.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:8.31}, {year:2023,value:2.52}, {year:2024,value:4.22}, {year:2025,value:7.04}, {year:2026,value:7.98} ],
+          note: 'ROE bottomed at 2.52% (FY2023) and recovered to 7.98% \u2014 still modest against a business earning a 12.85% operating margin.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:2.12}, {year:2023,value:3.34}, {year:2024,value:2.16}, {year:2025,value:1.74}, {year:2026,value:1.49} ],
+          note: 'Gross leverage fell from 2.12\u00d7 to 1.49\u00d7, and on a net basis NWS carries no leverage at all.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2022,value:1350}, {year:2023,value:1090}, {year:2024,value:1100}, {year:2025,value:1130}, {year:2026,value:1230} ],
+        note: 'Operating cash flow is the steadiest line in the whole NWS dataset \u2014 $1.09B to $1.35B across five years, with no year outside that band despite net income ranging from $149M to $1.18B.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2022,value:862.38}, {year:2023,value:496.13}, {year:2024,value:297.5}, {year:2025,value:370.5}, {year:2026,value:1050} ],
+        note: 'Free cash flow bottomed at $297.5M (FY2024) and more than tripled to $1.05B (FY2026), the best year of the period.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2022,value:623}, {year:2023,value:149}, {year:2024,value:266}, {year:2025,value:1180}, {year:2026,value:573} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2022,value:908.63}, {year:2023,value:526.75}, {year:2024,value:308.75}, {year:2025,value:370.5}, {year:2026,value:1050} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:63.88}, {year:2023,value:45.52}, {year:2024,value:27.05}, {year:2025,value:32.79}, {year:2026,value:85.37} ],
+          note: 'Conversion improved from 27.0% (FY2024) to 85.4% (FY2026) \u2014 the strongest improvement of any of the four media names.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:216.69}, {year:2023,value:731.54}, {year:2024,value:413.53}, {year:2025,value:95.76}, {year:2026,value:214.66} ],
+          note: 'Operating cash flow ran 731% of net income in FY2023 and 96% in FY2025 \u2014 a reminder that reported earnings here bear little relation to cash generation.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2022,value:-2080}, {year:2023,value:-574}, {year:2024,value:-524}, {year:2025,value:-153}, {year:2026,value:-539} ],
+          note: 'Investing outflows fell from $2.08B to $153M\u2013$574M \u2014 the shift from buying to harvesting.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2022,value:404}, {year:2023,value:-501}, {year:2024,value:-441}, {year:2025,value:-563}, {year:2026,value:-1010} ],
+          note: 'FY2022 shows a financing INFLOW of $404M; every year since is an outflow, reaching $1.01B in FY2026 as the buyback stepped up.'
+        },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2022,value:-179}, {year:2023,value:-243}, {year:2024,value:-117}, {year:2025,value:-150}, {year:2026,value:-782} ],
+          note: 'Buybacks were minimal at $117M\u2013$243M for four years, then jumped over five-fold to $782M in FY2026 \u2014 the first year free cash flow could comfortably fund it.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2022,value:-118}, {year:2023,value:-116}, {year:2024,value:-114}, {year:2025,value:-114}, {year:2026,value:-112} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.2}, {year:2023,value:0.2}, {year:2024,value:0.2}, {year:2025,value:0.2}, {year:2026,value:0.21} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Essentially flat at around $0.20 across all five years.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:18.94}, {year:2023,value:77.85}, {year:2024,value:42.86}, {year:2025,value:9.66}, {year:2026,value:19.55} ],
+          note: 'The dividend is a small and shrinking claim in absolute terms, $118M falling to $112M, while free cash flow more than tripled. Payout against net income is erratic because earnings are \u2014 18.9%, 77.9%, 42.9%, 9.7%, 19.5%. Measured against free cash flow, which is far steadier, the dividend now costs under 11%.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2022,value:297}, {year:2023,value:359}, {year:2024,value:231}, {year:2025,value:264}, {year:2026,value:894} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:34.44}, {year:2023,value:72.36}, {year:2024,value:77.65}, {year:2025,value:71.26}, {year:2026,value:85.14} ],
+          note: 'Shareholder returns stayed well inside free cash flow in every year \u2014 34.4% to 85.1%. The most disciplined of the four media names on this measure.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'M USD', series: [ {year:2022,value:-41}, {year:2023,value:-9}, {year:2024,value:-13}, {year:2025,value:108}, {year:2026,value:-20} ] },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2022,value:-87}, {year:2023,value:5}, {year:2024,value:27}, {year:2025,value:-46}, {year:2026,value:33} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2022,value:98} ] },
+        { label: 'Foreign Exchange Rate Adjustments', unit: 'M USD', series: [ {year:2022,value:-96}, {year:2023,value:-5}, {year:2024,value:-6}, {year:2025,value:25}, {year:2026,value:14} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2022,value:-1500}, {year:2023,value:-17}, {year:2024,value:-38}, {year:2025,value:-96}, {year:2026,value:-122} ],
+          note: 'The $1.50B of cash acquisitions in FY2022 dwarfs every subsequent year ($17M\u2013$122M). Acquisition activity essentially stopped after FY2022.'
+        },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2022,value:-414}, {year:2023,value:11}, {year:2024,value:127}, {year:2025,value:443}, {year:2026,value:-308} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// DJCO_BREAKDOWN — Daily Journal Corporation Coverage data (Tier 2)
+// SOURCE: Muzz's supplied media data drop — income statement, balance
+// sheet and cash flow, FY2021–FY2025 (USD, $K).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// SCALE: figures in THOUSANDS (K USD) — sub-$100M revenue, following
+// the PLTR precedent rather than the $M convention.
+// CONTINGENCIES: reported net income is dominated by securities-portfolio
+// marks, not operations. Supplied ROA and ROE cannot share a numerator.
+// EPS is not supplied at all and has not been fabricated.
+// ═════════════════════════════════════════════════════════════════
+const DJCO_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'K USD', series: [ {year:2021,value:49930}, {year:2022,value:54010}, {year:2023,value:67710}, {year:2024,value:69930}, {year:2025,value:87700} ],
+        note: 'Revenue grew from $49.9M to $87.7M, up 75.6% in five years, with the strongest year being FY2025 (+25.4%). This is the operating business \u2014 legal publishing plus Journal Technologies court software \u2014 and it is genuinely growing.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'K USD', series: [ {year:2021,value:38270}, {year:2022,value:40400}, {year:2023,value:46280}, {year:2024,value:50270}, {year:2025,value:60920} ] },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'K USD', series: [ {year:2021,value:7200}, {year:2022,value:9560}, {year:2023,value:12560}, {year:2024,value:13350}, {year:2025,value:14940} ] },
+        { label: 'Operating Expense', unit: 'K USD', series: [ {year:2021,value:7680}, {year:2022,value:9940}, {year:2023,value:12840}, {year:2024,value:13350}, {year:2025,value:14940} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'K USD', series: [ {year:2021,value:45940}, {year:2022,value:50340}, {year:2023,value:59120}, {year:2024,value:63620}, {year:2025,value:75860} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'K USD', series: [ {year:2021,value:3980}, {year:2022,value:3670}, {year:2023,value:8590}, {year:2024,value:6310}, {year:2025,value:11840} ],
+        note: 'Operating income rose from $3.98M to $11.84M. Small in absolute terms, but nearly tripled.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:7.97}, {year:2022,value:6.8}, {year:2023,value:12.69}, {year:2024,value:9.02}, {year:2025,value:13.5} ],
+        note: 'Operating margin improved from 7.97% to 13.50%, though the path is uneven (6.79% in FY2022, 9.02% in FY2024). Journal Technologies carries the growth and the operating leverage.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'K USD', series: [ {year:2021,value:-327}, {year:2022,value:-1110}, {year:2023,value:-4330}, {year:2024,value:-3090}, {year:2025,value:-1380} ] },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'K USD', series: [ {year:2021,value:-1760}, {year:2022,value:-1680}, {year:2023,value:-1940}, {year:2024,value:-2190}, {year:2025,value:-2130} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'K USD', series: [ {year:2021,value:40150}, {year:2022,value:-26930}, {year:2023,value:6650}, {year:2024,value:26170}, {year:2025,value:37950} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:26.23}, {year:2022,value:26.26}, {year:2023,value:23.66}, {year:2024,value:25.09}, {year:2025,value:25.29} ],
+        note: 'Stable at 23.66%\u201326.26%, applied to the swinging pre-tax figure. The FY2022 tax line is a $26.9M BENEFIT, matching that year\u2019s pre-tax loss.'
+      },
+      netIncome: { label: 'Net Income', unit: 'K USD', series: [ {year:2021,value:112900}, {year:2022,value:-75620}, {year:2023,value:21450}, {year:2024,value:78110}, {year:2025,value:112140} ],
+        note: 'Net income of $112.9M, \u2212$75.6M, $21.5M, $78.1M, $112.1M against operating income of $4.0M, $3.7M, $8.6M, $6.3M, $11.8M. The two have almost nothing to do with each other. Net income here is dominated by mark-to-market movements on the securities portfolio, not by the business.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:226.14}, {year:2022,value:-140.02}, {year:2023,value:31.68}, {year:2024,value:111.7}, {year:2025,value:127.86} ],
+        note: 'Net profit margin of 226%, \u2212140%, 32%, 112%, 128%. A margin above 100% is the tell: reported profit exceeds total revenue because most of it comes from the investment portfolio, not from selling anything.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:1.38}, {year:2022,value:1.38}, {year:2023,value:1.38}, {year:2024,value:1.38}, {year:2025,value:1.38} ],
+        note: 'Exactly 1.38M shares in every year of the series \u2014 no issuance, no buyback, no dilution. One of the smallest share counts of any listed company in coverage.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'K USD', series: [ {year:2021,value:4460}, {year:2022,value:4050}, {year:2023,value:8870}, {year:2024,value:6570}, {year:2025,value:12090} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:8.93}, {year:2022,value:7.5}, {year:2023,value:13.1}, {year:2024,value:9.4}, {year:2025,value:13.79} ] },
+        { label: 'Depreciation & Amortisation', unit: 'K USD', series: [ {year:2021,value:480}, {year:2022,value:379}, {year:2023,value:279} ],
+          note: 'Depreciation of $480K, $379K, $279K, then not disclosed for FY2024 and FY2025. Trivial either way \u2014 under 1% of revenue.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'K USD', series: [ {year:2021,value:153050}, {year:2022,value:-102550}, {year:2023,value:28100}, {year:2024,value:104280}, {year:2025,value:150090} ],
+          note: 'Pre-tax income including unusual items swings from $153.05M to \u2212$102.55M and back to $150.09M. Pre-tax income EXCLUDING unusual items \u2014 the actual business \u2014 moves gently from $4.80M to $15.78M. Read the second series, not the first.'
+        },
+        { label: 'EBT Excluding Unusual Items', unit: 'K USD', series: [ {year:2021,value:4800}, {year:2022,value:6330}, {year:2023,value:10660}, {year:2024,value:8140}, {year:2025,value:15780} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'K USD', series: [ {year:2021,value:148250}, {year:2022,value:-108880}, {year:2023,value:17440}, {year:2024,value:96140}, {year:2025,value:134310} ],
+          note: 'The gap between pre-tax income including and excluding unusual items is $148.25M, \u2212$108.88M, $17.44M, $96.14M, $134.31M \u2014 and it reconciles almost exactly to the supplied gain/loss on sale of investments line in every year. Confirms that the "unusual items" here ARE the securities portfolio marks.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:3.53}, {year:2022,value:-4.85}, {year:2023,value:40.05}, {year:2024,value:8.08}, {year:2025,value:10.56} ],
+          note: 'Operating income runs 3.5%, 40.0%, 8.1% and 10.6% of net income in the four positive years. In three of those four, over 89% of reported profit came from outside the operating business \u2014 FY2023 is the exception only because the portfolio had a quiet year. Any valuation built on net income is valuing a portfolio, not an operating company.'
+        },
+        { label: 'Interest & Investment Income', unit: 'K USD', series: [ {year:2021,value:2910}, {year:2022,value:5450}, {year:2023,value:8340}, {year:2024,value:7100}, {year:2025,value:7460} ],
+          note: 'Interest and investment income grew from $2.9M to $7.5M \u2014 the portfolio\u2019s dividend and interest yield, and notably it alone approaches the size of the entire operating profit in the early years.'
+        },
+        { label: 'Net Interest Expense', unit: 'K USD', series: [ {year:2021,value:2580}, {year:2022,value:4340}, {year:2023,value:4010}, {year:2024,value:4020}, {year:2025,value:6080} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'K USD', series: [ {year:2022,value:-272}, {year:2024,value:-4} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:12.17}, {year:2022,value:3.31}, {year:2023,value:1.98}, {year:2024,value:2.04}, {year:2025,value:8.58} ],
+          note: 'Coverage swings from 12.2\u00d7 to 2.0\u00d7 and back to 8.6\u00d7 as the margin borrowing was drawn and repaid.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'K USD', series: [ {year:2021,value:12600}, {year:2022,value:13420}, {year:2023,value:20840}, {year:2024,value:12990}, {year:2025,value:20570} ],
+        note: 'Cash of $20.6M is trivial next to the $493.0M securities portfolio \u2014 the liquidity sits in marketable securities, not cash.'
+      },
+      accountsReceivable: { label: 'Total Receivables', unit: 'K USD', series: [ {year:2021,value:9520}, {year:2022,value:17950}, {year:2023,value:18690}, {year:2024,value:19220}, {year:2025,value:21010} ] },
+      inventory: { label: 'Inventory', unit: 'K USD', series: [ {year:2021,value:43}, {year:2022,value:56}, {year:2023,value:72} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'K USD', series: [ {year:2023,value:194}, {year:2024,value:748}, {year:2025,value:1390} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'K USD', series: [ {year:2021,value:372340}, {year:2022,value:309450}, {year:2023,value:345410}, {year:2024,value:394500}, {year:2025,value:539190} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'K USD', series: [ {year:2021,value:10220}, {year:2022,value:9660}, {year:2023,value:9460}, {year:2024,value:9270}, {year:2025,value:8930} ],
+        note: 'Net PP&E declined gently from $10.2M to $8.9M \u2014 barely 1.6% of total assets.'
+      },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'K USD', series: [ {year:2021,value:56090}, {year:2022,value:25270}, {year:2023,value:30600}, {year:2024,value:52640}, {year:2025,value:87330} ],
+        note: 'Deferred tax assets of $87.3M in FY2025, presented on the asset side exactly as supplied. It tracks the securities portfolio closely, rising when the portfolio rises \u2014 which is the behaviour of a deferred tax LIABILITY on unrealised gains. Worth verifying against the filed accounts.'
+      },
+      totalAssets: { label: 'Total Assets', unit: 'K USD', series: [ {year:2021,value:382560}, {year:2022,value:319110}, {year:2023,value:354860}, {year:2024,value:403760}, {year:2025,value:548120} ],
+        note: 'Total assets grew from $382.6M to $548.1M, up 43.3% \u2014 almost entirely the securities portfolio appreciating.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'K USD', series: [ {year:2021,value:4240}, {year:2022,value:5060}, {year:2023,value:6640}, {year:2024,value:6050}, {year:2025,value:7070} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'K USD', series: [ {year:2021,value:6050}, {year:2022,value:7070}, {year:2023,value:8790}, {year:2024,value:8520}, {year:2025,value:12480} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'K USD', series: [ {year:2021,value:6240}, {year:2023,value:1070}, {year:2025,value:879} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'K USD', series: [ {year:2021,value:147}, {year:2022,value:146}, {year:2023,value:158}, {year:2024,value:164}, {year:2025,value:169} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'K USD', series: [ {year:2021,value:33430}, {year:2022,value:76290}, {year:2023,value:76120}, {year:2024,value:28460}, {year:2025,value:22790} ],
+        note: 'Long-term debt rose from $33.4M to $76.3M (FY2022\u201323) then fell to $22.8M. This is margin borrowing against the portfolio \u2014 the classic leveraged-securities structure \u2014 and it was largely paid down after the FY2022 drawdown.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'K USD', series: [ {year:2021,value:33577}, {year:2022,value:76436}, {year:2023,value:76278}, {year:2024,value:28624}, {year:2025,value:22959} ],
+        note: 'Total debt peaked at $76.4M in FY2022 against a portfolio then worth $275.5M, and has since fallen to $23.0M against a $493.0M portfolio. Leverage against the portfolio went from 28% to under 5%.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'K USD', series: [ {year:2021,value:3380}, {year:2022,value:4550}, {year:2023,value:4470}, {year:2024,value:4560}, {year:2025,value:7140} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'K USD', series: [ {year:2021,value:127920}, {year:2022,value:140090}, {year:2023,value:154390}, {year:2024,value:124980}, {year:2025,value:157060} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'K USD', series: [ {year:2021,value:1760}, {year:2022,value:1760}, {year:2023,value:1760}, {year:2024,value:1960}, {year:2025,value:2100} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'K USD', series: [ {year:2021,value:252870}, {year:2022,value:177250}, {year:2023,value:198700}, {year:2024,value:276810}, {year:2025,value:388950} ],
+        note: 'Retained earnings grew from $252.9M to $389.0M \u2014 DJCO pays no dividend and buys back no stock, so essentially all profit compounds inside the company. This is deliberate and long-standing.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'K USD', series: [ {year:2021,value:254640}, {year:2022,value:179020}, {year:2023,value:200470}, {year:2024,value:278780}, {year:2025,value:391060} ],
+        note: 'Common equity grew from $254.6M to $391.1M, up 53.6%, entirely through retention.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:184.42}, {year:2022,value:130}, {year:2023,value:145.58}, {year:2024,value:202.39}, {year:2025,value:283.91} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:3.38}, {year:2022,value:4.8}, {year:2023,value:4.28}, {year:2024,value:3.08}, {year:2025,value:2.2} ],
+        note: 'Price to book fell from 3.38\u00d7 to 2.20\u00d7 while book value per share rose 54%. Given that book is mostly marked-to-market securities, a premium to book here is a premium over liquid, observable value.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:0.13}, {year:2022,value:0.43}, {year:2023,value:0.38}, {year:2024,value:0.1}, {year:2025,value:0.06} ],
+        note: 'Total debt to equity fell from 0.13\u00d7 to 0.06\u00d7.'
+      },
+      extraLines: [
+        { label: 'Short-Term Investments', unit: 'K USD', series: [ {year:2021,value:347570}, {year:2022,value:275530}, {year:2023,value:303130}, {year:2024,value:358690}, {year:2025,value:493000} ],
+          note: 'The securities portfolio, and the real story. It grew from $347.6M to $493.0M, up 41.8%, and represents 89.9% of total assets. Daily Journal is a small publishing and software business attached to a large investment portfolio.'
+        },
+        { label: 'Cash & Short-Term Investments', unit: 'K USD', series: [ {year:2021,value:360170}, {year:2022,value:288950}, {year:2023,value:323970}, {year:2024,value:371680}, {year:2025,value:513560} ] },
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'K USD', series: [ {year:2021,value:20977}, {year:2022,value:63016}, {year:2023,value:55438}, {year:2024,value:15634}, {year:2025,value:2389} ],
+          note: 'On a net basis DJCO holds cash comfortably in excess of debt in most years, and against the securities portfolio the balance sheet carries no meaningful leverage at all.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'K USD', series: [ {year:2021,value:17330}, {year:2022,value:21350}, {year:2023,value:25540}, {year:2024,value:23710}, {year:2025,value:18170} ],
+          note: 'Current unearned revenue of $18.2M\u2013$25.5M \u2014 substantial relative to $87.7M of revenue, reflecting prepaid software and subscription contracts.'
+        },
+        { label: 'Unearned Revenue \u2014 Non-Current', unit: 'K USD', series: [ {year:2021,value:995}, {year:2022,value:370}, {year:2023,value:1000}, {year:2024,value:883}, {year:2025,value:994} ] },
+        { label: 'Current Portion of Leases', unit: 'K USD', series: [ {year:2025,value:37} ] },
+        { label: 'Prepaid Expenses', unit: 'K USD', series: [ {year:2021,value:557}, {year:2022,value:451}, {year:2023,value:380}, {year:2024,value:660}, {year:2025,value:959} ] },
+        { label: 'Treasury Stock', unit: 'K USD', series: [ {year:2021,value:-4}, {year:2022,value:-4}, {year:2023,value:-4}, {year:2024,value:-4}, {year:2025,value:-4} ],
+          note: 'Treasury stock is a token \u2212$4K in every year. Effectively nil.'
+        },
+        { label: 'Total Equity', unit: 'K USD', series: [ {year:2021,value:254640}, {year:2022,value:179020}, {year:2023,value:200470}, {year:2024,value:278780}, {year:2025,value:391060} ] },
+        { label: 'Tangible Book Value', unit: 'K USD', series: [ {year:2021,value:254640}, {year:2022,value:179020}, {year:2023,value:200470}, {year:2024,value:278780}, {year:2025,value:391060} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:0.8}, {year:2022,value:0.65}, {year:2023,value:1.59}, {year:2024,value:1.04}, {year:2025,value:1.55} ],
+          note: 'The supplied ROA (0.80%\u20132.05%) and the supplied ROE (up to 56.97%) cannot both be computed from the same numerator, since DJCO has almost no leverage \u2014 total assets of $548.1M against $391.1M of equity. The ROA series appears to be built on operating income while the ROE series is built on net income. Both retained exactly as supplied; do not compare them directly.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:1.08}, {year:2022,value:0.84}, {year:2023,value:2.02}, {year:2024,value:1.35}, {year:2025,value:2.05} ],
+          note: 'Return on capital of 1.08%\u20132.05%, consistent with the ROA series and with an operating business earning $11.8M on a $548.1M balance sheet.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:56.97}, {year:2022,value:-34.88}, {year:2023,value:11.31}, {year:2024,value:32.6}, {year:2025,value:33.48} ],
+          note: 'ROE of 56.97%, \u221234.88%, 11.31%, 32.60%, 33.48% \u2014 this is portfolio performance, not business performance. It tells you what the securities did, not how well the company was run.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:7.53}, {year:2022,value:18.87}, {year:2023,value:8.6}, {year:2024,value:4.36}, {year:2025,value:1.9} ],
+          note: 'Not a meaningful measure here \u2014 EBITDA reflects only the small operating business while the debt is secured against the portfolio.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'K USD', series: [ {year:2021,value:3290}, {year:2022,value:-5260}, {year:2023,value:15080}, {year:2024,value:-89}, {year:2025,value:13330} ],
+        note: 'Operating cash flow of $3.3M, \u2212$5.3M, $15.1M, \u2212$0.1M, $13.3M \u2014 negative in two of five years, against reported net income of up to $112.9M. The gap is the non-cash securities marks being backed out. This is the cleanest evidence that reported earnings are not cash earnings.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'K USD', series: [ {year:2021,value:6600}, {year:2022,value:-6780}, {year:2023,value:10490}, {year:2024,value:-2710}, {year:2025,value:4440} ],
+        note: 'Free cash flow of $6.6M, \u2212$6.8M, $10.5M, \u2212$2.7M, $4.4M. Negative in two years. Against reported net income averaging roughly $50M a year, this is the real cash the operating business throws off.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'K USD', series: [ {year:2021,value:112900}, {year:2022,value:-75620}, {year:2023,value:21450}, {year:2024,value:78110}, {year:2025,value:112140} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'K USD', series: [ {year:2021,value:6800}, {year:2022,value:-6090}, {year:2023,value:13200}, {year:2024,value:-784.13}, {year:2025,value:5300} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:200.61}, {year:2022,value:128.9}, {year:2023,value:69.56}, {year:2024,value:3044.94}, {year:2025,value:33.31} ] },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:2.91}, {year:2022,value:6.96}, {year:2023,value:70.3}, {year:2024,value:-0.11}, {year:2025,value:11.89} ],
+          note: 'Operating cash flow ran 2.9% of net income in FY2021, 70.3% in FY2023, \u22120.1% in FY2024 and 11.9% in FY2025. In the years the portfolio moved hard, barely a tenth of reported profit arrived as operating cash.'
+        },
+        { label: 'Cash from Investing', unit: 'K USD', series: [ {year:2021,value:-19990}, {year:2022,value:-36760}, {year:2023,value:-7260}, {year:2024,value:40530}, {year:2025,value:-8} ],
+          note: 'FY2024 shows a $40.5M investing INFLOW \u2014 the only positive year, as securities were sold. Every other year is a net outflow into the portfolio.'
+        },
+        { label: 'Cash from Financing', unit: 'K USD', series: [ {year:2021,value:2380}, {year:2022,value:42850}, {year:2023,value:-153}, {year:2024,value:-47660}, {year:2025,value:-5660} ],
+          note: 'FY2022 shows a $42.9M financing inflow (margin borrowing during the drawdown), reversed by a $47.7M outflow in FY2024 as that borrowing was repaid.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'K USD', series: [ {year:2021,value:148250}, {year:2022,value:-109150}, {year:2023,value:17450}, {year:2024,value:96140}, {year:2025,value:134300} ],
+          note: 'The dominant line in the entire dataset: $148.25M, \u2212$109.15M, $17.45M, $96.14M, $134.30M. Compare to operating income of $4.0M\u2013$11.8M in the same years. Everything about DJCO\u2019s reported earnings runs through here.'
+        },
+        { label: 'Change in Inventories', unit: 'K USD', series: [ {year:2021,value:-7}, {year:2022,value:-13}, {year:2023,value:-16} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'K USD', series: [ {year:2022,value:272} ] },
+        { label: 'Net Change in Cash', unit: 'K USD', series: [ {year:2021,value:-14320}, {year:2022,value:829}, {year:2023,value:7670}, {year:2024,value:-7210}, {year:2025,value:7660} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// NEC_BREAKDOWN — Nine Entertainment Co. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied media data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (AUD, A$M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CURRENCY: AUD throughout. Labels carry (A$M); unit stays M USD so the
+// shared fmtVal renders a currency symbol — the CNI/CP convention.
+// CONTINGENCIES: FY2026 is dominated by a disposal. Supplied ROE of
+// -22.89% sits against positive reported net income; both as supplied.
+// ═════════════════════════════════════════════════════════════════
+const NEC_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:2690}, {year:2023,value:2700}, {year:2024,value:2630}, {year:2025,value:2130}, {year:2026,value:2200} ],
+        note: 'Revenue fell from A$2.69B to A$2.20B, down 18.2%. The sharp drop is FY2025, from A$2.63B to A$2.13B \u2014 a 19.0% fall in one year that reflects a change in what is being consolidated rather than trading collapse.'
+      },
+      costOfSales: { label: 'Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:1990}, {year:2023,value:2110}, {year:2024,value:2130}, {year:2025,value:1810}, {year:2026,value:1850} ] },
+      opexLines: [
+        { label: 'Operating Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:148.61}, {year:2023,value:155.11}, {year:2024,value:155.71}, {year:2025,value:102.4}, {year:2026,value:150.32} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:2140}, {year:2023,value:2260}, {year:2024,value:2290}, {year:2025,value:1910}, {year:2026,value:2000} ] },
+      operatingProfit: { label: 'Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:551.48}, {year:2023,value:443.28}, {year:2024,value:339.63}, {year:2025,value:223.5}, {year:2026,value:201.62} ],
+        note: 'Operating income fell every single year without exception: A$551.5M, A$443.3M, A$339.6M, A$223.5M, A$201.6M. Down 63.4% across five years. This is the most consistently negative operating trend of any company in this batch.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:20.5}, {year:2023,value:16.42}, {year:2024,value:12.91}, {year:2025,value:10.49}, {year:2026,value:9.16} ],
+        note: 'Operating margin fell from 20.50% to 9.16% \u2014 more than halved, and down in every year. Margin fell faster than revenue, which means costs did not come out as fast as the top line went away.'
+      },
+      interestExpense: { label: 'Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-26.3}, {year:2023,value:-47.8}, {year:2024,value:-62.14}, {year:2025,value:-50.15}, {year:2026,value:-42.59} ] },
+      otherIncomeExpense: { label: 'Other Non-Operating Income (A$M)', unit: 'M USD', series: [ {year:2023,value:-0.941}, {year:2024,value:-0.881} ] },
+      provisionForTaxes: { label: 'Income Tax Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:134.35}, {year:2023,value:80.56}, {year:2024,value:65.11}, {year:2025,value:33.15}, {year:2026,value:-141.61} ],
+        note: 'FY2026 shows a A$141.6M tax BENEFIT rather than an expense, consistent with the negative pre-tax result.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:29.88}, {year:2023,value:29.28}, {year:2024,value:32.55}, {year:2025,value:24.86}, {year:2026,value:29.47} ],
+        note: 'The FY2026 rate of 29.47% is shown against a negative pre-tax figure, so it is not a meaningful effective rate. Use FY2022\u2013FY2025 for any normalised view.'
+      },
+      netIncome: { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:297.14}, {year:2023,value:181.81}, {year:2024,value:110.9}, {year:2025,value:103.89}, {year:2026,value:511.29} ],
+        note: 'Net income of A$297.1M, A$181.8M, A$110.9M, A$103.9M, then A$511.3M. The FY2026 figure is nearly five times FY2025 in a year when operating income fell again \u2014 it is a disposal gain, not trading performance.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:11.04}, {year:2023,value:6.72}, {year:2024,value:4.22}, {year:2025,value:4.87}, {year:2026,value:23.25} ],
+        note: 'The 23.25% net margin in FY2026 against a 9.16% operating margin is the clearest signal that FY2026 earnings are not operational.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:0.21}, {year:2023,value:0.16}, {year:2024,value:0.12}, {year:2025,value:0.11}, {year:2026,value:0.62} ],
+        note: 'EPS of A$0.62 in FY2026 against 1.58B shares implies roughly A$980M, against reported net income of A$511.3M. Does not reconcile. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:1700}, {year:2023,value:1620}, {year:2024,value:1580}, {year:2025,value:1580}, {year:2026,value:1580} ],
+        note: 'Share count fell from 1.70B to 1.58B by FY2024 and has been static since \u2014 buybacks stopped after FY2024.'
+      },
+      extraLines: [
+        { label: 'EBITDA (A$M)', unit: 'M USD', series: [ {year:2022,value:608.49}, {year:2023,value:500.91}, {year:2024,value:388.61}, {year:2025,value:271.74}, {year:2026,value:254.07} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:22.62}, {year:2023,value:18.55}, {year:2024,value:14.78}, {year:2025,value:12.76}, {year:2026,value:11.55} ],
+          note: 'EBITDA margin fell from 22.62% to 11.55%.'
+        },
+        { label: 'Depreciation & Amortisation (A$M)', unit: 'M USD', series: [ {year:2022,value:149.11}, {year:2023,value:155.71}, {year:2024,value:156.21}, {year:2025,value:102.4}, {year:2026,value:150.32} ],
+          note: 'Depreciation of A$149.1M\u2013A$156.2M for three years, dropping to A$102.4M in FY2025 then back to A$150.3M. Note the supplied Operating Expense line is near-identical to D&A in every year \u2014 the same export artefact seen in the railway data.'
+        },
+        { label: 'EBT Including Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:449.64}, {year:2023,value:275.1}, {year:2024,value:200.01}, {year:2025,value:133.32}, {year:2026,value:-480.45} ],
+          note: 'FY2026 pre-tax income including unusual items is NEGATIVE at \u2212A$480.5M, while the excluding figure is +A$159.9M. A A$640M swing, and yet reported net income is +A$511.3M. The reconciling items sit below the pre-tax line.'
+        },
+        { label: 'EBT Excluding Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:526.97}, {year:2023,value:394.78}, {year:2024,value:274.89}, {year:2025,value:172.4}, {year:2026,value:159.89} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl. (A$M)', unit: 'M USD', series: [ {year:2022,value:-77.33}, {year:2023,value:-119.68}, {year:2024,value:-74.88}, {year:2025,value:-39.08}, {year:2026,value:-640.34} ],
+          note: 'Unusual items are a drag in four of five years, then \u2212A$640.3M in FY2026 \u2014 an order of magnitude larger than anything prior.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:185.6}, {year:2023,value:243.81}, {year:2024,value:306.25}, {year:2025,value:215.13}, {year:2026,value:39.43} ],
+          note: 'Operating income ran 186%\u2013306% of net income for four years, then 39% in FY2026. The reversal is the disposal gain arriving.'
+        },
+        { label: 'Net Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-26.3}, {year:2023,value:-47.8}, {year:2024,value:-62.14}, {year:2025,value:-50.15}, {year:2026,value:-42.59} ] },
+        { label: 'Gain / (Loss) from Asset Sale (A$M)', unit: 'M USD', series: [ {year:2022,value:-0.302}, {year:2023,value:0.401}, {year:2024,value:-0.163}, {year:2025,value:-0.076}, {year:2026,value:-854.26} ],
+          note: 'FY2026 carries a \u2212A$854.3M loss on asset sale \u2014 by far the largest single line item in the NEC dataset, and it needs to be understood before any FY2026 figure is used.'
+        },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:20.97}, {year:2023,value:9.27}, {year:2024,value:5.47}, {year:2025,value:4.46}, {year:2026,value:4.73} ],
+          note: 'Interest coverage collapsed from 21.0\u00d7 to 4.73\u00d7 \u2014 a 77% deterioration, and the weakest coverage of the four media names.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents (A$M)', unit: 'M USD', series: [ {year:2022,value:153.46}, {year:2023,value:119.68}, {year:2024,value:92.86}, {year:2025,value:141.67}, {year:2026,value:92.39} ],
+        note: 'Cash of A$92.4M against A$750.4M of total debt \u2014 the thinnest liquidity position of the four media names.'
+      },
+      accountsReceivable: { label: 'Total Receivables (A$M)', unit: 'M USD', series: [ {year:2022,value:408.38}, {year:2023,value:427.65}, {year:2024,value:381.27}, {year:2025,value:383.68}, {year:2026,value:470.57} ] },
+      inventory: { label: 'Inventory (A$M)', unit: 'M USD', series: [ {year:2022,value:30.84}, {year:2023,value:0.34}, {year:2024,value:0.423}, {year:2025,value:0.577}, {year:2026,value:0.599} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:266.32}, {year:2023,value:309.11}, {year:2024,value:314.12}, {year:2025,value:476.68}, {year:2026,value:473.28} ] },
+      totalCurrentAssets: { label: 'Total Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:892.8}, {year:2023,value:900.92}, {year:2024,value:905.53}, {year:2025,value:1060}, {year:2026,value:1110} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment (A$M)', unit: 'M USD', series: [ {year:2022,value:491.49}, {year:2023,value:442.14}, {year:2024,value:408.68}, {year:2025,value:380.41}, {year:2026,value:1070} ],
+        note: 'Net PP&E jumped from A$380.4M to A$1.07B in FY2026, and long-term leases jumped from A$289.6M to A$878.8M in the same year. A near-identical A$589M increase on both sides \u2014 this is a lease accounting change or a major property recognition, not organic capital investment.'
+      },
+      goodwill: { label: 'Goodwill (A$M)', unit: 'M USD', series: [ {year:2022,value:1150}, {year:2023,value:1080}, {year:2024,value:1070}, {year:2025,value:1070}, {year:2026,value:886.37} ],
+        note: 'Goodwill fell from A$1.15B to A$886.4M, with the sharpest drop in FY2026 (A$1.07B \u2192 A$886.4M).'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles (A$M)', unit: 'M USD', series: [ {year:2022,value:1530}, {year:2023,value:1520}, {year:2024,value:1550}, {year:2025,value:1380}, {year:2026,value:469.9} ],
+        note: 'Other intangibles collapsed from A$1.38B to A$469.9M in FY2026 \u2014 a A$910M reduction in one year. Together with goodwill, roughly A$1.09B of intangible value left the balance sheet in FY2026.'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current (A$M)', unit: 'M USD', series: [ {year:2026,value:44.48} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current (A$M)', unit: 'M USD', series: [ {year:2022,value:267.86}, {year:2023,value:268.86}, {year:2024,value:266.16}, {year:2025,value:240.26} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:30.98}, {year:2023,value:30.34}, {year:2024,value:38.48}, {year:2025,value:49.42}, {year:2026,value:60.14} ] },
+      totalAssets: { label: 'Total Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:4140}, {year:2023,value:4020}, {year:2024,value:4000}, {year:2025,value:3970}, {year:2026,value:3670} ],
+        note: 'Total assets shrank from A$4.14B to A$3.67B, down 11.4%.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:266.36}, {year:2023,value:282.8}, {year:2024,value:252.04}, {year:2025,value:307.29}, {year:2026,value:261.83} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:135.57}, {year:2023,value:122.78}, {year:2024,value:135.96}, {year:2025,value:139.1}, {year:2026,value:122.71} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:44.62}, {year:2024,value:14.47}, {year:2025,value:44.37} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:79.77}, {year:2023,value:99.43}, {year:2024,value:99.69}, {year:2025,value:100.96}, {year:2026,value:100.54} ] },
+      longTermDebt: { label: 'Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:398.14}, {year:2023,value:543.45}, {year:2024,value:633.16}, {year:2025,value:624.38}, {year:2026,value:649.87} ],
+        note: 'Long-term debt rose from A$398.1M to A$649.9M, up 63.2%, while operating income fell 63.4%. Debt up, earnings down.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion (A$M)', unit: 'M USD', series: [ {year:2022,value:477.91}, {year:2023,value:642.88}, {year:2024,value:732.85}, {year:2025,value:725.34}, {year:2026,value:750.41} ],
+        note: 'Total debt rose from A$477.9M to A$750.4M, up 57.0%.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:143.39}, {year:2023,value:123.01}, {year:2024,value:130.31}, {year:2025,value:101.34}, {year:2026,value:150.11} ] },
+      totalLiabilities: { label: 'Total Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:2070}, {year:2023,value:2140}, {year:2024,value:2220}, {year:2025,value:2190}, {year:2026,value:2480} ] },
+      retainedEarnings: { label: 'Retained Earnings (A$M)', unit: 'M USD', series: [ {year:2022,value:-178.82}, {year:2023,value:-212.4}, {year:2024,value:-248.18}, {year:2025,value:-266.21}, {year:2026,value:-676.37} ],
+        note: 'Retained earnings are NEGATIVE throughout and deteriorating: \u2212A$178.8M to \u2212A$676.4M. Five years of reported profits totalling A$1.20B alongside dividends of A$840M and a A$777M special dividend \u2014 NEC has distributed more than it earned.'
+      },
+      shareholderEquity: { label: 'Total Common Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:1880}, {year:2023,value:1680}, {year:2024,value:1590}, {year:2025,value:1570}, {year:2026,value:1180} ],
+        note: 'Common equity fell from A$1.88B to A$1.18B, down 37.2%. The FY2026 fall of A$390M coincides with the special dividend.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:1.1}, {year:2023,value:1.04}, {year:2024,value:1}, {year:2025,value:0.99}, {year:2026,value:0.75} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:0.88}, {year:2023,value:0.93}, {year:2024,value:0.97}, {year:2025,value:0.98}, {year:2026,value:1.29} ],
+        note: 'Price to book ROSE from 0.88\u00d7 to 1.29\u00d7 while book value per share fell 32%. NEC traded below book for four straight years.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.25}, {year:2023,value:0.38}, {year:2024,value:0.46}, {year:2025,value:0.46}, {year:2026,value:0.64} ],
+        note: 'Total debt to equity rose from 0.25\u00d7 to 0.64\u00d7 as debt grew and equity shrank.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:324.45}, {year:2023,value:523.2}, {year:2024,value:639.99}, {year:2025,value:583.67}, {year:2026,value:658.02} ],
+          note: 'Net debt rose from A$324.5M to A$658.0M \u2014 more than doubled \u2014 against EBITDA that fell 58.2% over the same period.'
+        },
+        { label: 'Long-Term Investments (A$M)', unit: 'M USD', series: [ {year:2022,value:40.12}, {year:2023,value:37.58}, {year:2024,value:33.41}, {year:2025,value:28.42}, {year:2026,value:25.53} ] },
+        { label: 'Total Current Unearned Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:76.95}, {year:2023,value:87.94}, {year:2024,value:83.45}, {year:2025,value:82.47}, {year:2026,value:75.73} ],
+          note: 'Current unearned revenue is stable at A$75.7M\u2013A$87.9M.'
+        },
+        { label: 'Unearned Revenue \u2014 Non-Current (A$M)', unit: 'M USD', series: [ {year:2022,value:4.48}, {year:2023,value:2.8}, {year:2024,value:0.734}, {year:2025,value:0.545}, {year:2026,value:4.45} ] },
+        { label: 'Long-Term Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:347.38}, {year:2023,value:333.75}, {year:2024,value:306.8}, {year:2025,value:289.58}, {year:2026,value:878.79} ],
+          note: 'Jumped from A$289.6M to A$878.8M in FY2026, tracking the PP&E increase almost exactly.'
+        },
+        { label: 'Current Portion of Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:35.36}, {year:2023,value:36.61}, {year:2024,value:39.57}, {year:2025,value:43.64}, {year:2026,value:40.57} ] },
+        { label: 'Prepaid Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:33.79}, {year:2023,value:44.14}, {year:2024,value:116.86}, {year:2025,value:59.13}, {year:2026,value:76.17} ] },
+        { label: 'Comprehensive Income & Other (A$M)', unit: 'M USD', series: [ {year:2022,value:-77.97}, {year:2023,value:-85.7}, {year:2024,value:-77.5}, {year:2025,value:-74.7}, {year:2026,value:-54.55} ] },
+        { label: 'Total Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:2070}, {year:2023,value:1880}, {year:2024,value:1790}, {year:2025,value:1780}, {year:2026,value:1180} ] },
+        { label: 'Tangible Book Value (A$M)', unit: 'M USD', series: [ {year:2022,value:-802.51}, {year:2023,value:-921.93}, {year:2024,value:-1030}, {year:2025,value:-872.64}, {year:2026,value:-173.85} ],
+          note: 'Tangible book value is NEGATIVE in every single year \u2014 \u2212A$802.5M, \u2212A$921.9M, \u2212A$1.03B, \u2212A$872.6M, \u2212A$173.9M. Goodwill and intangibles have always exceeded total equity. It improved only because the intangibles were written down.'
+        },
+        { label: 'Total Minority Interest (A$M)', unit: 'M USD', series: [ {year:2022,value:193.54}, {year:2023,value:193.65}, {year:2024,value:197.71}, {year:2025,value:204.95}, {year:2026,value:0.796} ],
+          note: 'Minority interest collapsed from A$205.0M to A$796K in FY2026 \u2014 a subsidiary interest was bought out or disposed of.'
+        },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:8.56}, {year:2023,value:6.79}, {year:2024,value:5.29}, {year:2025,value:3.51}, {year:2026,value:3.3} ],
+          note: 'Return on assets fell every year, 8.56% to 3.30%.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:12}, {year:2023,value:9.52}, {year:2024,value:7.38}, {year:2025,value:4.9}, {year:2026,value:4.43} ],
+          note: 'Return on capital fell every year, 12.00% to 4.43% \u2014 down 63% and consistent with the operating income trend.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:15.64}, {year:2023,value:9.86}, {year:2024,value:7.37}, {year:2025,value:5.62}, {year:2026,value:-22.89} ],
+          note: 'The supplied FY2026 ROE of \u221222.89% sits against reported net income of +A$511.3M. Those two cannot both be right on the same basis \u2014 the ROE series appears to be computed on a continuing-operations or pre-disposal basis. Both retained exactly as supplied; do not read them together.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:0.79}, {year:2023,value:1.28}, {year:2024,value:1.89}, {year:2025,value:2.67}, {year:2026,value:2.95} ],
+          note: 'Leverage deteriorated from 0.79\u00d7 to 2.95\u00d7. Both sides moved the wrong way at once, and this is the single sharpest leverage deterioration in the batch.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations (A$M)', unit: 'M USD', series: [ {year:2022,value:487.23}, {year:2023,value:351.78}, {year:2024,value:293.42}, {year:2025,value:379.6}, {year:2026,value:162.22} ],
+        note: 'Operating cash flow fell from A$487.2M to A$162.2M, down 66.7%, with the sharpest drop in FY2026.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:431.69}, {year:2023,value:208.56}, {year:2024,value:178.09}, {year:2025,value:76.75}, {year:2026,value:-90.04} ],
+        note: 'Free cash flow fell from A$431.7M to NEGATIVE A$90.0M. The only negative free cash flow year in the batch, and it arrives in the same year reported net income hit a five-year high.'
+      },
+      extraLines: [
+        { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:297.14}, {year:2023,value:181.81}, {year:2024,value:110.9}, {year:2025,value:103.89}, {year:2026,value:511.29} ] },
+        { label: 'Unlevered Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:448.13}, {year:2023,value:238.43}, {year:2024,value:216.92}, {year:2025,value:108.1}, {year:2026,value:-63.42} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:88.6}, {year:2023,value:59.29}, {year:2024,value:60.69}, {year:2025,value:20.22}, {year:2026,value:-55.5} ],
+          note: 'Conversion fell from 88.6% to negative. Even in FY2025 it was only 20.2%.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:163.97}, {year:2023,value:193.49}, {year:2024,value:264.58}, {year:2025,value:365.39}, {year:2026,value:31.73} ],
+          note: 'Operating cash flow ran 164%\u2013365% of net income for four years, then 31.7% in FY2026 \u2014 because FY2026 net income is a non-cash disposal gain.'
+        },
+        { label: 'Cash from Investing (A$M)', unit: 'M USD', series: [ {year:2022,value:-297.33}, {year:2023,value:-117.41}, {year:2024,value:-135.95}, {year:2025,value:-127.3}, {year:2026,value:535.5} ],
+          note: 'FY2026 shows a A$535.5M investing INFLOW \u2014 the only positive year, and the source of the special dividend.'
+        },
+        { label: 'Cash from Financing (A$M)', unit: 'M USD', series: [ {year:2022,value:-208.36}, {year:2023,value:-268.16}, {year:2024,value:-184.28}, {year:2025,value:-203.49}, {year:2026,value:-746.99} ],
+          note: 'FY2026 financing outflow of A$747.0M, more than triple any prior year, driven by the special dividend.'
+        },
+        { label: 'Repurchase of Common Stock (A$M)', unit: 'M USD', series: [ {year:2022,value:-12.11}, {year:2023,value:-154.01}, {year:2024,value:-67.45} ],
+          note: 'Buybacks of A$12.1M, A$154.0M, A$67.5M then nothing in FY2025 or FY2026.'
+        },
+        { label: 'Common Dividends Paid (A$M)', unit: 'M USD', series: [ {year:2022,value:-213.17}, {year:2023,value:-219.56}, {year:2024,value:-146.07}, {year:2025,value:-126.86}, {year:2026,value:-134.79} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.13}, {year:2023,value:0.14}, {year:2024,value:0.09}, {year:2025,value:0.08}, {year:2026,value:0.09} ],
+          note: 'Derived as ordinary dividends paid \u00f7 shares outstanding. Fell from A$0.13 to A$0.09.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:71.74}, {year:2023,value:120.76}, {year:2024,value:131.71}, {year:2025,value:122.11}, {year:2026,value:26.36} ],
+          note: 'Ordinary dividend payout ran 71.8%, 120.8%, 131.7%, 122.1% \u2014 above 100% of net income in three consecutive years, which is why retained earnings kept deteriorating. Including the FY2026 special dividend, total distributions were 178% of that year\u2019s net income.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends (A$M)', unit: 'M USD', series: [ {year:2022,value:225.28}, {year:2023,value:373.57}, {year:2024,value:213.52}, {year:2025,value:126.86}, {year:2026,value:134.79} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:52.19}, {year:2023,value:179.12}, {year:2024,value:119.89}, {year:2025,value:165.29}, {year:2026,value:-149.7} ],
+          note: 'Shareholder returns exceeded free cash flow in three of five years, peaking at 179% in FY2023 and 165% in FY2025. FY2026 free cash flow was negative, so the special dividend was funded entirely from disposal proceeds rather than trading.'
+        },
+        { label: 'Special Dividend Paid (A$M)', unit: 'M USD', series: [ {year:2026,value:-777.02} ],
+          note: 'A A$777.0M special dividend in FY2026 \u2014 more than five times the ordinary dividend, and larger than the entire A$511.3M of reported net income that year. This is disposal proceeds being returned, not earnings.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments (A$M)', unit: 'M USD', series: [ {year:2023,value:2.44}, {year:2024,value:-1.21} ] },
+        { label: 'Sale / Purchase of Intangible Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:-55.99}, {year:2023,value:-77.25}, {year:2024,value:-99.39}, {year:2025,value:-110.2}, {year:2026,value:-95.12} ],
+          note: 'Purchases of intangible assets ran A$56.0M\u2013A$110.2M every year \u2014 a persistent cash cost that sits outside conventional capex and depresses free cash flow.'
+        },
+        { label: 'Total Short-Term Debt Issued (A$M)', unit: 'M USD', series: [ {year:2023,value:2.58}, {year:2024,value:3.03} ] },
+        { label: 'Total Short-Term Debt Repaid (A$M)', unit: 'M USD', series: [ {year:2022,value:-3.9} ] },
+        { label: 'Cash Acquisitions (A$M)', unit: 'M USD', series: [ {year:2022,value:-226.1}, {year:2023,value:-0.046}, {year:2024,value:-0.204}, {year:2026,value:-855.24} ],
+          note: 'FY2026 shows \u2212A$855.2M on the cash acquisitions line, matching the scale of the FY2026 asset-sale loss. The FY2022 figure of \u2212A$226.1M is the only other material year.'
+        },
+        { label: 'Net Change in Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:-18.46}, {year:2023,value:-33.79}, {year:2024,value:-26.82}, {year:2025,value:48.81}, {year:2026,value:-49.28} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -13599,9 +14432,9 @@ const COVERAGE_DATA = [
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
 
   // === MEDIA/PRESS · USA ===
-  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media/Press',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
-  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media/Press',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
-  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media/Press',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: null, locked: true },
+  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media/Press',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: FOX_BREAKDOWN },
+  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media/Press',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: NWS_BREAKDOWN },
+  { ticker: 'DJCO',  name: 'Daily Journal Corporation',        industry: 'Media/Press',         country: 'United States', marketCap: 730000000,     marketCapDate: '29 Jun 2026', verdict: null, tier: 2, oneLiner: 'Munger-era mini-Berkshire: legal publisher + Journal Technologies court software + a securities portfolio.', breakdown: DJCO_BREAKDOWN },
 
   // === BEVERAGES · USA ===
   { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverages',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
@@ -13658,7 +14491,7 @@ const COVERAGE_DATA = [
   { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null, locked: true },
 
   // === MEDIA/PRESS · AUSTRALIA ===
-  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media/Press',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null, locked: true },
+  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media/Press',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: NEC_BREAKDOWN },
 
   // === STOCK EXCHANGES · ISRAEL ===
   { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Stock Exchanges',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets.', breakdown: null, locked: true },
