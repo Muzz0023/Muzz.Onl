@@ -13019,6 +13019,560 @@ const ORCL_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// UNP_BREAKDOWN — Union Pacific Corporation Coverage data (Tier 2)
+// SOURCE: Muzz's supplied railroad data drop — income statement,
+// balance sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left on the asset
+// side and EPS left unreconciled, both per Muzz's explicit call.
+// Derived lines (operating ratio, coverage, payout, DPS, FCF
+// conversion, debt ratios) are pure arithmetic on the supplied
+// figures and are labelled as derived where not self-evident.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// // CONTINGENCIES: none supplied.
+// ═════════════════════════════════════════════════════════════════
+const UNP_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:21800}, {year:2022,value:24880}, {year:2023,value:24120}, {year:2024,value:24250}, {year:2025,value:24510} ],
+        note: 'Revenue grew from $21.80B (2021) to $24.51B (2025) \u2014 up 12.4% across five years. Almost all of it landed in 2022 (+14.1% in a single year). The three years since have been flat: $24.88B, $24.12B, $24.25B, $24.51B. This is a mature network operating at scale, not a growth story.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:9060}, {year:2022,value:11340}, {year:2023,value:11220}, {year:2024,value:10760}, {year:2025,value:10700} ] },
+      opexLines: [
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:3380}, {year:2022,value:3530}, {year:2023,value:3770}, {year:2024,value:3720}, {year:2025,value:3840} ] },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2021,value:1180}, {year:2022,value:1290}, {year:2023,value:1450}, {year:2024,value:1330}, {year:2025,value:1370} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:12440}, {year:2022,value:14870}, {year:2023,value:14990}, {year:2024,value:14480}, {year:2025,value:14540} ] },
+      expensesToRevenue: { label: 'Operating Ratio \u2014 Opex \u00f7 Revenue (%)', unit: '%', series: [ {year:2021,value:57.06}, {year:2022,value:59.77}, {year:2023,value:62.15}, {year:2024,value:59.71}, {year:2025,value:59.32} ],
+        note: 'The railway number \u2014 lower is better. Best year 57.06% (2021), worst 62.15% (2023) during the freight recession, recovering to 59.32% (2025). UNP runs the tightest operating ratio of the three railways in coverage.'
+      },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:9360}, {year:2022,value:10000}, {year:2023,value:9130}, {year:2024,value:9770}, {year:2025,value:9970} ],
+        note: 'Operating income peaked at $10.00B (2022), dipped to $9.13B (2023), and reached $9.97B (2025) \u2014 still marginally below the 2022 high after three years.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-1160}, {year:2022,value:-1270}, {year:2023,value:-1340}, {year:2024,value:-1270}, {year:2025,value:-1310} ] },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2021,value:272}, {year:2022,value:205}, {year:2023,value:280}, {year:2024,value:219}, {year:2025,value:518} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:1960}, {year:2022,value:2070}, {year:2023,value:1850}, {year:2024,value:2050}, {year:2025,value:2030} ],
+        note: 'Tax expense tracked pre-tax income closely across all five years, with no unusual items distorting the line.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:23.06}, {year:2022,value:22.86}, {year:2023,value:22.52}, {year:2024,value:23.28}, {year:2025,value:22.13} ],
+        note: 'Tight band of 22.13%\u201323.28% \u2014 no tax-driven distortions anywhere in this series.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:6520}, {year:2022,value:7000}, {year:2023,value:6380}, {year:2024,value:6750}, {year:2025,value:7140} ],
+        note: 'Net income moved from $6.52B to $7.14B, up 9.5% over five years. The 2023 trough ($6.38B) tracks the operating ratio deterioration in the same year.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:29.92}, {year:2022,value:28.13}, {year:2023,value:26.45}, {year:2024,value:27.82}, {year:2025,value:29.12} ],
+        note: 'Net margin dipped to 26.45% in 2023 and recovered to 29.12% by 2025, essentially back to the 29.92% starting point.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:9.95}, {year:2022,value:11.21}, {year:2023,value:10.32}, {year:2024,value:11.16}, {year:2025,value:11.66} ],
+        note: 'EPS rose 17.2% ($9.95 \u2192 $11.66) while net income rose only 9.5%. The difference is the buyback \u2014 a 6.8% smaller share count doing roughly half the per-share work.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:636.9}, {year:2022,value:611.87}, {year:2023,value:609.78}, {year:2024,value:604.29}, {year:2025,value:593.39} ],
+        note: 'Share count fell from 636.90M to 593.39M, down 6.8% in five years. Treasury stock grew from \u2212$47.73B to \u2212$58.84B over the same span \u2014 $11.11B of stock retired.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:11570}, {year:2022,value:12250}, {year:2023,value:11450}, {year:2024,value:12170}, {year:2025,value:12440} ] },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2021,value:2210}, {year:2022,value:2250}, {year:2023,value:2320}, {year:2024,value:2400}, {year:2025,value:2470} ],
+          note: 'Depreciation rose steadily from $2.21B to $2.47B, tracking the growing asset base.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:8480}, {year:2022,value:9070}, {year:2023,value:8230}, {year:2024,value:8790}, {year:2025,value:9170} ],
+          note: 'Pre-tax income including and excluding unusual items are identical in 2021, 2024, and near-identical elsewhere \u2014 a clean earnings series with no significant one-offs.'
+        },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:8480}, {year:2022,value:8960}, {year:2023,value:8130}, {year:2024,value:8790}, {year:2025,value:9240} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2022,value:23}, {year:2023,value:52}, {year:2024,value:76}, {year:2025,value:56} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-1160}, {year:2022,value:-1250}, {year:2023,value:-1290}, {year:2024,value:-1190}, {year:2025,value:-1250} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:8.07}, {year:2022,value:7.87}, {year:2023,value:6.81}, {year:2024,value:7.69}, {year:2025,value:7.61} ],
+          note: 'Operating income covers interest 6.8\u20138.1\u00d7. Coverage weakened modestly from 8.07\u00d7 (2021) to 7.61\u00d7 (2025).'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:960}, {year:2022,value:973}, {year:2023,value:1060}, {year:2024,value:1020}, {year:2025,value:1270} ],
+        note: 'Cash sits at $1.27B against $31.71B of total debt. UNP runs a deliberately thin cash balance and relies on the reliability of operating cash flow.'
+      },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:1720}, {year:2022,value:1890}, {year:2023,value:2070}, {year:2024,value:1890}, {year:2025,value:1860} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:621}, {year:2022,value:741}, {year:2023,value:743}, {year:2024,value:769}, {year:2025,value:787} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:183}, {year:2022,value:291}, {year:2023,value:251}, {year:2024,value:318}, {year:2025,value:383} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:3550}, {year:2022,value:3950}, {year:2023,value:4150}, {year:2024,value:4020}, {year:2025,value:4560} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:55970}, {year:2022,value:56980}, {year:2023,value:58230}, {year:2024,value:58850}, {year:2025,value:59940} ],
+        note: 'Net PP&E of $59.94B against $69.70B of total assets. The track, locomotives and rolling stock effectively are the company. This is what a capital-intensive moat looks like on a balance sheet \u2014 and it is also the reason a competitor cannot simply appear.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:686}, {year:2022,value:729}, {year:2023,value:814}, {year:2024,value:791}, {year:2025,value:745} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:12680}, {year:2022,value:13030}, {year:2023,value:13120}, {year:2024,value:13150}, {year:2025,value:13420} ],
+        note: 'Presented on the ASSET side exactly as supplied in the source data. At $13.42B (2025) this is roughly 19% of total assets \u2014 a material line worth verifying against the filed accounts before relying on it.'
+      },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:1080}, {year:2022,value:1410}, {year:2023,value:1340}, {year:2024,value:1390}, {year:2025,value:1580} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:63530}, {year:2022,value:65450}, {year:2023,value:67130}, {year:2024,value:67720}, {year:2025,value:69700} ] },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:752}, {year:2022,value:784}, {year:2023,value:856}, {year:2024,value:847}, {year:2025,value:804} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:1270}, {year:2022,value:1670}, {year:2023,value:1330}, {year:2024,value:1420}, {year:2025,value:1400} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'M USD', series: [ {year:2021,value:823}, {year:2022,value:628}, {year:2023,value:685}, {year:2024,value:605}, {year:2025,value:491} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:2070}, {year:2022,value:1610}, {year:2023,value:1370}, {year:2024,value:1390}, {year:2025,value:1480} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:27320}, {year:2022,value:31480}, {year:2023,value:31050}, {year:2024,value:29700}, {year:2025,value:30230} ],
+        note: 'Long-term debt rose from $27.32B to $30.23B, peaking at $31.48B in 2022 \u2014 the same year as the $6.28B buyback. The debt and the repurchases move together.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:29390}, {year:2022,value:33090}, {year:2023,value:32420}, {year:2024,value:31090}, {year:2025,value:31710} ],
+        note: 'Long-term debt plus the current portion. Peaked at $33.09B (2022) and has come down to $31.71B, though it remains above the 2021 level.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:1440}, {year:2022,value:1420}, {year:2023,value:1710}, {year:2024,value:1730}, {year:2025,value:1760} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:49360}, {year:2022,value:53290}, {year:2023,value:52340}, {year:2024,value:50830}, {year:2025,value:51230} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2021,value:4980}, {year:2022,value:5080}, {year:2023,value:5190}, {year:2024,value:5330}, {year:2025,value:5590} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:55050}, {year:2022,value:58890}, {year:2023,value:62090}, {year:2024,value:65630}, {year:2025,value:69530} ],
+        note: 'Retained earnings grew $14.48B over five years ($55.05B \u2192 $69.53B) while treasury stock grew $11.11B. Roughly three-quarters of the retained profit went straight back out through buybacks.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:14160}, {year:2022,value:12160}, {year:2023,value:14790}, {year:2024,value:16890}, {year:2025,value:18470} ],
+        note: 'Equity fell before it rose \u2014 $14.16B (2021) down to $12.16B (2022), then back to $18.47B (2025). The 2022 dip is the buyback year.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:22.17}, {year:2022,value:19.86}, {year:2023,value:24.25}, {year:2024,value:27.95}, {year:2025,value:31.13} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:13.8}, {year:2022,value:15.41}, {year:2023,value:12.62}, {year:2024,value:10.95}, {year:2025,value:9.83} ],
+        note: 'The multiple compressed from 13.80\u00d7 to 9.83\u00d7 even as book value per share rose 40.4% ($22.17 \u2192 $31.13).'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:2.08}, {year:2022,value:2.72}, {year:2023,value:2.19}, {year:2024,value:1.84}, {year:2025,value:1.72} ],
+        note: 'Total debt has run between 1.72\u00d7 and 2.72\u00d7 equity, peaking in the heavy-buyback year of 2022 and easing since as equity rebuilt.'
+      },
+      extraLines: [
+        { label: 'Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:46}, {year:2022,value:46}, {year:2023,value:16}, {year:2024,value:20}, {year:2025,value:250} ] },
+        { label: 'Cash & Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:1010}, {year:2022,value:1020}, {year:2023,value:1070}, {year:2024,value:1040}, {year:2025,value:1520} ] },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:2240}, {year:2022,value:2380}, {year:2023,value:2610}, {year:2024,value:2660}, {year:2025,value:2890} ],
+          note: 'Long-term investments grew steadily from $2.24B to $2.89B.'
+        },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:1670}, {year:2022,value:1470}, {year:2023,value:1350}, {year:2024,value:997}, {year:2025,value:804} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:422}, {year:2022,value:398}, {year:2023,value:404}, {year:2024,value:383}, {year:2025,value:309} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-914}, {year:2022,value:-582}, {year:2023,value:-614}, {year:2024,value:-723}, {year:2025,value:-591} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-47730}, {year:2022,value:-54000}, {year:2023,value:-54670}, {year:2024,value:-56130}, {year:2025,value:-58840} ],
+          note: 'Grew from \u2212$47.73B to \u2212$58.84B. Against $69.53B of retained earnings, UNP has repurchased nearly as much stock as it has ever retained in profit.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:14160}, {year:2022,value:12160}, {year:2023,value:14790}, {year:2024,value:16890}, {year:2025,value:18470} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:13480}, {year:2022,value:11430}, {year:2023,value:13970}, {year:2024,value:16100}, {year:2025,value:17720} ],
+          note: 'Tangible book value tracks total equity closely \u2014 UNP carries no goodwill at all, which is unusual and a mark of a business built rather than bought.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:518}, {year:2022,value:364} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:9.29}, {year:2022,value:9.69}, {year:2023,value:8.61}, {year:2024,value:9.05}, {year:2025,value:9.07} ] },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:12.87}, {year:2022,value:13.48}, {year:2023,value:11.88}, {year:2024,value:12.42}, {year:2025,value:12.39} ],
+          note: 'Return on capital ran 11.9%\u201313.5% across the period \u2014 a far more stable read on the business than ROE, and the highest of the three railways.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:41.92}, {year:2022,value:53.17}, {year:2023,value:47.34}, {year:2024,value:42.6}, {year:2025,value:40.38} ],
+          note: 'Return on equity exceeded 40% in every year and hit 53.17% in 2022. Read it with care: the denominator is suppressed by \u2212$58.84B of treasury stock. High ROE here reflects an eroded equity base as much as operating quality.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:2.54}, {year:2022,value:2.7}, {year:2023,value:2.83}, {year:2024,value:2.55}, {year:2025,value:2.55} ],
+          note: 'Steady at 2.5\u20132.8\u00d7 across the whole period \u2014 leverage held within a consistent band despite the buyback swings.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:9030}, {year:2022,value:9360}, {year:2023,value:8380}, {year:2024,value:9350}, {year:2025,value:9290} ],
+        note: 'Operating cash flow has been remarkably stable \u2014 $8.38B to $9.36B across all five years, with no clear trend.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:4760}, {year:2022,value:4060}, {year:2023,value:3360}, {year:2024,value:4620}, {year:2025,value:3920} ],
+        note: 'Free cash flow went the wrong way: $4.76B (2021) to $3.92B (2025), down 17.6% while revenue rose 12.4%. FCF peaked in the first year of the series and has not recovered since.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:6520}, {year:2022,value:7000}, {year:2023,value:6380}, {year:2024,value:6750}, {year:2025,value:7140} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:5490}, {year:2022,value:4850}, {year:2023,value:4200}, {year:2024,value:5420}, {year:2025,value:4740} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:52.71}, {year:2022,value:43.38}, {year:2023,value:40.1}, {year:2024,value:49.41}, {year:2025,value:42.2} ],
+          note: 'Free cash flow converted 52.7% of operating cash flow in 2021, falling to 42.2% by 2025.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-2710}, {year:2022,value:-3470}, {year:2023,value:-3670}, {year:2024,value:-3330}, {year:2025,value:-3760} ],
+          note: 'Investing outflows ran $2.71B\u2013$3.76B and trended up across the period.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-7160}, {year:2022,value:-5890}, {year:2023,value:-4630}, {year:2024,value:-6070}, {year:2025,value:-5280} ],
+          note: 'Financing outflows of $4.63B\u2013$7.16B every year \u2014 the mechanical result of returning more cash than the business generates in free cash flow.'
+        },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-7290}, {year:2022,value:-6280}, {year:2023,value:-705}, {year:2024,value:-1510}, {year:2025,value:-2680} ],
+          note: 'The buyback is lumpy: $7.29B (2021), $6.28B (2022), then a sharp pullback to $705M (2023) before rebuilding to $2.68B (2025).'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-2800}, {year:2022,value:-3160}, {year:2023,value:-3170}, {year:2024,value:-3210}, {year:2025,value:-3240} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:4.4}, {year:2022,value:5.16}, {year:2023,value:5.2}, {year:2024,value:5.31}, {year:2025,value:5.46} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $4.40 to $5.46, up 24.1% \u2014 faster than both net income and EPS.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:42.94}, {year:2022,value:45.14}, {year:2023,value:49.69}, {year:2024,value:47.56}, {year:2025,value:45.38} ],
+          note: 'The dividend alone consumed 42.9%\u201349.7% of net income \u2014 before any buyback.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:10090}, {year:2022,value:9440}, {year:2023,value:3875}, {year:2024,value:4720}, {year:2025,value:5920} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:211.97}, {year:2022,value:232.51}, {year:2023,value:115.33}, {year:2024,value:102.16}, {year:2025,value:151.02} ],
+          note: 'Buybacks plus dividends exceeded free cash flow in every single year \u2014 212% (2021), 232% (2022), 115%, 102%, and 151% (2025). Sustained shareholder returns above free cash flow are funded by the balance sheet, which is consistent with long-term debt rising $2.91B over the same period.'
+        },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2021,value:17}, {year:2022,value:-120}, {year:2023,value:-2}, {year:2024,value:-26}, {year:2025,value:-18} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-835}, {year:2022,value:4}, {year:2023,value:87}, {year:2024,value:-46}, {year:2025,value:252} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// CSX_BREAKDOWN — CSX Corporation Coverage data (Tier 2)
+// SOURCE: Muzz's supplied railroad data drop — income statement,
+// balance sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left on the asset
+// side and EPS left unreconciled, both per Muzz's explicit call.
+// Derived lines (operating ratio, coverage, payout, DPS, FCF
+// conversion, debt ratios) are pure arithmetic on the supplied
+// figures and are labelled as derived where not self-evident.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// // CONTINGENCIES: none supplied.
+// ═════════════════════════════════════════════════════════════════
+const CSX_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:12520}, {year:2022,value:14850}, {year:2023,value:14660}, {year:2024,value:14540}, {year:2025,value:14090} ],
+        note: 'Revenue peaked at $14.85B in 2022 and has fallen in each of the three years since \u2014 $14.66B, $14.54B, $14.09B. The 2025 figure is 5.1% below the 2022 peak, and the decline is uninterrupted.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:5870}, {year:2022,value:7530}, {year:2023,value:7520}, {year:2024,value:7460}, {year:2025,value:7670} ] },
+      opexLines: [
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:1420}, {year:2022,value:1500}, {year:2023,value:1610}, {year:2024,value:1660}, {year:2025,value:1680} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:7290}, {year:2022,value:9030}, {year:2023,value:9130}, {year:2024,value:9110}, {year:2025,value:9350} ] },
+      expensesToRevenue: { label: 'Operating Ratio \u2014 Opex \u00f7 Revenue (%)', unit: '%', series: [ {year:2021,value:58.23}, {year:2022,value:60.81}, {year:2023,value:62.28}, {year:2024,value:62.65}, {year:2025,value:66.36} ],
+        note: 'Deteriorating in every single year of the series \u2014 58.23% (2021) to 66.36% (2025). An eight-point move in the wrong direction with no reversal in any year. This is the single most concerning line in the CSX dataset and it is the worst operating ratio of the three railways in coverage.'
+      },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:5230}, {year:2022,value:5820}, {year:2023,value:5530}, {year:2024,value:5430}, {year:2025,value:4740} ],
+        note: 'Operating income fell from $5.82B (2022) to $4.74B (2025), down 18.6%. Revenue fell 5.1% over the same period \u2014 the profit decline is roughly 3.6\u00d7 the revenue decline, which is operating leverage running in reverse.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-722}, {year:2022,value:-742}, {year:2023,value:-809}, {year:2024,value:-832}, {year:2025,value:-844} ] },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2021,value:8}, {year:2022,value:12}, {year:2023,value:31}, {year:2024,value:7}, {year:2025,value:14} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:1170}, {year:2022,value:1230}, {year:2023,value:1160}, {year:2024,value:1090}, {year:2025,value:880} ],
+        note: 'Tax expense fell from $1.23B (2022) to $880M (2025), tracking the decline in pre-tax income.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:23.63}, {year:2022,value:23.03}, {year:2023,value:24.04}, {year:2024,value:23.82}, {year:2025,value:23.35} ],
+        note: 'Stable at 23.03%\u201324.04% throughout.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:3780}, {year:2022,value:4110}, {year:2023,value:3670}, {year:2024,value:3470}, {year:2025,value:2890} ],
+        note: 'Net income fell from $4.11B (2022) to $2.89B (2025) \u2014 down 29.7%, and 2025 is the lowest of all five years.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:30.19}, {year:2022,value:27.7}, {year:2023,value:25.03}, {year:2024,value:23.87}, {year:2025,value:20.5} ],
+        note: 'Net margin fell every year without exception: 30.19%, 27.70%, 25.03%, 23.87%, 20.50%. Nearly ten points of margin gone in five years.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:1.56}, {year:2022,value:1.89}, {year:2023,value:1.85}, {year:2024,value:1.83}, {year:2025,value:1.61} ],
+        note: 'EPS looks flat ($1.56 \u2192 $1.61) while net income fell 23.5%. The entire per-share result is the 15.1% reduction in share count. Strip the buyback out and the underlying earnings picture is materially worse than the EPS line suggests.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:2190}, {year:2022,value:2060}, {year:2023,value:1960}, {year:2024,value:1890}, {year:2025,value:1860} ],
+        note: 'Share count fell from 2.19B to 1.86B, down 15.1% \u2014 the most aggressive share reduction of the three railways, and the only thing holding the EPS line up.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:6650}, {year:2022,value:7320}, {year:2023,value:7140}, {year:2024,value:7090}, {year:2025,value:6420} ] },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2021,value:1420}, {year:2022,value:1500}, {year:2023,value:1610}, {year:2024,value:1660}, {year:2025,value:1680} ],
+          note: 'Depreciation rose from $1.42B to $1.68B. Note that in this dataset the supplied Operating Expense line is identical to Depreciation & Amortisation in every year \u2014 an artefact of how the source presents the cost structure.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:4950}, {year:2022,value:5350}, {year:2023,value:4830}, {year:2024,value:4560}, {year:2025,value:3770} ],
+          note: '2021 and 2022 carry meaningful unusual items ($420M and $220M respectively); 2023 onward the two measures converge.'
+        },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:4530}, {year:2022,value:5130}, {year:2023,value:4830}, {year:2024,value:4690}, {year:2025,value:3960} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:7}, {year:2022,value:42}, {year:2023,value:79}, {year:2024,value:85}, {year:2025,value:45} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-715}, {year:2022,value:-700}, {year:2023,value:-730}, {year:2024,value:-747}, {year:2025,value:-799} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2021,value:-454}, {year:2022,value:-238} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:7.24}, {year:2022,value:7.84}, {year:2023,value:6.84}, {year:2024,value:6.53}, {year:2025,value:5.62} ],
+          note: 'Interest coverage weakened materially, from 7.24\u00d7 (2021) to 5.62\u00d7 (2025) \u2014 the sharpest coverage decline of the three railways.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:2240}, {year:2022,value:1960}, {year:2023,value:1350}, {year:2024,value:933}, {year:2025,value:670} ],
+        note: 'Cash fell every year without exception \u2014 $2.24B, $1.96B, $1.35B, $933M, $670M. Down 70.1% across the period.'
+      },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:1150}, {year:2022,value:1310}, {year:2023,value:1390}, {year:2024,value:1330}, {year:2025,value:1300} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:339}, {year:2022,value:341}, {year:2023,value:440}, {year:2024,value:414}, {year:2025,value:390} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:70}, {year:2022,value:108}, {year:2023,value:90}, {year:2024,value:75}, {year:2025,value:187} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:3870}, {year:2022,value:3850}, {year:2023,value:3360}, {year:2024,value:2820}, {year:2025,value:2550} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:33520}, {year:2022,value:34750}, {year:2023,value:35220}, {year:2024,value:36150}, {year:2025,value:37280} ],
+        note: 'Net PP&E rose from $33.52B to $37.28B \u2014 capital spending kept climbing through five years of falling revenue, falling margin and falling free cash flow.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:276}, {year:2022,value:319}, {year:2023,value:325}, {year:2024,value:239}, {year:2025,value:80} ],
+        note: 'Goodwill fell from $276M to $80M, written down steadily across the period.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:175}, {year:2022,value:183}, {year:2023,value:181}, {year:2024,value:194}, {year:2025,value:187} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:7380}, {year:2022,value:7570}, {year:2023,value:7700}, {year:2024,value:7730}, {year:2025,value:7910} ],
+        note: 'Presented on the ASSET side exactly as supplied in the source data. At $7.91B (2025) this is roughly 18% of total assets \u2014 worth verifying against the filed accounts.'
+      },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:414}, {year:2022,value:328}, {year:2023,value:566}, {year:2024,value:697}, {year:2025,value:765} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:40530}, {year:2022,value:41910}, {year:2023,value:42210}, {year:2024,value:42760}, {year:2025,value:43680} ] },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:963}, {year:2022,value:1130}, {year:2023,value:1240}, {year:2024,value:1120}, {year:2025,value:1150} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:711}, {year:2022,value:810}, {year:2023,value:610}, {year:2024,value:575}, {year:2025,value:647} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'M USD', series: [ {year:2021,value:134}, {year:2022,value:111}, {year:2023,value:524}, {year:2024,value:508}, {year:2025,value:118} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:181}, {year:2022,value:151}, {year:2023,value:558}, {year:2024,value:606}, {year:2025,value:708} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:16140}, {year:2022,value:17990}, {year:2023,value:18070}, {year:2024,value:18010}, {year:2025,value:18240} ],
+        note: 'Long-term debt rose from $16.14B to $18.24B and has been essentially flat since 2023.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:16321}, {year:2022,value:18141}, {year:2023,value:18628}, {year:2024,value:18616}, {year:2025,value:18948} ],
+        note: 'Total debt rose 16.1% ($16.32B \u2192 $18.95B) while EBITDA fell 3.5% over the same period.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:508}, {year:2022,value:557}, {year:2023,value:550}, {year:2024,value:581}, {year:2025,value:575} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:27030}, {year:2022,value:29290}, {year:2023,value:30230}, {year:2024,value:30260}, {year:2025,value:30520} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:11630}, {year:2022,value:10360}, {year:2023,value:9610}, {year:2024,value:9990}, {year:2025,value:10560} ],
+        note: 'Retained earnings fell from $11.63B (2021) to $9.61B (2023) before partially recovering to $10.56B \u2014 CSX distributed more than it earned in the early part of the series.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:13490}, {year:2022,value:12620}, {year:2023,value:11980}, {year:2024,value:12500}, {year:2025,value:13160} ],
+        note: 'Equity fell from $13.49B to $11.98B by 2023, recovering to $13.16B \u2014 still below where it started five years earlier.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:6.13}, {year:2022,value:6.1}, {year:2023,value:6.12}, {year:2024,value:6.58}, {year:2025,value:7.07} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:8.34}, {year:2022,value:8.38}, {year:2023,value:8.36}, {year:2024,value:7.77}, {year:2025,value:7.23} ],
+        note: 'Price to book eased from 8.34\u00d7 to 7.23\u00d7 as book value per share rose from $6.13 to $7.07.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:1.21}, {year:2022,value:1.44}, {year:2023,value:1.55}, {year:2024,value:1.49}, {year:2025,value:1.44} ],
+        note: 'Total debt runs 1.21\u20131.55\u00d7 equity \u2014 more conservative than UNP but rising through the period.'
+      },
+      extraLines: [
+        { label: 'Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:77}, {year:2022,value:129}, {year:2023,value:83}, {year:2024,value:72}, {year:2025,value:5} ] },
+        { label: 'Cash & Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:2320}, {year:2022,value:2090}, {year:2023,value:1440}, {year:2024,value:1010}, {year:2025,value:675} ] },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:2280}, {year:2022,value:2490}, {year:2023,value:2560}, {year:2024,value:2670}, {year:2025,value:2830} ],
+          note: 'Long-term investments grew steadily from $2.28B to $2.83B.'
+        },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:525}, {year:2022,value:517}, {year:2023,value:508}, {year:2024,value:496}, {year:2025,value:494} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:64}, {year:2022,value:69}, {year:2023,value:68}, {year:2024,value:73}, {year:2025,value:67} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-342}, {year:2022,value:186}, {year:2023,value:412}, {year:2024,value:614}, {year:2025,value:735} ] },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:13500}, {year:2022,value:12630}, {year:2023,value:11990}, {year:2024,value:12510}, {year:2025,value:13160} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:13040}, {year:2022,value:12110}, {year:2023,value:11470}, {year:2024,value:12070}, {year:2025,value:12890} ],
+          note: 'Tangible book value tracks equity closely; goodwill was never material and has been almost entirely written off.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2021,value:10}, {year:2022,value:10}, {year:2023,value:5}, {year:2024,value:5}, {year:2025,value:5} ],
+          note: 'Minority interest is immaterial \u2014 $5M\u2013$10M against a $43.68B balance sheet.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:244}, {year:2022,value:188}, {year:2023,value:182}, {year:2024,value:169}, {year:2025,value:169} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:8.14}, {year:2022,value:8.83}, {year:2023,value:8.22}, {year:2024,value:7.98}, {year:2025,value:6.86} ] },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:10.77}, {year:2022,value:11.78}, {year:2023,value:11.05}, {year:2024,value:10.79}, {year:2025,value:9.21} ],
+          note: 'Return on capital fell from 11.78% (2022) to 9.21% (2025) \u2014 the clearest single measure of the business deteriorating.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:28.42}, {year:2022,value:31.49}, {year:2023,value:29.81}, {year:2024,value:28.34}, {year:2025,value:22.51} ],
+          note: 'Return on equity fell from 31.49% (2022) to 22.51% (2025), and the fall is real rather than a denominator effect \u2014 equity is roughly flat while earnings dropped.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:2.45}, {year:2022,value:2.48}, {year:2023,value:2.61}, {year:2024,value:2.63}, {year:2025,value:2.95} ],
+          note: 'Leverage rose from 2.45\u00d7 to 2.95\u00d7. Debt grew while EBITDA shrank \u2014 both sides of the ratio moving the wrong way at once.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:5100}, {year:2022,value:5530}, {year:2023,value:5510}, {year:2024,value:5250}, {year:2025,value:4610} ],
+        note: 'Operating cash flow held up far better than free cash flow, easing from $5.10B to $4.61B (down 9.6%) while FCF fell 64.3%.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:2720}, {year:2022,value:2700}, {year:2023,value:2550}, {year:2024,value:2150}, {year:2025,value:970.5} ],
+        note: 'Free cash flow collapsed from $2.72B (2021) to $970.5M (2025), down 64.3%. Revenue fell only 3.4% over the same period. This is by a wide margin the sharpest deterioration anywhere in the three-railway dataset.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:3780}, {year:2022,value:4110}, {year:2023,value:3670}, {year:2024,value:3470}, {year:2025,value:2890} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:3170}, {year:2022,value:3160}, {year:2023,value:3050}, {year:2024,value:2670}, {year:2025,value:1500} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:53.33}, {year:2022,value:48.82}, {year:2023,value:46.28}, {year:2024,value:40.95}, {year:2025,value:21.05} ],
+          note: 'Conversion fell from 53.3% to 21.1%. Operating cash flow declined 9.6% over the period while free cash flow declined 64.3% \u2014 the gap is rising capital intensity.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-1880}, {year:2022,value:-2060}, {year:2023,value:-2230}, {year:2024,value:-2610}, {year:2025,value:-2850} ],
+          note: 'Investing outflows rose every year, from $1.88B to $2.85B \u2014 up 51.6% while revenue fell.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-4110}, {year:2022,value:-3770}, {year:2023,value:-3870}, {year:2024,value:-3060}, {year:2025,value:-2030} ],
+          note: 'Financing outflows narrowed from $4.11B to $2.03B as the buyback was throttled back.'
+        },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-2890}, {year:2022,value:-4730}, {year:2023,value:-3480}, {year:2024,value:-2240}, {year:2025,value:-1400} ],
+          note: 'Repurchases peaked at $4.73B (2022) and have fallen every year since, to $1.40B (2025) \u2014 the pullback tracks the collapse in free cash flow.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-839}, {year:2022,value:-852}, {year:2023,value:-882}, {year:2024,value:-930}, {year:2025,value:-972} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:0.38}, {year:2022,value:0.41}, {year:2023,value:0.45}, {year:2024,value:0.49}, {year:2025,value:0.52} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $0.38 to $0.52, up 36.5% \u2014 while net income fell 23.5% over the same five years.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:22.2}, {year:2022,value:20.73}, {year:2023,value:24.03}, {year:2024,value:26.8}, {year:2025,value:33.63} ],
+          note: 'The dividend payout ratio climbed from 22.2% to 33.6% \u2014 not because the dividend grew unusually fast, but because earnings fell underneath it.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:3729}, {year:2022,value:5582}, {year:2023,value:4362}, {year:2024,value:3170}, {year:2025,value:2372} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:137.1}, {year:2022,value:206.74}, {year:2023,value:171.06}, {year:2024,value:147.44}, {year:2025,value:244.41} ],
+          note: 'Shareholder returns exceeded free cash flow in every year of the series, reaching 244% in 2025 when $2.37B was returned against $970.5M of free cash flow. The gap is funded by debt, which rose $2.63B across the period.'
+        },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2021,value:-541}, {year:2022,value:-227}, {year:2023,value:-31}, {year:2024,value:-70}, {year:2025,value:-16} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-890}, {year:2022,value:-306}, {year:2023,value:-580}, {year:2024,value:-420}, {year:2025,value:-263} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// CP_BREAKDOWN — Canadian Pacific Kansas City Coverage data (Tier 2)
+// SOURCE: Muzz's supplied railroad data drop — income statement,
+// balance sheet and cash flow, FY2021–FY2025 (CAD, C$M).
+// Figures entered EXACTLY as supplied. Deferred tax left on the asset
+// side and EPS left unreconciled, both per Muzz's explicit call.
+// Derived lines (operating ratio, coverage, payout, DPS, FCF
+// conversion, debt ratios) are pure arithmetic on the supplied
+// figures and are labelled as derived where not self-evident.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// // CURRENCY: CAD throughout. Labels carry (C$M) per the CNI
+// convention already in the file; unit stays M USD so the
+// shared formatter renders correctly.
+// CONTINGENCIES: 2023 KCS merger creates a structural break —
+// 2021-22 and 2023-25 are not like-for-like.
+// ═════════════════════════════════════════════════════════════════
+const CP_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue (C$M)', unit: 'M USD', series: [ {year:2021,value:8000}, {year:2022,value:8810}, {year:2023,value:12560}, {year:2024,value:14550}, {year:2025,value:15080} ],
+        note: 'Revenue rose 88.5% from C$8.00B to C$15.08B \u2014 but this is not organic growth. The Kansas City Southern combination lands in 2023, when revenue jumps from C$8.81B to C$12.56B in a single year. The 2021\u201322 figures describe a materially different company from the 2023\u201325 figures, and the two halves are not comparable.'
+      },
+      costOfSales: { label: 'Cost of Revenue (C$M)', unit: 'M USD', series: [ {year:2021,value:3410}, {year:2022,value:4220}, {year:2023,value:6300}, {year:2024,value:7000}, {year:2025,value:6960} ] },
+      opexLines: [
+        { label: 'Operating Expense (C$M)', unit: 'M USD', series: [ {year:2021,value:811}, {year:2022,value:853}, {year:2023,value:1540}, {year:2024,value:1900}, {year:2025,value:2020} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses (C$M)', unit: 'M USD', series: [ {year:2021,value:4220}, {year:2022,value:5070}, {year:2023,value:7840}, {year:2024,value:8900}, {year:2025,value:8980} ] },
+      expensesToRevenue: { label: 'Operating Ratio \u2014 Opex \u00f7 Revenue (%)', unit: '%', series: [ {year:2021,value:52.75}, {year:2022,value:57.55}, {year:2023,value:62.42}, {year:2024,value:61.17}, {year:2025,value:59.55} ],
+        note: 'C$52.75% in 2021 is the best single operating ratio anywhere in the three-railway dataset \u2014 but that is pre-merger CP, a smaller and simpler network. Post-merger the ratio runs 59\u201362%, and the trend since 2023 is improving: 62.42%, 61.17%, 59.55%.'
+      },
+      operatingProfit: { label: 'Operating Income (C$M)', unit: 'M USD', series: [ {year:2021,value:3780}, {year:2022,value:3740}, {year:2023,value:4720}, {year:2024,value:5640}, {year:2025,value:6100} ],
+        note: 'Operating income rose from C$3.78B to C$6.10B. The 2023 step-up is the merger, not operating improvement.'
+      },
+      interestExpense: { label: 'Interest Expense (C$M)', unit: 'M USD', series: [ {year:2021,value:-440}, {year:2022,value:-652}, {year:2023,value:-771}, {year:2024,value:-801}, {year:2025,value:-876} ] },
+      otherIncomeExpense: { label: 'Other Non-Operating Income (C$M)', unit: 'M USD', series: [ {year:2021,value:-1}, {year:2022,value:-17}, {year:2023,value:-19}, {year:2024,value:18}, {year:2025,value:-13} ] },
+      provisionForTaxes: { label: 'Income Tax Expense (C$M)', unit: 'M USD', series: [ {year:2021,value:768}, {year:2022,value:628}, {year:2023,value:-6980}, {year:2024,value:1060}, {year:2025,value:1350} ],
+        note: '2023 shows a C$6.98B tax BENEFIT rather than an expense \u2014 a deferred tax movement tied to the merger. It is the reason net income is positive in a year with a pre-tax loss.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:21.22}, {year:2022,value:15.15}, {year:2023,value:228.5}, {year:2024,value:22.19}, {year:2025,value:24.53} ],
+        note: 'The 228.50% figure for 2023 is not a meaningful tax rate. It is the arithmetic of a large tax benefit divided by a negative pre-tax figure. For any normalised view use 2021\u201322 and 2024\u201325, which run 15.15%\u201324.53%.'
+      },
+      netIncome: { label: 'Net Income (C$M)', unit: 'M USD', series: [ {year:2021,value:2850}, {year:2022,value:3520}, {year:2023,value:3930}, {year:2024,value:3720}, {year:2025,value:4140} ],
+        note: 'Net income rose from C$2.85B to C$4.14B. Note that 2023 net income of C$3.93B sits on top of a pre-tax LOSS of C$3.05B \u2014 the bridge is a C$6.98B tax benefit. Treat 2023 as non-comparable.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:35.67}, {year:2022,value:39.9}, {year:2023,value:31.28}, {year:2024,value:25.56}, {year:2025,value:27.46} ],
+        note: 'Margin fell from 35.67% to 27.46% as the merger brought in a larger, lower-margin revenue base. The 39.90% in 2022 is the pre-merger peak.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:3.76}, {year:2022,value:3.77}, {year:2023,value:3.84}, {year:2024,value:4.25}, {year:2025,value:4.61} ],
+        note: 'Retained exactly as supplied. Note that EPS does not reconcile to net income \u00f7 shares outstanding in 2021, 2023 or 2024 \u2014 computing from the supplied figures gives $3.07, $4.21 and $3.98 against the reported $3.76, $3.84 and $4.25. Weighted-average share counts and the minority interest introduced in 2023 are the likely explanation. 2022 and 2025 do reconcile.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:929.71}, {year:2022,value:930.77}, {year:2023,value:932.43}, {year:2024,value:933.71}, {year:2025,value:897.96} ],
+        note: 'Share count was flat to slightly rising through 2024 (929.71M \u2192 933.71M) and then fell to 897.96M in 2025 \u2014 the first genuine reduction in the series, and it coincides with CP\u2019s first buyback.'
+      },
+      extraLines: [
+        { label: 'EBITDA (C$M)', unit: 'M USD', series: [ {year:2021,value:4590}, {year:2022,value:4590}, {year:2023,value:6260}, {year:2024,value:7540}, {year:2025,value:8120} ] },
+        { label: 'Depreciation & Amortisation (C$M)', unit: 'M USD', series: [ {year:2021,value:811}, {year:2022,value:853}, {year:2023,value:1540}, {year:2024,value:1900}, {year:2025,value:2020} ],
+          note: 'Depreciation more than doubles, C$811M \u2192 C$2.02B, as the KCS asset base consolidates. Note that in this dataset the supplied Operating Expense line is identical to Depreciation & Amortisation in every year.'
+        },
+        { label: 'EBT Including Unusual Items (C$M)', unit: 'M USD', series: [ {year:2021,value:3620}, {year:2022,value:4150}, {year:2023,value:-3050}, {year:2024,value:4770}, {year:2025,value:5480} ],
+          note: 'Pre-tax income including unusual items is NEGATIVE in 2023 (\u2212C$3.05B) while the excluding-unusuals figure is +C$4.13B. A C$7.18B swing in one year \u2014 the merger accounting.'
+        },
+        { label: 'EBT Excluding Unusual Items (C$M)', unit: 'M USD', series: [ {year:2021,value:3210}, {year:2022,value:4150}, {year:2023,value:4130}, {year:2024,value:4860}, {year:2025,value:5220} ] },
+        { label: 'Net Interest Expense (C$M)', unit: 'M USD', series: [ {year:2021,value:-440}, {year:2022,value:-652}, {year:2023,value:-771}, {year:2024,value:-801}, {year:2025,value:-876} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:8.59}, {year:2022,value:5.74}, {year:2023,value:6.12}, {year:2024,value:7.04}, {year:2025,value:6.96} ],
+          note: 'Coverage dipped to 5.74\u00d7 in 2022 as merger debt costs landed ahead of the earnings, recovering to 6.96\u00d7 by 2025.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents (C$M)', unit: 'M USD', series: [ {year:2021,value:69}, {year:2022,value:451}, {year:2023,value:464}, {year:2024,value:739}, {year:2025,value:184} ],
+        note: 'Cash is thin throughout \u2014 C$69M to C$739M against C$23.16B of debt. The 2025 balance of C$184M follows the C$3.94B buyback.'
+      },
+      accountsReceivable: { label: 'Total Receivables (C$M)', unit: 'M USD', series: [ {year:2021,value:819}, {year:2022,value:1020}, {year:2023,value:1890}, {year:2024,value:1970}, {year:2025,value:2030} ] },
+      inventory: { label: 'Inventory (C$M)', unit: 'M USD', series: [ {year:2021,value:235}, {year:2022,value:284}, {year:2023,value:400}, {year:2024,value:457}, {year:2025,value:502} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets (C$M)', unit: 'M USD', series: [ {year:2021,value:216}, {year:2022,value:138}, {year:2023,value:251}, {year:2024,value:220}, {year:2025,value:224} ] },
+      totalCurrentAssets: { label: 'Total Current Assets (C$M)', unit: 'M USD', series: [ {year:2021,value:1350}, {year:2022,value:1890}, {year:2023,value:3000}, {year:2024,value:3380}, {year:2025,value:2940} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment (C$M)', unit: 'M USD', series: [ {year:2021,value:21490}, {year:2022,value:22650}, {year:2023,value:52090}, {year:2024,value:56390}, {year:2025,value:55750} ],
+        note: 'Net PP&E jumps from C$22.65B to C$52.09B in 2023 as the KCS network consolidates onto the balance sheet.'
+      },
+      goodwill: { label: 'Goodwill (C$M)', unit: 'M USD', series: [ {year:2021,value:328}, {year:2022,value:344}, {year:2023,value:17730}, {year:2024,value:19350}, {year:2025,value:18440} ],
+        note: 'Goodwill leaps from C$344M (2022) to C$17.73B (2023) \u2014 this is the merger premium arriving in one step. At C$18.44B it is roughly 21% of total assets, and it is the single biggest reason CP\u2019s returns on capital sit so far below UNP\u2019s.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles (C$M)', unit: 'M USD', series: [ {year:2021,value:43}, {year:2022,value:42}, {year:2023,value:2970}, {year:2024,value:3150}, {year:2025,value:2910} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current (C$M)', unit: 'M USD', series: [ {year:2021,value:11350}, {year:2022,value:12200}, {year:2023,value:11050}, {year:2024,value:11970}, {year:2025,value:11830} ],
+        note: 'Presented on the ASSET side exactly as supplied in the source data. C$11.83B (2025), roughly 14% of total assets.'
+      },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets (C$M)', unit: 'M USD', series: [ {year:2021,value:2450}, {year:2022,value:3250}, {year:2023,value:3570}, {year:2024,value:4890}, {year:2025,value:5440} ] },
+      totalAssets: { label: 'Total Assets (C$M)', unit: 'M USD', series: [ {year:2021,value:68180}, {year:2022,value:73500}, {year:2023,value:79900}, {year:2024,value:87740}, {year:2025,value:85950} ] },
+      accountsPayable: { label: 'Total Accounts Payable (C$M)', unit: 'M USD', series: [ {year:2021,value:432}, {year:2022,value:503}, {year:2023,value:680}, {year:2024,value:768}, {year:2025,value:682} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses (C$M)', unit: 'M USD', series: [ {year:2021,value:678}, {year:2022,value:652}, {year:2023,value:1090}, {year:2024,value:1210}, {year:2025,value:1100} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable (C$M)', unit: 'M USD', series: [ {year:2021,value:164}, {year:2022,value:177}, {year:2023,value:255}, {year:2024,value:379}, {year:2025,value:459} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt (C$M)', unit: 'M USD', series: [ {year:2021,value:1450}, {year:2022,value:1500}, {year:2023,value:3130}, {year:2024,value:2810}, {year:2025,value:3220} ] },
+      longTermDebt: { label: 'Long-Term Debt (C$M)', unit: 'M USD', series: [ {year:2021,value:18540}, {year:2022,value:18110}, {year:2023,value:19320}, {year:2024,value:19780}, {year:2025,value:19940} ],
+        note: 'Long-term debt is remarkably stable given the scale of the merger \u2014 C$18.54B (2021) to C$19.94B (2025), a rise of just 7.6% while the asset base grew 26.1%.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion (C$M)', unit: 'M USD', series: [ {year:2021,value:19990}, {year:2022,value:19610}, {year:2023,value:22450}, {year:2024,value:22590}, {year:2025,value:23160} ],
+        note: 'Total debt rose from C$19.99B to C$23.16B, with the step-up arriving in 2023 alongside the merger.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities (C$M)', unit: 'M USD', series: [ {year:2021,value:257}, {year:2022,value:264}, {year:2023,value:471}, {year:2024,value:526}, {year:2025,value:444} ] },
+      totalLiabilities: { label: 'Total Liabilities (C$M)', unit: 'M USD', series: [ {year:2021,value:34350}, {year:2022,value:34610}, {year:2023,value:37490}, {year:2024,value:38850}, {year:2025,value:39120} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital (C$M)', unit: 'M USD', series: [ {year:2021,value:66}, {year:2022,value:78}, {year:2023,value:88}, {year:2024,value:94}, {year:2025,value:105} ] },
+      retainedEarnings: { label: 'Retained Earnings (C$M)', unit: 'M USD', series: [ {year:2021,value:10390}, {year:2022,value:13200}, {year:2023,value:16420}, {year:2024,value:19430}, {year:2025,value:19780} ],
+        note: 'Retained earnings nearly doubled, C$10.39B \u2192 C$19.78B \u2014 CP retains far more of its earnings than either UNP or CSX, having paid no buyback until 2025.'
+      },
+      shareholderEquity: { label: 'Total Common Equity (C$M)', unit: 'M USD', series: [ {year:2021,value:33830}, {year:2022,value:38890}, {year:2023,value:41490}, {year:2024,value:47890}, {year:2025,value:45880} ],
+        note: 'Equity grew from C$33.83B to C$45.88B, most of it arriving in 2023\u201324 as merger consideration. This expanding denominator is why ROE and ROC fall even as net income rises.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:36.39}, {year:2022,value:41.79}, {year:2023,value:44.51}, {year:2024,value:51.3}, {year:2025,value:51.11} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:2.59}, {year:2022,value:2.25}, {year:2023,value:2.11}, {year:2024,value:1.83}, {year:2025,value:1.84} ],
+        note: 'Price to book fell from 2.59\u00d7 to 1.84\u00d7 \u2014 a far lower multiple than UNP (9.83\u00d7) or CSX (7.23\u00d7), which is the market pricing the goodwill-heavy equity base rather than the earnings.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:0.59}, {year:2022,value:0.5}, {year:2023,value:0.54}, {year:2024,value:0.47}, {year:2025,value:0.5} ],
+        note: 'Total debt runs just 0.47\u20130.59\u00d7 equity \u2014 by far the most conservative of the three, though the equity base is inflated by merger goodwill.'
+      },
+      extraLines: [
+        { label: 'Long-Term Investments (C$M)', unit: 'M USD', series: [ {year:2021,value:42520}, {year:2022,value:45310}, {year:2023,value:533}, {year:2024,value:586}, {year:2025,value:473} ],
+          note: 'Long-term investments collapse from C$45.31B (2022) to C$533M (2023). This is not a disposal \u2014 it is the KCS holding moving off the investment line and onto the consolidated balance sheet as the merger completes. Goodwill and PP&E move the opposite way in the same year.'
+        },
+        { label: 'Long-Term Leases (C$M)', unit: 'M USD', series: [ {year:2021,value:260}, {year:2022,value:232}, {year:2023,value:273}, {year:2024,value:275}, {year:2025,value:309} ] },
+        { label: 'Current Portion of Leases (C$M)', unit: 'M USD', series: [ {year:2021,value:163}, {year:2022,value:76}, {year:2023,value:116}, {year:2024,value:126}, {year:2025,value:128} ] },
+        { label: 'Comprehensive Income & Other (C$M)', unit: 'M USD', series: [ {year:2021,value:-2100}, {year:2022,value:91}, {year:2023,value:-618}, {year:2024,value:2680}, {year:2025,value:1240} ] },
+        { label: 'Total Equity (C$M)', unit: 'M USD', series: [ {year:2021,value:33830}, {year:2022,value:38890}, {year:2023,value:42410}, {year:2024,value:48890}, {year:2025,value:46830} ] },
+        { label: 'Tangible Book Value (C$M)', unit: 'M USD', series: [ {year:2021,value:33460}, {year:2022,value:38500}, {year:2023,value:20790}, {year:2024,value:25400}, {year:2025,value:24530} ],
+          note: 'Tangible book value falls from C$38.50B (2022) to C$20.79B (2023) even as total equity rises \u2014 the entire difference is the C$17.73B of goodwill arriving.'
+        },
+        { label: 'Total Minority Interest (C$M)', unit: 'M USD', series: [ {year:2023,value:919}, {year:2024,value:998}, {year:2025,value:948} ],
+          note: 'Minority interest first appears in 2023 at C$919M \u2014 another artefact of the merger structure, and part of why the EPS line does not reconcile cleanly.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits (C$M)', unit: 'M USD', series: [ {year:2021,value:718}, {year:2022,value:538}, {year:2023,value:581}, {year:2024,value:548}, {year:2025,value:537} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:5.14}, {year:2022,value:3.3}, {year:2023,value:3.84}, {year:2024,value:4.21}, {year:2025,value:4.39} ] },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:6.59}, {year:2022,value:4.14}, {year:2023,value:4.75}, {year:2024,value:5.14}, {year:2025,value:5.35} ],
+          note: 'Return on capital fell from 6.59% to 5.35% \u2014 the lowest of the three railways by a wide margin, and less than half of UNP\u2019s 12.39%. CP has bought a network it has not yet grown into. Whether these returns improve is the entire question for this business.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:13.86}, {year:2022,value:9.67}, {year:2023,value:9.65}, {year:2024,value:8.13}, {year:2025,value:8.64} ],
+          note: 'Return on equity fell from 13.86% to 8.64% \u2014 not because earnings fell, but because the equity base grew faster than the earnings did. UNP earns 40%+ on equity; CP earns roughly a fifth of that.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:4.36}, {year:2022,value:4.27}, {year:2023,value:3.59}, {year:2024,value:3}, {year:2025,value:2.85} ],
+          note: 'Leverage improved substantially, from 4.36\u00d7 (2021) to 2.85\u00d7 (2025), as the acquired EBITDA arrived and debt stayed roughly flat.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations (C$M)', unit: 'M USD', series: [ {year:2021,value:3690}, {year:2022,value:4140}, {year:2023,value:4140}, {year:2024,value:5270}, {year:2025,value:5310} ],
+        note: 'Operating cash flow grew from C$3.69B to C$5.31B, up 43.9%, tracking the enlarged network.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow (C$M)', unit: 'M USD', series: [ {year:2021,value:1530}, {year:2022,value:1270}, {year:2023,value:1360}, {year:2024,value:2330}, {year:2025,value:2000} ],
+        note: 'Free cash flow grew from C$1.53B to C$2.00B, with the best year being 2024 at C$2.33B.'
+      },
+      extraLines: [
+        { label: 'Net Income (C$M)', unit: 'M USD', series: [ {year:2021,value:2850}, {year:2022,value:3520}, {year:2023,value:3930}, {year:2024,value:3720}, {year:2025,value:4140} ] },
+        { label: 'Unlevered Free Cash Flow (C$M)', unit: 'M USD', series: [ {year:2021,value:1810}, {year:2022,value:1680}, {year:2023,value:1840}, {year:2024,value:2830}, {year:2025,value:2550} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:41.46}, {year:2022,value:30.68}, {year:2023,value:32.85}, {year:2024,value:44.21}, {year:2025,value:37.66} ],
+          note: 'Conversion ran 30.7%\u201344.2% \u2014 consistently the weakest of the three railways, reflecting heavy post-merger capital spending.'
+        },
+        { label: 'Cash from Investing (C$M)', unit: 'M USD', series: [ {year:2021,value:-13730}, {year:2022,value:-1500}, {year:2023,value:-2160}, {year:2024,value:-2800}, {year:2025,value:-2670} ],
+          note: 'The C$13.73B investing outflow in 2021 is the KCS acquisition. Every other year in the series runs C$1.50B\u2013C$2.80B.'
+        },
+        { label: 'Cash from Financing (C$M)', unit: 'M USD', series: [ {year:2021,value:9940}, {year:2022,value:-2300}, {year:2023,value:-1960}, {year:2024,value:-2250}, {year:2025,value:-3150} ],
+          note: 'The +C$9.94B financing inflow in 2021 is the money raised to fund the acquisition \u2014 the only positive financing year in any of the three railways across this dataset.'
+        },
+        { label: 'Repurchase of Common Stock (C$M)', unit: 'M USD', series: [ {year:2025,value:-3940} ],
+          note: 'No repurchases whatsoever until 2025, when C$3.94B was bought back in a single year. Four years of retaining everything, then a step change in capital return policy.'
+        },
+        { label: 'Common Dividends Paid (C$M)', unit: 'M USD', series: [ {year:2021,value:-507}, {year:2022,value:-707}, {year:2023,value:-707}, {year:2024,value:-709}, {year:2025,value:-796} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:0.55}, {year:2022,value:0.76}, {year:2023,value:0.76}, {year:2024,value:0.76}, {year:2025,value:0.89} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from C$0.55 to C$0.89, though it was essentially flat at C$0.76 from 2022 through 2024.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:17.79}, {year:2022,value:20.09}, {year:2023,value:17.99}, {year:2024,value:19.06}, {year:2025,value:19.23} ],
+          note: 'The most conservative payout of the three railways \u2014 17.8% to 20.1%, versus UNP at 42.9\u201349.7%. CP kept its powder dry through the merger integration.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends (C$M)', unit: 'M USD', series: [ {year:2021,value:507}, {year:2022,value:707}, {year:2023,value:707}, {year:2024,value:709}, {year:2025,value:4736} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:33.14}, {year:2022,value:55.67}, {year:2023,value:51.99}, {year:2024,value:30.43}, {year:2025,value:236.8} ],
+          note: 'Shareholder returns stayed well within free cash flow for four straight years (30\u201356%), then jumped to 236.8% in 2025 on the first buyback. Compare UNP and CSX, which exceeded free cash flow in all five years.'
+        },
+        { label: 'Change in Inventories (C$M)', unit: 'M USD', series: [ {year:2021,value:-14}, {year:2022,value:-27}, {year:2023,value:1}, {year:2024,value:-36}, {year:2025,value:-53} ] },
+        { label: 'Total Short-Term Debt Issued (C$M)', unit: 'M USD', series: [ {year:2023,value:1100}, {year:2024,value:713} ] },
+        { label: 'Total Short-Term Debt Repaid (C$M)', unit: 'M USD', series: [ {year:2021,value:-454}, {year:2022,value:-415}, {year:2025,value:-624} ] },
+        { label: 'Issuance of Common Stock (C$M)', unit: 'M USD', series: [ {year:2021,value:25}, {year:2022,value:32}, {year:2023,value:69}, {year:2024,value:69}, {year:2025,value:73} ] },
+        { label: 'Foreign Exchange Rate Adjustments (C$M)', unit: 'M USD', series: [ {year:2021,value:41}, {year:2022,value:20}, {year:2023,value:-7}, {year:2024,value:54}, {year:2025,value:-53} ] },
+        { label: 'Cash Acquisitions (C$M)', unit: 'M USD', series: [ {year:2023,value:298} ] },
+        { label: 'Gain / (Loss) on Sale of Investments (C$M)', unit: 'M USD', series: [ {year:2025,value:333} ] },
+        { label: 'Net Change in Cash (C$M)', unit: 'M USD', series: [ {year:2021,value:-65}, {year:2022,value:369}, {year:2023,value:13}, {year:2024,value:275}, {year:2025,value:-555} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -13033,9 +13587,9 @@ const COVERAGE_DATA = [
   { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, tier: 2, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: PLTR_BREAKDOWN },
 
   // === RAILWAYS · CANADA & USA ===
-  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
-  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railways',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null, locked: true },
-  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railways',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null, locked: true },
+  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railways',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: UNP_BREAKDOWN },
+  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railways',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: CSX_BREAKDOWN },
+  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railways',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: CP_BREAKDOWN },
   { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: CNI_BREAKDOWN },
 
   // === FINANCIAL SERVICES · USA ===
