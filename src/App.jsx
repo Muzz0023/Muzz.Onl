@@ -15044,6 +15044,668 @@ const UBER_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// WES_BREAKDOWN — Wesfarmers Limited Coverage data (Tier 2)
+// SOURCE: Muzz's supplied retail data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (AUD, A$M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// CURRENCY: AUD. Labels carry (A$M); unit stays M USD so the shared
+// fmtVal renders a currency symbol — the CNI/CP/NEC/PXA convention.
+// Derived lines are pure arithmetic on the supplied figures. Gross
+// margin, inventory turnover and days inventory added for this cluster.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: a persistent -A$6.2B reserve suppresses reported
+// equity, which inflates both ROE and price-to-book. FY2026 total
+// distributions were 144% of net income and equity fell A$1.21B.
+// ═════════════════════════════════════════════════════════════════
+const WES_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:36840}, {year:2023,value:43550}, {year:2024,value:44190}, {year:2025,value:45700}, {year:2026,value:47270} ],
+        note: 'Revenue grew from A$36.84B to A$47.27B, up 28.3%, and rose in every year. The FY2023 jump (+18.2%) is the largest single step in the series.'
+      },
+      costOfSales: { label: 'Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:23710}, {year:2023,value:29220}, {year:2024,value:29150}, {year:2025,value:30260}, {year:2026,value:31410} ],
+        note: 'Cost of revenue grew 32.5% against 28.3% revenue growth \u2014 slightly faster, which is why gross margin slipped.'
+      },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:13130}, {year:2023,value:14330}, {year:2024,value:15040}, {year:2025,value:15440}, {year:2026,value:15860} ],
+        note: 'Gross profit grew from A$13.13B to A$15.86B, up 20.8%.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2022,value:35.64}, {year:2023,value:32.9}, {year:2024,value:34.03}, {year:2025,value:33.79}, {year:2026,value:33.55} ],
+        note: 'Gross margin fell from 35.64% to 33.55%, with the sharpest drop in FY2023 (to 32.91%). Still roughly six points above either supermarket \u2014 this is the Bunnings and Kmart mix at work, not a grocery business.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative (A$M)', unit: 'M USD', series: [ {year:2022,value:6950}, {year:2023,value:7540}, {year:2024,value:7870}, {year:2025,value:8160}, {year:2026,value:8290} ],
+          note: 'SG&A grew 19.3%, meaningfully slower than the 28.3% revenue growth. Cost discipline is holding.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2022,value:18.87}, {year:2023,value:17.31}, {year:2024,value:17.81}, {year:2025,value:17.86}, {year:2026,value:17.54} ],
+          note: 'SG&A improved from 18.87% of revenue to 17.54%, and has sat in a tight 17.3%\u201317.9% band since FY2023.'
+        },
+        { label: 'Operating Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:9820}, {year:2023,value:10630}, {year:2024,value:11190}, {year:2025,value:11500}, {year:2026,value:11640} ] },
+        { label: 'Other Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:1280}, {year:2023,value:1360}, {year:2024,value:1520}, {year:2025,value:1500}, {year:2026,value:1490} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:33520}, {year:2023,value:39850}, {year:2024,value:40340}, {year:2025,value:41750}, {year:2026,value:43050} ] },
+      operatingProfit: { label: 'Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:3310}, {year:2023,value:3700}, {year:2024,value:3850}, {year:2025,value:3950}, {year:2026,value:4230} ],
+        note: 'Operating income grew from A$3.31B to A$4.23B, up 27.8%, and rose in every single year without exception. The most consistent operating trend of the three Australian retailers.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:8.98}, {year:2023,value:8.5}, {year:2024,value:8.71}, {year:2025,value:8.64}, {year:2026,value:8.95} ],
+        note: 'Operating margin held between 8.50% and 8.98% across all five years \u2014 remarkably stable, and roughly double what either supermarket earns. Wesfarmers is a different animal from WOW and COL despite sharing the "retail" label.'
+      },
+      interestExpense: { label: 'Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-294}, {year:2023,value:-340}, {year:2024,value:-384}, {year:2025,value:-393}, {year:2026,value:-454} ],
+        note: 'Interest expense grew 54.4%, from A$294M to A$454M, faster than either revenue or operating income \u2014 the cost of the rising debt load.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:90}, {year:2023,value:110}, {year:2024,value:111}, {year:2025,value:106}, {year:2026,value:126} ] },
+      provisionForTaxes: { label: 'Income Tax Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:968}, {year:2023,value:1040}, {year:2024,value:1030}, {year:2025,value:1130}, {year:2026,value:1140} ],
+        note: 'Tax expense grew steadily from A$968M to A$1.14B, tracking pre-tax income with no distortions.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:29.16}, {year:2023,value:29.75}, {year:2024,value:28.71}, {year:2025,value:27.81}, {year:2026,value:28.45} ],
+        note: 'A tight 27.81%\u201329.75% band across all five years \u2014 no tax-driven noise anywhere in this series.'
+      },
+      netIncome: { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:2350}, {year:2023,value:2470}, {year:2024,value:2560}, {year:2025,value:2930}, {year:2026,value:2870} ],
+        note: 'Net income grew from A$2.35B to A$2.87B, though FY2026 is down A$60M from the FY2025 peak of A$2.93B.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:6.38}, {year:2023,value:5.66}, {year:2024,value:5.79}, {year:2025,value:6.4}, {year:2026,value:6.08} ],
+        note: 'Net margin ran 5.66%\u20136.40%, ending at 6.08% \u2014 nearly four times what Coles earns and roughly four times Woolworths.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:2.08}, {year:2023,value:2.18}, {year:2024,value:2.26}, {year:2025,value:2.34}, {year:2026,value:2.53} ],
+        note: 'EPS grew from A$2.08 to A$2.53, up 21.6%. Unlike most names in this coverage, WES EPS reconciles closely to net income \u00f7 shares in four of five years \u2014 the exception is FY2025, where the implied figure sits about 9% below reported net income.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:1130}, {year:2023,value:1130}, {year:2024,value:1130}, {year:2025,value:1140}, {year:2026,value:1140} ],
+        note: 'Share count is essentially static at 1.13B\u20131.14B. The A$2.27B buyback in FY2022 is the only repurchase in the series and did not durably shrink the count.'
+      },
+      extraLines: [
+        { label: 'EBITDA (A$M)', unit: 'M USD', series: [ {year:2022,value:3800}, {year:2023,value:4210}, {year:2024,value:4410}, {year:2025,value:4540}, {year:2026,value:4810} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:10.31}, {year:2023,value:9.67}, {year:2024,value:9.98}, {year:2025,value:9.93}, {year:2026,value:10.18} ],
+          note: 'EBITDA margin ran 9.67%\u201310.31%, ending at 10.17%.'
+        },
+        { label: 'Depreciation & Amortisation (A$M)', unit: 'M USD', series: [ {year:2022,value:1580}, {year:2023,value:1700}, {year:2024,value:1800}, {year:2025,value:1830}, {year:2026,value:1840} ],
+          note: 'D&A grew from A$1.58B to A$1.84B, tracking the asset base.'
+        },
+        { label: 'EBT Including Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:3320}, {year:2023,value:3510}, {year:2024,value:3590}, {year:2025,value:4050}, {year:2026,value:4020} ] },
+        { label: 'EBT Excluding Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:3280}, {year:2023,value:3480}, {year:2024,value:3610}, {year:2025,value:3860}, {year:2026,value:4020} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl. (A$M)', unit: 'M USD', series: [ {year:2022,value:40}, {year:2023,value:30}, {year:2024,value:-20}, {year:2025,value:190}, {year:2026,value:0} ],
+          note: 'Unusual items are negligible in every year except FY2025 (+A$190M) \u2014 an unusually clean earnings series.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:140.85}, {year:2023,value:149.8}, {year:2024,value:150.39}, {year:2025,value:134.81}, {year:2026,value:147.39} ] },
+        { label: 'Net Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-294}, {year:2023,value:-340}, {year:2024,value:-384}, {year:2025,value:-393}, {year:2026,value:-454} ] },
+        { label: 'Gain / (Loss) from Asset Sale (A$M)', unit: 'M USD', series: [ {year:2022,value:-53}, {year:2023,value:-32}, {year:2024,value:9}, {year:2025,value:-237}, {year:2026,value:-3} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:11.26}, {year:2023,value:10.88}, {year:2024,value:10.03}, {year:2025,value:10.05}, {year:2026,value:9.32} ],
+          note: 'Interest coverage fell from 11.26\u00d7 to 9.32\u00d7. Comfortable, but deteriorating as debt grows.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents (A$M)', unit: 'M USD', series: [ {year:2022,value:705}, {year:2023,value:673}, {year:2024,value:835}, {year:2025,value:638}, {year:2026,value:530} ] },
+      accountsReceivable: { label: 'Total Receivables (A$M)', unit: 'M USD', series: [ {year:2022,value:2090}, {year:2023,value:2090}, {year:2024,value:2210}, {year:2025,value:2990}, {year:2026,value:2420} ] },
+      inventory: { label: 'Inventory (A$M)', unit: 'M USD', series: [ {year:2022,value:6080}, {year:2023,value:6040}, {year:2024,value:6100}, {year:2025,value:6040}, {year:2026,value:6560} ],
+        note: 'Inventory of A$6.56B on A$28.88B of assets \u2014 22.7% of the balance sheet, and it grew A$520M in FY2026 after four flat years.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2022,value:3.9}, {year:2023,value:4.84}, {year:2024,value:4.78}, {year:2025,value:5.01}, {year:2026,value:4.79} ],
+        note: 'Inventory turns 4.79\u00d7 a year, up from 3.90\u00d7. Far slower than the supermarkets, which is exactly what you would expect \u2014 hardware and general merchandise sit on shelves for months, groceries for weeks.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2022,value:93.59}, {year:2023,value:75.41}, {year:2024,value:76.36}, {year:2025,value:72.85}, {year:2026,value:76.2} ],
+        note: 'Days inventory of 76.2 days, improved from 93.6. Compare roughly 30 days at both supermarkets. The capital tied up in stock is the structural cost of the Bunnings model.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:716}, {year:2023,value:353}, {year:2024,value:267}, {year:2025,value:269}, {year:2026,value:305} ] },
+      totalCurrentAssets: { label: 'Total Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:9600}, {year:2023,value:9150}, {year:2024,value:9410}, {year:2025,value:9930}, {year:2026,value:9810} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment (A$M)', unit: 'M USD', series: [ {year:2022,value:10760}, {year:2023,value:11040}, {year:2024,value:11150}, {year:2025,value:11040}, {year:2026,value:12080} ],
+        note: 'Net PP&E grew from A$10.76B to A$12.08B, with almost all of the increase arriving in FY2026 (+A$1.04B after four flat years).'
+      },
+      goodwill: { label: 'Goodwill (A$M)', unit: 'M USD', series: [ {year:2022,value:3340}, {year:2023,value:3350}, {year:2024,value:3590}, {year:2025,value:3490}, {year:2026,value:3490} ],
+        note: 'Goodwill is stable at A$3.34B\u2013A$3.59B \u2014 no material acquisitions or impairments.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles (A$M)', unit: 'M USD', series: [ {year:2022,value:1350}, {year:2023,value:1340}, {year:2024,value:1460}, {year:2025,value:1470}, {year:2026,value:1470} ] },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current (A$M)', unit: 'M USD', series: [ {year:2022,value:581}, {year:2023,value:624}, {year:2024,value:641}, {year:2025,value:631}, {year:2026,value:630} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:47}, {year:2023,value:92}, {year:2024,value:115}, {year:2025,value:307}, {year:2026,value:342} ] },
+      totalAssets: { label: 'Total Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:27290}, {year:2023,value:26550}, {year:2024,value:27310}, {year:2025,value:27980}, {year:2026,value:28880} ],
+        note: 'Total assets grew only 5.8% across five years while revenue grew 28.3%. Capital efficiency is improving.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:5360}, {year:2023,value:5270}, {year:2024,value:5300}, {year:2025,value:5380}, {year:2026,value:5740} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:1030}, {year:2023,value:992}, {year:2024,value:1020}, {year:2025,value:1020}, {year:2026,value:1060} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:6}, {year:2024,value:124}, {year:2025,value:186}, {year:2026,value:241} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:988} ] },
+      longTermDebt: { label: 'Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:3970}, {year:2023,value:4430}, {year:2024,value:4760}, {year:2025,value:4720}, {year:2026,value:5650} ],
+        note: 'Long-term debt grew from A$3.97B to A$5.65B, up 42.3%, with A$930M added in FY2026 alone.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion (A$M)', unit: 'M USD', series: [ {year:2022,value:4958}, {year:2023,value:4430}, {year:2024,value:4760}, {year:2025,value:4720}, {year:2026,value:5650} ],
+        note: 'Total debt grew from A$4.96B to A$5.65B. Note the FY2022 figure includes A$988M of current maturities that have since been rolled into long-term.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:404}, {year:2023,value:374}, {year:2024,value:398}, {year:2025,value:445}, {year:2026,value:565} ] },
+      totalLiabilities: { label: 'Total Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:19310}, {year:2023,value:18270}, {year:2024,value:18720}, {year:2025,value:18790}, {year:2026,value:20910} ] },
+      retainedEarnings: { label: 'Retained Earnings (A$M)', unit: 'M USD', series: [ {year:2022,value:485}, {year:2023,value:818}, {year:2024,value:1170}, {year:2025,value:1810}, {year:2026,value:1870} ],
+        note: 'Retained earnings are strikingly small \u2014 A$485M rising to only A$1.87B \u2014 despite A$13.18B of cumulative net income. Wesfarmers distributes nearly everything it earns.'
+      },
+      shareholderEquity: { label: 'Total Common Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:7980}, {year:2023,value:8280}, {year:2024,value:8590}, {year:2025,value:9190}, {year:2026,value:7980} ],
+        note: 'Common equity rose to A$9.19B by FY2025 then fell A$1.21B to A$7.98B in FY2026, back to exactly where it started five years earlier. The FY2026 distributions are why.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:7.04}, {year:2023,value:7.3}, {year:2024,value:7.57}, {year:2025,value:8.1}, {year:2026,value:7.03} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:11.33}, {year:2023,value:10.93}, {year:2024,value:10.54}, {year:2025,value:9.85}, {year:2026,value:11.35} ],
+        note: 'Price to book of 11.35\u00d7 \u2014 the highest of the three by a wide margin, and it barely moved across five years. Given the negative reserve suppressing book value, this multiple says less than it appears to.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.62}, {year:2023,value:0.54}, {year:2024,value:0.55}, {year:2025,value:0.51}, {year:2026,value:0.71} ],
+        note: 'Total debt to equity rose from 0.62\u00d7 to 0.71\u00d7, with the FY2026 jump reflecting both new debt and the equity drawdown.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:4253}, {year:2023,value:3757}, {year:2024,value:3925}, {year:2025,value:4082}, {year:2026,value:5120} ],
+          note: 'Net debt grew from A$4.25B to A$5.12B, up 20.4%.'
+        },
+        { label: 'Long-Term Investments (A$M)', unit: 'M USD', series: [ {year:2022,value:1610}, {year:2023,value:943}, {year:2024,value:938}, {year:2025,value:1110}, {year:2026,value:1060} ] },
+        { label: 'Total Current Unearned Revenue (A$M)', unit: 'M USD', series: [ {year:2025,value:178}, {year:2026,value:191} ] },
+        { label: 'Long-Term Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:6020}, {year:2023,value:5600}, {year:2024,value:5360}, {year:2025,value:5300}, {year:2026,value:5920} ],
+          note: 'Long-term leases of A$5.92B against A$28.88B of assets \u2014 the store network, held off the ownership line.'
+        },
+        { label: 'Current Portion of Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:1100}, {year:2023,value:1140}, {year:2024,value:1170}, {year:2025,value:1150}, {year:2026,value:1150} ] },
+        { label: 'Comprehensive Income & Other (A$M)', unit: 'M USD', series: [ {year:2022,value:-6080}, {year:2023,value:-6110}, {year:2024,value:-6160}, {year:2025,value:-6190}, {year:2026,value:-6220} ] },
+        { label: 'Total Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:7980}, {year:2023,value:8280}, {year:2024,value:8590}, {year:2025,value:9190}, {year:2026,value:7980} ] },
+        { label: 'Tangible Book Value (A$M)', unit: 'M USD', series: [ {year:2022,value:3300}, {year:2023,value:3590}, {year:2024,value:3530}, {year:2025,value:4230}, {year:2026,value:3010} ],
+          note: 'Tangible book value fell from A$4.23B to A$3.01B in FY2026, down A$1.22B, tracking the equity drawdown.'
+        },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:7.74}, {year:2023,value:8.6}, {year:2024,value:8.93}, {year:2025,value:8.92}, {year:2026,value:9.29} ],
+          note: 'Return on assets improved from 7.74% to 9.29% on a barely-changed asset base.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:10.38}, {year:2023,value:11.71}, {year:2024,value:12.24}, {year:2025,value:12.26}, {year:2026,value:12.87} ],
+          note: 'Return on capital rose from 10.38% to 12.87%, improving in every year. The best and most consistent of the three, and the cleanest evidence that Wesfarmers is the superior business here.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:26.58}, {year:2023,value:30.32}, {year:2024,value:30.32}, {year:2025,value:32.92}, {year:2026,value:33.48} ],
+          note: 'ROE rose from 26.58% to 33.48%, improving in every year. Read with the caveat that the denominator is suppressed by the A$6.22B negative reserve \u2014 the operating return is better captured by ROC.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:1.3}, {year:2023,value:1.05}, {year:2024,value:1.08}, {year:2025,value:1.04}, {year:2026,value:1.17} ],
+          note: 'Leverage improved from 1.31\u00d7 to 1.17\u00d7 as EBITDA outgrew debt \u2014 conservative throughout.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations (A$M)', unit: 'M USD', series: [ {year:2022,value:2300}, {year:2023,value:4180}, {year:2024,value:4590}, {year:2025,value:4570}, {year:2026,value:4270} ],
+        note: 'Operating cash flow jumped from A$2.30B (FY2022) to A$4.18B (FY2023) and has held A$4.27B\u2013A$4.59B since. The FY2022 figure is depressed by an A$1.18B inventory build.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:414.5}, {year:2023,value:2930}, {year:2024,value:3230}, {year:2025,value:2440}, {year:2026,value:3580} ],
+        note: 'Free cash flow of A$414.5M in FY2022 was an outlier caused by the inventory build; it has run A$2.44B\u2013A$3.58B since, ending at the highest figure of the period.'
+      },
+      extraLines: [
+        { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:2350}, {year:2023,value:2470}, {year:2024,value:2560}, {year:2025,value:2930}, {year:2026,value:2870} ] },
+        { label: 'Unlevered Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:591.25}, {year:2023,value:3130}, {year:2024,value:3450}, {year:2025,value:2670}, {year:2026,value:3860} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:18.02}, {year:2023,value:70.1}, {year:2024,value:70.37}, {year:2025,value:53.39}, {year:2026,value:83.84} ],
+          note: 'Conversion was 18.0% in FY2022 and 53.4%\u201383.8% thereafter, ending at 83.8% \u2014 the strongest of the three.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:97.87}, {year:2023,value:169.23}, {year:2024,value:179.3}, {year:2025,value:155.97}, {year:2026,value:148.78} ],
+          note: 'Operating cash flow ran 98% of net income in FY2022 and 149%\u2013179% thereafter \u2014 solid conversion once the inventory build washed through.'
+        },
+        { label: 'Cash from Investing (A$M)', unit: 'M USD', series: [ {year:2022,value:-1190}, {year:2023,value:-552}, {year:2024,value:-1370}, {year:2025,value:-1120}, {year:2026,value:-280} ],
+          note: 'Investing outflows fell to just A$280M in FY2026, the lowest of the period.'
+        },
+        { label: 'Cash from Financing (A$M)', unit: 'M USD', series: [ {year:2022,value:-3430}, {year:2023,value:-3660}, {year:2024,value:-3060}, {year:2025,value:-3640}, {year:2026,value:-4100} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2022,value:51.74}, {year:2023,value:13.21}, {year:2024,value:29.85}, {year:2025,value:24.51}, {year:2026,value:6.56} ] },
+        { label: 'Repurchase of Common Stock (A$M)', unit: 'M USD', series: [ {year:2022,value:-2270} ],
+          note: 'A single A$2.27B buyback in FY2022 and nothing since. Wesfarmers returns capital through dividends, not repurchases.'
+        },
+        { label: 'Common Dividends Paid (A$M)', unit: 'M USD', series: [ {year:2022,value:-1930}, {year:2023,value:-2130}, {year:2024,value:-2200}, {year:2025,value:-2290}, {year:2026,value:-3670} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:1.71}, {year:2023,value:1.88}, {year:2024,value:1.95}, {year:2025,value:2.01}, {year:2026,value:3.22} ],
+          note: 'Derived as ordinary dividends paid \u00f7 shares outstanding. Rose from A$1.71 to A$3.22, up 88.4% \u2014 far ahead of the 21.6% EPS growth.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:82.13}, {year:2023,value:86.23}, {year:2024,value:85.94}, {year:2025,value:78.16}, {year:2026,value:127.87} ],
+          note: 'Ordinary payout ran 82.1%, 86.2%, 85.9%, 78.2% \u2014 already high \u2014 then 127.9% in FY2026. Adding the special dividend, FY2026 distributions were A$4.12B against A$2.87B of net income, or 144%. That is why equity fell A$1.21B.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends (A$M)', unit: 'M USD', series: [ {year:2022,value:4200}, {year:2023,value:2130}, {year:2024,value:2200}, {year:2025,value:2290}, {year:2026,value:3670} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:1013.27}, {year:2023,value:72.7}, {year:2024,value:68.11}, {year:2025,value:93.85}, {year:2026,value:102.51} ],
+          note: 'This line counts buybacks plus the ordinary dividend, which came to 102.5% of free cash flow in FY2026. Add the A$454M special dividend and total FY2026 distributions were A$4.12B against A$3.58B generated \u2014 115%. FY2022 reached 1,013%, when the A$2.27B buyback landed in the year free cash flow collapsed to A$414.5M.'
+        },
+        { label: 'Special Dividend Paid (A$M)', unit: 'M USD', series: [ {year:2026,value:-454} ],
+          note: 'A A$454M special dividend in FY2026 on top of the enlarged ordinary dividend.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments (A$M)', unit: 'M USD', series: [ {year:2024,value:3}, {year:2025,value:2}, {year:2026,value:3} ] },
+        { label: 'Change in Inventories (A$M)', unit: 'M USD', series: [ {year:2022,value:-1180}, {year:2023,value:57}, {year:2024,value:-59}, {year:2025,value:25}, {year:2026,value:-605} ] },
+        { label: 'Gain / (Loss) on Sale of Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:58}, {year:2023,value:41}, {year:2024,value:12}, {year:2025,value:234}, {year:2026,value:9} ] },
+        { label: 'Sale / Purchase of Intangible Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:-174}, {year:2023,value:-132}, {year:2024,value:-153}, {year:2025,value:-107}, {year:2026,value:-140} ] },
+        { label: 'Cash Acquisitions (A$M)', unit: 'M USD', series: [ {year:2022,value:-773}, {year:2023,value:-24}, {year:2024,value:-298}, {year:2025,value:-69}, {year:2026,value:-281} ],
+          note: 'Modest and steady \u2014 A$24M to A$773M a year. Wesfarmers is not growing by acquisition in this period.'
+        },
+        { label: 'Net Change in Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:-2320}, {year:2023,value:-32}, {year:2024,value:162}, {year:2025,value:-197}, {year:2026,value:-108} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// WOW_BREAKDOWN — Woolworths Group Limited Coverage data (Tier 2)
+// SOURCE: Muzz's supplied retail data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (AUD, A$M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// CURRENCY: AUD. Labels carry (A$M); unit stays M USD so the shared
+// fmtVal renders a currency symbol — the CNI/CP/NEC/PXA convention.
+// Derived lines are pure arithmetic on the supplied figures. Gross
+// margin, inventory turnover and days inventory added for this cluster.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: FY2022 net income of A$7.93B cannot be derived from
+// the statement (A$6.37B gap vs EBT minus tax) and is not comparable
+// with any other year. Supplied EPS reconciles in no year. D&A is not
+// supplied; an implied series is derived and labelled as such.
+// FY2024 carries an 86.64% effective tax rate and a A$1.03B goodwill
+// writedown. All flagged in-app, none corrected.
+// ═════════════════════════════════════════════════════════════════
+const WOW_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:60850}, {year:2023,value:64290}, {year:2024,value:67920}, {year:2025,value:69080}, {year:2026,value:71540} ],
+        note: 'Revenue grew from A$60.85B to A$71.54B, up 17.6%, and rose in every year. Woolworths remains the largest of the three by a wide margin \u2014 56% bigger than Coles on the top line.'
+      },
+      costOfSales: { label: 'Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:44880}, {year:2023,value:47120}, {year:2024,value:49370}, {year:2025,value:50260}, {year:2026,value:51970} ] },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:15970}, {year:2023,value:17170}, {year:2024,value:18550}, {year:2025,value:18820}, {year:2026,value:19570} ],
+        note: 'Gross profit grew from A$15.97B to A$19.57B, up 22.5% \u2014 faster than revenue.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2022,value:26.24}, {year:2023,value:26.71}, {year:2024,value:27.31}, {year:2025,value:27.24}, {year:2026,value:27.36} ],
+        note: 'Gross margin improved from 26.25% to 27.35%, rising in three of the four year-on-year moves. Note this improvement did NOT reach operating income, which fell over the same period. The cost problem sits below the gross line.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative (A$M)', unit: 'M USD', series: [ {year:2022,value:13580}, {year:2023,value:14450}, {year:2024,value:15740}, {year:2025,value:16330}, {year:2026,value:16710} ],
+          note: 'SG&A grew from A$13.58B to A$16.71B, up 23.0%, outpacing 17.6% revenue growth.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2022,value:22.32}, {year:2023,value:22.48}, {year:2024,value:23.17}, {year:2025,value:23.64}, {year:2026,value:23.36} ],
+          note: 'SG&A rose from 22.32% of revenue to 23.36%. Combined with the improving gross margin, this is the whole story: Woolworths is buying better and selling worse.'
+        },
+        { label: 'Operating Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:13350}, {year:2023,value:14450}, {year:2024,value:15740}, {year:2025,value:16360}, {year:2026,value:17410} ] },
+        { label: 'Other Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:-229}, {year:2025,value:24}, {year:2026,value:698} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:58230}, {year:2023,value:61570}, {year:2024,value:65110}, {year:2025,value:66620}, {year:2026,value:69380} ] },
+      operatingProfit: { label: 'Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:2620}, {year:2023,value:2720}, {year:2024,value:2810}, {year:2025,value:2460}, {year:2026,value:2160} ],
+        note: 'Operating income peaked at A$2.81B (FY2024) and has fallen in each of the two years since, to A$2.16B \u2014 down 23.1% from the peak and down 17.6% across the full period, in a business whose revenue grew 17.6%. That divergence is the central fact in the WOW dataset.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:4.31}, {year:2023,value:4.23}, {year:2024,value:4.14}, {year:2025,value:3.56}, {year:2026,value:3.02} ],
+        note: 'Operating margin fell from 4.31% to 3.02%, and fell in every year. Coles now earns 4.27% \u2014 a full 1.25 points more on 36% less revenue. The scale advantage is not converting into a margin advantage.'
+      },
+      interestExpense: { label: 'Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-619}, {year:2023,value:-698}, {year:2024,value:-772}, {year:2025,value:-838}, {year:2026,value:-861} ],
+        note: 'Interest expense grew 39.1%, from A$619M to A$861M \u2014 and now consumes 39.9% of operating income, up from 23.6%.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income (A$M)', unit: 'M USD', series: [ {year:2023,value:221}, {year:2024,value:289}, {year:2025,value:269}, {year:2026,value:257} ] },
+      provisionForTaxes: { label: 'Income Tax Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:534}, {year:2023,value:693}, {year:2024,value:759}, {year:2025,value:421}, {year:2026,value:426} ],
+        note: 'FY2024 tax of A$759M against pre-tax income of A$876M \u2014 an 86.64% effective rate, and the reason net income collapsed to A$108M that year.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:25.54}, {year:2023,value:29.84}, {year:2024,value:86.64}, {year:2025,value:30.64}, {year:2026,value:27} ],
+        note: 'The FY2024 rate of 86.64% is the outlier. Every other year runs 25.54%\u201330.64%. FY2024 pre-tax income was depressed by A$1.50B of unusual items while the tax charge was not, producing the distortion.'
+      },
+      netIncome: { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:7930}, {year:2023,value:1620}, {year:2024,value:108}, {year:2025,value:963}, {year:2026,value:1140} ],
+        note: 'Net income of A$7.93B, A$1.62B, A$108M, A$963M, A$1.14B. The FY2022 figure is not comparable \u2014 see below \u2014 and the FY2024 figure of A$108M is a genuine near-wipeout of the bottom line.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:13.04}, {year:2023,value:2.52}, {year:2024,value:0.16}, {year:2025,value:1.39}, {year:2026,value:1.59} ],
+        note: 'Net margin of 0.16% in FY2024 \u2014 sixteen cents of profit per hundred dollars of sales. Even the recovered FY2026 figure of 1.59% is well below Coles at 2.38%.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:1.23}, {year:2023,value:1.26}, {year:2024,value:1.4}, {year:2025,value:1.13}, {year:2026,value:1.3} ],
+        note: 'The supplied EPS reconciles to net income \u00f7 shares in no year. FY2024 is the starkest: EPS of A$1.40 against net income of A$108M and 1.22B shares, which implies A$1.71B \u2014 sixteen times the reported figure. FY2022 runs the other way, implying A$1.49B against A$7.93B reported. This looks like an underlying or continuing-operations EPS sitting in a statutory series. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:1210}, {year:2023,value:1210}, {year:2024,value:1220}, {year:2025,value:1220}, {year:2026,value:1220} ] },
+      extraLines: [
+        { label: 'EBITDA (A$M)', unit: 'M USD', series: [ {year:2022,value:3600}, {year:2023,value:3790}, {year:2024,value:3990}, {year:2025,value:3720}, {year:2026,value:3490} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:5.92}, {year:2023,value:5.9}, {year:2024,value:5.87}, {year:2025,value:5.39}, {year:2026,value:4.88} ],
+          note: 'EBITDA margin fell from 5.92% to 4.88%, down in four of five years.'
+        },
+        { label: 'Implied D&A \u2014 EBITDA minus Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:980}, {year:2023,value:1070}, {year:2024,value:1180}, {year:2025,value:1260}, {year:2026,value:1330} ],
+          note: 'D&A is not supplied, so this is derived as EBITDA minus operating income: A$980M rising to A$1.33B. Note this sits well below Coles\u2019 reported A$1.65B despite Woolworths having a larger asset base \u2014 worth checking against the filed accounts before relying on it.'
+        },
+        { label: 'EBT Including Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:2090}, {year:2023,value:2320}, {year:2024,value:876}, {year:2025,value:1370}, {year:2026,value:1580} ],
+          note: 'Pre-tax income including unusual items falls to A$876M in FY2024 against A$2.38B excluding them. Two very different readings of the same year.'
+        },
+        { label: 'EBT Excluding Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:2090}, {year:2023,value:2320}, {year:2024,value:2380}, {year:2025,value:1920}, {year:2026,value:1580} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl. (A$M)', unit: 'M USD', series: [ {year:2022,value:0}, {year:2023,value:0}, {year:2024,value:-1504}, {year:2025,value:-550}, {year:2026,value:0} ],
+          note: 'Unusual items were nil in FY2022\u201323, then \u2212A$1.50B in FY2024 and \u2212A$550M in FY2025. The FY2024 charge alone exceeds two years of net income.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:33.04}, {year:2023,value:167.9}, {year:2024,value:2601.85}, {year:2025,value:255.45}, {year:2026,value:189.47} ] },
+        { label: 'Interest & Investment Income (A$M)', unit: 'M USD', series: [ {year:2022,value:19}, {year:2023,value:21}, {year:2024,value:32}, {year:2025,value:27}, {year:2026,value:32} ] },
+        { label: 'Net Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-600}, {year:2023,value:-677}, {year:2024,value:-740}, {year:2025,value:-811}, {year:2026,value:-829} ] },
+        { label: 'Gain / (Loss) from Asset Sale (A$M)', unit: 'M USD', series: [ {year:2022,value:-73}, {year:2023,value:-31}, {year:2024,value:-64}, {year:2025,value:-45}, {year:2026,value:-11} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:4.23}, {year:2023,value:3.9}, {year:2024,value:3.64}, {year:2025,value:2.94}, {year:2026,value:2.51} ],
+          note: 'Interest coverage collapsed from 4.23\u00d7 to 2.51\u00d7, falling in every year. The weakest coverage of the three by a wide margin.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents (A$M)', unit: 'M USD', series: [ {year:2022,value:1030}, {year:2023,value:1140}, {year:2024,value:1300}, {year:2025,value:1280}, {year:2026,value:1500} ] },
+      accountsReceivable: { label: 'Total Receivables (A$M)', unit: 'M USD', series: [ {year:2022,value:904}, {year:2023,value:1070}, {year:2024,value:1110}, {year:2025,value:1100}, {year:2026,value:1090} ] },
+      inventory: { label: 'Inventory (A$M)', unit: 'M USD', series: [ {year:2022,value:3590}, {year:2023,value:3700}, {year:2024,value:4190}, {year:2025,value:4170}, {year:2026,value:4470} ] },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2022,value:12.5}, {year:2023,value:12.74}, {year:2024,value:11.78}, {year:2025,value:12.05}, {year:2026,value:11.63} ],
+        note: 'Inventory turns 11.63\u00d7 a year, down from 12.50\u00d7 \u2014 stock is moving slightly slower than it did.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2022,value:29.2}, {year:2023,value:28.65}, {year:2024,value:30.98}, {year:2025,value:30.29}, {year:2026,value:31.38} ],
+        note: 'Days inventory of 31.4 days, up from 29.2. Marginally worse than Coles at 30.0.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:393}, {year:2023,value:316}, {year:2024,value:244}, {year:2025,value:269}, {year:2026,value:431} ] },
+      totalCurrentAssets: { label: 'Total Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:6110}, {year:2023,value:6380}, {year:2024,value:6990}, {year:2025,value:6990}, {year:2026,value:7690} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment (A$M)', unit: 'M USD', series: [ {year:2022,value:18230}, {year:2023,value:18350}, {year:2024,value:19280}, {year:2025,value:19330}, {year:2026,value:18990} ],
+        note: 'Net PP&E of A$18.99B \u2014 more than double the entire Coles PP&E base at A$13.09B, on 56% more revenue.'
+      },
+      goodwill: { label: 'Goodwill (A$M)', unit: 'M USD', series: [ {year:2022,value:3200}, {year:2023,value:3500}, {year:2024,value:2470}, {year:2025,value:2470}, {year:2026,value:2380} ],
+        note: 'Goodwill fell from A$3.50B to A$2.47B in FY2024 \u2014 a A$1.03B writedown in a single year, arriving alongside the A$1.50B of unusual items and the collapse in net income.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles (A$M)', unit: 'M USD', series: [ {year:2022,value:2080}, {year:2023,value:2190}, {year:2024,value:2410}, {year:2025,value:2240}, {year:2026,value:2140} ] },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current (A$M)', unit: 'M USD', series: [ {year:2022,value:1340}, {year:2023,value:1530}, {year:2024,value:1650}, {year:2025,value:1850}, {year:2026,value:2130} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current (A$M)', unit: 'M USD', series: [ {year:2023,value:54}, {year:2024,value:83}, {year:2025,value:61}, {year:2026,value:47} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:17}, {year:2023,value:72}, {year:2024,value:48}, {year:2025,value:236}, {year:2026,value:99} ] },
+      totalAssets: { label: 'Total Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:33270}, {year:2023,value:33700}, {year:2024,value:33940}, {year:2025,value:33830}, {year:2026,value:34070} ],
+        note: 'Total assets are almost perfectly flat, A$33.27B to A$34.07B, while revenue grew 17.6%.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:5220}, {year:2023,value:5620}, {year:2024,value:5820}, {year:2025,value:6020}, {year:2026,value:6300} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:2800}, {year:2023,value:2900}, {year:2024,value:2880}, {year:2025,value:2970}, {year:2026,value:3910} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:12}, {year:2023,value:230}, {year:2024,value:303}, {year:2025,value:127}, {year:2026,value:129} ] },
+      shortTermDebt: { label: 'Short-Term Borrowings (A$M)', unit: 'M USD', series: [ {year:2022,value:354}, {year:2023,value:76}, {year:2025,value:27}, {year:2026,value:29} ],
+        note: 'Short-term borrowings have been run down from A$354M to A$29M.'
+      },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2023,value:390}, {year:2024,value:712}, {year:2025,value:217}, {year:2026,value:372} ] },
+      longTermDebt: { label: 'Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:3940}, {year:2023,value:3290}, {year:2024,value:3870}, {year:2025,value:5270}, {year:2026,value:4760} ],
+        note: 'Long-term debt grew from A$3.94B to A$4.76B, peaking at A$5.27B in FY2025.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion (A$M)', unit: 'M USD', series: [ {year:2022,value:4294}, {year:2023,value:3756}, {year:2024,value:4582}, {year:2025,value:5514}, {year:2026,value:5161} ],
+        note: 'Total debt grew from A$4.29B to A$5.16B, up 20.1%, while operating income fell 17.6%.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:1420}, {year:2023,value:1400}, {year:2024,value:883}, {year:2025,value:873}, {year:2026,value:882} ] },
+      totalLiabilities: { label: 'Total Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:27170}, {year:2023,value:27140}, {year:2024,value:28370}, {year:2025,value:28870}, {year:2026,value:29160} ] },
+      retainedEarnings: { label: 'Retained Earnings (A$M)', unit: 'M USD', series: [ {year:2022,value:8170}, {year:2023,value:8590}, {year:2024,value:7410}, {year:2025,value:6710}, {year:2026,value:6750} ],
+        note: 'Retained earnings fell from A$8.17B to A$6.75B despite five profitable years \u2014 distributions and writedowns together outran earnings.'
+      },
+      shareholderEquity: { label: 'Total Common Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:5980}, {year:2023,value:6430}, {year:2024,value:5410}, {year:2025,value:4860}, {year:2026,value:4800} ],
+        note: 'Common equity fell from A$5.98B to A$4.80B, down 19.7%, and fell in four of five years. Woolworths is shrinking its equity base while Coles grows its.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:4.95}, {year:2023,value:5.29}, {year:2024,value:4.43}, {year:2025,value:3.98}, {year:2026,value:3.93} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:8.01}, {year:2023,value:7.5}, {year:2024,value:8.95}, {year:2025,value:9.96}, {year:2026,value:10.09} ] },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.72}, {year:2023,value:0.58}, {year:2024,value:0.85}, {year:2025,value:1.13}, {year:2026,value:1.08} ],
+        note: 'Total debt to equity rose from 0.72\u00d7 to 1.08\u00d7 as equity shrank and debt grew. Debt now exceeds equity.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:3264}, {year:2023,value:2616}, {year:2024,value:3282}, {year:2025,value:4234}, {year:2026,value:3661} ],
+          note: 'Net debt grew from A$3.26B to A$3.66B.'
+        },
+        { label: 'Long-Term Investments (A$M)', unit: 'M USD', series: [ {year:2022,value:1750}, {year:2023,value:1200}, {year:2024,value:633}, {year:2025,value:251}, {year:2026,value:142} ],
+          note: 'Long-term investments collapsed from A$1.75B to A$142M \u2014 down 91.9% across five years as the remaining holdings were sold down.'
+        },
+        { label: 'Total Current Unearned Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:436}, {year:2023,value:491}, {year:2024,value:485}, {year:2025,value:494}, {year:2026,value:567} ] },
+        { label: 'Long-Term Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:10900}, {year:2023,value:10340}, {year:2024,value:10550}, {year:2025,value:10180}, {year:2026,value:9580} ],
+          note: 'Long-term leases of A$9.58B, down from A$10.90B \u2014 the store footprint has been trimmed.'
+        },
+        { label: 'Current Portion of Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:1570}, {year:2023,value:1640}, {year:2024,value:1600}, {year:2025,value:1700}, {year:2026,value:1740} ] },
+        { label: 'Prepaid Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:188}, {year:2023,value:161}, {year:2024,value:156}, {year:2025,value:183}, {year:2026,value:207} ] },
+        { label: 'Comprehensive Income & Other (A$M)', unit: 'M USD', series: [ {year:2022,value:-7570}, {year:2023,value:-7720}, {year:2024,value:-7670}, {year:2025,value:-7520}, {year:2026,value:-7620} ] },
+        { label: 'Total Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:6100}, {year:2023,value:6570}, {year:2024,value:5570}, {year:2025,value:4960}, {year:2026,value:4910} ] },
+        { label: 'Tangible Book Value (A$M)', unit: 'M USD', series: [ {year:2022,value:702}, {year:2023,value:732}, {year:2024,value:535}, {year:2025,value:151}, {year:2026,value:281} ],
+          note: 'Tangible book value fell from A$702M to A$151M in FY2025 \u2014 effectively nil against a A$34.07B balance sheet \u2014 recovering slightly to A$281M. Goodwill and intangibles of A$4.52B against A$4.80B of equity leaves almost nothing tangible behind.'
+        },
+        { label: 'Total Minority Interest (A$M)', unit: 'M USD', series: [ {year:2022,value:124}, {year:2023,value:140}, {year:2024,value:162}, {year:2025,value:102}, {year:2026,value:115} ],
+          note: 'Minority interest is small at A$102M\u2013A$162M.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits (A$M)', unit: 'M USD', series: [ {year:2022,value:159}, {year:2023,value:161}, {year:2024,value:170}, {year:2025,value:194}, {year:2026,value:200} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:4.52}, {year:2023,value:5.08}, {year:2024,value:5.19}, {year:2025,value:4.53}, {year:2026,value:3.97} ],
+          note: 'Return on assets fell from 4.52% to 3.97% on a flat asset base.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:8.3}, {year:2023,value:7.53}, {year:2024,value:7.88}, {year:2025,value:6.88}, {year:2026,value:6.17} ],
+          note: 'Return on capital fell from 8.30% to 6.17%, down in four of five years, and now sits well below Coles at 8.73% and Wesfarmers at 12.87%. The lowest of the three.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:39.7}, {year:2023,value:25.72}, {year:2024,value:1.93}, {year:2025,value:18.1}, {year:2026,value:23.34} ],
+          note: 'The supplied ROE reconciles to net income \u00f7 common equity in FY2023\u201326 (within about 1.7 points) but not in FY2022, where the supplied 39.70% sits against a computed 132.61%. That confirms the FY2022 numerator is on a different basis. The FY2024 figure of 1.93% is the real signal: a return on equity below the cash rate.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:1.19}, {year:2023,value:0.99}, {year:2024,value:1.15}, {year:2025,value:1.48}, {year:2026,value:1.48} ],
+          note: 'Leverage rose from 1.19\u00d7 to 1.48\u00d7 \u2014 debt up, EBITDA down.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations (A$M)', unit: 'M USD', series: [ {year:2022,value:3380}, {year:2023,value:4750}, {year:2024,value:4360}, {year:2025,value:4550}, {year:2026,value:4950} ],
+        note: 'Operating cash flow grew from A$3.38B to A$4.95B, up 46.4%, and is the healthiest line in the WOW dataset. Cash generation has held up far better than reported earnings.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:-1640}, {year:2023,value:2230}, {year:2024,value:1870}, {year:2025,value:1340}, {year:2026,value:2160} ],
+        note: 'Free cash flow was NEGATIVE A$1.64B in FY2022, then A$2.23B, A$1.87B, A$1.34B and A$2.16B. Still below the FY2023 level three years later.'
+      },
+      extraLines: [
+        { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:7930}, {year:2023,value:1620}, {year:2024,value:108}, {year:2025,value:963}, {year:2026,value:1140} ] },
+        { label: 'Unlevered Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:-1260}, {year:2023,value:2670}, {year:2024,value:2350}, {year:2025,value:1860}, {year:2026,value:2700} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:-48.52}, {year:2023,value:46.95}, {year:2024,value:42.89}, {year:2025,value:29.45}, {year:2026,value:43.64} ],
+          note: 'Conversion of 43.6% in FY2026, having been negative in FY2022 and peaking at 46.9% in FY2023.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:42.62}, {year:2023,value:293.21}, {year:2024,value:4037.04}, {year:2025,value:472.48}, {year:2026,value:434.21} ],
+          note: 'Operating cash flow ran 4,037% of net income in FY2024 \u2014 a ratio that tells you nothing except that reported earnings that year were almost entirely written off by non-cash charges.'
+        },
+        { label: 'Cash from Investing (A$M)', unit: 'M USD', series: [ {year:2022,value:-2460}, {year:2023,value:-1840}, {year:2024,value:-2280}, {year:2025,value:-1930}, {year:2026,value:-2010} ],
+          note: 'Investing outflows are steady at A$1.84B\u2013A$2.46B \u2014 Woolworths keeps spending regardless of the earnings trend.'
+        },
+        { label: 'Cash from Financing (A$M)', unit: 'M USD', series: [ {year:2022,value:-1340}, {year:2023,value:-2810}, {year:2024,value:-1920}, {year:2025,value:-2650}, {year:2026,value:-2700} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2022,value:72.78}, {year:2023,value:38.74}, {year:2024,value:52.29}, {year:2025,value:42.42}, {year:2026,value:40.61} ] },
+        { label: 'Repurchase of Common Stock (A$M)', unit: 'M USD', series: [ {year:2022,value:-2130}, {year:2023,value:-110}, {year:2024,value:-44}, {year:2025,value:-25}, {year:2026,value:-85} ],
+          note: 'A A$2.13B buyback in FY2022 and almost nothing since \u2014 A$25M to A$110M a year. Capital return effectively stopped after FY2022.'
+        },
+        { label: 'Common Dividends Paid (A$M)', unit: 'M USD', series: [ {year:2022,value:-1010}, {year:2023,value:-1030}, {year:2024,value:-1170}, {year:2025,value:-1660}, {year:2026,value:-1100} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.83}, {year:2023,value:0.85}, {year:2024,value:0.96}, {year:2025,value:1.36}, {year:2026,value:0.9} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from A$0.83 to A$1.36 (FY2025) then fell back to A$0.90.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:12.74}, {year:2023,value:63.58}, {year:2024,value:1083.33}, {year:2025,value:172.38}, {year:2026,value:96.49} ],
+          note: 'Payout was 1,083% of net income in FY2024, when A$1.17B was paid against A$108M earned. FY2025 was 172%. Only FY2026 at 96.5% is anywhere near sustainable on reported earnings.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends (A$M)', unit: 'M USD', series: [ {year:2022,value:3140}, {year:2023,value:1140}, {year:2024,value:1214}, {year:2025,value:1685}, {year:2026,value:1185} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:-191.46}, {year:2023,value:51.12}, {year:2024,value:64.92}, {year:2025,value:125.75}, {year:2026,value:54.86} ],
+          note: 'Shareholder returns stayed inside free cash flow in FY2023, FY2024 and FY2026 (51.1%, 64.9%, 54.9%) but reached 125.7% in FY2025. FY2022 free cash flow was NEGATIVE A$1.64B while A$3.14B was returned \u2014 the buyback and dividend were funded entirely from the balance sheet that year.'
+        },
+        { label: 'Change in Inventories (A$M)', unit: 'M USD', series: [ {year:2022,value:-343}, {year:2023,value:-119}, {year:2024,value:-357}, {year:2025,value:44}, {year:2026,value:-351} ] },
+        { label: 'Foreign Exchange Rate Adjustments (A$M)', unit: 'M USD', series: [ {year:2022,value:2}, {year:2023,value:2}, {year:2025,value:2}, {year:2026,value:-11} ] },
+        { label: 'Cash Acquisitions (A$M)', unit: 'M USD', series: [ {year:2022,value:-425}, {year:2023,value:-373}, {year:2024,value:-487}, {year:2025,value:-84}, {year:2026,value:-16} ] },
+        { label: 'Net Change in Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:-414}, {year:2023,value:103}, {year:2024,value:163}, {year:2025,value:-23}, {year:2026,value:222} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// COL_BREAKDOWN — Coles Group Limited Coverage data (Tier 2)
+// SOURCE: Muzz's supplied retail data drop — income statement, balance
+// sheet and cash flow, FY2022–FY2026 (AUD, A$M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// CURRENCY: AUD. Labels carry (A$M); unit stays M USD so the shared
+// fmtVal renders a currency symbol — the CNI/CP/NEC/PXA convention.
+// Derived lines are pure arithmetic on the supplied figures. Gross
+// margin, inventory turnover and days inventory added for this cluster.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: FY2026 EPS is not supplied in the source and has not
+// been fabricated. Everything else reconciles cleanly.
+// ═════════════════════════════════════════════════════════════════
+const COL_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:38340}, {year:2023,value:40590}, {year:2024,value:43680}, {year:2025,value:44490}, {year:2026,value:45720} ],
+        note: 'Revenue grew from A$38.34B to A$45.72B, up 19.2%, and rose in every year. Growth slightly ahead of Woolworths (17.6%) off a base 36% smaller.'
+      },
+      costOfSales: { label: 'Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:28400}, {year:2023,value:30030}, {year:2024,value:32390}, {year:2025,value:32650}, {year:2026,value:33340} ] },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue (A$M)', unit: 'M USD', series: [ {year:2022,value:9940}, {year:2023,value:10560}, {year:2024,value:11290}, {year:2025,value:11840}, {year:2026,value:12380} ],
+        note: 'Gross profit grew from A$9.94B to A$12.38B, up 24.6% \u2014 comfortably faster than revenue.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2022,value:25.93}, {year:2023,value:26.02}, {year:2024,value:25.85}, {year:2025,value:26.61}, {year:2026,value:27.08} ],
+        note: 'Gross margin improved from 25.93% to 27.08%, rising in three of the four year-on-year moves. The gap to Woolworths barely moved \u2014 32 basis points in FY2022, 27 in FY2026 \u2014 so Coles has held its buying position rather than closed it.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative (A$M)', unit: 'M USD', series: [ {year:2022,value:6820}, {year:2023,value:7400}, {year:2024,value:7930}, {year:2025,value:8320}, {year:2026,value:8780} ],
+          note: 'SG&A grew 28.7%, from A$6.82B to A$8.78B, outpacing 19.2% revenue growth.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2022,value:17.79}, {year:2023,value:18.23}, {year:2024,value:18.15}, {year:2025,value:18.7}, {year:2026,value:19.2} ],
+          note: 'SG&A rose from 17.79% of revenue to 19.20% \u2014 the same directional problem Woolworths has, but from a lower base and with a smaller increase.'
+        },
+        { label: 'Operating Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:8210}, {year:2023,value:8860}, {year:2024,value:9330}, {year:2025,value:9880}, {year:2026,value:10430} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:36600}, {year:2023,value:38890}, {year:2024,value:41720}, {year:2025,value:42530}, {year:2026,value:43770} ] },
+      operatingProfit: { label: 'Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:1740}, {year:2023,value:1700}, {year:2024,value:1970}, {year:2025,value:1950}, {year:2026,value:1950} ],
+        note: 'Operating income grew from A$1.74B to A$1.95B, up 12.1%, and has been flat at A$1.95B\u2013A$1.97B for three consecutive years. Not growing, but not deteriorating either \u2014 which is more than can be said for Woolworths.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2022,value:4.54}, {year:2023,value:4.19}, {year:2024,value:4.51}, {year:2025,value:4.38}, {year:2026,value:4.27} ],
+        note: 'Operating margin held between 4.19% and 4.54% across all five years, ending at 4.27%. Woolworths ended at 3.02%. Coles now earns a materially better operating margin than its larger competitor, and the gap has widened every year since FY2023.'
+      },
+      interestExpense: { label: 'Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-341}, {year:2023,value:-371}, {year:2024,value:-411}, {year:2025,value:-513}, {year:2026,value:-508} ],
+        note: 'Interest expense grew 49.0%, from A$341M to A$508M, and now consumes 26.1% of operating income.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income (A$M)', unit: 'M USD', series: [ {year:2022,value:67}, {year:2023,value:140}, {year:2024,value:134}, {year:2025,value:104}, {year:2026,value:105} ] },
+      provisionForTaxes: { label: 'Income Tax Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:422}, {year:2023,value:423}, {year:2024,value:487}, {year:2025,value:457}, {year:2026,value:459} ],
+        note: 'Tax expense of A$422M\u2013A$487M, tracking pre-tax income closely.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2022,value:28.77}, {year:2023,value:28.87}, {year:2024,value:30.15}, {year:2025,value:29.75}, {year:2026,value:29.63} ],
+        note: 'A tight 28.77%\u201330.15% band across all five years. No distortions.'
+      },
+      netIncome: { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:1050}, {year:2023,value:1100}, {year:2024,value:1120}, {year:2025,value:1080}, {year:2026,value:1090} ],
+        note: 'Net income is essentially flat across five years \u2014 A$1.05B, A$1.10B, A$1.12B, A$1.08B, A$1.09B. It has not grown, but it has also never lurched, and it reconciles to pre-tax income minus tax in every year. The cleanest earnings series of the three.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2022,value:2.73}, {year:2023,value:2.71}, {year:2024,value:2.56}, {year:2025,value:2.43}, {year:2026,value:2.38} ],
+        note: 'Net margin fell every single year, from 2.73% to 2.38%. Flat profit on rising revenue is arithmetically a falling margin \u2014 the volume is coming, the profit is not.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2022,value:0.79}, {year:2023,value:0.78}, {year:2024,value:0.84}, {year:2025,value:0.81} ],
+        note: 'EPS of A$0.79, A$0.78, A$0.84, A$0.81 \u2014 and FY2026 is not supplied at all. The blank is in the source; no figure has been fabricated to fill it.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2022,value:1330}, {year:2023,value:1330}, {year:2024,value:1330}, {year:2025,value:1340}, {year:2026,value:1340} ] },
+      extraLines: [
+        { label: 'EBITDA (A$M)', unit: 'M USD', series: [ {year:2022,value:2310}, {year:2023,value:2280}, {year:2024,value:2570}, {year:2025,value:2630}, {year:2026,value:2650} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2022,value:6.03}, {year:2023,value:5.62}, {year:2024,value:5.88}, {year:2025,value:5.91}, {year:2026,value:5.8} ],
+          note: 'EBITDA margin slipped from 6.02% to 5.80%, having troughed at 5.62% in FY2023.'
+        },
+        { label: 'Depreciation & Amortisation (A$M)', unit: 'M USD', series: [ {year:2022,value:1390}, {year:2023,value:1460}, {year:2024,value:1400}, {year:2025,value:1570}, {year:2026,value:1650} ],
+          note: 'D&A grew from A$1.39B to A$1.65B. Note this exceeds the implied A$1.33B for Woolworths despite Coles having a materially smaller asset base \u2014 the two are unlikely to be on a consistent basis.'
+        },
+        { label: 'EBT Including Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:1470}, {year:2023,value:1470}, {year:2024,value:1620}, {year:2025,value:1540}, {year:2026,value:1550} ] },
+        { label: 'EBT Excluding Unusual Items (A$M)', unit: 'M USD', series: [ {year:2022,value:1460}, {year:2023,value:1450}, {year:2024,value:1670}, {year:2025,value:1540}, {year:2026,value:1550} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl. (A$M)', unit: 'M USD', series: [ {year:2022,value:10}, {year:2023,value:20}, {year:2024,value:-50}, {year:2025,value:0}, {year:2026,value:0} ],
+          note: 'Unusual items are trivially small in every year \u2014 the largest is \u2212A$50M in FY2024. Compare Woolworths at \u2212A$1.50B in the same year.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2022,value:165.71}, {year:2023,value:154.55}, {year:2024,value:175.89}, {year:2025,value:180.56}, {year:2026,value:178.9} ] },
+        { label: 'Net Interest Expense (A$M)', unit: 'M USD', series: [ {year:2022,value:-341}, {year:2023,value:-371}, {year:2024,value:-411}, {year:2025,value:-513}, {year:2026,value:-508} ] },
+        { label: 'Gain / (Loss) from Asset Sale (A$M)', unit: 'M USD', series: [ {year:2022,value:14}, {year:2024,value:-12}, {year:2025,value:11}, {year:2026,value:13} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2022,value:5.1}, {year:2023,value:4.58}, {year:2024,value:4.79}, {year:2025,value:3.8}, {year:2026,value:3.84} ],
+          note: 'Interest coverage fell from 5.10\u00d7 to 3.84\u00d7. Weaker than Wesfarmers at 9.32\u00d7 but comfortably ahead of Woolworths at 2.51\u00d7.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents (A$M)', unit: 'M USD', series: [ {year:2022,value:589}, {year:2023,value:597}, {year:2024,value:675}, {year:2025,value:705}, {year:2026,value:568} ] },
+      accountsReceivable: { label: 'Total Receivables (A$M)', unit: 'M USD', series: [ {year:2022,value:512}, {year:2023,value:609}, {year:2024,value:496}, {year:2025,value:515}, {year:2026,value:543} ] },
+      inventory: { label: 'Inventory (A$M)', unit: 'M USD', series: [ {year:2022,value:2450}, {year:2023,value:2320}, {year:2024,value:2700}, {year:2025,value:2730}, {year:2026,value:2740} ] },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2022,value:11.59}, {year:2023,value:12.94}, {year:2024,value:12}, {year:2025,value:11.96}, {year:2026,value:12.17} ],
+        note: 'Inventory turns 12.17\u00d7 a year, up from 11.59\u00d7 \u2014 improving, and now faster than Woolworths.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2022,value:31.49}, {year:2023,value:28.21}, {year:2024,value:30.42}, {year:2025,value:30.52}, {year:2026,value:29.99} ],
+        note: 'Days inventory of 30.0 days, improved from 31.5. Marginally better than Woolworths at 31.4, and a fraction of Wesfarmers at 76.2.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:119}, {year:2023,value:141}, {year:2024,value:10}, {year:2025,value:116}, {year:2026,value:58} ] },
+      totalCurrentAssets: { label: 'Total Current Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:3750}, {year:2023,value:3750}, {year:2024,value:3990}, {year:2025,value:4180}, {year:2026,value:4000} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment (A$M)', unit: 'M USD', series: [ {year:2022,value:12010}, {year:2023,value:11490}, {year:2024,value:12670}, {year:2025,value:12810}, {year:2026,value:13090} ],
+        note: 'Net PP&E grew from A$12.01B to A$13.09B, up 9.0% \u2014 steady reinvestment in the store network and the automated distribution centres.'
+      },
+      goodwill: { label: 'Goodwill (A$M)', unit: 'M USD', series: [ {year:2022,value:1160}, {year:2023,value:1120}, {year:2024,value:1150}, {year:2025,value:1150}, {year:2026,value:1160} ],
+        note: 'Goodwill is flat at A$1.12B\u2013A$1.16B throughout. No writedowns \u2014 in sharp contrast to Woolworths, which took A$1.03B off in FY2024.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles (A$M)', unit: 'M USD', series: [ {year:2022,value:704}, {year:2023,value:920}, {year:2024,value:1050}, {year:2025,value:1100}, {year:2026,value:1060} ] },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current (A$M)', unit: 'M USD', series: [ {year:2022,value:822}, {year:2023,value:740}, {year:2024,value:717}, {year:2025,value:671}, {year:2026,value:742} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:174}, {year:2023,value:53}, {year:2024,value:72}, {year:2025,value:151}, {year:2026,value:83} ] },
+      totalAssets: { label: 'Total Assets (A$M)', unit: 'M USD', series: [ {year:2022,value:18840}, {year:2023,value:18290}, {year:2024,value:19870}, {year:2025,value:20290}, {year:2026,value:20410} ],
+        note: 'Total assets grew 8.3% while revenue grew 19.2%.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable (A$M)', unit: 'M USD', series: [ {year:2022,value:3210}, {year:2023,value:3280}, {year:2024,value:3410}, {year:2025,value:3600}, {year:2026,value:3640} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:830}, {year:2023,value:846}, {year:2024,value:861}, {year:2025,value:865}, {year:2026,value:1100} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable (A$M)', unit: 'M USD', series: [ {year:2024,value:73}, {year:2026,value:90} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2025,value:150}, {year:2026,value:300} ] },
+      longTermDebt: { label: 'Long-Term Debt (A$M)', unit: 'M USD', series: [ {year:2022,value:1100}, {year:2023,value:1120}, {year:2024,value:1650}, {year:2025,value:1830}, {year:2026,value:1500} ],
+        note: 'Long-term debt grew from A$1.10B to a peak of A$1.83B, then fell to A$1.50B in FY2026 \u2014 the only one of the three to reduce debt in the final year.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion (A$M)', unit: 'M USD', series: [ {year:2022,value:1100}, {year:2023,value:1120}, {year:2024,value:1650}, {year:2025,value:1980}, {year:2026,value:1800} ],
+        note: 'Total debt of A$1.80B \u2014 roughly a third of Woolworths\u2019 A$5.16B, on a business generating 64% of the revenue.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:363}, {year:2023,value:316}, {year:2024,value:253}, {year:2025,value:311}, {year:2026,value:326} ] },
+      totalLiabilities: { label: 'Total Liabilities (A$M)', unit: 'M USD', series: [ {year:2022,value:15710}, {year:2023,value:14940}, {year:2024,value:16250}, {year:2025,value:16490}, {year:2026,value:16460} ] },
+      retainedEarnings: { label: 'Retained Earnings (A$M)', unit: 'M USD', series: [ {year:2022,value:1390}, {year:2023,value:1610}, {year:2024,value:1840}, {year:2025,value:2000}, {year:2026,value:2110} ],
+        note: 'Retained earnings grew from A$1.39B to A$2.11B, up 51.8% \u2014 Coles retains a meaningful share of what it earns.'
+      },
+      shareholderEquity: { label: 'Total Common Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:3120}, {year:2023,value:3360}, {year:2024,value:3620}, {year:2025,value:3810}, {year:2026,value:3950} ],
+        note: 'Common equity grew from A$3.12B to A$3.95B, up 26.6%, rising in every single year. Woolworths\u2019 equity fell 19.7% over the same period. This is the clearest structural divergence between the two.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2022,value:2.35}, {year:2023,value:2.52}, {year:2024,value:2.71}, {year:2025,value:2.85}, {year:2026,value:2.95} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2022,value:10.13}, {year:2023,value:9.44}, {year:2024,value:8.78}, {year:2025,value:8.35}, {year:2026,value:8.07} ],
+        note: 'Price to book compressed steadily from 10.13\u00d7 to 8.07\u00d7 as book value per share grew 25.5%.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2022,value:0.35}, {year:2023,value:0.33}, {year:2024,value:0.46}, {year:2025,value:0.52}, {year:2026,value:0.46} ],
+        note: 'Total debt to equity of 0.46\u00d7, against Woolworths at 1.08\u00d7.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:511}, {year:2023,value:523}, {year:2024,value:975}, {year:2025,value:1275}, {year:2026,value:1232} ],
+          note: 'Net debt of A$1.23B, up from A$511M but still the smallest absolute debt load of the three.'
+        },
+        { label: 'Long-Term Investments (A$M)', unit: 'M USD', series: [ {year:2022,value:219}, {year:2023,value:220}, {year:2024,value:225}, {year:2025,value:240}, {year:2026,value:272} ] },
+        { label: 'Long-Term Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:7770}, {year:2023,value:7030}, {year:2024,value:7510}, {year:2025,value:7420}, {year:2026,value:7140} ],
+          note: 'Long-term leases of A$7.14B against A$20.41B of assets \u2014 35.0% of the balance sheet, and the store network in one line.'
+        },
+        { label: 'Current Portion of Leases (A$M)', unit: 'M USD', series: [ {year:2022,value:914}, {year:2023,value:820}, {year:2024,value:911}, {year:2025,value:928}, {year:2026,value:949} ] },
+        { label: 'Prepaid Expenses (A$M)', unit: 'M USD', series: [ {year:2022,value:83}, {year:2023,value:82}, {year:2024,value:102}, {year:2025,value:109}, {year:2026,value:94} ] },
+        { label: 'Comprehensive Income & Other (A$M)', unit: 'M USD', series: [ {year:2022,value:36}, {year:2023,value:15}, {year:2024,value:25}, {year:2025,value:24}, {year:2026,value:12} ] },
+        { label: 'Total Equity (A$M)', unit: 'M USD', series: [ {year:2022,value:3120}, {year:2023,value:3360}, {year:2024,value:3620}, {year:2025,value:3810}, {year:2026,value:3950} ] },
+        { label: 'Tangible Book Value (A$M)', unit: 'M USD', series: [ {year:2022,value:1260}, {year:2023,value:1320}, {year:2024,value:1410}, {year:2025,value:1560}, {year:2026,value:1730} ],
+          note: 'Tangible book value grew from A$1.26B to A$1.73B, up 37.3%, rising every year. Woolworths\u2019 fell from A$702M to A$281M over the same period. Coles has roughly six times the tangible book of its larger rival.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits (A$M)', unit: 'M USD', series: [ {year:2022,value:72}, {year:2023,value:65}, {year:2024,value:71}, {year:2025,value:72}, {year:2026,value:68} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2022,value:5.87}, {year:2023,value:5.72}, {year:2024,value:6.44}, {year:2025,value:6.08}, {year:2026,value:6} ],
+          note: 'Return on assets of 6.00%, up from 5.87%, and consistently above Woolworths across every year of the period.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2022,value:8.48}, {year:2023,value:8.41}, {year:2024,value:9.44}, {year:2025,value:8.78}, {year:2026,value:8.73} ],
+          note: 'Return on capital of 8.73%, against 8.48% five years ago \u2014 broadly flat, and now well ahead of Woolworths at 6.17%.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2022,value:35.2}, {year:2023,value:32.16}, {year:2024,value:32.35}, {year:2025,value:29.07}, {year:2026,value:28.12} ],
+          note: 'ROE fell from 35.20% to 28.12% \u2014 but the fall is because equity grew 26.6% while profit stayed flat, which is a far healthier reason than the alternative.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2022,value:0.48}, {year:2023,value:0.49}, {year:2024,value:0.64}, {year:2025,value:0.75}, {year:2026,value:0.68} ],
+          note: 'Leverage of 0.68\u00d7 EBITDA \u2014 by far the most conservative of the three (Woolworths 1.48\u00d7, Wesfarmers 1.17\u00d7), and it improved in FY2026.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations (A$M)', unit: 'M USD', series: [ {year:2022,value:2690}, {year:2023,value:2810}, {year:2024,value:2790}, {year:2025,value:2940}, {year:2026,value:3340} ],
+        note: 'Operating cash flow grew from A$2.69B to A$3.34B, up 24.2%, and rose in four of five years. FY2026 is the highest of the period.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:1150}, {year:2023,value:976.38}, {year:2024,value:1050}, {year:2025,value:1030}, {year:2026,value:1770} ],
+        note: 'Free cash flow was A$976M\u2013A$1.15B for four years, then jumped 71.8% to A$1.77B in FY2026. The best year of the period by a wide margin.'
+      },
+      extraLines: [
+        { label: 'Net Income (A$M)', unit: 'M USD', series: [ {year:2022,value:1050}, {year:2023,value:1100}, {year:2024,value:1120}, {year:2025,value:1080}, {year:2026,value:1090} ] },
+        { label: 'Unlevered Free Cash Flow (A$M)', unit: 'M USD', series: [ {year:2022,value:1360}, {year:2023,value:1210}, {year:2024,value:1300}, {year:2025,value:1350}, {year:2026,value:2090} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2022,value:42.75}, {year:2023,value:34.75}, {year:2024,value:37.63}, {year:2025,value:35.03}, {year:2026,value:52.99} ],
+          note: 'Conversion improved from 42.8% to 53.0%.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2022,value:256.19}, {year:2023,value:255.45}, {year:2024,value:249.11}, {year:2025,value:272.22}, {year:2026,value:306.42} ],
+          note: 'Operating cash flow ran 249%\u2013306% of net income in every single year \u2014 remarkably consistent, and a reminder that reported profit understates the cash this business generates.'
+        },
+        { label: 'Cash from Investing (A$M)', unit: 'M USD', series: [ {year:2022,value:-1140}, {year:2023,value:-1000}, {year:2024,value:-1510}, {year:2025,value:-1360}, {year:2026,value:-1420} ],
+          note: 'Investing outflows are steady at A$1.00B\u2013A$1.51B \u2014 roughly two-thirds of Woolworths\u2019 spend on a business generating 64% of the revenue. Proportionate.'
+        },
+        { label: 'Cash from Financing (A$M)', unit: 'M USD', series: [ {year:2022,value:-1750}, {year:2023,value:-1800}, {year:2024,value:-1200}, {year:2025,value:-1540}, {year:2026,value:-2060} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2022,value:42.38}, {year:2023,value:35.59}, {year:2024,value:54.12}, {year:2025,value:46.26}, {year:2026,value:42.51} ] },
+        { label: 'Repurchase of Common Stock (A$M)', unit: 'M USD', series: [ {year:2023,value:-71}, {year:2024,value:-40}, {year:2025,value:-42}, {year:2026,value:-45} ],
+          note: 'Small and consistent buybacks of A$40M\u2013A$71M a year from FY2023. Modest, but sustained \u2014 unlike Woolworths, which stopped.'
+        },
+        { label: 'Common Dividends Paid (A$M)', unit: 'M USD', series: [ {year:2022,value:-798}, {year:2023,value:-844}, {year:2024,value:-853}, {year:2025,value:-889}, {year:2026,value:-938} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.6}, {year:2023,value:0.63}, {year:2024,value:0.64}, {year:2025,value:0.66}, {year:2026,value:0.7} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from A$0.60 to A$0.70, up 16.7%.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:76}, {year:2023,value:76.73}, {year:2024,value:76.16}, {year:2025,value:82.31}, {year:2026,value:86.06} ],
+          note: 'Payout ran 76.0%\u201386.1% of net income across all five years, ending at 86.1%. High, but stable and covered by free cash flow \u2014 unlike Woolworths, which paid out 1,083% in FY2024.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends (A$M)', unit: 'M USD', series: [ {year:2022,value:798}, {year:2023,value:915}, {year:2024,value:893}, {year:2025,value:931}, {year:2026,value:983} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2022,value:69.39}, {year:2023,value:93.71}, {year:2024,value:85.05}, {year:2025,value:90.39}, {year:2026,value:55.54} ],
+          note: 'Shareholder returns stayed inside free cash flow in every single year, running 55.5%\u201393.7% \u2014 the only one of the three retailers to manage that. Wesfarmers exceeded free cash flow twice and Woolworths three times.'
+        },
+        { label: 'Change in Inventories (A$M)', unit: 'M USD', series: [ {year:2022,value:-341}, {year:2023,value:39}, {year:2024,value:-372}, {year:2025,value:-30}, {year:2026,value:-5} ] },
+        { label: 'Cash Acquisitions (A$M)', unit: 'M USD', series: [ {year:2024,value:-74}, {year:2026,value:-41} ] },
+        { label: 'Net Increase / (Decrease) in Loans Originated (A$M)', unit: 'M USD', series: [ {year:2025,value:-25} ],
+          note: 'A single A$25M line in FY2025 \u2014 immaterial, and the only appearance of a lending item in the series.'
+        },
+        { label: 'Net Change in Cash (A$M)', unit: 'M USD', series: [ {year:2022,value:-198}, {year:2023,value:8}, {year:2024,value:78}, {year:2025,value:30}, {year:2026,value:-137} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -15115,9 +15777,9 @@ const COVERAGE_DATA = [
   { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banks',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null, locked: true },
 
   // === RETAIL · AUSTRALIA ===
-  { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null, locked: true },
-  { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null, locked: true },
-  { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null, locked: true },
+  { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: WES_BREAKDOWN },
+  { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: WOW_BREAKDOWN },
+  { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: COL_BREAKDOWN },
 
   // === INFRASTRUCTURE · AUSTRALIA ===
   { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null, locked: true },
