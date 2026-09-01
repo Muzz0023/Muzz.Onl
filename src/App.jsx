@@ -32420,7 +32420,7 @@ const RACE_BREAKDOWN = {
   },
 };
 // ════════════════════════════════════════════════════════════════
-// V_BREAKDOWN — Visa Inc. Coverage data (Tier 2, drop 1)
+// V_BREAKDOWN — Visa Inc. Coverage data (Tier 1)
 // SOURCE: Muzz's supplied Item 1 material — overview, core business and
 // transaction flow, strategy, core products, new flows, key foundations,
 // value-added services, and Visa Commercial Solutions / Visa Direct.
@@ -32428,7 +32428,7 @@ const RACE_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES,
 // COMMITMENTS, SEGMENTS, COMPETITORS.
-// TABS DARK: INCOME, BALANCE, CASH FLOW, THESIS.
+// TABS DARK: BALANCE, CASH FLOW, THESIS.
 //
 // CHECKED BEFORE BUILDING:
 //   the four new-flow components ($145T B2B + $20T B2C + $20T P2P +
@@ -34783,6 +34783,1780 @@ const V_BREAKDOWN = {
         ],
       },
     },
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Net Revenue',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 11778,
+          },
+          {
+            year: 2014,
+            value: 12702,
+          },
+          {
+            year: 2015,
+            value: 13880,
+          },
+          {
+            year: 2016,
+            value: 15082,
+          },
+          {
+            year: 2017,
+            value: 18358,
+          },
+          {
+            year: 2018,
+            value: 20609,
+          },
+          {
+            year: 2019,
+            value: 22977,
+          },
+          {
+            year: 2020,
+            value: 21846,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 24105,
+          },
+          {
+            year: 2022,
+            value: 29310,
+          },
+          {
+            year: 2023,
+            value: 32653,
+          },
+          {
+            year: 2024,
+            value: 35926,
+          },
+        ],
+        note: 'Grew 205% over eleven years with ONE down year, FY2020. NOTE A SOURCE CONFLICT: the income note gives FY2024 net revenue as 35,226. The revenue components sum to 35,926 and the geographic split (14,780 US + 21,146 international) also gives 35,926, so 35,226 is a transposition and 35,926 is used here. This is NET of client incentives.',
+      },
+      totalExpenses: {
+        label: 'Total Operating Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 4539,
+          },
+          {
+            year: 2014,
+            value: 5005,
+          },
+          {
+            year: 2015,
+            value: 4816,
+            down: true,
+          },
+          {
+            year: 2016,
+            value: 7199,
+          },
+          {
+            year: 2017,
+            value: 6214,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 7655,
+          },
+          {
+            year: 2019,
+            value: 7976,
+          },
+          {
+            year: 2020,
+            value: 7765,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 8301,
+          },
+          {
+            year: 2022,
+            value: 10497,
+          },
+          {
+            year: 2023,
+            value: 11653,
+          },
+          {
+            year: 2024,
+            value: 12331,
+          },
+        ],
+        note: 'TWO VERSIONS OF THE OPERATING EXPENSE LINES WERE SUPPLIED AND THEY DISAGREE. The dedicated operating-expense document reconciles to total operating expenses in 11 of 12 years; the income note reconciles in only 7. The operating-expense version is used throughout. The differences are professional fees FY2023 (545 not 546), depreciation FY2019 (656 not 606) and FY2020 (767 not 647), and the litigation provision FY2021 (3 not 33) and FY2023 (927 not 326). The source also labels every expense line "Down Years 0/12", which is wrong for all of them \u2014 total operating expenses alone fell in FY2015, FY2017 and FY2020.',
+      },
+      opexLines: [
+        {
+          label: 'Personnel',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 1932,
+            },
+            {
+              year: 2014,
+              value: 1875,
+              down: true,
+            },
+            {
+              year: 2015,
+              value: 2079,
+            },
+            {
+              year: 2016,
+              value: 2226,
+            },
+            {
+              year: 2017,
+              value: 2628,
+            },
+            {
+              year: 2018,
+              value: 3170,
+            },
+            {
+              year: 2019,
+              value: 3444,
+            },
+            {
+              year: 2020,
+              value: 3785,
+            },
+            {
+              year: 2021,
+              value: 4240,
+            },
+            {
+              year: 2022,
+              value: 4990,
+            },
+            {
+              year: 2023,
+              value: 5831,
+            },
+            {
+              year: 2024,
+              value: 6264,
+            },
+          ],
+          note: 'THE DOMINANT COST, at 50.8% of operating expenses in FY2024 against a 44.1% eleven-year average. Grew 224% while net revenue grew 205%. Includes stock-based compensation. Fell once, in FY2014.',
+        },
+        {
+          label: 'Marketing',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 876,
+            },
+            {
+              year: 2014,
+              value: 900,
+            },
+            {
+              year: 2015,
+              value: 872,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 869,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 922,
+            },
+            {
+              year: 2018,
+              value: 988,
+            },
+            {
+              year: 2019,
+              value: 1105,
+            },
+            {
+              year: 2020,
+              value: 971,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 1136,
+            },
+            {
+              year: 2022,
+              value: 1336,
+            },
+            {
+              year: 2023,
+              value: 1341,
+            },
+            {
+              year: 2024,
+              value: 1560,
+            },
+          ],
+          note: 'Grew only 78% over eleven years against 205% revenue growth, so it fell from 19.3% of operating expenses to 12.7%. The World Cup, Olympics and F1 sponsorships are inside this line \u2014 they are a shrinking share of a growing base.',
+        },
+        {
+          label: 'Network & Processing',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 468,
+            },
+            {
+              year: 2014,
+              value: 507,
+            },
+            {
+              year: 2015,
+              value: 474,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 538,
+            },
+            {
+              year: 2017,
+              value: 620,
+            },
+            {
+              year: 2018,
+              value: 686,
+            },
+            {
+              year: 2019,
+              value: 721,
+            },
+            {
+              year: 2020,
+              value: 727,
+            },
+            {
+              year: 2021,
+              value: 730,
+            },
+            {
+              year: 2022,
+              value: 743,
+            },
+            {
+              year: 2023,
+              value: 736,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 778,
+            },
+          ],
+          note: 'THE MOST REMARKABLE LINE IN THE STATEMENT. The actual cost of running VisaNet grew just 66% \u2014 from $468m to $778m \u2014 while PROCESSED TRANSACTIONS GREW 300%, from 58.5bn to 233.8bn. Cost per processed transaction fell from about $8.00 per thousand to $3.33 per thousand, a 58% decline. This single comparison is the operating leverage of a payments network in one number.',
+        },
+        {
+          label: 'Professional Fees',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 412,
+            },
+            {
+              year: 2014,
+              value: 328,
+              down: true,
+            },
+            {
+              year: 2015,
+              value: 336,
+            },
+            {
+              year: 2016,
+              value: 389,
+            },
+            {
+              year: 2017,
+              value: 409,
+            },
+            {
+              year: 2018,
+              value: 446,
+            },
+            {
+              year: 2019,
+              value: 454,
+            },
+            {
+              year: 2020,
+              value: 408,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 403,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 505,
+            },
+            {
+              year: 2023,
+              value: 545,
+            },
+            {
+              year: 2024,
+              value: 635,
+            },
+          ],
+          note: 'External legal, consulting and audit. Up 54% over eleven years and rising sharply since FY2021 \u2014 consistent with the litigation load described in the commitments tab.',
+        },
+        {
+          label: 'Depreciation & Amortisation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 397,
+            },
+            {
+              year: 2014,
+              value: 435,
+            },
+            {
+              year: 2015,
+              value: 494,
+            },
+            {
+              year: 2016,
+              value: 502,
+            },
+            {
+              year: 2017,
+              value: 556,
+            },
+            {
+              year: 2018,
+              value: 613,
+            },
+            {
+              year: 2019,
+              value: 656,
+            },
+            {
+              year: 2020,
+              value: 767,
+            },
+            {
+              year: 2021,
+              value: 804,
+            },
+            {
+              year: 2022,
+              value: 861,
+            },
+            {
+              year: 2023,
+              value: 943,
+            },
+            {
+              year: 2024,
+              value: 1034,
+            },
+          ],
+          note: 'The only expense line that rose in every single year, up 160%. Reflects capitalised software and acquired intangibles from Tink, Currencycloud, Pismo and others.',
+        },
+        {
+          label: 'General & Administrative',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 451,
+            },
+            {
+              year: 2014,
+              value: 507,
+            },
+            {
+              year: 2015,
+              value: 547,
+            },
+            {
+              year: 2016,
+              value: 796,
+            },
+            {
+              year: 2017,
+              value: 1060,
+            },
+            {
+              year: 2018,
+              value: 1145,
+            },
+            {
+              year: 2019,
+              value: 1196,
+            },
+            {
+              year: 2020,
+              value: 1096,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 985,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1194,
+            },
+            {
+              year: 2023,
+              value: 1330,
+            },
+            {
+              year: 2024,
+              value: 1598,
+            },
+          ],
+          note: 'Grew 254%, faster than revenue. Fell in FY2020 and FY2021 on reduced travel and facilities.',
+        },
+        {
+          label: 'Litigation Provision',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 3,
+            },
+            {
+              year: 2014,
+              value: 453,
+            },
+            {
+              year: 2015,
+              value: 14,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 2,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 19,
+            },
+            {
+              year: 2018,
+              value: 607,
+            },
+            {
+              year: 2019,
+              value: 400,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 11,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 3,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 868,
+            },
+            {
+              year: 2023,
+              value: 927,
+            },
+            {
+              year: 2024,
+              value: 462,
+              down: true,
+            },
+          ],
+          note: 'THE MOST VOLATILE LINE BY FAR, ranging from $2m to $927m. Spikes in FY2014 ($453m), FY2018 ($607m), FY2022 ($868m) and FY2023 ($927m). It is 3.7% of operating expenses in FY2024 but was 8.0% in FY2023. Read it with the retrospective responsibility plans \u2014 provisions for COVERED matters are later absorbed by escrow or by preferred stock conversion, so this line overstates the ultimate cost to Class A holders.',
+        },
+        {
+          label: 'Visa Europe framework charge FY2016 \u2014 DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2016,
+              value: 1877,
+            },
+          ],
+          note: 'DERIVED, NOT SUPPLIED. The seven disclosed expense lines sum to $5,322m in FY2016 against stated total operating expenses of $7,199m \u2014 a gap of $1,877m, or 26.1%. The source\u2019s own percentage-of-opex table for FY2016 sums to 74.0%, leaving exactly the same 26% unexplained. This is the Visa Europe framework agreement charge, and it is why FY2016 operating margin collapsed to 52.27% from 65.30%. Every other year reconciles exactly.',
+        },
+      ],
+      operatingProfit: {
+        label: 'Operating Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 7239,
+          },
+          {
+            year: 2014,
+            value: 7697,
+          },
+          {
+            year: 2015,
+            value: 9064,
+          },
+          {
+            year: 2016,
+            value: 7883,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 12144,
+          },
+          {
+            year: 2018,
+            value: 12954,
+          },
+          {
+            year: 2019,
+            value: 15001,
+          },
+          {
+            year: 2020,
+            value: 14081,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 15804,
+          },
+          {
+            year: 2022,
+            value: 18813,
+          },
+          {
+            year: 2023,
+            value: 21000,
+          },
+          {
+            year: 2024,
+            value: 23595,
+          },
+        ],
+        note: 'Net revenue less total operating expenses; reconciles in all twelve years. Grew 226%.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 61.46,
+          },
+          {
+            year: 2014,
+            value: 60.6,
+          },
+          {
+            year: 2015,
+            value: 65.3,
+          },
+          {
+            year: 2016,
+            value: 52.27,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 66.15,
+          },
+          {
+            year: 2018,
+            value: 62.86,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 65.29,
+          },
+          {
+            year: 2020,
+            value: 64.46,
+          },
+          {
+            year: 2021,
+            value: 65.56,
+          },
+          {
+            year: 2022,
+            value: 64.19,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 64.31,
+          },
+          {
+            year: 2024,
+            value: 65.68,
+          },
+        ],
+        note: 'AN EXTRAORDINARY LEVEL AND REMARKABLY STABLE: 65.68% in FY2024, and between 60% and 67% in every year except FY2016. The FY2016 trough of 52.27% is entirely the Visa Europe charge above. NOTE: the source states 64.99% for FY2024, which is computed off the erroneous 35,226 revenue figure; on the correct 35,926 the margin is 65.68%. All eleven other years match the source exactly.',
+      },
+      provisionForTaxes: {
+        label: 'Income Tax Provision',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 2277,
+          },
+          {
+            year: 2014,
+            value: 2286,
+          },
+          {
+            year: 2015,
+            value: 2667,
+          },
+          {
+            year: 2016,
+            value: 2021,
+          },
+          {
+            year: 2017,
+            value: 4995,
+          },
+          {
+            year: 2018,
+            value: 2505,
+          },
+          {
+            year: 2019,
+            value: 2804,
+          },
+          {
+            year: 2020,
+            value: 2924,
+          },
+          {
+            year: 2021,
+            value: 3752,
+          },
+          {
+            year: 2022,
+            value: 3179,
+          },
+          {
+            year: 2023,
+            value: 3764,
+          },
+          {
+            year: 2024,
+            value: 4173,
+          },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 31.38,
+          },
+          {
+            year: 2014,
+            value: 29.6,
+          },
+          {
+            year: 2015,
+            value: 29.65,
+          },
+          {
+            year: 2016,
+            value: 25.22,
+          },
+          {
+            year: 2017,
+            value: 42.71,
+          },
+          {
+            year: 2018,
+            value: 19.56,
+          },
+          {
+            year: 2019,
+            value: 18.84,
+          },
+          {
+            year: 2020,
+            value: 21.2,
+          },
+          {
+            year: 2021,
+            value: 23.36,
+          },
+          {
+            year: 2022,
+            value: 17.53,
+          },
+          {
+            year: 2023,
+            value: 17.89,
+          },
+          {
+            year: 2024,
+            value: 17.45,
+          },
+        ],
+        note: 'FY2017 AT 42.71% IS THE OUTLIER \u2014 US tax reform, the same one-off that distorts Apple and Alphabet in FY2017. It is why FY2017 net income of $6,699m barely exceeded FY2016 despite operating income rising 54%. The rate has since settled near 17\u201318%, down from 31% in FY2013. Item 1A flags the global minimum tax and digital services taxes as risks to this.',
+      },
+      nopat: {
+        label: 'NOPAT \u2014 Net Operating Profit After Tax',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 4967,
+          },
+          {
+            year: 2014,
+            value: 5419,
+          },
+          {
+            year: 2015,
+            value: 6377,
+          },
+          {
+            year: 2016,
+            value: 5895,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 6957,
+          },
+          {
+            year: 2018,
+            value: 10420,
+          },
+          {
+            year: 2019,
+            value: 12175,
+          },
+          {
+            year: 2020,
+            value: 11096,
+          },
+          {
+            year: 2021,
+            value: 12112,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 15515,
+          },
+          {
+            year: 2023,
+            value: 17243,
+          },
+          {
+            year: 2024,
+            value: 19478,
+          },
+        ],
+        note: 'Operating income taxed at the effective rate. FY2017 is distorted by tax reform and should not be read as an operating result.',
+      },
+      netIncome: {
+        label: 'Net Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 4980,
+          },
+          {
+            year: 2014,
+            value: 5438,
+          },
+          {
+            year: 2015,
+            value: 6328,
+          },
+          {
+            year: 2016,
+            value: 5991,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 6699,
+          },
+          {
+            year: 2018,
+            value: 10301,
+          },
+          {
+            year: 2019,
+            value: 12080,
+          },
+          {
+            year: 2020,
+            value: 10866,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 12311,
+          },
+          {
+            year: 2022,
+            value: 14957,
+          },
+          {
+            year: 2023,
+            value: 17273,
+          },
+          {
+            year: 2024,
+            value: 19743,
+          },
+        ],
+        note: 'Grew 296% over eleven years \u2014 faster than revenue at 205% and operating income at 226%, because the tax rate halved. Two down years: FY2016 (Visa Europe charge) and FY2020.',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 42.28,
+          },
+          {
+            year: 2014,
+            value: 42.81,
+          },
+          {
+            year: 2015,
+            value: 45.59,
+          },
+          {
+            year: 2016,
+            value: 39.72,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 36.49,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 49.98,
+          },
+          {
+            year: 2019,
+            value: 52.57,
+          },
+          {
+            year: 2020,
+            value: 49.74,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 51.07,
+          },
+          {
+            year: 2022,
+            value: 51.03,
+          },
+          {
+            year: 2023,
+            value: 52.9,
+          },
+          {
+            year: 2024,
+            value: 54.95,
+          },
+        ],
+        note: '54.96% in FY2024. For every dollar of net revenue Visa keeps fifty-five cents after all costs and taxes \u2014 among the highest margins of any large company anywhere, and a direct consequence of taking no credit risk and holding no inventory.',
+      },
+      eps: {
+        label: 'Diluted EPS \u2014 Class A',
+        unit: 'USD',
+        series: [
+          {
+            year: 2013,
+            value: 1.9,
+          },
+          {
+            year: 2014,
+            value: 2.16,
+          },
+          {
+            year: 2015,
+            value: 2.58,
+          },
+          {
+            year: 2016,
+            value: 2.48,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 2.8,
+          },
+          {
+            year: 2018,
+            value: 4.42,
+          },
+          {
+            year: 2019,
+            value: 5.32,
+          },
+          {
+            year: 2020,
+            value: 4.89,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 5.63,
+          },
+          {
+            year: 2022,
+            value: 7.0,
+          },
+          {
+            year: 2023,
+            value: 8.28,
+          },
+          {
+            year: 2024,
+            value: 9.73,
+          },
+        ],
+        note: 'Grew 412% against 296% net income growth, because the Class A diluted count fell 22.7% from 2,624m to 2,029m. Buybacks contributed roughly a quarter of the EPS growth.',
+      },
+      extraLines: [
+        {
+          label: 'Service Revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 5352,
+            },
+            {
+              year: 2014,
+              value: 5797,
+            },
+            {
+              year: 2015,
+              value: 6302,
+            },
+            {
+              year: 2016,
+              value: 6747,
+            },
+            {
+              year: 2017,
+              value: 7975,
+            },
+            {
+              year: 2018,
+              value: 8918,
+            },
+            {
+              year: 2019,
+              value: 9700,
+            },
+            {
+              year: 2020,
+              value: 9804,
+            },
+            {
+              year: 2021,
+              value: 11475,
+            },
+            {
+              year: 2022,
+              value: 13361,
+            },
+            {
+              year: 2023,
+              value: 14826,
+            },
+            {
+              year: 2024,
+              value: 16114,
+            },
+          ],
+          note: 'Fees on the DOLLAR VALUE of payments \u2014 assessment fees charged to issuers for the scale of spend. Rose every year, up 201%. This is the ad valorem line, so it tracks nominal volume and benefits from inflation.',
+        },
+        {
+          label: 'Data Processing Revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 4642,
+            },
+            {
+              year: 2014,
+              value: 5167,
+            },
+            {
+              year: 2015,
+              value: 5552,
+            },
+            {
+              year: 2016,
+              value: 6272,
+            },
+            {
+              year: 2017,
+              value: 7786,
+            },
+            {
+              year: 2018,
+              value: 9027,
+            },
+            {
+              year: 2019,
+              value: 10333,
+            },
+            {
+              year: 2020,
+              value: 10975,
+            },
+            {
+              year: 2021,
+              value: 12792,
+            },
+            {
+              year: 2022,
+              value: 14438,
+            },
+            {
+              year: 2023,
+              value: 16007,
+            },
+            {
+              year: 2024,
+              value: 17714,
+            },
+          ],
+          note: 'PER-TRANSACTION fees for authorisation, clearing, settlement and network access. Up 282%, the fastest of the three core lines, and it OVERTOOK service revenue in FY2020. That matters: the mix is shifting from value-based to volume-based fees, which is the opposite exposure to the one the competitive scoreboard implies, and a partial hedge against ad valorem interchange caps.',
+        },
+        {
+          label: 'International Transaction Revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 3389,
+            },
+            {
+              year: 2014,
+              value: 3560,
+            },
+            {
+              year: 2015,
+              value: 4064,
+            },
+            {
+              year: 2016,
+              value: 4649,
+            },
+            {
+              year: 2017,
+              value: 6321,
+            },
+            {
+              year: 2018,
+              value: 7211,
+            },
+            {
+              year: 2019,
+              value: 7804,
+            },
+            {
+              year: 2020,
+              value: 6299,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 6530,
+            },
+            {
+              year: 2022,
+              value: 9815,
+            },
+            {
+              year: 2023,
+              value: 11638,
+            },
+            {
+              year: 2024,
+              value: 12665,
+            },
+          ],
+          note: 'Cross-border and currency conversion fees \u2014 the highest-yield revenue Visa earns. FELL 19.3% IN FY2020 as travel stopped, the only revenue line to decline, and did not regain its FY2019 level until FY2022. This is the cyclical line and the one most exposed to geopolitics.',
+        },
+        {
+          label: 'Other Revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 716,
+            },
+            {
+              year: 2014,
+              value: 770,
+            },
+            {
+              year: 2015,
+              value: 823,
+            },
+            {
+              year: 2016,
+              value: 823,
+            },
+            {
+              year: 2017,
+              value: 841,
+            },
+            {
+              year: 2018,
+              value: 944,
+            },
+            {
+              year: 2019,
+              value: 1313,
+            },
+            {
+              year: 2020,
+              value: 1432,
+            },
+            {
+              year: 2021,
+              value: 1675,
+            },
+            {
+              year: 2022,
+              value: 1991,
+            },
+            {
+              year: 2023,
+              value: 2479,
+            },
+            {
+              year: 2024,
+              value: 3197,
+            },
+          ],
+          note: 'Value-added services, licensing and account holder services. Up 347% \u2014 the fastest-growing line in the statement, from 6.1% to 8.9% of net revenue. Note this is NOT the whole of value-added services: the leadership disclosure describes VAS as a $9bn business, so most of it is recognised inside the other revenue lines rather than here.',
+        },
+        {
+          label: 'CLIENT INCENTIVES \u2014 contra-revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: -2321,
+            },
+            {
+              year: 2014,
+              value: -2592,
+            },
+            {
+              year: 2015,
+              value: -2861,
+            },
+            {
+              year: 2016,
+              value: -3409,
+            },
+            {
+              year: 2017,
+              value: -4565,
+            },
+            {
+              year: 2018,
+              value: -5491,
+            },
+            {
+              year: 2019,
+              value: -6173,
+            },
+            {
+              year: 2020,
+              value: -6664,
+            },
+            {
+              year: 2021,
+              value: -8367,
+            },
+            {
+              year: 2022,
+              value: -10295,
+            },
+            {
+              year: 2023,
+              value: -12297,
+            },
+            {
+              year: 2024,
+              value: -13764,
+            },
+          ],
+          note: 'THE MOST IMPORTANT LINE IN THIS STATEMENT AND THE ONE MOST OFTEN MISSED. Rebates, discounts, marketing funds and performance incentives paid to issuers, acquirers and merchants \u2014 netted AGAINST revenue rather than shown as an expense. It grew 493% over eleven years against 205% net revenue growth, rising from 19.7% to 38.3% of net revenue. Visa now hands back more than a third of what it collects. This is price competition made visible, and it sits above the operating margin line so it never appears as cost inflation.',
+        },
+        {
+          label: 'Gross Revenue before incentives \u2014 derived',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 14099,
+            },
+            {
+              year: 2014,
+              value: 15294,
+            },
+            {
+              year: 2015,
+              value: 16741,
+            },
+            {
+              year: 2016,
+              value: 18491,
+            },
+            {
+              year: 2017,
+              value: 22923,
+            },
+            {
+              year: 2018,
+              value: 26100,
+            },
+            {
+              year: 2019,
+              value: 29150,
+            },
+            {
+              year: 2020,
+              value: 28510,
+            },
+            {
+              year: 2021,
+              value: 32472,
+            },
+            {
+              year: 2022,
+              value: 39605,
+            },
+            {
+              year: 2023,
+              value: 44950,
+            },
+            {
+              year: 2024,
+              value: 49690,
+            },
+          ],
+          note: 'Service plus data processing plus international plus other, before client incentives. $49,690m in FY2024 against $35,926m of net revenue.',
+        },
+        {
+          label: 'Client incentives as % of gross revenue \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2013,
+              value: 16.46,
+            },
+            {
+              year: 2014,
+              value: 16.95,
+            },
+            {
+              year: 2015,
+              value: 17.09,
+            },
+            {
+              year: 2016,
+              value: 18.44,
+            },
+            {
+              year: 2017,
+              value: 19.91,
+            },
+            {
+              year: 2018,
+              value: 21.04,
+            },
+            {
+              year: 2019,
+              value: 21.18,
+            },
+            {
+              year: 2020,
+              value: 23.37,
+            },
+            {
+              year: 2021,
+              value: 25.77,
+            },
+            {
+              year: 2022,
+              value: 25.99,
+            },
+            {
+              year: 2023,
+              value: 27.36,
+            },
+            {
+              year: 2024,
+              value: 27.7,
+            },
+          ],
+          note: 'From 16.5% to 27.7%. On a net-revenue basis the same line reads 19.7% to 38.3%. Either way the trend is one direction, and it is the clearest quantification of the pricing pressure described in the business risk factors.',
+        },
+        {
+          label: 'Net Revenue \u2014 United States',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 6379,
+            },
+            {
+              year: 2014,
+              value: 6847,
+            },
+            {
+              year: 2015,
+              value: 7406,
+            },
+            {
+              year: 2016,
+              value: 7851,
+            },
+            {
+              year: 2017,
+              value: 8704,
+            },
+            {
+              year: 2018,
+              value: 9332,
+            },
+            {
+              year: 2019,
+              value: 10279,
+            },
+            {
+              year: 2020,
+              value: 10125,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 11160,
+            },
+            {
+              year: 2022,
+              value: 12851,
+            },
+            {
+              year: 2023,
+              value: 14138,
+            },
+            {
+              year: 2024,
+              value: 14780,
+            },
+          ],
+          note: '41.1% of net revenue in FY2024, down from 54.2% in FY2013.',
+        },
+        {
+          label: 'Net Revenue \u2014 International',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 5177,
+            },
+            {
+              year: 2014,
+              value: 5629,
+            },
+            {
+              year: 2015,
+              value: 6219,
+            },
+            {
+              year: 2016,
+              value: 7040,
+            },
+            {
+              year: 2017,
+              value: 9654,
+            },
+            {
+              year: 2018,
+              value: 11277,
+            },
+            {
+              year: 2019,
+              value: 12698,
+            },
+            {
+              year: 2020,
+              value: 11721,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 12945,
+            },
+            {
+              year: 2022,
+              value: 16459,
+            },
+            {
+              year: 2023,
+              value: 18515,
+            },
+            {
+              year: 2024,
+              value: 21146,
+            },
+          ],
+          note: '58.9% of net revenue and rising. NOTE FY2016 DOES NOT RECONCILE: US $7,851m plus international $7,040m is $14,891m against $15,082m of net revenue, leaving $191m unallocated \u2014 the source\u2019s own percentage table for FY2016 sums to 98.8% for the same reason. Visa Europe closed partway through that year.',
+        },
+        {
+          label: 'Net Revenue \u2014 Europe (separate reporting to FY2015)',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 222,
+            },
+            {
+              year: 2014,
+              value: 226,
+            },
+            {
+              year: 2015,
+              value: 255,
+            },
+          ],
+          note: 'Reported separately only through FY2015 at around 1.8% of revenue, then absorbed. Not chainable to the international line.',
+        },
+        {
+          label: 'Interest Expense',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2016,
+              value: -427,
+            },
+            {
+              year: 2017,
+              value: -563,
+            },
+            {
+              year: 2018,
+              value: -612,
+            },
+            {
+              year: 2019,
+              value: -533,
+            },
+            {
+              year: 2020,
+              value: -516,
+            },
+            {
+              year: 2021,
+              value: -513,
+            },
+            {
+              year: 2022,
+              value: -538,
+            },
+            {
+              year: 2023,
+              value: -644,
+            },
+            {
+              year: 2024,
+              value: -641,
+            },
+          ],
+          note: 'Disclosed only from FY2016. Broadly flat at $500\u2013650m.',
+        },
+        {
+          label: 'Investment Income (Expense) and Other',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2016,
+              value: 556,
+            },
+            {
+              year: 2017,
+              value: 113,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 464,
+            },
+            {
+              year: 2019,
+              value: 416,
+            },
+            {
+              year: 2020,
+              value: 225,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 772,
+            },
+            {
+              year: 2022,
+              value: -139,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 681,
+            },
+            {
+              year: 2024,
+              value: 962,
+            },
+          ],
+          note: 'Volatile, swinging from $(139)m in FY2022 to $962m in FY2024. Disclosed from FY2016.',
+        },
+        {
+          label: 'Total Non-Operating Income (Expense)',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 18,
+            },
+            {
+              year: 2014,
+              value: 27,
+            },
+            {
+              year: 2015,
+              value: -69,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 129,
+            },
+            {
+              year: 2017,
+              value: -450,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: -148,
+            },
+            {
+              year: 2019,
+              value: -117,
+            },
+            {
+              year: 2020,
+              value: -291,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 259,
+            },
+            {
+              year: 2022,
+              value: -677,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 37,
+            },
+            {
+              year: 2024,
+              value: 321,
+            },
+          ],
+          note: 'Interest expense plus investment income; reconciles in all nine years where components exist. Small relative to operating income \u2014 at most 3.7% of pre-tax profit.',
+        },
+        {
+          label: 'Diluted EPS \u2014 Class C',
+          unit: 'USD',
+          series: [
+            {
+              year: 2013,
+              value: 7.61,
+            },
+            {
+              year: 2014,
+              value: 8.65,
+            },
+            {
+              year: 2015,
+              value: 10.33,
+            },
+            {
+              year: 2016,
+              value: 9.94,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 11.21,
+            },
+            {
+              year: 2018,
+              value: 17.72,
+            },
+            {
+              year: 2019,
+              value: 21.3,
+            },
+            {
+              year: 2020,
+              value: 19.58,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 22.53,
+            },
+            {
+              year: 2022,
+              value: 28.03,
+            },
+            {
+              year: 2023,
+              value: 33.17,
+            },
+            {
+              year: 2024,
+              value: 38.97,
+            },
+          ],
+          note: 'Class C earnings per share run at almost exactly FOUR TIMES Class A \u2014 $38.97 against $9.73 in FY2024, a ratio of 4.005 \u2014 which reveals the Class C conversion rate into Class A. FY2024 also shows Class B-1 basic EPS of $15.46 and Class B-2 of $15.45, implying a B conversion rate of about 1.59. Those two classes were reported combined as "Class B" before FY2023.',
+        },
+        {
+          label: 'Diluted Weighted-Average Shares \u2014 Class A',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2013,
+              value: 2624,
+            },
+            {
+              year: 2014,
+              value: 2523,
+              down: true,
+            },
+            {
+              year: 2015,
+              value: 2457,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 2414,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 2395,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 2329,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 2272,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 2223,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 2188,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 2136,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 2085,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 2029,
+              down: true,
+            },
+          ],
+          note: 'FELL IN EVERY SINGLE YEAR, from 2,624m to 2,029m \u2014 down 22.7% over eleven years. Sustained buybacks, and the mechanism the US retrospective responsibility plan mimics when escrow deposits reduce the Class B conversion rate. BUT SEE THE OWNERSHIP TAB: this count is not permanently shrinking. Class B-1 and B-2 convert into Class A when the US covered litigation resolves, and the Series B and C preferred convert by 2028 at the latest.',
+        },
+      ],
+    },
   },
   moat: {
     preamble: 'Visa\u2019s moat is a two-sided network where neither side can defect alone: 4.6 billion credentials on one side, more than 150 million merchant locations on the other, and an issuer economics model that pays banks to keep issuing. What makes it unusually durable is that Visa takes no credit risk and holds no receivable \u2014 it is a toll on the nominal value of commerce, so inflation passes through it. What makes it assailable is that the toll is set partly by regulators, and that account-to-account rails can move money without touching a card at all.',
@@ -35835,7 +37609,7 @@ const COVERAGE_DATA = [
   { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: CNI_BREAKDOWN },
 
   // === FINANCIAL SERVICES · USA ===
-  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 2, progress: 'research' },
+  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null , locked: true, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
