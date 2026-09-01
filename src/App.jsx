@@ -32832,6 +32832,207 @@ const V_BREAKDOWN = {
       ],
       keyTakeaway: 'Do not model per-share figures off a stable Class A count. Two separate conversion streams increase it: the Class B classes on final resolution of US covered litigation, on no timetable at all, and the Series B and C preferred by 2028 at the latest. Both dilute voting, and subsequent sales of converted stock could pressure the Class A price. The structure exists for a defensible reason \u2014 it makes the banks that benefited from interchange bear the cost of litigating it \u2014 but for a Class A holder it is an overhang with an unknowable clock, and it does not clear until the litigation does.',
     },
+    leadership: {
+      asOf: 'Board of directors and executive leadership as disclosed',
+      executives: [
+        {
+          name: 'Ryan McInerney',
+          featured: true,
+          tenureYears: 12,
+          since: 'Joined June 2013 \u00b7 CEO Feb 2023',
+          role: 'Chief Executive Officer \u00b7 previously President, responsible for Visa\u2019s global businesses \u00b7 before Visa, CEO of consumer banking at JPMorgan Chase, a business with 75,000+ employees and roughly $14bn of revenue, plus COO of Home Lending and consumer Chief Risk Officer \u00b7 earlier a principal at McKinsey in retail banking and payments \u00b7 BS Finance, Notre Dame',
+        },
+        {
+          name: 'Chris Suh',
+          featured: true,
+          tenureYears: 2,
+          since: 'Joined July 2023',
+          role: 'Chief Financial Officer \u00b7 oversees financial strategy, planning, reporting, finance operations and investor relations \u00b7 joined from ELECTRONIC ARTS where he was CFO \u00b7 at Microsoft 1996\u20132022 including CFO of the CLOUD + AI division 2018\u201322 and Head of Investor Relations 2013\u201318 \u00b7 PwC 1992\u201396 \u00b7 BA Accounting and Finance and MBA, University of Washington \u00b7 THE SHORTEST TENURE ON THE TEAM at two years, and an outside hire \u2014 a cloud-economics CFO for a company selling software services',
+        },
+        {
+          name: 'Rajat Taneja',
+          featured: true,
+          tenureYears: 11,
+          since: 'Joined November 2013',
+          role: 'President, Technology \u00b7 responsible for technology innovation and investment strategy, product engineering, global IT and operations infrastructure \u00b7 THE CISO REPORTS TO HIM, per Item 1C, and he has held this seat since 2013 \u00b7 previously EVP and CTO of Electronic Arts 2011\u201313 \u00b7 at Microsoft 1996\u20132011, latterly Corporate VP of the Commerce Division and GM and Corporate VP of Online Services \u00b7 currently a director of MSCI; formerly Ellie Mae \u00b7 BE Electrical Engineering, Jadavpur; MBA Washington State',
+        },
+        {
+          name: 'Jack Forestell',
+          featured: true,
+          tenureYears: 11,
+          since: 'Joined 2014',
+          role: 'Chief Product and Strategy Officer \u2014 Visa\u2019s FIRST in that combined role \u00b7 owns the product roadmap across fintechs, sellers, financial institutions, governments and consumers \u00b7 previously Group President of Value-Added Services, Global Head of Merchant & Acquirer Solutions, and Global Head of Products and Solutions \u00b7 twelve years at CAPITAL ONE, most recently Head of Capital One Digital covering online and mobile banking, emerging payments and Capital One Labs, and before that five years running the US card portfolio \u00b7 earlier a senior partner at Mercer Management',
+        },
+        {
+          name: 'Oliver Jenkyn',
+          featured: true,
+          tenureYears: 15,
+          since: '~15 years at Visa',
+          role: 'Group President, Global Markets \u00b7 responsible for the business across 200+ countries, with the five Regional Presidents \u2014 North America, Europe, Asia Pacific, Latin America & Caribbean, and CEMEA \u2014 reporting to him, along with global merchant, client and digital partnership teams and global deal negotiations \u00b7 previously President of North America, led the new businesses (commercial, B2B, government and Visa Direct), and was Global Head of Strategy and M&A \u00b7 partner at McKinsey in San Francisco, New York and London, where HE LED THE FIRM\u2019S RELATIONSHIP WITH VISA AND PLAYED AN INTEGRAL ROLE IN THE IPO',
+        },
+        {
+          name: 'Antony Cahill',
+          featured: true,
+          tenureYears: 7,
+          since: 'Joined 2018',
+          role: 'Regional President and CEO, Visa Europe \u2014 all operations across the 38-market region \u00b7 FROM 2023 HE RAN GLOBAL VALUE-ADDED SERVICES, GROWING IT INTO A $9 BILLION BUSINESS WITH REVENUE GROWTH ABOVE 20% ANNUALLY across the 200+ product portfolio \u00b7 joined as Managing Director for Visa Europe, later Deputy CEO for the region \u00b7 more than twenty years in Australian financial services including COO of NAB and executive roles at ANZ \u00b7 MBA, Australian Graduate School of Management, UNSW; BSc Loughborough',
+        },
+        {
+          name: 'Paul Fabara',
+          featured: true,
+          tenureYears: 6,
+          since: 'Joined 2019',
+          role: 'Chief Risk and Client Services Officer \u00b7 leads global risk and client operations, maintains the integrity and security of the payment system, and IS THE PRINCIPAL LIAISON WITH REGULATORY AGENCIES \u2014 which given the regulation section is among the most consequential jobs here \u00b7 eight years at American Express, most recently President of the global services group and, notably, CHIEF RISK OFFICER \u00b7 earlier Global COO of Barclays\u2019 credit card business covering 71 countries, COO of Alliance Data Systems across 400+ private-label programmes, and began at Providian',
+        },
+        {
+          name: 'Chris Newkirk',
+          tenureYears: 5,
+          since: 'Joined June 2020',
+          role: 'President, Commercial & Money Movement Solutions \u2014 running both Visa Commercial Solutions and Visa Direct, so the entire new-flows agenda sits with him \u00b7 joined as Chief Strategy Officer, leading growth strategy and overseeing regional product, cross-border, interchange and pricing, and establishing the Visa Garage \u00b7 twelve years at Capital One, latterly President of small business, international and the Walmart partnership with full P&L across six lines of business in the US, UK and Canada \u00b7 earlier IndyMac and McKinsey \u00b7 Yale; JD magna cum laude, Harvard Law',
+        },
+        {
+          name: 'Andrew Torre',
+          tenureYears: 23,
+          since: 'Joined 2002',
+          role: 'President, Value-Added Services \u2014 the global suite Cahill built \u00b7 THE LONGEST-SERVING EXECUTIVE AT 23 YEARS \u00b7 previously Regional President of CEMEA, driving the transformation of operations across 86 countries and territories, and before that led business operations in RUSSIA and Sub-Saharan Africa \u2014 direct experience of the market Visa subsequently exited \u00b7 global roles in product, strategy and pricing \u00b7 earlier GM of Enterprise Payments at BankServ, VP at Washington Mutual, and the World Bank in Kyiv, Moscow and the CIS \u00b7 MA Johns Hopkins',
+        },
+        {
+          name: 'Julie B. Rottenberg',
+          tenureYears: 17,
+          since: 'Joined 2008',
+          role: 'EVP, General Counsel \u00b7 oversees global legal and compliance including litigation, regulatory, commercial agreements and M&A \u00b7 joined VISA\u2019S LITIGATION TEAM in 2008 and most recently was Deputy General Counsel and Chief Counsel for North America \u00b7 before Visa a partner specialising in LITIGATION AND ANTITRUST at Arnold & Porter \u00b7 clerked on the Ninth Circuit and in the Western District of Virginia \u00b7 JD with highest honours, George Washington \u00b7 Seventeen years inside the interchange litigation is exactly the background this role requires',
+        },
+        {
+          name: 'Kelly Mahon Tullier',
+          tenureYears: null,
+          since: 'Previously EVP & General Counsel',
+          role: 'Vice Chair, Chief People and Corporate Affairs Officer, and Corporate Secretary \u00b7 leads people, communications, government engagement, inclusive impact and sustainability, transformation and corporate services including real estate, aviation, security and global events \u00b7 chair of the Visa Foundation \u00b7 previously EVP and General Counsel of Visa \u00b7 almost twenty years at PepsiCo including SVP and Deputy General Counsel and GC for Asia Pacific, Middle East and Africa based in Dubai, plus GC of Frito-Lay \u00b7 earlier Baker Botts and a federal clerkship \u00b7 JD magna cum laude, Cornell',
+        },
+        {
+          name: 'Frank Cooper III',
+          tenureYears: null,
+          since: 'Chief Marketing Officer',
+          role: 'Chief Marketing Officer \u00b7 all marketing across consumer, B2B and client, spanning brand, data and insights, social and digital, content and sponsorships \u00b7 five years as Global CMO of BLACKROCK \u00b7 previously Chief Marketing and Creative Officer at BuzzFeed and twelve-plus years at PepsiCo as CMO of Global Consumer Engagement \u00b7 began as an entertainment lawyer and was a senior executive at MOTOWN and DEF JAM \u00b7 former Chairman of the American Advertising Federation \u00b7 JD Harvard Law, where he was Supreme Court Editor of the Harvard Law Review',
+        },
+      ],
+      board: [
+        {
+          name: 'John F. Lundgren',
+          category: 'BOARD CHAIR \u00b7 Independent',
+          role: 'Chair of the Visa board, and Chairman of Topgolf Callaway Brands \u00b7 CEO and Chairman of Stanley Black & Decker 2010\u20132016, having been Chairman and CEO of The Stanley Works 2004\u20132010 and led the merger that created it \u00b7 earlier President, European Consumer Products at Georgia-Pacific, James River and Fort James \u00b7 BA Dartmouth, MBA Stanford \u00b7 Brings M&A and post-merger integration, global industrial operations and long-cycle capital allocation \u00b7 THE CHAIR AND CEO ROLES ARE SEPARATE, which is the governance point',
+        },
+        {
+          name: 'Ryan McInerney',
+          category: 'CEO \u00b7 the only insider',
+          role: 'Chief Executive Officer since February 2023, at Visa since June 2013, previously President responsible for the global businesses \u00b7 before Visa, CEO of consumer banking at JPMorgan Chase \u2014 a business with more than 75,000 employees and roughly $14bn of revenue \u2014 plus COO of Home Lending and Chief Risk Officer for the consumer businesses \u00b7 earlier a principal at McKinsey in retail banking and payments \u00b7 BS Finance, Notre Dame \u00b7 The one non-independent director on a twelve-person board',
+        },
+        {
+          name: 'William (Bill) Ready',
+          category: 'Independent \u00b7 THE PAYMENTS OPERATOR',
+          role: 'CEO of Pinterest since June 2022 \u00b7 THE MOST INTERESTING SEAT ON THIS BOARD. President of Commerce, Payments and Next Billion Users at Google 2020\u201322, running Shopping and GOOGLE PAY \u00b7 before that EVP and COO of PayPal 2016\u201319 and Global Head of Product & Engineering \u00b7 and before that CEO of BRAINTREE 2011\u201313, continuing to lead Braintree and VENMO after PayPal acquired it \u00b7 also a director of Williams-Sonoma \u00b7 MBA Harvard \u00b7 He has personally run PayPal, Venmo and Google Pay \u2014 three of the wallet and P2P platforms that either ride on or route around Visa\u2019s rails. Nobody on the board understands the disintermediation question better, and nobody has a more complicated relationship with it',
+        },
+        {
+          name: 'Teri L. List',
+          category: 'Independent \u00b7 three-time public CFO',
+          role: 'EVP and CFO of Gap until retiring in June 2020, and previously CFO of Dick\u2019s Sporting Goods and of Kraft Foods Group \u00b7 nearly two decades at Procter & Gamble in finance, ending as SVP and Treasurer \u00b7 about ten years at Deloitte before that \u00b7 CPA \u00b7 CURRENTLY ON THE BOARDS OF DANAHER, MICROSOFT AND LULULEMON \u00b7 Capital allocation, M&A integration, treasury and controls \u2014 the natural audit committee profile, and three CFO seats is unusual depth',
+        },
+        {
+          name: 'Pamela Murphy',
+          category: 'Independent \u00b7 cybersecurity',
+          role: 'CEO of IMPERVA, a global cybersecurity software and services provider, 2020 to July 2024 \u00b7 previously COO of Infor 2011\u201319 after serving as SVP Corporate Operations, scaling a large enterprise software and SaaS business \u00b7 about ten years at Oracle across finance, global sales operations and EMEA consulting \u00b7 began at Arthur Andersen in audit \u00b7 Fellow Chartered Accountant (Ireland) \u00b7 currently a director of Rockwell Automation \u00b7 A sitting cybersecurity CEO on the board of a company whose Audit and Risk Committee owns cyber oversight is a genuine capability match, not a box-tick',
+        },
+        {
+          name: 'Ramon Laguarta',
+          category: 'Independent \u00b7 sitting Fortune 500 CEO',
+          role: 'Chairman and CEO of PEPSICO \u2014 CEO since October 2018, Chairman since February 2019 \u00b7 a full PepsiCo career: President 2017\u201318, CEO of Europe & Sub-Saharan Africa, CEO of PepsiCo Europe, President of Developing & Emerging Markets, and commercial roles from 1996 \u00b7 before that Chupa Chups across Asia, Europe, the Middle East and the US \u00b7 Co-Chair of the World Economic Forum Food Systems Initiative \u00b7 MBA ESADE \u00b7 Global P&L and emerging-markets growth \u2014 and a direct line into how a very large merchant thinks about acceptance cost',
+        },
+        {
+          name: 'Linda J. Rendle',
+          category: 'Independent \u00b7 sitting Fortune 500 CEO',
+          role: 'Chair and CEO of THE CLOROX COMPANY \u2014 CEO since September 2020, Chair since January 2024 \u00b7 more than twenty years at Clorox across P&L and enterprise roles including President, EVP Cleaning International Strategy & Operations, and general management of Cleaning and Professional Products \u00b7 started in sales in 2003 \u00b7 earlier Procter & Gamble sales management \u00b7 BA Economics, Harvard \u00b7 Brand and category leadership, supply chain resilience, and turnaround experience through disruption',
+        },
+        {
+          name: 'Denise M. Morrison',
+          category: 'Independent \u00b7 former CEO',
+          role: 'Founder of Denise Morrison & Associates \u00b7 President and CEO of CAMPBELL SOUP 2011\u20132018, having joined in 2003 \u00b7 earlier senior leadership at Kraft and Nabisco, plus Procter & Gamble, PepsiCo and Nestl\u00e9 \u00b7 also a director of MetLife and Quest Diagnostics \u00b7 holds a CERT cybersecurity certificate from Carnegie Mellon \u00b7 Fortune Most Powerful Women 2012\u20132018 \u00b7 General management, governance and human capital, with formal cyber oversight credentials',
+        },
+        {
+          name: 'Maynard G. Webb Jr.',
+          category: 'Independent \u00b7 marketplaces and scale operations',
+          role: 'Founder of Webb Investment Network, an early-stage venture firm, since 2010 \u00b7 Chairman 2008\u201313 and CEO 2006\u201311 of LiveOps \u00b7 COO OF EBAY 2002\u201306 and President of eBay Technologies 1999\u20132002 \u2014 which is direct exposure to marketplaces and payments adjacencies \u00b7 earlier SVP and CIO at Gateway and VP and CIO at Bay Networks \u00b7 currently a director of Salesforce and AppLovin; former Chairman of Yahoo through 2017 \u00b7 Scale operations from the COO and CIO seat',
+        },
+        {
+          name: 'Lloyd A. Carney',
+          category: 'Independent \u00b7 enterprise technology',
+          role: 'Chairman and CEO of Carney Global Ventures since 2007 \u00b7 also Ambassador and Special Investment Envoy for Technology for Jamaica since 2023, and Chancellor of the University of Technology, Jamaica since 2022 \u00b7 CEO of Brocade Communications 2013\u201317 through its sale to Broadcom, of Xsigo Systems 2008\u201312, and CEO and Chair of Micromuse 2003\u201306 through its sale to IBM \u00b7 senior roles at Juniper Networks, Nortel and Bay Networks \u00b7 Chair of Grid Dynamics and director of Vertex Pharmaceuticals \u00b7 BS Electrical Engineering Technology plus two honorary doctorates \u00b7 Three CEO exits gives real M&A and networking-infrastructure depth',
+        },
+        {
+          name: 'Kermit R. Crawford',
+          category: 'Independent \u00b7 large-scale retail',
+          role: 'President and COO of Rite Aid 2017\u201319 \u00b7 operating partner at Sycamore Partners 2015\u201317 \u00b7 a thirty-one-year Walgreens career from 1983, rising to EVP and President of Pharmacy, Health & Wellness 2011\u201314 across a 13,000-location estate \u00b7 currently a director of C.H. Robinson Worldwide and Allstate; formerly TransUnion \u00b7 BS Pharmacy, Texas Southern \u00b7 Retail operations at scale, supply chain and turnarounds \u2014 the merchant\u2019s view of acceptance cost',
+        },
+        {
+          name: 'Francisco J. Fern\u00e1ndez-Carbajal',
+          category: 'Independent \u00b7 LatAm banking',
+          role: 'CEO of Servicios Administrativos Contry since 2005, a private firm providing centralised administration and investment management \u00b7 at BBVA BANCOMER, Mexico\u2019s largest bank, as CEO of Corporate Development 2000\u201302, President 1999\u20132000 and CFO 1995\u201399, having joined in 1991 \u00b7 currently a director of CEMEX, and previously on several of Mexico\u2019s largest listed boards across food and beverage, retail, mining, airports and financial services \u00b7 MBA Harvard \u00b7 The only director with deep emerging-market ISSUER perspective, which matters given the Prosa acquisition and localisation pressure',
+        },
+      ],
+      boardTakeaways: {
+        title: 'Governance assessment \u00b7 board of directors',
+        verdict: 'Twelve directors, ELEVEN INDEPENDENT \u2014 91.7%, the highest independence ratio in this coverage library. The Chair and CEO roles are separate, and Ryan McInerney is the only insider. The composition is deliberate rather than decorative: five directors come from consumer, retail and CPG, which is the merchant\u2019s side of the network; four from technology and payments; two from banking and finance. A sitting cybersecurity CEO sits on a board whose Audit and Risk Committee owns cyber oversight, and a three-time public-company CFO who also sits on the Microsoft board covers the audit profile. The single most notable seat is Bill Ready, who has personally run Braintree, Venmo, PayPal and Google Pay. NOTE A DISCLOSURE GAP: the supplied material gives no ages and no board tenures, so refreshment and average tenure cannot be assessed at all \u2014 that is the one thing this board cannot be graded on.',
+        scores: [
+          {
+            label: 'Independence \u2014 11 of 12 (91.7%)',
+            rating: 'strong',
+          },
+          {
+            label: 'Chair and CEO roles separated',
+            rating: 'strong',
+          },
+          {
+            label: 'Payments and commerce expertise (Ready, Webb)',
+            rating: 'strong',
+          },
+          {
+            label: 'Cybersecurity expertise (Murphy, Morrison)',
+            rating: 'strong',
+          },
+          {
+            label: 'Financial expertise (List, Fern\u00e1ndez-Carbajal)',
+            rating: 'strong',
+          },
+          {
+            label: 'Merchant-side perspective \u2014 5 of 12 from retail and CPG',
+            rating: 'strong',
+          },
+          {
+            label: 'Sitting Fortune 500 CEOs on the board (Laguarta, Rendle)',
+            rating: 'moderate',
+          },
+          {
+            label: 'Emerging-market representation \u2014 1 of 12',
+            rating: 'moderate',
+          },
+          {
+            label: 'Regulatory and public-policy background \u2014 none disclosed',
+            rating: 'weak',
+          },
+          {
+            label: 'Board refreshment and tenure \u2014 NOT DISCLOSED in source',
+            rating: 'weak',
+          },
+        ],
+      },
+      executiveTakeaways: [
+        'THE VAS NUMBER IS THE MOST USEFUL FIGURE IN THIS DISCLOSURE. Antony Cahill\u2019s biography states that Value-Added Services grew into a $9 BILLION global business with revenue growth above 20% annually. Against roughly $36bn of FY2024 net revenue that is about 25% of Visa \u2014 a quarter of the company, growing at more than twice the corporate rate, and disclosed in an executive profile rather than a segment note.',
+        'AVERAGE EXECUTIVE TENURE IS ABOUT 10.9 YEARS where disclosed, ranging from Andrew Torre at 23 years to Chris Suh at 2. This is a promote-from-within team with targeted outside hires in exactly the two seats where outside perspective helps most: finance and risk.',
+        'THE RISK SEAT IS FILLED BY A FORMER AMERICAN EXPRESS CHIEF RISK OFFICER. Paul Fabara also serves as principal liaison with regulatory agencies \u2014 which, given that regulation is the defining risk in this filing, makes his the second most consequential job in the company after the CEO\u2019s.',
+        'THE GENERAL COUNSEL CAME UP THROUGH VISA\u2019S LITIGATION TEAM AND WAS AN ANTITRUST PARTNER AT ARNOLD & PORTER. Julie Rottenberg has spent seventeen years inside the interchange litigation that defines the capital structure. For a company whose share classes cannot simplify until that litigation resolves, this is the right background in the right chair.',
+        'PRIOR-EMPLOYER CONCENTRATION IS NOTABLE: three of twelve came from McKinsey (McInerney, Jenkyn, Newkirk), two from Capital One, two from Microsoft and two from PepsiCo. Oliver Jenkyn led McKinsey\u2019s Visa relationship and played an integral role in the IPO before joining. Consultant-heavy leadership can bring analytical rigour and can bring homogeneity of thinking; worth noting rather than judging.',
+        'THE NEW-FLOWS AGENDA SITS WITH ONE PERSON. Chris Newkirk runs both Visa Commercial Solutions and Visa Direct \u2014 the entire $200 trillion opportunity described in the strategy section reports to a single executive with five years at the company. That is either clear accountability or a concentration of execution risk, and the financials will eventually say which.',
+        'CFO CONTINUITY IS THE THING TO WATCH. Chris Suh arrived in July 2023 from Electronic Arts, having spent 26 years at Microsoft including as CFO of Cloud + AI. Two years in post is the shortest tenure among the named executives, and it coincides with the period in which value-added services became a quarter of revenue.',
+      ],
+    },
   },
   moat: {
     preamble: 'Visa\u2019s moat is a two-sided network where neither side can defect alone: 4.6 billion credentials on one side, more than 150 million merchant locations on the other, and an issuer economics model that pays banks to keep issuing. What makes it unusually durable is that Visa takes no credit risk and holds no receivable \u2014 it is a toll on the nominal value of commerce, so inflation passes through it. What makes it assailable is that the toll is set partly by regulators, and that account-to-account rails can move money without touching a card at all.',
