@@ -15706,6 +15706,507 @@ const COL_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// CAT_BREAKDOWN — Caterpillar Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied construction data drop — income statement,
+// balance sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// COST LINES: the source carries BOTH 'Cost of goods sold' and 'Cost of
+// revenue' with different values. Cost of revenue is the line that
+// reconciles to Total operating expenses in every year, so it drives
+// gross profit and inventory turns; the narrower COGS is carried as its
+// own line rather than discarded.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: D&A is not supplied; an implied series is derived as
+// EBITDA minus operating income and labelled as such.
+// Net PP&E jumps 56.6% in FY2025 ($10.12B -> $15.85B) after four flat
+// years — a structural break that needs explaining before FY2025 is
+// compared with prior years.
+// Cat Financial loan originations are carried in the cash flow tab.
+// ═════════════════════════════════════════════════════════════════
+const CAT_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:50970}, {year:2022,value:59430}, {year:2023,value:67060}, {year:2024,value:64810}, {year:2025,value:67590} ],
+        note: 'Revenue grew from $50.97B to $67.59B, up 32.6%, but the path is not a trend \u2014 it peaked at $67.06B in FY2023, fell to $64.81B in FY2024, and only just exceeded the FY2023 peak in FY2025. Three years of essentially flat revenue after one enormous step-up.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:37780}, {year:2022,value:43860}, {year:2023,value:45790}, {year:2024,value:43720}, {year:2025,value:48130} ],
+        note: 'Cost of revenue is the line that reconciles to total operating expenses in every year. It grew 27.4%, slower than the 32.6% revenue growth, which is why gross margin improved.'
+      },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:13190}, {year:2022,value:15570}, {year:2023,value:21270}, {year:2024,value:21090}, {year:2025,value:19460} ],
+        note: 'Gross profit grew from $13.19B to $19.46B, up 47.5% \u2014 nearly half again as fast as revenue.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:25.88}, {year:2022,value:26.2}, {year:2023,value:31.72}, {year:2024,value:32.54}, {year:2025,value:28.79} ],
+        note: 'Gross margin improved from 25.88% to 28.79%, peaking at 31.72% in FY2023. This is real pricing power in an industrial: Caterpillar raised prices faster than its input costs rose, and held most of it.'
+      },
+      opexLines: [
+        { label: 'Research & Development', unit: 'M USD', series: [ {year:2021,value:1690}, {year:2022,value:1810}, {year:2023,value:2110}, {year:2024,value:2110}, {year:2025,value:2150} ],
+          note: 'R&D grew from $1.69B to $2.15B, up 27.2%, and has been flat at $2.11B\u2013$2.15B for three years.'
+        },
+        { label: 'R&D as % of Revenue', unit: '%', series: [ {year:2021,value:3.32}, {year:2022,value:3.05}, {year:2023,value:3.15}, {year:2024,value:3.26}, {year:2025,value:3.18} ],
+          note: 'R&D fell from 3.32% of revenue to 3.18% \u2014 modest and stable, as you would expect from mature heavy equipment.'
+        },
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:3430}, {year:2022,value:4110}, {year:2023,value:5620}, {year:2024,value:5720}, {year:2025,value:5800} ],
+          note: 'SG&A grew 69.1%, from $3.43B to $5.80B \u2014 more than double the rate of revenue growth. The step-up arrived in FY2023 (+36.7% in one year) and has not been unwound.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:6.73}, {year:2022,value:6.92}, {year:2023,value:8.38}, {year:2024,value:8.83}, {year:2025,value:8.58} ],
+          note: 'SG&A rose from 6.73% of revenue to 8.58%. This is the main drag on operating margin and it is entirely self-inflicted.'
+        },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:4920}, {year:2022,value:5810}, {year:2023,value:7610}, {year:2024,value:7530}, {year:2025,value:7700} ] },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2021,value:-204}, {year:2022,value:-115}, {year:2023,value:-120}, {year:2024,value:-298}, {year:2025,value:-250} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:42700}, {year:2022,value:49670}, {year:2023,value:53390}, {year:2024,value:51250}, {year:2025,value:55830} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:8270}, {year:2022,value:9760}, {year:2023,value:13670}, {year:2024,value:13560}, {year:2025,value:11760} ],
+        note: 'Operating income peaked at $13.67B (FY2023) and has fallen in each of the two years since, to $11.76B \u2014 down 14.0% from the peak, in a year when revenue set a record. Costs, not demand.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:16.23}, {year:2022,value:16.42}, {year:2023,value:20.38}, {year:2024,value:20.92}, {year:2025,value:17.4} ],
+        note: 'Operating margin rose from 16.23% to 20.38% (FY2023) then fell to 17.40%. Still well above where it started, but the last two years have given back roughly three of the four points gained.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-488}, {year:2022,value:-443}, {year:2023,value:-511}, {year:2024,value:-512}, {year:2025,value:-502} ],
+        note: 'Interest expense is flat at $443M\u2013$512M across all five years \u2014 fixed-rate debt, essentially unchanged in size.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2021,value:124}, {year:2022,value:234}, {year:2023,value:155}, {year:2024,value:-29}, {year:2025,value:158} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:1740}, {year:2022,value:2070}, {year:2023,value:2780}, {year:2024,value:2630}, {year:2025,value:2770} ],
+        note: 'Tax expense of $2.77B in FY2025 on lower pre-tax income than FY2024 \u2014 the rate rose from 19.59% to 23.76%, costing roughly $490M relative to the prior year.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:21.15}, {year:2022,value:23.57}, {year:2023,value:21.21}, {year:2024,value:19.59}, {year:2025,value:23.76} ],
+        note: 'Ranged 19.59%\u201323.76%. The FY2025 rate is the highest of the period and contributed materially to the net income decline.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:6490}, {year:2022,value:6710}, {year:2023,value:10340}, {year:2024,value:10790}, {year:2025,value:8880} ],
+        note: 'Net income peaked at $10.79B (FY2024) and fell 17.7% to $8.88B in FY2025 \u2014 the largest single-year fall in the series, and it came in a record revenue year.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:12.73}, {year:2022,value:11.28}, {year:2023,value:15.41}, {year:2024,value:16.65}, {year:2025,value:13.14} ],
+        note: 'Net margin ran 11.28% to 16.65%, ending at 13.14%. The FY2025 fall reflects both the operating margin compression and a higher effective tax rate.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:10.81}, {year:2022,value:13.84}, {year:2023,value:21.21}, {year:2024,value:21.9}, {year:2025,value:19.06} ],
+        note: 'EPS grew from $10.81 to $19.06, up 76.3%, against 36.8% net income growth. The buyback supplies the difference. Note the FY2021 figure sits about 11% below net income \u00f7 shares; FY2022\u201325 reconcile within roughly 6%.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:535.89}, {year:2022,value:516.35}, {year:2023,value:499.38}, {year:2024,value:477.93}, {year:2025,value:465.29} ],
+        note: 'Share count fell from 535.89M to 465.29M, down 13.2%, and fell in every single year. This is a genuine, sustained reduction \u2014 not offset by issuance.'
+      },
+      extraLines: [
+        { label: 'Cost of Goods Sold \u2014 narrower than Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:35510}, {year:2022,value:41350}, {year:2023,value:42770}, {year:2024,value:40200}, {year:2025,value:44750} ],
+          note: 'The source carries a separate, narrower cost of goods sold figure that excludes roughly $2.3B\u2013$3.4B a year of costs included in cost of revenue. Both are retained. The wider figure is the one that ties to the statement.'
+        },
+        { label: 'Cost of Goods Sold as % of Revenue', unit: '%', series: [ {year:2021,value:69.67}, {year:2022,value:69.58}, {year:2023,value:63.78}, {year:2024,value:62.03}, {year:2025,value:66.21} ],
+          note: 'Narrow COGS fell from 69.67% of revenue to 66.21% \u2014 a 3.5-point improvement in manufacturing cost.'
+        },
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:10630}, {year:2022,value:11980}, {year:2023,value:15810}, {year:2024,value:15720}, {year:2025,value:13960} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:20.86}, {year:2022,value:20.16}, {year:2023,value:23.58}, {year:2024,value:24.26}, {year:2025,value:20.65} ],
+          note: 'EBITDA margin peaked at 23.58% (FY2023) and fell to 20.65%.'
+        },
+        { label: 'Implied D&A \u2014 EBITDA minus Operating Income', unit: 'M USD', series: [ {year:2021,value:2360}, {year:2022,value:2220}, {year:2023,value:2140}, {year:2024,value:2160}, {year:2025,value:2200} ],
+          note: 'D&A is not supplied, so this is derived as EBITDA minus operating income: $2.36B, $2.22B, $2.14B, $2.16B, $2.20B \u2014 remarkably flat, at roughly 3.3% of revenue.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:8240}, {year:2022,value:8770}, {year:2023,value:13110}, {year:2024,value:13420}, {year:2025,value:11650} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:8130}, {year:2022,value:9840}, {year:2023,value:13770}, {year:2024,value:13620}, {year:2025,value:11780} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:110}, {year:2022,value:-1070}, {year:2023,value:-660}, {year:2024,value:-200}, {year:2025,value:-130} ],
+          note: 'Unusual items swing from \u2212$110M to +$1.07B (FY2022) to +$660M (FY2023) \u2014 the FY2022 figure alone is 16% of that year\u2019s pre-tax income.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:127.43}, {year:2022,value:145.45}, {year:2023,value:132.21}, {year:2024,value:125.67}, {year:2025,value:132.43} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:80}, {year:2022,value:167}, {year:2023,value:494}, {year:2024,value:482}, {year:2025,value:416} ],
+          note: 'Interest income rose from $80M to a peak of $494M as rates rose against a growing cash balance, and now nearly offsets interest expense entirely \u2014 net interest cost fell from $408M to just $86M.'
+        },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-408}, {year:2022,value:-276}, {year:2023,value:-17}, {year:2024,value:-30}, {year:2025,value:-86} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2023,value:572}, {year:2024,value:164}, {year:2025,value:30} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:16.95}, {year:2022,value:22.03}, {year:2023,value:26.75}, {year:2024,value:26.48}, {year:2025,value:23.43} ],
+          note: 'Interest coverage rose from 16.9\u00d7 to 23.4\u00d7, peaking at 26.8\u00d7. Never a concern.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:8430}, {year:2022,value:6040}, {year:2023,value:6110}, {year:2024,value:6170}, {year:2025,value:9330} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:8660}, {year:2022,value:9100}, {year:2023,value:9560}, {year:2024,value:9520}, {year:2025,value:11220} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:14040}, {year:2022,value:16270}, {year:2023,value:16570}, {year:2024,value:16830}, {year:2025,value:18140} ],
+        note: 'Inventory grew from $14.04B to $18.14B, up 29.2%, and rose in every year including the two when revenue fell.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2021,value:2.69}, {year:2022,value:2.7}, {year:2023,value:2.76}, {year:2024,value:2.6}, {year:2025,value:2.65} ],
+        note: 'Inventory turns just 2.65\u00d7 a year, essentially unchanged from 2.69\u00d7 five years ago. Heavy equipment sits in the channel for months.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2021,value:135.69}, {year:2022,value:135.19}, {year:2023,value:132.25}, {year:2024,value:140.38}, {year:2025,value:137.74} ],
+        note: 'Days inventory of 137.7, up marginally from 135.6. Compare the supermarkets at roughly 30 days and Wesfarmers at 76 \u2014 this is the working capital cost of building machines.'
+      },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:43460}, {year:2022,value:43790}, {year:2023,value:46950}, {year:2024,value:45680}, {year:2025,value:52490} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:8800}, {year:2022,value:8750}, {year:2023,value:9250}, {year:2024,value:10120}, {year:2025,value:15850} ],
+        note: 'Net PP&E jumped from $10.12B to $15.85B in FY2025 \u2014 up 56.6%, or $5.73B, in a single year after four years of barely moving. That is by far the largest structural change in the Caterpillar balance sheet and it needs explaining before FY2025 is compared with anything prior.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:6320}, {year:2022,value:5290}, {year:2023,value:5310}, {year:2024,value:5240}, {year:2025,value:5320} ],
+        note: 'Goodwill fell from $6.32B to $5.29B in FY2022 and has been flat since.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:1040}, {year:2022,value:758}, {year:2023,value:564}, {year:2024,value:399}, {year:2025,value:241} ],
+        note: 'Other intangibles have amortised down steadily from $1.04B to $241M, down 76.8%.'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2021,value:1670}, {year:2022,value:2050}, {year:2023,value:2630}, {year:2024,value:3190}, {year:2025,value:2760} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:412}, {year:2022,value:471}, {year:2023,value:454}, {year:2024,value:432}, {year:2025,value:494} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:3680}, {year:2022,value:4200}, {year:2023,value:4880}, {year:2024,value:4830}, {year:2025,value:5520} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:82790}, {year:2022,value:81940}, {year:2023,value:87480}, {year:2024,value:87760}, {year:2025,value:98590} ],
+        note: 'Total assets grew from $82.79B to $98.59B, with $10.83B of the $15.80B increase arriving in FY2025 alone.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:8150}, {year:2022,value:8690}, {year:2023,value:7910}, {year:2024,value:7680}, {year:2025,value:8970} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:5570}, {year:2022,value:5950}, {year:2023,value:7060}, {year:2024,value:6920}, {year:2025,value:7370} ] },
+      shortTermDebt: { label: 'Short-Term Borrowings', unit: 'M USD', series: [ {year:2021,value:9}, {year:2022,value:3} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:45}, {year:2022,value:120}, {year:2023,value:1040}, {year:2024,value:46}, {year:2025,value:35} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:9670}, {year:2022,value:9440}, {year:2023,value:8510}, {year:2024,value:8500}, {year:2025,value:10580} ],
+        note: 'Long-term debt fell from $9.67B to $8.50B and then rose to $10.58B in FY2025 \u2014 the year of the PP&E step-up.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:9724}, {year:2022,value:9563}, {year:2023,value:9550}, {year:2024,value:8546}, {year:2025,value:10615} ],
+        note: 'Total debt of $10.62B against $13.96B of EBITDA. Modest for an industrial of this size.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:3910}, {year:2022,value:3250}, {year:2023,value:3330}, {year:2024,value:3580}, {year:2025,value:3750} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:66280}, {year:2022,value:66050}, {year:2023,value:67970}, {year:2024,value:68270}, {year:2025,value:77270} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:39280}, {year:2022,value:43510}, {year:2023,value:51250}, {year:2024,value:59350}, {year:2025,value:65450} ],
+        note: 'Retained earnings grew from $39.28B to $65.45B \u2014 up $26.17B over five years against $43.20B of cumulative net income.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:16480}, {year:2022,value:15870}, {year:2023,value:19490}, {year:2024,value:19490}, {year:2025,value:21320} ],
+        note: 'Common equity of $21.32B \u2014 up from $16.48B, but tiny relative to $65.45B of retained earnings, because of the treasury stock offset.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:30.76}, {year:2022,value:30.73}, {year:2023,value:39.04}, {year:2024,value:40.78}, {year:2025,value:45.82} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:26.02}, {year:2022,value:26.04}, {year:2023,value:20.5}, {year:2024,value:19.62}, {year:2025,value:17.47} ],
+        note: 'Price to book compressed from 26.02\u00d7 to 17.47\u00d7 \u2014 an extreme multiple in absolute terms, but book value is artificially small because of the buyback. Book value per share grew 49.0% over the same period.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:0.59}, {year:2022,value:0.6}, {year:2023,value:0.49}, {year:2024,value:0.44}, {year:2025,value:0.5} ],
+        note: 'Total debt to equity fell from 0.59\u00d7 to 0.50\u00d7.'
+      },
+      extraLines: [
+        { label: 'Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:964}, {year:2023,value:1900} ] },
+        { label: 'Cash & Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:9390}, {year:2022,value:6040}, {year:2023,value:8010}, {year:2024,value:6170}, {year:2025,value:9330} ] },
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:1294}, {year:2022,value:3523}, {year:2023,value:3440}, {year:2024,value:2376}, {year:2025,value:1285} ],
+          note: 'Net debt of just $1.29B \u2014 down from $1.29B five years ago and effectively unchanged, though it swung as high as $3.52B in FY2022. Caterpillar is barely levered on a net basis.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2021,value:1090}, {year:2022,value:1860}, {year:2023,value:1930}, {year:2024,value:2320}, {year:2025,value:3310} ] },
+        { label: 'Unearned Revenue \u2014 Non-Current', unit: 'M USD', series: [ {year:2022,value:454}, {year:2023,value:460}, {year:2024,value:423}, {year:2025,value:1360} ] },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:563}, {year:2022,value:484}, {year:2023,value:499}, {year:2024,value:526}, {year:2025,value:664} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:158}, {year:2022,value:151}, {year:2023,value:147}, {year:2024,value:143}, {year:2025,value:158} ] },
+        { label: 'Prepaid Expenses', unit: 'M USD', series: [ {year:2021,value:1640}, {year:2022,value:2400}, {year:2023,value:2440}, {year:2024,value:2880}, {year:2025,value:2500} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-1550}, {year:2022,value:-2460}, {year:2023,value:-1820}, {year:2024,value:-2470}, {year:2025,value:-1770} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-27640}, {year:2022,value:-31750}, {year:2023,value:-36340}, {year:2024,value:-44330}, {year:2025,value:-49540} ],
+          note: 'Treasury stock grew from \u2212$27.64B to \u2212$49.54B \u2014 $21.90B of stock retired in five years.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:16520}, {year:2022,value:15890}, {year:2023,value:19500}, {year:2024,value:19490}, {year:2025,value:21320} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:9120}, {year:2022,value:9820}, {year:2023,value:13620}, {year:2024,value:13850}, {year:2025,value:15760} ] },
+        { label: 'Treasury Stock as % of Retained Earnings', unit: '%', series: [ {year:2021,value:70.37}, {year:2022,value:72.97}, {year:2023,value:70.91}, {year:2024,value:74.69}, {year:2025,value:75.69} ],
+          note: 'Treasury stock now equals 75.7% of lifetime retained earnings, up from 70.4%. Caterpillar has bought back roughly three-quarters of everything it has ever retained. This is the single reason equity is only $21.32B on a $98.59B balance sheet.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2021,value:32}, {year:2022,value:22}, {year:2023,value:9}, {year:2024,value:3} ] },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:5590}, {year:2022,value:4200}, {year:2023,value:4100}, {year:2024,value:3760}, {year:2025,value:3840} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:6.42}, {year:2022,value:7.4}, {year:2023,value:10.08}, {year:2024,value:9.67}, {year:2025,value:7.89} ],
+          note: 'Return on assets peaked at 10.08% and fell to 7.89%.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:9.57}, {year:2022,value:11.25}, {year:2023,value:15.33}, {year:2024,value:14.56}, {year:2025,value:11.87} ],
+          note: 'Return on capital peaked at 15.33% (FY2023) and has fallen to 11.87% \u2014 still respectable, but the two-year decline tracks the operating margin compression exactly.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:40.72}, {year:2022,value:41.37}, {year:2023,value:58.38}, {year:2024,value:55.33}, {year:2025,value:43.53} ],
+          note: 'ROE of 40.72%, 41.37%, 58.38%, 55.33%, 43.53%. Genuinely high, but read it knowing the denominator is suppressed by $49.54B of treasury stock. ROC of 11.87% is the honest operating measure.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:0.91}, {year:2022,value:0.8}, {year:2023,value:0.6}, {year:2024,value:0.54}, {year:2025,value:0.76} ],
+          note: 'Gross leverage of 0.76\u00d7 EBITDA, improved from 0.91\u00d7. Conservative throughout.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:7200}, {year:2022,value:7770}, {year:2023,value:12890}, {year:2024,value:12040}, {year:2025,value:11740} ],
+        note: 'Operating cash flow grew from $7.20B to $11.74B, up 63.0%, peaking at $12.89B in FY2023. Far steadier than reported earnings.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:7040}, {year:2022,value:3580}, {year:2023,value:8560}, {year:2024,value:5290}, {year:2025,value:5840} ],
+        note: 'Free cash flow is volatile: $7.04B, $3.58B, $8.56B, $5.29B, $5.84B. The FY2022 collapse coincides with a $2.59B inventory build.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:6490}, {year:2022,value:6710}, {year:2023,value:10340}, {year:2024,value:10790}, {year:2025,value:8880} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:7340}, {year:2022,value:3850}, {year:2023,value:8880}, {year:2024,value:5610}, {year:2025,value:6150} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:97.78}, {year:2022,value:46.07}, {year:2023,value:66.41}, {year:2024,value:43.94}, {year:2025,value:49.74} ],
+          note: 'Conversion ranged 43.9%\u201397.8%, ending at 49.7%.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:110.94}, {year:2022,value:115.8}, {year:2023,value:124.66}, {year:2024,value:111.58}, {year:2025,value:132.21} ],
+          note: 'Operating cash flow ran 111%\u2013132% of net income in every year \u2014 consistent, healthy conversion with no accounting distortions.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-3080}, {year:2022,value:-2540}, {year:2023,value:-5870}, {year:2024,value:-2450}, {year:2025,value:-4710} ],
+          note: 'Investing outflows ranged $2.45B\u2013$5.87B with no clear trend.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-4190}, {year:2022,value:-7280}, {year:2023,value:-6930}, {year:2024,value:-9570}, {year:2025,value:-3900} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:42.78}, {year:2022,value:32.69}, {year:2023,value:45.54}, {year:2024,value:20.35}, {year:2025,value:40.12} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-2670}, {year:2022,value:-4230}, {year:2023,value:-4980}, {year:2024,value:-7740}, {year:2025,value:-5260} ],
+          note: 'Buybacks of $2.67B, $4.23B, $4.98B, $7.74B and $5.26B \u2014 $24.88B over five years, against $43.21B of net income. Roughly 58 cents of every dollar earned went to repurchases.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-2330}, {year:2022,value:-2440}, {year:2023,value:-2560}, {year:2024,value:-2650}, {year:2025,value:-2750} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:4.35}, {year:2022,value:4.73}, {year:2023,value:5.13}, {year:2024,value:5.54}, {year:2025,value:5.91} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $4.35 to $5.91, up 35.9% \u2014 helped by the shrinking share count as much as by the dividend itself.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:35.9}, {year:2022,value:36.36}, {year:2023,value:24.76}, {year:2024,value:24.56}, {year:2025,value:30.97} ],
+          note: 'The dividend payout ratio fell from 35.9% to 31.0% as earnings outgrew the dividend. Modest and well covered.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:5000}, {year:2022,value:6670}, {year:2023,value:7540}, {year:2024,value:10390}, {year:2025,value:8010} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:71.02}, {year:2022,value:186.31}, {year:2023,value:88.08}, {year:2024,value:196.41}, {year:2025,value:137.16} ],
+          note: 'Shareholder returns exceeded free cash flow in three of five years, reaching 196.4% in FY2024 when $10.39B was returned against $5.29B generated. Over the full period $37.61B was returned against $30.31B of free cash flow.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'M USD', series: [ {year:2021,value:134}, {year:2022,value:-56}, {year:2023,value:11}, {year:2024,value:39}, {year:2025,value:30} ] },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2021,value:-2590}, {year:2022,value:-2590}, {year:2023,value:-364}, {year:2024,value:-414}, {year:2025,value:-1480} ] },
+        { label: 'Total Short-Term Debt Issued', unit: 'M USD', series: [ {year:2021,value:3490}, {year:2022,value:402}, {year:2025,value:1110} ] },
+        { label: 'Total Short-Term Debt Repaid', unit: 'M USD', series: [ {year:2023,value:-1350}, {year:2024,value:-168} ] },
+        { label: 'Foreign Exchange Rate Adjustments', unit: 'M USD', series: [ {year:2021,value:-29}, {year:2022,value:-194}, {year:2023,value:-110}, {year:2024,value:-106}, {year:2025,value:-43} ] },
+        { label: 'Net Increase / (Decrease) in Loans Originated', unit: 'M USD', series: [ {year:2021,value:-521}, {year:2022,value:-5}, {year:2023,value:-1060}, {year:2024,value:-1720}, {year:2025,value:-1740} ],
+          note: 'Net loans originated grew from $521M to $1.74B a year \u2014 this is Cat Financial, the captive finance arm, extending credit to dealers and customers. It is a real and growing use of cash that sits outside conventional capex, and it more than tripled over the period.'
+        },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-103}, {year:2022,value:-2250}, {year:2023,value:-28}, {year:2024,value:-89}, {year:2025,value:3090} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// DE_BREAKDOWN — Deere & Company Coverage data (Tier 2)
+// SOURCE: Muzz's supplied construction data drop — income statement,
+// balance sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// COST LINES: the source carries BOTH 'Cost of goods sold' and 'Cost of
+// revenue' with different values. Cost of revenue is the line that
+// reconciles to Total operating expenses in every year, so it drives
+// gross profit and inventory turns; the narrower COGS is carried as its
+// own line rather than discarded.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: D&A is not supplied; an implied series is derived.
+// Free cash flow is NEGATIVE in FY2022 and FY2024 despite $7.1B of net
+// income in both — the captive finance arm consumes cash as the loan
+// book grows. 72.8% of total assets are current, reflecting finance
+// receivables rather than a manufacturer's working capital.
+// ═════════════════════════════════════════════════════════════════
+const DE_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:43980}, {year:2022,value:52560}, {year:2023,value:61220}, {year:2024,value:51530}, {year:2025,value:45630} ],
+        note: 'Revenue peaked at $61.22B (FY2023) and has fallen in each of the two years since, to $45.63B \u2014 down 25.5% from the peak and now BELOW the FY2021 starting point. This is a genuine agricultural downcycle, not a soft patch.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:31760}, {year:2022,value:38170}, {year:2023,value:42470}, {year:2024,value:36330}, {year:2025,value:33330} ],
+        note: 'Cost of revenue fell 21.5% from the FY2023 peak, slower than the 25.5% revenue decline \u2014 costs have not come out as fast as sales.'
+      },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:12220}, {year:2022,value:14390}, {year:2023,value:18750}, {year:2024,value:15200}, {year:2025,value:12300} ],
+        note: 'Gross profit fell from a peak of $18.75B (FY2023) to $12.30B, down 34.4% \u2014 falling faster than revenue.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:27.79}, {year:2022,value:27.38}, {year:2023,value:30.63}, {year:2024,value:29.5}, {year:2025,value:26.96} ],
+        note: 'Gross margin fell from 30.63% (FY2023) to 26.96%, and is now below the 27.79% it started at. Compare Caterpillar, which held its gains \u2014 Deere gave them back.'
+      },
+      opexLines: [
+        { label: 'Research & Development', unit: 'M USD', series: [ {year:2021,value:1590}, {year:2022,value:1910}, {year:2023,value:2180}, {year:2024,value:2260}, {year:2025,value:2310} ],
+          note: 'R&D grew from $1.59B to $2.31B, up 45.3%, and rose in every year INCLUDING the two downturn years. Deere is spending through the cycle on precision agriculture rather than cutting to protect earnings.'
+        },
+        { label: 'R&D as % of Revenue', unit: '%', series: [ {year:2021,value:3.62}, {year:2022,value:3.63}, {year:2023,value:3.56}, {year:2024,value:4.39}, {year:2025,value:5.06} ],
+          note: 'R&D rose from 3.62% of revenue to 5.06% \u2014 a 1.4-point increase, driven partly by the falling denominator but also by genuine growth in the absolute spend.'
+        },
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:2880}, {year:2022,value:2960}, {year:2023,value:3430}, {year:2024,value:3700}, {year:2025,value:3700} ],
+          note: 'SG&A grew from $2.88B to $3.70B, up 28.5%, and held flat at $3.70B in FY2025 rather than falling with revenue.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:6.55}, {year:2022,value:5.63}, {year:2023,value:5.6}, {year:2024,value:7.18}, {year:2025,value:8.11} ],
+          note: 'SG&A rose from 6.55% of revenue to 8.11%, with the jump arriving as revenue fell. Fixed costs against a shrinking top line.'
+        },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:4300}, {year:2022,value:4630}, {year:2023,value:5360}, {year:2024,value:5790}, {year:2025,value:5690} ] },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2021,value:-169}, {year:2022,value:-243}, {year:2023,value:-244}, {year:2024,value:-168}, {year:2025,value:-323} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:36060}, {year:2022,value:42800}, {year:2023,value:47830}, {year:2024,value:42120}, {year:2025,value:39020} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:7930}, {year:2022,value:9760}, {year:2023,value:13390}, {year:2024,value:9410}, {year:2025,value:6610} ],
+        note: 'Operating income collapsed from $13.39B (FY2023) to $6.61B \u2014 down 50.6% in two years, against a 25.5% revenue decline. Operating leverage running hard in reverse: profit fell twice as fast as sales.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:18.03}, {year:2022,value:18.57}, {year:2023,value:21.87}, {year:2024,value:18.26}, {year:2025,value:14.49} ],
+        note: 'Operating margin fell from 21.87% (FY2023) to 14.49%. Caterpillar ended at 17.40% on a business whose revenue grew. This is the clearest divergence between the two.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-306}, {year:2022,value:-263}, {year:2023,value:-91}, {year:2024,value:-166}, {year:2025,value:-247} ],
+        note: 'Interest expense fell to just $91M in FY2023 and has since risen to $247M.'
+      },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:1660}, {year:2022,value:2010}, {year:2023,value:2870}, {year:2024,value:2090}, {year:2025,value:1260} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:21.75}, {year:2022,value:21.97}, {year:2023,value:22.04}, {year:2024,value:22.81}, {year:2025,value:20.12} ],
+        note: 'A tight 20.12%\u201322.81% band across all five years. No tax distortions anywhere in this series.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:5960}, {year:2022,value:7130}, {year:2023,value:10170}, {year:2024,value:7100}, {year:2025,value:5030} ],
+        note: 'Net income fell from $10.17B to $5.03B \u2014 down 50.5%, and now below the $5.96B earned in FY2021.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:13.56}, {year:2022,value:13.57}, {year:2023,value:16.61}, {year:2024,value:13.78}, {year:2025,value:11.02} ],
+        note: 'Net margin fell from 16.61% to 11.02%.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:18.99}, {year:2022,value:23.98}, {year:2023,value:34.69}, {year:2024,value:25.62}, {year:2025,value:18.5} ],
+        note: 'EPS fell from $34.69 to $18.50, down 46.7% \u2014 slightly less than the 50.5% fall in net income, because the share count shrank 3.5% over the same span. EPS reconciles to net income \u00f7 shares within roughly 4% in every year, which is unusually clean for this coverage.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:307.41}, {year:2022,value:298.24}, {year:2023,value:280.26}, {year:2024,value:271.58}, {year:2025,value:270.45} ],
+        note: 'Share count fell from 307.41M to 270.45M, down 12.0%, though the reduction has almost stopped \u2014 only 1.13M shares in FY2025 against 18.0M in FY2023.'
+      },
+      extraLines: [
+        { label: 'Cost of Goods Sold \u2014 narrower than Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:29120}, {year:2022,value:35250}, {year:2023,value:37720}, {year:2024,value:30740}, {year:2025,value:28150} ],
+          note: 'The source carries a separate, narrower cost of goods sold figure. Both are retained; the wider cost of revenue is the line that ties to total operating expenses.'
+        },
+        { label: 'Cost of Goods Sold as % of Revenue', unit: '%', series: [ {year:2021,value:66.21}, {year:2022,value:67.07}, {year:2023,value:61.61}, {year:2024,value:59.65}, {year:2025,value:61.69} ],
+          note: 'Narrow COGS ran 59.7%\u201367.1% of revenue, ending at 61.69%.'
+        },
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:9860}, {year:2022,value:11540}, {year:2023,value:15250}, {year:2024,value:11350}, {year:2025,value:8610} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:22.42}, {year:2022,value:21.96}, {year:2023,value:24.91}, {year:2024,value:22.03}, {year:2025,value:18.87} ],
+          note: 'EBITDA margin fell from 24.91% to 18.87%.'
+        },
+        { label: 'Implied D&A \u2014 EBITDA minus Operating Income', unit: 'M USD', series: [ {year:2021,value:1930}, {year:2022,value:1780}, {year:2023,value:1860}, {year:2024,value:1940}, {year:2025,value:2000} ],
+          note: 'D&A is not supplied, so this is derived as EBITDA minus operating income: $1.93B, $1.78B, $1.86B, $1.94B, $2.00B. Notably it ROSE while revenue fell 25.5% \u2014 the asset base kept growing through the downturn.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:7620}, {year:2022,value:9140}, {year:2023,value:13030}, {year:2024,value:9180}, {year:2025,value:6260} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:7620}, {year:2022,value:9390}, {year:2023,value:13220}, {year:2024,value:9280}, {year:2025,value:6410} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:0}, {year:2022,value:-250}, {year:2023,value:-190}, {year:2024,value:-100}, {year:2025,value:-150} ],
+          note: 'Unusual items are a modest drag in four of five years, ranging \u2212$250M to \u2212$100M \u2014 a clean earnings series with no large one-offs.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:133.05}, {year:2022,value:136.89}, {year:2023,value:131.66}, {year:2024,value:132.54}, {year:2025,value:131.41} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:41}, {year:2022,value:14}, {year:2023,value:29}, {year:2024,value:127}, {year:2025,value:56} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-265}, {year:2022,value:-249}, {year:2023,value:-62}, {year:2024,value:-39}, {year:2025,value:-191} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:25.92}, {year:2022,value:37.11}, {year:2023,value:147.14}, {year:2024,value:56.69}, {year:2025,value:26.76} ],
+          note: 'Interest coverage peaked at 147\u00d7 in FY2023 and has fallen to 26.8\u00d7 as both sides of the ratio moved against it. Still very comfortable.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:7190}, {year:2022,value:3770}, {year:2023,value:5720}, {year:2024,value:5620}, {year:2025,value:6340} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:6060}, {year:2022,value:8950}, {year:2023,value:9760}, {year:2024,value:7700}, {year:2025,value:7740} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:6780}, {year:2022,value:8500}, {year:2023,value:8160}, {year:2024,value:7090}, {year:2025,value:7410} ],
+        note: 'Inventory fell from a peak of $8.50B to $7.41B \u2014 down 12.8%, meaningfully less than the 25.5% revenue decline, so stock has built up relative to sales.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2021,value:4.68}, {year:2022,value:4.49}, {year:2023,value:5.2}, {year:2024,value:5.12}, {year:2025,value:4.5} ],
+        note: 'Inventory turns 4.50\u00d7 a year, down from 4.68\u00d7. Faster than Caterpillar at 2.65\u00d7 \u2014 Deere moves its equipment through the channel roughly twice as quickly.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2021,value:77.99}, {year:2022,value:81.29}, {year:2023,value:70.19}, {year:2024,value:71.29}, {year:2025,value:81.11} ],
+        note: 'Days inventory of 81.1, up from 77.9. Well ahead of Caterpillar at 137.7.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:36}, {year:2022,value:373}, {year:2023,value:742}, {year:2024,value:349}, {year:2025,value:118} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:60530}, {year:2022,value:66200}, {year:2023,value:78560}, {year:2024,value:80210}, {year:2025,value:77130} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:6110}, {year:2022,value:6360}, {year:2023,value:7160}, {year:2024,value:7850}, {year:2025,value:8400} ],
+        note: 'Net PP&E grew from $6.11B to $8.40B, up 37.4%, and rose in every single year including through the downturn.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:3290}, {year:2022,value:3690}, {year:2023,value:3900}, {year:2024,value:3960}, {year:2025,value:4190} ],
+        note: 'Goodwill grew steadily from $3.29B to $4.19B \u2014 modest bolt-on acquisition activity.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:1560}, {year:2022,value:1590}, {year:2023,value:1580}, {year:2024,value:1500}, {year:2025,value:1360} ] },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2021,value:1040}, {year:2022,value:824}, {year:2023,value:1810}, {year:2024,value:2090}, {year:2025,value:2280} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:576}, {year:2022,value:495}, {year:2023,value:520}, {year:2024,value:478}, {year:2025,value:434} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:4140}, {year:2022,value:4250}, {year:2023,value:3600}, {year:2024,value:3730}, {year:2025,value:4110} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:84110}, {year:2022,value:90030}, {year:2023,value:104090}, {year:2024,value:107320}, {year:2025,value:106000} ],
+        note: 'Total assets grew from $84.11B to $106.00B, peaking at $107.32B, while revenue fell 25.5% from its peak. The balance sheet kept expanding as the business contracted.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:3480}, {year:2022,value:4120}, {year:2023,value:3630}, {year:2024,value:2910}, {year:2025,value:3190} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:4590}, {year:2022,value:4160}, {year:2023,value:4830}, {year:2024,value:4450}, {year:2025,value:4000} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'M USD', series: [ {year:2021,value:1080}, {year:2022,value:1260}, {year:2023,value:1560}, {year:2024,value:1510}, {year:2025,value:1160} ] },
+      shortTermDebt: { label: 'Short-Term Borrowings', unit: 'M USD', series: [ {year:2021,value:1500}, {year:2022,value:1020}, {year:2023,value:1210}, {year:2024,value:880}, {year:2025,value:376} ],
+        note: 'Short-term borrowings were run down from $1.50B to $376M, a 74.9% reduction.'
+      },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:134}, {year:2022,value:1110}, {year:2023,value:1080}, {year:2024,value:562}, {year:2025,value:356} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:8880}, {year:2022,value:7890}, {year:2023,value:7160}, {year:2024,value:6530}, {year:2025,value:8680} ],
+        note: 'Long-term debt fell from $8.88B to $6.53B (FY2024) then rose sharply to $8.68B in FY2025 \u2014 a $2.15B increase in the worst earnings year of the period.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:10514}, {year:2022,value:10020}, {year:2023,value:9450}, {year:2024,value:7972}, {year:2025,value:9412} ],
+        note: 'Total debt of $9.41B, down from $10.51B, having troughed at $7.97B in FY2024.'
+      },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:65680}, {year:2022,value:69670}, {year:2023,value:82200}, {year:2024,value:84400}, {year:2025,value:79990} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:36450}, {year:2022,value:42250}, {year:2023,value:50930}, {year:2024,value:56400}, {year:2025,value:59680} ],
+        note: 'Retained earnings grew from $36.45B to $59.68B, up 63.7% \u2014 rising in every year including the downturn.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:18430}, {year:2022,value:20260}, {year:2023,value:21790}, {year:2024,value:22840}, {year:2025,value:25950} ],
+        note: 'Common equity grew from $18.43B to $25.95B, up 40.8%, rising in every single year \u2014 including both downturn years. Unlike Caterpillar, Deere has been building its equity base rather than buying it back.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:59.83}, {year:2022,value:67.82}, {year:2023,value:77.37}, {year:2024,value:84.03}, {year:2025,value:95.99} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:10.54}, {year:2022,value:9.29}, {year:2023,value:8.15}, {year:2024,value:7.5}, {year:2025,value:6.57} ],
+        note: 'Price to book compressed steadily every year, from 10.54\u00d7 to 6.57\u00d7, while book value per share grew 60.4% ($59.83 \u2192 $95.99).'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:0.57}, {year:2022,value:0.49}, {year:2023,value:0.43}, {year:2024,value:0.35}, {year:2025,value:0.36} ],
+        note: 'Total debt to equity fell from 0.57\u00d7 to 0.36\u00d7 as equity grew 40.8%.'
+      },
+      extraLines: [
+        { label: 'Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:3}, {year:2022,value:61}, {year:2023,value:104}, {year:2024,value:125}, {year:2025,value:217} ] },
+        { label: 'Cash & Short-Term Investments', unit: 'M USD', series: [ {year:2021,value:7430}, {year:2022,value:3830}, {year:2023,value:6040}, {year:2024,value:6000}, {year:2025,value:6900} ] },
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:3324}, {year:2022,value:6250}, {year:2023,value:3730}, {year:2024,value:2352}, {year:2025,value:3072} ],
+          note: 'Net debt of $3.07B, DOWN from $3.32B five years ago despite the collapse in earnings. Modest against $8.61B of EBITDA.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:175}, {year:2022,value:117}, {year:2023,value:126}, {year:2024,value:122}, {year:2025,value:510} ] },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2021,value:991}, {year:2022,value:1820}, {year:2023,value:2150}, {year:2024,value:2420}, {year:2025,value:2570} ] },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:317}, {year:2022,value:332}, {year:2023,value:330}, {year:2024,value:342}, {year:2025,value:277} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:23}, {year:2022,value:21}, {year:2023,value:25}, {year:2024,value:33}, {year:2025,value:149} ] },
+        { label: 'Prepaid Expenses', unit: 'M USD', series: [ {year:2021,value:193}, {year:2022,value:185}, {year:2023,value:167}, {year:2024,value:238}, {year:2025,value:259} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-2540}, {year:2022,value:-3060}, {year:2023,value:-3110}, {year:2024,value:-3710}, {year:2025,value:-3030} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-20530}, {year:2022,value:-24090}, {year:2023,value:-31340}, {year:2024,value:-35350}, {year:2025,value:-36360} ],
+          note: 'Treasury stock grew from \u2212$20.53B to \u2212$36.36B, with $7.25B retired in FY2023 alone \u2014 the peak earnings year.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:18430}, {year:2022,value:20360}, {year:2023,value:21890}, {year:2024,value:22930}, {year:2025,value:26010} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:13580}, {year:2022,value:14990}, {year:2023,value:16300}, {year:2024,value:17370}, {year:2025,value:20400} ],
+          note: 'Tangible book value grew from $13.58B to $20.40B, up 50.2%. It is 78.6% of common equity \u2014 a far more tangible balance sheet than most in this coverage.'
+        },
+        { label: 'Deferred Charges \u2014 Long-Term', unit: 'M USD', series: [ {year:2021,value:281}, {year:2022,value:383}, {year:2023,value:426}, {year:2024,value:412}, {year:2025,value:417} ] },
+        { label: 'Treasury Stock as % of Retained Earnings', unit: '%', series: [ {year:2021,value:56.32}, {year:2022,value:57.02}, {year:2023,value:61.54}, {year:2024,value:62.68}, {year:2025,value:60.92} ],
+          note: 'Treasury stock equals 60.9% of lifetime retained earnings, against Caterpillar at 75.7%. Deere has been the more restrained repurchaser of the two.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2021,value:3}, {year:2022,value:95}, {year:2023,value:101}, {year:2024,value:89}, {year:2025,value:57} ],
+          note: 'Minority interest is immaterial at $3M\u2013$101M.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:4340}, {year:2022,value:2460}, {year:2023,value:2140}, {year:2024,value:2350}, {year:2025,value:1710} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:6.22}, {year:2022,value:7.01}, {year:2023,value:8.62}, {year:2024,value:5.56}, {year:2025,value:3.87} ],
+          note: 'Return on assets fell from 8.62% to 3.87%.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:7.83}, {year:2022,value:8.66}, {year:2023,value:10.44}, {year:2024,value:6.7}, {year:2025,value:4.6} ],
+          note: 'Return on capital fell from 10.44% to 4.60%, down 56%. Caterpillar ended at 11.87%. That gap \u2014 more than double \u2014 is the single most important number in this comparison.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:38.02}, {year:2022,value:36.76}, {year:2023,value:48.08}, {year:2024,value:31.64}, {year:2025,value:20.43} ],
+          note: 'ROE fell from 48.08% (FY2023) to 20.43% \u2014 less than half, and the fall is genuine on both counts: earnings halved while equity grew 19.1%.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:1.07}, {year:2022,value:0.87}, {year:2023,value:0.62}, {year:2024,value:0.7}, {year:2025,value:1.09} ],
+          note: 'Leverage rose from 1.07\u00d7 to 1.09\u00d7 but troughed at 0.62\u00d7 in FY2023 \u2014 the ratio deteriorated purely because EBITDA fell 43.5% from the peak.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:7730}, {year:2022,value:4700}, {year:2023,value:8590}, {year:2024,value:9230}, {year:2025,value:7460} ],
+        note: 'Operating cash flow of $7.73B, $4.70B, $8.59B, $9.23B, $7.46B \u2014 volatile, but notably it PEAKED in FY2024, a year when net income fell 30%. Cash generation and reported earnings are poorly correlated here.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:973.5}, {year:2022,value:-409.5}, {year:2023,value:3650}, {year:2024,value:-275.88}, {year:2025,value:2740} ],
+        note: 'Free cash flow was NEGATIVE in FY2022 (\u2212$409.5M) and FY2024 (\u2212$275.9M) \u2014 in years Deere earned $7.13B and $7.10B of net income. That is the captive finance arm: growing the loan book consumes cash regardless of how profitable the equipment sales are. Any free-cash-flow-based valuation of Deere has to account for this.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:5960}, {year:2022,value:7130}, {year:2023,value:10170}, {year:2024,value:7100}, {year:2025,value:5030} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:1160}, {year:2022,value:-245.13}, {year:2023,value:3700}, {year:2024,value:-172.13}, {year:2025,value:2890} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:12.59}, {year:2022,value:-8.71}, {year:2023,value:42.49}, {year:2024,value:-2.99}, {year:2025,value:36.73} ],
+          note: 'Conversion of 36.7% in FY2025, negative in two of the five years, and never above 42.5%. Materially weaker than Caterpillar.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:129.7}, {year:2022,value:65.92}, {year:2023,value:84.46}, {year:2024,value:130}, {year:2025,value:148.31} ],
+          note: 'Operating cash flow ran 66% of net income in FY2022 and 130% in FY2024. The swings come from the finance arm and working capital, not from the equipment business.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-5750}, {year:2022,value:-8490}, {year:2023,value:-8750}, {year:2024,value:-6460}, {year:2025,value:-2060} ],
+          note: 'Investing outflows ran $5.75B\u2013$8.75B for four years before collapsing to $2.06B in FY2025 \u2014 the finance book stopped growing as demand fell.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-1080}, {year:2022,value:826}, {year:2023,value:2810}, {year:2024,value:-2720}, {year:2025,value:-4580} ],
+          note: 'Financing was a net INFLOW in FY2022 ($826M) and FY2023 ($2.81B) \u2014 Deere was raising debt while buying back stock. It has since swung to a $4.58B outflow.'
+        },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:74.39}, {year:2022,value:180.64}, {year:2023,value:101.86}, {year:2024,value:69.99}, {year:2025,value:27.61} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-2540}, {year:2022,value:-3600}, {year:2023,value:-7220}, {year:2024,value:-4010}, {year:2025,value:-1140} ],
+          note: 'Buybacks peaked at $7.22B in FY2023 and collapsed to $1.14B in FY2025, down 84.2%. Deere throttled repurchases hard as earnings fell \u2014 a discipline Caterpillar did not display to the same degree.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-1040}, {year:2022,value:-1310}, {year:2023,value:-1430}, {year:2024,value:-1610}, {year:2025,value:-1720} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:3.38}, {year:2022,value:4.39}, {year:2023,value:5.1}, {year:2024,value:5.93}, {year:2025,value:6.36} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $3.38 to $6.36, up 88.0% \u2014 nearly doubling in five years.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:17.45}, {year:2022,value:18.37}, {year:2023,value:14.06}, {year:2024,value:22.68}, {year:2025,value:34.19} ],
+          note: 'Payout rose from 17.5% to 34.2% as the dividend grew and earnings halved. Still comfortably covered, but the direction is worth watching if the downcycle extends.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:3580}, {year:2022,value:4910}, {year:2023,value:8650}, {year:2024,value:5620}, {year:2025,value:2860} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:367.75}, {year:2022,value:-1199.02}, {year:2023,value:236.99}, {year:2024,value:-2037.12}, {year:2025,value:104.38} ],
+          note: 'Shareholder returns were 367.6% of free cash flow in FY2021 and negative-denominator in FY2022 and FY2024 when free cash flow was below zero. Only FY2023 and FY2025 saw returns comfortably funded from free cash flow. Over the period $25.62B was returned against just $6.68B of cumulative free cash flow \u2014 a gap of nearly four times, funded from the balance sheet.'
+        },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2021,value:-2500}, {year:2022,value:-2090}, {year:2023,value:279}, {year:2024,value:788}, {year:2025,value:-275} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2023,value:-18} ] },
+        { label: 'Total Short-Term Debt Issued', unit: 'M USD', series: [ {year:2021,value:818}, {year:2022,value:3850}, {year:2023,value:4010} ] },
+        { label: 'Total Short-Term Debt Repaid', unit: 'M USD', series: [ {year:2024,value:-1860}, {year:2025,value:-2540} ] },
+        { label: 'Foreign Exchange Rate Adjustments', unit: 'M USD', series: [ {year:2021,value:55}, {year:2022,value:-224}, {year:2023,value:31}, {year:2024,value:-37}, {year:2025,value:77} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2021,value:-244}, {year:2022,value:-498}, {year:2023,value:-82}, {year:2025,value:-101} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:953}, {year:2022,value:-3180}, {year:2023,value:2680}, {year:2024,value:13}, {year:2025,value:900} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -15754,8 +16255,8 @@ const COVERAGE_DATA = [
   { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
 
   // === CONSTRUCTION · USA ===
-  { ticker: 'CAT',   name: 'Caterpillar',                  industry: 'Construction',       country: 'United States', marketCap: 460000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'The world’s dominant maker of construction and mining equipment — a cyclical industrial giant riding the AI-infrastructure and data-center power buildout.', breakdown: null, locked: true },
-  { ticker: 'DE',    name: 'Deere & Company',              industry: 'Construction',       country: 'United States', marketCap: 166000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'North America’s agricultural-machinery leader — precision-farming tech and a captive dealer-network moat (“Nothing Runs Like a Deere”).', breakdown: null, locked: true },
+  { ticker: 'CAT',   name: 'Caterpillar',                  industry: 'Construction',       country: 'United States', marketCap: 460000000000,  marketCapDate: '28 Jun 2026', verdict: null, tier: 2, oneLiner: 'The world’s dominant maker of construction and mining equipment — a cyclical industrial giant riding the AI-infrastructure and data-center power buildout.', breakdown: CAT_BREAKDOWN },
+  { ticker: 'DE',    name: 'Deere & Company',              industry: 'Construction',       country: 'United States', marketCap: 166000000000,  marketCapDate: '28 Jun 2026', verdict: null, tier: 2, oneLiner: 'North America’s agricultural-machinery leader — precision-farming tech and a captive dealer-network moat (“Nothing Runs Like a Deere”).', breakdown: DE_BREAKDOWN },
 
   // === CONSUMER GOODS · USA ===
   { ticker: 'PG',    name: 'Procter & Gamble',             industry: 'Consumer Goods', country: 'United States', marketCap: 347000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Consumer-staples powerhouse — a portfolio of trusted household brands (Tide, Pampers, Gillette) with 70 straight years of dividend increases.', breakdown: null, locked: true },
