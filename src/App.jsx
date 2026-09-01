@@ -25529,7 +25529,7 @@ const QSR_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
 // DERIVATIVES, COMMITMENTS.
-// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
+// TABS DARK: BALANCE, CASH FLOW, THESIS.
 //
 // STILL TIER 2. Only revenue and net income exist, taken from the
 // per-employee table rather than the statements. No cost lines, no balance
@@ -26478,6 +26478,1195 @@ const GOOG_BREAKDOWN = {
     },
   },
   numbers: {
+    segments: {
+      wmGeography: {
+        preamble: 'Revenue by geography, FY2016\u2013FY2025 ($M). The four regions plus the hedging line reconcile exactly to consolidated revenue in every year tested. FY2025 splits 48.2% United States, 29.1% EMEA, 16.8% APAC and 5.9% Other Americas \u2014 so 51.8% of revenue is earned outside the US, which is the exposure behind the FX hedging programme in the DERIVATIVES tab.',
+        prNote: 'THE HEDGING LINE IS PART OF REVENUE, and it resolves a discrepancy flagged earlier in this build. The derivatives impact table gave revenue effects of 237 / 211 / (126) for FY2023\u2013FY2025 while the accompanying audit narrative said +213 / +174 / (233). This disaggregation shows 236 / 211 / (127) \u2014 matching the impact table to within $1m. The impact table was right and the narrative was wrong. Note also that FY2022\u2019s $1,960m hedging gain is by far the largest of the period, roughly nine times any other year.',
+        lines: [
+          {
+            label: 'United States',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2016,
+                value: 42781,
+              },
+              {
+                year: 2017,
+                value: 52449,
+              },
+              {
+                year: 2018,
+                value: 63269,
+              },
+              {
+                year: 2019,
+                value: 74843,
+              },
+              {
+                year: 2020,
+                value: 85014,
+              },
+              {
+                year: 2021,
+                value: 117854,
+              },
+              {
+                year: 2022,
+                value: 134814,
+              },
+              {
+                year: 2023,
+                value: 146286,
+              },
+              {
+                year: 2024,
+                value: 170447,
+              },
+              {
+                year: 2025,
+                value: 194229,
+              },
+            ],
+            note: 'Grew 354% over ten years and rose every year. At 48.2% of FY2025 revenue the US is just under half the company \u2014 and it is where the DOJ Search and ad tech proceedings apply.',
+          },
+          {
+            label: 'EMEA \u2014 Europe, Middle East & Africa',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2016,
+                value: 30304,
+              },
+              {
+                year: 2017,
+                value: 36046,
+              },
+              {
+                year: 2018,
+                value: 44567,
+              },
+              {
+                year: 2019,
+                value: 50645,
+              },
+              {
+                year: 2020,
+                value: 55370,
+              },
+              {
+                year: 2021,
+                value: 79107,
+              },
+              {
+                year: 2022,
+                value: 82062,
+              },
+              {
+                year: 2023,
+                value: 91038,
+              },
+              {
+                year: 2024,
+                value: 102127,
+              },
+              {
+                year: 2025,
+                value: 117152,
+              },
+            ],
+            note: 'Second largest at 29.1% of FY2025 revenue, up 287% over ten years. This is the region governed by the DMA, the AI Act, GDPR and the EU ad tech decision \u2014 the largest concentration of regulatory risk in the business sits in the second largest revenue pool.',
+          },
+          {
+            label: 'APAC \u2014 Asia-Pacific',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2016,
+                value: 12559,
+              },
+              {
+                year: 2017,
+                value: 16235,
+              },
+              {
+                year: 2018,
+                value: 21374,
+              },
+              {
+                year: 2019,
+                value: 26928,
+              },
+              {
+                year: 2020,
+                value: 32550,
+              },
+              {
+                year: 2021,
+                value: 46123,
+              },
+              {
+                year: 2022,
+                value: 47024,
+              },
+              {
+                year: 2023,
+                value: 51514,
+              },
+              {
+                year: 2024,
+                value: 56815,
+              },
+              {
+                year: 2025,
+                value: 67680,
+              },
+            ],
+            note: 'Fastest-growing region, up 439% over ten years and 19.1% in FY2025 alone \u2014 faster than the US or EMEA.',
+          },
+          {
+            label: 'Other Americas \u2014 Canada & Latin America',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2016,
+                value: 4628,
+              },
+              {
+                year: 2017,
+                value: 6125,
+              },
+              {
+                year: 2018,
+                value: 7609,
+              },
+              {
+                year: 2019,
+                value: 8986,
+              },
+              {
+                year: 2020,
+                value: 9417,
+              },
+              {
+                year: 2021,
+                value: 14404,
+              },
+              {
+                year: 2022,
+                value: 16976,
+              },
+              {
+                year: 2023,
+                value: 18320,
+              },
+              {
+                year: 2024,
+                value: 20418,
+              },
+              {
+                year: 2025,
+                value: 23902,
+              },
+            ],
+            note: 'Smallest at 5.9% of revenue but grew 416% over the decade.',
+          },
+          {
+            label: 'Hedging gains / (losses)',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 455,
+              },
+              {
+                year: 2020,
+                value: 176,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 149,
+                down: true,
+              },
+              {
+                year: 2022,
+                value: 1960,
+              },
+              {
+                year: 2023,
+                value: 236,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 211,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: -127,
+                down: true,
+              },
+            ],
+            note: 'Reported inside revenue. Turned NEGATIVE in FY2025 for the first time in the series, which is the cash flow hedge correctly losing as the dollar weakened while the underlying foreign revenue gained more. See the DERIVATIVES tab.',
+          },
+          {
+            label: 'Total Revenues',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2016,
+                value: 90272,
+              },
+              {
+                year: 2017,
+                value: 110855,
+              },
+              {
+                year: 2018,
+                value: 136819,
+              },
+              {
+                year: 2019,
+                value: 161857,
+              },
+              {
+                year: 2020,
+                value: 182527,
+              },
+              {
+                year: 2021,
+                value: 257637,
+              },
+              {
+                year: 2022,
+                value: 282836,
+              },
+              {
+                year: 2023,
+                value: 307394,
+              },
+              {
+                year: 2024,
+                value: 350018,
+              },
+              {
+                year: 2025,
+                value: 402836,
+              },
+            ],
+            note: 'Regions plus hedging reconcile exactly to this line in every year checked. Revenue rose in all ten years \u2014 no exceptions.',
+          },
+        ],
+      },
+      wmSegmentPnl: {
+        preamble: 'Per-segment revenue, expenses and operating profit. Operating profit runs FY2018\u2013FY2025 and reconciles to total income from operations in ALL EIGHT YEARS. Expense detail is only disclosed FY2022\u2013FY2025. Read the restatement note on the expense lines before differencing anything in FY2022. THE HEADLINE: Google Services operating margin broke 40% in FY2025, Cloud went from a 7.3% loss margin to a 23.7% profit margin in three years, and Alphabet-level activities \u2014 the central AI and corporate cost \u2014 now lose more than Other Bets.',
+        segments: [
+          {
+            name: 'Google Services',
+            type: 'Reportable segment',
+            featured: true,
+            profitEngine: true,
+            note: 'The profit engine. Operating margin has risen every year since FY2022 and broke 40% in FY2025 \u2014 extraordinary for a business turning over $342.7bn. The mechanism is visible in the expense split: employee compensation FELL 2.4% between FY2023 and FY2025 while segment revenue grew 25.7%.',
+            metrics: [
+              {
+                label: 'Revenue',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 151825,
+                  },
+                  {
+                    year: 2020,
+                    value: 168635,
+                  },
+                  {
+                    year: 2021,
+                    value: 237529,
+                  },
+                  {
+                    year: 2022,
+                    value: 253528,
+                  },
+                  {
+                    year: 2023,
+                    value: 272543,
+                  },
+                  {
+                    year: 2024,
+                    value: 304930,
+                  },
+                  {
+                    year: 2025,
+                    value: 342721,
+                  },
+                ],
+              },
+              {
+                label: 'Employee Compensation Expense',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 43529,
+                  },
+                  {
+                    year: 2023,
+                    value: 46224,
+                  },
+                  {
+                    year: 2024,
+                    value: 44560,
+                  },
+                  {
+                    year: 2025,
+                    value: 45124,
+                  },
+                ],
+                note: 'PEAKED IN FY2023 AT $46,224m AND HAS FALLEN SINCE, to $45,124m \u2014 down 2.4% while segment revenue grew 25.7% over the same two years. This is where the FY2023 headcount reduction shows up, and it is the single clearest driver of the margin expansion.',
+              },
+              {
+                label: 'Other Costs & Expenses',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 127300,
+                  },
+                  {
+                    year: 2023,
+                    value: 130461,
+                  },
+                  {
+                    year: 2024,
+                    value: 139107,
+                  },
+                  {
+                    year: 2025,
+                    value: 158193,
+                  },
+                ],
+                note: 'Traffic acquisition costs, content and infrastructure. Up 21.3% in FY2025 alone and 24.2% over two years \u2014 growing faster than revenue, and now 77.8% of segment expenses. All of the cost growth is here, none of it in people.',
+              },
+              {
+                label: 'Total Expenses',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 170829,
+                  },
+                  {
+                    year: 2023,
+                    value: 176685,
+                  },
+                  {
+                    year: 2024,
+                    value: 183667,
+                  },
+                  {
+                    year: 2025,
+                    value: 203317,
+                  },
+                ],
+                note: 'THE FY2022 EXPENSE FIGURES ARE ON A DIFFERENT BASIS. The supplied expense table implies FY2022 operating profit of $82,699m for Services, $(1,922)m for Cloud and $(4,636)m for Other Bets \u2014 but the segment profitability table gives $86,572m, $(2,968)m and $(6,083)m, and only the second set reconciles to total income from operations of $74,842m. The difference is pre- versus post-restatement presentation, from when Alphabet moved to "Alphabet-level activities" in FY2023. THE PROFITABILITY BASIS IS USED THROUGHOUT for operating profit and margin; the FY2022 expense components are shown as supplied and should not be differenced against it. FY2023\u2013FY2025 agree exactly on both bases.',
+              },
+              {
+                label: 'Operating Profit',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2018,
+                    value: 43137,
+                  },
+                  {
+                    year: 2019,
+                    value: 48999,
+                  },
+                  {
+                    year: 2020,
+                    value: 54606,
+                  },
+                  {
+                    year: 2021,
+                    value: 91855,
+                  },
+                  {
+                    year: 2022,
+                    value: 86572,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 95858,
+                  },
+                  {
+                    year: 2024,
+                    value: 121263,
+                  },
+                  {
+                    year: 2025,
+                    value: 139404,
+                  },
+                ],
+                note: 'Grew 223% from FY2018 to FY2025. The only decline was FY2022.',
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2019,
+                    value: 32.27,
+                  },
+                  {
+                    year: 2020,
+                    value: 32.38,
+                  },
+                  {
+                    year: 2021,
+                    value: 38.67,
+                  },
+                  {
+                    year: 2022,
+                    value: 34.15,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 35.17,
+                  },
+                  {
+                    year: 2024,
+                    value: 39.77,
+                  },
+                  {
+                    year: 2025,
+                    value: 40.68,
+                  },
+                ],
+                note: 'Struck on the profitability basis. 32.27% \u2192 40.68% over seven years, and up in every year since FY2022. Note the FY2022 dip to 34.15% \u2014 on the alternative expense basis this reads 32.6%, which is the figure to avoid mixing with the rest of the series.',
+              },
+            ],
+          },
+          {
+            name: 'Google Cloud',
+            type: 'Reportable segment',
+            featured: true,
+            note: 'The turnaround. From a $(1,922)m to $(2,968)m loss in FY2022 depending on basis, to $13,910m of operating profit in FY2025 \u2014 with profit MORE THAN DOUBLING in FY2025 alone. Employee compensation grew only 7.6% while revenue grew 35.8%.',
+            metrics: [
+              {
+                label: 'Revenue',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 8918,
+                  },
+                  {
+                    year: 2020,
+                    value: 13059,
+                  },
+                  {
+                    year: 2021,
+                    value: 19206,
+                  },
+                  {
+                    year: 2022,
+                    value: 26280,
+                  },
+                  {
+                    year: 2023,
+                    value: 33088,
+                  },
+                  {
+                    year: 2024,
+                    value: 43229,
+                  },
+                  {
+                    year: 2025,
+                    value: 58705,
+                  },
+                ],
+                note: 'Grew 558% over seven years, from $8.9bn to $58.7bn, and rose every year. FY2025 growth of 35.8% is the fastest of any Alphabet line.',
+              },
+              {
+                label: 'Employee Compensation Expense',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 16132,
+                  },
+                  {
+                    year: 2023,
+                    value: 19054,
+                  },
+                  {
+                    year: 2024,
+                    value: 20519,
+                  },
+                  {
+                    year: 2025,
+                    value: 22078,
+                  },
+                ],
+                note: 'Up only 7.6% in FY2025 against 35.8% revenue growth. That gap IS the operating leverage.',
+              },
+              {
+                label: 'Other Costs & Expenses',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 12070,
+                  },
+                  {
+                    year: 2023,
+                    value: 12318,
+                  },
+                  {
+                    year: 2024,
+                    value: 16598,
+                  },
+                  {
+                    year: 2025,
+                    value: 22717,
+                  },
+                ],
+                note: 'Up 36.9% in FY2025, tracking revenue growth of 35.8% almost exactly. This is the data centre and compute bill, and it scales with the business roughly one-for-one \u2014 so incremental Cloud margin comes from the people line, not the infrastructure line.',
+              },
+              {
+                label: 'Total Expenses',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 28202,
+                  },
+                  {
+                    year: 2023,
+                    value: 31372,
+                  },
+                  {
+                    year: 2024,
+                    value: 37117,
+                  },
+                  {
+                    year: 2025,
+                    value: 44795,
+                  },
+                ],
+                note: 'THE FY2022 EXPENSE FIGURES ARE ON A DIFFERENT BASIS. The supplied expense table implies FY2022 operating profit of $82,699m for Services, $(1,922)m for Cloud and $(4,636)m for Other Bets \u2014 but the segment profitability table gives $86,572m, $(2,968)m and $(6,083)m, and only the second set reconciles to total income from operations of $74,842m. The difference is pre- versus post-restatement presentation, from when Alphabet moved to "Alphabet-level activities" in FY2023. THE PROFITABILITY BASIS IS USED THROUGHOUT for operating profit and margin; the FY2022 expense components are shown as supplied and should not be differenced against it. FY2023\u2013FY2025 agree exactly on both bases.',
+              },
+              {
+                label: 'Operating Profit / (Loss)',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2018,
+                    value: -4348,
+                  },
+                  {
+                    year: 2019,
+                    value: -4645,
+                  },
+                  {
+                    year: 2020,
+                    value: -5607,
+                  },
+                  {
+                    year: 2021,
+                    value: -3099,
+                  },
+                  {
+                    year: 2022,
+                    value: -2968,
+                  },
+                  {
+                    year: 2023,
+                    value: 1716,
+                  },
+                  {
+                    year: 2024,
+                    value: 6112,
+                  },
+                  {
+                    year: 2025,
+                    value: 13910,
+                  },
+                ],
+                note: 'Crossed into profit in FY2023 after at least five consecutive loss years, then 3.6x in FY2024 and 2.3x again in FY2025.',
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2019,
+                    value: -52.09,
+                  },
+                  {
+                    year: 2020,
+                    value: -42.94,
+                  },
+                  {
+                    year: 2021,
+                    value: -16.14,
+                  },
+                  {
+                    year: 2022,
+                    value: -11.29,
+                  },
+                  {
+                    year: 2023,
+                    value: 5.19,
+                  },
+                  {
+                    year: 2024,
+                    value: 14.14,
+                  },
+                  {
+                    year: 2025,
+                    value: 23.69,
+                  },
+                ],
+                note: 'From \u221252.09% in FY2019 to +23.69% in FY2025 \u2014 a 76-point swing. Still below Services at 40.68%, but the direction and the pace are the story.',
+              },
+            ],
+          },
+          {
+            name: 'Other Bets',
+            type: 'Experimental ventures',
+            note: 'FY2025 REVERSED THREE YEARS OF IMPROVEMENT. The loss widened 69% to $(7,515)m \u2014 the worst in the series \u2014 while revenue FELL. Expenses now run 5.89x revenue, worse than FY2022.',
+            metrics: [
+              {
+                label: 'Revenue',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 659,
+                  },
+                  {
+                    year: 2020,
+                    value: 657,
+                  },
+                  {
+                    year: 2021,
+                    value: 753,
+                  },
+                  {
+                    year: 2022,
+                    value: 1068,
+                  },
+                  {
+                    year: 2023,
+                    value: 1527,
+                  },
+                  {
+                    year: 2024,
+                    value: 1648,
+                  },
+                  {
+                    year: 2025,
+                    value: 1537,
+                    down: true,
+                  },
+                ],
+                note: 'Fell 6.7% in FY2025 to $1,537m. On $402.8bn of group revenue this is 0.38% \u2014 a rounding error that consumes 5.8% of group operating profit.',
+              },
+              {
+                label: 'Total Expenses \u2014 derived',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2022,
+                    value: 5704,
+                  },
+                  {
+                    year: 2023,
+                    value: 5622,
+                  },
+                  {
+                    year: 2024,
+                    value: 6092,
+                  },
+                  {
+                    year: 2025,
+                    value: 9052,
+                  },
+                ],
+                note: 'Derived as revenue plus loss, on the expense-table basis. Spending jumped 48.6% in FY2025.',
+              },
+              {
+                label: 'Operating Loss',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2018,
+                    value: -3358,
+                  },
+                  {
+                    year: 2019,
+                    value: -4824,
+                    down: true,
+                  },
+                  {
+                    year: 2020,
+                    value: -4476,
+                  },
+                  {
+                    year: 2021,
+                    value: -5281,
+                    down: true,
+                  },
+                  {
+                    year: 2022,
+                    value: -6083,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: -4095,
+                  },
+                  {
+                    year: 2024,
+                    value: -4444,
+                  },
+                  {
+                    year: 2025,
+                    value: -7515,
+                    down: true,
+                  },
+                ],
+                note: 'The FY2025 loss of $(7,515)m is the largest in the eight-year series, 69% worse than FY2024. Waymo\u2019s scale-up is the obvious candidate but the segment disclosure does not confirm it.',
+              },
+              {
+                label: 'Loss per $1 of Revenue \u2014 Derived',
+                unit: 'x',
+                series: [
+                  {
+                    year: 2019,
+                    value: 7.32,
+                  },
+                  {
+                    year: 2020,
+                    value: 6.81,
+                  },
+                  {
+                    year: 2021,
+                    value: 7.01,
+                  },
+                  {
+                    year: 2022,
+                    value: 5.7,
+                  },
+                  {
+                    year: 2023,
+                    value: 2.68,
+                  },
+                  {
+                    year: 2024,
+                    value: 2.7,
+                  },
+                  {
+                    year: 2025,
+                    value: 4.89,
+                  },
+                ],
+                note: 'For every dollar of revenue, Other Bets lost $4.89 in FY2025, up from $2.70 in FY2024. The ratio had improved for three straight years and then went backwards sharply.',
+              },
+            ],
+          },
+          {
+            name: 'Alphabet-Level Activities',
+            type: 'Unallocated \u2014 the line nobody discusses',
+            featured: true,
+            note: 'INTRODUCED IN FY2023 when Alphabet restructured its segment presentation, replacing "corporate costs, unallocated". This is centralised AI research \u2014 DeepMind and Google Research \u2014 plus advanced computing infrastructure and shared corporate functions. It has grown 82% in two years and NOW LOSES MORE THAN OTHER BETS. It gets a fraction of the attention.',
+            metrics: [
+              {
+                label: 'Alphabet-Level Activities',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: -9186,
+                  },
+                  {
+                    year: 2024,
+                    value: -10541,
+                    down: true,
+                  },
+                  {
+                    year: 2025,
+                    value: -16760,
+                    down: true,
+                  },
+                ],
+                note: '$(9,186)m \u2192 $(10,541)m \u2192 $(16,760)m. Up 59% in FY2025 alone. For scale, this single line is now 2.2x the Other Bets loss and 12.99% of Google Services operating profit. If you are trying to size what Alphabet spends on frontier AI outside the product segments, this is the closest disclosed proxy.',
+              },
+              {
+                label: 'Corporate Costs, Unallocated \u2014 predecessor line',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2018,
+                    value: -7907,
+                  },
+                  {
+                    year: 2019,
+                    value: -5299,
+                  },
+                  {
+                    year: 2020,
+                    value: -3299,
+                  },
+                  {
+                    year: 2021,
+                    value: -4761,
+                    down: true,
+                  },
+                  {
+                    year: 2022,
+                    value: -2679,
+                  },
+                ],
+                note: 'The pre-FY2023 presentation, ended at $(2,679)m. Do not chain it to the line above \u2014 the restructuring changed what sits inside it, which is why the new line starts 3.4x higher.',
+              },
+            ],
+          },
+        ],
+      },
+      revenueByCategory: {
+        description: 'Revenue disaggregated by line, FY2019\u2013FY2025 ($M). Search plus YouTube ads plus Network sums exactly to Google advertising; advertising plus subscriptions/platforms/devices sums exactly to Google Services; and Services plus Cloud plus Other Bets plus hedging sums exactly to total revenue \u2014 verified in every year tested. NOTE A PRESENTATION BREAK: before FY2019 Alphabet reported "Google properties" and "Google other revenues" instead of these lines, so the pre-FY2019 series are not chainable to these.',
+        mix2024: [
+          {
+            label: 'Google Search & other',
+            value: 224532,
+            pct: 55.7,
+          },
+          {
+            label: 'Google subscriptions, platforms & devices',
+            value: 48030,
+            pct: 11.9,
+          },
+          {
+            label: 'Google Cloud',
+            value: 58705,
+            pct: 14.6,
+          },
+          {
+            label: 'YouTube ads',
+            value: 40367,
+            pct: 10.0,
+          },
+          {
+            label: 'Google Network',
+            value: 29792,
+            pct: 7.4,
+          },
+          {
+            label: 'Other Bets',
+            value: 1537,
+            pct: 0.4,
+          },
+        ],
+        lines: [
+          {
+            label: 'Google Search & other',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 98115,
+              },
+              {
+                year: 2020,
+                value: 104062,
+              },
+              {
+                year: 2021,
+                value: 148951,
+              },
+              {
+                year: 2022,
+                value: 162450,
+              },
+              {
+                year: 2023,
+                value: 175033,
+              },
+              {
+                year: 2024,
+                value: 198084,
+              },
+              {
+                year: 2025,
+                value: 224532,
+              },
+            ],
+            note: 'THE COMPANY. At $224.5bn this is 55.7% of total revenue and 65.5% of Google Services. Grew 129% over seven years and rose every year. Every risk in the register \u2014 the DOJ remedies, AI Overviews cannibalising clicks, one-click-away switching \u2014 routes through this single line.',
+          },
+          {
+            label: 'YouTube ads',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 15149,
+              },
+              {
+                year: 2020,
+                value: 19772,
+              },
+              {
+                year: 2021,
+                value: 28845,
+              },
+              {
+                year: 2022,
+                value: 29243,
+              },
+              {
+                year: 2023,
+                value: 31510,
+              },
+              {
+                year: 2024,
+                value: 36147,
+              },
+              {
+                year: 2025,
+                value: 40367,
+              },
+            ],
+            note: 'Grew 166% over seven years to $40.4bn, faster than Search. And this is ADVERTISING ONLY \u2014 YouTube subscription revenue sits in the subscriptions line below, so the platform is larger than this number suggests.',
+          },
+          {
+            label: 'Google Network',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 21547,
+              },
+              {
+                year: 2020,
+                value: 23090,
+              },
+              {
+                year: 2021,
+                value: 31701,
+              },
+              {
+                year: 2022,
+                value: 32780,
+              },
+              {
+                year: 2023,
+                value: 31312,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 30359,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: 29792,
+                down: true,
+              },
+            ],
+            note: 'THE ONLY ADVERTISING LINE IN DECLINE. Peaked at $32,780m in FY2022 and has fallen three consecutive years to $29,792m, down 9.1% from peak. This is the third-party publisher network \u2014 precisely the business the DOJ ad tech case targets for structural remedy. A shrinking line and the one facing divestiture risk are the same line.',
+          },
+          {
+            label: 'Google advertising \u2014 total',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 134811,
+              },
+              {
+                year: 2020,
+                value: 146924,
+              },
+              {
+                year: 2021,
+                value: 209497,
+              },
+              {
+                year: 2022,
+                value: 224473,
+              },
+              {
+                year: 2023,
+                value: 237855,
+              },
+              {
+                year: 2024,
+                value: 264590,
+              },
+              {
+                year: 2025,
+                value: 294691,
+              },
+            ],
+            note: 'Search plus YouTube ads plus Network. At $294.7bn this is 73.2% of total revenue \u2014 Alphabet remains overwhelmingly an advertising business, and Item 1A states the dependency plainly.',
+          },
+          {
+            label: 'Google subscriptions, platforms & devices',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 17014,
+              },
+              {
+                year: 2020,
+                value: 21711,
+              },
+              {
+                year: 2021,
+                value: 28032,
+              },
+              {
+                year: 2022,
+                value: 29055,
+              },
+              {
+                year: 2023,
+                value: 34688,
+              },
+              {
+                year: 2024,
+                value: 40340,
+              },
+              {
+                year: 2025,
+                value: 48030,
+              },
+            ],
+            note: 'THE DIVERSIFICATION, AND IT IS WORKING. Grew 182% over seven years to $48.0bn \u2014 faster than advertising \u2014 and up 19.1% in FY2025. YouTube TV, Music and Premium, NFL Sunday Ticket, Google One, Play, and Pixel and Nest hardware. Now 14.0% of Google Services, against 11.2% in FY2019.',
+          },
+          {
+            label: 'Google Cloud',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 8918,
+              },
+              {
+                year: 2020,
+                value: 13059,
+              },
+              {
+                year: 2021,
+                value: 19206,
+              },
+              {
+                year: 2022,
+                value: 26280,
+              },
+              {
+                year: 2023,
+                value: 33088,
+              },
+              {
+                year: 2024,
+                value: 43229,
+              },
+              {
+                year: 2025,
+                value: 58705,
+              },
+            ],
+            note: 'Up 558% over seven years and 14.6% of total revenue, from 5.5% in FY2019. The fastest-growing line in the company.',
+          },
+          {
+            label: 'Other Bets',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 659,
+              },
+              {
+                year: 2020,
+                value: 657,
+              },
+              {
+                year: 2021,
+                value: 753,
+              },
+              {
+                year: 2022,
+                value: 1068,
+              },
+              {
+                year: 2023,
+                value: 1527,
+              },
+              {
+                year: 2024,
+                value: 1648,
+              },
+              {
+                year: 2025,
+                value: 1537,
+                down: true,
+              },
+            ],
+            note: '0.38% of total revenue, and falling.',
+          },
+          {
+            label: 'Hedging gains / (losses)',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 455,
+              },
+              {
+                year: 2020,
+                value: 176,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 149,
+                down: true,
+              },
+              {
+                year: 2022,
+                value: 1960,
+              },
+              {
+                year: 2023,
+                value: 236,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 211,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: -127,
+                down: true,
+              },
+            ],
+            note: 'Reported within revenue. Matches the derivatives impact table to within $1m \u2014 see the geography note and the DERIVATIVES tab.',
+          },
+        ],
+      },
+    },
     employees: {
       label: 'Total Employees',
       unit: '',
