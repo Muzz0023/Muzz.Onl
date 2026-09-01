@@ -26263,6 +26263,313 @@ const GOOG_BREAKDOWN = {
         },
       ],
     },
+    derivatives: {
+      summary: 'Alphabet uses derivatives to manage foreign currency, interest rate, commodity price, credit and equity price risk \u2014 and, unusually, states plainly that it also enters into derivatives TO ENHANCE INVESTMENT RETURNS. That phrase does not appear in the KO, HSY or COST filings, which all open with some version of "we do not enter into derivatives for speculative purposes". Quantified below, the enhancement book turns out to be a rounding error. The genuine finding is elsewhere: $16.9bn of CREDIT DERIVATIVES created from nothing in a single year, backstopping third parties\u2019 data centre lease obligations. All derivatives are carried at fair value, primarily Level 2. FX collars are presented net; everything else gross.',
+      accountingNote: 'Accounting treatment follows intended use and hedge designation. Cash flow hedges defer in AOCI and reclassify into revenue when the hedged sales are recognised; fair value hedges run through OI&E against the hedged item; net investment hedges park in AOCI with excluded components amortised to OI&E; non-designated derivatives hit earnings immediately with no deferral \u2014 which is the CONSERVATIVE choice, not evasion, since every wobble shows up straight away rather than being parked in equity.',
+      risksHedged: [
+        {
+          name: 'Cash flow hedges \u00b7 $23.9bn notional',
+          icon: '\u1f310',
+          description: 'Forecasted revenue in non-USD currencies, hedged with forwards, options and collars at maturities of 24 months or less. Net accumulated pre-tax loss of $60m, reclassifying within 12 months \u2014 trivial.',
+          instruments: 'FX forwards, options and collars \u2014 designated cash flow hedges',
+          purpose: 'Alphabet books well over $190bn of international revenue a year, so hedging $24bn of it is hedging a fraction of real exposure. The collar is the tell: buying a put and selling a call deliberately caps your upside to cheapen the protection. That is a cost-conscious hedger\u2019s instrument \u2014 a speculator does not sell away their own upside.',
+        },
+        {
+          name: 'Fair value hedges \u00b7 wound down to $0',
+          icon: '\u1f4c9',
+          description: 'Was $1.56bn in 2024, now zero. The programme closed as the underlying non-USD marketable debt securities rolled off.',
+          instruments: 'FX forwards \u2014 designated fair value hedges',
+          purpose: 'Three-year effectiveness record before closure: hedge versus hedged item of \u221259/+59, +58/\u221259, +9/\u22129. Near-perfect mirror images netting to about zero every year. Mechanical, boring and correct.',
+        },
+        {
+          name: 'Net investment hedges \u00b7 $14.2bn + $15.4bn debt',
+          icon: '\u1f3e6',
+          description: 'FX risk on the USD value of foreign subsidiaries. NEW IN 2025: $15.4bn of foreign currency-denominated debt designated as a net investment hedge, against zero in 2024.',
+          instruments: 'Forwards, options and collars, cross-currency swaps, and foreign-currency debt',
+          purpose: 'The debt designation is the cheapest hedge available \u2014 you were borrowing anyway, so borrow in the currency you are exposed to and the hedge costs nothing. It is Coca-Cola\u2019s long-standing playbook, newly adopted by a company that historically barely borrowed at all. Read it alongside the AI capex: Alphabet has started raising foreign-currency debt at scale, and is taking the free hedge while it does.',
+        },
+        {
+          name: 'Non-designated FX \u00b7 $56.1bn notional',
+          icon: '\u2696',
+          description: 'The largest book, and the one a careless reading calls speculation because it lacks hedge accounting. It is remeasurement hedging of monetary assets and liabilities held in non-functional currencies.',
+          instruments: 'FX forwards \u2014 not designated as hedging instruments',
+          purpose: 'Alphabet carries enormous intercompany balances, cash pools and receivables across roughly fifty currencies. Those remeasure through the income statement every quarter whether hedged or not, so the offsetting derivative can too \u2014 hedge accounting would add paperwork without benefit. Gains ran positive in three consecutive years across opposite dollar regimes, which is not what directional betting looks like; it is both sides of a remeasurement seesaw.',
+        },
+        {
+          name: 'Other contracts \u00b7 $15.9bn \u2014 the "enhance returns" book',
+          icon: '\u1f3b2',
+          description: 'Equity and commodity overlays on the investment portfolio, plus the return-enhancement activity. Fair value $324m assets against $98m liabilities \u2014 a net position of about $226m.',
+          instruments: 'Equity and commodity derivatives, likely covered-call-type overlays',
+          purpose: 'This is the only line carrying genuine speculation vocabulary, so it deserves quantifying rather than assuming. It LOST $148m in 2025 against OI&E of $29.8bn \u2014 minus 0.5% of OI&E. A treasury squeezing basis points from a $100bn-plus securities pile and a bit of commodity exposure for data centre energy. Nobody builds a profit engine that loses money.',
+        },
+        {
+          name: 'Credit derivatives \u00b7 $0 \u2192 $16.9bn \u26a0',
+          icon: '\u26a0',
+          description: 'THE FINDING. Backstop guarantees on THIRD PARTIES\u2019 data centre lease obligations, created from nothing in a single year. Maximum potential payments $16.94bn, tenors running up to 15 years. If triggered, Alphabet may receive equity in or cash payments from certain counterparties.',
+          instruments: 'Written credit protection \u2014 accounted for as credit derivatives',
+          purpose: 'This one is not hedging Alphabet\u2019s risk; it is absorbing someone else\u2019s. AI-compute partners cannot finance data centre leases without a creditworthy guarantor, so Alphabet\u2019s signature becomes their borrowing capacity, which becomes compute capacity existing for an ecosystem Alphabet needs. It is insurance written for STRATEGIC benefit rather than premium \u2014 and that is precisely the problem. Berkshire writes insurance too, but the question is always whether the premium compensates the tail. Here there is no premium.',
+        },
+      ],
+      hedgeTypes: [
+        {
+          name: 'Forwards',
+          description: 'Lock the rate \u2014 certainty in both directions.',
+        },
+        {
+          name: 'Options',
+          description: 'Insure the rate \u2014 downside protection with upside retained, for a premium.',
+        },
+        {
+          name: 'Collars',
+          description: 'Insure cheaply \u2014 sell your upside to fund your protection.',
+        },
+        {
+          name: 'Cross-currency swaps',
+          description: 'Long-dated FX lock matched to permanent foreign investments.',
+        },
+        {
+          name: 'Foreign-currency debt as hedge',
+          description: 'Borrow in the currency you fear \u2014 the hedge is free because you were borrowing anyway. New in 2025.',
+        },
+        {
+          name: 'Non-designated forwards',
+          description: 'Neutralise quarterly remeasurement noise; straight to earnings, no AOCI.',
+        },
+        {
+          name: 'Credit derivatives',
+          description: 'Alphabet co-signing the AI industry\u2019s lease applications. \u26a0',
+        },
+      ],
+      pros: [
+        'ZERO OF FIVE SPECULATION FINGERPRINTS on the market-facing book. Notionals are proportionate ($127bn against $403bn of revenue, about 32% \u2014 lighter than Coca-Cola\u2019s ~108%). Income effects are noise against $132bn of net income. Every FX programme maps to identifiable revenue, securities, subsidiaries or monetary balances. The enhancement book lost money. Counterparty exposure is collateralised.',
+        'The 2025 cash flow hedge LOSS is the proof of hedging rather than betting \u2014 hedges are supposed to lose when the thing they protect appreciates. A speculative book does not politely lose money against a revenue base that gained from the same currency move.',
+        'Counterparty risk is genuinely negligible: master netting plus collateral arrangements reduce true net exposure to $361m of assets and $224m of liabilities on a company of this size.',
+        'Choosing NOT to apply hedge accounting to the largest book is the conservative option \u2014 everything hits earnings immediately rather than being parked in AOCI. Companies concealing speculation do the reverse.',
+      ],
+      cons: [
+        'THE CREDIT DERIVATIVE BOOK IS PRO-CYCLICAL WITH EVERYTHING ELSE ALPHABET IS BETTING ON. If AI demand disappoints, compute partners\u2019 revenue dries up, they default on leases, the backstops fire \u2014 and Alphabet pays out at precisely the moment its own capex is being written down. No diversification, maximum correlation. It is the one line where Alphabet is levered to its own optimism.',
+        'The recovery mechanism makes Alphabet a distressed-equity investor in failed AI-compute firms. That is the remedy, not a mitigant.',
+        'Fifteen-year tails are the longest-dated exposure in the entire book, spanning multiple credit cycles, and the whole $16.9bn appeared in a single year.',
+        'The exposure is contingent and lives off the balance sheet until it does not. Combined with the $5.7bn of power-equipment financial guarantees in the commitments note, that is roughly $22.6bn of off-balance-sheet guarantees underwriting the physical supply chain of the AI build-out \u2014 leases and power both.',
+      ],
+      bigPicture: 'No gambling \u2014 but they have started writing insurance on their own thesis. The market-facing book is professionally run, effectiveness-proven, collateralised and immaterial to earnings in every year tested; the same "boring is good" grade as KO, HSY and COST. The "enhance investment returns" language that would alarm a headline reader quantifies out at rounding-error scale, and its 2025 loss is oddly reassuring. Grade the two halves separately: derivatives desk CLEAN, balance-sheet-as-AI-underwriter WATCH ITEM. Honest mitigants on the credit book \u2014 disclosed transparently, severe defaults required to trigger, equity recovery rights, and $17bn against roughly $470bn of assets and $132bn of annual net income is survivable even at total loss. But re-check the notional every single 10-K. If it runs to $50bn-plus while AI monetisation questions grow, the risk grade changes.',
+      tables: [
+        {
+          title: 'GROSS NOTIONAL AMOUNTS ($M)',
+          columns: [
+            'Programme',
+            'FY2024',
+            'FY2025',
+            'Change',
+          ],
+          rows: [
+            [
+              'FX \u2014 cash flow hedges',
+              '20,315',
+              '23,852',
+              '+17.4%',
+            ],
+            [
+              'FX \u2014 fair value hedges',
+              '1,562',
+              '0',
+              'wound down',
+            ],
+            [
+              'FX \u2014 net investment hedges',
+              '6,986',
+              '14,203',
+              '+103.3%',
+            ],
+            [
+              'FX \u2014 not designated',
+              '44,227',
+              '56,085',
+              '+26.8%',
+            ],
+            [
+              'Credit derivatives',
+              '0',
+              '16,940',
+              'NEW',
+            ],
+            [
+              'Other contracts',
+              '15,082',
+              '15,900',
+              '+5.4%',
+            ],
+            [
+              'TOTAL NOTIONAL',
+              '88,172',
+              '126,980',
+              '+44.0%',
+            ],
+          ],
+          emphasis: [
+            4,
+            6,
+          ],
+          note: 'Components sum exactly to both stated totals. Total notional grew 44% in one year, and $16.9bn of that $38.8bn increase \u2014 44% of the growth \u2014 is the new credit derivative book alone. Scale check: $127bn of notional against $403bn of revenue is about 32%, versus roughly 108% for Coca-Cola. Alphabet hedges proportionally LIGHTER than its peers despite comparable international exposure.',
+        },
+        {
+          title: 'FAIR VALUES ($M)',
+          columns: [
+            'Category',
+            'FY2024 assets',
+            'FY2024 liab.',
+            'FY2025 assets',
+            'FY2025 liab.',
+          ],
+          rows: [
+            [
+              'Designated FX',
+              '1,054',
+              '0',
+              '316',
+              '197',
+            ],
+            [
+              'Non-designated FX',
+              '200',
+              '593',
+              '92',
+              '84',
+            ],
+            [
+              'Other contracts',
+              '474',
+              '19',
+              '324',
+              '98',
+            ],
+            [
+              'TOTAL',
+              '1,728',
+              '612',
+              '732',
+              '379',
+            ],
+          ],
+          emphasis: [
+            3,
+          ],
+          note: 'Components tie to the stated totals in both years. Note how small these are: a $732m derivative asset against $126.98bn of notional means the book is almost entirely at-the-money \u2014 which is what a hedging book should look like. Total fair value roughly halved year on year as positions rolled.',
+        },
+        {
+          title: 'OTHER COMPREHENSIVE INCOME IMPACT ($M)',
+          columns: [
+            'Component',
+            'FY2023',
+            'FY2024',
+            'FY2025',
+          ],
+          rows: [
+            [
+              'Cash flow hedges',
+              '174',
+              '934',
+              '(1,023)',
+            ],
+            [
+              'Net investment hedges',
+              '(287)',
+              '223',
+              '(1,147)',
+            ],
+            [
+              'TOTAL OCI IMPACT',
+              '(113)',
+              '1,157',
+              '(2,170)',
+            ],
+          ],
+          emphasis: [
+            2,
+          ],
+          note: 'Sums tie in all three years. The FY2025 loss of $2.17bn is the dollar-weakening mirror image of foreign operations GAINING value in translation \u2014 the losses sit in AOCI next to larger offsetting gains. A non-event, and exactly what a working hedge does.',
+        },
+        {
+          title: 'INCOME STATEMENT IMPACT ($M)',
+          columns: [
+            'Line',
+            'FY2023',
+            'FY2024',
+            'FY2025',
+          ],
+          rows: [
+            [
+              'In revenues',
+              '237',
+              '211',
+              '(126)',
+            ],
+            [
+              'In other income & expense',
+              '262',
+              '658',
+              '487',
+            ],
+          ],
+          note: 'DISCREPANCY BETWEEN THE SUPPLIED SOURCES \u2014 flagged, not resolved. The impact table above gives revenue effects of 237 / 211 / (126), but the accompanying audit narrative states +213 / +174 / (233). Separately, the narrative splits OI&E into FX gains of +7 / +335 / +445 and other-contract results of +53 / +174 / (148), which sum to +60 / +509 / +297 \u2014 not the 262 / 658 / 487 in the table. The TABLE is carried here as the primary source. The direction and the conclusion are unaffected either way: against $403bn of revenue and $29.8bn of OI&E these are rounding errors, and the revenue line flipping negative in FY2025 is the hedge correctly losing as the dollar weakened.',
+        },
+        {
+          title: 'OFFSETTING & COLLATERAL \u2014 TRUE COUNTERPARTY EXPOSURE ($M)',
+          columns: [
+            'As of',
+            'Gross',
+            'Offset in B/S',
+            'Net presented',
+            'Legal right',
+            'Collateral',
+            'TRUE NET',
+          ],
+          rows: [
+            [
+              '31 Dec 2024 \u00b7 assets',
+              '1,776',
+              '(48)',
+              '1,728',
+              '(516)',
+              '(721)',
+              '491',
+            ],
+            [
+              '31 Dec 2024 \u00b7 liabilities',
+              '660',
+              '(48)',
+              '612',
+              '(516)',
+              '(9)',
+              '87',
+            ],
+            [
+              '31 Dec 2025 \u00b7 assets',
+              '842',
+              '(110)',
+              '732',
+              '(140)',
+              '(231)',
+              '361',
+            ],
+            [
+              '31 Dec 2025 \u00b7 liabilities',
+              '489',
+              '(110)',
+              '379',
+              '(140)',
+              '(15)',
+              '224',
+            ],
+          ],
+          emphasis: [
+            2,
+            3,
+          ],
+          note: 'Every row reconciles: gross less offset equals net presented, and net presented less legal right of offset less collateral equals true net, in all four rows. Master netting and collateral security arrangements reduce genuine counterparty exposure to $361m of assets and $224m of liabilities. On a company of this size that is negligible \u2014 the AIG fingerprint of an uncollateralised counterparty web is absent.',
+        },
+      ],
+    },
   },
 };
 
@@ -41115,6 +41422,39 @@ function MuzzApp() {
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{derivatives.bigPicture}</div>
                                 </div>
                               )}
+
+                              {/* NUMERIC TABLES — notionals, fair values, OCI, income impact, offsetting */}
+                              {derivatives.tables && derivatives.tables.length > 0 && derivatives.tables.map((tb, ti) => (
+                                <div key={ti} style={{marginBottom:'10px'}}>
+                                  {tb.title && <SectionHeading>// {tb.title}</SectionHeading>}
+                                  <div style={{overflowX:'auto',marginBottom:'6px'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                          {(tb.columns || []).map((c, ci) => (
+                                            <th key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'7px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',whiteSpace:'nowrap'}}>{c}</th>
+                                          ))}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {(tb.rows || []).map((r, ri) => {
+                                          const hot = (tb.emphasis || []).indexOf(ri) >= 0;
+                                          return (
+                                            <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: hot ? 'rgba(245,158,11,0.08)' : 'transparent'}}>
+                                              {r.map((cell, ci) => (
+                                                <td key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'6px 9px',color: hot ? amber : (ci === 0 ? 'rgba(224,234,255,0.85)' : 'rgba(224,234,255,0.7)'),fontWeight: hot || ci === 0 ? 600 : 400,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{cell}</td>
+                                              ))}
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  {tb.note && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>{tb.note}</div>
+                                  )}
+                                </div>
+                              ))}
                             </>
                           )}
 
