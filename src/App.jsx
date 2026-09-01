@@ -32428,7 +32428,7 @@ const RACE_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES,
 // COMMITMENTS, SEGMENTS, COMPETITORS.
-// TABS DARK: BALANCE, CASH FLOW, THESIS.
+// TABS DARK: THESIS only.
 //
 // CHECKED BEFORE BUILDING:
 //   the four new-flow components ($145T B2B + $20T B2C + $20T P2P +
@@ -36554,6 +36554,2086 @@ const V_BREAKDOWN = {
             },
           ],
           note: 'FELL IN EVERY SINGLE YEAR, from 2,624m to 2,029m \u2014 down 22.7% over eleven years. Sustained buybacks, and the mechanism the US retrospective responsibility plan mimics when escrow deposits reduce the Class B conversion rate. BUT SEE THE OWNERSHIP TAB: this count is not permanently shrinking. Class B-1 and B-2 convert into Class A when the US covered litigation resolves, and the Series B and C preferred convert by 2028 at the latest.',
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 3518,
+          },
+          {
+            year: 2016,
+            value: 5619,
+          },
+          {
+            year: 2017,
+            value: 9874,
+          },
+          {
+            year: 2018,
+            value: 8162,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 7838,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 16289,
+          },
+          {
+            year: 2021,
+            value: 16487,
+          },
+          {
+            year: 2022,
+            value: 15689,
+          },
+          {
+            year: 2023,
+            value: 16286,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 11975,
+            down: true,
+          },
+        ],
+        note: 'FELL 26.5% IN FY2024, from $16,286m to $11,975m \u2014 the largest single-year decline in the series. Read it against the $1,500m escrow deposit and continued buybacks.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 847,
+          },
+          {
+            year: 2016,
+            value: 1041,
+          },
+          {
+            year: 2017,
+            value: 1132,
+          },
+          {
+            year: 2018,
+            value: 1328,
+          },
+          {
+            year: 2019,
+            value: 1542,
+          },
+          {
+            year: 2020,
+            value: 1618,
+          },
+          {
+            year: 2021,
+            value: 1968,
+          },
+          {
+            year: 2022,
+            value: 2020,
+          },
+          {
+            year: 2023,
+            value: 2291,
+          },
+          {
+            year: 2024,
+            value: 2561,
+          },
+        ],
+        note: 'Rose every year, up 202% \u2014 broadly tracking revenue.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 10021,
+          },
+          {
+            year: 2016,
+            value: 14313,
+          },
+          {
+            year: 2017,
+            value: 19023,
+          },
+          {
+            year: 2018,
+            value: 18216,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 20970,
+          },
+          {
+            year: 2020,
+            value: 27645,
+          },
+          {
+            year: 2021,
+            value: 27607,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 30205,
+          },
+          {
+            year: 2023,
+            value: 33532,
+          },
+          {
+            year: 2024,
+            value: 34033,
+          },
+        ],
+      },
+      ppeNet: {
+        label: 'Property, Equipment & Technology, net',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1888,
+          },
+          {
+            year: 2016,
+            value: 2150,
+          },
+          {
+            year: 2017,
+            value: 2253,
+          },
+          {
+            year: 2018,
+            value: 2472,
+          },
+          {
+            year: 2019,
+            value: 2695,
+          },
+          {
+            year: 2020,
+            value: 2737,
+          },
+          {
+            year: 2021,
+            value: 2715,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 3223,
+          },
+          {
+            year: 2023,
+            value: 3425,
+          },
+          {
+            year: 2024,
+            value: 3824,
+          },
+        ],
+        note: 'Only $3,824m of physical and technology assets supporting 233.8 billion processed transactions and $15.5 TRILLION of volume. PP&E is 4.0% of total assets. This is the asset-light model in one number.',
+      },
+      goodwill: {
+        label: 'Goodwill',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 11825,
+          },
+          {
+            year: 2016,
+            value: 15066,
+          },
+          {
+            year: 2017,
+            value: 15110,
+          },
+          {
+            year: 2018,
+            value: 15194,
+          },
+          {
+            year: 2019,
+            value: 15656,
+          },
+          {
+            year: 2020,
+            value: 15910,
+          },
+          {
+            year: 2021,
+            value: 15958,
+          },
+          {
+            year: 2022,
+            value: 17787,
+          },
+          {
+            year: 2023,
+            value: 17997,
+          },
+          {
+            year: 2024,
+            value: 18941,
+          },
+        ],
+        note: 'Jumped from $11,825m to $15,066m in FY2016 on the Visa Europe acquisition, and has grown steadily since through Tink, Currencycloud, Pismo and others.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 39367,
+          },
+          {
+            year: 2016,
+            value: 64035,
+          },
+          {
+            year: 2017,
+            value: 67977,
+          },
+          {
+            year: 2018,
+            value: 69225,
+          },
+          {
+            year: 2019,
+            value: 72574,
+          },
+          {
+            year: 2020,
+            value: 80919,
+          },
+          {
+            year: 2021,
+            value: 82896,
+          },
+          {
+            year: 2022,
+            value: 85501,
+          },
+          {
+            year: 2023,
+            value: 90499,
+          },
+          {
+            year: 2024,
+            value: 94511,
+          },
+        ],
+        note: 'Grew 140% over nine years, but note the shape: +63% in FY2016 alone on Visa Europe, then a steady grind. THE SUPPLIED BALANCE SHEET EXTRACT IS INCOMPLETE, NOT WRONG. Subtotals are carried exactly as given and are treated as authoritative; the line detail omits some items. Current liability lines fall short of the stated total by $1,806m in FY2017, $1,289m in FY2018, $2,385m in FY2020, $995m in FY2021 and $2,250m in FY2022 \u2014 the gap is shown as its own derived line below. FY2015, FY2019, FY2023 and FY2024 reconcile cleanly.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 127,
+          },
+          {
+            year: 2016,
+            value: 203,
+          },
+          {
+            year: 2017,
+            value: 179,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 183,
+          },
+          {
+            year: 2019,
+            value: 156,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 174,
+          },
+          {
+            year: 2021,
+            value: 266,
+          },
+          {
+            year: 2022,
+            value: 340,
+          },
+          {
+            year: 2023,
+            value: 375,
+          },
+          {
+            year: 2024,
+            value: 479,
+          },
+        ],
+        note: 'Only $479m \u2014 trivially small. Visa has almost no trade payables because it buys almost nothing physical.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 5355,
+          },
+          {
+            year: 2016,
+            value: 8046,
+          },
+          {
+            year: 2017,
+            value: 9991,
+          },
+          {
+            year: 2018,
+            value: 11305,
+          },
+          {
+            year: 2019,
+            value: 13415,
+          },
+          {
+            year: 2020,
+            value: 14513,
+          },
+          {
+            year: 2021,
+            value: 15739,
+          },
+          {
+            year: 2022,
+            value: 20853,
+          },
+          {
+            year: 2023,
+            value: 23098,
+          },
+          {
+            year: 2024,
+            value: 26517,
+          },
+        ],
+        note: 'Grew 395%, far faster than current assets at 240%, driven mainly by the client incentive liability.',
+      },
+      currentRatio: {
+        label: 'Current Liabilities / Current Assets',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.53,
+          },
+          {
+            year: 2016,
+            value: 0.56,
+          },
+          {
+            year: 2017,
+            value: 0.53,
+          },
+          {
+            year: 2018,
+            value: 0.62,
+          },
+          {
+            year: 2019,
+            value: 0.64,
+          },
+          {
+            year: 2020,
+            value: 0.52,
+          },
+          {
+            year: 2021,
+            value: 0.57,
+          },
+          {
+            year: 2022,
+            value: 0.69,
+          },
+          {
+            year: 2023,
+            value: 0.69,
+          },
+          {
+            year: 2024,
+            value: 0.78,
+          },
+        ],
+        note: 'Rose from 0.53x to 0.78x \u2014 the cushion has thinned materially, though it remains comfortable.',
+      },
+      longTermDebt: {
+        label: 'Long-Term Debt',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 0,
+          },
+          {
+            year: 2016,
+            value: 15882,
+          },
+          {
+            year: 2017,
+            value: 16618,
+          },
+          {
+            year: 2018,
+            value: 16630,
+          },
+          {
+            year: 2019,
+            value: 16729,
+          },
+          {
+            year: 2020,
+            value: 21071,
+          },
+          {
+            year: 2021,
+            value: 19978,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 20200,
+          },
+          {
+            year: 2023,
+            value: 20463,
+          },
+          {
+            year: 2024,
+            value: 20836,
+          },
+        ],
+        note: 'VISA HAD ZERO LONG-TERM DEBT UNTIL FY2016. The $15,882m that appeared that year funded the Visa Europe acquisition, and the balance has sat at $20\u201321bn since FY2020. At 1.06x net income and 0.53x equity this is conservative, but the debt-free era ended with Visa Europe.',
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.0,
+          },
+          {
+            year: 2016,
+            value: 0.48,
+          },
+          {
+            year: 2017,
+            value: 0.51,
+          },
+          {
+            year: 2018,
+            value: 0.48,
+          },
+          {
+            year: 2019,
+            value: 0.48,
+          },
+          {
+            year: 2020,
+            value: 0.58,
+          },
+          {
+            year: 2021,
+            value: 0.53,
+          },
+          {
+            year: 2022,
+            value: 0.57,
+          },
+          {
+            year: 2023,
+            value: 0.53,
+          },
+          {
+            year: 2024,
+            value: 0.53,
+          },
+        ],
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 9525,
+          },
+          {
+            year: 2016,
+            value: 31123,
+          },
+          {
+            year: 2017,
+            value: 35217,
+          },
+          {
+            year: 2018,
+            value: 35219,
+          },
+          {
+            year: 2019,
+            value: 37890,
+          },
+          {
+            year: 2020,
+            value: 44709,
+          },
+          {
+            year: 2021,
+            value: 45307,
+          },
+          {
+            year: 2022,
+            value: 49920,
+          },
+          {
+            year: 2023,
+            value: 51766,
+          },
+          {
+            year: 2024,
+            value: 55374,
+          },
+        ],
+        note: 'Grew 481% over nine years against 31% equity growth \u2014 which is what buying back stock while borrowing does to a balance sheet.',
+      },
+      debtToEquity: {
+        label: 'Total Liabilities to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.32,
+          },
+          {
+            year: 2016,
+            value: 0.95,
+          },
+          {
+            year: 2017,
+            value: 1.08,
+          },
+          {
+            year: 2018,
+            value: 1.01,
+          },
+          {
+            year: 2019,
+            value: 1.09,
+          },
+          {
+            year: 2020,
+            value: 1.23,
+          },
+          {
+            year: 2021,
+            value: 1.21,
+          },
+          {
+            year: 2022,
+            value: 1.4,
+          },
+          {
+            year: 2023,
+            value: 1.34,
+          },
+          {
+            year: 2024,
+            value: 1.41,
+          },
+        ],
+      },
+      additionalPaidInCapital: {
+        label: 'Additional Paid-In Capital',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 18073,
+          },
+          {
+            year: 2016,
+            value: 17395,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 16900,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 16678,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 16541,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 16721,
+          },
+          {
+            year: 2021,
+            value: 18855,
+          },
+          {
+            year: 2022,
+            value: 19545,
+          },
+          {
+            year: 2023,
+            value: 20452,
+          },
+          {
+            year: 2024,
+            value: 21229,
+          },
+        ],
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings (Accumulated Income)',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 11843,
+          },
+          {
+            year: 2016,
+            value: 10462,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 9508,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 11318,
+          },
+          {
+            year: 2019,
+            value: 13502,
+          },
+          {
+            year: 2020,
+            value: 14088,
+          },
+          {
+            year: 2021,
+            value: 15351,
+          },
+          {
+            year: 2022,
+            value: 16116,
+          },
+          {
+            year: 2023,
+            value: 18040,
+          },
+          {
+            year: 2024,
+            value: 17289,
+            down: true,
+          },
+        ],
+        note: 'THE BUFFETT RETAINED-EARNINGS TEST DOES NOT WORK ON THIS COMPANY, and it is worth understanding why. Retained earnings grew just $5,446m between FY2015 and FY2024 while market value grew roughly $431,000m \u2014 implying $79.14 of market value per $1 retained, against Alphabet\u2019s $13.98. That looks spectacular and means almost nothing. Cumulative net income over the same period was $116,549m, so 95.3% OF EARNINGS WERE RETURNED RATHER THAN RETAINED. The denominator is near zero, so the ratio explodes. For heavy repurchasers this test measures payout policy, not value creation. Note also that retained earnings FELL $751m in FY2024 despite $19,743m of net income.',
+      },
+      shareholderEquity: {
+        label: 'Total Stockholders\u2019 Equity',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 29842,
+          },
+          {
+            year: 2016,
+            value: 32912,
+          },
+          {
+            year: 2017,
+            value: 32760,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 34806,
+          },
+          {
+            year: 2019,
+            value: 34684,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 36210,
+          },
+          {
+            year: 2021,
+            value: 37589,
+          },
+          {
+            year: 2022,
+            value: 35581,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 38733,
+          },
+          {
+            year: 2024,
+            value: 39137,
+          },
+        ],
+        note: 'Grew only 31% over nine years while net income grew 212% \u2014 because capital is returned rather than accumulated. That is the direct cause of the 50.4% return on equity. NOTE AN INCONSISTENCY: in FY2018 total liabilities plus equity exceeds total assets by $800m. The source\u2019s own ROE and ROA figures for FY2018 use these same subtotals, so all three are carried as supplied and the imbalance is flagged rather than resolved.',
+      },
+      sharesOutstanding: {
+        label: 'Diluted Weighted-Average Class A Shares',
+        unit: 'M shares',
+        series: [
+          {
+            year: 2015,
+            value: 2457,
+          },
+          {
+            year: 2016,
+            value: 2414,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 2395,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 2329,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 2272,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 2223,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 2188,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 2136,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 2085,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 2029,
+            down: true,
+          },
+        ],
+        note: 'Fell in every single year, 2,457m to 2,029m, down 17.4% over nine years. See the OWNERSHIP tab: Class B and the preferred convert into Class A later, so this decline is not permanent.',
+      },
+      bookValuePerShare: {
+        label: 'Book Value Per Share',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 12.15,
+          },
+          {
+            year: 2016,
+            value: 13.63,
+          },
+          {
+            year: 2017,
+            value: 13.68,
+          },
+          {
+            year: 2018,
+            value: 14.94,
+          },
+          {
+            year: 2019,
+            value: 15.27,
+          },
+          {
+            year: 2020,
+            value: 16.29,
+          },
+          {
+            year: 2021,
+            value: 17.18,
+          },
+          {
+            year: 2022,
+            value: 16.66,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 18.58,
+          },
+          {
+            year: 2024,
+            value: 19.29,
+          },
+        ],
+        note: '$12.15 to $19.29, a 5.27% CAGR \u2014 far below earnings growth, again because capital is returned.',
+      },
+      investedCapital: {
+        label: 'Invested Capital',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 22755,
+          },
+          {
+            year: 2016,
+            value: 38829,
+          },
+          {
+            year: 2017,
+            value: 34959,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 38236,
+          },
+          {
+            year: 2019,
+            value: 38134,
+          },
+          {
+            year: 2020,
+            value: 36339,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 38161,
+          },
+          {
+            year: 2022,
+            value: 35810,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 37304,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 41709,
+          },
+        ],
+        note: 'ESSENTIALLY FLAT FOR EIGHT YEARS \u2014 $38,829m in FY2016 against $41,709m in FY2024, up just 7.4%, while NOPAT more than tripled. That is the entire ROIC story.',
+      },
+      extraLines: [
+        {
+          label: 'Restricted Cash \u2014 US Litigation Escrow',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1072,
+            },
+            {
+              year: 2016,
+              value: 1027,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1031,
+            },
+            {
+              year: 2018,
+              value: 1491,
+            },
+            {
+              year: 2019,
+              value: 1205,
+            },
+            {
+              year: 2020,
+              value: 901,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 894,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1449,
+            },
+            {
+              year: 2023,
+              value: 1764,
+            },
+            {
+              year: 2024,
+              value: 3089,
+            },
+          ],
+          note: 'CROSS-CHECK: $3,089m at FY2024, exactly matching the escrow balance in the COMMITMENTS tab. This is restricted cash \u2014 unavailable for buybacks, dividends or investment. It nearly doubled in FY2024 on the $1,500m deposit.',
+        },
+        {
+          label: 'Settlement Receivable',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 408,
+            },
+            {
+              year: 2016,
+              value: 1467,
+            },
+            {
+              year: 2017,
+              value: 1422,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1582,
+            },
+            {
+              year: 2019,
+              value: 3048,
+            },
+            {
+              year: 2020,
+              value: 1264,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 1758,
+            },
+            {
+              year: 2022,
+              value: 1932,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 2183,
+            },
+            {
+              year: 2024,
+              value: 4454,
+            },
+          ],
+        },
+        {
+          label: 'Settlement Payable',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 780,
+            },
+            {
+              year: 2016,
+              value: 2084,
+            },
+            {
+              year: 2017,
+              value: 2003,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 2186,
+            },
+            {
+              year: 2019,
+              value: 3960,
+            },
+            {
+              year: 2020,
+              value: 1736,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 2443,
+            },
+            {
+              year: 2022,
+              value: 3281,
+            },
+            {
+              year: 2023,
+              value: 3269,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 5265,
+            },
+          ],
+          note: 'Settlement receivable and payable are the mechanical flows of the settlement guarantee described in the risk factors. FY2024 payable of $5,265m against $4,454m receivable \u2014 a net $811m position, up sharply from $1,086m of net payable in FY2023.',
+        },
+        {
+          label: 'Customer Collateral \u2014 ASSET',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1023,
+            },
+            {
+              year: 2016,
+              value: 1001,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1106,
+            },
+            {
+              year: 2018,
+              value: 1324,
+            },
+            {
+              year: 2019,
+              value: 1648,
+            },
+            {
+              year: 2020,
+              value: 1850,
+            },
+            {
+              year: 2021,
+              value: 2260,
+            },
+            {
+              year: 2022,
+              value: 2342,
+            },
+            {
+              year: 2023,
+              value: 3005,
+            },
+            {
+              year: 2024,
+              value: 3524,
+            },
+          ],
+        },
+        {
+          label: 'Customer Collateral \u2014 LIABILITY',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1023,
+            },
+            {
+              year: 2016,
+              value: 1001,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1106,
+            },
+            {
+              year: 2018,
+              value: 1324,
+            },
+            {
+              year: 2019,
+              value: 1648,
+            },
+            {
+              year: 2020,
+              value: 1850,
+            },
+            {
+              year: 2021,
+              value: 2260,
+            },
+            {
+              year: 2022,
+              value: 2342,
+            },
+            {
+              year: 2023,
+              value: 3005,
+            },
+            {
+              year: 2024,
+              value: 3524,
+            },
+          ],
+          note: 'IDENTICAL ON BOTH SIDES IN NINE OF TEN YEARS. Visa holds cash collateral from clients and owes it straight back, so the item inflates both total assets and total liabilities by $3,524m in FY2024 with no economic substance. Strip it out and total assets are $90,987m rather than $94,511m.',
+        },
+        {
+          label: 'Client Incentives \u2014 current asset',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 303,
+            },
+            {
+              year: 2016,
+              value: 284,
+            },
+            {
+              year: 2017,
+              value: 344,
+            },
+            {
+              year: 2018,
+              value: 340,
+            },
+            {
+              year: 2019,
+              value: 741,
+            },
+            {
+              year: 2020,
+              value: 1214,
+            },
+            {
+              year: 2021,
+              value: 1359,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1272,
+            },
+            {
+              year: 2023,
+              value: 1577,
+            },
+            {
+              year: 2024,
+              value: 1918,
+            },
+          ],
+        },
+        {
+          label: 'Client Incentives \u2014 non-current asset',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 110,
+            },
+            {
+              year: 2016,
+              value: 448,
+            },
+            {
+              year: 2017,
+              value: 591,
+            },
+            {
+              year: 2018,
+              value: 538,
+            },
+            {
+              year: 2019,
+              value: 2084,
+            },
+            {
+              year: 2020,
+              value: 3175,
+            },
+            {
+              year: 2021,
+              value: 3245,
+            },
+            {
+              year: 2022,
+              value: 3348,
+            },
+            {
+              year: 2023,
+              value: 3789,
+            },
+            {
+              year: 2024,
+              value: 4628,
+            },
+          ],
+        },
+        {
+          label: 'Client Incentives \u2014 LIABILITY',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1049,
+            },
+            {
+              year: 2016,
+              value: 1976,
+            },
+            {
+              year: 2017,
+              value: 2038,
+            },
+            {
+              year: 2018,
+              value: 2834,
+            },
+            {
+              year: 2019,
+              value: 3997,
+            },
+            {
+              year: 2020,
+              value: 4176,
+            },
+            {
+              year: 2021,
+              value: 5241,
+            },
+            {
+              year: 2022,
+              value: 6099,
+            },
+            {
+              year: 2023,
+              value: 8177,
+            },
+            {
+              year: 2024,
+              value: 9075,
+            },
+          ],
+          note: 'The liability grew 765% to $9,075m, against $6,546m of prepaid incentives on the asset side \u2014 a net $2,529m liability. This is the balance-sheet footprint of the contra-revenue line that now consumes 38.3% of net revenue.',
+        },
+        {
+          label: 'Intangible Assets, net',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 11361,
+            },
+            {
+              year: 2016,
+              value: 27234,
+            },
+            {
+              year: 2017,
+              value: 27848,
+            },
+            {
+              year: 2018,
+              value: 27558,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 26780,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 27808,
+            },
+            {
+              year: 2021,
+              value: 27664,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 25065,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 26104,
+            },
+            {
+              year: 2024,
+              value: 26889,
+            },
+          ],
+          note: 'Jumped from $11,361m to $27,234m in FY2016 on Visa Europe and has been slowly amortising since. GOODWILL PLUS INTANGIBLES IS 48.5% OF TOTAL ASSETS \u2014 nearly half the balance sheet is intangible, and it peaked at 66.1% in FY2016.',
+        },
+        {
+          label: 'Accrued Litigation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1024,
+            },
+            {
+              year: 2016,
+              value: 981,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 982,
+            },
+            {
+              year: 2018,
+              value: 1434,
+            },
+            {
+              year: 2019,
+              value: 1203,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 931,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 989,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1456,
+            },
+            {
+              year: 2023,
+              value: 1751,
+            },
+            {
+              year: 2024,
+              value: 1727,
+              down: true,
+            },
+          ],
+          note: 'Matches the total litigation reserve in the COMMITMENTS tab exactly \u2014 $1,727m at FY2024 and $1,751m at FY2023.',
+        },
+        {
+          label: 'Unallocated current liabilities \u2014 DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 0,
+            },
+            {
+              year: 2016,
+              value: 0,
+            },
+            {
+              year: 2017,
+              value: 1806,
+            },
+            {
+              year: 2018,
+              value: 1293,
+            },
+            {
+              year: 2019,
+              value: 28,
+            },
+            {
+              year: 2020,
+              value: 2385,
+            },
+            {
+              year: 2021,
+              value: 995,
+            },
+            {
+              year: 2022,
+              value: 2250,
+            },
+            {
+              year: 2023,
+              value: 0,
+            },
+            {
+              year: 2024,
+              value: 0,
+            },
+          ],
+          note: 'THE SUPPLIED BALANCE SHEET EXTRACT IS INCOMPLETE, NOT WRONG. Subtotals are carried exactly as given and are treated as authoritative; the line detail omits some items. Current liability lines fall short of the stated total by $1,806m in FY2017, $1,289m in FY2018, $2,385m in FY2020, $995m in FY2021 and $2,250m in FY2022 \u2014 the gap is shown as its own derived line below. FY2015, FY2019, FY2023 and FY2024 reconcile cleanly.',
+        },
+        {
+          label: 'Return on Invested Capital',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 28.0,
+            },
+            {
+              year: 2016,
+              value: 15.2,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 19.9,
+            },
+            {
+              year: 2018,
+              value: 27.3,
+            },
+            {
+              year: 2019,
+              value: 31.9,
+            },
+            {
+              year: 2020,
+              value: 30.5,
+            },
+            {
+              year: 2021,
+              value: 31.7,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 43.3,
+            },
+            {
+              year: 2023,
+              value: 46.2,
+            },
+            {
+              year: 2024,
+              value: 46.7,
+            },
+          ],
+          note: '15.2% in FY2016 to 46.7% in FY2024. The three-year average is 45.4% against a ten-year average of 32.1%. Returns are ACCELERATING, and the mechanism is that Visa barely needs incremental capital.',
+        },
+        {
+          label: 'Return on Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 21.2,
+            },
+            {
+              year: 2016,
+              value: 18.2,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 20.5,
+            },
+            {
+              year: 2018,
+              value: 29.6,
+            },
+            {
+              year: 2019,
+              value: 34.8,
+            },
+            {
+              year: 2020,
+              value: 30.0,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 32.8,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 42.0,
+            },
+            {
+              year: 2023,
+              value: 44.6,
+            },
+            {
+              year: 2024,
+              value: 50.4,
+            },
+          ],
+          note: '50.4% in FY2024, more than doubling from 18.2% in FY2016. Note this is flattered by the shrinking equity base \u2014 read it alongside ROIC, which tells the same story more honestly.',
+        },
+        {
+          label: 'Return on Assets',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 16.1,
+            },
+            {
+              year: 2016,
+              value: 9.4,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 9.9,
+            },
+            {
+              year: 2018,
+              value: 14.9,
+            },
+            {
+              year: 2019,
+              value: 16.6,
+            },
+            {
+              year: 2020,
+              value: 13.4,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 14.9,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 17.5,
+            },
+            {
+              year: 2023,
+              value: 19.1,
+            },
+            {
+              year: 2024,
+              value: 20.9,
+            },
+          ],
+          note: '20.9%, up from 9.4% in FY2016.',
+        },
+        {
+          label: 'Deferred Tax Liabilities',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 3273,
+            },
+            {
+              year: 2016,
+              value: 4808,
+            },
+            {
+              year: 2017,
+              value: 5960,
+            },
+            {
+              year: 2018,
+              value: 4618,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 4807,
+            },
+            {
+              year: 2020,
+              value: 5237,
+            },
+            {
+              year: 2021,
+              value: 6128,
+            },
+            {
+              year: 2022,
+              value: 5332,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 5114,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 5301,
+            },
+          ],
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Cash from Operations',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2005,
+            value: 491,
+          },
+          {
+            year: 2006,
+            value: 435,
+            down: true,
+          },
+          {
+            year: 2007,
+            value: 505,
+          },
+          {
+            year: 2008,
+            value: 531,
+          },
+          {
+            year: 2009,
+            value: 558,
+          },
+          {
+            year: 2010,
+            value: 2691,
+          },
+          {
+            year: 2011,
+            value: 3872,
+          },
+          {
+            year: 2012,
+            value: 5009,
+          },
+          {
+            year: 2013,
+            value: 3022,
+            down: true,
+          },
+          {
+            year: 2014,
+            value: 7205,
+          },
+          {
+            year: 2015,
+            value: 6584,
+            down: true,
+          },
+          {
+            year: 2016,
+            value: 5574,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 9208,
+          },
+          {
+            year: 2018,
+            value: 12713,
+          },
+          {
+            year: 2019,
+            value: 12784,
+          },
+          {
+            year: 2020,
+            value: 10440,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 15227,
+          },
+          {
+            year: 2022,
+            value: 18849,
+          },
+          {
+            year: 2023,
+            value: 20755,
+          },
+          {
+            year: 2024,
+            value: 19950,
+            down: true,
+          },
+        ],
+        note: 'A TWENTY-YEAR SERIES, from $491m in FY2005 to $19,950m in FY2024 \u2014 up 3,963%. BUT IT FELL 3.9% IN FY2024, from $20,755m, while net income ROSE 14.3%. Operating cash flow to net income dropped from 1.20x to 1.01x. Worth understanding before extrapolating: the $1,500m escrow deposit and working capital movements both sit in here.',
+      },
+      capex: {
+        label: 'Capital Expenditures',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2005,
+            value: 119,
+          },
+          {
+            year: 2006,
+            value: 87,
+          },
+          {
+            year: 2007,
+            value: 160,
+          },
+          {
+            year: 2008,
+            value: 415,
+          },
+          {
+            year: 2009,
+            value: 306,
+          },
+          {
+            year: 2010,
+            value: 241,
+          },
+          {
+            year: 2011,
+            value: 353,
+          },
+          {
+            year: 2012,
+            value: 376,
+          },
+          {
+            year: 2013,
+            value: 471,
+          },
+          {
+            year: 2014,
+            value: 553,
+          },
+          {
+            year: 2015,
+            value: 414,
+          },
+          {
+            year: 2016,
+            value: 523,
+          },
+          {
+            year: 2017,
+            value: 707,
+          },
+          {
+            year: 2018,
+            value: 718,
+          },
+          {
+            year: 2019,
+            value: 756,
+          },
+          {
+            year: 2020,
+            value: 736,
+          },
+          {
+            year: 2021,
+            value: 705,
+          },
+          {
+            year: 2022,
+            value: 970,
+          },
+          {
+            year: 2023,
+            value: 1059,
+          },
+          {
+            year: 2024,
+            value: 1257,
+          },
+        ],
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2005,
+            value: 24.24,
+          },
+          {
+            year: 2006,
+            value: 20.0,
+          },
+          {
+            year: 2007,
+            value: 31.68,
+          },
+          {
+            year: 2008,
+            value: 78.15,
+          },
+          {
+            year: 2009,
+            value: 54.84,
+          },
+          {
+            year: 2010,
+            value: 8.96,
+          },
+          {
+            year: 2011,
+            value: 9.12,
+          },
+          {
+            year: 2012,
+            value: 7.51,
+          },
+          {
+            year: 2013,
+            value: 15.59,
+          },
+          {
+            year: 2014,
+            value: 7.68,
+          },
+          {
+            year: 2015,
+            value: 6.29,
+          },
+          {
+            year: 2016,
+            value: 9.38,
+          },
+          {
+            year: 2017,
+            value: 7.68,
+          },
+          {
+            year: 2018,
+            value: 5.65,
+          },
+          {
+            year: 2019,
+            value: 5.91,
+          },
+          {
+            year: 2020,
+            value: 7.05,
+          },
+          {
+            year: 2021,
+            value: 4.63,
+          },
+          {
+            year: 2022,
+            value: 5.15,
+          },
+          {
+            year: 2023,
+            value: 5.1,
+          },
+          {
+            year: 2024,
+            value: 6.3,
+          },
+        ],
+      },
+      freeCashFlow: {
+        label: 'Owner Earnings \u2014 Operating Cash Flow less CapEx',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2005,
+            value: 372,
+          },
+          {
+            year: 2006,
+            value: 348,
+            down: true,
+          },
+          {
+            year: 2007,
+            value: 345,
+            down: true,
+          },
+          {
+            year: 2008,
+            value: 116,
+            down: true,
+          },
+          {
+            year: 2009,
+            value: 252,
+          },
+          {
+            year: 2010,
+            value: 2450,
+          },
+          {
+            year: 2011,
+            value: 3519,
+          },
+          {
+            year: 2012,
+            value: 4633,
+          },
+          {
+            year: 2013,
+            value: 2551,
+            down: true,
+          },
+          {
+            year: 2014,
+            value: 6652,
+          },
+          {
+            year: 2015,
+            value: 6170,
+            down: true,
+          },
+          {
+            year: 2016,
+            value: 5051,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 8501,
+          },
+          {
+            year: 2018,
+            value: 11995,
+          },
+          {
+            year: 2019,
+            value: 12028,
+          },
+          {
+            year: 2020,
+            value: 9704,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 14522,
+          },
+          {
+            year: 2022,
+            value: 17879,
+          },
+          {
+            year: 2023,
+            value: 19696,
+          },
+          {
+            year: 2024,
+            value: 18693,
+            down: true,
+          },
+        ],
+        note: 'Reconciles exactly in all twenty years. $18,693m in FY2024 \u2014 52.0% OF NET REVENUE converted to owner earnings, which is close to the theoretical limit for any business. It fell 5.1% in FY2024, the first decline since FY2020.',
+      },
+      extraLines: [
+        {
+          label: 'CapEx as % of Net Revenue \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2024,
+              value: 3.5,
+            },
+          ],
+          note: 'CAPITAL EXPENDITURE IS 6.30% OF OPERATING CASH FLOW AND 3.5% OF NET REVENUE. For contrast, Alphabet\u2019s FY2025 capex was 55.5% of operating cash flow and Ferrari\u2019s was 6.79% of revenue. Visa runs a $15.5 TRILLION payment network on $1,257m of annual capital spending. The twelve-year average is 7.20%; the twenty-year average of 16.05% is distorted by the tiny pre-IPO base.',
+        },
+        {
+          label: 'Operating Cash Flow to Net Income \u2014 derived',
+          unit: 'x',
+          series: [
+            {
+              year: 2016,
+              value: 1.04,
+            },
+            {
+              year: 2017,
+              value: 0.93,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1.2,
+            },
+            {
+              year: 2019,
+              value: 1.23,
+            },
+            {
+              year: 2020,
+              value: 0.96,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 1.24,
+            },
+            {
+              year: 2022,
+              value: 1.26,
+            },
+            {
+              year: 2023,
+              value: 1.2,
+            },
+            {
+              year: 2024,
+              value: 1.01,
+              down: true,
+            },
+          ],
+          note: 'Cash conversion has run near or above 1.0x throughout, which is what a business with no inventory and no credit book should produce. THE FY2024 READING OF 1.01x IS THE WEAKEST SINCE FY2020 and the single thing in this build most worth watching next year.',
         },
       ],
     },
