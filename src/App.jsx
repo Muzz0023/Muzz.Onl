@@ -25529,7 +25529,7 @@ const QSR_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
 // DERIVATIVES, COMMITMENTS.
-// TABS DARK: BALANCE, CASH FLOW, THESIS.
+// TABS DARK: THESIS only.
 //
 // STILL TIER 2. Only revenue and net income exist, taken from the
 // per-employee table rather than the statements. No cost lines, no balance
@@ -27833,6 +27833,14 @@ const GOOG_BREAKDOWN = {
         unit: 'M USD',
         series: [
           {
+            year: 2013,
+            value: 55519,
+          },
+          {
+            year: 2014,
+            value: 66001,
+          },
+          {
             year: 2015,
             value: 74989,
           },
@@ -27877,12 +27885,803 @@ const GOOG_BREAKDOWN = {
             value: 402836,
           },
         ],
-        note: 'PARTIAL INCOME STATEMENT \u2014 only revenue and net income are available, sourced from the per-employee table rather than the financial statements. Cost of revenue, operating expense, operating income, tax and EPS are NOT yet supplied, and neither is the Google Services / Cloud / Other Bets split. Revenue grew 437% over eleven years, from $75.0bn to $402.8bn, and rose in every single year \u2014 no down years at all, which almost nothing else in this library can claim.',
+        note: 'Revenue grew 626% over thirteen years and ROSE IN EVERY SINGLE YEAR \u2014 no exceptions across a period containing a pandemic, a tech-advertising recession and a full antitrust decade.',
+      },
+      costOfSales: {
+        label: 'Cost of Revenues',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 21993,
+          },
+          {
+            year: 2014,
+            value: 25691,
+          },
+          {
+            year: 2015,
+            value: 28164,
+          },
+          {
+            year: 2016,
+            value: 35138,
+          },
+          {
+            year: 2017,
+            value: 45583,
+          },
+          {
+            year: 2018,
+            value: 59549,
+          },
+          {
+            year: 2019,
+            value: 71896,
+          },
+          {
+            year: 2020,
+            value: 84732,
+          },
+          {
+            year: 2021,
+            value: 110939,
+          },
+          {
+            year: 2022,
+            value: 126203,
+          },
+          {
+            year: 2023,
+            value: 133332,
+          },
+          {
+            year: 2024,
+            value: 146306,
+          },
+          {
+            year: 2025,
+            value: 162535,
+          },
+        ],
+        note: 'Traffic acquisition costs, content acquisition, data centre operations and hardware costs.',
+      },
+      grossProfit: {
+        label: 'Gross Profit',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 33526,
+          },
+          {
+            year: 2014,
+            value: 40310,
+          },
+          {
+            year: 2015,
+            value: 46825,
+          },
+          {
+            year: 2016,
+            value: 55134,
+          },
+          {
+            year: 2017,
+            value: 65272,
+          },
+          {
+            year: 2018,
+            value: 77270,
+          },
+          {
+            year: 2019,
+            value: 89961,
+          },
+          {
+            year: 2020,
+            value: 97795,
+          },
+          {
+            year: 2021,
+            value: 146698,
+          },
+          {
+            year: 2022,
+            value: 156633,
+          },
+          {
+            year: 2023,
+            value: 174062,
+          },
+          {
+            year: 2024,
+            value: 203712,
+          },
+          {
+            year: 2025,
+            value: 240301,
+          },
+        ],
+      },
+      grossMargin: {
+        label: 'Gross Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 60.36,
+          },
+          {
+            year: 2014,
+            value: 61.07,
+          },
+          {
+            year: 2015,
+            value: 62.44,
+          },
+          {
+            year: 2016,
+            value: 61.08,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 58.86,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 56.47,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 55.57,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 53.58,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 56.92,
+          },
+          {
+            year: 2022,
+            value: 55.38,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 56.63,
+          },
+          {
+            year: 2024,
+            value: 58.18,
+          },
+          {
+            year: 2025,
+            value: 59.65,
+          },
+        ],
+        note: 'THE U-SHAPE IS THE STORY. Margin fell from 62.44% in FY2015 to a 53.58% trough in FY2020 as traffic acquisition and infrastructure costs grew faster than revenue \u2014 then recovered to 59.65%, six points off the bottom. It is still below the FY2015 peak after a decade.',
+      },
+      opexLines: [
+        {
+          label: 'Research & Development',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 7137,
+            },
+            {
+              year: 2014,
+              value: 9832,
+            },
+            {
+              year: 2015,
+              value: 12282,
+            },
+            {
+              year: 2016,
+              value: 13948,
+            },
+            {
+              year: 2017,
+              value: 16625,
+            },
+            {
+              year: 2018,
+              value: 21419,
+            },
+            {
+              year: 2019,
+              value: 26018,
+            },
+            {
+              year: 2020,
+              value: 27573,
+            },
+            {
+              year: 2021,
+              value: 31562,
+            },
+            {
+              year: 2022,
+              value: 39500,
+            },
+            {
+              year: 2023,
+              value: 45427,
+            },
+            {
+              year: 2024,
+              value: 49326,
+            },
+            {
+              year: 2025,
+              value: 61087,
+            },
+          ],
+          note: 'Grew 756% over thirteen years to $61.1bn, and JUMPED 23.8% IN FY2025 ALONE \u2014 the largest single-year increase in the series. At 15.2% of revenue this is the AI build showing up in the income statement rather than the balance sheet.',
+        },
+        {
+          label: 'Sales & Marketing',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 6554,
+            },
+            {
+              year: 2014,
+              value: 8131,
+            },
+            {
+              year: 2015,
+              value: 9047,
+            },
+            {
+              year: 2016,
+              value: 10485,
+            },
+            {
+              year: 2017,
+              value: 12893,
+            },
+            {
+              year: 2018,
+              value: 16333,
+            },
+            {
+              year: 2019,
+              value: 18464,
+            },
+            {
+              year: 2020,
+              value: 17946,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 22912,
+            },
+            {
+              year: 2022,
+              value: 26567,
+            },
+            {
+              year: 2023,
+              value: 27917,
+            },
+            {
+              year: 2024,
+              value: 27808,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 28693,
+            },
+          ],
+          note: 'Grew only 338% against 626% revenue growth, and has been essentially FLAT since FY2022 at $26.6\u2013$28.7bn. Sales and marketing as a share of gross profit fell from 19.6% to 11.9% \u2014 the clearest operating leverage in the statement.',
+        },
+        {
+          label: 'General & Administrative',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 4432,
+            },
+            {
+              year: 2014,
+              value: 5851,
+            },
+            {
+              year: 2015,
+              value: 6136,
+            },
+            {
+              year: 2016,
+              value: 6985,
+            },
+            {
+              year: 2017,
+              value: 6872,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 8126,
+            },
+            {
+              year: 2019,
+              value: 9551,
+            },
+            {
+              year: 2020,
+              value: 11052,
+            },
+            {
+              year: 2021,
+              value: 13510,
+            },
+            {
+              year: 2022,
+              value: 15724,
+            },
+            {
+              year: 2023,
+              value: 16425,
+            },
+            {
+              year: 2024,
+              value: 14188,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 21482,
+            },
+          ],
+          note: 'Jumped 51.4% in FY2025 to $21.5bn after FALLING 13.6% in FY2024 \u2014 a violent two-year swing. The FY2025 spike is where the EU ad tech charge and the privacy settlement land.',
+        },
+      ],
+      totalExpenses: {
+        label: 'Total Operating Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 18123,
+          },
+          {
+            year: 2014,
+            value: 23814,
+          },
+          {
+            year: 2015,
+            value: 27465,
+          },
+          {
+            year: 2016,
+            value: 31418,
+          },
+          {
+            year: 2017,
+            value: 36390,
+          },
+          {
+            year: 2018,
+            value: 45878,
+          },
+          {
+            year: 2019,
+            value: 54033,
+          },
+          {
+            year: 2020,
+            value: 56571,
+          },
+          {
+            year: 2021,
+            value: 67984,
+          },
+          {
+            year: 2022,
+            value: 81791,
+          },
+          {
+            year: 2023,
+            value: 89769,
+          },
+          {
+            year: 2024,
+            value: 91322,
+          },
+          {
+            year: 2025,
+            value: 111262,
+          },
+        ],
+        note: 'R&D plus S&M plus G&A. Reconciles exactly in all thirteen years.',
+      },
+      expensesToRevenue: {
+        label: 'Total Costs & Expenses as % of Revenue',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 72.26,
+          },
+          {
+            year: 2014,
+            value: 75.01,
+          },
+          {
+            year: 2015,
+            value: 74.18,
+          },
+          {
+            year: 2016,
+            value: 73.73,
+          },
+          {
+            year: 2017,
+            value: 76.41,
+          },
+          {
+            year: 2018,
+            value: 80.76,
+          },
+          {
+            year: 2019,
+            value: 78.85,
+          },
+          {
+            year: 2020,
+            value: 77.41,
+          },
+          {
+            year: 2021,
+            value: 69.45,
+          },
+          {
+            year: 2022,
+            value: 73.54,
+          },
+          {
+            year: 2023,
+            value: 72.58,
+          },
+          {
+            year: 2024,
+            value: 67.89,
+          },
+          {
+            year: 2025,
+            value: 67.97,
+          },
+        ],
+        note: 'Fell from 80.8% at the FY2018 peak to 68.0%, but has been FLAT for two years \u2014 67.9% then 68.0%. The efficiency drive that drove the FY2022\u2013FY2024 margin expansion has plateaued.',
+      },
+      operatingProfit: {
+        label: 'Income from Operations',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 15403,
+          },
+          {
+            year: 2014,
+            value: 16496,
+          },
+          {
+            year: 2015,
+            value: 19360,
+          },
+          {
+            year: 2016,
+            value: 23716,
+          },
+          {
+            year: 2017,
+            value: 26146,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 26321,
+          },
+          {
+            year: 2019,
+            value: 34231,
+          },
+          {
+            year: 2020,
+            value: 41224,
+          },
+          {
+            year: 2021,
+            value: 78714,
+          },
+          {
+            year: 2022,
+            value: 74842,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 84293,
+          },
+          {
+            year: 2024,
+            value: 112390,
+          },
+          {
+            year: 2025,
+            value: 129039,
+          },
+        ],
+        note: 'Grew 738% over thirteen years. CONFLICT TO NOTE: this series gives FY2018 as $26,321m (revenue less total costs, which ties), but the segment profitability note gives total income from operations of $27,524m for FY2018 \u2014 a $1,203m gap. FY2019 through FY2025 agree exactly between the two statements; FY2018 is the only year that does not. Carried as supplied on both tabs.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 27.73,
+          },
+          {
+            year: 2014,
+            value: 24.99,
+          },
+          {
+            year: 2015,
+            value: 25.82,
+          },
+          {
+            year: 2016,
+            value: 26.28,
+          },
+          {
+            year: 2017,
+            value: 23.58,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 19.24,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 21.15,
+          },
+          {
+            year: 2020,
+            value: 22.58,
+          },
+          {
+            year: 2021,
+            value: 30.56,
+          },
+          {
+            year: 2022,
+            value: 26.46,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 27.42,
+          },
+          {
+            year: 2024,
+            value: 32.11,
+          },
+          {
+            year: 2025,
+            value: 32.03,
+            down: true,
+          },
+        ],
+        note: 'Bottomed at 19.24% in FY2018 and reached 32.11% in FY2024, but slipped fractionally to 32.03% in FY2025 \u2014 the first decline since FY2022.',
+      },
+      provisionForTaxes: {
+        label: 'Provision for Income Taxes',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 2739,
+          },
+          {
+            year: 2014,
+            value: 3639,
+          },
+          {
+            year: 2015,
+            value: 3303,
+          },
+          {
+            year: 2016,
+            value: 4672,
+          },
+          {
+            year: 2017,
+            value: 14531,
+          },
+          {
+            year: 2018,
+            value: 4177,
+          },
+          {
+            year: 2019,
+            value: 5282,
+          },
+          {
+            year: 2020,
+            value: 7813,
+          },
+          {
+            year: 2021,
+            value: 14701,
+          },
+          {
+            year: 2022,
+            value: 11356,
+          },
+          {
+            year: 2023,
+            value: 11922,
+          },
+          {
+            year: 2024,
+            value: 19697,
+          },
+          {
+            year: 2025,
+            value: 26656,
+          },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 17.22,
+          },
+          {
+            year: 2014,
+            value: 21.09,
+          },
+          {
+            year: 2015,
+            value: 16.81,
+          },
+          {
+            year: 2016,
+            value: 19.35,
+          },
+          {
+            year: 2017,
+            value: 53.41,
+          },
+          {
+            year: 2018,
+            value: 11.96,
+          },
+          {
+            year: 2019,
+            value: 13.33,
+          },
+          {
+            year: 2020,
+            value: 16.25,
+          },
+          {
+            year: 2021,
+            value: 16.2,
+          },
+          {
+            year: 2022,
+            value: 15.92,
+          },
+          {
+            year: 2023,
+            value: 13.91,
+          },
+          {
+            year: 2024,
+            value: 16.44,
+          },
+          {
+            year: 2025,
+            value: 16.78,
+          },
+        ],
+        note: 'FY2017 AT 53.41% IS THE OUTLIER \u2014 the one-time US tax reform charge, which is why FY2017 net income fell 35% on rising pre-tax income. Excluding it the rate has run 11.96%\u201321.09% and sat near 16\u201317% for the last two years. Item 1A flags the OECD 15% global minimum tax as a live risk to this line.',
+      },
+      nopat: {
+        label: 'NOPAT \u2014 Net Operating Profit After Tax',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 12748,
+          },
+          {
+            year: 2014,
+            value: 13012,
+          },
+          {
+            year: 2015,
+            value: 16107,
+          },
+          {
+            year: 2016,
+            value: 19136,
+          },
+          {
+            year: 2017,
+            value: 12179,
+          },
+          {
+            year: 2018,
+            value: 23199,
+          },
+          {
+            year: 2019,
+            value: 29680,
+          },
+          {
+            year: 2020,
+            value: 34520,
+          },
+          {
+            year: 2021,
+            value: 65977,
+          },
+          {
+            year: 2022,
+            value: 63002,
+          },
+          {
+            year: 2023,
+            value: 72542,
+          },
+          {
+            year: 2024,
+            value: 93934,
+          },
+          {
+            year: 2025,
+            value: 107382,
+          },
+        ],
+        note: 'Operating income taxed at the effective rate; the numerator for ROIC. FY2017 is distorted by the tax reform charge and should not be read as an operating result.',
       },
       netIncome: {
         label: 'Net Income',
         unit: 'M USD',
         series: [
+          {
+            year: 2013,
+            value: 13160,
+          },
+          {
+            year: 2014,
+            value: 13620,
+          },
           {
             year: 2015,
             value: 16348,
@@ -27930,19 +28729,27 @@ const GOOG_BREAKDOWN = {
             value: 132170,
           },
         ],
-        note: 'Net income grew 708% over eleven years, from $16.3bn to $132.2bn. Two down years: FY2017 (\u221235.0%, the EU Shopping fine plus US tax reform) and FY2022 (\u221221.1%). FY2025 at $132.2bn is a record and up 32.0% on FY2024 \u2014 and that is AFTER roughly $5bn of fresh antitrust and privacy charges went through the FY2025 income statement.',
+        note: 'Grew 904% over thirteen years. Two down years: FY2017 (tax reform) and FY2022. BUT READ FY2025 WITH CARE \u2014 see the paper-gain line in the cash flow tab. Roughly $24.6bn of the $132.2bn is an unrealised mark on private securities, not an operating result. Net income excluding it is about $107.6bn.',
       },
       profitMargin: {
-        label: 'Net Profit Margin \u2014 Derived',
+        label: 'Net Profit Margin',
         unit: '%',
         series: [
           {
+            year: 2013,
+            value: 23.71,
+          },
+          {
+            year: 2014,
+            value: 20.63,
+          },
+          {
             year: 2015,
-            value: 21.8,
+            value: 21.79,
           },
           {
             year: 2016,
-            value: 21.58,
+            value: 21.57,
           },
           {
             year: 2017,
@@ -27951,7 +28758,7 @@ const GOOG_BREAKDOWN = {
           },
           {
             year: 2018,
-            value: 22.46,
+            value: 22.47,
           },
           {
             year: 2019,
@@ -27972,20 +28779,99 @@ const GOOG_BREAKDOWN = {
           },
           {
             year: 2023,
-            value: 24.01,
+            value: 24.0,
           },
           {
             year: 2024,
-            value: 28.6,
+            value: 28.61,
           },
           {
             year: 2025,
             value: 32.81,
           },
         ],
-        note: 'Derived as net income \u00f7 revenue. Margin sat in a 21\u201322% band for six of the first seven years, then stepped to 29.5% in FY2021 and has reached 32.81% \u2014 the highest of the period, and 11 points above the FY2015 level. The FY2017 reading of 11.42% is the fine-and-tax-charge year. NOTE: this is the CONSOLIDATED margin, so it is struck AFTER Other Bets losses and after unallocated Alphabet-level costs. The core business earns more than this line shows.',
+        note: '32.81% is the highest of the period, but roughly 6 points of it is the securities markup.',
       },
       extraLines: [
+        {
+          label: 'Other Income / (Expense), net',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2013,
+              value: 496,
+            },
+            {
+              year: 2014,
+              value: 763,
+            },
+            {
+              year: 2015,
+              value: 291,
+            },
+            {
+              year: 2016,
+              value: 434,
+            },
+            {
+              year: 2017,
+              value: 1047,
+            },
+            {
+              year: 2018,
+              value: 8592,
+            },
+            {
+              year: 2019,
+              value: 5394,
+            },
+            {
+              year: 2020,
+              value: 6858,
+            },
+            {
+              year: 2021,
+              value: 12020,
+            },
+            {
+              year: 2022,
+              value: -3514,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 1424,
+            },
+            {
+              year: 2024,
+              value: 7425,
+            },
+            {
+              year: 2025,
+              value: 29787,
+            },
+          ],
+          note: 'THE LINE THAT MAKES FY2025. $29,787m against $1,424m two years earlier \u2014 a 21-fold increase. The cash flow statement reverses out a $24,620m non-cash securities gain, and non-marketable securities on the balance sheet rose $30,705m. All three tie in direction and magnitude. This is a mark-to-market on private holdings, not operations, and it flows straight through to reported net income. FY2022 is the mirror image at $(3,514)m.',
+        },
+        {
+          label: 'European Commission Fines \u2014 derived',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2017,
+              value: 2736,
+            },
+            {
+              year: 2018,
+              value: 5071,
+            },
+            {
+              year: 2019,
+              value: 1697,
+            },
+          ],
+          note: 'DERIVED, NOT SUPPLIED. Cost of revenue plus operating expenses reconciles to total costs and expenses in ten of thirteen years. The three exceptions are FY2017 (+2,736), FY2018 (+5,071) and FY2019 (+1,697) \u2014 which match the EU Shopping, EU Android and EU AdSense fines in the antitrust register on the RISKS tab to within $0.1bn. Alphabet reported them as a separate income statement line rather than inside operating expenses. The identity holds in every other year.',
+        },
         {
           label: 'Stock-Based Compensation \u2014 Total Expense',
           unit: 'M USD',
@@ -28095,56 +28981,1797 @@ const GOOG_BREAKDOWN = {
           ],
           note: 'Under the Alphabet Amended and Restated 2021 Stock Plan. The pool is drawing down \u2014 99m shares consumed in FY2025 \u2014 but 534m remain reserved, which is deep headroom. RSUs vest over four years and settle in CLASS C, the non-voting class: employees are paid in economics without governance, which is the same mechanic that preserves founder control. NOTE THE FEEDBACK LOOP: roughly $24bn a year of stock issuance is why a $60bn-plus buyback produces only a modest net reduction in share count. A meaningful share of the buyback is mopping up compensation rather than returning capital \u2014 worth splitting precisely when the share count table arrives.',
         },
+      ],
+    },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 16549,
+          },
+          {
+            year: 2016,
+            value: 12918,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 10715,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 16701,
+          },
+          {
+            year: 2019,
+            value: 18498,
+          },
+          {
+            year: 2020,
+            value: 26465,
+          },
+          {
+            year: 2021,
+            value: 20945,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 21879,
+          },
+          {
+            year: 2023,
+            value: 24048,
+          },
+          {
+            year: 2024,
+            value: 23466,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 30708,
+          },
+        ],
+      },
+      extraLines: [
         {
-          label: 'Revenue per Employee \u2014 cross-check',
-          unit: 'USD',
+          label: 'Marketable Securities',
+          unit: 'M USD',
           series: [
             {
               year: 2015,
-              value: 1213146,
+              value: 56517,
             },
             {
               year: 2016,
-              value: 1252861,
+              value: 73415,
             },
             {
               year: 2017,
-              value: 1383786,
+              value: 91156,
             },
             {
               year: 2018,
-              value: 1385219,
+              value: 92439,
             },
             {
               year: 2019,
-              value: 1361286,
+              value: 101177,
             },
             {
               year: 2020,
-              value: 1349046,
+              value: 110229,
             },
             {
               year: 2021,
-              value: 1646243,
+              value: 118704,
             },
             {
               year: 2022,
-              value: 1486778,
+              value: 91883,
+              down: true,
             },
             {
               year: 2023,
-              value: 1684331,
+              value: 86868,
+              down: true,
             },
             {
               year: 2024,
-              value: 1909296,
+              value: 72191,
+              down: true,
             },
             {
               year: 2025,
-              value: 2111080,
+              value: 96135,
             },
           ],
-          note: 'Revenue \u00f7 employees reproduces the supplied per-employee column in all eleven years to within about $12. The residual is the revenue column being rounded to the nearest $1m while the per-employee figures were struck off exact revenue. Not a discrepancy.',
+          note: 'Fell from a $118.7bn peak in FY2021 to $72.2bn in FY2024 before recovering to $96.1bn. The drawdown funded buybacks; the recovery is the FY2025 debt raise.',
+        },
+        {
+          label: 'Total Cash & Marketable Securities',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 73066,
+            },
+            {
+              year: 2016,
+              value: 86333,
+            },
+            {
+              year: 2017,
+              value: 101871,
+            },
+            {
+              year: 2018,
+              value: 109140,
+            },
+            {
+              year: 2019,
+              value: 119675,
+            },
+            {
+              year: 2020,
+              value: 136694,
+            },
+            {
+              year: 2021,
+              value: 139649,
+            },
+            {
+              year: 2022,
+              value: 113762,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 110916,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 95657,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 126843,
+            },
+          ],
+          note: '$126.8bn against $46.5bn of long-term debt \u2014 still a large net cash position, but the smallest relative cushion in the series.',
+        },
+        {
+          label: 'Non-Marketable Securities',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 5183,
+            },
+            {
+              year: 2016,
+              value: 5878,
+            },
+            {
+              year: 2017,
+              value: 7813,
+            },
+            {
+              year: 2018,
+              value: 13859,
+            },
+            {
+              year: 2019,
+              value: 13078,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 20703,
+            },
+            {
+              year: 2021,
+              value: 29549,
+            },
+            {
+              year: 2022,
+              value: 30492,
+            },
+            {
+              year: 2023,
+              value: 31008,
+            },
+            {
+              year: 2024,
+              value: 37982,
+            },
+            {
+              year: 2025,
+              value: 68687,
+            },
+          ],
+          note: 'ROSE $30,705m IN FY2025 ALONE, up 81% to $68.7bn. This is the balance-sheet counterpart of the $29,787m other-income line and the $24,620m non-cash gain reversed out in the cash flow statement. Private holdings marked up, flowing straight through reported earnings.',
+        },
+        {
+          label: 'Days Sales Outstanding',
+          unit: 'days',
+          series: [
+            {
+              year: 2015,
+              value: 56.25,
+            },
+            {
+              year: 2016,
+              value: 57.16,
+            },
+            {
+              year: 2017,
+              value: 60.35,
+            },
+            {
+              year: 2018,
+              value: 55.64,
+            },
+            {
+              year: 2019,
+              value: 57.11,
+            },
+            {
+              year: 2020,
+              value: 61.86,
+            },
+            {
+              year: 2021,
+              value: 55.67,
+            },
+            {
+              year: 2022,
+              value: 51.94,
+            },
+            {
+              year: 2023,
+              value: 56.95,
+            },
+            {
+              year: 2024,
+              value: 54.59,
+            },
+            {
+              year: 2025,
+              value: 56.98,
+            },
+          ],
+          note: 'Remarkably stable at 52\u201362 days across eleven years. Customers take about two months, which is normal for enterprise and advertising billing.',
+        },
+        {
+          label: 'Days Payables Outstanding',
+          unit: 'days',
+          series: [
+            {
+              year: 2015,
+              value: 25.01,
+            },
+            {
+              year: 2016,
+              value: 21.19,
+            },
+            {
+              year: 2017,
+              value: 25.12,
+            },
+            {
+              year: 2018,
+              value: 26.84,
+            },
+            {
+              year: 2019,
+              value: 28.24,
+            },
+            {
+              year: 2020,
+              value: 24.07,
+            },
+            {
+              year: 2021,
+              value: 19.86,
+            },
+            {
+              year: 2022,
+              value: 14.84,
+            },
+            {
+              year: 2023,
+              value: 20.52,
+            },
+            {
+              year: 2024,
+              value: 19.93,
+            },
+            {
+              year: 2025,
+              value: 27.4,
+            },
+          ],
+          note: 'Jumped to 27.4 days in FY2025, the longest since FY2019, as payables rose 53% against the capex build.',
+        },
+        {
+          label: 'Cash Conversion Cycle \u2014 no inventory',
+          unit: 'days',
+          series: [
+            {
+              year: 2015,
+              value: 31.24,
+            },
+            {
+              year: 2016,
+              value: 35.97,
+            },
+            {
+              year: 2017,
+              value: 35.23,
+            },
+            {
+              year: 2018,
+              value: 28.8,
+            },
+            {
+              year: 2019,
+              value: 28.87,
+            },
+            {
+              year: 2020,
+              value: 37.79,
+            },
+            {
+              year: 2021,
+              value: 35.81,
+            },
+            {
+              year: 2022,
+              value: 37.1,
+            },
+            {
+              year: 2023,
+              value: 36.43,
+            },
+            {
+              year: 2024,
+              value: 34.66,
+            },
+            {
+              year: 2025,
+              value: 29.58,
+            },
+          ],
+          note: '29.58 days in FY2025, the best since FY2019 \u2014 but driven ENTIRELY by stretching payables, not by collecting faster. DSO actually worsened.',
+        },
+        {
+          label: 'Return on Invested Capital',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 12.97,
+            },
+            {
+              year: 2016,
+              value: 13.07,
+            },
+            {
+              year: 2017,
+              value: 7.03,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 11.91,
+            },
+            {
+              year: 2019,
+              value: 12.98,
+            },
+            {
+              year: 2020,
+              value: 13.33,
+            },
+            {
+              year: 2021,
+              value: 21.97,
+            },
+            {
+              year: 2022,
+              value: 20.97,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 22.34,
+            },
+            {
+              year: 2024,
+              value: 25.56,
+            },
+            {
+              year: 2025,
+              value: 21.61,
+              down: true,
+            },
+          ],
+          note: 'THE MOST IMPORTANT LINE IN THIS TAB. ROIC FELL from 25.56% to 21.61% in FY2025 even though NOPAT grew 14.3% \u2014 because invested capital grew 35.2%. Alphabet is deploying capital far faster than returns are following. FY2017 is distorted by the tax reform charge.',
+        },
+        {
+          label: 'Tangible ROIC',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 14.86,
+            },
+            {
+              year: 2016,
+              value: 14.73,
+            },
+            {
+              year: 2017,
+              value: 7.78,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 13.11,
+            },
+            {
+              year: 2019,
+              value: 14.26,
+            },
+            {
+              year: 2020,
+              value: 14.52,
+            },
+            {
+              year: 2021,
+              value: 23.8,
+            },
+            {
+              year: 2022,
+              value: 23.2,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 24.54,
+            },
+            {
+              year: 2024,
+              value: 27.99,
+            },
+            {
+              year: 2025,
+              value: 23.17,
+              down: true,
+            },
+          ],
+          note: 'Same pattern excluding goodwill: 27.99% to 23.17%.',
+        },
+        {
+          label: 'Invested Capital',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 124213,
+            },
+            {
+              year: 2016,
+              value: 146394,
+            },
+            {
+              year: 2017,
+              value: 173266,
+            },
+            {
+              year: 2018,
+              value: 194755,
+            },
+            {
+              year: 2019,
+              value: 228783,
+            },
+            {
+              year: 2020,
+              value: 258931,
+            },
+            {
+              year: 2021,
+              value: 300242,
+            },
+            {
+              year: 2022,
+              value: 300391,
+            },
+            {
+              year: 2023,
+              value: 324683,
+            },
+            {
+              year: 2024,
+              value: 367575,
+            },
+            {
+              year: 2025,
+              value: 496816,
+            },
+          ],
+          note: 'Assets less cash less non-interest-bearing current liabilities. Grew 35.2% in FY2025 alone \u2014 the largest single-year increase in the series by a wide margin.',
+        },
+        {
+          label: 'Return on Tangible Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 15.65,
+            },
+            {
+              year: 2016,
+              value: 15.89,
+            },
+            {
+              year: 2017,
+              value: 9.33,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 19.24,
+            },
+            {
+              year: 2019,
+              value: 18.99,
+            },
+            {
+              year: 2020,
+              value: 20.0,
+            },
+            {
+              year: 2021,
+              value: 33.24,
+            },
+            {
+              year: 2022,
+              value: 26.4,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 29.04,
+            },
+            {
+              year: 2024,
+              value: 34.14,
+            },
+            {
+              year: 2025,
+              value: 34.61,
+            },
+          ],
+          note: '34.61%, but note it inherits the securities markup in net income.',
+        },
+        {
+          label: 'Return on Assets',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 11.08,
+            },
+            {
+              year: 2016,
+              value: 11.63,
+            },
+            {
+              year: 2017,
+              value: 6.41,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 13.21,
+            },
+            {
+              year: 2019,
+              value: 12.45,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 12.6,
+            },
+            {
+              year: 2021,
+              value: 21.16,
+            },
+            {
+              year: 2022,
+              value: 16.42,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 18.35,
+            },
+            {
+              year: 2024,
+              value: 22.24,
+            },
+            {
+              year: 2025,
+              value: 22.2,
+              down: true,
+            },
+          ],
+          note: '22.20%, essentially flat on FY2024 despite net income growing 32% \u2014 because total assets grew 32% as well. The asset base is now growing as fast as the earnings it produces.',
+        },
+        {
+          label: 'Return on Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 13.58,
+            },
+            {
+              year: 2016,
+              value: 14.01,
+            },
+            {
+              year: 2017,
+              value: 8.3,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 17.31,
+            },
+            {
+              year: 2019,
+              value: 17.04,
+            },
+            {
+              year: 2020,
+              value: 18.1,
+            },
+            {
+              year: 2021,
+              value: 30.21,
+            },
+            {
+              year: 2022,
+              value: 23.41,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 26.03,
+            },
+            {
+              year: 2024,
+              value: 30.8,
+            },
+            {
+              year: 2025,
+              value: 31.83,
+            },
+          ],
+          note: '31.83%, the highest of the period \u2014 but it inherits the securities markup in net income, so read it against ROIC, which fell.',
+        },
+        {
+          label: 'Book Value Per Share \u2014 FY2024\u2013FY2025 only',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2024,
+              value: 26.62,
+            },
+            {
+              year: 2025,
+              value: 34.35,
+            },
+          ],
+          note: 'ONLY THESE TWO YEARS ARE CARRIED. THE SHARE COUNT SERIES IS BROKEN BEFORE FY2024 AND MUST NOT BE USED. It reads 343\u2013346 for FY2015\u2013FY2021, then 6,881 and 6,799 for FY2022\u2013FY2023, then 12,211 and 12,088. That is a 19.9x jump between FY2021 and FY2022 and a further 1.8x between FY2023 and FY2024, against an actual Alphabet count of roughly 12.2 billion throughout. Only FY2024 and FY2025 are on the correct basis (FY2024: Class A 5,835 + Class B 861 + Class C 5,515 = 12,211). Carried exactly as supplied per the standing rule, but every per-share figure derived from FY2015\u2013FY2023 is wrong by roughly 2x or 35x.',
+        },
+      ],
+      accountsReceivable: {
+        label: 'Accounts Receivable, net',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 11556,
+          },
+          {
+            year: 2016,
+            value: 14137,
+          },
+          {
+            year: 2017,
+            value: 18336,
+          },
+          {
+            year: 2018,
+            value: 20838,
+          },
+          {
+            year: 2019,
+            value: 25326,
+          },
+          {
+            year: 2020,
+            value: 30930,
+          },
+          {
+            year: 2021,
+            value: 39304,
+          },
+          {
+            year: 2022,
+            value: 40258,
+          },
+          {
+            year: 2023,
+            value: 47964,
+          },
+          {
+            year: 2024,
+            value: 52340,
+          },
+          {
+            year: 2025,
+            value: 62886,
+          },
+        ],
+        note: 'Grew 444% over eleven years, broadly tracking revenue.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 90114,
+          },
+          {
+            year: 2016,
+            value: 105408,
+          },
+          {
+            year: 2017,
+            value: 124308,
+          },
+          {
+            year: 2018,
+            value: 135676,
+          },
+          {
+            year: 2019,
+            value: 152578,
+          },
+          {
+            year: 2020,
+            value: 174296,
+          },
+          {
+            year: 2021,
+            value: 188143,
+          },
+          {
+            year: 2022,
+            value: 164795,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 171530,
+          },
+          {
+            year: 2024,
+            value: 163711,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 206038,
+          },
+        ],
+      },
+      ppeNet: {
+        label: 'Property & Equipment, net',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 29016,
+          },
+          {
+            year: 2016,
+            value: 34234,
+          },
+          {
+            year: 2017,
+            value: 42383,
+          },
+          {
+            year: 2018,
+            value: 59719,
+          },
+          {
+            year: 2019,
+            value: 73646,
+          },
+          {
+            year: 2020,
+            value: 84749,
+          },
+          {
+            year: 2021,
+            value: 97599,
+          },
+          {
+            year: 2022,
+            value: 112668,
+          },
+          {
+            year: 2023,
+            value: 134345,
+          },
+          {
+            year: 2024,
+            value: 171036,
+          },
+          {
+            year: 2025,
+            value: 246597,
+          },
+        ],
+        note: 'ROSE $75,561m IN FY2025 \u2014 up 44.2% in a single year to $246.6bn, and 750% over eleven years. This is the AI data centre build arriving on the balance sheet. PP&E is now 41.4% of total assets, against 19.7% in FY2015.',
+      },
+      goodwill: {
+        label: 'Goodwill',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 15869,
+          },
+          {
+            year: 2016,
+            value: 16468,
+          },
+          {
+            year: 2017,
+            value: 16747,
+          },
+          {
+            year: 2018,
+            value: 17888,
+          },
+          {
+            year: 2019,
+            value: 20624,
+          },
+          {
+            year: 2020,
+            value: 21175,
+          },
+          {
+            year: 2021,
+            value: 22956,
+          },
+          {
+            year: 2022,
+            value: 28960,
+          },
+          {
+            year: 2023,
+            value: 29198,
+          },
+          {
+            year: 2024,
+            value: 31885,
+          },
+          {
+            year: 2025,
+            value: 33380,
+          },
+        ],
+        note: 'Only $33.4bn on a $595.3bn balance sheet \u2014 5.6%. Alphabet built rather than bought, and the pending $32.0bn Wiz acquisition would roughly double this line.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 147461,
+          },
+          {
+            year: 2016,
+            value: 167497,
+          },
+          {
+            year: 2017,
+            value: 197295,
+          },
+          {
+            year: 2018,
+            value: 232792,
+          },
+          {
+            year: 2019,
+            value: 275909,
+          },
+          {
+            year: 2020,
+            value: 319616,
+          },
+          {
+            year: 2021,
+            value: 359268,
+          },
+          {
+            year: 2022,
+            value: 365264,
+          },
+          {
+            year: 2023,
+            value: 402392,
+          },
+          {
+            year: 2024,
+            value: 450256,
+          },
+          {
+            year: 2025,
+            value: 595281,
+          },
+        ],
+        note: 'JUMPED 32.2% IN FY2025 to $595.3bn \u2014 the largest single-year increase in the series. PP&E and non-marketable securities account for $106.3bn of the $145.0bn increase between them.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1931,
+          },
+          {
+            year: 2016,
+            value: 2041,
+          },
+          {
+            year: 2017,
+            value: 3137,
+          },
+          {
+            year: 2018,
+            value: 4378,
+          },
+          {
+            year: 2019,
+            value: 5561,
+          },
+          {
+            year: 2020,
+            value: 5589,
+          },
+          {
+            year: 2021,
+            value: 6037,
+          },
+          {
+            year: 2022,
+            value: 5128,
+          },
+          {
+            year: 2023,
+            value: 7493,
+          },
+          {
+            year: 2024,
+            value: 7987,
+          },
+          {
+            year: 2025,
+            value: 12200,
+          },
+        ],
+        note: 'Up 52.7% in FY2025 to $12.2bn as the capex programme stretched supplier terms.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 19310,
+          },
+          {
+            year: 2016,
+            value: 16756,
+          },
+          {
+            year: 2017,
+            value: 24183,
+          },
+          {
+            year: 2018,
+            value: 34620,
+          },
+          {
+            year: 2019,
+            value: 45221,
+          },
+          {
+            year: 2020,
+            value: 56834,
+          },
+          {
+            year: 2021,
+            value: 64254,
+          },
+          {
+            year: 2022,
+            value: 69300,
+          },
+          {
+            year: 2023,
+            value: 81814,
+          },
+          {
+            year: 2024,
+            value: 89122,
+          },
+          {
+            year: 2025,
+            value: 102745,
+          },
+        ],
+      },
+      currentRatio: {
+        label: 'Current Liabilities / Current Assets',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.21,
+          },
+          {
+            year: 2016,
+            value: 0.16,
+          },
+          {
+            year: 2017,
+            value: 0.19,
+          },
+          {
+            year: 2018,
+            value: 0.26,
+          },
+          {
+            year: 2019,
+            value: 0.3,
+          },
+          {
+            year: 2020,
+            value: 0.33,
+          },
+          {
+            year: 2021,
+            value: 0.34,
+          },
+          {
+            year: 2022,
+            value: 0.42,
+          },
+          {
+            year: 2023,
+            value: 0.48,
+          },
+          {
+            year: 2024,
+            value: 0.54,
+          },
+          {
+            year: 2025,
+            value: 0.5,
+          },
+        ],
+        note: '0.50x in FY2025. Current assets are twice current liabilities \u2014 the ratio has roughly doubled from 0.21x in FY2015 but there is no liquidity question here.',
+      },
+      longTermDebt: {
+        label: 'Long-Term Debt',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1995,
+          },
+          {
+            year: 2016,
+            value: 3935,
+          },
+          {
+            year: 2017,
+            value: 3969,
+          },
+          {
+            year: 2018,
+            value: 4012,
+          },
+          {
+            year: 2019,
+            value: 4554,
+          },
+          {
+            year: 2020,
+            value: 13932,
+          },
+          {
+            year: 2021,
+            value: 14817,
+          },
+          {
+            year: 2022,
+            value: 14701,
+          },
+          {
+            year: 2023,
+            value: 11870,
+          },
+          {
+            year: 2024,
+            value: 10883,
+          },
+          {
+            year: 2025,
+            value: 46547,
+          },
+        ],
+        note: 'THE FIRST REAL BALANCE SHEET EVENT IN ALPHABET\u2019S HISTORY. $10,883m to $46,547m \u2014 up 328% in one year. This company has been effectively debt-free its entire life. Debt-to-equity is still only 0.11x so there is no solvency question, but the character of the business has changed: Alphabet is now funding capital expenditure with borrowed money.',
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.01,
+          },
+          {
+            year: 2016,
+            value: 0.02,
+          },
+          {
+            year: 2017,
+            value: 0.02,
+          },
+          {
+            year: 2018,
+            value: 0.02,
+          },
+          {
+            year: 2019,
+            value: 0.02,
+          },
+          {
+            year: 2020,
+            value: 0.06,
+          },
+          {
+            year: 2021,
+            value: 0.05,
+          },
+          {
+            year: 2022,
+            value: 0.05,
+          },
+          {
+            year: 2023,
+            value: 0.04,
+          },
+          {
+            year: 2024,
+            value: 0.03,
+          },
+          {
+            year: 2025,
+            value: 0.11,
+          },
+        ],
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 27130,
+          },
+          {
+            year: 2016,
+            value: 28461,
+          },
+          {
+            year: 2017,
+            value: 44793,
+          },
+          {
+            year: 2018,
+            value: 55164,
+          },
+          {
+            year: 2019,
+            value: 74467,
+          },
+          {
+            year: 2020,
+            value: 97072,
+          },
+          {
+            year: 2021,
+            value: 107633,
+          },
+          {
+            year: 2022,
+            value: 109120,
+          },
+          {
+            year: 2023,
+            value: 119013,
+          },
+          {
+            year: 2024,
+            value: 125172,
+          },
+          {
+            year: 2025,
+            value: 180016,
+          },
+        ],
+        note: 'Up 43.8% in FY2025. Liabilities plus equity reconciles to total assets in all eleven years.',
+      },
+      debtToEquity: {
+        label: 'Total Liabilities to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.22,
+          },
+          {
+            year: 2016,
+            value: 0.2,
+          },
+          {
+            year: 2017,
+            value: 0.29,
+          },
+          {
+            year: 2018,
+            value: 0.31,
+          },
+          {
+            year: 2019,
+            value: 0.36,
+          },
+          {
+            year: 2020,
+            value: 0.43,
+          },
+          {
+            year: 2021,
+            value: 0.42,
+          },
+          {
+            year: 2022,
+            value: 0.42,
+          },
+          {
+            year: 2023,
+            value: 0.42,
+          },
+          {
+            year: 2024,
+            value: 0.38,
+          },
+          {
+            year: 2025,
+            value: 0.43,
+          },
+        ],
+        note: '0.43x, and remarkably stable at 0.36\u20130.43x for six years despite the debt raise.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 89223,
+          },
+          {
+            year: 2016,
+            value: 105131,
+          },
+          {
+            year: 2017,
+            value: 113247,
+          },
+          {
+            year: 2018,
+            value: 134885,
+          },
+          {
+            year: 2019,
+            value: 152122,
+          },
+          {
+            year: 2020,
+            value: 163401,
+          },
+          {
+            year: 2021,
+            value: 191484,
+          },
+          {
+            year: 2022,
+            value: 195563,
+          },
+          {
+            year: 2023,
+            value: 211247,
+          },
+          {
+            year: 2024,
+            value: 245084,
+          },
+          {
+            year: 2025,
+            value: 324055,
+          },
+        ],
+        note: 'Grew $234,832m over eleven years. THE BUFFETT RETAINED-EARNINGS TEST: market value rose roughly $3,282,000m over the same period against that retained figure, implying about $13.98 of market value created per $1 retained \u2014 up from $11.82 on the FY2024 basis. NOTE the FY2025 market capitalisation used is approximate and was not taken from a filing, so treat the $13.98 as indicative.',
+      },
+      shareholderEquity: {
+        label: 'Total Stockholders\u2019 Equity',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 120331,
+          },
+          {
+            year: 2016,
+            value: 139036,
+          },
+          {
+            year: 2017,
+            value: 152502,
+          },
+          {
+            year: 2018,
+            value: 177628,
+          },
+          {
+            year: 2019,
+            value: 201442,
+          },
+          {
+            year: 2020,
+            value: 222544,
+          },
+          {
+            year: 2021,
+            value: 251635,
+          },
+          {
+            year: 2022,
+            value: 256144,
+          },
+          {
+            year: 2023,
+            value: 283379,
+          },
+          {
+            year: 2024,
+            value: 325084,
+          },
+          {
+            year: 2025,
+            value: 415265,
+          },
+        ],
+        note: 'Grew 245% to $415.3bn, and up 27.7% in FY2025 alone.',
+      },
+      sharesOutstanding: {
+        label: 'Shares Outstanding \u2014 SEE THE WARNING',
+        unit: 'M shares',
+        series: [
+          {
+            year: 2015,
+            value: 343,
+          },
+          {
+            year: 2016,
+            value: 345,
+          },
+          {
+            year: 2017,
+            value: 345,
+          },
+          {
+            year: 2018,
+            value: 346,
+          },
+          {
+            year: 2019,
+            value: 346,
+          },
+          {
+            year: 2020,
+            value: 346,
+          },
+          {
+            year: 2021,
+            value: 345,
+          },
+          {
+            year: 2022,
+            value: 6881,
+          },
+          {
+            year: 2023,
+            value: 6799,
+          },
+          {
+            year: 2024,
+            value: 12211,
+          },
+          {
+            year: 2025,
+            value: 12088,
+          },
+        ],
+        note: 'THE SHARE COUNT SERIES IS BROKEN BEFORE FY2024 AND MUST NOT BE USED. It reads 343\u2013346 for FY2015\u2013FY2021, then 6,881 and 6,799 for FY2022\u2013FY2023, then 12,211 and 12,088. That is a 19.9x jump between FY2021 and FY2022 and a further 1.8x between FY2023 and FY2024, against an actual Alphabet count of roughly 12.2 billion throughout. Only FY2024 and FY2025 are on the correct basis (FY2024: Class A 5,835 + Class B 861 + Class C 5,515 = 12,211). Carried exactly as supplied per the standing rule, but every per-share figure derived from FY2015\u2013FY2023 is wrong by roughly 2x or 35x.',
+      },
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Net Cash from Operating Activities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 18659,
+          },
+          {
+            year: 2014,
+            value: 22376,
+          },
+          {
+            year: 2015,
+            value: 26024,
+          },
+          {
+            year: 2016,
+            value: 36036,
+          },
+          {
+            year: 2017,
+            value: 37091,
+          },
+          {
+            year: 2018,
+            value: 47971,
+          },
+          {
+            year: 2019,
+            value: 54520,
+          },
+          {
+            year: 2020,
+            value: 65124,
+          },
+          {
+            year: 2021,
+            value: 91652,
+          },
+          {
+            year: 2022,
+            value: 91495,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 101746,
+          },
+          {
+            year: 2024,
+            value: 125299,
+          },
+          {
+            year: 2025,
+            value: 164713,
+          },
+        ],
+        note: 'Grew 783% over thirteen years and 31.5% in FY2025 alone to $164.7bn. NOTE WHAT IS INSIDE IT: the statement reverses out a $24,620m non-cash gain on debt and equity securities, and adds back $27.1bn of share-based compensation. Operating cash flow is genuine, but it is not the same as owner earnings.',
+      },
+      capex: {
+        label: 'Capital Expenditures',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 7358,
+          },
+          {
+            year: 2014,
+            value: 10959,
+          },
+          {
+            year: 2015,
+            value: 9915,
+          },
+          {
+            year: 2016,
+            value: 10212,
+          },
+          {
+            year: 2017,
+            value: 13184,
+          },
+          {
+            year: 2018,
+            value: 25139,
+          },
+          {
+            year: 2019,
+            value: 23548,
+          },
+          {
+            year: 2020,
+            value: 22281,
+          },
+          {
+            year: 2021,
+            value: 24640,
+          },
+          {
+            year: 2022,
+            value: 31485,
+          },
+          {
+            year: 2023,
+            value: 32251,
+          },
+          {
+            year: 2024,
+            value: 52535,
+          },
+          {
+            year: 2025,
+            value: 91447,
+          },
+        ],
+        note: '$91,447m, UP 74.1% IN ONE YEAR and 1,143% over thirteen years. For scale it is now 4.3x the depreciation charge of $21,136m \u2014 Alphabet is building far faster than the existing base wears out, which means the depreciation drag on reported earnings is still years from catching up.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 39.4,
+          },
+          {
+            year: 2014,
+            value: 49.0,
+          },
+          {
+            year: 2015,
+            value: 38.0,
+          },
+          {
+            year: 2016,
+            value: 28.3,
+          },
+          {
+            year: 2017,
+            value: 35.6,
+          },
+          {
+            year: 2018,
+            value: 52.4,
+          },
+          {
+            year: 2019,
+            value: 43.2,
+          },
+          {
+            year: 2020,
+            value: 34.2,
+          },
+          {
+            year: 2021,
+            value: 26.9,
+          },
+          {
+            year: 2022,
+            value: 34.4,
+          },
+          {
+            year: 2023,
+            value: 31.7,
+          },
+          {
+            year: 2024,
+            value: 42.0,
+          },
+          {
+            year: 2025,
+            value: 55.5,
+          },
+        ],
+        note: '55.5% in FY2025 \u2014 THE HIGHEST IN THE THIRTEEN-YEAR SERIES, three full points above the previous FY2018 peak of 52.4%, and more than double the FY2021 low of 26.9%.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 11301,
+          },
+          {
+            year: 2014,
+            value: 11417,
+          },
+          {
+            year: 2015,
+            value: 16109,
+          },
+          {
+            year: 2016,
+            value: 25824,
+          },
+          {
+            year: 2017,
+            value: 23907,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 22832,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 30972,
+          },
+          {
+            year: 2020,
+            value: 42843,
+          },
+          {
+            year: 2021,
+            value: 67012,
+          },
+          {
+            year: 2022,
+            value: 60010,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 69495,
+          },
+          {
+            year: 2024,
+            value: 72764,
+          },
+          {
+            year: 2025,
+            value: 73266,
+          },
+        ],
+        note: 'THE MOST IMPORTANT NUMBER IN THIS BUILD. Operating cash flow grew 31.5% in FY2025. Free cash flow grew 0.7% \u2014 $72,764m to $73,266m. CAPEX ATE THE ENTIRE INCREASE. Every dollar of the $39.4bn improvement in operating cash flow, and then some, went into the ground.',
+      },
+      extraLines: [
+        {
+          label: 'Depreciation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2025,
+              value: 21136,
+            },
+          ],
+          note: 'Against $91,447m of capex \u2014 a 4.3x ratio. The gap is future depreciation not yet in the P&L.',
+        },
+        {
+          label: 'Non-Cash Securities Gain Reversed Out',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2025,
+              value: -24620,
+            },
+          ],
+          note: 'THE PAPER-GAIN TIE. The operating section reverses out $(24,620)m of "loss (gain) on debt and equity securities, net". That corresponds to the $29,787m other-income line and the $30,705m increase in non-marketable securities. All three point the same way: roughly $24.6bn of FY2025 reported net income is an unrealised mark on private holdings. Net income excluding it is about $107.6bn, which would make FY2025 growth roughly 7% rather than 32%.',
+        },
+        {
+          label: 'Share Repurchases',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2024,
+              value: 62222,
+            },
+            {
+              year: 2025,
+              value: 45709,
+            },
+          ],
+          note: 'FELL 26.5% in FY2025, from $62.2bn to $45.7bn. Alphabet pulled back on buybacks to fund the capex programme \u2014 the clearest evidence of the capital allocation shift.',
+        },
+        {
+          label: 'Dividends Paid',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2024,
+              value: 7363,
+            },
+            {
+              year: 2025,
+              value: 10049,
+            },
+          ],
+          note: 'Up 36.5% to $10.0bn in only the second year of paying a dividend.',
+        },
+        {
+          label: 'Total Shareholder Returns',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2024,
+              value: 69585,
+            },
+            {
+              year: 2025,
+              value: 55758,
+            },
+          ],
+          note: 'Buybacks plus dividends fell 19.9% to $55.8bn \u2014 76% of free cash flow, down from 96% in FY2024. Capital returns are being squeezed by the build.',
+        },
+        {
+          label: 'Net Debt Raised',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2025,
+              value: 32137,
+            },
+          ],
+          note: 'Issuance of $64,564m against repayments of $32,427m. This is what put $46.5bn of long-term debt on the balance sheet. ALPHABET IS FUNDING CAPITAL EXPENDITURE WITH DEBT FOR THE FIRST TIME IN ITS HISTORY.',
         },
       ],
     },
