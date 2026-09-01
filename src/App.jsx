@@ -32418,7 +32418,783 @@ const RACE_BREAKDOWN = {
       ],
     },
   },
-};const COVERAGE_DATA = [
+};
+// ════════════════════════════════════════════════════════════════
+// V_BREAKDOWN — Visa Inc. Coverage data (Tier 2, drop 1)
+// SOURCE: Muzz's supplied Item 1 material — overview, core business and
+// transaction flow, strategy, core products, new flows, key foundations,
+// value-added services, and Visa Commercial Solutions / Visa Direct.
+// Scale figures are FY2024 (Visa's year ends 30 September).
+//
+// TABS LIVE: OVERVIEW, MOAT, RISKS, DERIVATIVES.
+// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS.
+//
+// CHECKED BEFORE BUILDING:
+//   the four new-flow components ($145T B2B + $20T B2C + $20T P2P +
+//   $15T G2C) sum EXACTLY to the stated $200T total.
+//   303bn transactions / 365 = ~830m a day, matching the stated ~829m.
+//   $16T over 303bn transactions implies a $52.81 average ticket.
+//
+// THE FINDING WORTH CARRYING: of 303bn Visa-BRANDED transactions only
+// 234bn are PROCESSED by Visa. The 69bn gap is 22.8% of branded volume —
+// largely US domestic debit routing. Branded and processed volume earn
+// differently, so a model built off the headline overstates processing
+// economics. Surfaced in identity, in the scale table and in the moat.
+// ════════════════════════════════════════════════════════════════
+const V_BREAKDOWN = {
+  overview: {
+    identity: {
+      name: 'Visa Inc.',
+      ticker: 'V',
+      description: 'A global payments network, not a lender. Visa runs VisaNet \u2014 a proprietary transaction network providing a single connection point for authorisation, clearing and settlement across more than 200 countries and territories. The classic four-party model of consumer, issuer, acquirer and merchant has widened to include digital banks, wallets, fintechs, governments and NGOs. Stated purpose: to uplift everyone, everywhere by being the best way to pay and be paid.',
+      industryPosition: [
+        'SCALE, FY2024: 303 BILLION Visa-branded payments and cash transactions \u2014 about 830 million a day \u2014 carrying $16 TRILLION of total payments and cash volume. Average transaction value is roughly $52.81.',
+        '4.6 BILLION payment credentials in issue, accepted at more than 150 million merchant locations (about 42 million of those reached through payment facilitators), serving around 14,500 financial institution clients.',
+        'READ THE PROCESSING GAP CAREFULLY: of the 303bn Visa-BRANDED transactions, only 234bn were PROCESSED by Visa. The other 69 billion \u2014 22.8% \u2014 carry the Visa brand but run over someone else\u2019s rails. That gap is largely US domestic debit routing, and it is the single most under-discussed number in the business, because brand volume and processed volume earn very differently.',
+        'VALUE-ADDED SERVICES: more than 200 products as of 30 September 2024, across five pillars \u2014 issuing, acceptance, risk and identity, open banking, and advisory. Deliberately NETWORK-AGNOSTIC, so they can be sold on rails Visa does not own.',
+        'TOKENISATION: 11.5 BILLION network tokens provisioned as of 30 September 2024, replacing card numbers with cryptographically protected substitutes.',
+        'CONTACTLESS: tap to pay is the default in around 60 countries where it exceeds 90% of face-to-face Visa transactions, and above 50% in more than 125 countries. Outside the US it is over 80% of face-to-face; inside the US it has only just passed 50%, on 535m+ enabled cards.',
+        'More than $3 BILLION invested in AI and data infrastructure over the past decade, running on four redundant data centres built for continuous availability.',
+      ],
+    },
+    buffettFraming: {
+      headline: 'A toll road that takes no credit risk',
+      body: 'The mechanics matter more than the branding. In a typical purchase the merchant hands the transaction to an acquirer, the acquirer presents it through VisaNet, Visa routes it to the issuer for authorisation, and the ISSUER then pays the acquirer the transaction value less the interchange reimbursement fee. The acquirer pays the merchant the purchase amount less the merchant discount rate. Visa never advances the money and never carries the receivable. It moves data and takes a fee for doing so. When a cardholder defaults, the issuing bank absorbs it \u2014 not Visa. That single structural fact is why a payments network and a credit-card lender are completely different businesses despite looking similar from the outside. It also means Visa\u2019s revenue scales with the NOMINAL value of commerce, so inflation flows through it rather than eroding it.',
+      bottomLine: 'What you are underwriting is the durability of a two-sided network: 4.6bn credentials on one side, 150m+ merchant locations on the other, and neither side can defect alone. The risks are not credit risks \u2014 they are regulatory (interchange caps, routing mandates), disintermediation (account-to-account rails that bypass cards entirely), and the slow erosion visible in that 22.8% of branded transactions Visa no longer processes. Note that Visa is building the disintermediation threat itself, through open banking and A2A. That is either admirable self-cannibalisation or an admission of where flows are heading; the numbers will eventually say which.',
+    },
+    businessLines: {
+      description: 'Three revenue growth drivers \u2014 consumer payments, new flows, and value-added services \u2014 sitting on five stated foundations: network of networks, technology platforms, security, brand and talent. What follows is what actually sits inside each.',
+      lines: [
+        {
+          name: 'The C2B transaction \u2014 how Visa actually earns',
+          description: 'Consumer buys from merchant. Merchant presents the transaction to an acquirer. The acquirer presents it through VisaNet to Visa, which routes it to the issuer to check the balance or credit line. Once authorised, the issuer posts it to the consumer\u2019s account and pays the acquirer the transaction value MINUS the interchange reimbursement fee. The acquirer pays the merchant the purchase amount MINUS the merchant discount rate. Visa takes a fee for facilitating the movement. IT NEVER TOUCHES THE PRINCIPAL AND NEVER CARRIES CREDIT RISK.',
+          revenueProfile: 'Fee on facilitation',
+          highlight: true,
+        },
+        {
+          name: 'Credit',
+          description: 'Cards and digital credentials giving consumers and businesses access to a credit line. Run through programmes operated by financial institution clients, co-brand partners, fintechs and affinity partners \u2014 Visa supplies the rails and the brand, the partner supplies the balance sheet.',
+          revenueProfile: 'Core product',
+        },
+        {
+          name: 'Debit',
+          description: 'Cards and credentials drawing on funds already in a deposit account, in person, online or via mobile, with no credit line involved. Includes the Visa/PLUS Global ATM network for cash access across 200+ countries through both bank and independent ATM operators. Debit is also where the routing regulation bites hardest.',
+          revenueProfile: 'Core product',
+        },
+        {
+          name: 'Prepaid',
+          description: 'Credentials drawing on a designated balance funded by individuals, businesses or governments. Covers general-purpose reloadable, payroll, government and corporate disbursements, healthcare, gift and travel. Explicitly framed as a financial-inclusion product for people with limited or no access to traditional banking.',
+          revenueProfile: 'Core product',
+        },
+        {
+          name: 'Tap to Pay \u2014 contactless',
+          description: 'The default way to pay in roughly 60 countries, where it now exceeds 90% of face-to-face Visa transactions, and above 50% in more than 125 countries. Outside the US, contactless is over 80% of face-to-face; the US has only just crossed 50% on 535m+ enabled cards. Transit is the wedge: 870+ contactless public-transport projects and more than 2.0 BILLION contactless transit transactions in FY2024.',
+          revenueProfile: 'Key enabler',
+          marginNote: 'The US lag is the growth runway, not a weakness',
+        },
+        {
+          name: 'Tokenisation \u2014 Visa Token Service',
+          description: 'Replaces the card number with a network token plus cryptographic data, so the underlying account is never exposed. Improves authorisation rates, cuts fraud and smooths checkout across in-person and online. 11.5 BILLION tokens provisioned as of 30 September 2024. This is quietly one of the strongest lock-in mechanisms Visa has \u2014 a tokenised credential is materially harder to migrate off the network.',
+          revenueProfile: 'Key enabler',
+          highlight: true,
+        },
+        {
+          name: 'Click to Pay \u2014 EMV Secure Remote Commerce',
+          description: 'A standardised online checkout that removes manual data entry and passes consumer and transaction data securely. The stated goal is to make online payments as secure, reliable and interoperable as an in-person tap.',
+          revenueProfile: 'Key enabler',
+        },
+        {
+          name: 'Visa Commercial Solutions \u2014 the B2B push',
+          description: 'Small-business, corporate travel and entertainment, purchasing, and virtual cards for SMEs, enterprises and governments. Spend controls, reconciliation and richer data for working-capital optimisation. Accounts Receivable Manager automates virtual-card acceptance in the US, with vertical focus on fleet and fuel, travel and agriculture. The point is converting paper and ACH workflows into data-rich digital payments \u2014 higher-yield volume than consumer card.',
+          revenueProfile: 'New flows',
+          highlight: true,
+        },
+        {
+          name: 'Visa Direct Platform \u2014 money movement beyond cards',
+          description: 'A network-of-networks for domestic and cross-border P2P, A2A, B2C payouts, merchant settlement and refunds. Potential access to more than 11.0 BILLION endpoints \u2014 roughly 4.0bn cards, 3.5bn bank accounts and 3.5bn digital wallets \u2014 across 195+ countries, integrating 75+ domestic schemes, 15+ real-time payment schemes, 15+ card networks and 5+ gateways. Processed about 10 BILLION transactions for 550+ partners in FY2024.',
+          revenueProfile: 'New flows',
+          highlight: true,
+        },
+        {
+          name: 'Visa B2B Connect and Cross-Border Solutions',
+          description: 'B2B Connect is a multilateral bank-to-bank cross-border network live in 100+ countries, built for corporate payments and streamlined settlement. Cross-Border Solutions and Currencycloud supply real-time FX, virtual accounts, liquidity and settlement. Visa+ is the interoperability layer, live for eligible PayPal and Venmo transfers in the US and for B2C payouts with DailyPay.',
+          revenueProfile: 'New flows',
+        },
+        {
+          name: 'VAS 1 \u00b7 Issuing Solutions',
+          description: 'Visa DPS is one of the largest issuer processors, with DPS Forward adding modular API-based access \u2014 authorisation and processing plus fraud mitigation, disputes, analytics, campaign management, digital issuance and contact-centre support. The Pismo acquisition in early 2024 added cloud-native issuer processing and core banking for credit, debit and prepaid via APIs, and crucially extends support to real-time payment frameworks. Also loyalty and benefits, account controls and BNPL credentials.',
+          revenueProfile: 'Value-added services',
+        },
+        {
+          name: 'VAS 2 \u00b7 Acceptance Solutions',
+          description: 'The Visa Acceptance Platform, including Cybersource and Authorize.net \u2014 an omnichannel cloud gateway with value-added modules for acquirers, PSPs, ISVs and merchants. Token management, Account Updater, the Verifi dispute tools (network-agnostic), and Global Urban Mobility for transit acceptance. Raises merchant conversion and cuts chargeback cost.',
+          revenueProfile: 'Value-added services',
+        },
+        {
+          name: 'VAS 3 \u00b7 Risk & Identity Solutions',
+          description: 'The Visa Protect suite turns network data and machine learning into near real-time risk decisions: Consumer Authentication Service, Protect Authentication Intelligence, and Provisioning Intelligence against fraudulent token provisioning. Added March 2024: Deep Authorization for card-not-present AI risk scoring, PROTECT FOR A2A \u2014 the first real-time non-card fraud solution \u2014 and Visa Risk Manager with scheme-agnostic Advanced Authorization.',
+          revenueProfile: 'Value-added services',
+          highlight: true,
+        },
+        {
+          name: 'VAS 4 \u00b7 Open Banking Solutions',
+          description: 'Built around Tink AB. Secure data access \u2014 account verification, balance, personal finance management \u2014 plus payment initiation for A2A and merchant payments. Expanded across Europe and into the US in 2024, with Visa A2A planned for the UK in 2025 carrying standards, rules and dispute management. NOTE WHAT THIS IS: Visa building the rails that bypass its own cards, and attaching protection and dispute handling so it still earns from them.',
+          revenueProfile: 'Value-added services',
+          highlight: true,
+        },
+        {
+          name: 'VAS 5 \u00b7 Advisory Services',
+          description: 'Visa Consulting & Analytics covers strategy, commercial money movement, portfolio optimisation, digital and AI, risk and implementation, with VCA Managed Services embedding teams to execute. Visa Marketing Services uses the sponsorship portfolio to drive activations. High-margin, sticky, and it pulls through demand for the rest of the stack.',
+          revenueProfile: 'Value-added services',
+        },
+      ],
+      tables: [
+        {
+          title: 'FY2024 SCALE \u00b7 AND THE PROCESSING GAP',
+          columns: [
+            'Metric',
+            'FY2024',
+          ],
+          rows: [
+            [
+              'Visa-branded payments & cash transactions',
+              '303 billion',
+            ],
+            [
+              '\u2014 of which PROCESSED by Visa on VisaNet',
+              '234 billion',
+            ],
+            [
+              '\u2014 branded but NOT processed by Visa',
+              '69 billion \u00b7 22.8%',
+            ],
+            [
+              'Transactions per day',
+              '~830 million',
+            ],
+            [
+              'Total payments & cash volume',
+              '$16 trillion',
+            ],
+            [
+              'Implied average transaction value',
+              '$52.81',
+            ],
+            [
+              'Payment credentials in issue',
+              '4.6 billion',
+            ],
+            [
+              'Merchant locations accepting Visa',
+              '150 million+',
+            ],
+            [
+              '\u2014 of which via payment facilitators',
+              '~42 million',
+            ],
+            [
+              'Financial institution clients',
+              '~14,500',
+            ],
+            [
+              'Network tokens provisioned',
+              '11.5 billion',
+            ],
+            [
+              'Countries and territories',
+              '200+',
+            ],
+          ],
+          emphasis: [
+            2,
+          ],
+          note: 'THE HIGHLIGHTED ROW IS THE ONE TO WATCH. Nearly a quarter of Visa-branded transactions do not run over VisaNet \u2014 they carry the brand but are routed elsewhere, largely US domestic debit. Branded volume and processed volume earn very differently, so headline transaction growth and revenue growth can diverge. Any model built off the 303bn figure without splitting it is overstating the processing economics.',
+        },
+        {
+          title: 'THE OPPORTUNITY \u00b7 STATED TAM, EXCLUDING RUSSIA AND CHINA',
+          columns: [
+            'Flow',
+            'Annual opportunity',
+            'Note',
+          ],
+          rows: [
+            [
+              'B2B',
+              '$145T',
+              'Of which ~15% (~$20T) addressable by card and virtual products; ~$105T sits in accounts payable and receivable as cheques, ACH and wires',
+            ],
+            [
+              'B2C',
+              '$20T',
+              'Payouts, disbursements, gig and insurance',
+            ],
+            [
+              'P2P',
+              '$20T',
+              'Person to person, domestic and cross-border',
+            ],
+            [
+              'G2C',
+              '$15T',
+              'Government to citizen disbursements',
+            ],
+            [
+              'TOTAL NEW FLOWS',
+              '$200T',
+              'The four components sum exactly to the stated total',
+            ],
+            [
+              'Consumer payments (separate)',
+              '>$20T',
+              'Cash, cheque, ACH and domestic schemes still to convert to cards and digital accounts',
+            ],
+          ],
+          emphasis: [
+            4,
+          ],
+          note: 'The four new-flow components reconcile exactly to the $200T headline. Hold the scale in perspective though: Visa currently carries $16T of total payments and cash volume, so the stated TAM is more than twelve times the entire existing business. TAMs of that size are directional rather than forecastable \u2014 the useful part is the B2B split, which says only about a seventh of B2B flow is card-addressable at all, and the rest requires Visa to win on non-card rails.',
+        },
+        {
+          title: 'VISA DIRECT \u00b7 REACH AND CONNECTIVITY',
+          columns: [
+            'Dimension',
+            'FY2024',
+          ],
+          rows: [
+            [
+              'Potential endpoints',
+              '11.0 billion+',
+            ],
+            [
+              '\u2014 cards',
+              '~4.0 billion',
+            ],
+            [
+              '\u2014 bank accounts',
+              '~3.5 billion',
+            ],
+            [
+              '\u2014 digital wallets',
+              '~3.5 billion',
+            ],
+            [
+              'Countries and territories',
+              '195+',
+            ],
+            [
+              'Domestic schemes integrated',
+              '75+',
+            ],
+            [
+              'Real-time payment schemes',
+              '15+',
+            ],
+            [
+              'Card-based networks',
+              '15+',
+            ],
+            [
+              'Gateways',
+              '5+',
+            ],
+            [
+              'Transactions processed',
+              '~10 billion',
+            ],
+            [
+              'Partners',
+              '550+',
+            ],
+            [
+              'Visa B2B Connect coverage',
+              '100+ countries',
+            ],
+          ],
+          note: 'Note the composition: 7.0 billion of the 11.0 billion endpoints are bank accounts and digital wallets, NOT cards. Visa Direct is explicitly a bet that the company can earn from money movement even where no card is involved \u2014 which is the honest strategic response to account-to-account rails, and the reason the open banking and A2A investments sit alongside it.',
+        },
+      ],
+    },
+    customers: {
+      mainCustomers: 'Visa sits in the middle of four constituencies and is paid by two of them. ISSUERS \u2014 around 14,500 financial institutions plus digital banks, wallets and fintechs \u2014 issue the credentials. ACQUIRERS and PSPs connect the merchants. MERCHANTS, more than 150 million locations, accept the credential. CONSUMERS hold 4.6 billion of them and pay Visa nothing directly. Governments and NGOs are an increasingly explicit fifth group, mostly through prepaid and G2C disbursement.',
+      distributionNetwork: [
+        'VisaNet \u2014 one connection point for authorisation, clearing and settlement across 200+ countries and territories.',
+        'Four redundant data centres, each with independent power, cooling and connectivity, designed for continuous availability.',
+        'The Visa/PLUS Global ATM network for cash access in 200+ countries via bank and independent ATM operators.',
+        'Payment facilitators reaching roughly 42 million of the 150 million+ merchant locations \u2014 an indirect channel that scales acceptance without direct acquiring relationships.',
+        'Visa Acceptance Platform, Cybersource and Authorize.net as the merchant-side gateway.',
+        'Visa Direct across 195+ countries, integrating 75+ domestic schemes and 15+ real-time payment schemes.',
+        'Visa B2B Connect for multilateral bank-to-bank corporate payments in 100+ countries.',
+        'Tink for open banking data access and payment initiation across Europe and the US.',
+        'Visa+ as the interoperability layer between competing P2P apps \u2014 live for PayPal and Venmo in the US.',
+      ],
+    },
+    reinvestment: {
+      headline: 'Five stated foundations, and where the money goes',
+      breakdown: [
+        {
+          label: 'Network of networks',
+          amount: '$3bn+ in AI and data over a decade',
+          detail: 'The stated mission is to move money to all endpoints and form factors across all available networks through ONE connection, with Visa\u2019s value-added services layered on regardless of which rail carries the transaction. Interoperability is the whole thesis \u2014 B2B Connect, Visa Direct and Visa+ are the expressions of it.',
+        },
+        {
+          label: 'Technology platforms',
+          amount: 'Four redundant data centres',
+          detail: 'A global stack of software, hardware and telecoms across four data centres with independent power, cooling and connectivity, built for continuous availability. For a network whose product is reliability, this is the product.',
+        },
+        {
+          label: 'Security',
+          amount: 'Defence in depth',
+          detail: 'Cryptographic de-valuation of sensitive data, secure development lifecycle, strong identity and access management, and advanced cyber detection and response. Risk teams pair AI with human analysts to monitor and mitigate ecosystem threats in near real time.',
+        },
+        {
+          label: 'Brand',
+          amount: 'FIFA, Olympics, NFL, F1',
+          detail: 'Sponsorship of the FIFA World Cup 2026, the Olympic and Paralympic Games, the NFL, Oracle Red Bull Racing and the Visa Cash App RB F1 team. The brand does commercial work here \u2014 it drives acceptance and is used to showcase innovation, not just awareness.',
+        },
+        {
+          label: 'Talent',
+          amount: '~31,600 employees, +10% YoY',
+          detail: 'Up from about 28,800, with 5% voluntary attrition and 57% of employees outside the US across 80+ countries. 91% say they would recommend Visa as a place to work. Broad generative-AI adoption internally including a secure internal ChatGPT. New Mission Rock site in San Francisco complements Foster City.',
+        },
+      ],
+      note: 'The $3bn of AI and data investment over a decade is the number to hold against the risk and identity product line \u2014 Deep Authorization, Protect for A2A and Advanced Authorization are what that spending is supposed to produce, and they are being sold as network-agnostic services rather than bundled free.',
+    },
+    acquisitions: {
+      heading: 'PARTNERSHIPS AND ACQUISITIONS \u2014 BUYING CAPABILITY, NOT VOLUME',
+      preamble: 'Visa\u2019s stated rationale is to augment capabilities, differentiate the network and accelerate growth under a disciplined return lens. What the FY2024 list actually shows is a company buying its way into non-card rails and AI risk \u2014 cloud-native core banking, a domestic processor in a market with localisation pressure, and real-time financial-crime AI. Alongside that sits a partnership machine: MORE THAN 650 NEW COMMERCIAL PARTNERSHIPS IN FY2024, up about 30% year on year, spanning early-stage fintechs to mature players.',
+      timeline: [
+        {
+          year: 'FY2024 \u00b7 CLOSED',
+          target: 'Pismo \u2014 cloud-native issuer processing and core banking',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          featured: true,
+          note: 'API-first credit, debit and prepaid processing and core banking. THE STRATEGIC POINT IS THE LAST LINE OF THE DESCRIPTION: it expands Visa\u2019s support for REAL-TIME PAYMENT frameworks. Visa did not buy a card processor \u2014 it bought the ability to run the rails that compete with cards.',
+        },
+        {
+          year: 'FY2024 \u00b7 SIGNED',
+          target: 'Featurespace \u2014 real-time AI fraud and financial-crime protection',
+          price: 'Undisclosed',
+          funding: 'Cash, subject to regulatory approval',
+          featured: true,
+          note: 'Feeds directly into the Risk & Identity pillar and the Visa Protect suite. Read alongside the $3bn+ of AI and data investment over the past decade and the March 2024 launch of Protect for A2A \u2014 Visa is assembling fraud capability that works on rails it does not own, because that is where the volume is heading.',
+        },
+        {
+          year: 'FY2024 \u00b7 SIGNED',
+          target: 'Prosa \u2014 majority stake in the Mexican processor',
+          price: 'Undisclosed',
+          funding: 'Cash, subject to regulatory approval',
+          note: 'To remain independent after closing. Buying a domestic processor in a large emerging market is the direct answer to the localisation and in-country processing mandates described in the regulation section \u2014 if the rules favour local schemes, own a local scheme.',
+        },
+      ],
+      note: 'Two programmes sit underneath the deals. FINTECH FAST TRACK gives streamlined onboarding and turnkey access so partners can launch cards and enable Visa Direct quickly. VISA READY certifies partners against Visa security and functionality standards. Plus startup engagement through the Visa Everywhere Initiative, She\u2019s Next and the Africa Fintech Accelerator. The pattern across all of it is the same: make it cheap for someone else to build on Visa\u2019s rails, then sell them services.',
+    },
+    headquarters: {
+      location: 'San Francisco Bay Area \u2014 owned and leased premises',
+      description: 'As of 30 September 2024 Visa owned or leased 135 OFFICE LOCATIONS IN 83 COUNTRIES, including FOUR DATA CENTRES in the United States, the United Kingdom and Singapore. Visa states the facilities are suitable and adequate for ongoing business needs. Note how small the physical footprint is relative to what runs through it: four data centres carry 234 billion processed transactions a year. This is an asset-light network, and the property note is the clearest evidence of it \u2014 there is no factory, no fleet and no inventory anywhere in this business.',
+    },
+  },
+  moat: {
+    preamble: 'Visa\u2019s moat is a two-sided network where neither side can defect alone: 4.6 billion credentials on one side, more than 150 million merchant locations on the other, and an issuer economics model that pays banks to keep issuing. What makes it unusually durable is that Visa takes no credit risk and holds no receivable \u2014 it is a toll on the nominal value of commerce, so inflation passes through it. What makes it assailable is that the toll is set partly by regulators, and that account-to-account rails can move money without touching a card at all.',
+    summary: {
+      headline: 'A toll road on global commerce, with the tollbooth increasingly regulated and a bypass under construction',
+      breakdown: [
+        {
+          division: 'Consumer payments \u2014 the core network',
+          moatStrength: 'Very Strong',
+          biggestRisk: '303bn transactions and $16T of volume across 200+ countries. The two-sided network is the textbook case. The risk is not competition for the network \u2014 it is regulation of what the network may charge, and mandated routing choice, which is already visible in the 22.8% of branded transactions Visa no longer processes.',
+        },
+        {
+          division: 'Tokenisation and the credential',
+          moatStrength: 'Very Strong',
+          biggestRisk: '11.5 billion network tokens provisioned. A tokenised, cryptographically bound credential sitting inside a wallet or a merchant\u2019s card-on-file is materially harder to migrate to another network than a plastic card was. This is the quiet lock-in, and it is growing.',
+        },
+        {
+          division: 'Merchant acceptance',
+          moatStrength: 'Strong',
+          biggestRisk: '150m+ locations, with 42m reached indirectly through payment facilitators. Acceptance is near-universal in developed markets, which is both the moat and the ceiling.',
+        },
+        {
+          division: 'Value-added services',
+          moatStrength: 'Moderate',
+          biggestRisk: '200+ products deliberately built NETWORK-AGNOSTIC so they sell on rails Visa does not own. Strategically right \u2014 it decouples service revenue from card volume \u2014 but it means competing on product merit against specialist vendors rather than on network position.',
+        },
+        {
+          division: 'New flows \u2014 B2B, P2P, B2C, G2C',
+          moatStrength: 'Weak to Moderate',
+          biggestRisk: 'A stated $200T opportunity against $16T of current volume, but only about a seventh of the $145T B2B flow is card-addressable at all. The remaining $105T sits in accounts payable and receivable as cheques, ACH and wires, where Visa has no incumbency and competes with banks, ERP vendors and domestic rails. Visa Direct\u2019s 10bn transactions are real, but this is a land-grab, not a moat.',
+        },
+        {
+          division: 'Open banking and A2A',
+          moatStrength: 'Weak',
+          biggestRisk: 'THE STRATEGIC TENSION IN ONE LINE. Visa is building account-to-account rails through Tink and Visa A2A \u2014 the very thing that lets money move without a card. The argument is that if disintermediation is coming, Visa should own the standards, rules and dispute handling and earn from them. That is honest and probably right, but it is a lower-margin business than interchange-linked card volume, and success here partly cannibalises the core.',
+        },
+        {
+          division: 'Brand and intellectual property',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'The Visa marks signify acceptance, security, convenience, speed and reliability, and are LICENSED to issuers and acquirers under network participation agreements \u2014 so the brand is not merely marketing, it is the contractual instrument binding the network together. Protected through trademark, patent, copyright, trade secret and contract, with active patenting in emerging technologies. The risk is regulatory rather than competitive: rules that force unbundling of brand from processing weaken the licence as a lever.',
+        },
+        {
+          division: 'Regulatory position',
+          moatStrength: 'Weak',
+          biggestRisk: 'THE SINGLE LARGEST STRUCTURAL EXPOSURE. Regulators in the US, EU, UK and Australia cap or influence what Visa may charge AND mandate that merchants can route around it. The EU further requires scheme and processing separation. Several large markets promote domestic schemes through localisation and in-country processing mandates. And Visa\u2019s own opportunity figures exclude Russia and China entirely. Very few businesses face simultaneous regulation of price, of customer routing choice, and of market access.',
+        },
+        {
+          division: 'Asset intensity',
+          moatStrength: 'Very Strong',
+          biggestRisk: '135 offices in 83 countries and FOUR data centres carry 234 billion processed transactions a year. No factory, no fleet, no inventory, no credit book. Incremental volume costs almost nothing to carry, which is why the operating margin looks the way it does \u2014 and it is the reason regulation, not competition, is the binding constraint on this business.',
+        },
+      ],
+    },
+  },
+  risks: {
+    governmentalRegulation: {
+      summary: 'Visa operates under a complex and expanding global regime that reaches products, PRICING, data, ROUTING and market access. Two of those matter more than the rest: regulators in several major markets set or cap what Visa may charge, and mandate that merchants be able to route transactions away from it. That is unusual \u2014 most businesses in this coverage face regulation of conduct, not of price and of customer choice simultaneously. It is also the mechanism behind the 22.8% of Visa-branded transactions that no longer run over VisaNet.',
+      sections: [
+        {
+          number: '01',
+          name: 'Interchange controls \u2014 regulated pricing',
+          bullets: [
+            {
+              label: 'United States',
+              text: 'Dodd-Frank caps debit interchange and is the single largest pricing intervention Visa faces.',
+            },
+            {
+              label: 'Europe',
+              text: 'The Interchange Fee Regulation caps interchange across the EEA and requires SCHEME AND PROCESSING SEPARATION \u2014 governance, accounting and decision-making split apart.',
+            },
+            {
+              label: 'Australia',
+              text: 'The Reserve Bank of Australia sets interchange standards directly.',
+            },
+            {
+              label: 'Consequence',
+              text: 'Caps compress issuer economics, which flows back into what issuers will pay Visa and how aggressively they market cards. This is price regulation of the core product.',
+            },
+          ],
+        },
+        {
+          number: '02',
+          name: 'Network exclusivity and routing \u2014 regulated customer choice',
+          bullets: [
+            {
+              label: 'Dodd-Frank',
+              text: 'Curbs exclusivity and MANDATES merchant routing choice in the US, especially for debit and prepaid.',
+            },
+            {
+              label: 'EU IFR',
+              text: 'Enforces the same routing choice across the EEA.',
+            },
+            {
+              label: 'Why it matters most',
+              text: 'Routing mandates are why brand volume and processed volume diverge. A merchant can accept a Visa credential and send the transaction over a competing network. This is the regulation with the most direct line to revenue.',
+            },
+            {
+              label: 'No-surcharge rules',
+              text: 'Whether merchants may surcharge varies by market and product, and is being actively reshaped by litigation, regulation and legislation.',
+            },
+          ],
+        },
+        {
+          number: '03',
+          name: 'Market participation restrictions \u2014 regulated access',
+          bullets: [
+            {
+              label: 'Markets',
+              text: 'China, India, Indonesia, Thailand and Vietnam promote DOMESTIC schemes through local ownership requirements, data localisation, or in-country processing mandates.',
+            },
+            {
+              label: 'Effect',
+              text: 'These tilt the field toward local networks rather than banning Visa outright \u2014 a slower and harder problem than prohibition, because Visa must keep investing to compete on a field that is deliberately uneven.',
+            },
+            {
+              label: 'Scale of exclusion',
+              text: 'Note that Visa\u2019s own opportunity figures are all stated EXCLUDING RUSSIA AND CHINA. Two of the largest payment markets on earth are simply outside the addressable base.',
+            },
+          ],
+        },
+        {
+          number: '04',
+          name: 'Anti-corruption, AML and sanctions',
+          bullets: [
+            {
+              label: 'Regimes',
+              text: 'FCPA, UK Bribery Act, Bank Secrecy Act and OFAC programmes.',
+            },
+            {
+              label: 'Enforcement',
+              text: 'Visa bars sanctioned entities and regions \u2014 Cuba, Iran, North Korea, Syria, Crimea, Donetsk and Luhansk \u2014 from issuing, acquiring or using Visa products.',
+            },
+            {
+              label: 'Transaction categories',
+              text: 'Certain internet categories including gambling, digital currencies and alcohol and tobacco carry monitoring and filtering obligations.',
+            },
+          ],
+        },
+        {
+          number: '05',
+          name: 'Supervisory oversight \u2014 who examines Visa',
+          bullets: [
+            {
+              label: 'United States',
+              text: 'The Federal Banking Agencies \u2014 Fed, OCC, FDIC and NCUA \u2014 oversee Visa as a technology service provider, with potential CFPB examination as a bank service provider.',
+            },
+            {
+              label: 'International',
+              text: 'Central bank and financial authority oversight in Canada, Europe, India, Ukraine, the UK, Brazil and Hong Kong among others.',
+            },
+            {
+              label: 'United Kingdom',
+              text: 'Visa Europe is a RECOGNISED PAYMENT SYSTEM under the Bank of England, and the Payment Systems Regulator holds broad powers over competition, innovation, FEES, governance and risk. Post-Brexit the UK applies IFR and PSD2-style rules, with the PSR monitoring compliance.',
+            },
+          ],
+        },
+        {
+          number: '06',
+          name: 'Open banking and data rights \u2014 the structural one',
+          bullets: [
+            {
+              label: 'PSD2',
+              text: 'Opens bank account access to third-party providers and mandates strong customer authentication, raising operational complexity and potentially affecting the checkout experience.',
+            },
+            {
+              label: 'Spreading',
+              text: 'Australia, Brazil, Canada, Hong Kong and Mexico are granting third parties access rights to data, payment initiation, or both.',
+            },
+            {
+              label: 'United States',
+              text: 'The CFPB issued its final rule on personal financial data rights in October 2024, expanding consumer and third-party data access and potentially reshaping competitive dynamics and portability.',
+            },
+            {
+              label: 'Read it against strategy',
+              text: 'This is the regulation that creates the account-to-account threat \u2014 and it is also precisely why Visa bought Tink and is launching Visa A2A. Regulation is simultaneously the biggest risk to the card franchise and the reason the open banking business exists.',
+            },
+          ],
+        },
+        {
+          number: '07',
+          name: 'Privacy, AI and cybersecurity',
+          bullets: [
+            {
+              label: 'Obligations',
+              text: 'Rising and fragmented requirements that can limit data flows, raise security standards and constrain AI deployment.',
+            },
+            {
+              label: 'Product consequence',
+              text: 'Could alter product design, data handling and cross-border operations \u2014 which matters more than usual for Visa, because its risk and identity products are built on exactly the cross-border data flows being restricted.',
+            },
+            {
+              label: 'Sustainability reporting',
+              text: 'Expanding statutory regimes including CSRD and climate disclosure rules.',
+            },
+          ],
+        },
+      ],
+    },
+    derivatives: {
+      summary: 'A small, conventional hedging book. Aggregate notional of derivatives DESIGNATED as hedging instruments was $11.7bn at 30 September 2024, against $11.0bn a year earlier. NOT designated: $1.9bn, up from $0.8bn. Total notional of $13.6bn against roughly $36bn of FY2024 revenue \u2014 proportionally light, and there is nothing exotic in it. Three instrument types only: foreign exchange forwards, cross-currency swaps and interest rate swaps.',
+      accountingNote: 'The interest rate swaps are designated as FAIR VALUE hedges on a portion of the outstanding senior notes. The carrying value of the hedged senior notes was $3.9bn at 30 September 2024 and $3.7bn in 2023. Forward contracts designated as net investment hedges generate excluded forward points, and swap agreements generate interest differentials; both are recognised in earnings.',
+      risksHedged: [
+        {
+          name: 'FX forwards \u00b7 designated',
+          icon: '\u1f310',
+          description: 'The largest programme by count. Carried at $49m of assets and $74m of liabilities at FY2024, against $100m and $66m a year earlier.',
+          instruments: 'Foreign exchange forward contracts \u2014 designated hedging instruments',
+          purpose: 'Visa earns across 200+ countries and reports in dollars, so currency exposure is structural rather than incidental. The asset position fell 51% year on year as rates moved.',
+        },
+        {
+          name: 'Cross-currency swaps \u00b7 designated',
+          icon: '\u1f4b1',
+          description: 'Assets fell sharply from $178m to $36m; liabilities went from nil to $2m.',
+          instruments: 'Cross-currency swaps \u2014 designated hedging instruments',
+          purpose: 'Longer-dated currency exposure, typically on foreign-currency debt and net investments in overseas operations.',
+        },
+        {
+          name: 'Interest rate swaps \u00b7 fair value hedges',
+          icon: '\u1f4ca',
+          description: 'The single largest position in the book at $133m of liabilities, DOWN 57.6% from $314m.',
+          instruments: 'Interest rate swaps designated as fair value hedges on senior notes',
+          purpose: 'Hedging $3.9bn of the outstanding senior notes. The collapse in the liability is the rate cycle unwinding, not a change in policy \u2014 the hedged notional actually rose from $3.7bn to $3.9bn.',
+        },
+        {
+          name: 'FX forwards \u00b7 NOT designated',
+          icon: '\u2696',
+          description: 'Small and stable at $18m of assets and $17m of liabilities. But the NOTIONAL more than doubled, from $0.8bn to $1.9bn.',
+          instruments: 'Foreign exchange forwards without hedge accounting',
+          purpose: 'Economic hedges of balance-sheet remeasurement that do not qualify for, or do not need, hedge accounting. Fair value changes hit earnings immediately. The notional growth is worth watching but the fair value exposure is immaterial.',
+        },
+      ],
+      cons: [
+        'The non-designated notional grew 137.5% in a year, from $0.8bn to $1.9bn. The fair values involved are trivial, so this is a note rather than a concern \u2014 but non-designated positions run straight through earnings with no deferral, so a materially larger book would add volatility to other income.',
+        'Excluded forward points and interest differentials swung from a $151m GAIN in FY2022 to a $25m loss in FY2023 and a $94m loss in FY2024 \u2014 a $245m swing over two years on a line most readers never look at.',
+      ],
+      bigPicture: 'Nothing here changes the investment case. $13.6bn of total notional on a business turning over $16 trillion of payments volume is a rounding error, the instruments are the three plainest types available, and the largest single position exists to hedge the interest rate on identified senior notes. Compare Alphabet, which wrote $16.9bn of credit protection on third parties\u2019 data centre leases in a single year. Visa\u2019s derivative book is doing exactly what a treasury book should do and no more.',
+      tables: [
+        {
+          title: 'NOTIONAL AMOUNTS ($BN)',
+          columns: [
+            'Category',
+            'FY2024',
+            'FY2023',
+            'Change',
+          ],
+          rows: [
+            [
+              'Designated as hedging instruments',
+              '11.7',
+              '11.0',
+              '+6.4%',
+            ],
+            [
+              'NOT designated as hedging instruments',
+              '1.9',
+              '0.8',
+              '+137.5%',
+            ],
+            [
+              'TOTAL NOTIONAL',
+              '13.6',
+              '11.8',
+              '+15.3%',
+            ],
+          ],
+          emphasis: [
+            2,
+          ],
+          note: '$13.6bn of notional against roughly $36bn of FY2024 revenue is about 38% \u2014 comparable to Alphabet at 32% and far below Coca-Cola at roughly 108%. For a company operating in 200+ countries this is a light book, which is itself informative: Visa\u2019s FX exposure is largely on fee revenue rather than on inventory, receivables or foreign-currency debt at scale.',
+        },
+        {
+          title: 'DERIVATIVE INSTRUMENTS AT GROSS FAIR VALUE ($M)',
+          columns: [
+            'Instrument',
+            'Balance sheet location',
+            'FY2024',
+            'FY2023',
+          ],
+          rows: [
+            [
+              'ASSETS \u2014 designated',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX forward contracts',
+              'Prepaid expenses and other current assets',
+              '49',
+              '100',
+            ],
+            [
+              'Cross-currency swaps',
+              'Other assets',
+              '36',
+              '178',
+            ],
+            [
+              'ASSETS \u2014 not designated',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX forward contracts',
+              'Prepaid expenses and other current assets',
+              '18',
+              '15',
+            ],
+            [
+              'TOTAL ASSETS',
+              '',
+              '103',
+              '293',
+            ],
+            [
+              'LIABILITIES \u2014 designated',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX forward contracts',
+              'Accrued liabilities',
+              '74',
+              '66',
+            ],
+            [
+              'Cross-currency swaps',
+              'Other liabilities',
+              '2',
+              '\u2014',
+            ],
+            [
+              'Interest rate swaps',
+              'Other liabilities',
+              '133',
+              '314',
+            ],
+            [
+              'LIABILITIES \u2014 not designated',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX forward contracts',
+              'Accrued liabilities',
+              '17',
+              '16',
+            ],
+            [
+              'TOTAL LIABILITIES',
+              '',
+              '226',
+              '396',
+            ],
+            [
+              'NET POSITION',
+              '',
+              '(123)',
+              '(103)',
+            ],
+          ],
+          emphasis: [
+            5,
+            12,
+            13,
+          ],
+          note: 'Components sum to both totals in both years. Total fair value roughly HALVED on the asset side, from $293m to $103m, while liabilities fell from $396m to $226m \u2014 the net position barely moved, from a $103m to a $123m net liability. The interest rate swaps are the swing factor, falling from $314m to $133m as the rate cycle turned, on hedged senior notes that grew from $3.7bn to $3.9bn.',
+        },
+        {
+          title: 'EARNINGS IMPACT \u00b7 EXCLUDED FORWARD POINTS AND INTEREST DIFFERENTIALS ($M)',
+          columns: [
+            'Fiscal year',
+            'Net increase / (decrease) in earnings',
+          ],
+          rows: [
+            [
+              'FY2022',
+              '151',
+            ],
+            [
+              'FY2023',
+              '(25)',
+            ],
+            [
+              'FY2024',
+              '(94)',
+            ],
+          ],
+          emphasis: [
+            2,
+          ],
+          note: 'From forward contracts designated as net investment hedges and from swap interest differentials. A $245m swing across two years, from a gain to a loss. Immaterial against Visa\u2019s earnings, but it is the kind of line that explains an otherwise puzzling movement in other income and expense.',
+        },
+      ],
+    },
+  },
+};
+
+const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG', tickerDisplay: 'GOOG / GOOGL',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
@@ -32438,7 +33214,7 @@ const RACE_BREAKDOWN = {
   { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railways',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: CNI_BREAKDOWN },
 
   // === FINANCIAL SERVICES · USA ===
-  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 2, progress: 'research' },
   { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null , locked: true, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
