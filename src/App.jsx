@@ -18890,41 +18890,33 @@ const TASE_BREAKDOWN = {
 
 // ════════════════════════════════════════════════════════════════
 // AAPL_BREAKDOWN — Apple Inc. Coverage data (Tier 2, pending financials)
-// SOURCE: Muzz's supplied 10-K material across three drops — Item 1, Item
-// 1A, Item 1C, Item 2 (Properties), Item 3, Human Capital, the Commitments
-// & Contingencies note, the Derivative Instruments and Hedging note, and
-// the Share-Based Compensation note. Plus compiled (not filed) material on
-// pricing power, acquisition strategy and competition.
+// SOURCE: Muzz's supplied material across five drops — Item 1, 1A, 1C, 2,
+// 3, Human Capital, Commitments & Contingencies, Derivatives, Share-Based
+// Compensation, the FY2026 DEF 14A board disclosure, the executive/VP
+// roster, and the segment + product revenue tables.
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME, RISKS.
-// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, RISKS.
+// TABS DARK: BALANCE, CASH FLOW, THESIS.
 //
-// TIER 2, NOT TIER 1 — DELIBERATE. Tier 1 requires a full breakdown
-// INCLUDING multi-year income statement, balance sheet and cash flow. Only
-// revenue and net income are available (from the per-employee table), so
-// the income statement is PARTIAL and there is no balance sheet or cash
-// flow at all. Tier 2's own definition covers this exactly: "some sections
-// may be light or not yet populated". Flip to Tier 1 when the statements
-// land.
+// TIER 2, NOT TIER 1 — still no balance sheet and no cash flow, and the
+// income statement remains partial (revenue and net income only).
 //
-// CEO TRANSITION — VERIFIED. Muzz's pricing-power doc flagged this as
-// unconfirmed. It is confirmed: Apple Newsroom (April 2026) announced Tim
-// Cook becomes executive chairman and John Ternus becomes CEO effective
-// 1 September 2026, approved unanimously by the Board following a
-// long-term succession planning process. Carried as fact in leadership.
+// TWO SEGMENT-DATA FINDINGS, both disclosed in-app on the affected lines:
+//  1. The column the source headed "Research and development" is COST OF
+//     SALES. Apple's total R&D is ~$34bn; this column totals $220,960m.
+//     Net sales minus it minus selling & marketing equals the stated
+//     operating income exactly in all five segments, and the implied gross
+//     margin of 46.91% matches the 46.9% reported in the pricing-power
+//     drop. VALUES ARE UNCHANGED — only the label is corrected.
+//  2. Greater China was carved OUT of Asia Pacific in FY2013. Pre-FY2013
+//     Rest of Asia Pacific includes China and is not comparable.
 //
-// CONFIDENCE LABELLING: moat.acquisitionStrategy is explicitly marked
-// COMPILED, NOT SOURCED — deal prices are tracker estimates, several deals
-// are unconfirmed by Apple, and trackers disagree on the total count.
-// Everything else in this breakdown is filing-derived.
+// Segment operating income sums to $175,677m vs ~$127bn actual company
+// operating income; the ~$49bn gap is unallocated corporate R&D and G&A.
+// Segment operating income is a CONTRIBUTION measure, not a standalone
+// P&L, and segment margins are not comparable with the consolidated one.
 //
-// RISK WEIGHTS: the supplied Item 1A register carries an A/B/C weight and
-// an FY2025-change column. The renderer reads only {risk, meaning} per
-// item, so both are preserved inline at the head of each meaning.
-//
-// The "facts" stat block remains unpopulated — its renderer dispatches on
-// founded/incorporated/warehouses/network/teamMembers/euronext/coasts, and
-// none of those fit Apple. HQ is carried in overview.headquarters instead.
+// Both revenue splits reconcile exactly to $416,161m for FY2025.
 // ════════════════════════════════════════════════════════════════
 const AAPL_BREAKDOWN = {
   overview: {
@@ -19122,25 +19114,264 @@ const AAPL_BREAKDOWN = {
       },
     },
     leadership: {
-      asOf: '1 September 2026',
+      asOf: '1 September 2026 \u00b7 board per FY2026 DEF 14A, re-elected 24 Feb 2026',
       executives: [
         {
           name: 'John Ternus',
-          role: 'Chief Executive Officer',
-          since: 'CEO effective 1 Sept 2026 \u00b7 25 years at Apple \u00b7 previously SVP, Hardware Engineering',
+          role: 'Chief Executive Officer & Director \u00b7 from 1 Sept 2026 \u00b7 prev. SVP Hardware Engineering \u00b7 led iPhone, iPad, Mac, Watch, AirPods, Vision Pro and the Mac transition to Apple silicon',
+          age: 51,
+          tenureYears: 25,
+          since: 'Joined 2001',
+          featured: true,
         },
         {
           name: 'Tim Cook',
-          role: 'Executive Chairman of the Board',
-          since: 'CEO Aug 2011 \u2013 Aug 2026 \u00b7 joined Apple 1998 as SVP Worldwide Operations',
+          role: 'Executive Chairman \u00b7 from 1 Sept 2026 \u00b7 CEO 2011\u20132026; COO 2005\u201311; EVP Worldwide Sales & Ops 2002\u201305 \u00b7 prior Compaq, Intelligent Electronics, IBM \u00b7 will continue engaging with policymakers worldwide',
+          age: 65,
+          tenureYears: 28,
+          since: 'Joined 1998',
+          featured: true,
+        },
+        {
+          name: 'Sabih Khan',
+          role: 'Chief Operating Officer \u00b7 succeeded Jeff Williams in 2025 \u00b7 planning, procurement, manufacturing, quality, logistics, fulfilment, supplier programs, AppleCare \u00b7 Environment & Social Initiatives now report to him \u00b7 prior GE Plastics',
+          tenureYears: 31,
+          since: 'Joined 1995',
+        },
+        {
+          name: 'Kevan Parekh',
+          role: 'SVP & Chief Financial Officer \u00b7 CFO since Jan 2025 \u00b7 former VP of FP&A and Worldwide Finance \u00b7 prior GM, Thomson Reuters',
+          tenureYears: 13,
+          since: 'Joined 2013',
+        },
+        {
+          name: 'Johny Srouji',
+          role: 'Chief Hardware Officer \u00b7 promoted 20 Apr 2026, now leads BOTH hardware technologies and hardware engineering, absorbing Ternus\u2019s org \u00b7 built Apple silicon from A4 to M-series \u00b7 prior Intel, IBM',
+          tenureYears: 18,
+          since: 'Joined 2008',
+          featured: true,
+        },
+        {
+          name: 'Jennifer Newstead',
+          role: 'SVP, General Counsel \u2014 and Government Affairs once Adams retires \u00b7 GC since 1 Mar 2026 \u00b7 prior Chief Legal Officer at Meta (6 yrs); Legal Adviser, U.S. State Dept; GC, White House OMB; Principal Deputy AAG, DOJ Office of Legal Policy \u00b7 12 yrs partner at Davis Polk \u00b7 clerked for Justice Breyer',
+          tenureYears: 1,
+          since: 'Joined Jan 2026',
+          featured: true,
+        },
+        {
+          name: 'Eddy Cue',
+          role: 'SVP, Services \u00b7 built the Apple Online Store (1998), iTunes (2003) and the App Store (2008) \u00b7 oversees Apple Music, TV, iCloud, Pay, Maps \u00b7 also absorbed part of the former AI organisation',
+          tenureYears: 37,
+          since: 'Joined 1989',
+        },
+        {
+          name: 'Craig Federighi',
+          role: 'SVP, Software Engineering \u00b7 oversees iOS and macOS \u2014 and now AI, with the VP of AI reporting to him \u00b7 prior NeXT, CTO of Ariba, original Apple engineer',
+          tenureYears: 17,
+          since: 'Returned 2009',
+          featured: true,
+        },
+        {
+          name: 'Greg \u201cJoz\u201d Joswiak',
+          role: 'SVP, Worldwide Marketing \u00b7 key in the iPod and iPhone launches \u00b7 former VP Product Marketing',
+          tenureYears: 40,
+          since: 'Joined 1986',
+        },
+        {
+          name: 'Deirdre O\u2019Brien',
+          role: 'SVP, Retail + People \u00b7 leads retail and HR \u00b7 career in product launches and employee culture',
+          tenureYears: 38,
+          since: 'Joined 1988',
+        },
+        {
+          name: 'Amar Subramanya',
+          role: 'VP, AI \u00b7 reports to Craig Federighi \u00b7 foundation models, machine learning research and AI safety \u00b7 prior corporate VP of AI at Microsoft; 16 years at Google as head of engineering for Gemini Assistant \u00b7 NOTE the level: a VP reporting to an SVP, where the predecessor was an SVP reporting to the CEO',
+          since: 'Joined 2026',
+          featured: true,
+        },
+        {
+          name: 'Kate Adams',
+          role: 'SVP, Government Affairs \u2014 RETIRING LATE 2026 \u00b7 was General Counsel 2017\u2013Mar 2026 \u00b7 prior SVP & GC at Honeywell (14 yrs); partner, Sidley Austin; clerk to Justice O\u2019Connor; DOJ trial attorney',
+          tenureYears: 9,
+          since: 'Joined 2017',
         },
       ],
       executiveTakeaways: [
-        'CONFIRMED, NOT RUMOUR: Apple announced that Tim Cook becomes executive chairman and John Ternus becomes CEO effective 1 September 2026. The transition was approved unanimously by the Board and followed a long-term succession planning process. Source: Apple Newsroom, April 2026.',
-        'Cook led Apple for 15 years, from August 2011. He is NOT leaving the company \u2014 as executive chairman he continues to assist with certain aspects of the business, including engaging with policymakers around the world, and has indicated he will keep managing relationships with the U.S. administration and the Chinese government.',
-        'Ternus spent 25 years at Apple and came up through Hardware Engineering, shipping iPhone, iPad, Mac, AirPods and Apple Watch. The succession signals a product-and-engineering emphasis rather than an operations one.',
-        'WHY THIS MATTERS FOR THE COVERAGE: every risk in the Item 1A register that turns on execution \u2014 the AI catch-up, the tariff response, the App Store legal position, the Greater China decline \u2014 now sits with a new chief executive in his first year. That is not a reason to change the numbers, but it is a reason to widen the range around them.',
-        'The handover coincides with an unusually heavy product cycle and with the Google search licensing appeal still live. A first-year CEO facing a possible step-down in high-margin Services revenue is a different proposition to a fifteen-year incumbent facing the same thing.',
+        'CONFIRMED, NOT RUMOUR \u00b7 Apple announced that Tim Cook becomes executive chairman and John Ternus becomes CEO effective 1 September 2026, approved unanimously by the Board following a long-term succession planning process. Art Levinson, non-executive chairman for 15 years, becomes LEAD INDEPENDENT DIRECTOR on the same date, and Ternus joins the board. Source: Apple Newsroom, April 2026.',
+        'APPLE JUST HANDED ITSELF TO AN ENGINEER \u00b7 Ternus is 51, fourteen years younger than Cook, and has spent 25 years inside hardware. Cook\u2019s edge was operations and supply chain; Ternus\u2019s is products. That is a genuine change in what the company will be optimised for, and it lands precisely when Apple is behind on AI. He will also be the first working engineer on the board.',
+        'GOVERNANCE FLAG \u00b7 THE CHAIR WORKS FOR GOOGLE. Art Levinson is founder and CEO of Calico, an Alphabet subsidiary. Apple\u2019s board chair is therefore employed by Alphabet, while Apple and Google run a multi-billion-dollar Safari search arrangement and a new Siri AI arrangement. That search revenue is Item 1A risk #20 \u2014 the single largest identifiable risk to earnings in the filing, and one at appellate risk. Levinson steps from Chair to Lead Independent Director on 1 Sept 2026, which does not change the relationship. This is a relationship to understand, not an allegation.',
+        'THE BOARD IS OLD AND THIN ON TECH OPERATORS \u00b7 Average age 69.1, average tenure 12.4 years, two directors at or above Apple\u2019s own recommended retirement age of 75. Of the eight, ONLY COOK has run a technology company. The rest come from biotech, aerospace, healthcare, consumer products, media and asset management. For a company now competing directly on AI, that is a notable gap.',
+        'THE BENCH IS EXTRAORDINARILY LONG-TENURED \u00b7 Joswiak 40 years, Schiller 39, O\u2019Brien 38, Cue 37, Khan 31, Lemay 27. Average tenure across the leadership table is roughly 22 years. That is continuity \u2014 and it is also a lot of people who have only ever worked one way.',
+        'NEWSTEAD IS THE OUTLIER AND THE TELL \u00b7 Apple went outside for its top lawyer for the first time in nearly a decade, and hired Meta\u2019s chief legal officer \u2014 someone who spent six years defending a platform against global antitrust and privacy regulators, on top of State Department and White House backgrounds. Combining Legal with Government Affairs under her signals that Apple expects REGULATION, not product, to be the biggest external threat. Read that against the Item 1A register, where the three A-weighted legal and regulatory risks all concern platform control.',
+        'THE AI SEAT \u2014 GAP NOW CLOSED, AND THE ANSWER MATTERS \u00b7 Muzz\u2019s note flagged John Giannandrea\u2019s status as unconfirmed. Verified: Apple announced he would retire in spring 2026 after an advisory period, and he left in April 2026. Amar Subramanya joined as VP of AI \u2014 previously corporate VP of AI at Microsoft and 16 years at Google as head of engineering for Gemini Assistant \u2014 covering foundation models, machine learning research and AI safety. Remaining parts of the organisation moved to COO Sabih Khan and SVP Eddy Cue. Giannandrea\u2019s role had already been cut back in March 2025, after the Apple Intelligence launch and the Siri delays, when he was stripped of oversight of Siri and robotics.',
+        'THE STRUCTURAL POINT ABOUT AI \u00b7 The AI leader is now a VICE PRESIDENT reporting to Craig Federighi, where the predecessor was a SENIOR VICE PRESIDENT reporting to the CEO. AI has been folded into software engineering rather than run as its own executive function. That can be read two ways \u2014 tighter integration with the product roadmap, or a demotion of the function \u2014 but either way the org chart now says AI is a feature of the OS, not a business. For a company whose largest identified earnings risk is a search licensing deal with a competitor, that is a choice worth watching.',
+        'CORRECTIONS APPLIED FROM THE PRIOR NOTE \u00b7 Levinson has been a director since 2000, not 2011 (26 years, not 14). Wanda Austin since 2024, not 2025. Al Gore and James A. Bell are OFF the board \u2014 not 2026 nominees. Sue Wagner and Alex Gorsky each appeared twice in the old note. Cook\u2019s public board seat is NIKE. Sugar\u2019s current outside seat is Uber; Chevron and Amgen are former. Wagner holds BlackRock and Samsara; Swiss Re is former. Gorsky holds IBM and JPMorgan Chase. Jung\u2019s only public seat is Wayfair; Unilever is former. Board size is 8, not the 12 rows previously listed.',
+      ],
+      board: [
+        {
+          name: 'Art Levinson, Ph.D.',
+          category: 'Chair \u2192 Lead Independent Director',
+          role: 'Board Chair (becomes LEAD INDEPENDENT DIRECTOR from 1 Sept 2026) \u00b7 Age 75 \u00b7 Independent \u00b7 Director since 2000 (26 yrs) \u00b7 Founder & CEO of Calico since Sept 2013 \u00b7 CEO of Genentech Jul 1995\u2013Apr 2009 and Chairman Sept 1999\u2013Sept 2014 \u00b7 National Medal of Technology & Innovation; Biotech Hall of Fame \u00b7 Committees: People & Compensation \u00b7 Other public boards: none \u00b7 Also: Broad Institute of MIT and Harvard; Board of Scientific Consultants, Memorial Sloan Kettering \u00b7 Skills: executive leadership of a large international public company, financial expertise, brand marketing, health sector, technology and innovation',
+        },
+        {
+          name: 'Tim Cook',
+          category: 'CEO \u2192 Executive Chairman',
+          role: 'CEO & Director (becomes EXECUTIVE CHAIRMAN from 1 Sept 2026) \u00b7 Age 65 \u00b7 NOT independent \u00b7 Director since 2011 (15 yrs) \u00b7 Apple CEO since 2011; COO Oct 2005\u20132011; EVP Worldwide Sales & Operations Feb 2002\u2013Oct 2005; SVP Worldwide Operations from Mar 1998 \u00b7 Prior: Compaq, Intelligent Electronics, IBM \u00b7 Committees: none \u00b7 Other public boards: NIKE, Inc. \u00b7 Also: National Football Foundation & College Hall of Fame; Trustee, Duke University; Leadership Council, Malala Fund \u00b7 Skills: executive leadership in technology; management of worldwide operations, sales, service and support',
+        },
+        {
+          name: 'John Ternus',
+          category: 'Incoming CEO \u00b7 joins board 1 Sept 2026',
+          role: 'CHIEF EXECUTIVE OFFICER & DIRECTOR from 1 Sept 2026 \u00b7 Age 51 \u00b7 NOT independent \u00b7 Joins the board on the same date \u00b7 25 years at Apple: joined the product design team in 2001, VP Hardware Engineering 2013, executive team 2021, SVP Hardware Engineering \u00b7 Led iPhone, iPad, Mac, Watch, AirPods and Vision Pro engineering, and the Mac transition to Apple silicon \u00b7 Prior: mechanical engineer at Virtual Research Systems \u00b7 BS Mechanical Engineering, UPenn \u00b7 Will be the first working engineer on the board',
+        },
+        {
+          name: 'Wanda Austin, Ph.D.',
+          category: 'Independent',
+          role: 'Independent Director \u00b7 Age 71 \u00b7 Director since 2024 (2 yrs \u2014 shortest tenure) \u00b7 President & CEO of The Aerospace Corporation Jan 2008\u2013Oct 2016, joined 1979 \u00b7 Interim President, USC 2018\u201319 \u00b7 Co-founder, MakingSpace Inc. \u00b7 National Academy of Engineering \u00b7 Committees: Audit \u00b7 Other public boards: Amgen; Chevron (former: Virgin Galactic) \u00b7 Also: American Energy Innovation Council; former Defense Policy Board, PCAST, Defense Science Board, NASA Advisory Council \u00b7 Skills: advanced technology and innovation, environment, cybersecurity, public policy, global perspective',
+        },
+        {
+          name: 'Alex Gorsky',
+          category: 'Independent',
+          role: 'Independent Director \u00b7 Age 65 \u00b7 Director since 2021 (5 yrs) \u00b7 Johnson & Johnson CEO Apr 2012\u2013Jan 2022, Chair from Dec 2012, Executive Chairman Jan 2022\u2013Jan 2023; joined J&J 1988; head of Novartis Pharmaceuticals North America 2004\u20132008 \u00b7 Co-founder, Alderline Group; General Partner, ICONIQ Capital \u00b7 Committees: People & Compensation, Nominating \u00b7 Other public boards: IBM; JPMorgan Chase (former: Johnson & Johnson) \u00b7 Also: Travis Manion Foundation; The Cleveland Clinic; Wharton Board of Advisors \u00b7 Skills: executive leadership, brand marketing, health and technology',
+        },
+        {
+          name: 'Andrea Jung',
+          category: 'Independent',
+          role: 'Independent Director \u00b7 Age 67 \u00b7 Director since 2008 (18 yrs) \u00b7 President & CEO of Grameen America since Apr 2014 \u00b7 Avon CEO Nov 1999\u2013Apr 2012, Chairman Sept 2001\u2013Apr 2012, Executive Chairman Apr\u2013Dec 2012 \u00b7 Committees: CHAIR of People & Compensation, and Nominating \u00b7 Other public boards: Wayfair (former: Unilever PLC) \u00b7 Also: Rockefeller Capital Management \u00b7 Skills: executive leadership, global business perspective, brand marketing and consumer products',
+        },
+        {
+          name: 'Monica Lozano',
+          category: 'Independent',
+          role: 'Independent Director \u00b7 Age 69 \u00b7 Director since 2021 (5 yrs) \u00b7 President & CEO of College Futures Foundation Dec 2017\u2013Aug 2022 \u00b7 30+ years in media: Chair, U.S. Hispanic Media 2014\u201316; Chair, ImpreMedia 2012\u201316 and CEO 2010\u201314; Publisher, La Opini\u00f3n 2004\u20132014 \u00b7 Committees: Audit \u00b7 Other public boards: Bank of America; Target \u00b7 Also: Weingart Foundation; American Academy of Arts and Sciences; co-founder, Aspen Institute Latinos and Society \u00b7 Skills: executive leadership, operations, strategic planning, media and marketing',
+        },
+        {
+          name: 'Ron Sugar, Ph.D.',
+          category: 'Independent \u00b7 Audit Chair',
+          role: 'Independent Director \u00b7 Age 77 (oldest) \u00b7 Director since 2010 (16 yrs) \u00b7 Northrop Grumman Chairman & CEO Apr 2003\u2013Jun 2010; President & COO 2001\u20132003; earlier executive roles at Litton Industries and TRW (CFO) \u00b7 National Academy of Engineering \u00b7 Committees: CHAIR of Audit \u00b7 Other public boards: Uber Technologies (former: Amgen, Chevron) \u00b7 Also: Trustee, USC; Los Angeles Philharmonic Association \u00b7 Skills: executive leadership, financial expertise as a former CFO, worldwide operations, advanced technology, government relations',
+        },
+        {
+          name: 'Sue Wagner',
+          category: 'Independent \u00b7 Nominating Chair',
+          role: 'Independent Director \u00b7 Age 64 (youngest) \u00b7 Director since 2014 (12 yrs) \u00b7 Co-founder of BlackRock; Vice Chair Jan 2006\u2013Jul 2012; also COO and Head of Corporate Strategy; led alternatives and international client businesses \u00b7 Committees: Audit, and CHAIR of Nominating \u00b7 Other public boards: BlackRock; Samsara (former: Swiss Re) \u00b7 Also: Color Health Inc.; Trustee, Wellesley College \u00b7 Skills: operational experience as COO, financial expertise, regulated financial services, global perspective',
+        },
+      ],
+      boardTakeaways: {
+        title: 'Governance assessment \u00b7 FY2026 proxy, directors re-elected 24 Feb 2026',
+        verdict: 'Eight directors today, nine from 1 September 2026 when John Ternus joins. Seven of eight are independent (87.5%), four of eight are women (50%), and seven of eight have run a company as CEO. Average age 69.1, average tenure 12.4 years. Two directors sit at or above Apple\u2019s own recommended retirement age of 75 (Levinson 75, Sugar 77). Committee load is clean: Sugar chairs Audit, Jung chairs People & Compensation, Wagner chairs Nominating, and Cook sits on no committee. Two structural observations follow.',
+        scores: [
+          {
+            label: 'Independence (7 of 8, 87.5%)',
+            rating: 'strong',
+          },
+          {
+            label: 'Gender balance (4 of 8, 50%)',
+            rating: 'strong',
+          },
+          {
+            label: 'CEO experience (7 of 8)',
+            rating: 'strong',
+          },
+          {
+            label: 'Committee independence (CEO on none)',
+            rating: 'strong',
+          },
+          {
+            label: 'Succession planning (executed, unanimous)',
+            rating: 'strong',
+          },
+          {
+            label: 'Average tenure 12.4 yrs \u2014 continuity vs freshness',
+            rating: 'moderate',
+          },
+          {
+            label: 'Average age 69.1; two directors 75+',
+            rating: 'weak',
+          },
+          {
+            label: 'Technology operating experience (1 of 8)',
+            rating: 'weak',
+          },
+          {
+            label: 'Chair independence from a key counterparty',
+            rating: 'weak',
+          },
+        ],
+      },
+    },
+    deepBench: {
+      note: 'Below the executive team sits a long-tenured vice-president bench. Average tenure across the whole leadership table is roughly 22 years. Also shown: the departures that reshaped the org in 2025\u201326 \u2014 Jeff Williams (COO, succeeded by Sabih Khan), Lisa Jackson (whose organisation was split between Government Affairs and the COO), and John Giannandrea, whose exit moved AI under Software Engineering.',
+      columns: [
+        {
+          title: 'Design & Product',
+          people: [
+            {
+              name: 'Molly Anderson',
+              unit: 'VP, Industrial Design \u00b7 joined 2014 \u00b7 12 yrs \u00b7 prior Nokia, Barber Osgerby, Map Project Office',
+            },
+            {
+              name: 'Steve Lemay',
+              unit: 'VP, Human Interface Design \u00b7 joined 1999 \u00b7 27 yrs \u00b7 UX across iPhone, iPad, Watch, Mac, Siri, Vision Pro \u00b7 hundreds of Apple patents',
+            },
+            {
+              name: 'Phil Schiller',
+              unit: 'Apple Fellow \u00b7 joined 1987 \u00b7 39 yrs \u00b7 longtime SVP Marketing; now leads App Store & Events',
+            },
+          ],
+        },
+        {
+          title: 'Commercial & Regional',
+          people: [
+            {
+              name: 'Mike Fenger',
+              unit: 'VP, Worldwide Sales \u00b7 joined 2008 \u00b7 18 yrs \u00b7 prior Motorola, GE',
+            },
+            {
+              name: 'Isabel Ge Mahe',
+              unit: 'VP & MD, Greater China \u00b7 joined 2008 \u00b7 18 yrs \u00b7 leads the segment that has declined three consecutive years',
+            },
+            {
+              name: 'Tor Myhren',
+              unit: 'VP, Marketing Communications \u00b7 joined 2016 \u00b7 10 yrs \u00b7 former President & CCO, Grey Advertising',
+            },
+            {
+              name: 'Kristin Huguet Quayle',
+              unit: 'VP, Worldwide Communications \u00b7 joined 2005 \u00b7 21 yrs',
+            },
+          ],
+        },
+        {
+          title: 'Corporate & Finance',
+          people: [
+            {
+              name: 'Luca Maestri',
+              unit: 'VP, Corporate Services \u00b7 joined 2013 \u00b7 13 yrs \u00b7 CFO 2014\u20132023, handed to Parekh Jan 2025 \u00b7 prior CFO at Xerox, Nokia Siemens; 20 yrs at GM',
+            },
+            {
+              name: 'Adrian Perica',
+              unit: 'VP, Corporate Development \u00b7 joined 2009 \u00b7 17 yrs \u00b7 leads M&A and investments \u2014 the bolt-on acquisition programme runs through him',
+            },
+          ],
+        },
+        {
+          title: 'Departed / Departing 2025\u201326',
+          people: [
+            {
+              name: 'Jeff Williams',
+              unit: 'SVP Design, Watch & Health \u00b7 departed 2025 \u00b7 COO 2015\u20132025, succeeded by Sabih Khan \u00b7 joined 1998, prior IBM (13 yrs)',
+            },
+            {
+              name: 'Lisa Jackson',
+              unit: 'VP Environment, Policy & Social Initiatives \u00b7 departed late Jan 2026 \u00b7 former EPA Administrator 2009\u201313 \u00b7 org split: Government Affairs to Adams then Newstead, Environment & Social to Sabih Khan',
+            },
+            {
+              name: 'John Giannandrea',
+              unit: 'SVP Machine Learning & AI Strategy \u00b7 VERIFIED: retired spring 2026 after an advisory period, left April 2026 \u00b7 role already cut back in March 2025 after the Apple Intelligence launch and Siri delays \u00b7 succeeded by Amar Subramanya as VP of AI under Federighi',
+            },
+            {
+              name: 'Kate Adams',
+              unit: 'SVP General Counsel \u2192 Government Affairs \u00b7 retiring late 2026 \u00b7 handed GC to Newstead 1 Mar 2026',
+            },
+          ],
+        },
       ],
     },
   },
@@ -19883,6 +20114,1487 @@ const AAPL_BREAKDOWN = {
           note: '$21.8bn unrecognised over a weighted-average 2.5 years gives a FLOOR for forward SBC of roughly $8.7bn a year from grants already made, before any new issuance. Expect the reported number to keep running above that as new grants layer on.',
         },
       ],
+    },
+    segments: {
+      headlineInsight: {
+        title: 'Two engines, two problems',
+        body: 'FY2025 revenue of $416.2bn splits 50.4% iPhone and 26.2% Services \u2014 76.6% of the company in two lines. Both are growing. Underneath them sit two multi-year declines that get very different amounts of attention: Greater China, down three consecutive years and 13.2% from its FY2022 peak, and Wearables, Home & Accessories, down three consecutive years and 13.5% from its FY2022 peak. The China decline is widely discussed; the Wearables decline is almost never mentioned, and it is the same size. Meanwhile Greater China\u2019s operating MARGIN has held at 41.8% while its sales fell, so the segment problem there is demand, not economics.',
+      },
+      wmGeography: {
+        preamble: 'Net sales by reportable segment, FY2010\u2013FY2025 ($M). Apple manages the business primarily on a geographic basis and the five segments reconcile exactly to consolidated revenue \u2014 FY2025 sums to $416,161m, matching the total. Americas is 42.9% of FY2025 sales, Europe 26.7%, Greater China 15.5%, Rest of Asia Pacific 8.1% and Japan 6.9%.',
+        prNote: 'STRUCTURAL BREAK AT FY2013: Greater China was carved OUT of Asia Pacific. Rest of Asia Pacific reads $33,274m in FY2012 then $12,039m in FY2013, while Greater China begins at $27,016m in FY2013 \u2014 the two combined give $39,055m. Pre-FY2013 Rest of Asia Pacific therefore INCLUDES China and cannot be compared with the post-FY2013 series. The 2010\u20132012 total is also understated relative to later years for the same reason.',
+        lines: [
+          {
+            label: 'Americas',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 24498,
+              },
+              {
+                year: 2011,
+                value: 38315,
+              },
+              {
+                year: 2012,
+                value: 57512,
+              },
+              {
+                year: 2013,
+                value: 77093,
+              },
+              {
+                year: 2014,
+                value: 80095,
+              },
+              {
+                year: 2015,
+                value: 93864,
+              },
+              {
+                year: 2016,
+                value: 86613,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 96600,
+              },
+              {
+                year: 2018,
+                value: 112093,
+              },
+              {
+                year: 2019,
+                value: 116914,
+              },
+              {
+                year: 2020,
+                value: 124556,
+              },
+              {
+                year: 2021,
+                value: 153306,
+              },
+              {
+                year: 2022,
+                value: 169658,
+              },
+              {
+                year: 2023,
+                value: 162560,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 167045,
+              },
+              {
+                year: 2025,
+                value: 178353,
+              },
+            ],
+            note: 'The largest segment at 42.9% of FY2025 sales. Grew 628% from FY2010 to FY2025. Only two down years in sixteen: FY2016 and FY2023. North and South America.',
+          },
+          {
+            label: 'Europe',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 18692,
+              },
+              {
+                year: 2011,
+                value: 27778,
+              },
+              {
+                year: 2012,
+                value: 36323,
+              },
+              {
+                year: 2013,
+                value: 40980,
+              },
+              {
+                year: 2014,
+                value: 44285,
+              },
+              {
+                year: 2015,
+                value: 50337,
+              },
+              {
+                year: 2016,
+                value: 49952,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 54938,
+              },
+              {
+                year: 2018,
+                value: 62420,
+              },
+              {
+                year: 2019,
+                value: 60288,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 68640,
+              },
+              {
+                year: 2021,
+                value: 89307,
+              },
+              {
+                year: 2022,
+                value: 95118,
+              },
+              {
+                year: 2023,
+                value: 94294,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 101328,
+              },
+              {
+                year: 2025,
+                value: 111032,
+              },
+            ],
+            note: 'Second largest at 26.7% of FY2025 sales, and the fastest grower of the three big segments over the last three years (+17.8% since FY2023). Includes India, the Middle East and Africa \u2014 so the "Europe" label understates what is actually a growth-market segment.',
+          },
+          {
+            label: 'Greater China',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 27016,
+              },
+              {
+                year: 2014,
+                value: 31853,
+              },
+              {
+                year: 2015,
+                value: 58715,
+              },
+              {
+                year: 2016,
+                value: 48492,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 44764,
+                down: true,
+              },
+              {
+                year: 2018,
+                value: 51942,
+              },
+              {
+                year: 2019,
+                value: 43678,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 40308,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 68366,
+              },
+              {
+                year: 2022,
+                value: 74200,
+              },
+              {
+                year: 2023,
+                value: 72559,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 66952,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: 64377,
+                down: true,
+              },
+            ],
+            note: 'THE PROBLEM SEGMENT. Peaked at $74,200m in FY2022 and has declined in each of the three years since \u2014 $72,559m, $66,952m, $64,377m \u2014 down 13.2% from the peak. It is also the most volatile segment in the whole series: six down years in thirteen, including a 17.4% fall in FY2016 and a 23.4% collapse between FY2015 and FY2017. China mainland, Hong Kong and Taiwan.',
+          },
+          {
+            label: 'Japan',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 3981,
+              },
+              {
+                year: 2011,
+                value: 5437,
+              },
+              {
+                year: 2012,
+                value: 10571,
+              },
+              {
+                year: 2013,
+                value: 13782,
+              },
+              {
+                year: 2014,
+                value: 15314,
+              },
+              {
+                year: 2015,
+                value: 15706,
+              },
+              {
+                year: 2016,
+                value: 16928,
+              },
+              {
+                year: 2017,
+                value: 17733,
+              },
+              {
+                year: 2018,
+                value: 21733,
+              },
+              {
+                year: 2019,
+                value: 21506,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 21418,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 28482,
+              },
+              {
+                year: 2022,
+                value: 25977,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 24257,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 25052,
+              },
+              {
+                year: 2025,
+                value: 28703,
+              },
+            ],
+            note: 'Smallest segment at 6.9% of FY2025 sales, but the strongest recent recovery \u2014 up 18.3% over two years from the FY2023 trough, and FY2025 is an all-time high.',
+          },
+          {
+            label: 'Rest of Asia Pacific',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 8256,
+              },
+              {
+                year: 2011,
+                value: 22592,
+              },
+              {
+                year: 2012,
+                value: 33274,
+              },
+              {
+                year: 2013,
+                value: 12039,
+                down: true,
+              },
+              {
+                year: 2014,
+                value: 11248,
+                down: true,
+              },
+              {
+                year: 2015,
+                value: 15093,
+              },
+              {
+                year: 2016,
+                value: 13654,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 15199,
+              },
+              {
+                year: 2018,
+                value: 17407,
+              },
+              {
+                year: 2019,
+                value: 17788,
+              },
+              {
+                year: 2020,
+                value: 19593,
+              },
+              {
+                year: 2021,
+                value: 26356,
+              },
+              {
+                year: 2022,
+                value: 29375,
+              },
+              {
+                year: 2023,
+                value: 29615,
+              },
+              {
+                year: 2024,
+                value: 30658,
+              },
+              {
+                year: 2025,
+                value: 33696,
+              },
+            ],
+            note: 'READ THE FY2013 BREAK FIRST \u2014 pre-FY2013 figures include Greater China. On the comparable post-2013 basis this segment has grown 180% and has risen in every year since FY2017. Australia, New Zealand and Asian countries not captured elsewhere.',
+          },
+          {
+            label: 'Total Net Sales',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 55427,
+              },
+              {
+                year: 2011,
+                value: 94122,
+              },
+              {
+                year: 2012,
+                value: 137680,
+              },
+              {
+                year: 2013,
+                value: 170910,
+              },
+              {
+                year: 2014,
+                value: 182795,
+              },
+              {
+                year: 2015,
+                value: 233715,
+              },
+              {
+                year: 2016,
+                value: 215639,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 229234,
+              },
+              {
+                year: 2018,
+                value: 265595,
+              },
+              {
+                year: 2019,
+                value: 260174,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 274515,
+              },
+              {
+                year: 2021,
+                value: 365817,
+              },
+              {
+                year: 2022,
+                value: 394328,
+              },
+              {
+                year: 2023,
+                value: 383285,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 391035,
+              },
+              {
+                year: 2025,
+                value: 416161,
+              },
+            ],
+            note: 'Reconciles exactly to consolidated revenue in every year where all five segments are reported. FY2025: $416,161m.',
+          },
+        ],
+      },
+      wmSegmentPnl: {
+        preamble: 'Per-segment P&L, FY2023\u2013FY2025 \u2014 the only three years for which the cost lines are disclosed. TWO THINGS TO READ FIRST. (1) The column the source headed "Research and development" is COST OF SALES \u2014 see the note on that line; the values are unchanged, the label is corrected. (2) Segment operating income sums to $175,677m in FY2025 against roughly $127bn of actual company operating income. The ~$49bn gap is unallocated corporate R&D and G&A, which Apple does not push down to segments. Segment operating income is therefore a CONTRIBUTION measure, not a standalone P&L, and segment margins are not comparable with the consolidated operating margin.',
+        segments: [
+          {
+            name: 'Americas',
+            type: 'Geographic',
+            note: 'Largest segment. Operating margin 40.6% in FY2025, up from 37.2% in FY2023 \u2014 the biggest margin improvement of any segment.',
+            metrics: [
+              {
+                label: 'Net Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 162560,
+                  },
+                  {
+                    year: 2024,
+                    value: 167045,
+                  },
+                  {
+                    year: 2025,
+                    value: 178353,
+                  },
+                ],
+              },
+              {
+                label: 'Cost of Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 92394,
+                  },
+                  {
+                    year: 2024,
+                    value: 89587,
+                  },
+                  {
+                    year: 2025,
+                    value: 95699,
+                  },
+                ],
+                note: 'SOURCE LABEL CORRECTED. The supplied table headed this column "Research and development". It is cost of sales: Apple\u2019s total R&D is about $34bn while this column totals $220,960m across the five segments, net sales minus this column minus selling & marketing equals the stated operating income exactly in every segment, and the implied gross margin of 46.91% matches the 46.9% total gross margin reported elsewhere. Values are exactly as supplied \u2014 only the label is corrected.',
+              },
+              {
+                label: 'Gross Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 43.16,
+                  },
+                  {
+                    year: 2024,
+                    value: 46.37,
+                  },
+                  {
+                    year: 2025,
+                    value: 46.34,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 9658,
+                  },
+                  {
+                    year: 2024,
+                    value: 9802,
+                  },
+                  {
+                    year: 2025,
+                    value: 10174,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing as % of Sales \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 5.94,
+                  },
+                  {
+                    year: 2024,
+                    value: 5.87,
+                  },
+                  {
+                    year: 2025,
+                    value: 5.7,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Income',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 60508,
+                  },
+                  {
+                    year: 2024,
+                    value: 67656,
+                  },
+                  {
+                    year: 2025,
+                    value: 72480,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 37.22,
+                  },
+                  {
+                    year: 2024,
+                    value: 40.5,
+                  },
+                  {
+                    year: 2025,
+                    value: 40.64,
+                  },
+                ],
+              },
+            ],
+            featured: false,
+          },
+          {
+            name: 'Europe',
+            type: 'Geographic',
+            note: 'Fastest-growing large segment. Operating margin 43.0%, up from 38.3%. Includes India, the Middle East and Africa.',
+            metrics: [
+              {
+                label: 'Net Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 94294,
+                  },
+                  {
+                    year: 2024,
+                    value: 101328,
+                  },
+                  {
+                    year: 2025,
+                    value: 111032,
+                  },
+                ],
+              },
+              {
+                label: 'Cost of Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 54101,
+                  },
+                  {
+                    year: 2024,
+                    value: 55197,
+                  },
+                  {
+                    year: 2025,
+                    value: 58617,
+                  },
+                ],
+                note: 'SOURCE LABEL CORRECTED. The supplied table headed this column "Research and development". It is cost of sales: Apple\u2019s total R&D is about $34bn while this column totals $220,960m across the five segments, net sales minus this column minus selling & marketing equals the stated operating income exactly in every segment, and the implied gross margin of 46.91% matches the 46.9% total gross margin reported elsewhere. Values are exactly as supplied \u2014 only the label is corrected.',
+              },
+              {
+                label: 'Gross Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 42.63,
+                  },
+                  {
+                    year: 2024,
+                    value: 45.53,
+                  },
+                  {
+                    year: 2025,
+                    value: 47.21,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 4095,
+                  },
+                  {
+                    year: 2024,
+                    value: 4341,
+                  },
+                  {
+                    year: 2025,
+                    value: 4676,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing as % of Sales \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 4.34,
+                  },
+                  {
+                    year: 2024,
+                    value: 4.28,
+                  },
+                  {
+                    year: 2025,
+                    value: 4.21,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Income',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 36098,
+                  },
+                  {
+                    year: 2024,
+                    value: 41790,
+                  },
+                  {
+                    year: 2025,
+                    value: 47739,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 38.28,
+                  },
+                  {
+                    year: 2024,
+                    value: 41.24,
+                  },
+                  {
+                    year: 2025,
+                    value: 43.0,
+                  },
+                ],
+              },
+            ],
+            featured: false,
+          },
+          {
+            name: 'Greater China',
+            type: 'Geographic',
+            note: 'Sales down three straight years, but note the margin: 41.8% in FY2025 versus 41.8% in FY2023 \u2014 essentially unchanged. Apple has held segment profitability while volume fell, taking cost out roughly in line with sales. The problem here is demand, not economics.',
+            metrics: [
+              {
+                label: 'Net Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 72559,
+                  },
+                  {
+                    year: 2024,
+                    value: 66952,
+                  },
+                  {
+                    year: 2025,
+                    value: 64377,
+                  },
+                ],
+              },
+              {
+                label: 'Cost of Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 39787,
+                  },
+                  {
+                    year: 2024,
+                    value: 37519,
+                  },
+                  {
+                    year: 2025,
+                    value: 35141,
+                  },
+                ],
+                note: 'SOURCE LABEL CORRECTED. The supplied table headed this column "Research and development". It is cost of sales: Apple\u2019s total R&D is about $34bn while this column totals $220,960m across the five segments, net sales minus this column minus selling & marketing equals the stated operating income exactly in every segment, and the implied gross margin of 46.91% matches the 46.9% total gross margin reported elsewhere. Values are exactly as supplied \u2014 only the label is corrected.',
+              },
+              {
+                label: 'Gross Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 45.17,
+                  },
+                  {
+                    year: 2024,
+                    value: 43.96,
+                  },
+                  {
+                    year: 2025,
+                    value: 45.41,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 2444,
+                  },
+                  {
+                    year: 2024,
+                    value: 2351,
+                  },
+                  {
+                    year: 2025,
+                    value: 2319,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing as % of Sales \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 3.37,
+                  },
+                  {
+                    year: 2024,
+                    value: 3.51,
+                  },
+                  {
+                    year: 2025,
+                    value: 3.6,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Income',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 30328,
+                  },
+                  {
+                    year: 2024,
+                    value: 27082,
+                  },
+                  {
+                    year: 2025,
+                    value: 26917,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 41.8,
+                  },
+                  {
+                    year: 2024,
+                    value: 40.45,
+                  },
+                  {
+                    year: 2025,
+                    value: 41.81,
+                  },
+                ],
+              },
+            ],
+            featured: true,
+          },
+          {
+            name: 'Japan',
+            type: 'Geographic',
+            note: 'Highest operating margin of any segment at 48.6%, and the lowest selling and marketing cost at 3.4% of sales. FY2025 is an all-time high on both sales and operating income.',
+            metrics: [
+              {
+                label: 'Net Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 24257,
+                  },
+                  {
+                    year: 2024,
+                    value: 25052,
+                  },
+                  {
+                    year: 2025,
+                    value: 28703,
+                  },
+                ],
+              },
+              {
+                label: 'Cost of Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 11542,
+                  },
+                  {
+                    year: 2024,
+                    value: 11744,
+                  },
+                  {
+                    year: 2025,
+                    value: 13779,
+                  },
+                ],
+                note: 'SOURCE LABEL CORRECTED. The supplied table headed this column "Research and development". It is cost of sales: Apple\u2019s total R&D is about $34bn while this column totals $220,960m across the five segments, net sales minus this column minus selling & marketing equals the stated operating income exactly in every segment, and the implied gross margin of 46.91% matches the 46.9% total gross margin reported elsewhere. Values are exactly as supplied \u2014 only the label is corrected.',
+              },
+              {
+                label: 'Gross Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 52.42,
+                  },
+                  {
+                    year: 2024,
+                    value: 53.12,
+                  },
+                  {
+                    year: 2025,
+                    value: 51.99,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 827,
+                  },
+                  {
+                    year: 2024,
+                    value: 854,
+                  },
+                  {
+                    year: 2025,
+                    value: 969,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing as % of Sales \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 3.41,
+                  },
+                  {
+                    year: 2024,
+                    value: 3.41,
+                  },
+                  {
+                    year: 2025,
+                    value: 3.38,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Income',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 11888,
+                  },
+                  {
+                    year: 2024,
+                    value: 12454,
+                  },
+                  {
+                    year: 2025,
+                    value: 13955,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 49.01,
+                  },
+                  {
+                    year: 2024,
+                    value: 49.71,
+                  },
+                  {
+                    year: 2025,
+                    value: 48.62,
+                  },
+                ],
+              },
+            ],
+            featured: false,
+          },
+          {
+            name: 'Rest of Asia Pacific',
+            type: 'Geographic',
+            note: 'Steady compounder on the post-2013 basis. Operating margin 43.3%, up from 40.7%.',
+            metrics: [
+              {
+                label: 'Net Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 29615,
+                  },
+                  {
+                    year: 2024,
+                    value: 30658,
+                  },
+                  {
+                    year: 2025,
+                    value: 33696,
+                  },
+                ],
+              },
+              {
+                label: 'Cost of Sales',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 16313,
+                  },
+                  {
+                    year: 2024,
+                    value: 16305,
+                  },
+                  {
+                    year: 2025,
+                    value: 17724,
+                  },
+                ],
+                note: 'SOURCE LABEL CORRECTED. The supplied table headed this column "Research and development". It is cost of sales: Apple\u2019s total R&D is about $34bn while this column totals $220,960m across the five segments, net sales minus this column minus selling & marketing equals the stated operating income exactly in every segment, and the implied gross margin of 46.91% matches the 46.9% total gross margin reported elsewhere. Values are exactly as supplied \u2014 only the label is corrected.',
+              },
+              {
+                label: 'Gross Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 44.92,
+                  },
+                  {
+                    year: 2024,
+                    value: 46.82,
+                  },
+                  {
+                    year: 2025,
+                    value: 47.4,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 1236,
+                  },
+                  {
+                    year: 2024,
+                    value: 1291,
+                  },
+                  {
+                    year: 2025,
+                    value: 1386,
+                  },
+                ],
+              },
+              {
+                label: 'Selling & Marketing as % of Sales \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 4.17,
+                  },
+                  {
+                    year: 2024,
+                    value: 4.21,
+                  },
+                  {
+                    year: 2025,
+                    value: 4.11,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Income',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2023,
+                    value: 12066,
+                  },
+                  {
+                    year: 2024,
+                    value: 13062,
+                  },
+                  {
+                    year: 2025,
+                    value: 14586,
+                  },
+                ],
+              },
+              {
+                label: 'Operating Margin \u2014 Derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2023,
+                    value: 40.74,
+                  },
+                  {
+                    year: 2024,
+                    value: 42.61,
+                  },
+                  {
+                    year: 2025,
+                    value: 43.29,
+                  },
+                ],
+              },
+            ],
+            featured: false,
+          },
+        ],
+      },
+      revenueByCategory: {
+        description: 'Net sales by product and services line, FY2013\u2013FY2025 ($M). The five current lines reconcile exactly to consolidated revenue \u2014 FY2025 sums to $416,161m. NOTE THE FY2019 PRESENTATION CHANGE: "Other Products" was reported through FY2018 and replaced by "Wearables, Home & Accessories" from FY2019, so neither line has a continuous thirteen-year history and the two are not directly comparable.',
+        mix2024: [
+          {
+            label: 'iPhone',
+            value: 209586,
+            pct: 50.4,
+          },
+          {
+            label: 'Services',
+            value: 109158,
+            pct: 26.2,
+          },
+          {
+            label: 'Wearables, Home & Accessories',
+            value: 35686,
+            pct: 8.6,
+          },
+          {
+            label: 'Mac',
+            value: 33708,
+            pct: 8.1,
+          },
+          {
+            label: 'iPad',
+            value: 28023,
+            pct: 6.7,
+          },
+        ],
+        lines: [
+          {
+            label: 'iPhone',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 91279,
+              },
+              {
+                year: 2014,
+                value: 101991,
+              },
+              {
+                year: 2015,
+                value: 155041,
+              },
+              {
+                year: 2016,
+                value: 136700,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 141319,
+              },
+              {
+                year: 2018,
+                value: 166699,
+              },
+              {
+                year: 2019,
+                value: 142381,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 137781,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 191973,
+              },
+              {
+                year: 2022,
+                value: 205489,
+              },
+              {
+                year: 2023,
+                value: 200583,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 201183,
+              },
+              {
+                year: 2025,
+                value: 209586,
+              },
+            ],
+            note: 'Exactly half of FY2025 revenue at 50.4% \u2014 this is the single-product-category concentration Apple states plainly in Item 1A #22. Grew 130% since FY2013, but the last four years are essentially flat: $205.5bn, $200.6bn, $201.2bn, $209.6bn. FY2025 growth of 4.2% came from higher Pro model mix, not units. Every other risk in the filing is amplified by this line.',
+          },
+          {
+            label: 'Services',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 16051,
+              },
+              {
+                year: 2014,
+                value: 18063,
+              },
+              {
+                year: 2015,
+                value: 19909,
+              },
+              {
+                year: 2016,
+                value: 24348,
+              },
+              {
+                year: 2017,
+                value: 29980,
+              },
+              {
+                year: 2018,
+                value: 37190,
+              },
+              {
+                year: 2019,
+                value: 46291,
+              },
+              {
+                year: 2020,
+                value: 53768,
+              },
+              {
+                year: 2021,
+                value: 68425,
+              },
+              {
+                year: 2022,
+                value: 78129,
+              },
+              {
+                year: 2023,
+                value: 85200,
+              },
+              {
+                year: 2024,
+                value: 96169,
+              },
+              {
+                year: 2025,
+                value: 109158,
+              },
+            ],
+            note: 'THE ONLY LINE THAT HAS RISEN IN EVERY SINGLE YEAR. Up 580% since FY2013, from $16.1bn to $109.2bn, and from 8.5% of revenue a decade ago to 26.2% now. At 75.4% gross margin it does the heavy lifting on the blended margin. It is also the line under legal attack from three directions \u2014 the App Store take rate, the DMA steering orders and the Google search licensing appeal all sit inside it.',
+          },
+          {
+            label: 'Wearables, Home & Accessories',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2019,
+                value: 24482,
+              },
+              {
+                year: 2020,
+                value: 30620,
+              },
+              {
+                year: 2021,
+                value: 38367,
+              },
+              {
+                year: 2022,
+                value: 41241,
+              },
+              {
+                year: 2023,
+                value: 39845,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 37005,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: 35686,
+                down: true,
+              },
+            ],
+            note: 'First reported FY2019, replacing "Other Products". Peaked at $41,241m in FY2022 and has DECLINED IN EVERY YEAR SINCE \u2014 down 13.5% from the peak to $35,686m. The only Apple line in a sustained multi-year decline, and it gets far less attention than Greater China for the same pattern.',
+          },
+          {
+            label: 'Mac',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 21483,
+              },
+              {
+                year: 2014,
+                value: 24079,
+              },
+              {
+                year: 2015,
+                value: 25471,
+              },
+              {
+                year: 2016,
+                value: 22831,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 25850,
+              },
+              {
+                year: 2018,
+                value: 25484,
+                down: true,
+              },
+              {
+                year: 2019,
+                value: 25740,
+              },
+              {
+                year: 2020,
+                value: 28622,
+              },
+              {
+                year: 2021,
+                value: 35190,
+              },
+              {
+                year: 2022,
+                value: 40177,
+              },
+              {
+                year: 2023,
+                value: 29357,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 29984,
+              },
+              {
+                year: 2025,
+                value: 33708,
+              },
+            ],
+            note: 'Cyclical and refresh-driven. Peaked at $40,177m in FY2022, collapsed 26.9% to $29,357m in FY2023, and has recovered only to $33,708m \u2014 still 16.1% below the peak three years on.',
+          },
+          {
+            label: 'iPad',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 31980,
+              },
+              {
+                year: 2014,
+                value: 30283,
+                down: true,
+              },
+              {
+                year: 2015,
+                value: 23227,
+                down: true,
+              },
+              {
+                year: 2016,
+                value: 20628,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 19222,
+                down: true,
+              },
+              {
+                year: 2018,
+                value: 18805,
+                down: true,
+              },
+              {
+                year: 2019,
+                value: 21280,
+              },
+              {
+                year: 2020,
+                value: 23724,
+              },
+              {
+                year: 2021,
+                value: 31862,
+              },
+              {
+                year: 2022,
+                value: 29292,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 28300,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 26694,
+                down: true,
+              },
+              {
+                year: 2025,
+                value: 28023,
+              },
+            ],
+            note: 'The weakest long-run line. FY2025 revenue of $28,023m is 12.4% BELOW the FY2013 figure of $31,980m \u2014 thirteen years of no growth. Fell in six consecutive years from FY2014 to FY2018, recovered through FY2021, then fell three more years running before a modest FY2025 rebound.',
+          },
+          {
+            label: 'Other Products \u2014 discontinued line',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2013,
+                value: 10117,
+              },
+              {
+                year: 2014,
+                value: 8379,
+                down: true,
+              },
+              {
+                year: 2015,
+                value: 10067,
+              },
+              {
+                year: 2016,
+                value: 11132,
+              },
+              {
+                year: 2017,
+                value: 12863,
+              },
+              {
+                year: 2018,
+                value: 17417,
+              },
+            ],
+            note: 'Reported FY2013\u2013FY2018 only, then replaced by Wearables, Home & Accessories from FY2019. Shown for completeness; do not chain it to the Wearables series.',
+          },
+        ],
+      },
     },
   },
   risks: {
