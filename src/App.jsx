@@ -25527,7 +25527,8 @@ const QSR_BREAKDOWN = {
 // and Contingencies note, Business Combinations, and the Human Capital
 // per-employee table FY2015-FY2025.
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
+// DERIVATIVES, COMMITMENTS.
 // TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
 //
 // STILL TIER 2. Only revenue and net income exist, taken from the
@@ -25569,6 +25570,47 @@ const GOOG_BREAKDOWN = {
       headline: 'What you are actually buying',
       body: 'A profit engine with an option attached. Google Services and Google Cloud are the business; Other Bets is a portfolio of loss-making ventures held inside the same share. The holding-company structure exists precisely so the second cannot disrupt the first \u2014 but as an owner you fund both, and only one of them earns. Larry Page and Sergey Brin\u2019s line still governs the culture: "Google is not a conventional company. We do not intend to become one." Alphabet explicitly rejects incrementalism, arguing that in technology only revolutionary innovation survives \u2014 which is a statement about capital allocation as much as culture. The moonshot record is real rather than rhetorical: Android became the world\u2019s largest operating system, YouTube the largest video platform, Chrome the most-used browser, and AI itself began as a moonshot before becoming core to nearly every product. Waymo now runs fully autonomous paid ride-hailing in multiple cities. The counterweight is that those wins are the survivors of a much larger set of attempts, and the failures do not get their own paragraph in the annual report.',
       bottomLine: 'Underwriting Alphabet means accepting that most of what the culture funds will not work, and being paid enough by the core business to make that acceptable. So far you have been: revenue rose in all eleven years and net income compounded 708%. But note the structural consequence \u2014 because Other Bets losses and unallocated Alphabet-level costs run through the consolidated numbers, the reported margin UNDERSTATES what the core business earns. Read segment operating income before drawing any conclusion about profitability, and treat the 32.81% consolidated net margin as a floor rather than the number.',
+    },
+    businessLines: {
+      description: 'Alphabet reports Google in two segments, with Other Bets alongside. What follows is the product detail underneath those segment labels \u2014 useful because the segment REVENUE split has not been supplied yet, so this is currently the only view of what actually sits inside each one.',
+      lines: [
+        {
+          name: 'Search \u2014 Google Services',
+          description: 'The evolution is the story: ten blue links \u2192 mobile search \u2192 Universal Search across news, images and video \u2192 voice and visual search \u2192 multisearch combining text and image \u2192 natural language queries \u2192 now Gemini and AI Overviews, live in more than 100 countries with over a billion users. Each step added complexity and engagement. The open question is whether the current step also adds revenue per query, because an AI answer monetises differently from a page of links.',
+        },
+        {
+          name: 'Advertising \u2014 the primary revenue source',
+          description: 'Ads run across Search, YouTube, Maps, Gmail, the Play Store and partner sites through the Google Network. Two distinct products: PERFORMANCE advertising \u2014 text ads in Search, highly measurable, aimed at a direct action \u2014 and BRAND advertising \u2014 video, display and interactive across YouTube and other surfaces. AI-driven ad tech (Performance Max, Demand Gen, Product Studio) is the layer Alphabet argues competitors cannot match, resting on a decade of ad-specific optimisation rather than on general model quality.',
+        },
+        {
+          name: 'YouTube \u2014 dual monetisation',
+          description: 'Increasingly a television business rather than a video site: advertising revenue AND subscription revenue from YouTube TV, YouTube Music, YouTube Premium and NFL Sunday Ticket. That combination is rarer than it looks \u2014 most streaming competitors have one engine, not two.',
+        },
+        {
+          name: 'Subscriptions, Platforms & Devices \u2014 the non-advertising push',
+          description: 'Google One cloud storage, Google Play apps and in-app purchases, and hardware in Pixel phones, Pixel Watch and Nest. Alphabet explicitly frames these as diversification away from advertising. Play and Android together are the ecosystem lock-in; Pixel is strategic rather than volume-driven, showcasing on-device Gemini Nano.',
+        },
+        {
+          name: 'Google Cloud \u2014 GCP and Workspace',
+          description: 'Two revenue models under one segment: CONSUMPTION-based fees for compute, storage and AI use, and SUBSCRIPTIONS for Workspace and managed services. GCP covers compute, storage, networking, databases, analytics, cybersecurity and AI systems. Workspace is Gmail, Docs, Sheets and Meet with Gemini embedded. Alphabet describes Cloud as its fastest-growing segment on both revenue and profit.',
+        },
+        {
+          name: 'Vertex AI \u2014 the developer platform',
+          description: 'A full development environment to train, tune, test and deploy models \u2014 and notably it serves Google\u2019s own Gemini models, THIRD-PARTY models and OPEN-SOURCE models side by side. Advanced tooling covers vector search, grounding and model distillation to raise accuracy and cut cost. Offering rival models on your own platform is a deliberate bet that owning the distribution layer matters more than owning the model.',
+        },
+        {
+          name: 'Cybersecurity \u2014 AI-powered',
+          description: 'Threat detection, vulnerability analysis and incident response, with AI used to prioritise what security teams should investigate and what they can ignore. This is the segment the pending $32.0bn Wiz acquisition lands in \u2014 which tells you how much weight Alphabet is putting on it.',
+        },
+        {
+          name: 'Data & Analytics \u2014 the cross-cloud differentiator',
+          description: 'Relational, key-value, document and in-memory databases, plus a unified platform combining data lakes, warehouses and governance. The competitive point is CROSS-CLOUD COMPATIBILITY: the analytics tools work in multi-cloud environments, and data is delivered directly to AI agents and LLMs across any cloud. For a third-place provider, working well inside a rival\u2019s environment is a sensible wedge.',
+        },
+        {
+          name: 'Other Bets \u2014 the portfolio',
+          description: 'Waymo (autonomous ride-hailing, already generating revenue), Verily (precision health, data platforms, clinical research), Wing (drone delivery), Intrinsic (industrial robotics software), and Fiber and Project Taara (connectivity). Stages run from pure R&D through early commercialisation to real revenue. IMPORTANT STRUCTURAL POINT: each operates independently, many with THEIR OWN BOARDS AND EXTERNAL INVESTORS \u2014 so Alphabet does not wholly own the upside on the ones that work, while funding the ones that do not.',
+        },
+      ],
     },
     operatingSegments: {
       preamble: 'Alphabet is a holding company. Google \u2014 the main business \u2014 reports in two segments, with Other Bets and Alphabet-level activities alongside. The structure is designed to let Google operate efficiently as the profit engine while Other Bets innovates independently WITHOUT disrupting Google\u2019s operations.',
@@ -25712,6 +25754,134 @@ const GOOG_BREAKDOWN = {
           division: 'AI research \u2014 DeepMind and Google Research',
           moatStrength: 'Strong',
           biggestRisk: 'Centralised rather than scattered, with an owned full stack from silicon to model. The moat is the combination of talent, compute and distribution in one company. The risk is that frontier model capability is proving easier to replicate than distribution \u2014 which argues the distribution, not the research, is the durable half.',
+        },
+        {
+          division: 'Google Cloud \u2014 the full-stack argument',
+          moatStrength: 'Moderate',
+          biggestRisk: 'The differentiators are real: chips through data centres through models through applications, owned end to end, plus CROSS-CLOUD analytics that work inside AWS and Azure environments. High switching costs once Vertex AI, Workspace AI and the data tools are integrated. But it is still third behind two larger rivals in a price-competitive market, and Vertex deliberately serves third-party and open-source models alongside Gemini \u2014 a bet that the platform matters more than the model, which is right only if model quality commoditises.',
+        },
+        {
+          division: 'Switching costs \u2014 Alphabet\u2019s own assessment',
+          moatStrength: 'Weak',
+          biggestRisk: 'The filing says users are ONE CLICK AWAY and nobody is locked into Search. That is Alphabet stating in a legal document that its largest business has no contractual retention. The moat is habit plus default placement \u2014 and default placement is precisely what the DOJ Search remedies and the DMA are dismantling. Consumer-facing switching costs are genuinely low; the enterprise ones in Cloud are genuinely high. Do not average them.',
+        },
+        {
+          division: 'Other Bets \u2014 the ownership caveat',
+          moatStrength: 'Weak',
+          biggestRisk: 'Many Bets have their own boards AND EXTERNAL INVESTORS. Alphabet funds the losses in full but does not wholly own the upside on the ones that work. That asymmetry is easy to miss when valuing Waymo as a free option inside the share price \u2014 it is not free, and it may not be wholly yours.',
+        },
+      ],
+    },
+    competitiveLandscape: {
+      preamble: 'Alphabet competes on every front simultaneously, and its own framing of why that is dangerous is the most useful line in the section: users are ONE CLICK AWAY from an alternative. Nobody is locked into Search. That is a company with enormous distribution telling you the distribution is not contractual \u2014 it is habitual, and habits change faster than contracts. Read this against the antitrust register: the default placement deals that convert habit into position are exactly what regulators are dismantling.',
+      middleLabel: 'ALPHABET PRODUCT',
+      majorCompetitors: [
+        'Microsoft',
+        'Amazon',
+        'Meta',
+        'Apple',
+        'OpenAI',
+        'Anthropic',
+        'TikTok / ByteDance',
+        'Netflix',
+        'Samsung',
+        'Baidu',
+        'Yandex',
+        'Booking Holdings',
+      ],
+      categories: [
+        {
+          category: 'Search & Discovery',
+          icon: '\u1f50d',
+          featured: true,
+          rows: [
+            {
+              type: 'General search',
+              pepBrands: 'Google Search',
+              competitors: 'Bing, DuckDuckGo, Baidu, Yandex',
+            },
+            {
+              type: 'Vertical search \u2014 the real threat',
+              pepBrands: 'Google Search',
+              competitors: 'Amazon (products), Booking/Expedia (travel), Indeed/LinkedIn (jobs), WebMD (health). Users bypass Google ENTIRELY and search on the destination \u2014 no click to lose, because there was never a click.',
+            },
+            {
+              type: 'AI assistants',
+              pepBrands: 'Gemini, Google Assistant',
+              competitors: 'ChatGPT, Siri, Alexa. AI chatbots challenge traditional search BEHAVIOUR, not just search share \u2014 a different kind of problem.',
+            },
+            {
+              type: 'Social discovery',
+              pepBrands: 'Google Search',
+              competitors: 'Meta, TikTok, X, Reddit \u2014 users go there for recommendations instead of searching.',
+            },
+          ],
+        },
+        {
+          category: 'Advertising',
+          icon: '\u1f4e3',
+          featured: true,
+          rows: [
+            {
+              type: 'Digital advertising',
+              pepBrands: 'Search Ads, YouTube Ads, Google Network',
+              competitors: 'Meta, Amazon Ads, TikTok, Snapchat, programmatic networks',
+            },
+            {
+              type: 'Traditional advertising',
+              pepBrands: 'All Google surfaces',
+              competitors: 'TV, radio, newspapers, magazines, billboards \u2014 advertisers split budgets across formats, so digital share is not a closed contest.',
+            },
+          ],
+        },
+        {
+          category: 'Cloud & Enterprise',
+          icon: '\u2601',
+          rows: [
+            {
+              type: 'Cloud infrastructure',
+              pepBrands: 'Google Cloud Platform',
+              competitors: 'AWS, Microsoft Azure \u2014 both larger. Google is a genuine third.',
+            },
+            {
+              type: 'Productivity software',
+              pepBrands: 'Google Workspace',
+              competitors: 'Microsoft 365, Slack, Zoom, Dropbox',
+            },
+          ],
+        },
+        {
+          category: 'AI Models & Platforms',
+          icon: '\u1f9e0',
+          featured: true,
+          rows: [
+            {
+              type: 'Foundation models',
+              pepBrands: 'Gemini, Vertex AI',
+              competitors: 'OpenAI, Anthropic, Meta, Amazon, Microsoft, and startups \u2014 competing directly on models, agents and developer tools.',
+            },
+          ],
+        },
+        {
+          category: 'Content, Platforms & Hardware',
+          icon: '\u1f4f1',
+          rows: [
+            {
+              type: 'Video',
+              pepBrands: 'YouTube',
+              competitors: 'Netflix, TikTok, Twitch, Disney+, Roku \u2014 competing for attention AND ad dollars.',
+            },
+            {
+              type: 'App stores & content',
+              pepBrands: 'Google Play',
+              competitors: 'Apple App Store, Amazon, Meta, TikTok \u2014 users spend time and money in ecosystems Google does not control.',
+            },
+            {
+              type: 'Consumer hardware',
+              pepBrands: 'Pixel, Pixel Watch, Nest',
+              competitors: 'Apple, Samsung, Microsoft',
+            },
+          ],
         },
       ],
     },
