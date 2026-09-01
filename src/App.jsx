@@ -32299,8 +32299,8 @@ const COVERAGE_DATA = [
   { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste & Recycling',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: WM_BREAKDOWN },
   { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste & Recycling',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: RSG_BREAKDOWN },
 
-  // === CONGLOMERATE · USA ===
-  { ticker: 'BRK.B', tickerDisplay: 'BRK.B / BRK.A', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true, progress: 'research' },
+  // === INVESTMENT · USA ===
+  { ticker: 'BRK.B', tickerDisplay: 'BRK.B / BRK.A', name: 'Berkshire Hathaway',             industry: 'Investment',    country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true, progress: 'research' },
 
   // === RETAIL · USA ===
   { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: COST_BREAKDOWN },
