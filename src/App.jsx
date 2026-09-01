@@ -18889,34 +18889,42 @@ const TASE_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════
-// AAPL_BREAKDOWN — Apple Inc. Coverage data (Tier 2, pending financials)
-// SOURCE: Muzz's supplied material across five drops — Item 1, 1A, 1C, 2,
+// AAPL_BREAKDOWN — Apple Inc. Coverage data (Tier 1)
+// SOURCE: Muzz's supplied material across six drops — Item 1, 1A, 1C, 2,
 // 3, Human Capital, Commitments & Contingencies, Derivatives, Share-Based
 // Compensation, the FY2026 DEF 14A board disclosure, the executive/VP
-// roster, and the segment + product revenue tables.
+// roster, segment + product revenue, and the full income statement,
+// balance sheet, cash flow and dividend history FY2015-FY2025.
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, RISKS.
-// TABS DARK: BALANCE, CASH FLOW, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW,
+// RISKS.  DARK: THESIS (no thesis material supplied yet).
 //
-// TIER 2, NOT TIER 1 — still no balance sheet and no cash flow, and the
-// income statement remains partial (revenue and net income only).
+// ARITHMETIC VERIFIED ACROSS ALL 11 YEARS BEFORE BUILDING:
+//   revenue - cost of sales = gross profit                 11/11
+//   gross profit - operating expenses = operating income   11/11
+//   R&D + SG&A = total operating expenses                  11/11
+//   current + non-current liabilities = total liabilities  11/11
+//   total liabilities + equity = total assets              11/11
+//   ROIC/ROE/ROA reconcile exactly to NOPAT, NI, equity, assets
 //
-// TWO SEGMENT-DATA FINDINGS, both disclosed in-app on the affected lines:
-//  1. The column the source headed "Research and development" is COST OF
-//     SALES. Apple's total R&D is ~$34bn; this column totals $220,960m.
-//     Net sales minus it minus selling & marketing equals the stated
-//     operating income exactly in all five segments, and the implied gross
-//     margin of 46.91% matches the 46.9% reported in the pricing-power
-//     drop. VALUES ARE UNCHANGED — only the label is corrected.
-//  2. Greater China was carved OUT of Asia Pacific in FY2013. Pre-FY2013
-//     Rest of Asia Pacific includes China and is not comparable.
+// FOUR DATA ISSUES, each disclosed in-app on the affected line:
+//  1. PRODUCTS FY2015-FY2018 IS TOTAL REVENUE — Services was not split out
+//     before FY2019, so those four Products figures equal consolidated
+//     revenue and must not be chained to the FY2019+ Products series.
+//  2. "Total non-current liabilities (Long term debt)" IS NOT DEBT. At
+//     $119,877m it is 42% of total liabilities and reconciles as the whole
+//     non-current block; actual term debt is roughly $85-95bn. Relabelled,
+//     and the two ratios built on it relabelled with it.
+//  3. FY2019 IS THE ONLY YEAR WHERE EPS AND SHARE COUNT SIT ON DIFFERENT
+//     SPLIT BASES. Shares are 4:1 adjusted from FY2019, EPS only from
+//     FY2020. NI/shares reproduces printed EPS within 4% in 10 of 11 years
+//     and is 3.8x out in FY2019 alone.
+//  4. THE SUPPLIED EPS CAGR OF 7.7% IS THE NET INCOME CAGR. On a consistent
+//     split-adjusted basis EPS compounded at about 12.5%.
 //
-// Segment operating income sums to $175,677m vs ~$127bn actual company
-// operating income; the ~$49bn gap is unallocated corporate R&D and G&A.
-// Segment operating income is a CONTRIBUTION measure, not a standalone
-// P&L, and segment margins are not comparable with the consolidated one.
-//
-// Both revenue splits reconcile exactly to $416,161m for FY2025.
+// Earlier drops also corrected the segment "Research and development"
+// column (it is COST OF SALES) and flagged the FY2013 Greater China carve-
+// out. Values are never altered — only labels, and always disclosed.
 // ════════════════════════════════════════════════════════════════
 const AAPL_BREAKDOWN = {
   overview: {
@@ -19822,7 +19830,7 @@ const AAPL_BREAKDOWN = {
     },
     incomeStatement: {
       totalRevenue: {
-        label: 'Revenue',
+        label: 'Total Revenue',
         unit: 'M USD',
         series: [
           {
@@ -19832,6 +19840,7 @@ const AAPL_BREAKDOWN = {
           {
             year: 2016,
             value: 215639,
+            down: true,
           },
           {
             year: 2017,
@@ -19844,6 +19853,7 @@ const AAPL_BREAKDOWN = {
           {
             year: 2019,
             value: 260174,
+            down: true,
           },
           {
             year: 2020,
@@ -19860,6 +19870,7 @@ const AAPL_BREAKDOWN = {
           {
             year: 2023,
             value: 383285,
+            down: true,
           },
           {
             year: 2024,
@@ -19870,7 +19881,819 @@ const AAPL_BREAKDOWN = {
             value: 416161,
           },
         ],
-        note: 'PARTIAL INCOME STATEMENT \u2014 only revenue and net income have been supplied so far, sourced from the per-employee table rather than from the financial statements. Cost of sales, operating expense, operating income, tax and EPS are NOT yet available. Revenue grew 78.1% over eleven years, from $233.7bn to $416.2bn. Note the two down years: FY2016 (\u22127.7%) and FY2023 (\u22122.8%), and the FY2020\u2013FY2021 surge of +33.3% in a single year.',
+        note: 'Revenue grew 78.1% over eleven years, from $233.7bn to $416.2bn \u2014 a 5.9% CAGR. Three down years: FY2016 (\u22127.7%), FY2019 (\u22122.0%) and FY2023 (\u22122.8%). The FY2020\u2192FY2021 jump of 33.3% is the largest single-year move in the series and reset the base permanently.',
+      },
+      netSales: {
+        label: 'Net Sales \u2014 Products',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 233715,
+          },
+          {
+            year: 2016,
+            value: 215639,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 229234,
+          },
+          {
+            year: 2018,
+            value: 265595,
+          },
+          {
+            year: 2019,
+            value: 213883,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 220747,
+          },
+          {
+            year: 2021,
+            value: 297392,
+          },
+          {
+            year: 2022,
+            value: 316199,
+          },
+          {
+            year: 2023,
+            value: 298085,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 294866,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 307003,
+          },
+        ],
+        note: 'READ FY2015\u2013FY2018 WITH CARE: Services was not reported separately before FY2019, so the Products figure in those four years IS consolidated revenue, not a product-only number. On the comparable FY2019 basis, Products grew 43.5% to $307.0bn while Services grew 135.8%. Products has been broadly flat for four years \u2014 $316.2bn, $298.1bn, $294.9bn, $307.0bn \u2014 and FY2025 is still below FY2022.',
+      },
+      membershipFees: {
+        label: 'Net Sales \u2014 Services',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2019,
+            value: 46291,
+          },
+          {
+            year: 2020,
+            value: 53768,
+          },
+          {
+            year: 2021,
+            value: 68425,
+          },
+          {
+            year: 2022,
+            value: 78129,
+          },
+          {
+            year: 2023,
+            value: 85200,
+          },
+          {
+            year: 2024,
+            value: 96169,
+          },
+          {
+            year: 2025,
+            value: 109158,
+          },
+        ],
+        note: 'First reported separately in FY2019. Has risen in EVERY year since, from $46.3bn to $109.2bn, up 135.8%. Now 26.2% of revenue at 75.4% gross margin, against 8.5% of revenue a decade ago. This one line is the entire margin story of the last five years.',
+      },
+      costOfSales: {
+        label: 'Total Cost of Sales',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 140089,
+          },
+          {
+            year: 2016,
+            value: 131376,
+          },
+          {
+            year: 2017,
+            value: 141048,
+          },
+          {
+            year: 2018,
+            value: 163756,
+          },
+          {
+            year: 2019,
+            value: 161782,
+          },
+          {
+            year: 2020,
+            value: 169559,
+          },
+          {
+            year: 2021,
+            value: 212981,
+          },
+          {
+            year: 2022,
+            value: 223546,
+          },
+          {
+            year: 2023,
+            value: 214137,
+          },
+          {
+            year: 2024,
+            value: 210352,
+          },
+          {
+            year: 2025,
+            value: 220960,
+          },
+        ],
+        note: 'Grew 57.7% against 78.1% revenue growth \u2014 the gap is the whole gross margin expansion. Note FY2021: cost of sales rose 25.6% in one year as revenue rose 33.3%.',
+      },
+      grossProfit: {
+        label: 'Gross Profit',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 93626,
+          },
+          {
+            year: 2016,
+            value: 84263,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 88186,
+          },
+          {
+            year: 2018,
+            value: 101839,
+          },
+          {
+            year: 2019,
+            value: 98392,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 104956,
+          },
+          {
+            year: 2021,
+            value: 152836,
+          },
+          {
+            year: 2022,
+            value: 170782,
+          },
+          {
+            year: 2023,
+            value: 169148,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 180683,
+          },
+          {
+            year: 2025,
+            value: 195201,
+          },
+        ],
+        note: 'Gross profit more than doubled, up 108.5% against 78.1% revenue growth. Revenue minus cost of sales equals this figure exactly in all eleven years.',
+      },
+      grossMargin: {
+        label: 'Gross Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 40.0,
+          },
+          {
+            year: 2016,
+            value: 39.1,
+          },
+          {
+            year: 2017,
+            value: 38.5,
+          },
+          {
+            year: 2018,
+            value: 38.3,
+          },
+          {
+            year: 2019,
+            value: 37.8,
+          },
+          {
+            year: 2020,
+            value: 38.2,
+          },
+          {
+            year: 2021,
+            value: 41.8,
+          },
+          {
+            year: 2022,
+            value: 43.3,
+          },
+          {
+            year: 2023,
+            value: 44.1,
+          },
+          {
+            year: 2024,
+            value: 46.2,
+          },
+          {
+            year: 2025,
+            value: 46.9,
+          },
+        ],
+        note: 'THE SINGLE MOST IMPORTANT TREND IN THE INCOME STATEMENT. Margin bottomed at 37.8% in FY2019 and has risen in every year since to 46.9% \u2014 a 9.1-point expansion in six years. It is mix, not price: Services went from 17.8% to 26.2% of revenue at 75.4% gross margin over the same period. Note the FY2015\u2013FY2019 direction was DOWNWARD, from 40.0% to 37.8%, so this is a reversal rather than a trend.',
+      },
+      opexLines: [
+        {
+          label: 'Research & Development',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 8067,
+            },
+            {
+              year: 2016,
+              value: 10045,
+            },
+            {
+              year: 2017,
+              value: 11581,
+            },
+            {
+              year: 2018,
+              value: 14236,
+            },
+            {
+              year: 2019,
+              value: 16217,
+            },
+            {
+              year: 2020,
+              value: 18752,
+            },
+            {
+              year: 2021,
+              value: 21914,
+            },
+            {
+              year: 2022,
+              value: 26251,
+            },
+            {
+              year: 2023,
+              value: 29915,
+            },
+            {
+              year: 2024,
+              value: 31370,
+            },
+            {
+              year: 2025,
+              value: 34550,
+            },
+          ],
+          note: 'R&D grew 328% over eleven years, from $8.1bn to $34.6bn \u2014 4.3x revenue growth. The FY2022 step-up (+19.8%) is the largest single-year increase. Apple now spends more on R&D annually than its entire FY2016 net income.',
+        },
+        {
+          label: 'R&D as % of Gross Profit',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 8.6,
+            },
+            {
+              year: 2016,
+              value: 11.9,
+            },
+            {
+              year: 2017,
+              value: 13.1,
+            },
+            {
+              year: 2018,
+              value: 14.0,
+            },
+            {
+              year: 2019,
+              value: 16.5,
+            },
+            {
+              year: 2020,
+              value: 17.9,
+            },
+            {
+              year: 2021,
+              value: 14.3,
+            },
+            {
+              year: 2022,
+              value: 15.4,
+            },
+            {
+              year: 2023,
+              value: 17.7,
+            },
+            {
+              year: 2024,
+              value: 17.4,
+            },
+            {
+              year: 2025,
+              value: 17.7,
+            },
+          ],
+          note: 'More than doubled, from 8.6% to 17.7%. This is the cleanest measure of how much harder Apple is having to work for the same profit \u2014 and it has been flat at 17.4\u201317.7% for three years, suggesting a new plateau rather than continued escalation.',
+        },
+        {
+          label: 'Selling, General & Administrative',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 14329,
+            },
+            {
+              year: 2016,
+              value: 14194,
+            },
+            {
+              year: 2017,
+              value: 15261,
+            },
+            {
+              year: 2018,
+              value: 16705,
+            },
+            {
+              year: 2019,
+              value: 18245,
+            },
+            {
+              year: 2020,
+              value: 19916,
+            },
+            {
+              year: 2021,
+              value: 21973,
+            },
+            {
+              year: 2022,
+              value: 25094,
+            },
+            {
+              year: 2023,
+              value: 24932,
+            },
+            {
+              year: 2024,
+              value: 26097,
+            },
+            {
+              year: 2025,
+              value: 27601,
+            },
+          ],
+          note: 'SG&A grew only 92.6% against 328% R&D growth. Apple has shifted spend decisively from selling to building.',
+        },
+        {
+          label: 'SG&A as % of Gross Profit',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 15.3,
+            },
+            {
+              year: 2016,
+              value: 16.8,
+            },
+            {
+              year: 2017,
+              value: 17.3,
+            },
+            {
+              year: 2018,
+              value: 16.4,
+            },
+            {
+              year: 2019,
+              value: 18.5,
+            },
+            {
+              year: 2020,
+              value: 19.0,
+            },
+            {
+              year: 2021,
+              value: 14.4,
+            },
+            {
+              year: 2022,
+              value: 14.7,
+            },
+            {
+              year: 2023,
+              value: 14.7,
+            },
+            {
+              year: 2024,
+              value: 14.4,
+            },
+            {
+              year: 2025,
+              value: 14.1,
+            },
+          ],
+          note: 'Fell from a FY2020 peak of 19.0% to 14.1%, the lowest of the period. Operating leverage on the selling line while R&D absorbs the gains.',
+        },
+      ],
+      totalExpenses: {
+        label: 'Total Operating Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 22396,
+          },
+          {
+            year: 2016,
+            value: 24239,
+          },
+          {
+            year: 2017,
+            value: 26842,
+          },
+          {
+            year: 2018,
+            value: 30941,
+          },
+          {
+            year: 2019,
+            value: 34462,
+          },
+          {
+            year: 2020,
+            value: 38668,
+          },
+          {
+            year: 2021,
+            value: 43887,
+          },
+          {
+            year: 2022,
+            value: 51345,
+          },
+          {
+            year: 2023,
+            value: 54847,
+          },
+          {
+            year: 2024,
+            value: 57467,
+          },
+          {
+            year: 2025,
+            value: 62151,
+          },
+        ],
+        note: 'R&D plus SG&A. Reconciles exactly in all eleven years. Grew 177.5%, well ahead of revenue \u2014 but gross profit grew faster still, which is why operating margin expanded.',
+      },
+      expensesToRevenue: {
+        label: 'Total Operating Expenses as % of Gross Profit',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 23.9,
+          },
+          {
+            year: 2016,
+            value: 28.8,
+          },
+          {
+            year: 2017,
+            value: 30.5,
+          },
+          {
+            year: 2018,
+            value: 30.4,
+          },
+          {
+            year: 2019,
+            value: 35.0,
+          },
+          {
+            year: 2020,
+            value: 36.9,
+          },
+          {
+            year: 2021,
+            value: 28.7,
+          },
+          {
+            year: 2022,
+            value: 30.1,
+          },
+          {
+            year: 2023,
+            value: 32.4,
+          },
+          {
+            year: 2024,
+            value: 31.8,
+          },
+          {
+            year: 2025,
+            value: 31.8,
+          },
+        ],
+        note: 'Rose from 23.9% (FY2015) to a FY2020 peak of 36.9%, then fell back to 31.8% and has been flat for two years. Apple absorbs roughly a third of gross profit in operating cost.',
+      },
+      operatingProfit: {
+        label: 'Operating Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 71230,
+          },
+          {
+            year: 2016,
+            value: 60024,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 61344,
+          },
+          {
+            year: 2018,
+            value: 70898,
+          },
+          {
+            year: 2019,
+            value: 63930,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 66288,
+          },
+          {
+            year: 2021,
+            value: 108949,
+          },
+          {
+            year: 2022,
+            value: 119437,
+          },
+          {
+            year: 2023,
+            value: 114301,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 123216,
+          },
+          {
+            year: 2025,
+            value: 133050,
+          },
+        ],
+        note: 'Operating income grew 86.8%, from $71.2bn to $133.1bn. FY2025 is a record and follows the FY2023 dip. Gross profit minus operating expenses equals this exactly in all eleven years.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin \u2014 Derived',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 30.48,
+          },
+          {
+            year: 2016,
+            value: 27.84,
+          },
+          {
+            year: 2017,
+            value: 26.76,
+          },
+          {
+            year: 2018,
+            value: 26.69,
+          },
+          {
+            year: 2019,
+            value: 24.57,
+          },
+          {
+            year: 2020,
+            value: 24.15,
+          },
+          {
+            year: 2021,
+            value: 29.78,
+          },
+          {
+            year: 2022,
+            value: 30.29,
+          },
+          {
+            year: 2023,
+            value: 29.82,
+          },
+          {
+            year: 2024,
+            value: 31.51,
+          },
+          {
+            year: 2025,
+            value: 31.97,
+          },
+        ],
+        note: 'Derived as operating income \u00f7 revenue. Bottomed at 24.15% in FY2020 and reached 31.97% in FY2025 \u2014 the highest of the period, and nearly 8 points above the trough.',
+      },
+      provisionForTaxes: {
+        label: 'Provision for Income Taxes',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 19121,
+          },
+          {
+            year: 2016,
+            value: 15685,
+          },
+          {
+            year: 2017,
+            value: 15738,
+          },
+          {
+            year: 2018,
+            value: 13372,
+          },
+          {
+            year: 2019,
+            value: 10481,
+          },
+          {
+            year: 2020,
+            value: 9680,
+          },
+          {
+            year: 2021,
+            value: 14527,
+          },
+          {
+            year: 2022,
+            value: 19300,
+          },
+          {
+            year: 2023,
+            value: 16741,
+          },
+          {
+            year: 2024,
+            value: 29749,
+          },
+          {
+            year: 2025,
+            value: 20719,
+          },
+        ],
+        note: 'THE FY2024 FIGURE IS THE OUTLIER: $29,749m, up 77.7% on FY2023 and $9.0bn HIGHER than FY2025 despite lower pre-tax income. That single line is why FY2024 net income fell while operating income rose.',
+      },
+      taxRate: {
+        label: 'Effective Tax Rate',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 26.84,
+          },
+          {
+            year: 2016,
+            value: 26.13,
+          },
+          {
+            year: 2017,
+            value: 25.66,
+          },
+          {
+            year: 2018,
+            value: 18.86,
+          },
+          {
+            year: 2019,
+            value: 16.39,
+          },
+          {
+            year: 2020,
+            value: 14.6,
+          },
+          {
+            year: 2021,
+            value: 13.33,
+          },
+          {
+            year: 2022,
+            value: 16.16,
+          },
+          {
+            year: 2023,
+            value: 14.65,
+          },
+          {
+            year: 2024,
+            value: 24.14,
+          },
+          {
+            year: 2025,
+            value: 15.61,
+          },
+        ],
+        note: 'Structurally lower since FY2018 \u2014 from a 26.8% start down to a 13.3% trough in FY2021, averaging about 19% across the period. FY2024 spikes to 24.14% (+9.4 points on FY2023) before falling back to 15.61%. Any model using a normalised rate should note that the low-teens years, not the FY2024 spike, are the anomaly relative to statutory rates \u2014 and that Item 1A #26 flags OECD global minimum tax proposals as a live risk to exactly this line.',
+      },
+      nopat: {
+        label: 'NOPAT \u2014 Net Operating Profit After Tax',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 52112,
+          },
+          {
+            year: 2016,
+            value: 44340,
+          },
+          {
+            year: 2017,
+            value: 45603,
+          },
+          {
+            year: 2018,
+            value: 57527,
+          },
+          {
+            year: 2019,
+            value: 53452,
+          },
+          {
+            year: 2020,
+            value: 56610,
+          },
+          {
+            year: 2021,
+            value: 94426,
+          },
+          {
+            year: 2022,
+            value: 100136,
+          },
+          {
+            year: 2023,
+            value: 97556,
+          },
+          {
+            year: 2024,
+            value: 93472,
+          },
+          {
+            year: 2025,
+            value: 112281,
+          },
+        ],
+        note: 'Operating income taxed at the effective rate \u2014 the numerator for ROIC. Grew 115.5% over eleven years, faster than operating income, because the tax rate fell.',
       },
       netIncome: {
         label: 'Net Income',
@@ -19883,6 +20706,7 @@ const AAPL_BREAKDOWN = {
           {
             year: 2016,
             value: 45687,
+            down: true,
           },
           {
             year: 2017,
@@ -19895,6 +20719,7 @@ const AAPL_BREAKDOWN = {
           {
             year: 2019,
             value: 55256,
+            down: true,
           },
           {
             year: 2020,
@@ -19911,25 +20736,27 @@ const AAPL_BREAKDOWN = {
           {
             year: 2023,
             value: 96995,
+            down: true,
           },
           {
             year: 2024,
             value: 93736,
+            down: true,
           },
           {
             year: 2025,
             value: 112010,
           },
         ],
-        note: 'Net income grew 109.8% over eleven years, from $53.4bn to $112.0bn \u2014 comfortably ahead of the 78.1% revenue growth. FY2025 is the record at $112.0bn, up 19.5% on FY2024, and it follows two years of decline from the FY2022 level. Three down years in eleven: FY2016, FY2019 and FY2024.',
+        note: 'Net income grew 109.8%, a 7.7% CAGR. Four down years: FY2016, FY2019, FY2023 and FY2024. FY2025 at $112.0bn is a record, up 19.5% \u2014 and roughly half of that increase is the tax line normalising rather than operating improvement.',
       },
       profitMargin: {
-        label: 'Net Profit Margin \u2014 Derived',
+        label: 'Net Profit Margin',
         unit: '%',
         series: [
           {
             year: 2015,
-            value: 22.85,
+            value: 22.84,
           },
           {
             year: 2016,
@@ -19937,7 +20764,7 @@ const AAPL_BREAKDOWN = {
           },
           {
             year: 2017,
-            value: 21.09,
+            value: 21.1,
           },
           {
             year: 2018,
@@ -19953,7 +20780,7 @@ const AAPL_BREAKDOWN = {
           },
           {
             year: 2021,
-            value: 25.88,
+            value: 25.87,
           },
           {
             year: 2022,
@@ -19961,7 +20788,7 @@ const AAPL_BREAKDOWN = {
           },
           {
             year: 2023,
-            value: 25.31,
+            value: 25.3,
           },
           {
             year: 2024,
@@ -19969,12 +20796,283 @@ const AAPL_BREAKDOWN = {
           },
           {
             year: 2025,
-            value: 26.92,
+            value: 26.91,
           },
         ],
-        note: 'Derived as net income \u00f7 revenue from the supplied figures. Margin sat in a 20.9%\u201322.9% band for six years to FY2020, then stepped up to 25\u201326% and reached 26.92% in FY2025 \u2014 the highest of the period. That step-change coincides with the Services mix rising toward 26% of revenue at 75.4% gross margin. The margin story is mix, not price.',
+        note: 'Sat in a 20.9\u201322.8% band for six years to FY2020, stepped up to 25\u201326%, and reached 26.91% in FY2025 \u2014 the highest of the period.',
+      },
+      eps: {
+        label: 'Earnings Per Share',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 9.22,
+          },
+          {
+            year: 2016,
+            value: 8.31,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 9.21,
+          },
+          {
+            year: 2018,
+            value: 11.91,
+          },
+          {
+            year: 2019,
+            value: 11.89,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 3.28,
+          },
+          {
+            year: 2021,
+            value: 5.61,
+          },
+          {
+            year: 2022,
+            value: 6.11,
+          },
+          {
+            year: 2023,
+            value: 6.13,
+          },
+          {
+            year: 2024,
+            value: 6.08,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 7.46,
+          },
+        ],
+        note: 'SPLIT-BASIS WARNING. Apple did a 4:1 split in August 2020. The EPS series is split-adjusted from FY2020 onward but NOT before, while the share count series below is split-adjusted from FY2019 onward. FY2019 is therefore the one year where the two sit on different bases \u2014 net income \u00f7 shares reproduces the printed EPS within 4% in ten of eleven years but is 3.8x out in FY2019. Do not chain FY2018 to FY2019 on this line. Also note: the supplied EPS CAGR of 7.7% is the NET INCOME CAGR. On a consistent split-adjusted basis EPS compounded at roughly 12.5%, because the share count fell 17%.',
+      },
+      sharesOutstanding: {
+        label: 'Shares Outstanding',
+        unit: 'M shares',
+        series: [
+          {
+            year: 2015,
+            value: 5578.753,
+          },
+          {
+            year: 2016,
+            value: 5336.166,
+          },
+          {
+            year: 2017,
+            value: 5126.201,
+          },
+          {
+            year: 2018,
+            value: 4754.986,
+          },
+          {
+            year: 2019,
+            value: 17772.945,
+          },
+          {
+            year: 2020,
+            value: 16976.763,
+          },
+          {
+            year: 2021,
+            value: 16426.786,
+          },
+          {
+            year: 2022,
+            value: 15943.425,
+          },
+          {
+            year: 2023,
+            value: 15550.061,
+          },
+          {
+            year: 2024,
+            value: 15116.786,
+          },
+          {
+            year: 2025,
+            value: 14773.26,
+          },
+        ],
+        note: 'Split-adjusted from FY2019. On the post-split basis the count fell from 17.77bn to 14.77bn \u2014 down 16.9% in six years, and down in every single year. That is roughly 3bn shares retired. The FY2018\u2192FY2019 jump is the 4:1 split arriving in the series, not an issuance.',
+      },
+      dividends: {
+        note: 'Dividends per share against EPS. Both series carry the FY2020 4:1 split, so the FY2018\u2192FY2019 drop from $2.72 to $0.75 is the split, not a cut.',
+        cagr: '7.5%',
+        cagrPeriod: 'FY2019\u2013FY2025',
+        cagrNote: 'On the consistent post-split basis, DPS rose from $0.75 to $1.02 \u2014 up 36.0%, a 5.3% CAGR, and it has risen in every single year. Payout is roughly 13.7% of FY2025 EPS, among the most conservative in this coverage, which is deliberate: Apple returns the bulk of its cash through buybacks rather than dividends.',
+        splitNote: 'FY2019 onward is post the August 2020 4:1 split. FY2015\u2013FY2018 figures are pre-split and roughly 4x the comparable amount.',
+        rows: [
+          {
+            year: 2015,
+            dividend: 1.98,
+            eps: 9.22,
+          },
+          {
+            year: 2016,
+            dividend: 2.18,
+            eps: 8.31,
+          },
+          {
+            year: 2017,
+            dividend: 2.4,
+            eps: 9.21,
+          },
+          {
+            year: 2018,
+            dividend: 2.72,
+            eps: 11.91,
+          },
+          {
+            year: 2019,
+            dividend: 0.75,
+            eps: 11.89,
+          },
+          {
+            year: 2020,
+            dividend: 0.795,
+            eps: 3.28,
+          },
+          {
+            year: 2021,
+            dividend: 0.85,
+            eps: 5.61,
+          },
+          {
+            year: 2022,
+            dividend: 0.9,
+            eps: 6.11,
+          },
+          {
+            year: 2023,
+            dividend: 0.94,
+            eps: 6.13,
+          },
+          {
+            year: 2024,
+            dividend: 0.98,
+            eps: 6.08,
+          },
+          {
+            year: 2025,
+            dividend: 1.02,
+            eps: 7.46,
+          },
+        ],
       },
       extraLines: [
+        {
+          label: 'Total Expenses \u2014 Cost of Sales + Operating Expenses',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 162485,
+            },
+            {
+              year: 2016,
+              value: 155615,
+            },
+            {
+              year: 2017,
+              value: 167890,
+            },
+            {
+              year: 2018,
+              value: 194697,
+            },
+            {
+              year: 2019,
+              value: 196244,
+            },
+            {
+              year: 2020,
+              value: 208227,
+            },
+            {
+              year: 2021,
+              value: 256868,
+            },
+            {
+              year: 2022,
+              value: 274891,
+            },
+            {
+              year: 2023,
+              value: 268984,
+            },
+            {
+              year: 2024,
+              value: 267819,
+            },
+            {
+              year: 2025,
+              value: 283111,
+            },
+          ],
+          note: 'Grew 74.2% against 78.1% revenue growth \u2014 costs grew marginally slower than sales across the eleven years.',
+        },
+        {
+          label: 'Total Expenses as % of Revenue',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 69.52,
+            },
+            {
+              year: 2016,
+              value: 72.16,
+            },
+            {
+              year: 2017,
+              value: 73.24,
+            },
+            {
+              year: 2018,
+              value: 73.31,
+            },
+            {
+              year: 2019,
+              value: 75.43,
+            },
+            {
+              year: 2020,
+              value: 75.85,
+            },
+            {
+              year: 2021,
+              value: 70.22,
+            },
+            {
+              year: 2022,
+              value: 69.71,
+            },
+            {
+              year: 2023,
+              value: 70.18,
+            },
+            {
+              year: 2024,
+              value: 68.49,
+            },
+            {
+              year: 2025,
+              value: 68.03,
+            },
+          ],
+          note: 'Fell from a FY2020 peak of 75.85% to 68.03% in FY2025, the lowest of the period. Eleven-year average about 71%. Every point off this ratio is a point onto operating margin.',
+        },
         {
           label: 'Share-Based Compensation Expense',
           unit: 'M USD',
@@ -21596,6 +22694,1570 @@ const AAPL_BREAKDOWN = {
         ],
       },
     },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 21120,
+          },
+          {
+            year: 2016,
+            value: 20484,
+          },
+          {
+            year: 2017,
+            value: 20289,
+          },
+          {
+            year: 2018,
+            value: 25913,
+          },
+          {
+            year: 2019,
+            value: 48844,
+          },
+          {
+            year: 2020,
+            value: 38016,
+          },
+          {
+            year: 2021,
+            value: 34940,
+          },
+          {
+            year: 2022,
+            value: 23646,
+          },
+          {
+            year: 2023,
+            value: 29965,
+          },
+          {
+            year: 2024,
+            value: 29943,
+          },
+          {
+            year: 2025,
+            value: 35934,
+          },
+        ],
+        note: 'Note this is CASH ONLY \u2014 it excludes marketable securities, which are the bulk of Apple\u2019s liquid assets. Cash alone rose 70.1% over eleven years but swings widely, from $20.3bn to $48.8bn.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 16849,
+          },
+          {
+            year: 2016,
+            value: 15754,
+          },
+          {
+            year: 2017,
+            value: 17874,
+          },
+          {
+            year: 2018,
+            value: 23186,
+          },
+          {
+            year: 2019,
+            value: 22926,
+          },
+          {
+            year: 2020,
+            value: 16120,
+          },
+          {
+            year: 2021,
+            value: 26278,
+          },
+          {
+            year: 2022,
+            value: 28184,
+          },
+          {
+            year: 2023,
+            value: 52805,
+          },
+          {
+            year: 2024,
+            value: 33410,
+          },
+          {
+            year: 2025,
+            value: 39777,
+          },
+        ],
+        note: 'FY2023 IS FLAGGED IN THE SOURCE AS "CHECK" and FY2024 as "corrected" \u2014 both carried as supplied. The FY2023 figure of $52,805m sits 87% above FY2022 and 58% above FY2024, which does not fit the revenue pattern (FY2023 revenue actually FELL 2.8%). Treat FY2023 as unverified. The underlying driver Apple gives for genuine AR spikes is late-quarter shipments through carriers and enterprise contracts with longer payment terms, which leaves more of the quarter sitting as unpaid invoices at year-end.',
+      },
+      inventory: {
+        label: 'Inventories',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 2349,
+          },
+          {
+            year: 2016,
+            value: 2132,
+          },
+          {
+            year: 2017,
+            value: 4855,
+          },
+          {
+            year: 2018,
+            value: 3956,
+          },
+          {
+            year: 2019,
+            value: 4106,
+          },
+          {
+            year: 2020,
+            value: 4061,
+          },
+          {
+            year: 2021,
+            value: 6580,
+          },
+          {
+            year: 2022,
+            value: 4946,
+          },
+          {
+            year: 2023,
+            value: 6331,
+          },
+          {
+            year: 2024,
+            value: 7286,
+          },
+          {
+            year: 2025,
+            value: 5718,
+          },
+        ],
+        note: 'Inventory of $5.7bn on $221.0bn of cost of sales \u2014 about nine days of stock. Apple carries almost none, which is the balance-sheet signature of the outsourced manufacturing model.',
+      },
+      inventoryTurnover: {
+        label: 'Inventory Turnover \u2014 on average inventory',
+        unit: 'x',
+        series: [
+          {
+            year: 2016,
+            value: 58.7,
+          },
+          {
+            year: 2017,
+            value: 40.4,
+          },
+          {
+            year: 2018,
+            value: 37.2,
+          },
+          {
+            year: 2019,
+            value: 40.1,
+          },
+          {
+            year: 2020,
+            value: 41.5,
+          },
+          {
+            year: 2021,
+            value: 40.0,
+          },
+          {
+            year: 2022,
+            value: 38.8,
+          },
+          {
+            year: 2023,
+            value: 38.0,
+          },
+          {
+            year: 2024,
+            value: 30.9,
+          },
+          {
+            year: 2025,
+            value: 34.0,
+          },
+        ],
+        note: 'Averaged 40.0x across FY2016\u2013FY2025. FY2015 is not calculable without the FY2014 opening balance. Turnover has WEAKENED from a 58.7x peak in FY2016 to 34.0x \u2014 still exceptional, but the direction is consistent with the FY2024\u201325 inventory build.',
+      },
+      dio: {
+        label: 'Days Inventory Outstanding',
+        unit: 'days',
+        series: [
+          {
+            year: 2016,
+            value: 6.2,
+          },
+          {
+            year: 2017,
+            value: 9.0,
+          },
+          {
+            year: 2018,
+            value: 9.8,
+          },
+          {
+            year: 2019,
+            value: 9.1,
+          },
+          {
+            year: 2020,
+            value: 8.8,
+          },
+          {
+            year: 2021,
+            value: 9.1,
+          },
+          {
+            year: 2022,
+            value: 9.4,
+          },
+          {
+            year: 2023,
+            value: 9.6,
+          },
+          {
+            year: 2024,
+            value: 11.8,
+          },
+          {
+            year: 2025,
+            value: 10.7,
+          },
+        ],
+        note: 'Averaged 9.4 days across FY2016\u2013FY2025 and sits at 10.7. For context, Costco runs about 30 days and Caterpillar about 138. Apple holds roughly a week and a half of stock.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 89378,
+          },
+          {
+            year: 2016,
+            value: 106869,
+          },
+          {
+            year: 2017,
+            value: 128645,
+          },
+          {
+            year: 2018,
+            value: 131339,
+          },
+          {
+            year: 2019,
+            value: 162819,
+          },
+          {
+            year: 2020,
+            value: 143713,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 134836,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 135405,
+          },
+          {
+            year: 2023,
+            value: 143566,
+          },
+          {
+            year: 2024,
+            value: 152987,
+          },
+          {
+            year: 2025,
+            value: 147957,
+            down: true,
+          },
+        ],
+        note: 'Grew 65.5% but peaked at $162.8bn in FY2019 and has never regained that level \u2014 the buyback has been consuming current assets faster than the business generates them.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 35490,
+          },
+          {
+            year: 2016,
+            value: 37294,
+          },
+          {
+            year: 2017,
+            value: 44242,
+          },
+          {
+            year: 2018,
+            value: 55888,
+          },
+          {
+            year: 2019,
+            value: 46236,
+          },
+          {
+            year: 2020,
+            value: 42296,
+          },
+          {
+            year: 2021,
+            value: 54763,
+          },
+          {
+            year: 2022,
+            value: 64115,
+          },
+          {
+            year: 2023,
+            value: 62611,
+          },
+          {
+            year: 2024,
+            value: 68960,
+          },
+          {
+            year: 2025,
+            value: 69860,
+          },
+        ],
+        note: 'Nearly doubled to $69.9bn, and now EXCEEDS total inventory plus receivables combined. Apple is funded by its suppliers: it collects from customers long before it pays for components. That is negative working capital operating as a permanent, interest-free source of finance.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 80610,
+          },
+          {
+            year: 2016,
+            value: 79006,
+          },
+          {
+            year: 2017,
+            value: 100814,
+          },
+          {
+            year: 2018,
+            value: 116866,
+          },
+          {
+            year: 2019,
+            value: 105718,
+          },
+          {
+            year: 2020,
+            value: 105392,
+          },
+          {
+            year: 2021,
+            value: 125481,
+          },
+          {
+            year: 2022,
+            value: 153982,
+          },
+          {
+            year: 2023,
+            value: 145308,
+          },
+          {
+            year: 2024,
+            value: 176392,
+          },
+          {
+            year: 2025,
+            value: 165631,
+          },
+        ],
+        note: 'More than doubled to $165.6bn, growing far faster than current assets.',
+      },
+      currentRatio: {
+        label: 'Current Ratio',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 1.11,
+          },
+          {
+            year: 2016,
+            value: 1.35,
+          },
+          {
+            year: 2017,
+            value: 1.28,
+          },
+          {
+            year: 2018,
+            value: 1.12,
+          },
+          {
+            year: 2019,
+            value: 1.54,
+          },
+          {
+            year: 2020,
+            value: 1.36,
+          },
+          {
+            year: 2021,
+            value: 1.07,
+          },
+          {
+            year: 2022,
+            value: 0.88,
+          },
+          {
+            year: 2023,
+            value: 0.99,
+          },
+          {
+            year: 2024,
+            value: 0.87,
+          },
+          {
+            year: 2025,
+            value: 0.89,
+          },
+        ],
+        avg2015_2024: '1.13x',
+        note: 'BELOW 1.0 IN FOUR OF THE LAST FIVE YEARS, and 0.89 in FY2025 against a 1.13 eleven-year average. On any other company this would be a liquidity warning. Here it is a deliberate consequence of the buyback plus supplier financing \u2014 Apple generated $111.5bn of operating cash flow in FY2025 against $165.6bn of current liabilities, so the coverage comes from earnings, not from the balance sheet. Worth understanding rather than alarming at, but it is a real reduction in financial flexibility.',
+      },
+      otherLongTermLiabilities: {
+        label: 'Total Non-Current Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 90380,
+          },
+          {
+            year: 2016,
+            value: 114431,
+          },
+          {
+            year: 2017,
+            value: 140458,
+          },
+          {
+            year: 2018,
+            value: 141712,
+          },
+          {
+            year: 2019,
+            value: 142310,
+          },
+          {
+            year: 2020,
+            value: 153157,
+          },
+          {
+            year: 2021,
+            value: 162431,
+          },
+          {
+            year: 2022,
+            value: 148101,
+          },
+          {
+            year: 2023,
+            value: 145129,
+          },
+          {
+            year: 2024,
+            value: 131638,
+          },
+          {
+            year: 2025,
+            value: 119877,
+          },
+        ],
+        note: 'SOURCE LABEL CORRECTED. The supplied table headed this line "Total non-current liabilities (Long term debt)". It is NOT long-term debt: at $119,877m in FY2025 it is 42.0% of total liabilities, while Apple\u2019s actual term debt is roughly $85\u2013$95bn. It also reconciles exactly \u2014 current plus non-current equals total liabilities in all eleven years \u2014 which only works if this is the whole non-current block. Values unchanged; label corrected, and the two ratios built on it are relabelled accordingly.',
+      },
+      ltDebtToEquity: {
+        label: 'Non-Current Liabilities to Equity \u2014 relabelled',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.76,
+          },
+          {
+            year: 2016,
+            value: 0.89,
+          },
+          {
+            year: 2017,
+            value: 1.05,
+          },
+          {
+            year: 2018,
+            value: 1.32,
+          },
+          {
+            year: 2019,
+            value: 1.57,
+          },
+          {
+            year: 2020,
+            value: 2.34,
+          },
+          {
+            year: 2021,
+            value: 2.57,
+          },
+          {
+            year: 2022,
+            value: 2.92,
+          },
+          {
+            year: 2023,
+            value: 2.33,
+          },
+          {
+            year: 2024,
+            value: 2.31,
+          },
+          {
+            year: 2025,
+            value: 1.63,
+          },
+        ],
+        note: 'Supplied as "Long-Term Debt to Equity". It is non-current liabilities \u00f7 equity \u2014 see the line above. Peaked at 2.92x in FY2022 and has fallen to 1.63x, but that improvement is equity RISING off a very low base rather than liabilities being repaid. Eleven-year average 1.79x.',
+      },
+      ltDebtToNetIncome: {
+        label: 'Non-Current Liabilities to Net Income \u2014 relabelled',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 1.69,
+          },
+          {
+            year: 2016,
+            value: 2.5,
+          },
+          {
+            year: 2017,
+            value: 2.9,
+          },
+          {
+            year: 2018,
+            value: 2.38,
+          },
+          {
+            year: 2019,
+            value: 2.58,
+          },
+          {
+            year: 2020,
+            value: 2.67,
+          },
+          {
+            year: 2021,
+            value: 1.72,
+          },
+          {
+            year: 2022,
+            value: 1.48,
+          },
+          {
+            year: 2023,
+            value: 1.49,
+          },
+          {
+            year: 2024,
+            value: 1.4,
+          },
+          {
+            year: 2025,
+            value: 1.07,
+          },
+        ],
+        note: 'Supplied as "Long-Term Debt to Net Income". At 1.07x, Apple could clear its entire non-current liability block with roughly thirteen months of net income. Eleven-year average 1.99x, and the lowest reading of the period. This is the number that makes the current ratio unalarming.',
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 170990,
+          },
+          {
+            year: 2016,
+            value: 193437,
+          },
+          {
+            year: 2017,
+            value: 241272,
+          },
+          {
+            year: 2018,
+            value: 258578,
+          },
+          {
+            year: 2019,
+            value: 248028,
+          },
+          {
+            year: 2020,
+            value: 258549,
+          },
+          {
+            year: 2021,
+            value: 287912,
+          },
+          {
+            year: 2022,
+            value: 302083,
+          },
+          {
+            year: 2023,
+            value: 290437,
+          },
+          {
+            year: 2024,
+            value: 308030,
+          },
+          {
+            year: 2025,
+            value: 285508,
+          },
+        ],
+        note: 'Grew 67.0% to $285.5bn but has FALLEN 7.3% from the FY2024 peak. Current plus non-current reconciles exactly in all eleven years.',
+      },
+      debtToEquity: {
+        label: 'Total Liabilities to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 1.43,
+          },
+          {
+            year: 2016,
+            value: 1.51,
+          },
+          {
+            year: 2017,
+            value: 1.8,
+          },
+          {
+            year: 2018,
+            value: 2.41,
+          },
+          {
+            year: 2019,
+            value: 2.74,
+          },
+          {
+            year: 2020,
+            value: 3.96,
+          },
+          {
+            year: 2021,
+            value: 4.56,
+          },
+          {
+            year: 2022,
+            value: 5.96,
+          },
+          {
+            year: 2023,
+            value: 4.67,
+          },
+          {
+            year: 2024,
+            value: 5.41,
+          },
+          {
+            year: 2025,
+            value: 3.87,
+          },
+        ],
+        note: 'Peaked at 5.96x in FY2022 and stands at 3.87x, against an eleven-year average of 3.48x. The ratio nearly tripled from FY2015 \u2014 driven almost entirely by the equity denominator shrinking, not by liabilities growing.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 290345,
+          },
+          {
+            year: 2016,
+            value: 321686,
+          },
+          {
+            year: 2017,
+            value: 375319,
+          },
+          {
+            year: 2018,
+            value: 365725,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 338516,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 323888,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 351002,
+          },
+          {
+            year: 2022,
+            value: 352755,
+          },
+          {
+            year: 2023,
+            value: 352583,
+          },
+          {
+            year: 2024,
+            value: 364980,
+          },
+          {
+            year: 2025,
+            value: 359241,
+            down: true,
+          },
+        ],
+        note: 'Grew only 23.7% over eleven years while revenue grew 78.1% and net income grew 109.8%. Total assets peaked at $375.3bn in FY2017 and are BELOW that today. Apple is generating far more from a barely larger asset base \u2014 which is the entire ROIC story.',
+      },
+      investedCapital: {
+        label: 'Invested Capital',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 188615,
+          },
+          {
+            year: 2016,
+            value: 222196,
+          },
+          {
+            year: 2017,
+            value: 254216,
+          },
+          {
+            year: 2018,
+            value: 222946,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 183954,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 180480,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 190581,
+          },
+          {
+            year: 2022,
+            value: 175127,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 177310,
+          },
+          {
+            year: 2024,
+            value: 158645,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 157676,
+            down: true,
+          },
+        ],
+        note: 'Invested capital FELL 16.4% over eleven years, from $188.6bn to $157.7bn, and is down 38.0% from the FY2017 peak of $254.2bn. Apple has been shrinking the capital base while more than doubling profit. That combination is what produces a 71% ROIC.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings / (Accumulated Deficit)',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 92284,
+          },
+          {
+            year: 2016,
+            value: 96364,
+          },
+          {
+            year: 2017,
+            value: 98330,
+          },
+          {
+            year: 2018,
+            value: 70400,
+          },
+          {
+            year: 2019,
+            value: 45898,
+          },
+          {
+            year: 2020,
+            value: 14966,
+          },
+          {
+            year: 2021,
+            value: 5562,
+          },
+          {
+            year: 2022,
+            value: -3068,
+          },
+          {
+            year: 2023,
+            value: -214,
+          },
+          {
+            year: 2024,
+            value: -19154,
+          },
+          {
+            year: 2025,
+            value: -14264,
+          },
+        ],
+        note: 'TURNED NEGATIVE IN FY2022 AND HAS STAYED THERE. This is not losses \u2014 Apple earned $505bn of net income over the eleven years. It is that buybacks and dividends have returned more than every dollar of profit the company has ever retained. The accumulated deficit of \u2212$14.3bn is the running score of that policy.',
+      },
+      shareholderEquity: {
+        label: 'Total Shareholder Equity',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 119355,
+          },
+          {
+            year: 2016,
+            value: 128249,
+          },
+          {
+            year: 2017,
+            value: 134047,
+          },
+          {
+            year: 2018,
+            value: 107147,
+          },
+          {
+            year: 2019,
+            value: 90488,
+          },
+          {
+            year: 2020,
+            value: 65339,
+          },
+          {
+            year: 2021,
+            value: 63090,
+          },
+          {
+            year: 2022,
+            value: 50672,
+          },
+          {
+            year: 2023,
+            value: 62146,
+          },
+          {
+            year: 2024,
+            value: 56950,
+          },
+          {
+            year: 2025,
+            value: 73733,
+          },
+        ],
+        note: 'Equity FELL 38.2% over eleven years, from $119.4bn to $73.7bn, bottoming at $50.7bn in FY2022. Net income more than doubled over the same period. Every ratio with equity in the denominator \u2014 ROE, liabilities-to-equity, price-to-book \u2014 is distorted by this and should be read against ROIC instead.',
+      },
+      bookValuePerShare: {
+        label: 'Book Value Per Share',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 21.39,
+          },
+          {
+            year: 2016,
+            value: 24.03,
+          },
+          {
+            year: 2017,
+            value: 26.14,
+          },
+          {
+            year: 2018,
+            value: 22.53,
+          },
+          {
+            year: 2019,
+            value: 5.09,
+          },
+          {
+            year: 2020,
+            value: 3.85,
+          },
+          {
+            year: 2021,
+            value: 3.84,
+          },
+          {
+            year: 2022,
+            value: 3.18,
+          },
+          {
+            year: 2023,
+            value: 4.0,
+          },
+          {
+            year: 2024,
+            value: 3.77,
+          },
+          {
+            year: 2025,
+            value: 4.99,
+          },
+        ],
+        note: 'The FY2018\u2192FY2019 collapse from $22.53 to $5.09 is the 4:1 split entering the share-count series, NOT a destruction of book value. See the adjusted series below.',
+      },
+      sharesOutstanding: {
+        label: 'Shares Outstanding',
+        unit: 'M shares',
+        series: [
+          {
+            year: 2015,
+            value: 5578.753,
+          },
+          {
+            year: 2016,
+            value: 5336.166,
+          },
+          {
+            year: 2017,
+            value: 5126.201,
+          },
+          {
+            year: 2018,
+            value: 4754.986,
+          },
+          {
+            year: 2019,
+            value: 17772.945,
+          },
+          {
+            year: 2020,
+            value: 16976.763,
+          },
+          {
+            year: 2021,
+            value: 16426.786,
+          },
+          {
+            year: 2022,
+            value: 15943.425,
+          },
+          {
+            year: 2023,
+            value: 15550.061,
+          },
+          {
+            year: 2024,
+            value: 15116.786,
+          },
+          {
+            year: 2025,
+            value: 14773.26,
+          },
+        ],
+        note: 'Split-adjusted from FY2019. Down 16.9% on the consistent post-split basis, and down in every year.',
+      },
+      extraLines: [
+        {
+          label: 'Vendor Non-Trade Receivables',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2024,
+              value: 32833,
+            },
+            {
+              year: 2025,
+              value: 33180,
+            },
+          ],
+          note: 'Newly disclosed as a separate line, FY2024\u2013FY2025 only. At $33.2bn it is comparable in size to ordinary accounts receivable. Item 1A #25 notes these are UNSECURED and, as of 27 Sept 2025, concentrated among a few vendors primarily in Asia.',
+        },
+        {
+          label: 'Book Value Per Share \u2014 split-adjusted',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2015,
+              value: 6.71,
+            },
+            {
+              year: 2016,
+              value: 7.22,
+            },
+            {
+              year: 2017,
+              value: 7.54,
+            },
+            {
+              year: 2018,
+              value: 6.03,
+            },
+            {
+              year: 2019,
+              value: 5.09,
+            },
+            {
+              year: 2020,
+              value: 3.85,
+            },
+            {
+              year: 2021,
+              value: 3.84,
+            },
+            {
+              year: 2022,
+              value: 3.18,
+            },
+            {
+              year: 2023,
+              value: 4.0,
+            },
+            {
+              year: 2024,
+              value: 3.77,
+            },
+            {
+              year: 2025,
+              value: 4.99,
+            },
+          ],
+          note: 'The source adjusts FY2015\u2013FY2018 by applying the FY2019 share count. That is an approximation rather than a true split adjustment \u2014 a proper restatement would use 4x each year\u2019s actual count, which gives about $5.63 for FY2018 rather than $6.03. Directionally sound, precisely wrong. On this basis BVPS compounded at about \u22122.9% a year: book value per share has SHRUNK for a decade while earnings per share more than tripled.',
+        },
+        {
+          label: 'Return on Invested Capital',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 27.63,
+            },
+            {
+              year: 2016,
+              value: 19.96,
+            },
+            {
+              year: 2017,
+              value: 17.94,
+            },
+            {
+              year: 2018,
+              value: 25.8,
+            },
+            {
+              year: 2019,
+              value: 29.06,
+            },
+            {
+              year: 2020,
+              value: 31.37,
+            },
+            {
+              year: 2021,
+              value: 49.55,
+            },
+            {
+              year: 2022,
+              value: 57.18,
+            },
+            {
+              year: 2023,
+              value: 55.02,
+            },
+            {
+              year: 2024,
+              value: 58.92,
+            },
+            {
+              year: 2025,
+              value: 71.21,
+            },
+          ],
+          note: 'THE HEADLINE NUMBER. ROIC rose from 27.6% to 71.2%, and has risen in every year since FY2017. Eleven-year average 40%. Both halves moved the right way: NOPAT up 115% while invested capital fell 16%. This is the measure to underwrite Apple on \u2014 ROE is distorted by the shrinking equity base, ROIC is not.',
+        },
+        {
+          label: 'Return on Assets',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 18.39,
+            },
+            {
+              year: 2016,
+              value: 14.2,
+            },
+            {
+              year: 2017,
+              value: 12.88,
+            },
+            {
+              year: 2018,
+              value: 16.28,
+            },
+            {
+              year: 2019,
+              value: 16.32,
+            },
+            {
+              year: 2020,
+              value: 17.73,
+            },
+            {
+              year: 2021,
+              value: 26.97,
+            },
+            {
+              year: 2022,
+              value: 28.29,
+            },
+            {
+              year: 2023,
+              value: 27.51,
+            },
+            {
+              year: 2024,
+              value: 25.68,
+            },
+            {
+              year: 2025,
+              value: 31.18,
+            },
+          ],
+          note: 'Rose from 18.4% to 31.2%, eleven-year average 21%. Total assets grew only 23.7% while net income grew 109.8%.',
+        },
+        {
+          label: 'Return on Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 44.74,
+            },
+            {
+              year: 2016,
+              value: 35.62,
+            },
+            {
+              year: 2017,
+              value: 36.07,
+            },
+            {
+              year: 2018,
+              value: 55.56,
+            },
+            {
+              year: 2019,
+              value: 61.06,
+            },
+            {
+              year: 2020,
+              value: 87.87,
+            },
+            {
+              year: 2021,
+              value: 150.07,
+            },
+            {
+              year: 2022,
+              value: 196.96,
+            },
+            {
+              year: 2023,
+              value: 156.08,
+            },
+            {
+              year: 2024,
+              value: 164.59,
+            },
+            {
+              year: 2025,
+              value: 151.91,
+            },
+          ],
+          note: 'READ WITH CARE. ROE of 151.9% and an eleven-year average of 104% are arithmetically real but economically misleading \u2014 equity fell 38% over the period because of buybacks, so the denominator is shrinking faster than the numerator grows. The FY2022 reading of 196.96% coincides with the equity trough of $50.7bn, not with peak profitability. ROIC at 71.2% is the honest figure.',
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Net Cash from Operating Activities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 81266,
+          },
+          {
+            year: 2016,
+            value: 66231,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 64225,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 77434,
+          },
+          {
+            year: 2019,
+            value: 69391,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 80674,
+          },
+          {
+            year: 2021,
+            value: 104038,
+          },
+          {
+            year: 2022,
+            value: 122151,
+          },
+          {
+            year: 2023,
+            value: 110543,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 118254,
+          },
+          {
+            year: 2025,
+            value: 111482,
+            down: true,
+          },
+        ],
+        note: 'Operating cash flow grew 37.2% over eleven years \u2014 far slower than net income\u2019s 109.8%. It PEAKED at $122.2bn in FY2022 and FY2025 is 8.7% below that, in a year net income hit a record. Part of that gap is share-based compensation: $12.9bn of expense is added back into operating cash flow while the offsetting buyback sits in financing, so operating cash flow overstates true owner earnings by roughly the $9.3bn after-tax SBC cost.',
+      },
+      capex: {
+        label: 'Capital Expenditures',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 11247,
+          },
+          {
+            year: 2016,
+            value: 12734,
+          },
+          {
+            year: 2017,
+            value: 12451,
+          },
+          {
+            year: 2018,
+            value: 13313,
+          },
+          {
+            year: 2019,
+            value: 10465,
+          },
+          {
+            year: 2020,
+            value: 7309,
+          },
+          {
+            year: 2021,
+            value: 11085,
+          },
+          {
+            year: 2022,
+            value: 10708,
+          },
+          {
+            year: 2023,
+            value: 10959,
+          },
+          {
+            year: 2024,
+            value: 9447,
+          },
+          {
+            year: 2025,
+            value: 12715,
+          },
+        ],
+        note: 'Capex has been remarkably flat \u2014 $7.3bn to $13.3bn across eleven years, with no trend, while revenue grew 78%. FY2025 at $12.7bn is the highest since FY2018. For a company adding $180bn of revenue, spending nothing extra on fixed assets is the outsourced model in one line.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 13.84,
+          },
+          {
+            year: 2016,
+            value: 19.23,
+          },
+          {
+            year: 2017,
+            value: 19.39,
+          },
+          {
+            year: 2018,
+            value: 17.19,
+          },
+          {
+            year: 2019,
+            value: 15.08,
+          },
+          {
+            year: 2020,
+            value: 9.06,
+          },
+          {
+            year: 2021,
+            value: 10.65,
+          },
+          {
+            year: 2022,
+            value: 8.77,
+          },
+          {
+            year: 2023,
+            value: 9.91,
+          },
+          {
+            year: 2024,
+            value: 7.99,
+          },
+          {
+            year: 2025,
+            value: 11.4,
+          },
+        ],
+        note: 'Fell from a 19.4% peak in FY2017 to 8.0% in FY2024, averaging about 13%. Apple keeps roughly nine dollars in ten of its operating cash flow. Compare Meta at 88% of operating cash flow consumed by investing in FY2025 \u2014 the contrast in reinvestment intensity between the two is the single starkest in this coverage.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow \u2014 OCF minus CapEx',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 70019,
+          },
+          {
+            year: 2016,
+            value: 53497,
+          },
+          {
+            year: 2017,
+            value: 51774,
+          },
+          {
+            year: 2018,
+            value: 64121,
+          },
+          {
+            year: 2019,
+            value: 58926,
+          },
+          {
+            year: 2020,
+            value: 73365,
+          },
+          {
+            year: 2021,
+            value: 92953,
+          },
+          {
+            year: 2022,
+            value: 111443,
+          },
+          {
+            year: 2023,
+            value: 99584,
+          },
+          {
+            year: 2024,
+            value: 108807,
+          },
+          {
+            year: 2025,
+            value: 98767,
+          },
+        ],
+        note: 'Derived. Free cash flow grew 41.2%, from $70.0bn to $98.8bn, and peaked at $111.4bn in FY2022. It has exceeded $98bn in four of the last five years. Note it has grown far slower than net income \u2014 the gap is worth understanding before capitalising reported earnings.',
+      },
+      extraLines: [
+        {
+          label: 'Free Cash Flow Per Share \u2014 Derived',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2015,
+              value: 12.55,
+            },
+            {
+              year: 2016,
+              value: 10.03,
+            },
+            {
+              year: 2017,
+              value: 10.1,
+            },
+            {
+              year: 2018,
+              value: 13.49,
+            },
+            {
+              year: 2019,
+              value: 3.32,
+            },
+            {
+              year: 2020,
+              value: 4.32,
+            },
+            {
+              year: 2021,
+              value: 5.66,
+            },
+            {
+              year: 2022,
+              value: 6.99,
+            },
+            {
+              year: 2023,
+              value: 6.4,
+            },
+            {
+              year: 2024,
+              value: 7.2,
+            },
+            {
+              year: 2025,
+              value: 6.69,
+            },
+          ],
+          note: 'Derived as free cash flow \u00f7 shares outstanding. On the post-split basis FCF per share rose from $3.32 (FY2019) to $6.69 (FY2025), up 101% \u2014 roughly double the 41% growth in absolute free cash flow. The buyback supplies the difference. FY2015\u2013FY2018 sit on the pre-split share count and are not comparable.',
+        },
+        {
+          label: 'Dividends Per Share',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2015,
+              value: 1.98,
+            },
+            {
+              year: 2016,
+              value: 2.18,
+            },
+            {
+              year: 2017,
+              value: 2.4,
+            },
+            {
+              year: 2018,
+              value: 2.72,
+            },
+            {
+              year: 2019,
+              value: 0.75,
+            },
+            {
+              year: 2020,
+              value: 0.795,
+            },
+            {
+              year: 2021,
+              value: 0.85,
+            },
+            {
+              year: 2022,
+              value: 0.9,
+            },
+            {
+              year: 2023,
+              value: 0.94,
+            },
+            {
+              year: 2024,
+              value: 0.98,
+            },
+            {
+              year: 2025,
+              value: 1.02,
+            },
+          ],
+          note: 'Post-split from FY2019. Up 36.0% since, and raised in every year. The FY2018\u2192FY2019 fall is the 4:1 split, not a cut.',
+        },
+      ],
+    },
   },
   risks: {
     tldr: 'Twenty-seven risk factors across five categories, plus the Item 3 case detail. Four carry the analysis: Google search licensing, tariffs and Section 232, the new AI cluster, and single-category iPhone concentration. Three separate legal systems are working to loosen Apple\u2019s control of distribution and payment on its own platforms.',
@@ -22063,7 +24725,7 @@ const AAPL_BREAKDOWN = {
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
+  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: ORCL_BREAKDOWN },
