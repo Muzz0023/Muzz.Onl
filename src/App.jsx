@@ -19044,7 +19044,16 @@ const AAPL_BREAKDOWN = {
     },
     customers: {
       mainCustomers: 'Primarily consumer, small and mid-sized business, education, enterprise and government markets. Apple sells its products and resells third-party products in most major markets directly through its retail and online stores and its direct sales force, and sells services through its various service platforms in the same markets. It also uses indirect channels \u2014 third-party cellular network carriers and other resellers \u2014 for products and certain services.',
-      distributionNetwork: 'SEASONALITY AND LAUNCH TIMING: Apple has historically experienced higher net sales in the first fiscal quarter, in part on seasonal holiday demand. New product and service introductions can significantly affect net sales, cost of sales and operating expenses. Launch timing also moves sales into indirect channels, which fill with new inventory following a launch while channel inventory of the older product declines as the newer launch approaches. Net sales can also be affected when consumers and distributors merely anticipate an introduction.',
+      distributionNetwork: [
+        'DIRECT: retail stores, online stores and the direct sales force \u2014 40% of FY2025 net sales.',
+        'INDIRECT: third-party cellular network carriers and other resellers \u2014 60% of FY2025 net sales.',
+        'Services are sold in the same markets through Apple\u2019s various service platforms.',
+        'Apple also resells third-party products through its own direct channels.',
+        'SEASONALITY: historically higher net sales in the first fiscal quarter, in part on seasonal holiday demand.',
+        'Product and service introductions can significantly affect net sales, cost of sales and operating expenses.',
+        'Launch timing moves sales into indirect channels, which fill with new inventory following a launch while channel inventory of the older product declines as the newer launch approaches.',
+        'Net sales can also be affected when consumers and distributors merely ANTICIPATE an introduction \u2014 demand moves before the product does.',
+      ],
     },
     supplyChain: {
       preamble: 'Every FY2025 edit to the Supply of Components section points the same direction \u2014 the supply chain got riskier, and Apple wants that on the record. Four additions in one year to a section that had been near-static for a decade. Read alongside the tariff disclosure in MD&A, this reads as a coordinated legal hedge rather than incidental redrafting.',
