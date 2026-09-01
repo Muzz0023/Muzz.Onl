@@ -25100,6 +25100,7 @@ function MuzzApp() {
   const [numbersSubTab, setNumbersSubTab] = useState(null); // CN railGroups sub-tab nav
   const [moatSubTab, setMoatSubTab] = useState(null); // UMG moat sub-tab nav
   const [overviewSubTab, setOverviewSubTab] = useState(null); // coverage OVERVIEW sub-segment nav
+  const [riskSubTab, setRiskSubTab] = useState(null);         // coverage RISKS sub-tab (factors / cyber)
   const [coverageComingSoon, setCoverageComingSoon] = useState(null);            // ticker currently showing the COMING SOON flash (locked cards)
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
@@ -34421,8 +34422,7 @@ function MuzzApp() {
                       { id: 'income',    label: 'INCOME',    enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
                       { id: 'balance',   label: 'BALANCE',   enabled: !!(bd.numbers && bd.numbers.balanceSheet) },
                       { id: 'cashflow',  label: 'CASH FLOW', enabled: !!(bd.numbers && bd.numbers.cashFlow) },
-                      { id: 'risks',       label: 'RISKS',       enabled: !!(bd.risks && Object.keys(RISK_VIEW(bd.risks)).length) },
-                      { id: 'cyber',       label: 'CYBER',       enabled: RISK_HAS(bd.risks, 'cyber') },
+                      { id: 'risks',       label: 'RISKS',       enabled: !!(bd.risks && (Object.keys(RISK_VIEW(bd.risks)).length || RISK_HAS(bd.risks, 'cyber'))) },
                       { id: 'derivatives', label: 'DERIVATIVES', enabled: RISK_HAS(bd.risks, 'derivatives') },
                       { id: 'commitments', label: 'COMMITMENTS', enabled: RISK_HAS(bd.risks, 'commitments') },
                       { id: 'thesis',    label: 'THESIS',    enabled: !!bd.thesis },
@@ -38105,7 +38105,17 @@ function MuzzApp() {
                     // === RISKS TAB ===
                     const renderRisksTab = (only) => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations, tldr } = RISK_VIEW(bd.risks, only);
+                      // CYBER is a sub-tab of RISKS; DERIVATIVES and COMMITMENTS are top-level tabs.
+                      const riskTabs = [
+                        Object.keys(RISK_VIEW(bd.risks)).length ? { id: 'factors', label: 'RISK FACTORS' } : null,
+                        RISK_HAS(bd.risks, 'cyber') ? { id: 'cyber', label: 'CYBERSECURITY' } : null,
+                      ].filter(Boolean);
+                      const activeRiskTab = riskTabs.length ? (riskTabs.find(t => t.id === riskSubTab) || riskTabs[0]) : null;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations, tldr } = (only
+                        ? RISK_VIEW(bd.risks, only)
+                        : ((riskTabs.find(t => t.id === riskSubTab) || riskTabs[0] || {}).id === 'cyber'
+                            ? RISK_VIEW(bd.risks, 'cyber')
+                            : RISK_VIEW(bd.risks)));
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -38154,6 +38164,16 @@ function MuzzApp() {
 
                       return (
                         <div>
+                          {!only && riskTabs.length > 1 && (
+                            <div style={{display:'flex',gap:'6px',overflowX:'auto',paddingBottom:'4px',marginBottom:'10px'}}>
+                              {riskTabs.map(t => {
+                                const on = activeRiskTab && activeRiskTab.id === t.id;
+                                return (
+                                  <button key={t.id} onClick={() => setRiskSubTab(t.id)} style={{padding:'8px 14px',background:on?'rgba(245,158,11,0.16)':'rgba(0,0,0,0.35)',border:`0.5px solid ${on?'rgba(245,158,11,0.8)':'rgba(245,158,11,0.25)'}`,borderRadius:'4px',color:on?'rgba(245,158,11,0.95)':'rgba(224,234,255,0.6)',fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}}>// {t.label}</button>
+                                );
+                              })}
+                            </div>
+                          )}
                           {/* CN: SCORED RISK REGISTER (riskMatrix shape) */}
                           {riskMatrix && riskMatrix.rows && (
                             <>
@@ -44256,7 +44276,6 @@ function MuzzApp() {
                           {activeTab === 'balance'  && ((bd.numbers && bd.numbers.balanceSheet) ? renderBalanceTab() : renderEmptyTab('balance'))}
                           {activeTab === 'cashflow' && ((bd.numbers && bd.numbers.cashFlow) ? renderCashFlowTab() : renderEmptyTab('cash flow'))}
                           {activeTab === 'risks'       && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
-                          {activeTab === 'cyber'       && (RISK_HAS(bd.risks, 'cyber')       ? renderRisksTab('cyber')       : renderEmptyTab('cybersecurity'))}
                           {activeTab === 'derivatives' && (RISK_HAS(bd.risks, 'derivatives') ? renderRisksTab('derivatives') : renderEmptyTab('derivatives'))}
                           {activeTab === 'commitments' && (RISK_HAS(bd.risks, 'commitments') ? renderRisksTab('commitments') : renderEmptyTab('commitments'))}
                           {activeTab === 'thesis'   && (bd.thesis ? renderThesisTab() : renderEmptyTab('thesis'))}
