@@ -159,6 +159,19 @@ const RevenueCat = {
 // STARRY BACKGROUND COMPONENT
 // ============================================
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+// Share-class aliases. A company can trade under more than one ticker while the
+// coverage library is keyed on one of them, so normalise before any lookup.
+// GOOGL is Alphabet Class A (1 vote); GOOG is Class C (no vote).
+// BRK.A is Berkshire Class A; BRK.B is the Class B most holdings report.
+const normTicker = (t) => {
+  if (!t) return t;
+  const T = String(t).toUpperCase().trim();
+  if (T === 'GOOGL' || T === 'GOOG.L' || T === 'GOOG-L') return 'GOOG';
+  if (T === 'BRK.A' || T === 'BRK-A' || T === 'BRK/A' ||
+      T === 'BRK-B' || T === 'BRK/B' || T === 'BRKA' || T === 'BRKB') return 'BRK.B';
+  return t;
+};
+
 const localISODate = (d = new Date()) => { const x = d instanceof Date ? d : new Date(d); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
 
 const StarryBackground = ({ children }) => {
@@ -32287,7 +32300,7 @@ const COVERAGE_DATA = [
   { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste & Recycling',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: RSG_BREAKDOWN },
 
   // === CONGLOMERATE · USA ===
-  { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'BRK.B', tickerDisplay: 'BRK.B / BRK.A', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null , locked: true, progress: 'research' },
 
   // === RETAIL · USA ===
   { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: COST_BREAKDOWN },
@@ -32931,7 +32944,7 @@ function MuzzApp() {
       // Save this lookup (deduped), grouped by coverage industry where known
       setPerfSaved(prev => {
         if ((prev || []).some(p => p.ticker === ticker)) return prev;
-        const covMatch = (COVERAGE_DATA || []).find(cc => cc.ticker === ticker || (ticker === 'GOOGL' && cc.ticker === 'GOOG') || (ticker === 'BRK-B' && cc.ticker === 'BRK.B'));
+        const covMatch = (COVERAGE_DATA || []).find(cc => cc.ticker === normTicker(ticker));
         return [...(prev || []), { ticker, industry: covMatch ? covMatch.industry : 'Other' }];
       });
       setPerfData({
@@ -52621,7 +52634,7 @@ function MuzzApp() {
             const mcDim = 'rgba(245,158,11,0.55)';
             const mcGlow = 'rgba(245,158,11,0.25)';
             const SV_SHORT = { 'Warren Buffett':'BUFFETT', 'Li Lu':'LI LU', 'Gates Foundation Trust':'GATES TRUST', 'Bill Ackman':'ACKMAN', 'Guy Spier':'SPIER', 'Nick Sleep & Qais Zakaria':'SLEEP & ZAKARIA' };
-            const normT = (t) => t === 'GOOGL' ? 'GOOG' : t === 'BRK.A' ? 'BRK.B' : t;
+            const normT = normTicker;
             const fmtCap = (n) => {
               if (!n && n !== 0) return '—';
               if (n >= 1e12) return '$' + (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
@@ -52732,7 +52745,7 @@ function MuzzApp() {
                         <div style={{fontSize:'8px',color:svDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'7px'}}>// {inv.total && inv.holdings.length >= inv.total ? `ENTIRE PORTFOLIO · ${inv.total} HOLDINGS` : inv.total ? `TOP ${inv.holdings.length} OF ${inv.total} HOLDINGS` : `TOP ${inv.holdings.length} HOLDINGS`}{inv.currentPeriod ? ` · AS AT ${inv.currentPeriod}` : ''}</div>
                         <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
                           {(inv.holdings || []).map(t => {
-                            const covT = t === 'GOOGL' ? 'GOOG' : t;
+                            const covT = normTicker(t);
                             const cov = (COVERAGE_DATA || []).find(cc => cc.ticker === covT);
                             const inLibrary = !!cov;
                             const openable = cov && !cov.locked;
