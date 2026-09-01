@@ -34392,6 +34392,25 @@ function MuzzApp() {
                   {selected.breakdown ? (() => {
                     const bd = selected.breakdown;
                     // amber palette inherited from enclosing scope
+                    // Sections split out of RISKS into their own top-level tabs.
+                    // RISK_VIEW(risks) returns the RISKS tab's own sections;
+                    // RISK_VIEW(risks, 'cyber') returns only that split section.
+                    const RISK_SPLIT = {
+                      cyber:       ['cyber'],
+                      derivatives: ['derivatives'],
+                      commitments: ['commitmentsAndContingencies', 'purchaseObligations', 'contractualObligations', 'contingencies', 'obligations'],
+                    };
+                    const RISK_SPLIT_KEYS = RISK_SPLIT.cyber.concat(RISK_SPLIT.derivatives, RISK_SPLIT.commitments);
+                    const RISK_HAS = (r, group) => !!(r && RISK_SPLIT[group].some(k => r[k]));
+                    const RISK_VIEW = (r, only) => {
+                      const out = {};
+                      if (!r) return out;
+                      const keep = only ? RISK_SPLIT[only] : null;
+                      Object.keys(r).forEach(k => {
+                        if (keep ? keep.indexOf(k) >= 0 : RISK_SPLIT_KEYS.indexOf(k) < 0) out[k] = r[k];
+                      });
+                      return out;
+                    };
                     const TABS = [
                       { id: 'overview',  label: 'OVERVIEW',  enabled: !!bd.overview },
                       { id: 'trust',     label: 'TRUST',     enabled: !!bd.trust },
@@ -34402,7 +34421,10 @@ function MuzzApp() {
                       { id: 'income',    label: 'INCOME',    enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
                       { id: 'balance',   label: 'BALANCE',   enabled: !!(bd.numbers && bd.numbers.balanceSheet) },
                       { id: 'cashflow',  label: 'CASH FLOW', enabled: !!(bd.numbers && bd.numbers.cashFlow) },
-                      { id: 'risks',     label: 'RISKS',     enabled: !!bd.risks },
+                      { id: 'risks',       label: 'RISKS',       enabled: !!(bd.risks && Object.keys(RISK_VIEW(bd.risks)).length) },
+                      { id: 'cyber',       label: 'CYBER',       enabled: RISK_HAS(bd.risks, 'cyber') },
+                      { id: 'derivatives', label: 'DERIVATIVES', enabled: RISK_HAS(bd.risks, 'derivatives') },
+                      { id: 'commitments', label: 'COMMITMENTS', enabled: RISK_HAS(bd.risks, 'commitments') },
                       { id: 'thesis',    label: 'THESIS',    enabled: !!bd.thesis },
                     ];
                     const activeTab = coverageBreakdownTab;
@@ -38081,9 +38103,9 @@ function MuzzApp() {
                     );
 
                     // === RISKS TAB ===
-                    const renderRisksTab = () => {
+                    const renderRisksTab = (only) => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations, tldr } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring, riskSummary, riskMatrix, labor, riskManagement, obligations, tldr } = RISK_VIEW(bd.risks, only);
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -44233,7 +44255,10 @@ function MuzzApp() {
                           {activeTab === 'income'   && ((bd.numbers && bd.numbers.incomeStatement) ? renderIncomeTab() : renderEmptyTab('income'))}
                           {activeTab === 'balance'  && ((bd.numbers && bd.numbers.balanceSheet) ? renderBalanceTab() : renderEmptyTab('balance'))}
                           {activeTab === 'cashflow' && ((bd.numbers && bd.numbers.cashFlow) ? renderCashFlowTab() : renderEmptyTab('cash flow'))}
-                          {activeTab === 'risks'    && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
+                          {activeTab === 'risks'       && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
+                          {activeTab === 'cyber'       && (RISK_HAS(bd.risks, 'cyber')       ? renderRisksTab('cyber')       : renderEmptyTab('cybersecurity'))}
+                          {activeTab === 'derivatives' && (RISK_HAS(bd.risks, 'derivatives') ? renderRisksTab('derivatives') : renderEmptyTab('derivatives'))}
+                          {activeTab === 'commitments' && (RISK_HAS(bd.risks, 'commitments') ? renderRisksTab('commitments') : renderEmptyTab('commitments'))}
                           {activeTab === 'thesis'   && (bd.thesis ? renderThesisTab() : renderEmptyTab('thesis'))}
                         </div>
                       </div>
