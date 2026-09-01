@@ -25566,9 +25566,10 @@ const COVERAGE_DATA = [
   { ticker: 'WMT',   name: 'Walmart',                        industry: 'Retail',        country: 'United States', marketCap: 900000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'The largest retailer on earth — scale, supply chain and everyday low prices.', breakdown: WMT_BREAKDOWN },
   { ticker: 'HD',    name: 'The Home Depot',                 industry: 'Retail',        country: 'United States', marketCap: 350000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'North America’s home improvement leader — pro contractor demand and store density.', breakdown: HD_BREAKDOWN },
 
-  // === FOOD · USA ===
+  // === FOOD · USA & CANADA ===
   { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
   { ticker: 'MDLZ',  name: 'Mondelez International',          industry: 'Food',          country: 'United States', marketCap: 80000000000, marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Global snacking group — Oreo, Cadbury, Milka and Toblerone, with heavy cocoa cost exposure.', breakdown: MDLZ_BREAKDOWN },
+  { ticker: 'QSR',   name: 'Restaurant Brands International',  industry: 'Food',          country: 'Canada',        marketCap: 27000000000,   marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Burger King, Tim Hortons, Popeyes and Firehouse — a levered global franchisor.', breakdown: QSR_BREAKDOWN },
 
   // === CONSTRUCTION · USA ===
   { ticker: 'CAT',   name: 'Caterpillar',                  industry: 'Construction',       country: 'United States', marketCap: 460000000000,  marketCapDate: '28 Jun 2026', verdict: null, tier: 2, oneLiner: 'The world’s dominant maker of construction and mining equipment — a cyclical industrial giant riding the AI-infrastructure and data-center power buildout.', breakdown: CAT_BREAKDOWN },
@@ -25617,8 +25618,6 @@ const COVERAGE_DATA = [
   { ticker: 'TASE',  name: 'Tel Aviv Stock Exchange',          industry: 'Stock Exchanges',      country: 'Israel',        marketCap: 4700000000,    marketCapDate: '29 Jun 2026', verdict: null, tier: 2, oneLiner: 'Israel’s sole securities exchange — a listed toll-booth monopoly on Israeli capital markets.', breakdown: TASE_BREAKDOWN },
   // === AUTOMAKERS · ITALY ===
   { ticker: 'RACE',  name: 'Ferrari',                        industry: 'Automakers',    country: 'Italy',         marketCap: 70000000000,   marketCapDate: '1 Sep 2026', verdict: null, oneLiner: 'Luxury performance carmaker — deliberate scarcity and pricing power.', breakdown: null, locked: true },
-  // === RESTAURANTS · CANADA ===
-  { ticker: 'QSR',   name: 'Restaurant Brands International',  industry: 'Restaurants',   country: 'Canada',        marketCap: 27000000000,   marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Burger King, Tim Hortons, Popeyes and Firehouse — a levered global franchisor.', breakdown: QSR_BREAKDOWN },
 ];
 
 function MuzzApp() {
