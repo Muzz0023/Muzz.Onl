@@ -25519,9 +25519,198 @@ const QSR_BREAKDOWN = {
   },
 };
 
+
+// ════════════════════════════════════════════════════════════════
+// GOOG_BREAKDOWN — Alphabet Inc. Coverage data (Tier 2, drop 1 of n)
+// SOURCE: Muzz's supplied qualitative material — strategic overview,
+// corporate structure, culture and workforce, and the pending acquisitions
+// note.
+//
+// TABS LIVE: OVERVIEW, MOAT.
+// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+//
+// TIER 2 — no financial statements supplied yet. Tier 1 requires the
+// multi-year income statement, balance sheet and cash flow.
+//
+// VINTAGE IS MIXED — FLAGGED IN-APP. The strategic and workforce sections
+// read as FY2024 material: headcount is dated 31 Dec 2024 (183,323) and the
+// AI narrative tops out at Gemini 2.0 (2024). The acquisitions note is
+// FY2025: Wiz signed Mar 2025, Intersect Dec 2025, both expected to close
+// in 2026. Time-sensitive items should be re-checked against the current
+// filing.
+//
+// The 183,323 headcount is NOT built as a numbers series — a single dated
+// data point would render as a one-point chart. It goes in when a
+// multi-year series arrives.
+//
+// "facts" stat block deliberately unpopulated (needs founded/HQ/CEO, not
+// supplied). "leadership" not built — only Sundar Pichai is named, which is
+// not enough for the executives/board renderer.
+// ════════════════════════════════════════════════════════════════
+const GOOG_BREAKDOWN = {
+  overview: {
+    identity: {
+      name: 'Alphabet Inc.',
+      ticker: 'GOOG',
+      description: 'A holding company built around Google. The founding mission \u2014 organise the world\u2019s information and make it universally accessible and useful \u2014 still frames the business, but the stated purpose has shifted from helping people FIND answers to helping people GET THINGS DONE. Alphabet has described itself as AI-first since 2016, well ahead of most competitors, and now positions AI as a platform shift on the scale of the internet or mobile.',
+      industryPosition: [
+        'SEVEN PRODUCTS WITH 2+ BILLION USERS EACH: Search, Gmail, Maps, YouTube, Play Store, Chrome and Android. All seven now run on Gemini. That distribution is the asset \u2014 no other company can put a model in front of that many people on day one.',
+        'Search handles trillions of queries a year. YouTube spans entertainment, education and the creator economy. Google Cloud sells infrastructure, Vertex AI for model training and deployment, and pre-built Gemini agents for coding, documentation, testing and cybersecurity.',
+        'FULL AI STACK, OWNED END TO END: global data centres, custom silicon (TPUs), networks, and in-house research teams. Alphabet centralises its AI research across DeepMind and Google Research rather than scattering it through product groups.',
+        'Over $150 BILLION of R&D in the last five years. For scale, that is roughly Alphabet\u2019s entire market value a decade earlier, spent on research alone.',
+        'Gemini launched in 2023 as a natively multimodal model \u2014 text, images, audio, code and video \u2014 with Gemini 2.0 following in 2024. Prototypes named in the filing: Project Astra (a universal AI assistant) and Project Mariner (Gemini acting inside Chrome).',
+        'Alphabet states it prioritises user safety and privacy EVEN WHERE THAT REDUCES SHORT-TERM FINANCIAL GAIN, through secure-by-default and privacy-by-design architecture, auto-delete controls, on-device processing and account protections.',
+        'VINTAGE NOTE: the strategic and workforce material in this drop reads as FY2024 \u2014 headcount is dated 31 Dec 2024 and the AI narrative stops at Gemini 2.0. The acquisitions note is FY2025. Re-check anything time-sensitive against the current filing.',
+      ],
+    },
+    buffettFraming: {
+      headline: 'What you are actually buying',
+      points: [
+        'A PROFIT ENGINE WITH AN OPTION ATTACHED. Google Services and Google Cloud are the business; Other Bets is a portfolio of loss-making ventures held inside the same share. The holding-company structure exists precisely so the second cannot disrupt the first \u2014 but as an owner you fund both, and only one of them earns.',
+        'Larry Page and Sergey Brin\u2019s line still governs the culture: \u201cGoogle is not a conventional company. We do not intend to become one.\u201d Alphabet explicitly rejects incrementalism, arguing that in technology only revolutionary innovation survives. That is a statement about capital allocation as much as culture.',
+        'THE MOONSHOT RECORD IS REAL, NOT RHETORICAL. Android became the world\u2019s largest operating system, YouTube the largest video platform, Chrome the most-used browser \u2014 and AI itself began as a moonshot before becoming core to nearly every product. Waymo now runs fully autonomous paid ride-hailing in multiple cities.',
+        'THE COUNTERWEIGHT: those wins are the survivors of a much larger set of attempts, and the failures do not get their own paragraph in the annual report. Underwriting the culture means accepting that most of what it funds will not work, and being paid enough by the core business to make that acceptable.',
+        'The structure improves capital allocation in theory \u2014 autonomy, focus and dedicated leadership per unit \u2014 but it also means the disclosed consolidated margin UNDERSTATES what the core business earns, because Other Bets losses run through it. Read segment operating income before drawing conclusions about profitability.',
+      ],
+    },
+    operatingSegments: {
+      preamble: 'Alphabet is a holding company. Google \u2014 the main business \u2014 reports in two segments, with Other Bets and Alphabet-level activities alongside. The structure is designed to let Google operate efficiently as the profit engine while Other Bets innovates independently WITHOUT disrupting Google\u2019s operations.',
+      current: [
+        {
+          number: '01',
+          name: 'Google Services',
+          shortName: 'Services',
+          type: 'Reportable segment',
+          profitEngine: true,
+          featured: true,
+          detail: 'Search, YouTube, Ads, Android, Chrome, Maps, Hardware and Google Play. This is the profit engine and the source of essentially all group earnings. Ads is where the distribution converts to cash: AI now helps businesses generate images, optimise campaigns and target audiences, and AI Overviews sit directly in the Search results page.',
+        },
+        {
+          number: '02',
+          name: 'Google Cloud',
+          shortName: 'Cloud',
+          type: 'Reportable segment',
+          featured: true,
+          detail: 'Google Cloud Platform, Workspace (Gmail, Docs, Drive) and cybersecurity. Sells AI-optimised infrastructure, Vertex AI for building and deploying with Gemini, Imagen and Veo, and pre-built Gemini agents. The pending $32.0bn Wiz acquisition will land in this segment.',
+        },
+        {
+          number: '03',
+          name: 'Other Bets',
+          shortName: 'Other Bets',
+          type: 'Experimental ventures',
+          detail: 'Waymo (autonomous driving), Verily (health), Wing (drone delivery) and X (the moonshot factory). ALPHABET STATES PLAINLY THAT THESE LOSE MONEY TODAY and are held for long-term payoff. Waymo is the one furthest along \u2014 fully autonomous, paid ride-hailing, live in multiple cities.',
+        },
+        {
+          number: '04',
+          name: 'Alphabet-Level Activities',
+          shortName: 'Corporate',
+          type: 'Unallocated',
+          detail: 'Centralised AI research (DeepMind and Google Research), advanced computing infrastructure, and shared corporate functions supporting both Google and Other Bets. Costs here are not pushed down to the operating segments, so segment income and consolidated income will not reconcile directly.',
+        },
+      ],
+    },
+    customers: {
+      mainCustomers: 'Three distinct customer sets. CONSUMERS use the seven 2bn-user products largely free, and are monetised through advertising. ADVERTISERS and agencies buy access to that attention. ENTERPRISES and DEVELOPERS buy Google Cloud infrastructure, Workspace and AI tooling. The first group is the asset, the second pays for it, and the third is the growth story.',
+      distributionNetwork: [
+        'Search \u2014 trillions of queries a year; AI Overviews now answer complex questions directly in results.',
+        'YouTube \u2014 entertainment, education and the creator economy; Gemini drives recommendations and safety.',
+        'Android \u2014 the world\u2019s largest operating system, deeply integrated with Gemini for contextual help.',
+        'Chrome \u2014 the most-used browser; Project Mariner puts Gemini inside it as an acting agent.',
+        'Gmail, Maps and Google Play \u2014 each above two billion users in their own right.',
+        'Google Workspace \u2014 Gemini assists with writing, organising, visualisation and workflow.',
+        'Pixel devices \u2014 on-device Gemini Nano powering Pixel Screenshots and Pixel Studio.',
+        'Circle to Search \u2014 search anything on screen with a single gesture, turning the whole device surface into a query box.',
+        'NotebookLM and the Gemini App \u2014 long-document understanding and a standalone multimodal assistant.',
+      ],
+    },
+    reinvestment: {
+      headline: 'Over $150 billion of R&D in five years, and an owned full stack',
+      breakdown: [
+        {
+          label: 'Research & Development',
+          amount: '$150bn+ over 5 years',
+          detail: 'Funds new features, infrastructure and moonshot technology. This is the single largest recurring capital commitment in the business and the thing most directly at risk if advertising softens.',
+        },
+        {
+          label: 'AI infrastructure \u2014 owned end to end',
+          amount: 'Data centres, TPUs, networks',
+          detail: 'Alphabet operates a full AI stack rather than renting one: global data centres, custom silicon, networking and in-house research. It reports large reductions in computing cost and latency, particularly for AI Overviews in Search \u2014 which matters, because serving an AI answer costs more than serving ten blue links.',
+        },
+        {
+          label: 'Moonshots',
+          amount: 'Other Bets, loss-making by design',
+          detail: 'Waymo, Verily, Wing and X. Alphabet\u2019s stated position is that incrementalism does not survive in technology, so it funds a small number of large, long-dated bets. Quantum computing is named as the next frontier.',
+        },
+        {
+          label: 'Pending acquisitions',
+          amount: '$36.8bn signed, both closing 2026',
+          detail: 'Wiz at $32.0bn all-cash and Intersect at $4.8bn cash plus assumed debt. See the acquisitions section \u2014 this is a material departure from Alphabet\u2019s historic deal size.',
+        },
+      ],
+      note: 'The AI infrastructure line is the one to watch in the cash flow statement. An owned full stack means the cost of the AI transition lands in capital expenditure rather than in someone else\u2019s cloud bill, so free cash flow can diverge sharply from operating cash flow while the build-out runs.',
+    },
+    acquisitions: [
+      {
+        year: 'Mar 2025',
+        target: 'Wiz \u2014 cloud security platform',
+        price: '$32.0bn, all cash',
+        funding: 'All-cash transaction, subject to closing adjustments',
+        featured: true,
+        note: 'PENDING \u2014 expected to close in 2026, subject to customary closing conditions INCLUDING RECEIPT OF REGULATORY APPROVALS. Wiz will become part of the Google Cloud segment. At $32.0bn this is, by a wide margin, the largest acquisition Alphabet has ever attempted \u2014 several times the size of anything in its history, and a clear break from a company that historically bought small and built the rest. Two things follow: the regulatory approval condition is not a formality for a company already facing antitrust proceedings, and if it closes it will put a very large goodwill balance on a balance sheet that has never carried one.',
+      },
+      {
+        year: 'Dec 2025',
+        target: 'Intersect \u2014 data centre and energy infrastructure',
+        price: '$4.8bn cash',
+        funding: 'Cash, plus the assumption of debt',
+        featured: true,
+        note: 'PENDING \u2014 expected to close in the first half of 2026, subject to customary closing conditions. Note what it is: data centre and ENERGY infrastructure. Alphabet is buying upstream into the power and facilities layer that the AI build-out depends on, which says it expects the constraint on AI capacity to be physical rather than algorithmic. The assumption of debt means the headline $4.8bn understates the total consideration.',
+      },
+    ],
+  },
+  moat: {
+    preamble: 'Alphabet\u2019s moat is distribution first and technology second. Seven products with more than two billion users each is a position no competitor can replicate by building a better model \u2014 it has to be reached through a browser, an operating system, a video platform or a default search placement, all of which Alphabet owns. The AI question is whether that distribution transfers to a world where the answer, rather than the link, is the product.',
+    summary: {
+      headline: 'Distribution at a scale that cannot be rebuilt, attached to a business model that AI may reprice',
+      breakdown: [
+        {
+          division: 'Search and Ads',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'Trillions of queries a year and the default position on Chrome and Android. The risk is not losing queries \u2014 it is that AI Overviews answer them without a click, and an answer monetises differently from ten blue links. Alphabet is deliberately cannibalising the format that pays for everything.',
+        },
+        {
+          division: 'YouTube',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'The largest video platform, with a creator economy that competitors cannot buy. Gemini now drives recommendations and safety. Main risk is regulatory pressure on content and minors rather than competition.',
+        },
+        {
+          division: 'Android and Chrome',
+          moatStrength: 'Strong',
+          biggestRisk: 'The world\u2019s largest OS and most-used browser \u2014 these are the DISTRIBUTION, not the product. Their value is that they guarantee Gemini reaches users. The risk is that both are exactly what antitrust remedies target.',
+        },
+        {
+          division: 'Google Cloud',
+          moatStrength: 'Moderate',
+          biggestRisk: 'A genuine third place behind AWS and Azure, but growing and now the designated home for Wiz. Owning the full stack \u2014 TPUs included \u2014 is a real cost advantage in AI serving that the other two must buy from Nvidia. Still a price-competitive market with two larger rivals.',
+        },
+        {
+          division: 'Other Bets',
+          moatStrength: 'Weak',
+          biggestRisk: 'Loss-making by Alphabet\u2019s own description. Waymo is genuinely ahead in autonomous ride-hailing, but the rest is optionality, not a moat, and it consumes group earnings every year.',
+        },
+        {
+          division: 'AI research \u2014 DeepMind and Google Research',
+          moatStrength: 'Strong',
+          biggestRisk: 'Centralised rather than scattered, with an owned full stack from silicon to model. The moat is the combination of talent, compute and distribution in one company. The risk is that frontier model capability is proving easier to replicate than distribution \u2014 which argues the distribution, not the research, is the durable half.',
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
-  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 2, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
