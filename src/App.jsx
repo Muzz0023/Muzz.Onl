@@ -18887,10 +18887,430 @@ const TASE_BREAKDOWN = {
   },
 };
 
+
+// ════════════════════════════════════════════════════════════════
+// AAPL_BREAKDOWN — Apple Inc. Coverage data
+// SOURCE: Muzz's supplied 10-K material — Item 1 (Company Background,
+// Products, Services, Segments, Markets & Distribution, R&D, Seasonality,
+// Supply of Components, Intellectual Property), Item 3 (Legal Proceedings)
+// and the Commitments, Contingencies & Supply Concentrations note.
+// FY2025 filing, with FY2024 comparisons and post-filing developments.
+//
+// TABS LIVE: OVERVIEW, MOAT, RISKS.
+// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS —
+// no financial statements have been supplied yet.
+//
+// TIER BADGE DELIBERATELY NOT SET. Tier 1 in this app means a full
+// breakdown INCLUDING multi-year income statement, balance sheet and cash
+// flow. Setting Tier 1 before the financials exist would repeat exactly the
+// mismatch flagged at the start of this coverage build. The badge goes on
+// when the numbers land.
+//
+// CONTINGENCIES: the post-filing Epic items (Ninth Circuit 11 Dec 2025,
+// cert petition 21 May 2026, cert granted Jun 2026) post-date the 10-K and
+// are carried as supplied, with Muzz's own verify-before-relying caveat
+// preserved in the risk item text.
+// The "facts" stat block is NOT populated — its renderer expects founded /
+// HQ / CEO / incorporated, none of which are in this drop. Employees,
+// segment count and the channel split are carried in distribution instead.
+// ════════════════════════════════════════════════════════════════
+const AAPL_BREAKDOWN = {
+  overview: {
+    identity: {
+      coreIdentity: 'Apple designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, plus a range of related services. The fiscal year ends on the last Saturday of September and runs 52 or 53 weeks \u2014 FY2025 and FY2024 were both 52 weeks, FY2023 was 53. The company employs roughly 166,000 full-time equivalents and manages the business primarily on a geographic basis through five reportable segments. In FY2025, direct channels (retail stores, online stores and the direct sales force) accounted for 40% of net sales and indirect channels (carriers, resellers) for 60%.',
+      industryPosition: [
+        'Five hardware lines \u2014 iPhone (iOS), Mac (macOS), iPad (iPadOS), and Wearables, Home & Accessories \u2014 each running Apple-controlled operating systems.',
+        'Services spans advertising, AppleCare, cloud, digital content (App Store and subscriptions) and payment services (Apple Card, Apple Pay).',
+        'Customers are primarily consumer, small and mid-sized business, education, enterprise and government markets, across all five geographic segments.',
+        'Direct 40% / indirect 60% net sales split in FY2025 \u2014 Apple sells through its own retail and online stores and direct sales force, and through third-party carriers and resellers.',
+        'iPhone Air is a genuinely new SKU tier slotting between iPhone 17 and iPhone 17 Pro \u2014 the first real line extension since the SE.',
+        'FY2025 iPhone revenue grew 4% on higher net sales of Pro models: average selling price is doing the lifting, not units.',
+        'Wearables, Home & Accessories declined 4% in FY2025.',
+        'Historically higher net sales in Q1 on seasonal holiday demand; product launch timing moves net sales, cost of sales and operating expenses, and fills or drains indirect channel inventory.',
+      ],
+    },
+    buffettFraming: {
+      headline: '\u201cApple relies primarily on the skills of its people \u2014 not on its patents.\u201d',
+      body: 'The sentence worth circling in Item 1 has been there for years: Apple states that while IP ownership is an important factor in differentiating its business and success does depend in part on it, the company relies primarily on the innovative skills, technical competence and marketing abilities of its personnel. It adds that no single intellectual property right is solely responsible for protecting its products and services. That is an honest description of where the moat is not. Patents are not the barrier here \u2014 the barrier is the installed base, the switching cost of the ecosystem, and the brand.',
+      bottomLine: 'For durability analysis this matters twice over. Patents expire on a schedule you can model; ecosystems do not, so the \u201cno single right is solely responsible\u201d line is a genuine strength rather than boilerplate \u2014 there is no patent cliff to underwrite. But it also means the real durability question is not IP expiry at all. It is whether three separate legal systems succeed in loosening Apple\u2019s control over distribution and payment on its own platforms.',
+    },
+    businessLines: {
+      description: 'Apple reports revenue by product line and by Services. Each hardware line runs an Apple-owned operating system, which is the mechanism that turns hardware sales into a durable services annuity. Product and service announcements are concentrated around the fiscal calendar and materially affect quarterly net sales and channel inventory.',
+      lines: [
+        {
+          name: 'iPhone \u00b7 iOS',
+          description: 'Line as of FY2025: iPhone 17 Pro, iPhone Air, iPhone 17, iPhone 16, iPhone 16e. FY2025 revenue grew 4% due to higher net sales of Pro models. iPhone Air is the first new SKU tier since the SE, slotting between 17 and 17 Pro.',
+          revenueProfile: 'Largest line \u2014 ASP-led growth in FY2025',
+          highlight: true,
+        },
+        {
+          name: 'Mac \u00b7 macOS',
+          description: 'Laptops: MacBook Air, MacBook Pro. Desktops: iMac, Mac mini, Mac Studio, Mac Pro. FY2025 launches included MacBook Pro, Mac mini, iMac (Q1) and MacBook Air, Mac Studio (Q2).',
+          revenueProfile: 'Cyclical, refresh-driven',
+        },
+        {
+          name: 'iPad \u00b7 iPadOS',
+          description: 'Line: iPad Pro, iPad Air, iPad, iPad mini. FY2025 launches included iPad mini (Q1) and iPad Air and iPad (Q2).',
+          revenueProfile: 'Cyclical, refresh-driven',
+        },
+        {
+          name: 'Wearables, Home & Accessories',
+          description: 'Wearables now explicitly defined in Item 1 as smartwatches, wireless headphones and spatial computers \u2014 Apple Watch Series 11, SE 3 and Ultra 3 (watchOS); AirPods, AirPods Pro, AirPods Max, Beats; Apple Vision Pro (visionOS). Home: Apple TV 4K, now described as a media streaming AND gaming device (tvOS); HomePod and HomePod mini. Accessories: Apple-branded and third-party. Segment declined 4% in FY2025.',
+          revenueProfile: 'Declining 4% in FY2025',
+        },
+        {
+          name: 'Services',
+          description: 'Advertising (own platforms plus third-party licensing); AppleCare (fee-based support and repair, plus accidental damage or theft-and-loss cover by country and product); Cloud Services (sync and storage across Apple devices and Windows PCs); Digital Content \u2014 App Store (apps, books, music, video, games, podcasts) and subscriptions (Apple Arcade, Apple Fitness+, Apple Music, Apple News+, Apple TV); Payment Services (Apple Card, Apple Pay).',
+          revenueProfile: 'Highest-margin \u2014 the annuity on the installed base',
+          highlight: true,
+        },
+        {
+          name: 'Research & Development',
+          description: 'Apple states that because its industries are characterised by rapid technological advance, competing successfully depends heavily on ensuring a continual and timely flow of competitive products, services and technologies. It develops new technology to enhance existing offerings and expand the range through three routes: R&D, licensing of intellectual property, and acquisition of third-party businesses and technology.',
+          revenueProfile: 'Cost line \u2014 three routes: build, license, acquire',
+        },
+      ],
+    },
+    operatingSegments: {
+      asOf: 'FY2025',
+      description: 'Apple manages its business primarily on a geographic basis. All five segments sell similar hardware, software and services, but each is managed separately to align with the location of customers and distribution partners and the market dynamics of each region.',
+      segments: [
+        {
+          number: '01',
+          name: 'Americas',
+          shortName: 'AMERICAS',
+          type: 'Geographic',
+          detail: 'North and South America.',
+        },
+        {
+          number: '02',
+          name: 'Europe',
+          shortName: 'EUROPE',
+          type: 'Geographic',
+          detail: 'European countries, plus India, the Middle East and Africa.',
+        },
+        {
+          number: '03',
+          name: 'Greater China',
+          shortName: 'GREATER CHINA',
+          type: 'Geographic',
+          detail: 'China mainland, Hong Kong and Taiwan. Revenue declining, while the supply chain simultaneously flags Chinese-concentrated input dependence \u2014 two related exposures that do not offset each other.',
+        },
+        {
+          number: '04',
+          name: 'Japan',
+          shortName: 'JAPAN',
+          type: 'Geographic',
+          detail: 'Japan.',
+        },
+        {
+          number: '05',
+          name: 'Rest of Asia Pacific',
+          shortName: 'REST OF APAC',
+          type: 'Geographic',
+          detail: 'Australia, New Zealand, and Asian countries not captured in the other segments. New Zealand was named explicitly for the first time in FY2025 \u2014 housekeeping rather than a reorganisation; it was already inside the segment by implication.',
+        },
+      ],
+      operatingUnits: 'Five reportable segments in FY2025, unchanged in number from FY2024. The only definitional edit was the explicit naming of New Zealand within Rest of Asia Pacific.',
+    },
+    distribution: {
+      asOf: 'FY2025',
+      headlineStats: [
+        {
+          label: 'DIRECT CHANNELS',
+          value: '40%',
+          sub: 'of FY2025 net sales',
+        },
+        {
+          label: 'INDIRECT CHANNELS',
+          value: '60%',
+          sub: 'carriers and resellers',
+        },
+        {
+          label: 'EMPLOYEES',
+          value: '~166,000',
+          sub: 'full-time equivalent',
+        },
+        {
+          label: 'SEGMENTS',
+          value: '5',
+          sub: 'managed geographically',
+        },
+      ],
+    },
+    customers: {
+      mainCustomers: 'Primarily consumer, small and mid-sized business, education, enterprise and government markets. Apple sells its products and resells third-party products in most major markets directly through its retail and online stores and its direct sales force, and sells services through its various service platforms in the same markets. It also uses indirect channels \u2014 third-party cellular network carriers and other resellers \u2014 for products and certain services.',
+      distributionNetwork: 'SEASONALITY AND LAUNCH TIMING: Apple has historically experienced higher net sales in the first fiscal quarter, in part on seasonal holiday demand. New product and service introductions can significantly affect net sales, cost of sales and operating expenses. Launch timing also moves sales into indirect channels, which fill with new inventory following a launch while channel inventory of the older product declines as the newer launch approaches. Net sales can also be affected when consumers and distributors merely anticipate an introduction.',
+    },
+    supplyChain: {
+      preamble: 'Every FY2025 edit to the Supply of Components section points the same direction \u2014 the supply chain got riskier, and Apple wants that on the record. Four additions in one year to a section that had been near-static for a decade. Read alongside the tariff disclosure in MD&A, this reads as a coordinated legal hedge rather than incidental redrafting.',
+      categories: [
+        {
+          name: 'Sourcing and competition for supply',
+          points: [
+            'Most essential components are generally available from multiple sources; certain components are obtained from single or limited sources.',
+            'Apple competes for components with other participants in the smartphone, PC, tablet, wearables and accessories markets.',
+            'Many components, including multi-sourced ones, are at times subject to industry-wide shortage and significant commodity pricing fluctuations.',
+          ],
+        },
+        {
+          name: 'Custom components and new technology ramp',
+          points: [
+            'Apple uses some custom parts not commonly used by competitors; new products often use custom components available from only one source.',
+            'Initial capacity constraints may exist on new technology until supplier yields mature or manufacturing capacity increases.',
+            'Single-sourced custom components with one qualified supplier is a fragile arrangement BY DESIGN. It buys the differentiation that makes Apple silicon and custom displays work \u2014 the cost is that any one supplier\u2019s balance sheet becomes Apple\u2019s operating risk.',
+          ],
+        },
+        {
+          name: 'NEW IN FY2025 \u00b7 Trade restrictions and rare earths',
+          points: [
+            'New sentence added in FY2025: trade restrictions can increase cost or limit availability of Apple\u2019s products, and of the components, rare earths and other raw materials that go into them.',
+            '\u201cRare earths\u201d is the specific word to notice \u2014 Apple has never named them in Item 1 before.',
+            'Rare earth processing is heavily concentrated in China, and China restricted exports of several during 2025. So a company with a declining Greater China revenue segment is simultaneously flagging Chinese-concentrated input dependence. The two exposures are related but they do not offset: losing Chinese customers does not reduce reliance on Chinese inputs.',
+          ],
+        },
+        {
+          name: 'NEW IN FY2025 \u00b7 Supplier failure and consolidation',
+          points: [
+            'Supplier failure added: suppliers may simply fail. FY2025 is the first year Apple has said this.',
+            'Industry consolidation added as a distinct risk.',
+            'Suppliers may choose to concentrate on common components rather than Apple-customised ones, further limiting Apple\u2019s ability to obtain quantities on commercially reasonable terms.',
+            'Alternative-source difficulty added: Apple may not be able to identify or source sufficient quantities from an alternative supplier.',
+          ],
+        },
+        {
+          name: 'Supply agreements',
+          points: [
+            'Apple has agreements for many components but may not be able to extend or renew them on similar terms (FY2024 wording: \u201cno guarantee\u201d; FY2025 wording: \u201cmay not be able to\u201d).',
+            'May not obtain sufficient quantities in a timely manner.',
+            'FOR THE MODEL: this is not a line item, it is a variance argument. It does not lower base-case owner earnings, but it widens the distribution around gross margin and argues for a wider margin of safety rather than a lower forecast. Products gross margin already fell from 37.2% to 36.8% on tariff costs while the mix improved \u2014 the first visible dollar of what this section describes.',
+          ],
+        },
+      ],
+    },
+  },
+  moat: {
+    preamble: 'Apple holds a broad collection of IP rights across hardware, software and services \u2014 patents, designs, copyrights, trademarks, trade secrets and other forms, in the U.S. and various foreign countries. It regularly files patent, design, copyright and trademark applications on innovations arising from its hardware, software and service research, development, design and marketing, and is currently pursuing thousands of applications worldwide. The accumulated portfolio is large, no single right is solely responsible for protecting Apple\u2019s products and services, and duration is believed adequate relative to the expected lives of those products and services. But Apple itself states it relies PRIMARILY on the innovative skills, technical competence and marketing abilities of its personnel \u2014 which is the tell about where the real barrier sits.',
+    summary: {
+      headline: 'The moat is the installed base and the brand \u2014 and three legal systems are working on the part Apple controls.',
+      breakdown: [
+        {
+          division: 'Ecosystem & switching costs',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'None identified in the filing \u2014 this is the durable barrier, and it has no expiry schedule.',
+          featured: true,
+        },
+        {
+          division: 'Brand',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'Reputational spillover from the Epic bad-faith finding and the DOJ monopolisation case.',
+        },
+        {
+          division: 'Patent portfolio',
+          moatStrength: 'Moderate',
+          biggestRisk: 'Apple says it relies primarily on personnel, not IP. No single right is load-bearing \u2014 a strength for durability, but it means patents are not the barrier.',
+        },
+        {
+          division: 'Distribution & payment control',
+          moatStrength: 'Weak',
+          biggestRisk: 'EU DMA steering orders, the Epic injunction, and the DOJ case all attack the same chokepoint. Judicially endorsed in two jurisdictions.',
+        },
+        {
+          division: 'Third-party IP dependency',
+          moatStrength: 'Weak',
+          biggestRisk: 'FY2025 wording shifted from products \u201cdesigned to include\u201d third-party IP to technology that \u201cmust be licensed from\u201d third parties \u2014 a concession of dependency. No guarantee licences are obtainable on reasonable terms, or at all.',
+        },
+        {
+          division: 'Supply chain',
+          moatStrength: 'Weak',
+          biggestRisk: 'Single-sourced custom components, newly disclosed supplier-failure and consolidation risk, and rare earth exposure concentrated in China.',
+        },
+      ],
+      buffettTakeaways: [
+        'The IP section is the one place Apple tells you where the moat is NOT. Patents expire on a schedule you can model; ecosystems do not. There is no patent cliff to underwrite here.',
+        'The FY2025 third-party IP rewording is the only edit in that section with teeth. \u201cDesigned to include\u201d is voluntary and architectural. \u201cMust be licensed from\u201d is compulsory and ongoing. Same underlying fact, but the new phrasing concedes dependency rather than describing a design choice.',
+        'Paired with the Item 1A addition that machine learning and AI create new infringement exposure \u2014 training data and reproduction of copyrighted material in outputs \u2014 this looks like Apple Intelligence bringing a category of licensing risk that did not previously sit in the hardware business.',
+        'Dropping \u201caccessories\u201d from the scope of IP holdings is almost certainly compression rather than a signal, but it sits alongside Wearables, Home & Accessories declining 4% in FY2025. Two small things pointing the same way in one filing; probably coincidence, cheap to watch.',
+        'FRAMING: none of the legal exposure is a line item. It is an argument about the durability of Services margin. Apple earns 75.4% Services gross margin partly because it controls distribution and payment on its own platforms. If a terminal value leans on that margin holding where it is, the legal section is the reason to test a lower one.',
+      ],
+    },
+  },
+  risks: {
+    riskFactors: {
+      tldr: 'Three separate legal systems are working to loosen Apple\u2019s control of distribution and payment on its own platforms, and the supply chain section gained four new risk admissions in a single year. Base case is that App Store economics compress gradually rather than break.',
+      categories: [
+        {
+          name: 'Regulatory \u00b7 EU Digital Markets Act',
+          items: [
+            {
+              risk: 'Article 5(4) \u2014 fined and under appeal',
+              meaning: 'Commission opened a formal noncompliance investigation on 25 Mar 2024 into how developers may communicate and promote offers to end users for App Store apps, and how they may conclude contracts with those users. On 23 Apr 2025 it fined Apple \u20ac500 million and issued a cease-and-desist order requiring removal of technical and commercial restrictions preventing developers steering users to alternative distribution channels. Apple has appealed and maintains it complies. \u20ac500m is immaterial to Apple\u2019s financials in isolation.',
+            },
+            {
+              risk: 'Article 6(4) \u2014 preliminary findings issued, the asymmetric tail',
+              meaning: 'Second investigation opened 24 Jun 2024 into whether Apple\u2019s new contractual requirements for third-party developers and app marketplaces violate the DMA. Preliminary findings issued 23 Apr 2025. If a violation is finalised: cease-and-desist plus fines of up to 10% of annual worldwide net sales \u2014 on $416bn that is a theoretical $41bn ceiling. Ceilings are almost never applied and the actual Art 5(4) fine came in at a rounding error, so treat this as a tail scenario rather than a base case. But it is the ONLY line in the entire filing where a single regulatory outcome could exceed a full year of net income.',
+              critical: true,
+            },
+            {
+              risk: 'Breach of a cease-and-desist order',
+              meaning: 'If a cease-and-desist order is breached, the Commission may impose further fines.',
+            },
+          ],
+        },
+        {
+          name: 'Regulatory \u00b7 DOJ antitrust (United States)',
+          items: [
+            {
+              risk: 'Monopolisation claim in smartphones',
+              meaning: 'Filed 21 Mar 2024 in the U.S. District Court for the District of New Jersey by the DOJ plus a number of state and district attorneys general. Alleges monopolisation or attempted monopolisation in \u201cperformance smartphones\u201d and \u201csmartphones\u201d, seeking equitable relief. Various parallel civil suits in state and federal courts allege similar violations and seek monetary damages and nonmonetary relief. Apple believes it has substantial defences and intends to defend vigorously. As at the 10-K: no trial date, no ruling, no reserve disclosed.',
+            },
+          ],
+        },
+        {
+          name: 'Litigation \u00b7 Epic Games',
+          items: [
+            {
+              risk: 'The 2021 injunction and the 2025 contempt finding',
+              meaning: 'In 2021 the California District Court found certain App Review Guideline provisions violated California\u2019s UCL and enjoined Apple from prohibiting developers including buttons, external links or calls to action directing customers to non-IAP purchasing mechanisms, on U.S. storefronts of the iOS and iPadOS App Stores. Apple implemented a compliance plan on 16 Jan 2024 and moved to narrow or vacate on 30 Sep 2024. On 30 Apr 2025 the court found Apple in violation and enjoined it from imposing ANY commission or fee on purchases made outside an app, from restricting how developers guide consumers to out-of-app purchases, and from otherwise interfering with a consumer\u2019s choice. The motion to narrow or vacate was denied the same day.',
+              critical: true,
+            },
+            {
+              risk: 'Criminal contempt referral',
+              meaning: 'Apple was referred to the U.S. Attorney for the Northern District of California for a determination whether criminal contempt proceedings are appropriate. This is the item with no financial number attached and the most reputational weight. A referral is not a charge and the U.S. Attorney may do nothing. But a court finding that Apple acted in bad faith, affirmed on appeal, is the kind of fact that shapes how the DOJ monopolisation case and the EU proceedings are argued. It raises the probability of adverse outcomes elsewhere more than it creates direct cost.',
+            },
+            {
+              risk: 'POST-FILING \u00b7 Ninth Circuit, 11 Dec 2025 \u2014 a partial win read as a loss',
+              meaning: 'The panel unanimously affirmed the civil contempt finding based on Apple\u2019s wilful violations, affirmed several sanctions and modified or reversed others in part, and remanded. It also affirmed denial of Apple\u2019s request to vacate or modify the injunction and denied reassignment to a different judge. BUT it found the trial judge went too far in barring any commission at all, since the original injunction only outlawed PROHIBITIVE commissions \u2014 Apple should be allowed to charge some fees on linked transactions, limited and tied to the costs of the services Apple provides in facilitating steering links. On remand the parties will litigate the rate. The commercial question is now \u201cwhat rate\u201d, not \u201cwhether\u201d \u2014 a materially better position than the 10-K describes. The filing captured the worst moment of this case rather than its resolution.',
+            },
+            {
+              risk: 'POST-FILING \u00b7 Supreme Court certiorari granted',
+              meaning: 'Panel rehearing denied. Apple filed a petition for certiorari on 21 May 2026 challenging the civil contempt finding, and the U.S. Supreme Court granted certiorari in June 2026. The legal question is narrow: Apple argues the Ninth Circuit permits contempt for violating the SPIRIT of an injunction where other circuits do not; Epic contends the Ninth Circuit found the commission violated the injunction\u2019s TEXT because it had a prohibitive effect on steering, and that no circuit conflict exists. VERIFY CURRENT POSTURE BEFORE RELYING ON THIS \u2014 the cert grant is recent and the remand proceedings run in parallel.',
+            },
+            {
+              risk: 'The standard that constrains the model',
+              meaning: 'The court\u2019s framing is that fees on linked transactions must be tied to the COST of services Apple provides in facilitating the link. That is cost-plus reasoning, not value-capture reasoning. Apple\u2019s 27% link-out commission was set by reference to what IAP earns; a cost-tied fee is a different and much smaller number. If that framing survives, the U.S. link-out channel becomes close to margin-neutral for Apple.',
+            },
+            {
+              risk: 'Size the exposure before worrying about it',
+              meaning: 'Services was $109bn in FY2025 at 75.4% gross margin. App Store commissions are a portion of that; U.S. link-out purchases are a portion of those, and only for developers who bother to implement external links. The direct revenue at risk is real but not large. The reason to care is precedent: the EU has ordered the same steering freedom under the DMA, and the argument that App Store economics rest on a contractual chokepoint rather than a value exchange is now judicially endorsed in two jurisdictions.',
+            },
+          ],
+        },
+        {
+          name: 'Intellectual property',
+          items: [
+            {
+              risk: 'Third-party licensing dependency \u2014 wording hardened in FY2025',
+              meaning: 'Many of Apple\u2019s products and services include technology or IP that MUST BE LICENSED from third parties (FY2024 wording: products \u201care designed to include\u201d third-party IP). It may be necessary in future to seek or renew licences covering various aspects of Apple\u2019s products, processes and services. Apple has generally obtained such licences on commercially reasonable terms in the past, but there is no guarantee they can be obtained in future on reasonable terms, or at all.',
+            },
+            {
+              risk: 'AI and machine learning infringement exposure',
+              meaning: 'Item 1A adds that machine learning and AI create new infringement exposure \u2014 training data and reproduction of copyrighted material in outputs. Paired with the hardened third-party licensing language, this looks like Apple Intelligence bringing a category of licensing risk that did not previously sit in the hardware business.',
+            },
+          ],
+        },
+        {
+          name: 'Supply chain',
+          items: [
+            {
+              risk: 'Single and limited-source components',
+              meaning: 'Certain components come from single or limited sources, and new products often use custom components available from only one source. Suppliers may fail, consolidate, or choose to concentrate on common components rather than Apple-customised ones \u2014 all three added as new disclosures in FY2025.',
+            },
+            {
+              risk: 'Trade restrictions and rare earths',
+              meaning: 'New FY2025 sentence: trade restrictions can increase cost or limit availability of products and of the components, rare earths and other raw materials that go into them. Rare earth processing is concentrated in China, which restricted exports of several during 2025.',
+            },
+            {
+              risk: 'Already visible in the numbers',
+              meaning: 'Products gross margin fell from 37.2% to 36.8% on tariff costs while the mix improved \u2014 the first visible dollar of what the supply chain section describes.',
+            },
+          ],
+        },
+      ],
+    },
+    purchaseObligations: {
+      asOf: '27 September 2025',
+      unit: 'M USD',
+      description: 'Unconditional purchase obligations \u2014 off-balance-sheet commitments requiring the future purchase of goods or services, primarily supplier arrangements, licensed intellectual property and content, and distribution rights. The table covers obligations with a remaining term in excess of one year as of 27 September 2025. Total committed: $13,308m.',
+      schedule: [
+        {
+          year: 2026,
+          value: 4752,
+        },
+        {
+          year: 2027,
+          value: 3708,
+        },
+        {
+          year: 2028,
+          value: 1981,
+        },
+        {
+          year: 2029,
+          value: 1306,
+        },
+        {
+          year: 2030,
+          value: 788,
+        },
+      ],
+      takeaways: [
+        {
+          label: 'Total',
+          text: '$13,308m committed, including $773m in the \u201cthereafter\u201d bucket beyond FY2030 (not shown on the chart, which runs to FY2030).',
+        },
+        {
+          label: 'Front-loaded',
+          text: '$4,752m falls due in FY2026 alone \u2014 36% of the total \u2014 and $8,460m, or 64%, within two years. The tail runs down quickly.',
+        },
+        {
+          label: 'Composition',
+          text: 'Supplier arrangements, licensed intellectual property and content, and distribution rights. The licensed-content component is the one to watch alongside the hardened third-party IP language in Item 1.',
+        },
+        {
+          label: 'Scale',
+          text: 'Immaterial against Apple\u2019s scale \u2014 the entire multi-year commitment is a fraction of a single year\u2019s operating cash flow. This is disclosure, not leverage.',
+        },
+      ],
+    },
+    commitmentsAndContingencies: {
+      summary: 'Apple is subject to various legal proceedings and claims arising in the ordinary course of business that have not been fully resolved. The outcome of litigation is inherently uncertain. In management\u2019s opinion there was NOT at least a reasonable possibility that Apple may have incurred a material loss, or a material loss greater than a recorded accrual, concerning loss contingencies for asserted legal and other claims. Certain matters were settled in Q4 FY2025 \u2014 not individually or in aggregate material to financial condition or operating results.',
+      categories: [
+        {
+          name: 'Unconditional purchase obligations',
+          definition: 'Off-balance-sheet commitments requiring the future purchase of goods or services.',
+          kosCase: '$13,308m total as of 27 Sep 2025, with a remaining term in excess of one year. Primarily supplier arrangements, licensed IP and content, and distribution rights. Front-loaded: $4,752m due FY2026, $773m in the thereafter bucket.',
+        },
+        {
+          name: 'Legal contingencies \u2014 management assessment',
+          definition: 'Whether a material loss beyond any recorded accrual was reasonably possible.',
+          kosCase: 'Management\u2019s opinion: not at least a reasonable possibility of a material loss, or a material loss greater than a recorded accrual. Note this assessment sits in the same filing that discloses a \u20ac500m DMA fine, a zero-commission injunction, and a criminal contempt referral.',
+        },
+        {
+          name: 'Ordinary-course settlements',
+          definition: 'Matters resolved during the period.',
+          kosCase: 'Certain matters settled in Q4 FY2025 \u2014 not individually or in aggregate material to financial condition or operating results. Apple\u2019s prior note placed these in late 2024; the FY2025 filing places them in Q4 FY2025.',
+        },
+        {
+          name: 'Supply concentrations',
+          definition: 'Legacy note heading carried forward in the filing.',
+          kosCase: 'No separate content in this note \u2014 the heading is legacy. The substance sits in Item 1, \u201cSupply of Components\u201d, and is captured in the OVERVIEW tab under supply chain.',
+        },
+        {
+          name: 'Standard caveat',
+          definition: 'Apple\u2019s own framing of contingency uncertainty.',
+          kosCase: 'Outcomes are inherently uncertain; a resolution above management\u2019s expectations in any reporting period could materially adversely affect results for that period.',
+          critical: true,
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: ORCL_BREAKDOWN },
