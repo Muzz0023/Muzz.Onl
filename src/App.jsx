@@ -25639,6 +25639,372 @@ const GOOG_BREAKDOWN = {
           description: 'The graveyard is the honest part of the record. LOON (stratospheric internet balloons, shut 2021 as unsustainable). MAKANI (airborne wind energy kites, shut 2020). EVERYDAY ROBOTS (shut 2023, folded elsewhere). CHRONICLE (cybersecurity, folded into Google Cloud). SANDBOXAQ (spun out entirely). GOOGLE FIBER (moved into Google Services, no longer a Bet). Also outside Other Bets: Stadia, Google+, Google Glass and Boston Dynamics, which was bought and sold. Read this list alongside the $40bn of cumulative losses \u2014 it is what a high failure tolerance actually costs.',
         },
       ],
+      tables: [
+        {
+          title: 'WAYMO \u00b7 AUTONOMOUS DRIVING',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet\u2019s self-driving technology company. Level 4 autonomous systems for robotaxi fleets and, previously, trucking. Began as Google\u2019s Self-Driving Car Project in 2009; spun out as Waymo in 2016.',
+            ],
+            [
+              'Mission',
+              '"Make it safe and easy for people and things to move around." Reduce road deaths, expand mobility, build a scalable autonomous transport platform.',
+            ],
+            [
+              'Business model',
+              'Robotaxi rides today. Licensing the Waymo Driver to other companies is the long-term plan. Autonomous logistics is a further option.',
+            ],
+            [
+              'Markets',
+              'Phoenix (largest fully driverless zone) \u00b7 San Francisco (paid robotaxi service) \u00b7 Los Angeles (expanding) \u00b7 Austin (testing and early service).',
+            ],
+            [
+              'Fleet',
+              'Jaguar I-PACE EVs as the main fleet. Chrysler Pacifica Hybrid as legacy. Custom Class 8 trucks for Waymo Via \u2014 currently paused.',
+            ],
+            [
+              'Technology \u2014 the Waymo Driver',
+              'Long and short-range lidar, high-accuracy radar, 360-degree cameras, an AI perception stack, HD maps with real-time updating, and simulation at enormous scale.',
+            ],
+            [
+              'Miles',
+              'Over 20 million miles on public roads. Over 20 BILLION miles in simulation \u2014 a thousand times more simulated than real, which is the whole strategy.',
+            ],
+            [
+              'Safety approach',
+              'Redundancy across sensors, compute and braking. A publicly released Safety Case Framework. Real-time fallback behaviour.',
+            ],
+            [
+              'Strengths',
+              'The strongest technical track record of any autonomous vehicle company. Fully driverless commercial service with no safety driver. The largest real-world dataset in the industry.',
+            ],
+            [
+              'Competitors',
+              'Cruise (GM) \u2014 paused after safety issues. Tesla FSD \u2014 consumer-owned, not robotaxi-grade L4. Zoox (Amazon) \u2014 still testing. Motional (Hyundai/Aptiv) \u2014 under financial pressure.',
+            ],
+            [
+              'Challenges',
+              'Regulatory approval is slow and city-by-city. High capital cost in sensors, compute and fleet. Public trust and safety perception. Competition from cheaper L2 systems.',
+            ],
+            [
+              'Why Alphabet keeps it',
+              'Transportation is a $10 trillion-plus market. If autonomy is solved first, the platform economics could be monopoly-like. Heavy synergy with Alphabet AI and Maps.',
+            ],
+            [
+              'Status (2025)',
+              'The strongest AV company in the world. Fully driverless in multiple cities. Unit economics improving but STILL UNPROFITABLE. Investment continues but disciplined \u2014 team reductions through 2023\u201324 for efficiency.',
+            ],
+          ],
+          note: 'THE ONE THAT MIGHT WORK. Waymo is the only Other Bet with a live commercial service and a credible path to mattering at Alphabet scale. It is also the reason the Other Bets loss widened 69% in FY2025 \u2014 scaling a physical fleet is capital-hungry in a way software moonshots are not. If you are assigning any value to Other Bets, essentially all of it should sit here.',
+          emphasis: [
+            12,
+          ],
+        },
+        {
+          title: 'VERILY \u00b7 HEALTHCARE AND LIFE SCIENCES',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet\u2019s healthcare and life-sciences subsidiary. Uses AI, software, data science and hardware for disease prevention, diagnostics and care delivery. Originated inside Google X, spun out 2015.',
+            ],
+            [
+              'Mission',
+              '"Make healthcare more data-driven, precise and proactive." Evidence-driven medical tools, analytics and population health.',
+            ],
+            [
+              'Business model',
+              'SaaS health platforms sold to hospitals and insurers. Clinical trial management services. Licensing of health analytics. Pharma and biotech partnerships.',
+            ],
+            [
+              'Key products',
+              'Verily Study Platform (end-to-end clinical trial software) \u00b7 Baseline (large-scale medical studies) \u00b7 Verily Viewpoint (payer analytics) \u00b7 Onduo (virtual diabetes and chronic care, originally a Sanofi JV) \u00b7 Study Watch and biomarker hardware.',
+            ],
+            [
+              'Customers',
+              'Pharmaceutical companies, health insurers, large hospital systems, government and public health bodies, academic researchers.',
+            ],
+            [
+              'Partnerships',
+              'Mayo Clinic \u00b7 Dexcom \u00b7 Sanofi \u00b7 FDA collaborations \u00b7 the NIH All of Us Research Program \u00b7 Johnson & Johnson (past).',
+            ],
+            [
+              'Advantages',
+              'Alphabet\u2019s AI and ML stack. Ability to analyse very large health datasets. Sensor and hardware engineering. Genuine expertise in running large clinical trials.',
+            ],
+            [
+              'Weaknesses',
+              'Healthcare adoption is slow and heavily regulated. Many moonshot projects cancelled. High R&D burn. Hard to prove ROI to hospitals and insurers \u2014 which is the commercial problem, not the technical one.',
+            ],
+            [
+              'Why Alphabet keeps it',
+              'Healthcare is a $10\u201312 trillion global market. Synergy with Google Cloud healthcare. Gemini applied to biology and diagnostics. Long-term recurring revenue potential.',
+            ],
+            [
+              'Status (2025)',
+              'Leaner and more focused after 2022\u201324 restructuring. Shifting from moonshots toward profitable enterprise health platforms. Revenue growing but private. STILL LOSS-MAKING, with a clearer business model than before.',
+            ],
+            [
+              'Discontinued',
+              'Glucose-sensing smart contact lens (2018) \u00b7 Verb Surgical, the robot-surgery JV with Johnson & Johnson (ended 2020) \u00b7 COVID programmes scaled down post-2022 \u00b7 various experimental hardware wound down.',
+            ],
+          ],
+        },
+        {
+          title: 'CALICO \u00b7 LONGEVITY AND AGING',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'California Life Company. Founded 2013 to treat aging as a biological problem and extend healthy lifespan. Staffed with elite biologists and computational scientists.',
+            ],
+            [
+              'Mission',
+              '"Tackle aging as a biological problem and develop therapies that allow people to live healthier for longer."',
+            ],
+            [
+              'Business model',
+              'Drug development partnerships, principally with AbbVie. Future therapy revenue if candidates reach market. Long-term licensing of discoveries.',
+            ],
+            [
+              'Research areas',
+              'Cell aging and senescence \u00b7 DNA repair and genomic stability \u00b7 epigenetics and biological clocks \u00b7 cancer biology \u00b7 protein homeostasis \u00b7 regenerative biology and stem cells \u00b7 metabolism and mitochondrial function \u00b7 immunosenescence.',
+            ],
+            [
+              'Platforms',
+              'The AbbVie\u2013Calico joint R&D pipeline. A computational biology platform using AI and Google-scale compute. High-throughput drug discovery labs. Longitudinal aging studies in model organisms.',
+            ],
+            [
+              'Partnerships',
+              'ABBVIE is the flagship \u2014 over $1bn of research investment since 2014, renewed in 2021 and running through 2030. Also the Broad Institute, UCSF scientists, and past work with the Buck Institute.',
+            ],
+            [
+              'Leadership',
+              'Art Levinson, Chairman \u2014 former Genentech CEO, AND CHAIRMAN OF APPLE\u2019S BOARD. Hal Barron was CEO until 2022. Daphne Koller was a founding scientist, now CEO of Insitro.',
+            ],
+            [
+              'Advantages',
+              'Alphabet compute and AI infrastructure. Ability to run biology experiments at unusual scale. Top-tier biotech leadership from Genentech, GSK and Amgen. AbbVie gives access to clinical trial capability.',
+            ],
+            [
+              'Weaknesses',
+              'Biotech timelines run 10\u201315 years to approval. Historically burning over $500m a year. Minimal public transparency. NO COMMERCIAL PRODUCTS AFTER TWELVE YEARS.',
+            ],
+            [
+              'Status (2025)',
+              'Still active, smaller headcount after reshuffling. Focused on the clinical pipeline rather than open-ended biology. AbbVie partnership ongoing. Several aging-related drugs in trials.',
+            ],
+            [
+              'Discontinued',
+              'Some early-stage moonshots stopped, including organism lifespan screening. Internal restructuring 2022\u201324. Part of the research team merged into other Alphabet biology efforts, including Isomorphic.',
+            ],
+          ],
+          note: 'THE GOVERNANCE LINK WORTH KNOWING: Art Levinson chairs Calico and also chairs Apple\u2019s board. Twelve years and an estimated $6bn-plus of cumulative spend with no commercial product is the clearest single illustration of what a high failure tolerance costs \u2014 and of why Buffett declines to bet on the invention of the next big thing.',
+          emphasis: [
+            6,
+            8,
+          ],
+        },
+        {
+          title: 'WING \u00b7 DRONE DELIVERY',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet\u2019s drone-delivery company. Autonomous aircraft plus a logistics network delivering small packages \u2014 food, groceries, medicine, parcels \u2014 in minutes. Launched from X.',
+            ],
+            [
+              'Mission',
+              '"Make delivery faster, cleaner, safer and more efficient through autonomous aircraft."',
+            ],
+            [
+              'Business model',
+              'Delivery fees paid by retailers, pharmacies and food outlets. Partnerships with logistics providers and supermarkets. Potential future licensing of flight-control and fleet technology.',
+            ],
+            [
+              'Technology',
+              'Autonomous drones with vertical take-off and precise hover delivery \u00b7 automated docks and loading pads \u00b7 the Wing Delivery Network, cloud-connected drones routing themselves \u00b7 UAS Traffic Management, effectively air-traffic control for drones \u00b7 quiet electric propulsion.',
+            ],
+            [
+              'Performance',
+              'Delivery in 5\u201310 minutes \u00b7 payload 1\u20131.5kg \u00b7 speed up to ~110 km/h \u00b7 zero direct emissions.',
+            ],
+            [
+              'Where it operates',
+              'AUSTRALIA IS THE LARGEST MARKET \u2014 Canberra, Logan (Queensland), Gold Coast, Ipswich. United States \u2014 Virginia and Dallas\u2013Fort Worth. Finland \u2014 Helsinki, limited.',
+            ],
+            [
+              'Partners',
+              'Walmart and Walgreens in the US \u00b7 DoorDash in Australia \u00b7 Coles and Woolworths pilots \u00b7 local restaurants, bakeries and pharmacies.',
+            ],
+            [
+              'Advantages',
+              'Hundreds of thousands of real deliveries completed. Strong regulatory relationships in Australia and the US. Advanced AI routing. Notably quieter than competitor drones. Low operating cost versus ground delivery.',
+            ],
+            [
+              'Weaknesses',
+              'Payload limited to small items. Airspace regulation evolves slowly. Needs dense clusters of customers and partners to work economically. Weather sensitive.',
+            ],
+            [
+              'Why Alphabet keeps it',
+              'Last-mile delivery is a trillion-dollar logistics market. Drones are cheaper than vans for small parcels. Synergy with Maps, AI routing and autonomous systems.',
+            ],
+            [
+              'Status (2025)',
+              'Active and scaling in Australia, where adoption is fastest. Expanding US partnerships through the Walmart network. Limited Finnish operations. Wing Delivery Network built for global rollout.',
+            ],
+            [
+              'Long-term goal',
+              'Build the first autonomous drone-delivery airline. A million-plus deliveries a day. Full integration with retail supply chains. An air-traffic-control system for all low-altitude drones.',
+            ],
+          ],
+          note: 'WORTH NOTING FOR AN AUSTRALIAN INVESTOR: Australia is Wing\u2019s largest market by some distance, with four operating cities and Coles and Woolworths pilots \u2014 both of which are already in this coverage library. The regulatory relationship with CASA is arguably Wing\u2019s single most valuable asset.',
+        },
+        {
+          title: 'X \u00b7 THE MOONSHOT FACTORY',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet\u2019s semi-secret R&D lab (X Development LLC), dedicated to breakthrough technologies that could become billion-dollar businesses.',
+            ],
+            [
+              'Mission',
+              '"Create radical new technologies to solve the world\u2019s hardest problems \u2014 not just incremental improvements."',
+            ],
+            [
+              'How it works',
+              'Engineers, scientists, AI researchers and futurists in rapid prototyping cycles. IDEAS ARE KILLED QUICKLY IF THEY CANNOT REACH 10x IMPACT. Graduated projects become standalone Alphabet companies.',
+            ],
+            [
+              'Graduates',
+              'Waymo \u00b7 Wing \u00b7 Verily \u00b7 Intrinsic \u2014 and Loon and Makani, both dissolved. Dandelion (geothermal home heating) was spun out and is now independent.',
+            ],
+            [
+              'MINERAL \u2014 agriculture',
+              'AI and robotics for agriculture. Field-roaming robots collecting plant-level data; ML tracking crop growth, soil health and nutrients. Goal: "give every plant a digital identity and health profile." Customers are farmers, agribusiness and seed companies. STATUS 2025: still inside X, not yet spun out.',
+            ],
+            [
+              'TIDAL \u2014 ocean',
+              'Underwater robotics and AI monitoring ocean ecosystems and fish farms. Submersible camera systems tracking fish health, behaviour and population. Oceans supply over 20% of global protein and fish farms lose billions to disease. STATUS 2025: active, partnered with major aquaculture firms in Norway and Japan.',
+            ],
+            [
+              'TAARA \u2014 laser internet',
+              'Free Space Optics: invisible laser beams carrying internet data through air. "Wireless fibre" delivering 20Gbps-plus across rivers, valleys and rural areas where laying fibre is uneconomic. Key markets Kenya, Congo and India. STATUS 2025: active, with commercial links operating in multiple countries.',
+            ],
+            [
+              'Why it matters',
+              'A long-term innovation engine outside the core. It builds future Other Bets. Even one success is worth billions. And it attracts world-class engineers who join specifically for radical work \u2014 the talent argument is real and hard to quantify.',
+            ],
+          ],
+          note: 'X IS THE PIPELINE, AND ITS RECORD IS THE WHOLE ARGUMENT IN MINIATURE. It produced Waymo, Wing and Verily \u2014 and Loon and Makani, both shut. The kill-fast discipline is genuine, but note that none of the graduates has yet become a profitable business, twenty years in. Taara is the most commercially advanced of the current three.',
+        },
+        {
+          title: 'INTRINSIC \u00b7 INDUSTRIAL ROBOTICS SOFTWARE',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet subsidiary building AI-driven software that makes industrial robots easier to program, deploy and use. Born inside X, graduated to its own Other Bet in 2021.',
+            ],
+            [
+              'Mission',
+              '"Democratize robotics." Make robots accessible to businesses without deep robotics expertise.',
+            ],
+            [
+              'What it does',
+              'AI-assisted robot programming through demonstration and high-level instruction rather than manual coding \u00b7 computer vision and perception so robots understand parts and environments \u00b7 automatic motion planning \u00b7 simulation for virtual testing before deployment \u00b7 a unified integration layer across robots, sensors and hardware from many manufacturers.',
+            ],
+            [
+              'Problem it solves',
+              'Robots need complex expensive coding; automation takes months to integrate; robotics engineers are scarce and costly; robots cannot adapt to variation; factories run fragmented hardware. Intrinsic addresses each with software rather than hardware.',
+            ],
+            [
+              'Target users',
+              'Manufacturing companies, automation integrators, robot developers and factories \u2014 automotive, electronics, metal fabrication, logistics and consumer goods.',
+            ],
+            [
+              'Partnerships',
+              'Siemens, from 2023\u201324, for industrial automation and AI. Works with robotic arms from multiple OEMs.',
+            ],
+            [
+              'Long-term vision',
+              'Become the "Android of robotics" \u2014 a universal operating system for industrial robots. Alphabet sees a trillion-dollar automation opportunity as factories shift to AI-driven systems.',
+            ],
+            [
+              'Status (2025)',
+              'Active but EARLY-STAGE AND PRE-PROFIT. Revenue small but growing through automation integrator partnerships.',
+            ],
+          ],
+          note: 'The strategic logic is the strongest of any Other Bet \u2014 Alphabet has done exactly this once before, with Android, by giving away a software layer to commoditise the hardware beneath it. Whether that works when the hardware is a $100,000 robot arm rather than a phone is the open question.',
+        },
+        {
+          title: 'ISOMORPHIC LABS \u00b7 AI DRUG DISCOVERY',
+          columns: [
+            'ATTRIBUTE',
+            'DETAIL',
+          ],
+          rows: [
+            [
+              'What it is',
+              'Alphabet subsidiary focused on AI-driven drug discovery and biological modelling. Founded 2021, spun out of DeepMind\u2019s scientific breakthroughs, principally AlphaFold.',
+            ],
+            [
+              'Leadership',
+              'CEO Demis Hassabis \u2014 who is ALSO CEO of Google DeepMind. That dual role is unusual and tells you how directly this is meant to commercialise DeepMind science.',
+            ],
+            [
+              'What it does',
+              'AI-driven drug design using Gemini and AlphaFold-derived systems to design molecules that bind to disease targets \u00b7 protein structure prediction \u00b7 disease pathway modelling \u00b7 screening millions of compounds far faster than lab methods \u00b7 simulation before wet-lab testing \u00b7 collaborative R&D with pharma.',
+            ],
+            [
+              'Problem it solves',
+              'Drug discovery takes 10\u201315 years and costs $2\u20133bn per approved drug, with high failure rates. AI can compress early stages, predict failures sooner, and integrate fragmented biological datasets.',
+            ],
+            [
+              'Partnerships',
+              'ELI LILLY and NOVARTIS \u2014 multi-year, multi-hundred-million-dollar drug discovery deals. Note that Alphabet\u2019s own CFO, Anat Ashkenazi, came from Eli Lilly.',
+            ],
+            [
+              'Revenue model',
+              'Mostly milestone-based payments from pharma partnerships. NO COMMERCIAL DRUGS YET; the AI platform is still under development.',
+            ],
+            [
+              'Long-term vision',
+              'Become the AI engine behind most new drugs in a $1.5 trillion pharmaceutical industry.',
+            ],
+            [
+              'Why Alphabet cares',
+              'AI plus biology may be as large a frontier as cloud computing or autonomy. AlphaFold proved AI can solve real biological problems; Isomorphic is the commercialisation arm of that proof. One approved drug would be worth billions.',
+            ],
+            [
+              'Status (2025)',
+              'Active, early-to-mid development.',
+            ],
+          ],
+          note: 'THE CLEANEST TEST OF THE WHOLE MODEL. Isomorphic is Alphabet trying to convert frontier AI research directly into a business, with the same person running both the research lab and the commercial arm. If the build-don\u2019t-buy thesis works anywhere, it should work here \u2014 and if it does not, that is informative about the other six.',
+        },
+      ],
     },
     operatingSegments: {
       preamble: 'Alphabet is a holding company. Google \u2014 the main business \u2014 reports in two segments, with Other Bets and Alphabet-level activities alongside. The structure is designed to let Google operate efficiently as the profit engine while Other Bets innovates independently WITHOUT disrupting Google\u2019s operations.',
@@ -26379,6 +26745,328 @@ const GOOG_BREAKDOWN = {
       ],
       note: 'ARITHMETIC ERROR IN THE SUPPLIED GROUP TOTAL, flagged not corrected. The group Class B figure of 77,166,728 is SMALLER THAN LARRY PAGE\u2019S HOLDING ALONE (389,051,160) \u2014 Page is 5.0x the stated group total, which is impossible for a subtotal that includes him. Page plus Brin plus Doerr comes to EXACTLY 774,166,728, which is 77,166,728 with one digit restored after the leading 7. An independent check confirms it: Page\u2019s 389.05m Class B carry 3,891m votes at a stated 27.1%, implying about 14,356m total votes; Class B of roughly 822m shares gives 8,216m votes, leaving about 6,140m Class A votes, which is consistent with Alphabet\u2019s Class A count. The 774,166,728 figure reconciles; 77,166,728 does not. Carried as supplied per the standing rule, but do not use the group Class B number.',
       takeaway: 'CLASS A OWNERSHIP IS NOT VOTING POWER, and the Schmidt-versus-Vanguard comparison is the cleanest proof in the table. Vanguard holds 493,782,758 Class A shares for 3.4% of the vote. Eric Schmidt holds 56,921,959 shares \u2014 8.7 TIMES FEWER \u2014 for the same 3.4%, because 47.5m of his are Class B. A former chief executive who left the board in 2017 still carries more voting weight than BlackRock. Meanwhile the sitting CEO holds 227,560 Class A shares and no Class B at all: Sundar Pichai runs Alphabet with a rounding error of its votes. Insiders control 53.9% in total, of which Page and Brin are 52.3%. And the structure is self-perpetuating \u2014 Class B converts to Class A only on sale, and the founders do not sell.',
+    },
+    deepBench: {
+      note: 'The full corporate map underneath Alphabet, from Workbook 1. Two things are worth noticing before reading it. FIRST, how much of the map is ACQUIRED rather than built: YouTube, DoubleClick, Waze, Nest, Fitbit, Looker, Mandiant, Kaggle and reCAPTCHA are all purchases, and several of them are load-bearing. SECOND, the length of the discontinued list \u2014 Loon, Makani, Everyday Robots, Stadia, Google+, Boston Dynamics and Motorola Mobility, the last two bought and then sold. A high failure tolerance is the stated policy; this is what it produces.',
+      columns: [
+        {
+          title: 'Search, Ads & Monetisation',
+          people: [
+            {
+              name: 'Google Search',
+              unit: 'The core franchise \u00b7 $224.5bn of FY2025 revenue',
+            },
+            {
+              name: 'Google Ads',
+              unit: 'Advertiser-facing buying platform',
+            },
+            {
+              name: 'Google Marketing Platform',
+              unit: 'Enterprise campaign management \u00b7 built on DoubleClick',
+            },
+            {
+              name: 'AdSense',
+              unit: 'Publisher network \u2014 the Google Network line, in decline and the DOJ ad tech target',
+            },
+            {
+              name: 'AdMob',
+              unit: 'In-app mobile advertising',
+            },
+            {
+              name: 'Google Analytics',
+              unit: 'Measurement \u2014 the data layer advertisers depend on',
+            },
+            {
+              name: 'Google Tag Manager',
+              unit: 'Tag deployment and tracking infrastructure',
+            },
+          ],
+        },
+        {
+          title: 'Consumer Products',
+          people: [
+            {
+              name: 'YouTube, LLC',
+              unit: 'ACQUIRED 2006 for ~$1.65bn \u00b7 $40.4bn of ad revenue in FY2025 alone',
+            },
+            {
+              name: 'Android',
+              unit: 'ACQUIRED 2005 for ~$50m \u00b7 world\u2019s largest operating system',
+            },
+            {
+              name: 'Google Play',
+              unit: 'App distribution \u00b7 the business already repriced by the Epic settlement',
+            },
+            {
+              name: 'Google Maps',
+              unit: 'Mapping and local search \u00b7 also the routing layer under Waymo and Wing',
+            },
+            {
+              name: 'Google Earth',
+              unit: 'Geospatial imagery',
+            },
+            {
+              name: 'Google Chrome',
+              unit: 'Most-used browser \u00b7 the distribution the DOJ remedies target',
+            },
+            {
+              name: 'ChromeOS / Chromebook',
+              unit: 'Lightweight OS, strong in education',
+            },
+            {
+              name: 'Google Photos',
+              unit: 'Consumer storage \u00b7 feeds Google One subscriptions',
+            },
+            {
+              name: 'Google Drive',
+              unit: 'Storage \u00b7 consumer and Workspace',
+            },
+            {
+              name: 'Google Meet',
+              unit: 'Video conferencing \u00b7 competes with Zoom and Teams',
+            },
+            {
+              name: 'Google Docs / Workspace',
+              unit: 'Productivity suite \u00b7 inside the Cloud segment',
+            },
+          ],
+        },
+        {
+          title: 'Hardware \u2014 Made by Google',
+          people: [
+            {
+              name: 'Google Pixel',
+              unit: 'Phones \u00b7 strategic showcase for on-device Gemini Nano, not a volume play',
+            },
+            {
+              name: 'Nest',
+              unit: 'ACQUIRED 2014 \u00b7 smart home, merged into Google Home',
+            },
+            {
+              name: 'Fitbit',
+              unit: 'ACQUIRED 2021 \u00b7 wearables and health tracking',
+            },
+            {
+              name: 'Google Home / Assistant',
+              unit: 'Smart speakers and voice \u00b7 now being absorbed into Gemini',
+            },
+            {
+              name: 'Stadia',
+              unit: 'DISCONTINUED \u00b7 cloud gaming, shut down',
+            },
+          ],
+        },
+        {
+          title: 'Google Cloud',
+          people: [
+            {
+              name: 'Google Cloud Platform',
+              unit: 'Compute, storage, networking \u00b7 $58.7bn segment revenue FY2025',
+            },
+            {
+              name: 'Firebase',
+              unit: 'ACQUIRED 2014 \u00b7 mobile and web app development backend',
+            },
+            {
+              name: 'Apigee',
+              unit: 'ACQUIRED 2016 \u00b7 API management',
+            },
+            {
+              name: 'Looker',
+              unit: 'ACQUIRED 2019 for ~$2.6bn \u00b7 business intelligence and analytics',
+            },
+            {
+              name: 'Mandiant',
+              unit: 'ACQUIRED 2022 for ~$5.4bn \u00b7 threat intelligence and incident response',
+            },
+            {
+              name: 'Chronicle',
+              unit: 'Was an Other Bet \u00b7 cybersecurity, folded into Cloud',
+            },
+            {
+              name: 'Wiz \u2014 PENDING',
+              unit: '$32.0bn all-cash, expected to close 2026 \u00b7 would be the largest ever by far',
+            },
+          ],
+        },
+        {
+          title: 'AI & Research',
+          people: [
+            {
+              name: 'Google DeepMind',
+              unit: 'ACQUIRED 2014 \u00b7 AlphaGo, AlphaFold, Gemini \u00b7 sits in Alphabet-level activities, which lost $16.8bn in FY2025',
+            },
+            {
+              name: 'Google Research',
+              unit: 'Central research organisation, merged direction with DeepMind',
+            },
+            {
+              name: 'Gemini',
+              unit: 'The model family now running all seven 2bn-user products',
+            },
+          ],
+        },
+        {
+          title: 'Other Bets \u2014 active',
+          people: [
+            {
+              name: 'Waymo',
+              unit: 'Autonomous driving \u00b7 the most advanced and only commercial Other Bet',
+            },
+            {
+              name: 'Verily',
+              unit: 'Healthcare and life sciences \u00b7 spun out of X in 2015',
+            },
+            {
+              name: 'Calico',
+              unit: 'Longevity and aging \u00b7 founded 2013 \u00b7 chaired by Art Levinson',
+            },
+            {
+              name: 'Wing',
+              unit: 'Drone delivery \u00b7 Australia is the largest market',
+            },
+            {
+              name: 'X \u2014 the Moonshot Factory',
+              unit: 'X Development LLC \u00b7 produces future Bets \u00b7 Mineral, Tidal, Taara',
+            },
+            {
+              name: 'Intrinsic',
+              unit: 'Industrial robotics software \u00b7 graduated from X in 2021',
+            },
+            {
+              name: 'Isomorphic Labs',
+              unit: 'AI drug discovery \u00b7 founded 2021 out of AlphaFold \u00b7 led by Demis Hassabis',
+            },
+          ],
+        },
+        {
+          title: 'Investment arms',
+          people: [
+            {
+              name: 'GV (Google Ventures)',
+              unit: 'Venture capital arm \u00b7 early-stage investing',
+            },
+            {
+              name: 'CapitalG',
+              unit: 'Growth-stage / private-equity style fund \u00b7 later-stage positions',
+            },
+            {
+              name: 'Non-marketable securities',
+              unit: 'The balance sheet consequence: $68.7bn at FY2025, up $30.7bn in one year \u2014 and the source of the paper gain in FY2025 earnings',
+            },
+          ],
+        },
+        {
+          title: 'Acquisitions still operated',
+          people: [
+            {
+              name: 'YouTube',
+              unit: '2006 \u00b7 ~$1.65bn \u00b7 the single best acquisition in the company\u2019s history',
+            },
+            {
+              name: 'DoubleClick',
+              unit: '2008 \u00b7 ~$3.1bn \u00b7 the backbone of display advertising \u2014 and central to the DOJ ad tech case',
+            },
+            {
+              name: 'Waze',
+              unit: '2013 \u00b7 ~$1.1bn \u00b7 community navigation, run alongside Maps',
+            },
+            {
+              name: 'Nest',
+              unit: '2014 \u00b7 ~$3.2bn \u00b7 smart home',
+            },
+            {
+              name: 'Fitbit',
+              unit: '2021 \u00b7 ~$2.1bn \u00b7 wearables',
+            },
+            {
+              name: 'Looker',
+              unit: '2019 \u00b7 analytics for Cloud',
+            },
+            {
+              name: 'Mandiant',
+              unit: '2022 \u00b7 security for Cloud',
+            },
+            {
+              name: 'Kaggle',
+              unit: '2017 \u00b7 data science community and competition platform',
+            },
+            {
+              name: 'reCAPTCHA',
+              unit: '2009 \u00b7 bot detection, used across the web',
+            },
+            {
+              name: 'Postini',
+              unit: '2007 \u00b7 email security, folded into Workspace',
+            },
+            {
+              name: 'BumpTop',
+              unit: '2010 \u00b7 desktop interface technology',
+            },
+            {
+              name: 'Titan Aerospace',
+              unit: '2014 \u00b7 solar drones, absorbed into X',
+            },
+            {
+              name: 'Songza',
+              unit: '2014 \u00b7 music curation \u2192 Google Play Music \u2192 YouTube Music',
+            },
+            {
+              name: 'character.ai',
+              unit: '2024 \u00b7 $2.7bn \u00b7 licence plus hiring, booked as a business combination',
+            },
+          ],
+        },
+        {
+          title: 'Discontinued, sold or spun out',
+          people: [
+            {
+              name: 'Loon',
+              unit: 'SHUT 2021 \u00b7 stratospheric internet balloons \u00b7 not commercially sustainable',
+            },
+            {
+              name: 'Makani',
+              unit: 'SHUT 2020 \u00b7 airborne wind energy kites \u00b7 commercialisation too distant',
+            },
+            {
+              name: 'Everyday Robots',
+              unit: 'SHUT 2023 \u00b7 general-purpose robots \u00b7 folded into other divisions',
+            },
+            {
+              name: 'Stadia',
+              unit: 'SHUT 2023 \u00b7 cloud gaming',
+            },
+            {
+              name: 'Google+',
+              unit: 'SHUT 2019 \u00b7 social network',
+            },
+            {
+              name: 'Boston Dynamics',
+              unit: 'SOLD \u00b7 bought 2013, sold to SoftBank 2017, now Hyundai',
+            },
+            {
+              name: 'Motorola Mobility',
+              unit: 'SOLD \u00b7 bought 2012 for $12.5bn, sold to Lenovo 2014 for ~$2.9bn \u2014 the largest acquisition Alphabet ever made, and it was reversed',
+            },
+            {
+              name: 'SandboxAQ',
+              unit: 'SPUN OUT 2022 \u00b7 quantum and AI, now independent',
+            },
+            {
+              name: 'Google Fiber',
+              unit: 'MOVED \u00b7 no longer an Other Bet, now inside Google Services',
+            },
+            {
+              name: 'Chronicle',
+              unit: 'MERGED \u00b7 into Google Cloud',
+            },
+            {
+              name: 'Dandelion',
+              unit: 'SPUN OUT \u00b7 geothermal home heating, now independent',
+            },
+          ],
+        },
+      ],
     },
     customers: {
       mainCustomers: 'Three distinct customer sets. CONSUMERS use the seven 2bn-user products largely free, and are monetised through advertising. ADVERTISERS and agencies buy access to that attention. ENTERPRISES and DEVELOPERS buy Google Cloud infrastructure, Workspace and AI tooling. The first group is the asset, the second pays for it, and the third is the growth story.',
@@ -43547,6 +44235,39 @@ function MuzzApp() {
                                   );
                                 })}
                               </div>
+
+                              {/* DEEP ATTRIBUTE TABLES — one per business line where supplied */}
+                              {businessLines.tables && businessLines.tables.length > 0 && businessLines.tables.map((tb, ti) => (
+                                <div key={ti} style={{marginTop:'12px'}}>
+                                  {tb.title && <SectionHeading>// {tb.title}</SectionHeading>}
+                                  <div style={{overflowX:'auto',marginBottom:'6px'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                          {(tb.columns || []).map((c, ci) => (
+                                            <th key={ci} style={{textAlign:'left',padding:'7px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',whiteSpace:'nowrap',width: ci === 0 ? '190px' : 'auto'}}>{c}</th>
+                                          ))}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {(tb.rows || []).map((r, ri) => {
+                                          const hot = (tb.emphasis || []).indexOf(ri) >= 0;
+                                          return (
+                                            <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: hot ? 'rgba(245,158,11,0.08)' : 'transparent'}}>
+                                              {r.map((cell, ci) => (
+                                                <td key={ci} style={{textAlign:'left',padding:'7px 9px',color: hot ? amber : (ci === 0 ? amberDim : 'rgba(224,234,255,0.8)'),fontWeight: ci === 0 ? 600 : 400,letterSpacing:'0.2px',lineHeight:1.5,verticalAlign:'top'}}>{cell}</td>
+                                              ))}
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  {tb.note && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>{tb.note}</div>
+                                  )}
+                                </div>
+                              ))}
                             </>
                           )}
 
