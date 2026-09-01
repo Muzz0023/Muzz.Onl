@@ -43091,7 +43091,9 @@ function MuzzApp() {
                       const { facts, identity, competitors, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment, shareholders, deepBench } = bd.overview;
                       const OV_TAB_DEFS = [
                         { id:'company',    label:'COMPANY',    keys:['identity','headquarters','buffettFraming'] },
-                        { id:'business',   label:'BUSINESS',   keys:['businessLines','operatingSegments','customers','distribution','supplyChain','reinvestment'] },
+                        { id:'segments',   label:'OPERATING SEGMENTS', keys:['operatingSegments'] },
+                        { id:'lines',      label:'BUSINESS LINES', keys:['businessLines'] },
+                        { id:'business',   label:'BUSINESS',   keys:['customers','distribution','supplyChain','reinvestment'] },
                         { id:'operations', label:'OPERATIONS', keys:['rawMaterials','rawMaterialsCategories','properties','facilityMatrix','bottlerAgreements','bottlingInvestments','topBottlers','acquisitions','reece'] },
                         { id:'leadership', label:'LEADERSHIP', keys:['leadership','deepBench'] },
                         { id:'competitors', label:'COMPETITORS', keys:['competitors'] },
