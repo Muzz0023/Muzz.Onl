@@ -25648,6 +25648,162 @@ const GOOG_BREAKDOWN = {
         },
       ],
     },
+    competitors: {
+      preamble: 'Alphabet competes on every front simultaneously, and its own framing of why that is dangerous is the most useful line in the section: users are ONE CLICK AWAY from an alternative. Nobody is locked into Search. That is a company with enormous distribution telling you the distribution is not contractual \u2014 it is habitual, and habits change faster than contracts. Read this against the antitrust register: the default placement deals that convert habit into position are exactly what regulators are dismantling.',
+      middleLabel: 'ALPHABET PRODUCT',
+      majorCompetitors: [
+        'Microsoft',
+        'Amazon',
+        'Meta',
+        'Apple',
+        'OpenAI',
+        'Anthropic',
+        'TikTok / ByteDance',
+        'Netflix',
+        'Samsung',
+        'Baidu',
+        'Yandex',
+        'Booking Holdings',
+      ],
+      categories: [
+        {
+          category: 'Search & Discovery',
+          icon: '\u1f50d',
+          featured: true,
+          rows: [
+            {
+              type: 'General search',
+              ourProduct: 'Google Search',
+              competitors: 'Bing, DuckDuckGo, Baidu, Yandex',
+            },
+            {
+              type: 'Vertical search \u2014 the real threat',
+              ourProduct: 'Google Search',
+              competitors: 'Amazon (products), Booking/Expedia (travel), Indeed/LinkedIn (jobs), WebMD (health). Users bypass Google ENTIRELY and search on the destination \u2014 no click to lose, because there was never a click.',
+            },
+            {
+              type: 'AI assistants',
+              ourProduct: 'Gemini, Google Assistant',
+              competitors: 'ChatGPT, Siri, Alexa. AI chatbots challenge traditional search BEHAVIOUR, not just search share \u2014 a different kind of problem.',
+            },
+            {
+              type: 'Social discovery',
+              ourProduct: 'Google Search',
+              competitors: 'Meta, TikTok, X, Reddit \u2014 users go there for recommendations instead of searching.',
+            },
+          ],
+        },
+        {
+          category: 'Advertising',
+          icon: '\u1f4e3',
+          featured: true,
+          rows: [
+            {
+              type: 'Digital advertising',
+              ourProduct: 'Search Ads, YouTube Ads, Google Network',
+              competitors: 'Meta, Amazon Ads, TikTok, Snapchat, programmatic networks',
+            },
+            {
+              type: 'Traditional advertising',
+              ourProduct: 'All Google surfaces',
+              competitors: 'TV, radio, newspapers, magazines, billboards \u2014 advertisers split budgets across formats, so digital share is not a closed contest.',
+            },
+          ],
+        },
+        {
+          category: 'Cloud & Enterprise',
+          icon: '\u2601',
+          featured: false,
+          rows: [
+            {
+              type: 'Cloud infrastructure',
+              ourProduct: 'Google Cloud Platform',
+              competitors: 'AWS, Microsoft Azure \u2014 both larger. Google is a genuine third.',
+            },
+            {
+              type: 'Productivity software',
+              ourProduct: 'Google Workspace',
+              competitors: 'Microsoft 365, Slack, Zoom, Dropbox',
+            },
+          ],
+        },
+        {
+          category: 'AI Models & Platforms',
+          icon: '\u1f9e0',
+          featured: true,
+          rows: [
+            {
+              type: 'Foundation models',
+              ourProduct: 'Gemini, Vertex AI',
+              competitors: 'OpenAI, Anthropic, Meta, Amazon, Microsoft, and startups \u2014 competing directly on models, agents and developer tools.',
+            },
+          ],
+        },
+        {
+          category: 'Content, Platforms & Hardware',
+          icon: '\u1f4f1',
+          featured: false,
+          rows: [
+            {
+              type: 'Video',
+              ourProduct: 'YouTube',
+              competitors: 'Netflix, TikTok, Twitch, Disney+, Roku \u2014 competing for attention AND ad dollars.',
+            },
+            {
+              type: 'App stores & content',
+              ourProduct: 'Google Play',
+              competitors: 'Apple App Store, Amazon, Meta, TikTok \u2014 users spend time and money in ecosystems Google does not control.',
+            },
+            {
+              type: 'Consumer hardware',
+              ourProduct: 'Pixel, Pixel Watch, Nest',
+              competitors: 'Apple, Samsung, Microsoft',
+            },
+          ],
+        },
+      ],
+      note: 'Alphabet lists what it must do to compete: constantly improve AI, Search quality, relevance and accuracy; keep users who can switch instantly; deliver measurable results and ROI for advertisers; monetise well enough to retain YouTube creators and web publishers; beat AWS and Azure on AI infrastructure, security and data tooling; and ship integrated hardware and software across Pixel, Android and Chrome. Note what is NOT on that list: any form of contractual lock-in. Every item is a promise to keep earning the position, which is the honest description of a business whose users are one click away.',
+    },
+    equityStructure: {
+      summary: 'A three-class structure that separates economics from control completely. Class A carries one vote, Class B carries TEN, and Class C carries NONE. Larry Page and Sergey Brin own roughly 87% of the Class B, which gives them about 52% of total voting power \u2014 outright control of a company they no longer run day to day.',
+      classes: [
+        {
+          name: 'Class A (GOOGL)',
+          votingRights: '1 vote per share',
+          dividendRights: 'Full economic rights',
+          boardElections: 'Votes with all classes; no separate election right',
+          control: 'Ordinary public holders. Economic exposure without meaningful influence.',
+          color: 'amber',
+        },
+        {
+          name: 'Class B \u2014 the control block',
+          votingRights: '10 votes per share',
+          dividendRights: 'Full economic rights',
+          boardElections: 'Determines outcomes across all board elections',
+          control: 'Page and Brin hold ~87% of this class, giving them ~52% of TOTAL voting power. They can decide director elections, mergers, acquisitions and strategic direction.',
+          color: 'red',
+        },
+        {
+          name: 'Class C (GOOG)',
+          votingRights: 'NO votes',
+          dividendRights: 'Full economic rights',
+          boardElections: 'No vote',
+          control: 'Issued for compensation and M&A. Dilutes economics for existing holders while leaving founder voting power untouched \u2014 which is precisely why it exists.',
+          color: 'slate',
+        },
+      ],
+      controlProtection: 'Two mechanics entrench control over time, and both operate automatically. Issuing non-voting Class C for stock compensation and acquisitions dilutes economic ownership without touching the founders\u2019 votes. And BUYBACKS REDUCE THE SHARE COUNT, mechanically RAISING the founders\u2019 voting percentage \u2014 so the capital return programme, which looks like a shareholder-friendly policy, quietly increases founder control every year it runs.',
+      legalProtections: [
+        'The board fills its own vacancies \u2014 if a director leaves, the board picks the replacement without shareholder approval.',
+        'No stockholder action by written consent \u2014 shareholders must wait for a formal meeting.',
+        'No cumulative voting \u2014 minority holders cannot pool votes to elect a director.',
+        'Advance notice required for director nominations and shareholder proposals.',
+        'Preferred stock issuable instantly by the board \u2014 can dilute an acquirer on demand.',
+        'Delaware anti-takeover law \u2014 anyone acquiring 15% cannot merge for three years without approval.',
+        'Combined effect: Alphabet is designed to be effectively unacquirable.',
+      ],
+      keyTakeaway: 'There is no activist path, no proxy contest that can succeed, and no takeover premium embedded in this stock. Every dollar of return has to come from the business itself. That is not automatically bad \u2014 it insulates management from short-term pressure, which is exactly what funding decade-long moonshots requires \u2014 but it should be priced. You are buying economics and forgoing governance, and the buyback you benefit from is simultaneously tightening the control you do not have.',
+    },
     customers: {
       mainCustomers: 'Three distinct customer sets. CONSUMERS use the seven 2bn-user products largely free, and are monetised through advertising. ADVERTISERS and agencies buy access to that attention. ENTERPRISES and DEVELOPERS buy Google Cloud infrastructure, Workspace and AI tooling. The first group is the asset, the second pays for it, and the third is the growth story.',
       distributionNetwork: [
@@ -25769,119 +25925,6 @@ const GOOG_BREAKDOWN = {
           division: 'Other Bets \u2014 the ownership caveat',
           moatStrength: 'Weak',
           biggestRisk: 'Many Bets have their own boards AND EXTERNAL INVESTORS. Alphabet funds the losses in full but does not wholly own the upside on the ones that work. That asymmetry is easy to miss when valuing Waymo as a free option inside the share price \u2014 it is not free, and it may not be wholly yours.',
-        },
-      ],
-    },
-    competitiveLandscape: {
-      preamble: 'Alphabet competes on every front simultaneously, and its own framing of why that is dangerous is the most useful line in the section: users are ONE CLICK AWAY from an alternative. Nobody is locked into Search. That is a company with enormous distribution telling you the distribution is not contractual \u2014 it is habitual, and habits change faster than contracts. Read this against the antitrust register: the default placement deals that convert habit into position are exactly what regulators are dismantling.',
-      middleLabel: 'ALPHABET PRODUCT',
-      majorCompetitors: [
-        'Microsoft',
-        'Amazon',
-        'Meta',
-        'Apple',
-        'OpenAI',
-        'Anthropic',
-        'TikTok / ByteDance',
-        'Netflix',
-        'Samsung',
-        'Baidu',
-        'Yandex',
-        'Booking Holdings',
-      ],
-      categories: [
-        {
-          category: 'Search & Discovery',
-          icon: '\u1f50d',
-          featured: true,
-          rows: [
-            {
-              type: 'General search',
-              pepBrands: 'Google Search',
-              competitors: 'Bing, DuckDuckGo, Baidu, Yandex',
-            },
-            {
-              type: 'Vertical search \u2014 the real threat',
-              pepBrands: 'Google Search',
-              competitors: 'Amazon (products), Booking/Expedia (travel), Indeed/LinkedIn (jobs), WebMD (health). Users bypass Google ENTIRELY and search on the destination \u2014 no click to lose, because there was never a click.',
-            },
-            {
-              type: 'AI assistants',
-              pepBrands: 'Gemini, Google Assistant',
-              competitors: 'ChatGPT, Siri, Alexa. AI chatbots challenge traditional search BEHAVIOUR, not just search share \u2014 a different kind of problem.',
-            },
-            {
-              type: 'Social discovery',
-              pepBrands: 'Google Search',
-              competitors: 'Meta, TikTok, X, Reddit \u2014 users go there for recommendations instead of searching.',
-            },
-          ],
-        },
-        {
-          category: 'Advertising',
-          icon: '\u1f4e3',
-          featured: true,
-          rows: [
-            {
-              type: 'Digital advertising',
-              pepBrands: 'Search Ads, YouTube Ads, Google Network',
-              competitors: 'Meta, Amazon Ads, TikTok, Snapchat, programmatic networks',
-            },
-            {
-              type: 'Traditional advertising',
-              pepBrands: 'All Google surfaces',
-              competitors: 'TV, radio, newspapers, magazines, billboards \u2014 advertisers split budgets across formats, so digital share is not a closed contest.',
-            },
-          ],
-        },
-        {
-          category: 'Cloud & Enterprise',
-          icon: '\u2601',
-          rows: [
-            {
-              type: 'Cloud infrastructure',
-              pepBrands: 'Google Cloud Platform',
-              competitors: 'AWS, Microsoft Azure \u2014 both larger. Google is a genuine third.',
-            },
-            {
-              type: 'Productivity software',
-              pepBrands: 'Google Workspace',
-              competitors: 'Microsoft 365, Slack, Zoom, Dropbox',
-            },
-          ],
-        },
-        {
-          category: 'AI Models & Platforms',
-          icon: '\u1f9e0',
-          featured: true,
-          rows: [
-            {
-              type: 'Foundation models',
-              pepBrands: 'Gemini, Vertex AI',
-              competitors: 'OpenAI, Anthropic, Meta, Amazon, Microsoft, and startups \u2014 competing directly on models, agents and developer tools.',
-            },
-          ],
-        },
-        {
-          category: 'Content, Platforms & Hardware',
-          icon: '\u1f4f1',
-          rows: [
-            {
-              type: 'Video',
-              pepBrands: 'YouTube',
-              competitors: 'Netflix, TikTok, Twitch, Disney+, Roku \u2014 competing for attention AND ad dollars.',
-            },
-            {
-              type: 'App stores & content',
-              pepBrands: 'Google Play',
-              competitors: 'Apple App Store, Amazon, Meta, TikTok \u2014 users spend time and money in ecosystems Google does not control.',
-            },
-            {
-              type: 'Consumer hardware',
-              pepBrands: 'Pixel, Pixel Watch, Nest',
-              competitors: 'Apple, Samsung, Microsoft',
-            },
-          ],
         },
       ],
     },
@@ -26321,6 +26364,159 @@ const GOOG_BREAKDOWN = {
       summary: 'The antitrust and legal register, grouped by where each front actually stands rather than by jurisdiction. Cash impact to date: $3.0bn paid on EU Shopping, $4.9bn net charged on EU Android, $1.7bn charged then annulled on AdSense, $3.5bn charged on EU ad tech, $1.4bn paid on privacy.',
       categories: [
         {
+          name: '1 \u00b7 Risks to the Company',
+          items: [
+            {
+              risk: 'Advertising concentration \u2014 more than 75% of revenue',
+              meaning: 'Alphabet earns over three quarters of revenue from advertising, so any disruption is immediately financial. Advertisers cut budgets the moment the economy weakens. Network partners \u2014 websites, apps and publishers \u2014 can stop using Google\u2019s ad tools INSTANTLY, taking inventory with them. Ad blockers, cookie deprecation and privacy changes all reduce targeting ability, and Alphabet\u2019s OWN policy changes (the move away from third-party cookies) cut the same way. Apple\u2019s App Tracking Transparency is the worked example of a competitor rewriting the rules and Alphabet absorbing it.',
+            },
+            {
+              risk: 'Competition and the pace of innovation',
+              meaning: 'Users are ONE CLICK AWAY. Meta, OpenAI, Microsoft, Anthropic and Amazon may build better or cheaper models, and competitors can outspend Alphabet on infrastructure, talent and acquisitions. The specific risk named is betting wrong: heavy investment in the wrong AI direction wastes billions.',
+            },
+            {
+              risk: 'Investment in new businesses',
+              meaning: 'New projects may not pay off \u2014 Google+ is the reference case. Moonshots pull leadership focus from the core. PHYSICAL INFRASTRUCTURE IS THE SHARP EDGE: data centres, TPUs, GPUs and servers can lose value fast if the technology shifts. Hardware is structurally low margin, and Cloud faces aggressive pricing from two larger rivals.',
+            },
+            {
+              risk: 'Revenue growth and margin compression \u2014 stated as an expectation, not a risk',
+              meaning: 'Alphabet says growth will slow and margins will likely SHRINK. Three reasons: ad growth decelerating in a mature market, mix shifting toward lower-margin devices, cloud, subscriptions and Other Bets, and rising infrastructure, regulation, energy and talent costs. And critically, SOME COSTS ARE FIXED \u2014 data centres, servers and R&D cannot be scaled down quickly, so a downturn compresses margin harder than revenue falls.',
+            },
+            {
+              risk: 'Intellectual property',
+              meaning: 'IP protection is weak in some jurisdictions. "Google" risks becoming GENERIC \u2014 if the word simply means search, trademark protection weakens. Trade secret leaks and the cost of defending IP both bite.',
+            },
+            {
+              risk: 'Brand and reputation',
+              meaning: 'The brands are the most valuable assets. Content moderation failures, privacy or security failures, and technical outages all damage them, and the damage does not show up as a line item until users move.',
+            },
+            {
+              risk: 'Manufacturing and supply chain',
+              meaning: 'Dependence on third-party manufacturers for Pixel, servers, TPUs and GPUs. Component shortages \u2014 named specifically: Nvidia and AMD GPUs, and TPU fabrication capacity. Geopolitical exposure including China\u2013Taiwan. Quality issues, recalls, and forced-labour or unethical-supplier risk.',
+            },
+            {
+              risk: 'Systems, data centres and uptime',
+              meaning: 'The entire business depends on data centre uptime. Cyberattacks by state and non-state actors, natural disasters in earthquake, flood and fire zones, POWER AND UTILITY OUTAGES \u2014 data centres need enormous power \u2014 software bugs, and the admission that not all infrastructure is fully redundant.',
+            },
+            {
+              risk: 'International operations \u2014 51% of revenue',
+              meaning: 'FX exposure: dollar strength hurts international revenue. Sanctions and geopolitical tension across the Middle East, Ukraine and China. Longer payment cycles in some countries. Anti-corruption exposure across differing legal systems.',
+            },
+            {
+              risk: 'Investment and financial market risk',
+              meaning: 'Alphabet holds large investment positions. Fair value swings hit OI&E. Non-public investments require subjective valuation, so judgement errors are possible.',
+            },
+          ],
+        },
+        {
+          name: '2 \u00b7 Risks to the Industry',
+          items: [
+            {
+              risk: 'Evolving devices and platforms',
+              meaning: 'Access comes through phones, desktops, tablets, TVs, VR and AR, cars and smart speakers \u2014 each with its own standards. Manufacturers may restrict or block Google services entirely; APPLE IS NAMED AS THE EXAMPLE. If users do not adopt Google versions on new platforms, search volume falls and advertising revenue follows.',
+            },
+            {
+              risk: 'AI development and ethics \u2014 the biggest opportunity and the biggest liability',
+              meaning: 'AI can produce harmful or incorrect content, leading to misinformation, discrimination, safety issues, defamation and IP suits. Errors damage trust in Search, Gemini and YouTube recommendations. Regulators may impose new AI laws with heavy fines or forced system changes. Safe AI is expensive \u2014 billions on research, alignment, evaluation and moderation.',
+            },
+            {
+              risk: 'Privacy, security and cyberattack',
+              meaning: 'Even RUMOURS of poor privacy practice cause user distrust and regulatory pressure. AI creates new attack surfaces: AI-generated phishing, deepfakes and prompt exploitation. Alphabet states plainly that its code always contains unknown bugs. State-sponsored attacks are elevated because of government cloud customers. A partner breach gets blamed on Google, and a slow or wrong incident response means fines plus brand damage.',
+            },
+            {
+              risk: 'Platform misuse and content abuse',
+              meaning: 'Fake accounts, spam, scraping, child safety violations and election interference. At Alphabet\u2019s scale some abuse always gets through, and AI lets bad actors scale attacks faster. Regulatory punishment for failure to control content, and user migration if trust erodes.',
+            },
+            {
+              risk: 'Low-quality content and search manipulation',
+              meaning: 'Web spam, SEO abuse, content farms, and now AI-GENERATED JUNK requiring entirely new detection. If relevance falls, users move to TikTok, Reddit or ChatGPT. This is the risk that connects directly to the one-click-away problem.',
+            },
+            {
+              risk: 'Internet access and net neutrality',
+              meaning: 'ISPs can throttle, block or surcharge Google. Government censorship can remove Search, YouTube or Maps from a market entirely. Where net neutrality ends, providers may favour competitors.',
+            },
+            {
+              risk: 'Cyber threat detail',
+              meaning: 'Supply-chain attacks inserted through third-party software. AI-assisted phishing and impersonation. Nation-state attacks against government cloud customers. AI-enabled auto-hacking and malware optimisation. Zero-day vulnerabilities exploitable for months before discovery.',
+            },
+          ],
+        },
+        {
+          name: '3 \u00b7 Risks from Laws, Regulations and Policies',
+          items: [
+            {
+              risk: 'The compliance burden is compounding',
+              meaning: 'More laws every year across data, privacy, AI, content, competition, copyright, children\u2019s safety, consumer rights and tax \u2014 and they CONFLICT. EU versus US versus Asia produces contradictory obligations, high cost and operational friction. New rules can force redesign of Search, Play, Ads and AI, reducing product usefulness while raising cost.',
+            },
+            {
+              risk: 'Antitrust \u2014 the structural threat',
+              meaning: 'EU DMA limits data combining and forces interoperability, Search data sharing and billing changes. US DOJ cases target Search, ads and the Android Play Store, with remedies that COULD BE STRUCTURAL. Parallel actions in the UK, India, Japan and Korea focus on app store billing, fees, defaults and self-preferencing.',
+            },
+            {
+              risk: 'AI regulation \u2014 new and unformed',
+              meaning: 'The EU AI Act imposes transparency, risk controls and model restrictions. US federal rules are unclear, with possible forced model disclosures. State-level laws cover deepfakes, consumer protection and developer restrictions. Alphabet is building products into a regulatory framework that does not exist yet.',
+            },
+            {
+              risk: 'Privacy and data protection',
+              meaning: 'GDPR consent, portability and minimisation with heavy fines. US state laws on consent, data rights and biometrics. Children\u2019s data rules \u2014 COPPA, the UK Age Code, COPPA 2.0 \u2014 requiring major product change. Data localisation raising cost. Biometric statutes in Texas, Washington and Illinois carry real litigation risk. Cross-border EU-to-US transfers remain heavily restricted.',
+            },
+            {
+              risk: 'Copyright and AI training data',
+              meaning: 'The EU Copyright Directive creates liability for user-uploaded content \u2014 a direct YouTube exposure \u2014 and news publisher payment obligations. New licensing regimes may require paying for links, snippets and news. AI TRAINING DATA COPYRIGHT is an open legal question generating both lawsuits and proposed legislation.',
+            },
+            {
+              risk: 'Content moderation \u2014 contradictory by design',
+              meaning: 'The EU Digital Services Act imposes heavy removal duties and algorithm transparency. US state laws in Florida and Texas RESTRICT moderation or require equal political visibility. UK, Australian and Singaporean laws demand fast removal. Alphabet is required to moderate more and less at the same time, in different jurisdictions.',
+            },
+            {
+              risk: 'SAFE HARBOURS \u2014 the catastrophic tail',
+              meaning: 'DMCA \u00a7512 protects Google from liability for user-uploaded copyrighted content. Section 230 shields platforms from liability for user content. The DSA safe harbour covers hosting, caching and linking. NARROWING OR REPEALING ANY OF THESE WOULD BE CATASTROPHIC for YouTube, Search, Cloud and Ads \u2014 it would not tax the business model, it would invalidate it. This is the single largest unquantified legal risk in the filing and it sits outside Alphabet\u2019s control entirely.',
+            },
+            {
+              risk: 'Tax',
+              meaning: 'New digital taxes and the OECD 15% global minimum tax. Ongoing audits and transfer-pricing disputes given the global structure. The 1% US buyback tax may INCREASE, which raises the cost of the capital return programme directly.',
+            },
+          ],
+        },
+        {
+          name: '4 \u00b7 Risks to Ownership of the Stock',
+          items: [
+            {
+              risk: 'Buybacks and dividends are discretionary',
+              meaning: 'Alphabet can stop either at any time. Buybacks do not reliably raise the price. Ramping up lifts the stock, pausing drops it \u2014 so the programme itself is a source of volatility. And both drain cash that would otherwise fund R&D, AI, M&A or downturn protection, which matters more than usual against a capex cycle of this size.',
+            },
+            {
+              risk: 'FOUNDER VOTING CONTROL \u2014 Page and Brin hold ~52% of votes',
+              meaning: 'Class B carries 10 votes, Class A carries 1, Class C carries NONE. Page and Brin own roughly 87% of Class B, giving them about 52% of total voting power. They can determine every major decision \u2014 director elections, mergers, acquisitions, strategy \u2014 and ordinary shareholders have effectively no influence. Two mechanics ENTRENCH this over time: issuing non-voting Class C for compensation and M&A dilutes economics without touching founder votes, and buybacks reduce the share count, mechanically RAISING the founders\u2019 percentage. Owning this stock means accepting you are a passenger.',
+            },
+            {
+              risk: 'Anti-takeover architecture \u2014 designed to be unacquirable',
+              meaning: 'The board fills its own vacancies. No shareholder action by written consent. No cumulative voting, so minorities cannot pool votes for a board seat. Advance notice required for nominations. Preferred stock issuable instantly to dilute an acquirer. Plus Delaware\u2019s three-year restriction on anyone crossing 15%. There is no activist path and no takeover premium to underwrite here \u2014 the return has to come from the business.',
+            },
+            {
+              risk: 'Stock price volatility',
+              meaning: 'Historically volatile regardless of performance. Driven by inflation, rates, geopolitics and tech sentiment, and correlated with Amazon, Meta and Microsoft. Buyback changes move the price independently of operations.',
+            },
+          ],
+        },
+        {
+          name: '5 \u00b7 General Risks',
+          items: [
+            {
+              risk: 'Results fluctuate and past results do not predict future ones',
+              meaning: 'Quarterly revenue, profit and margin can swing significantly. Ads spike at holidays, cloud spending cycles vary, global events add volatility. Alphabet states directly that strong past performance is not a guarantee.',
+            },
+            {
+              risk: 'Acquisitions, investments and divestitures',
+              meaning: 'Management distraction, regulatory approval delays or blocks, integration difficulty across teams, cultures and technology, and foreign deal complexity. INHERITED LIABILITIES \u2014 lawsuits, IP claims, tax and privacy violations from acquired companies. Dilution where stock is used as consideration. Goodwill impairments and restructuring charges hitting earnings. Read this against $36.8bn of pending deals: every one of these applies to Wiz.',
+            },
+            {
+              risk: 'Talent \u2014 named as one of the biggest risks',
+              meaning: 'Reliance on Sundar Pichai and senior technical leaders. Aggressive poaching by Meta, Amazon, Microsoft and startups. EQUITY COMPENSATION LOSES ITS GRIP WHEN THE STOCK FALLS, which makes retention pro-cyclical with the share price. Immigration barriers shrink the talent pool. Maintaining culture at scale, and hybrid work adding integration and communication cost.',
+            },
+          ],
+        },
+        {
           name: '1 \u00b7 Resolved \u2014 off the board',
           items: [
             {
@@ -26740,12 +26936,64 @@ const GOOG_BREAKDOWN = {
         },
       ],
     },
+    cyber: {
+      tldr: 'Item 1C is a genuinely detailed programme description, and unlike some filings it makes an explicit materiality statement: NO cybersecurity incident has materially affected the business, results or operations to date \u2014 with the caveat that Alphabet cannot guarantee this continues.',
+      rows: [
+        {
+          category: 'What is monitored',
+          points: [
+            'Vulnerabilities in Alphabet products and services.',
+            'Software supply chain weaknesses.',
+            'Risks from third-party vendors and cloud partners.',
+            'Theft of intellectual property.',
+            'Attempts to compromise Alphabet infrastructure and systems.',
+          ],
+          meaning: 'Cybersecurity is run as an enterprise risk inside the company-wide framework, not as an IT function. Note that vendor and cloud-partner risk is named explicitly \u2014 consistent with Item 1A, where a partner breach gets blamed on Google.',
+        },
+        {
+          category: 'Who runs it',
+          points: [
+            'VP of Privacy, Safety & Security Engineering leads the global programme \u2014 20 years of experience, prior leadership roles at other major public companies.',
+            'Internal threat intelligence teams tracking global threats.',
+            'External security experts providing outside intelligence.',
+            'Executive leadership team oversees enterprise risk including cyber.',
+          ],
+          meaning: 'A named accountable owner with outside experience, supported by both internal and external intelligence. The same structural pattern as Apple\u2019s Item 1C.',
+        },
+        {
+          category: 'Process and escalation',
+          points: [
+            'Continuous monitoring of the threat landscape via internal and external sources.',
+            'Internal systems log EVERY privacy and security incident across Alphabet and third-party vendors.',
+            'Significant incidents reviewed by a cross-functional committee.',
+            'Potentially material incidents escalated rapidly to senior management.',
+            'OUTSIDE COUNSEL helps determine whether an incident is material and disclosable; external auditors informed when needed.',
+          ],
+          meaning: 'The outside-counsel materiality determination is the notable detail \u2014 it puts an independent legal check between an incident and the disclosure decision, which is more than most filings describe.',
+        },
+        {
+          category: 'Board oversight and independent testing',
+          points: [
+            'The Audit and Compliance Committee oversees cyber risks and major incidents.',
+            'Ensures compliance with reporting laws and oversees law enforcement interactions.',
+            'Receives regular briefings from senior management.',
+            'A DEDICATED INTERNAL CYBERSECURITY AUDIT TEAM performs independent testing of controls.',
+          ],
+          meaning: 'The internal cyber audit team testing controls independently is a real control, not just governance description. Few filings in this coverage disclose one.',
+        },
+      ],
+      takeaways: [
+        'ALPHABET MAKES THE MATERIALITY STATEMENT EXPLICITLY: no cybersecurity incident has materially affected the business, financial results or operations to date. Compare Apple, whose Item 1C describes governance structure only and makes no such statement. Alphabet is saying more, and that is worth something.',
+        'The caveat is equally explicit: this may not remain true, and given Alphabet\u2019s size and threat landscape a future material attack is always possible.',
+        'Read alongside Item 1A: AI creates NEW attack surfaces (AI-generated phishing, deepfakes, prompt exploitation), Alphabet states its code always contains unknown bugs, and hosting government cloud customers elevates nation-state exposure. The programme is strong; the surface is growing faster.',
+      ],
+    },
   },
 };
 
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
-  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 2, progress: 'research' },
+  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
@@ -37584,12 +37832,13 @@ function MuzzApp() {
                     };
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment, shareholders, deepBench } = bd.overview;
+                      const { facts, identity, competitors, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece, acquisitions, supplyChain, reinvestment, shareholders, deepBench } = bd.overview;
                       const OV_TAB_DEFS = [
                         { id:'company',    label:'COMPANY',    keys:['identity','headquarters','buffettFraming'] },
                         { id:'business',   label:'BUSINESS',   keys:['businessLines','operatingSegments','customers','distribution','supplyChain','reinvestment'] },
                         { id:'operations', label:'OPERATIONS', keys:['rawMaterials','rawMaterialsCategories','properties','facilityMatrix','bottlerAgreements','bottlingInvestments','topBottlers','acquisitions','reece'] },
                         { id:'leadership', label:'LEADERSHIP', keys:['leadership','deepBench'] },
+                        { id:'competitors', label:'COMPETITORS', keys:['competitors'] },
                         { id:'ownership',  label:'OWNERSHIP',  keys:['equityStructure','shareholders','regulatory'] },
                       ];
                       const ovPresent = { identity, headquarters, buffettFraming, businessLines, operatingSegments, customers, distribution, supplyChain, reinvestment, rawMaterials, rawMaterialsCategories, properties, facilityMatrix, bottlerAgreements, bottlingInvestments, topBottlers, acquisitions, reece, leadership, deepBench, equityStructure, shareholders, regulatory };
@@ -37764,6 +38013,52 @@ function MuzzApp() {
                           )}
 
                           {/* CN: NETWORK BUILT BY ACQUISITION */}
+                          {/* COMPETITORS — own sub-tab */}
+                          {showOv('competitors') && competitors && (
+                            <>
+                              <SectionHeading>// COMPETITIVE LANDSCAPE</SectionHeading>
+                              {competitors.preamble && <InfoPanel label="// THE SHAPE OF IT">{competitors.preamble}</InfoPanel>}
+                              {competitors.majorCompetitors && competitors.majorCompetitors.length > 0 && (
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'5px',margin:'8px 0'}}>
+                                  {competitors.majorCompetitors.map((c, i) => (
+                                    <span key={i} style={{padding:'3px 8px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.4)',borderRadius:'2px',fontSize:'10px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c}</span>
+                                  ))}
+                                </div>
+                              )}
+                              {(competitors.categories || []).map((cat, ci) => (
+                                <div key={ci} style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'10px',color:cat.featured?amber:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>{cat.icon ? cat.icon + ' ' : ''}{(cat.category || '').toUpperCase()}</div>
+                                  <div style={{overflowX:'auto'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                          <th style={{textAlign:'left',padding:'6px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>ARENA</th>
+                                          <th style={{textAlign:'left',padding:'6px 9px',color:'rgba(34,197,94,0.95)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>{competitors.middleLabel || 'OUR PRODUCT'}</th>
+                                          <th style={{textAlign:'left',padding:'6px 9px',color:'rgba(239,68,68,0.85)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>COMPETITORS</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {(cat.rows || []).map((r, ri) => (
+                                          <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                            <td style={{padding:'6px 9px',color:'rgba(224,234,255,0.85)',fontWeight:600,letterSpacing:'0.2px',verticalAlign:'top'}}>{r.type}</td>
+                                            <td style={{padding:'6px 9px',color:'rgba(34,197,94,0.85)',fontWeight:600,letterSpacing:'0.2px',verticalAlign:'top'}}>{r.ourProduct}</td>
+                                            <td style={{padding:'6px 9px',color:'rgba(224,234,255,0.7)',lineHeight:1.5,letterSpacing:'0.2px'}}>{r.competitors}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              ))}
+                              {competitors.note && (
+                                <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>⚔️ WHAT DETERMINES SUCCESS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitors.note}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {showOv('acquisitions') && acquisitions && (
                             <>
                               <SectionHeading>// {acquisitions.heading || 'NETWORK BUILT BY ACQUISITION'}</SectionHeading>
