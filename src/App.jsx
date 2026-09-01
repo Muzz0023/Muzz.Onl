@@ -25804,6 +25804,221 @@ const GOOG_BREAKDOWN = {
       ],
       keyTakeaway: 'There is no activist path, no proxy contest that can succeed, and no takeover premium embedded in this stock. Every dollar of return has to come from the business itself. That is not automatically bad \u2014 it insulates management from short-term pressure, which is exactly what funding decade-long moonshots requires \u2014 but it should be priced. You are buying economics and forgoing governance, and the buyback you benefit from is simultaneously tightening the control you do not have.',
     },
+    leadership: {
+      asOf: 'Director nominees as of 8 April 2025; executive officers per the FY2025 filing',
+      executives: [
+        {
+          name: 'Sundar Pichai',
+          featured: true,
+          age: 52,
+          tenureYears: 21,
+          since: 'Joined 2004',
+          role: 'Chief Executive Officer, Alphabet and Google \u00b7 CEO of Google since Oct 2015, of Alphabet since Dec 2019 \u00b7 previously SVP Products, and SVP Android, Chrome & Apps \u00b7 oversaw Search, Chrome, ChromeOS, Maps, Android, Gmail and Workspace \u00b7 shifted the company to an AI-first strategy \u00b7 holds 227,560 Class A shares and no Class B',
+        },
+        {
+          name: 'Anat Ashkenazi',
+          featured: true,
+          age: 52,
+          tenureYears: 1,
+          since: 'Joined July 2024',
+          role: 'SVP & Chief Financial Officer, Alphabet and Google \u00b7 previously EVP & CFO of Eli Lilly 2021\u20132024, after 23 years there including CFO of Lilly Research Laboratories, Oncology, Diabetes, Global Manufacturing and R&D \u00b7 BA Economics, Hebrew University; MBA, Tel Aviv \u00b7 AN OUTSIDE HIRE FROM PHARMA, with deep R&D-finance experience \u2014 a pointed choice for a company entering its heaviest research and capex cycle',
+        },
+        {
+          name: 'Ruth M. Porat',
+          featured: true,
+          age: 67,
+          tenureYears: 10,
+          since: 'Joined 2015',
+          role: 'President & Chief Investment Officer, Alphabet and Google since Sept 2023 \u00b7 was SVP & CFO 2015\u20132024 \u00b7 previously CFO of Morgan Stanley 2010\u20132015, Vice Chairman of Investment Banking, and Global Co-Head of Technology Investment Banking \u00b7 public board: Blackstone \u00b7 The CFO-to-CIO move matters: the person who ran the balance sheet for a decade now runs the investment strategy, including Other Bets',
+        },
+        {
+          name: 'Philipp Schindler',
+          age: 54,
+          tenureYears: 20,
+          since: 'Joined ~2005',
+          role: 'SVP & Chief Business Officer, Google since Aug 2015 \u00b7 oversees Google and YouTube global sales, technical and consumer support, partnerships, business development and country operations \u00b7 previously VP Global Sales & Operations, and President of Northern & Central Europe \u00b7 earlier SVP at AOL Germany \u00b7 effectively runs the revenue engine',
+        },
+        {
+          name: 'Kent Walker',
+          featured: true,
+          age: 64,
+          tenureYears: 19,
+          since: 'Joined 2006',
+          role: 'President, Global Affairs and Chief Legal Officer, Alphabet and Google since Nov 2021; Secretary since Jan 2020 \u00b7 oversees content policy, government affairs, regulatory affairs, legal, risk and compliance \u00b7 co-chairs the AI Responsibility Council and the Trust & Compliance Council \u00b7 former Assistant US Attorney; earlier at Netscape, AOL and eBay \u00b7 JD Stanford \u00b7 Given the antitrust register, this is arguably the second most consequential job in the company',
+        },
+      ],
+      board: [
+        {
+          name: 'Larry Page',
+          category: 'Co-founder \u00b7 NOT independent',
+          role: 'Director since 1998 (27 yrs) \u00b7 Age 52 \u00b7 Chair of the Executive Committee \u00b7 Co-founded Google 1998 \u00b7 CEO Google 1998\u20132001 and 2011\u20132015; CFO 1998\u20132002; President, Products 2001\u20132011; CEO Alphabet 2015\u20132019 \u00b7 BS Computer Engineering, Michigan; MS Computer Science, Stanford \u00b7 HOLDS 389,051,160 CLASS B SHARES = 27.1% OF ALL VOTES \u00b7 Architect of the search ecosystem and of the Alphabet holding structure itself',
+        },
+        {
+          name: 'Sergey Brin',
+          category: 'Co-founder \u00b7 NOT independent',
+          role: 'Director since 1998 (27 yrs) \u00b7 Age 51 \u00b7 Executive Committee \u00b7 Co-founded Google 1998 \u00b7 Chairman 1998\u20132001; President 1998\u20132011; President, Technology 2001\u20132011; President, Alphabet 2015\u20132019 \u00b7 BS Mathematics & Computer Science (High Honors), Maryland; MS Computer Science, Stanford \u00b7 HOLDS 362,766,628 CLASS B SHARES = 25.2% OF ALL VOTES \u00b7 Architect of the core search algorithms and the moonshot philosophy',
+        },
+        {
+          name: 'Sundar Pichai',
+          category: 'CEO \u00b7 NOT independent',
+          role: 'Director since 2017 (8 yrs) \u00b7 Age 52 \u00b7 Executive Committee \u00b7 CEO of Google since Oct 2015 and of Alphabet since Dec 2019 \u00b7 Joined Google 2004; SVP Products 2014\u201315; SVP Android, Chrome & Apps 2013\u201314 \u00b7 BTech Metallurgical Engineering, IIT Kharagpur; MS Materials Science, Stanford; MBA Wharton \u00b7 HOLDS 227,560 CLASS A SHARES AND NO CLASS B \u2014 the chief executive has effectively no voting power \u00b7 Shifted Google to an AI-first strategy',
+        },
+        {
+          name: 'John L. Hennessy',
+          category: 'Board Chair \u00b7 Independent',
+          role: 'CHAIR OF THE BOARD since Jan 2018 \u00b7 Independent director since 2004 (21 yrs) \u00b7 Age 72 \u00b7 Chair, Nominating & Corporate Governance Committee \u00b7 President of Stanford University 2000\u20132016; Dean of Engineering 1994\u20132000 \u00b7 Founder of MIPS Technologies; Chief Architect at Silicon Graphics \u00b7 ACM A.M. TURING AWARD and IEEE Medal of Honor \u00b7 PhD Computer Science, SUNY Stony Brook \u00b7 Holds 21,824 Class A shares \u00b7 Also: Gordon & Betty Moore Foundation; Queen Elizabeth Prize for Engineering',
+        },
+        {
+          name: 'Frances H. Arnold',
+          category: 'Independent',
+          role: 'Independent director since 2019 (6 yrs) \u00b7 Age 68 \u00b7 Nominating & Corporate Governance Committee \u00b7 NOBEL PRIZE IN CHEMISTRY 2018 \u00b7 Linus Pauling Professor of Chemical Engineering, Bioengineering & Biochemistry at Caltech, where she has been since 1986 \u00b7 Research in protein engineering by directed evolution \u00b7 Former co-chair of the President\u2019s Council of Advisors on Science and Technology \u00b7 Member of the National Academies of Sciences, Medicine and Engineering \u00b7 Other public board: Illumina \u00b7 PhD Chemical Engineering, UC Berkeley',
+        },
+        {
+          name: 'R. Martin \u201cMarty\u201d Ch\u00e1vez',
+          category: 'Independent \u00b7 newest director',
+          role: 'Independent director since 2022 (3 yrs \u2014 shortest tenure) \u00b7 Age 61 \u00b7 Audit & Compliance Committee \u00b7 Partner & Vice Chairman, Sixth Street since 2021 \u00b7 Goldman Sachs 2005\u20132019 as CIO, then CFO, then Global Co-Head of the Securities Division and Management Committee member \u00b7 Earlier co-founded Kiodex and Quorum Software Systems \u00b7 Former boards: Banco Santander, Recursion Pharmaceuticals \u00b7 PhD Medical Information Sciences, Stanford \u00b7 The rare director combining Wall Street financial discipline with genuine technical depth',
+        },
+        {
+          name: 'L. John Doerr',
+          category: 'Independent \u00b7 early investor',
+          role: 'Independent director since 1999 (26 yrs) \u00b7 Age 73 \u00b7 Leadership Development, Inclusion & Compensation Committee \u00b7 Chair of Kleiner Perkins since 2016; General Partner 1980\u20132016 \u00b7 Early investor in Google, Amazon, Sun and Netscape \u00b7 Author of Measure What Matters (OKRs) and Speed & Scale \u00b7 HOLDS 941,285 CLASS A AND 22,348,940 CLASS B = 1.6% OF VOTES \u2014 the only non-founder director with meaningful voting power \u00b7 Current public board: DoorDash \u00b7 MBA Harvard',
+        },
+        {
+          name: 'Roger W. Ferguson Jr.',
+          category: 'Independent \u00b7 Audit Chair',
+          role: 'Independent director since 2016 (9 yrs) \u00b7 Age 73 \u00b7 CHAIR, Audit & Compliance Committee \u00b7 VICE CHAIRMAN OF THE US FEDERAL RESERVE 1999\u20132006 and Board of Governors member 1997\u20132006 \u00b7 President & CEO of TIAA 2008\u20132021 \u00b7 Chairman of Americas Holding and Head of Financial Services at Swiss Re 2006\u20132008 \u00b7 McKinsey partner 1984\u20131997 \u00b7 Now CIO of Red Cell Partners \u00b7 Current public boards: Corning, IFF (resigning after 1 May 2025) \u00b7 PhD Economics and JD, Harvard',
+        },
+        {
+          name: 'K. Ram Shriram',
+          category: 'Independent \u00b7 founders-era',
+          role: 'Independent director since 1998 (27 yrs) \u00b7 Age 68 \u00b7 Leadership Development, Inclusion & Compensation Committee \u00b7 Managing Partner of Sherpalo Ventures since 2000 \u00b7 VP Business Development at Amazon 1998\u20131999; President of Junglee (acquired by Amazon); early executive at Netscape \u00b7 Holds 1,890,174 Class A shares \u00b7 Current public board: Yubico \u00b7 One of the earliest advisors to the founders and the board\u2019s continuity link to the founding era',
+        },
+        {
+          name: 'Robin L. Washington',
+          category: 'Independent \u00b7 Compensation Chair',
+          role: 'Independent director since 2019 (6 yrs) \u00b7 Age 62 \u00b7 CHAIR, Leadership Development, Inclusion & Compensation Committee, AND a member of Audit & Compliance \u00b7 President, Chief Operating & Financial Officer of Salesforce from 2025 \u00b7 EVP & CFO of Gilead Sciences 2008\u20132019 \u00b7 CFO of Hyperion Solutions; senior finance roles at PeopleSoft 1996\u20132005 \u00b7 Began at Deloitte and the Federal Reserve Bank of Chicago \u00b7 Former boards: Honeywell, Vertiv \u00b7 Trustee, Financial Accounting Foundation \u00b7 MBA Pepperdine',
+        },
+      ],
+      boardTakeaways: {
+        title: 'Governance assessment \u00b7 director nominees as of 8 April 2025',
+        verdict: 'Ten directors, seven independent (70%). Average age 63.2, average tenure 16.0 years. The committee structure is clean \u2014 Ferguson chairs Audit, Washington chairs Compensation, Hennessy chairs Nominating, and none of the three insiders sits on any of them. On paper this is a strong board: a Turing Award winner, a Nobel laureate, a former Vice Chairman of the Federal Reserve, a sitting Fortune 500 CFO, and a Goldman CFO who also holds a computer science degree. The problem is not the quality of the directors. It is that the votes that appoint them are controlled by two of them.',
+        scores: [
+          {
+            label: 'Director calibre and technical depth',
+            rating: 'strong',
+          },
+          {
+            label: 'Audit chair independence and expertise (Ferguson)',
+            rating: 'strong',
+          },
+          {
+            label: 'Independent board chair (Hennessy)',
+            rating: 'strong',
+          },
+          {
+            label: 'Committee independence \u2014 no insider on any of the three',
+            rating: 'strong',
+          },
+          {
+            label: 'Financial expertise \u2014 Ferguson, Ch\u00e1vez, Washington',
+            rating: 'strong',
+          },
+          {
+            label: 'Independence 7 of 10 (70%)',
+            rating: 'moderate',
+          },
+          {
+            label: 'Average tenure 16.0 yrs \u2014 four directors past 26 years',
+            rating: 'moderate',
+          },
+          {
+            label: 'Board refreshment \u2014 one new director since 2019',
+            rating: 'weak',
+          },
+          {
+            label: 'Shareholder ability to change the board',
+            rating: 'weak',
+          },
+          {
+            label: 'Founder voting control over director elections',
+            rating: 'weak',
+          },
+        ],
+      },
+    },
+    shareholders: {
+      asOf: 'Proxy statement, director nominees as of 8 April 2025',
+      holders: [
+        {
+          name: 'Larry Page \u00b7 co-founder',
+          capital: '389,051,160 Class B',
+          voting: '27.1%',
+          date: 'Zero Class A',
+        },
+        {
+          name: 'Sergey Brin \u00b7 co-founder',
+          capital: '362,766,628 Class B',
+          voting: '25.2%',
+          date: 'Zero Class A',
+        },
+        {
+          name: 'Eric Schmidt \u00b7 former CEO',
+          capital: '9,449,282 A + 47,472,677 B',
+          voting: '3.4%',
+          date: '>5% holder',
+        },
+        {
+          name: 'The Vanguard Group',
+          capital: '493,782,758 Class A',
+          voting: '3.4%',
+          date: '>5% holder',
+        },
+        {
+          name: 'BlackRock',
+          capital: '415,076,460 Class A',
+          voting: '2.9%',
+          date: '>5% holder',
+        },
+        {
+          name: 'L. John Doerr \u00b7 director',
+          capital: '941,285 A + 22,348,940 B',
+          voting: '1.6%',
+          date: 'Director',
+        },
+        {
+          name: 'K. Ram Shriram \u00b7 director',
+          capital: '1,890,174 Class A',
+          voting: '*',
+          date: 'Director',
+        },
+        {
+          name: 'Sundar Pichai \u00b7 CEO',
+          capital: '227,560 Class A',
+          voting: '*',
+          date: 'Officer',
+        },
+        {
+          name: 'Ruth Porat \u00b7 President & CIO',
+          capital: '28,060 Class A',
+          voting: '*',
+          date: 'Officer',
+        },
+        {
+          name: 'John Hennessy \u00b7 Board Chair',
+          capital: '21,824 Class A',
+          voting: '*',
+          date: 'Director',
+        },
+        {
+          name: 'ALL 15 officers & directors as a group',
+          capital: '3,108,903 A + 77,166,728 B \u26a0',
+          voting: '53.9%',
+          date: 'See the note \u2014 the Class B figure does not reconcile',
+        },
+      ],
+      note: 'ARITHMETIC ERROR IN THE SUPPLIED GROUP TOTAL, flagged not corrected. The group Class B figure of 77,166,728 is SMALLER THAN LARRY PAGE\u2019S HOLDING ALONE (389,051,160) \u2014 Page is 5.0x the stated group total, which is impossible for a subtotal that includes him. Page plus Brin plus Doerr comes to EXACTLY 774,166,728, which is 77,166,728 with one digit restored after the leading 7. An independent check confirms it: Page\u2019s 389.05m Class B carry 3,891m votes at a stated 27.1%, implying about 14,356m total votes; Class B of roughly 822m shares gives 8,216m votes, leaving about 6,140m Class A votes, which is consistent with Alphabet\u2019s Class A count. The 774,166,728 figure reconciles; 77,166,728 does not. Carried as supplied per the standing rule, but do not use the group Class B number.',
+      takeaway: 'CLASS A OWNERSHIP IS NOT VOTING POWER, and the Schmidt-versus-Vanguard comparison is the cleanest proof in the table. Vanguard holds 493,782,758 Class A shares for 3.4% of the vote. Eric Schmidt holds 56,921,959 shares \u2014 8.7 TIMES FEWER \u2014 for the same 3.4%, because 47.5m of his are Class B. A former chief executive who left the board in 2017 still carries more voting weight than BlackRock. Meanwhile the sitting CEO holds 227,560 Class A shares and no Class B at all: Sundar Pichai runs Alphabet with a rounding error of its votes. Insiders control 53.9% in total, of which Page and Brin are 52.3%. And the structure is self-perpetuating \u2014 Class B converts to Class A only on sale, and the founders do not sell.',
+    },
     customers: {
       mainCustomers: 'Three distinct customer sets. CONSUMERS use the seven 2bn-user products largely free, and are monetised through advertising. ADVERTISERS and agencies buy access to that attention. ENTERPRISES and DEVELOPERS buy Google Cloud infrastructure, Workspace and AI tooling. The first group is the asset, the second pays for it, and the third is the growth story.',
       distributionNetwork: [
@@ -26249,6 +26464,115 @@ const GOOG_BREAKDOWN = {
         note: 'Derived as net income \u00f7 revenue. Margin sat in a 21\u201322% band for six of the first seven years, then stepped to 29.5% in FY2021 and has reached 32.81% \u2014 the highest of the period, and 11 points above the FY2015 level. The FY2017 reading of 11.42% is the fine-and-tax-charge year. NOTE: this is the CONSOLIDATED margin, so it is struck AFTER Other Bets losses and after unallocated Alphabet-level costs. The core business earns more than this line shows.',
       },
       extraLines: [
+        {
+          label: 'Stock-Based Compensation \u2014 Total Expense',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 22100,
+            },
+            {
+              year: 2024,
+              value: 22800,
+            },
+            {
+              year: 2025,
+              value: 27100,
+            },
+          ],
+          note: 'THE JUMP IS THE STORY: +$4.3bn, or +18.9%, in FY2025 after two years of roughly 3% growth. At $27.1bn this is 6.73% of revenue and 20.50% of net income \u2014 for comparison, Costco runs 0.31% of revenue. This is the first company in the coverage where share-based compensation is a first-order valuation input rather than a footnote. The house convention is to leave it EXPENSED, which means owner earnings here will sit roughly $27bn below any sell-side "adjusted free cash flow" that adds it back \u2014 a difference of several multiple points on the same share price. The two-step proof still holds: pay the salaries in cash and let employees buy stock with it, and nobody would add it back.',
+        },
+        {
+          label: 'SBC \u2014 Settling in Alphabet Stock',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 21700,
+            },
+            {
+              year: 2024,
+              value: 22000,
+            },
+            {
+              year: 2025,
+              value: 24100,
+            },
+          ],
+        },
+        {
+          label: 'SBC \u2014 NOT Settling in Stock (cash-settled)',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 400,
+            },
+            {
+              year: 2024,
+              value: 800,
+            },
+            {
+              year: 2025,
+              value: 3000,
+            },
+          ],
+          note: 'Derived as total less the stock-settled portion. This line went from $0.4bn to $3.0bn in two years, and QUADRUPLED in FY2025 alone \u2014 growing far faster than the headline. Cash-settled awards are almost certainly Other Bets phantom equity, including awards whose value tracks units like Waymo as outside funding rounds mark them up. Two implications: this portion is a real cash cost rather than dilution, and it means Other Bets valuations feed back into Alphabet\u2019s compensation expense.',
+        },
+        {
+          label: 'Tax Benefit Recognised on SBC',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 4500,
+            },
+            {
+              year: 2024,
+              value: 4600,
+            },
+            {
+              year: 2025,
+              value: 5000,
+            },
+          ],
+          note: 'Excludes indirect effects, primarily the R&D tax credit.',
+        },
+        {
+          label: 'Tax Benefit Realised on Vesting/Exercise',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 5600,
+            },
+            {
+              year: 2024,
+              value: 6800,
+            },
+            {
+              year: 2025,
+              value: 8100,
+            },
+          ],
+          note: 'Realised benefit has exceeded recognised benefit in all three years and is growing faster \u2014 up 44.6% against 11.1% \u2014 which happens when the share price rises between grant and vest.',
+        },
+        {
+          label: 'Class C Shares Reserved for Future Issuance',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2024,
+              value: 633,
+            },
+            {
+              year: 2025,
+              value: 534,
+            },
+          ],
+          note: 'Under the Alphabet Amended and Restated 2021 Stock Plan. The pool is drawing down \u2014 99m shares consumed in FY2025 \u2014 but 534m remain reserved, which is deep headroom. RSUs vest over four years and settle in CLASS C, the non-voting class: employees are paid in economics without governance, which is the same mechanic that preserves founder control. NOTE THE FEEDBACK LOOP: roughly $24bn a year of stock issuance is why a $60bn-plus buyback produces only a modest net reduction in share count. A meaningful share of the buyback is mopping up compensation rather than returning capital \u2014 worth splitting precisely when the share count table arrives.',
+        },
         {
           label: 'Revenue per Employee \u2014 cross-check',
           unit: 'USD',
