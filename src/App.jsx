@@ -16683,6 +16683,467 @@ const MO_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// HLT_BREAKDOWN — Hilton Worldwide Holdings Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied hotels data drop — income statement, balance
+// sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// NEGATIVE EQUITY: supplied ROE, price-to-book and debt-to-equity carry
+// no information. Net debt to EBITDA and return on capital are the
+// measures that work; the unusable ones are retained but flagged.
+// PRICE-TO-BOOK: an "Implied Share Price" diagnostic line is derived as
+// price-to-book x book value per share. It returns an identical price in
+// all five years, proving the supplied price-to-book series is a single
+// CURRENT price over each year's book value, not a historical multiple.
+// This holds across the whole dataset, not just these two names.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: retained earnings are negative in every year, so the
+// treasury-stock-to-retained-earnings ratio is suppressed as meaningless.
+// FY2021 is a COVID-depressed base. FY2024 effective tax rate of 13.68%
+// is an outlier against 27-32% elsewhere. Supplied FY2023 EPS implies
+// $1.57B against $1.14B reported.
+// ═════════════════════════════════════════════════════════════════
+const HLT_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:2440}, {year:2022,value:3740}, {year:2023,value:4410}, {year:2024,value:4750}, {year:2025,value:4950} ],
+        note: 'Revenue more than doubled, from $2.44B to $4.95B, up 102.9%. FY2021 is a COVID-depressed base, so the early growth is recovery rather than expansion \u2014 but revenue has still risen 12.2% over the last two years from a normalised FY2023.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:679}, {year:2022,value:999}, {year:2023,value:1140}, {year:2024,value:1130}, {year:2025,value:1090} ] },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:1761}, {year:2022,value:2741}, {year:2023,value:3270}, {year:2024,value:3620}, {year:2025,value:3860} ],
+        note: 'Gross profit grew from $1.76B to $3.86B, up 119.1%.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:72.17}, {year:2022,value:73.29}, {year:2023,value:74.15}, {year:2024,value:76.21}, {year:2025,value:77.98} ],
+        note: 'Gross margin improved from 72.17% to 77.98%, rising in four of five years. Hilton keeps roughly 78 cents of every revenue dollar past the cost line \u2014 the asset-light franchising model in one number.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:390}, {year:2022,value:365}, {year:2023,value:405}, {year:2024,value:425}, {year:2025,value:411} ],
+          note: 'SG&A is essentially flat at $365M\u2013$425M across all five years while revenue doubled. That is the operating leverage in this model: the brand and the reservation system scale without the cost base following.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:15.98}, {year:2022,value:9.76}, {year:2023,value:9.18}, {year:2024,value:8.95}, {year:2025,value:8.3} ],
+          note: 'SG&A collapsed from 15.98% of revenue to 8.30% \u2014 nearly halving as a share of the business.'
+        },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:733}, {year:2022,value:626}, {year:2023,value:1000}, {year:2024,value:1270}, {year:2025,value:1190} ],
+          note: 'The supplied Operating Expense line reconciles as SG&A plus other operating expenses plus D&A in every year, and cost of revenue plus this line equals total operating expenses. The statement ties cleanly.'
+        },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2021,value:155}, {year:2022,value:99}, {year:2023,value:449}, {year:2024,value:694}, {year:2025,value:597} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:1410}, {year:2022,value:1630}, {year:2023,value:2140}, {year:2024,value:2390}, {year:2025,value:2280} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:1030}, {year:2022,value:2110}, {year:2023,value:2270}, {year:2024,value:2360}, {year:2025,value:2680} ],
+        note: 'Operating income grew from $1.03B to $2.68B, up 160.2%, and rose in every single year.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:42.21}, {year:2022,value:56.42}, {year:2023,value:51.47}, {year:2024,value:49.68}, {year:2025,value:54.14} ],
+        note: 'Operating margin rose from 42.21% to 54.14%, improving in four of five years. Over half of revenue now reaches operating income.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-397}, {year:2022,value:-415}, {year:2023,value:-464}, {year:2024,value:-569}, {year:2025,value:-620} ],
+        note: 'Interest expense grew 56.2%, from $397M to $620M, tracking the rising debt. It now consumes 23.1% of operating income, down from 38.5%.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2021,value:8}, {year:2022,value:33}, {year:2023,value:36}, {year:2024,value:54}, {year:2025,value:28} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:153}, {year:2022,value:477}, {year:2023,value:541}, {year:2024,value:244}, {year:2025,value:611} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:27.32}, {year:2022,value:27.51}, {year:2023,value:31.97}, {year:2024,value:13.68}, {year:2025,value:29.49} ],
+        note: 'The FY2024 rate of 13.68% is a clear outlier against 27.32%\u201331.97% in the other four years, and it flatters FY2024 net income by roughly $250M relative to a normal rate.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:410}, {year:2022,value:1260}, {year:2023,value:1140}, {year:2024,value:1540}, {year:2025,value:1460} ],
+        note: 'Net income of $410M, $1.26B, $1.14B, $1.54B, $1.46B \u2014 up 256% overall but not monotonic; FY2023 and FY2025 both stepped back.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:16.78}, {year:2022,value:33.59}, {year:2023,value:25.88}, {year:2024,value:32.34}, {year:2025,value:29.41} ],
+        note: 'Net margin ran 16.78% to 33.59%, ending at 29.41%.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:2.08}, {year:2022,value:4.89}, {year:2023,value:6.21}, {year:2024,value:7.12}, {year:2025,value:8.11} ],
+        note: 'EPS grew from $2.08 to $8.11, up 290%, comfortably ahead of the 256% growth in net income \u2014 the 17.9% reduction in share count supplies the rest. Note FY2023 does not reconcile well: $6.21 on 252.16M shares implies $1.57B against $1.14B reported, 37% higher. FY2022 ties within 4%. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:279.14}, {year:2022,value:266.45}, {year:2023,value:252.16}, {year:2024,value:240.6}, {year:2025,value:229.29} ],
+        note: 'Share count fell from 279.14M to 229.29M, down 17.9%, and fell in every year. One of the most consistent reductions in this coverage.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:1220}, {year:2022,value:2270}, {year:2023,value:2410}, {year:2024,value:2500}, {year:2025,value:2850} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:50}, {year:2022,value:60.7}, {year:2023,value:54.65}, {year:2024,value:52.63}, {year:2025,value:57.58} ],
+          note: 'EBITDA margin improved from 50.00% to 57.58%.'
+        },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2021,value:188}, {year:2022,value:162}, {year:2023,value:147}, {year:2024,value:146}, {year:2025,value:177} ] },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:560}, {year:2022,value:1730}, {year:2023,value:1690}, {year:2024,value:1780}, {year:2025,value:2070} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:636}, {year:2022,value:1730}, {year:2023,value:1820}, {year:2024,value:1830}, {year:2025,value:2070} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:-76}, {year:2022,value:0}, {year:2023,value:-130}, {year:2024,value:-50}, {year:2025,value:0} ],
+          note: 'Unusual items are small in every year: \u2212$76M, nil, \u2212$130M, \u2212$50M, nil. A clean earnings series with no large one-offs.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:251.22}, {year:2022,value:167.46}, {year:2023,value:199.12}, {year:2024,value:153.25}, {year:2025,value:183.56} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-397}, {year:2022,value:-415}, {year:2023,value:-464}, {year:2024,value:-569}, {year:2025,value:-620} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2021,value:7}, {year:2024,value:-5} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:2.59}, {year:2022,value:5.08}, {year:2023,value:4.89}, {year:2024,value:4.15}, {year:2025,value:4.32} ],
+          note: 'Interest coverage improved from 2.59\u00d7 to 4.32\u00d7 \u2014 operating income grew faster than the debt cost, despite debt rising 40%.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:1430}, {year:2022,value:1210}, {year:2023,value:800}, {year:2024,value:1300}, {year:2025,value:918} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:1070}, {year:2022,value:1330}, {year:2023,value:1490}, {year:2024,value:1580}, {year:2025,value:1690} ] },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:202}, {year:2022,value:152}, {year:2023,value:121}, {year:2024,value:120}, {year:2025,value:117} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:2870}, {year:2022,value:2870}, {year:2023,value:2610}, {year:2024,value:3270}, {year:2025,value:3000} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:999}, {year:2022,value:942}, {year:2023,value:1000}, {year:2024,value:978}, {year:2025,value:1260} ],
+        note: 'Net PP&E of just $1.26B on a $16.77B balance sheet \u2014 7.5%. Hilton does not own hotels; it licenses a brand. The assets are goodwill and intangibles, not buildings.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:5070}, {year:2022,value:5030}, {year:2023,value:5050}, {year:2024,value:5040}, {year:2025,value:5080} ],
+        note: 'Goodwill is flat at $5.03B\u2013$5.08B across all five years \u2014 no acquisitions of consequence.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:5840}, {year:2022,value:5890}, {year:2023,value:6080}, {year:2024,value:6420}, {year:2025,value:6700} ],
+        note: 'Other intangibles grew from $5.84B to $6.70B. Combined with goodwill, $11.78B of the $16.77B balance sheet \u2014 70.2% \u2014 is intangible.'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2021,value:213}, {year:2022,value:204}, {year:2023,value:140}, {year:2024,value:318}, {year:2025,value:252} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:700}, {year:2022,value:735}, {year:2023,value:401}, {year:2024,value:322}, {year:2025,value:322} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:452}, {year:2022,value:576}, {year:2023,value:512}, {year:2024,value:500}, {year:2025,value:484} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:15440}, {year:2022,value:15510}, {year:2023,value:15400}, {year:2024,value:16520}, {year:2025,value:16770} ],
+        note: 'Total assets grew only 8.6% across five years while revenue doubled \u2014 exceptional capital efficiency.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:274}, {year:2022,value:368}, {year:2023,value:457}, {year:2024,value:409}, {year:2025,value:376} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:598}, {year:2022,value:641}, {year:2023,value:691}, {year:2024,value:637}, {year:2025,value:666} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:4}, {year:2022,value:1}, {year:2023,value:5}, {year:2024,value:500} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:8600}, {year:2022,value:8580}, {year:2023,value:9050}, {year:2024,value:10530}, {year:2025,value:12020} ],
+        note: 'Long-term debt grew from $8.60B to $12.02B, up 39.8%, with $2.97B of that arriving in the last two years \u2014 exactly the period of the heaviest buybacks.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:8604}, {year:2022,value:8581}, {year:2023,value:9055}, {year:2024,value:11030}, {year:2025,value:12020} ],
+        note: 'Total debt of $12.02B against $2.85B of EBITDA.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:680}, {year:2022,value:652}, {year:2023,value:964}, {year:2024,value:941}, {year:2025,value:950} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:16260}, {year:2022,value:16610}, {year:2023,value:17750}, {year:2024,value:20210}, {year:2025,value:22120} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2021,value:10720}, {year:2022,value:10830}, {year:2023,value:10970}, {year:2024,value:11130}, {year:2025,value:11270} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:-6320}, {year:2022,value:-5190}, {year:2023,value:-4210}, {year:2024,value:-2820}, {year:2025,value:-1510} ],
+        note: 'Retained earnings are negative but IMPROVING \u2014 \u2212$6.32B to \u2212$1.51B. Five profitable years have worked off $4.81B of accumulated deficit. Note this is the opposite direction to equity, because treasury stock grew $9.99B over the same period.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:-821}, {year:2022,value:-1100}, {year:2023,value:-2360}, {year:2024,value:-3730}, {year:2025,value:-5390} ],
+        note: 'Common equity is NEGATIVE in every year and DETERIORATING fast \u2014 \u2212$821M to \u2212$5.39B, a 6.6-fold worsening. Unlike the tobacco names, whose negative equity is stable, Hilton\u2019s is getting more negative every year because buybacks are outrunning retained profit.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:-2.94}, {year:2022,value:-4.11}, {year:2023,value:-9.31}, {year:2024,value:-15.41}, {year:2025,value:-23.38} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:-109.47}, {year:2022,value:-78.31}, {year:2023,value:-34.57}, {year:2024,value:-20.89}, {year:2025,value:-13.77} ],
+        note: 'NOT MEANINGFUL as a historical series \u2014 see the implied share price line directly below, which shows the source used a single current price across all five years. The reported movement from \u2212109\u00d7 to \u221214\u00d7 tracks book value per share falling, not any change in market rating.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:-10.48}, {year:2022,value:-7.8}, {year:2023,value:-3.84}, {year:2024,value:-2.96}, {year:2025,value:-2.23} ],
+        note: 'NOT MEANINGFUL. Equity is negative in every year. Use net debt to EBITDA.'
+      },
+      extraLines: [
+        { label: 'Implied Share Price \u2014 Price-to-Book \u00d7 Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:321.84}, {year:2022,value:321.85}, {year:2023,value:321.85}, {year:2024,value:321.91}, {year:2025,value:321.94} ],
+          note: 'Diagnostic line. Price-to-book \u00d7 book value per share should recover the share price the source used in each year. Here it returns the SAME price in all five years, which means the supplied price-to-book series is one current price divided by each year\u2019s book value \u2014 not a historical multiple. Movements in the price-to-book line therefore track book value per share only, and say nothing about how the market rated the company in past years. This holds across every company in coverage, not just this one.'
+        },
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:7174}, {year:2022,value:7371}, {year:2023,value:8255}, {year:2024,value:9730}, {year:2025,value:11102} ],
+          note: 'Net debt grew from $7.17B to $11.10B, up 54.8%.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2021,value:1400}, {year:2022,value:1540}, {year:2023,value:1700}, {year:2024,value:2040}, {year:2025,value:2150} ] },
+        { label: 'Total Unearned Revenue \u2014 Current + Non-Current', unit: 'M USD', series: [ {year:2021,value:3610}, {year:2022,value:3810}, {year:2023,value:4360}, {year:2024,value:4940}, {year:2025,value:5420} ],
+          note: 'Current plus non-current unearned revenue grew from $3.61B to $5.42B, up 50.1%. This is the Hilton Honors loyalty programme \u2014 points sold to co-brand card partners and airlines and not yet redeemed. It is customer money held ahead of delivery, and it is the largest single liability on the balance sheet after debt.'
+        },
+        { label: 'Total Unearned Revenue as % of Revenue', unit: '%', series: [ {year:2021,value:147.95}, {year:2022,value:101.87}, {year:2023,value:98.87}, {year:2024,value:104}, {year:2025,value:109.49} ],
+          note: 'Total unearned revenue equals 109.5% of annual revenue \u2014 Hilton holds more than a full year of revenue as deferred loyalty liability. Marriott holds even more at 131.8%. This float is a genuine and underappreciated feature of the asset-light hotel model.'
+        },
+        { label: 'Unearned Revenue \u2014 Non-Current', unit: 'M USD', series: [ {year:2021,value:2210}, {year:2022,value:2270}, {year:2023,value:2660}, {year:2024,value:2900}, {year:2025,value:3270} ] },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:1030}, {year:2022,value:958}, {year:2023,value:913}, {year:2024,value:817}, {year:2025,value:1050} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:190}, {year:2022,value:150}, {year:2023,value:150}, {year:2024,value:152}, {year:2025,value:146} ] },
+        { label: 'Prepaid Expenses', unit: 'M USD', series: [ {year:2021,value:89}, {year:2022,value:105}, {year:2023,value:131}, {year:2024,value:193}, {year:2025,value:219} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-779}, {year:2022,value:-706}, {year:2023,value:-731}, {year:2024,value:-782}, {year:2025,value:-729} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-4440}, {year:2022,value:-6040}, {year:2023,value:-8390}, {year:2024,value:-11260}, {year:2025,value:-14430} ],
+          note: 'Treasury stock grew from \u2212$4.44B to \u2212$14.43B \u2014 it TRIPLED in five years, $9.99B of stock retired. This single line is why equity keeps falling despite the business improving.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:-819}, {year:2022,value:-1100}, {year:2023,value:-2350}, {year:2024,value:-3690}, {year:2025,value:-5350} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:-11730}, {year:2022,value:-12020}, {year:2023,value:-13500}, {year:2024,value:-15180}, {year:2025,value:-17170} ],
+          note: 'Tangible book value of \u2212$17.17B, deteriorating from \u2212$11.73B, as $11.78B of goodwill and intangibles sit against negative equity.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2021,value:2}, {year:2022,value:4}, {year:2023,value:13}, {year:2024,value:38}, {year:2025,value:42} ],
+          note: 'Minority interest is immaterial, $2M\u2013$42M.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:25}, {year:2022,value:40}, {year:2023,value:34} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:4.01}, {year:2022,value:8.53}, {year:2023,value:9.16}, {year:2024,value:9.22}, {year:2025,value:10.04} ],
+          note: 'Return on assets rose from 4.01% to 10.04% on a barely-changed asset base.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:6.71}, {year:2022,value:15}, {year:2023,value:17.31}, {year:2024,value:18.3}, {year:2025,value:20.66} ],
+          note: 'Return on capital rose from 6.71% to 20.66%, improving in every single year and more than tripling. THIS is the measure that works here, and it says the business genuinely got much better \u2014 the negative equity is a capital-structure choice, not a symptom.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:-35.31}, {year:2022,value:-131.14}, {year:2023,value:-66.82}, {year:2024,value:-50.99}, {year:2025,value:-32.34} ],
+          note: 'NOT MEANINGFUL. Reported at \u221232% to \u2212131% purely because equity is negative while earnings are positive. Use return on capital.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:7.05}, {year:2022,value:3.78}, {year:2023,value:3.76}, {year:2024,value:4.41}, {year:2025,value:4.22} ],
+          note: 'Gross leverage improved from 7.05\u00d7 to 4.22\u00d7 \u2014 but that is EBITDA recovering from a COVID base, not debt reduction. Debt rose 40% over the same span.'
+        },
+        { label: 'Net Debt to EBITDA', unit: 'x', series: [ {year:2021,value:5.88}, {year:2022,value:3.25}, {year:2023,value:3.43}, {year:2024,value:3.89}, {year:2025,value:3.9} ],
+          note: 'Net leverage of 3.90\u00d7, improved from 5.88\u00d7. This is the honest leverage measure given equity is negative, and 3.90\u00d7 is meaningfully higher than Marriott at 3.42\u00d7.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:109}, {year:2022,value:1680}, {year:2023,value:1950}, {year:2024,value:2010}, {year:2025,value:2130} ],
+        note: 'Operating cash flow went from $109M (FY2021, COVID) to $2.13B \u2014 a nearly twenty-fold increase, rising in every single year.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:906.88}, {year:2022,value:1520}, {year:2023,value:1450}, {year:2024,value:1630}, {year:2025,value:1730} ],
+        note: 'Free cash flow grew from $906.9M to $1.73B, up 90.8%, and rose in four of five years. Steady and improving.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:410}, {year:2022,value:1260}, {year:2023,value:1140}, {year:2024,value:1540}, {year:2025,value:1460} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:1140}, {year:2022,value:1760}, {year:2023,value:1720}, {year:2024,value:1970}, {year:2025,value:2100} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:832}, {year:2022,value:90.48}, {year:2023,value:74.36}, {year:2024,value:81.09}, {year:2025,value:81.22} ],
+          note: 'Conversion ran 74.4%\u201390.5% from FY2022, ending at 81.2%.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:26.59}, {year:2022,value:133.33}, {year:2023,value:171.05}, {year:2024,value:130.52}, {year:2025,value:145.89} ],
+          note: 'Operating cash flow ran 131%\u2013171% of net income from FY2022 onward. FY2021 at 27% is the COVID distortion.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-57}, {year:2022,value:-123}, {year:2023,value:-305}, {year:2024,value:-446}, {year:2025,value:-190} ],
+          note: 'Investing outflows are tiny at $57M\u2013$446M. Hilton consumes almost no capital.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-1790}, {year:2022,value:-1770}, {year:2023,value:-2040}, {year:2024,value:-1050}, {year:2025,value:-2350} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:52.29}, {year:2022,value:7.32}, {year:2023,value:15.64}, {year:2024,value:22.19}, {year:2025,value:8.92} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-49}, {year:2022,value:-1650}, {year:2023,value:-2390}, {year:2024,value:-2970}, {year:2025,value:-3250} ],
+          note: 'Buybacks went from $49M to $3.25B \u2014 a 66-fold increase, rising in every single year. Over five years $10.31B was repurchased against $5.81B of cumulative net income.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2022,value:-123}, {year:2023,value:-158}, {year:2024,value:-150}, {year:2025,value:-143} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:0.46}, {year:2023,value:0.63}, {year:2024,value:0.62}, {year:2025,value:0.62} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Roughly $0.46 to $0.63.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:9.76}, {year:2023,value:13.86}, {year:2024,value:9.74}, {year:2025,value:9.79} ],
+          note: 'Dividend payout ran 9.7%\u201313.9% of net income. Trivial next to the repurchase programme.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:49}, {year:2022,value:1773}, {year:2023,value:2548}, {year:2024,value:3120}, {year:2025,value:3393} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:5.4}, {year:2022,value:116.64}, {year:2023,value:175.72}, {year:2024,value:191.41}, {year:2025,value:196.13} ],
+          note: 'Shareholder returns ran 5.4% of free cash flow in FY2021 then 116.6%, 175.7%, 191.4% and 196.1%. For four straight years Hilton has returned roughly twice what it generates, funded by debt \u2014 which is exactly why equity keeps sliding.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'M USD', series: [ {year:2023,value:-92} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2021,value:-7}, {year:2024,value:5} ] },
+        { label: 'Sale / Purchase of Intangible Assets', unit: 'M USD', series: [ {year:2021,value:-44}, {year:2022,value:-63}, {year:2023,value:-96}, {year:2024,value:-102}, {year:2025,value:-84} ] },
+        { label: 'Foreign Exchange Rate Adjustments', unit: 'M USD', series: [ {year:2021,value:-10}, {year:2022,value:-19}, {year:2023,value:-12}, {year:2024,value:-21}, {year:2025,value:3} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2024,value:-236}, {year:2025,value:-4} ] },
+        { label: 'Net Increase / (Decrease) in Loans Originated', unit: 'M USD', series: [ {year:2021,value:-3}, {year:2022,value:-44}, {year:2023,value:-22}, {year:2024,value:-8}, {year:2025,value:-3} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-1750}, {year:2022,value:-226}, {year:2023,value:-411}, {year:2024,value:501}, {year:2025,value:-406} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// MAR_BREAKDOWN — Marriott International, Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied hotels data drop — income statement, balance
+// sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// NEGATIVE EQUITY: supplied ROE, price-to-book and debt-to-equity carry
+// no information. Net debt to EBITDA and return on capital are the
+// measures that work; the unusable ones are retained but flagged.
+// PRICE-TO-BOOK: an "Implied Share Price" diagnostic line is derived as
+// price-to-book x book value per share. It returns an identical price in
+// all five years, proving the supplied price-to-book series is a single
+// CURRENT price over each year's book value, not a historical multiple.
+// This holds across the whole dataset, not just these two names.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: equity crosses from positive to negative in FY2023, so
+// the supplied ROE reads -5,408.77% that year and price-to-book flips
+// sign between consecutive years. FY2021 and FY2023 effective tax rates
+// (6.86%, 8.73%) are far below the 23-25% band and flatter those years.
+// Free cash flow EXCEEDS operating cash flow in FY2021 and FY2022.
+// FY2021 is a COVID-depressed base.
+// ═════════════════════════════════════════════════════════════════
+const MAR_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:3420}, {year:2022,value:5360}, {year:2023,value:6300}, {year:2024,value:6620}, {year:2025,value:6980} ],
+        note: 'Revenue more than doubled, from $3.42B to $6.98B, up 104.1%, and rose in every year. FY2021 is a COVID-depressed base; growth from a normalised FY2023 is 10.8% over two years.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:734}, {year:2022,value:1070}, {year:2023,value:1310}, {year:2024,value:1330}, {year:2025,value:1460} ] },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:2686}, {year:2022,value:4290}, {year:2023,value:4990}, {year:2024,value:5290}, {year:2025,value:5520} ],
+        note: 'Gross profit grew from $2.69B to $5.52B, up 105.5%.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:78.54}, {year:2022,value:80.04}, {year:2023,value:79.21}, {year:2024,value:79.91}, {year:2025,value:79.08} ],
+        note: 'Gross margin is stable at 78.54%\u201380.04%, ending at 79.08% \u2014 marginally ahead of Hilton at 77.98% and remarkably consistent across the recovery.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:1290}, {year:2022,value:1530}, {year:2023,value:1660}, {year:2024,value:1940}, {year:2025,value:1870} ],
+          note: 'SG&A grew 45.0%, from $1.29B to $1.87B, against 104.1% revenue growth. Real operating leverage, though less extreme than Hilton\u2019s.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:37.72}, {year:2022,value:28.54}, {year:2023,value:26.35}, {year:2024,value:29.31}, {year:2025,value:26.79} ],
+          note: 'SG&A fell from 37.72% of revenue to 26.79%. Note this is more than three times Hilton\u2019s 8.30% \u2014 the two report their cost bases on very different bases, so the levels are not directly comparable even though the trends are.'
+        },
+        { label: 'Operating Expense', unit: 'M USD', series: [ {year:2021,value:923}, {year:2022,value:808}, {year:2023,value:1070}, {year:2024,value:1450}, {year:2025,value:1380} ] },
+        { label: 'Other Operating Expenses', unit: 'M USD', series: [ {year:2021,value:-590}, {year:2022,value:-911}, {year:2023,value:-783}, {year:2024,value:-676}, {year:2025,value:-700} ] },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:1660}, {year:2022,value:1880}, {year:2023,value:2380}, {year:2024,value:2770}, {year:2025,value:2840} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:1760}, {year:2022,value:3470}, {year:2023,value:3920}, {year:2024,value:3840}, {year:2025,value:4140} ],
+        note: 'Operating income grew from $1.76B to $4.14B, up 135.2%, though FY2024 stepped back before recovering.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:51.46}, {year:2022,value:64.74}, {year:2023,value:62.22}, {year:2024,value:58.01}, {year:2025,value:59.31} ],
+        note: 'Operating margin rose from 51.46% to 59.31%, peaking at 62.22% in FY2023. Higher than Hilton at 54.14% in every year of the period.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-420}, {year:2022,value:-403}, {year:2023,value:-565}, {year:2024,value:-695}, {year:2025,value:-809} ],
+        note: 'Interest expense grew 92.6%, from $420M to $809M \u2014 nearly doubling, and faster than either revenue or operating income. It now consumes 19.5% of operating income.'
+      },
+      otherIncomeExpense: { label: 'Other Non-Operating Income', unit: 'M USD', series: [ {year:2021,value:10}, {year:2022,value:11}, {year:2023,value:40}, {year:2024,value:31}, {year:2025,value:9} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:81}, {year:2022,value:756}, {year:2023,value:295}, {year:2024,value:776}, {year:2025,value:793} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:6.86}, {year:2022,value:24.28}, {year:2023,value:8.73}, {year:2024,value:24.63}, {year:2025,value:23.36} ],
+        note: 'Wildly unstable: 6.86%, 24.28%, 8.73%, 24.63%, 23.36%. The FY2021 and FY2023 rates are far below the others and materially flatter those years\u2019 net income. Any earnings model should use the 23\u201325% band.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:1100}, {year:2022,value:2360}, {year:2023,value:3080}, {year:2024,value:2380}, {year:2025,value:2600} ],
+        note: 'Net income of $1.10B, $2.36B, $3.08B, $2.38B, $2.60B. The FY2023 peak of $3.08B is inflated by an 8.73% effective tax rate; FY2024 fell 22.7% largely because the rate normalised.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:32.18}, {year:2022,value:44.03}, {year:2023,value:48.94}, {year:2024,value:35.89}, {year:2025,value:37.25} ],
+        note: 'Net margin of 48.94% in FY2023 against 35.89% in FY2024, on rising revenue and barely-changed operating margin. Tax, not operations.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:3.19}, {year:2022,value:6.69}, {year:2023,value:9.99}, {year:2024,value:9.33}, {year:2025,value:10.02} ],
+        note: 'EPS grew from $3.19 to $10.02, up 214%, against 136% net income growth \u2014 the 18.8% share count reduction does the rest. EPS reconciles to net income \u00f7 shares within about 7% in every year, which is cleaner than most of this coverage.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:326.31}, {year:2022,value:308.12}, {year:2023,value:289.49}, {year:2024,value:275.7}, {year:2025,value:264.98} ],
+        note: 'Share count fell from 326.31M to 264.98M, down 18.8%, and fell in every year \u2014 marginally more aggressive than Hilton.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:2060}, {year:2022,value:3790}, {year:2023,value:4270}, {year:2024,value:4230}, {year:2025,value:4600} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:60.23}, {year:2022,value:70.71}, {year:2023,value:67.78}, {year:2024,value:63.9}, {year:2025,value:65.9} ],
+          note: 'EBITDA margin improved from 60.23% to 65.90% \u2014 ahead of Hilton at 57.58%.'
+        },
+        { label: 'Depreciation & Amortisation', unit: 'M USD', series: [ {year:2021,value:220}, {year:2022,value:193}, {year:2023,value:189}, {year:2024,value:183}, {year:2025,value:213} ] },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:1180}, {year:2022,value:3110}, {year:2023,value:3380}, {year:2024,value:3150}, {year:2025,value:3390} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:1350}, {year:2022,value:3130}, {year:2023,value:3440}, {year:2024,value:3230}, {year:2025,value:3390} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:-170}, {year:2022,value:-20}, {year:2023,value:-60}, {year:2024,value:-80}, {year:2025,value:0} ],
+          note: 'Unusual items are small in every year, ranging \u2212$170M to nil.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:160}, {year:2022,value:147.03}, {year:2023,value:127.27}, {year:2024,value:161.34}, {year:2025,value:159.23} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:28}, {year:2022,value:26}, {year:2023,value:30}, {year:2024,value:40}, {year:2025,value:42} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-392}, {year:2022,value:-377}, {year:2023,value:-535}, {year:2024,value:-655}, {year:2025,value:-767} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:4.19}, {year:2022,value:8.61}, {year:2023,value:6.94}, {year:2024,value:5.53}, {year:2025,value:5.12} ],
+          note: 'Interest coverage improved from 4.19\u00d7 to 5.12\u00d7, though it peaked at 8.61\u00d7 in FY2022 and has fallen in each of the three years since as debt was raised for buybacks.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:1390}, {year:2022,value:507}, {year:2023,value:338}, {year:2024,value:396}, {year:2025,value:358} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:1980}, {year:2022,value:2570}, {year:2023,value:2710}, {year:2024,value:2800}, {year:2025,value:2910} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:3630}, {year:2022,value:3310}, {year:2023,value:3310}, {year:2024,value:3490}, {year:2025,value:3580} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:2570}, {year:2022,value:2570}, {year:2023,value:2510}, {year:2024,value:2680}, {year:2025,value:2900} ],
+        note: 'Net PP&E of $2.90B on a $27.54B balance sheet \u2014 10.5%. Asset-light, though somewhat less so than Hilton at 7.5%.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:9070}, {year:2022,value:8870}, {year:2023,value:8890}, {year:2024,value:8730}, {year:2025,value:8910} ],
+        note: 'Goodwill is flat at $8.73B\u2013$9.07B. Combined with $10.34B of intangibles, $19.25B of the $27.54B balance sheet \u2014 69.9% \u2014 is intangible, almost exactly matching Hilton\u2019s 70.2%.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:8930}, {year:2022,value:8750}, {year:2023,value:9190}, {year:2024,value:9490}, {year:2025,value:10340} ] },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2021,value:228}, {year:2022,value:240}, {year:2023,value:673}, {year:2024,value:650}, {year:2025,value:570} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:169}, {year:2022,value:313}, {year:2023,value:209}, {year:2024,value:81}, {year:2025,value:79} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:604}, {year:2022,value:584}, {year:2023,value:658}, {year:2024,value:716}, {year:2025,value:799} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:25550}, {year:2022,value:24820}, {year:2023,value:25670}, {year:2024,value:26180}, {year:2025,value:27540} ],
+        note: 'Total assets grew only 7.8% across five years while revenue doubled.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:726}, {year:2022,value:746}, {year:2023,value:738}, {year:2024,value:763}, {year:2025,value:814} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:2200}, {year:2022,value:2490}, {year:2023,value:3040}, {year:2024,value:2990}, {year:2025,value:2770} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:798}, {year:2022,value:676}, {year:2023,value:545}, {year:2024,value:1300}, {year:2025,value:1200} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:9190}, {year:2022,value:9250}, {year:2023,value:11200}, {year:2024,value:13020}, {year:2025,value:14890} ],
+        note: 'Long-term debt grew from $9.19B to $14.89B, up 62.0%, or $5.70B. The increase almost exactly matches the $14.07B of buybacks less retained profit.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:9988}, {year:2022,value:9926}, {year:2023,value:11745}, {year:2024,value:14320}, {year:2025,value:16090} ],
+        note: 'Total debt grew from $9.99B to $16.09B, up 61.1%.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:2000}, {year:2022,value:1840}, {year:2023,value:1480}, {year:2024,value:1380}, {year:2025,value:1270} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:24140}, {year:2022,value:24250}, {year:2023,value:26360}, {year:2024,value:29170}, {year:2025,value:31310} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2021,value:5890}, {year:2022,value:5970}, {year:2023,value:6050}, {year:2024,value:6180}, {year:2025,value:6350} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:10310}, {year:2022,value:12340}, {year:2023,value:14840}, {year:2024,value:16530}, {year:2025,value:18410} ],
+        note: 'Retained earnings are POSITIVE and growing strongly \u2014 $10.31B to $18.41B, up 78.6%. Unlike Hilton, Marriott has a large accumulated profit balance; the negative equity is entirely the $27.90B treasury stock sitting against it.'
+      },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:1410}, {year:2022,value:568}, {year:2023,value:-682}, {year:2024,value:-2990}, {year:2025,value:-3770} ],
+        note: 'Common equity FLIPPED from positive to negative during the period \u2014 $1.41B, $568M, then \u2212$682M, \u2212$2.99B, \u2212$3.77B. FY2023 is the crossover year, and it is the reason the supplied ROE reads \u22125,408.77% that year: equity of \u2212$682M is close enough to zero that the ratio explodes.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:4.33}, {year:2022,value:1.83}, {year:2023,value:-2.35}, {year:2024,value:-10.81}, {year:2025,value:-14.18} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:81.08}, {year:2022,value:191.85}, {year:2023,value:-149.4}, {year:2024,value:-32.48}, {year:2025,value:-24.76} ],
+        note: 'NOT MEANINGFUL as a historical series \u2014 see the implied share price line directly below. It also flips sign in FY2023 as book value crosses zero, going from +191.85\u00d7 to \u2212149.40\u00d7 between consecutive years.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:7.08}, {year:2022,value:17.48}, {year:2023,value:-17.22}, {year:2024,value:-4.79}, {year:2025,value:-4.27} ],
+        note: 'NOT MEANINGFUL from FY2023 onward, when equity turned negative.'
+      },
+      extraLines: [
+        { label: 'Implied Share Price \u2014 Price-to-Book \u00d7 Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:351.08}, {year:2022,value:351.09}, {year:2023,value:351.09}, {year:2024,value:351.11}, {year:2025,value:351.1} ],
+          note: 'Diagnostic line. Price-to-book \u00d7 book value per share should recover the share price the source used in each year. Here it returns the SAME price in all five years, which means the supplied price-to-book series is one current price divided by each year\u2019s book value \u2014 not a historical multiple. Movements in the price-to-book line therefore track book value per share only, and say nothing about how the market rated the company in past years. This holds across every company in coverage, not just this one.'
+        },
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:8598}, {year:2022,value:9419}, {year:2023,value:11407}, {year:2024,value:13924}, {year:2025,value:15732} ],
+          note: 'Net debt grew from $8.60B to $15.73B \u2014 up 82.9%, nearly doubling in five years.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:387}, {year:2022,value:335}, {year:2023,value:308}, {year:2024,value:298}, {year:2025,value:298} ] },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2021,value:2520}, {year:2022,value:3310}, {year:2023,value:3330}, {year:2024,value:3490}, {year:2025,value:3500} ] },
+        { label: 'Total Unearned Revenue \u2014 Current + Non-Current', unit: 'M USD', series: [ {year:2021,value:7650}, {year:2022,value:7650}, {year:2023,value:8030}, {year:2024,value:8630}, {year:2025,value:9200} ],
+          note: 'Current plus non-current unearned revenue of $9.20B, up from $7.65B. This is Bonvoy \u2014 points sold to card partners and not yet redeemed, plus deferred fees. It is 70% larger than Hilton\u2019s equivalent float.'
+        },
+        { label: 'Total Unearned Revenue as % of Revenue', unit: '%', series: [ {year:2021,value:223.68}, {year:2022,value:142.72}, {year:2023,value:127.46}, {year:2024,value:130.36}, {year:2025,value:131.81} ],
+          note: 'Total unearned revenue equals 131.8% of annual revenue \u2014 Marriott holds nearly sixteen months of revenue as deferred loyalty liability, against Hilton at 109.5%. Customer money held ahead of delivery, at no interest cost.'
+        },
+        { label: 'Unearned Revenue \u2014 Non-Current', unit: 'M USD', series: [ {year:2021,value:5130}, {year:2022,value:4340}, {year:2023,value:4700}, {year:2024,value:5140}, {year:2025,value:5700} ] },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:1240}, {year:2022,value:1170}, {year:2023,value:1010}, {year:2024,value:909}, {year:2025,value:988} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:157}, {year:2022,value:114}, {year:2023,value:113}, {year:2024,value:113}, {year:2025,value:110} ] },
+        { label: 'Prepaid Expenses', unit: 'M USD', series: [ {year:2021,value:251}, {year:2022,value:235}, {year:2023,value:261}, {year:2024,value:294}, {year:2025,value:317} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-342}, {year:2022,value:-729}, {year:2023,value:-647}, {year:2024,value:-1060}, {year:2025,value:-642} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-14450}, {year:2022,value:-17020}, {year:2023,value:-20930}, {year:2024,value:-24640}, {year:2025,value:-27900} ],
+          note: 'Treasury stock grew from \u2212$14.45B to \u2212$27.90B \u2014 $13.45B of stock retired in five years, nearly doubling.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:1410}, {year:2022,value:568}, {year:2023,value:-682}, {year:2024,value:-2990}, {year:2025,value:-3770} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:-16590}, {year:2022,value:-17050}, {year:2023,value:-18760}, {year:2024,value:-21210}, {year:2025,value:-23010} ],
+          note: 'Tangible book value of \u2212$23.01B against \u2212$17.17B for Hilton \u2014 a deeper negative on a larger balance sheet.'
+        },
+        { label: 'Treasury Stock as % of Retained Earnings', unit: '%', series: [ {year:2021,value:140.16}, {year:2022,value:137.93}, {year:2023,value:141.04}, {year:2024,value:149.06}, {year:2025,value:151.55} ],
+          note: 'Treasury stock equals 151.5% of retained earnings, up from 140.2%. Marriott has repurchased half again more than everything it has ever retained.'
+        },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:4.37}, {year:2022,value:8.62}, {year:2023,value:9.71}, {year:2024,value:9.27}, {year:2025,value:9.63} ],
+          note: 'Return on assets rose from 4.37% to 9.63%, marginally below Hilton at 10.04%.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:8.94}, {year:2022,value:17.67}, {year:2023,value:20.48}, {year:2024,value:19.58}, {year:2025,value:20.08} ],
+          note: 'Return on capital rose from 8.94% to 20.08%, more than doubling, and has been stable at 19.6%\u201320.5% for three years. Essentially identical to Hilton\u2019s 20.66% \u2014 the two businesses earn the same return on capital.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:119.2}, {year:2022,value:237.94}, {year:2023,value:-5408.77}, {year:2024,value:-129.29}, {year:2025,value:-76.92} ],
+          note: 'NOT MEANINGFUL. The supplied series reads +119%, +238%, \u22125,409%, \u2212129%, \u221277% \u2014 it flips sign and blows up to over five thousand percent as equity crosses zero in FY2023. The number carries no information about the business whatsoever. Use return on capital.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:4.85}, {year:2022,value:2.62}, {year:2023,value:2.75}, {year:2024,value:3.39}, {year:2025,value:3.5} ],
+          note: 'Gross leverage improved from 4.85\u00d7 to 3.50\u00d7 on EBITDA recovery, having troughed at 2.62\u00d7 in FY2022. It has risen in each of the last three years.'
+        },
+        { label: 'Net Debt to EBITDA', unit: 'x', series: [ {year:2021,value:4.17}, {year:2022,value:2.49}, {year:2023,value:2.67}, {year:2024,value:3.29}, {year:2025,value:3.42} ],
+          note: 'Net leverage of 3.42\u00d7, having troughed at 2.49\u00d7 in FY2022 and risen every year since. Lower than Hilton at 3.90\u00d7, but moving the wrong way.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:1180}, {year:2022,value:2360}, {year:2023,value:3170}, {year:2024,value:2750}, {year:2025,value:3210} ],
+        note: 'Operating cash flow grew from $1.18B to $3.21B, up 172%, and is at the highest of the period.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:1870}, {year:2022,value:2700}, {year:2023,value:2580}, {year:2024,value:1930}, {year:2025,value:1670} ],
+        note: 'Free cash flow PEAKED at $2.70B in FY2022 and has fallen in three of the four years since, to $1.67B \u2014 down 38.1% from the peak, while operating cash flow rose 36.0% over the same span. That divergence is the most important thing in the Marriott dataset and it is the opposite of Hilton, whose free cash flow rose.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:1100}, {year:2022,value:2360}, {year:2023,value:3080}, {year:2024,value:2380}, {year:2025,value:2600} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:2140}, {year:2022,value:2960}, {year:2023,value:2930}, {year:2024,value:2370}, {year:2025,value:2180} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:158.47}, {year:2022,value:114.41}, {year:2023,value:81.39}, {year:2024,value:70.18}, {year:2025,value:52.02} ],
+          note: 'Conversion collapsed from 158.5% (FY2021) to 52.0% (FY2025). Note the FY2021 and FY2022 figures exceed 100%, meaning free cash flow exceeded operating cash flow \u2014 the source\u2019s free cash flow definition is not operating cash flow minus capex in those years.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:107.27}, {year:2022,value:100}, {year:2023,value:102.92}, {year:2024,value:115.55}, {year:2025,value:123.46} ],
+          note: 'Operating cash flow ran 100%\u2013123% of net income from FY2022 \u2014 tight and consistent.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-187}, {year:2022,value:-297}, {year:2023,value:-465}, {year:2024,value:-734}, {year:2025,value:-948} ],
+          note: 'Investing outflows grew steadily from $187M to $948M \u2014 more than five-fold, and rising in every year while Hilton\u2019s stayed flat.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-463}, {year:2022,value:-2960}, {year:2023,value:-2860}, {year:2024,value:-1960}, {year:2025,value:-2320} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:15.85}, {year:2022,value:12.58}, {year:2023,value:14.67}, {year:2024,value:26.69}, {year:2025,value:29.53} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-90}, {year:2022,value:-2660}, {year:2023,value:-4060}, {year:2024,value:-3900}, {year:2025,value:-3420} ],
+          note: 'Buybacks of $90M, $2.66B, $4.06B, $3.90B and $3.42B \u2014 $14.13B over five years against $11.52B of cumulative net income. Marriott has repurchased more than it earned.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2022,value:-321}, {year:2023,value:-587}, {year:2024,value:-682}, {year:2025,value:-718} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2022,value:1.04}, {year:2023,value:2.03}, {year:2024,value:2.47}, {year:2025,value:2.71} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $1.04 to $2.71, up 160%.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2022,value:13.6}, {year:2023,value:19.06}, {year:2024,value:28.66}, {year:2025,value:27.62} ],
+          note: 'Payout rose from 13.6% to 27.6% of net income as the dividend was rebuilt post-COVID.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:90}, {year:2022,value:2981}, {year:2023,value:4647}, {year:2024,value:4582}, {year:2025,value:4138} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:4.81}, {year:2022,value:110.41}, {year:2023,value:180.12}, {year:2024,value:237.41}, {year:2025,value:247.78} ],
+          note: 'Shareholder returns ran 4.8% of free cash flow in FY2021 then 110.4%, 180.1%, 237.4% and 247.8%. Marriott now returns nearly two and a half times its free cash flow, and the gap has widened every year since FY2022. Debt has risen $6.10B over the same period.'
+        },
+        { label: 'Net Increase / (Decrease) in Loans Originated', unit: 'M USD', series: [ {year:2021,value:27}, {year:2022,value:3}, {year:2023,value:-16}, {year:2024,value:26}, {year:2025,value:-13} ] },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:527}, {year:2022,value:-896}, {year:2023,value:-159}, {year:2024,value:59}, {year:2025,value:-54} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -16738,8 +17199,8 @@ const COVERAGE_DATA = [
   { ticker: 'PG',    name: 'Procter & Gamble',             industry: 'Consumer Goods', country: 'United States', marketCap: 347000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Consumer-staples powerhouse — a portfolio of trusted household brands (Tide, Pampers, Gillette) with 70 straight years of dividend increases.', breakdown: null, locked: true },
 
   // === HOTELS · USA ===
-  { ticker: 'HLT',   name: 'Hilton Worldwide',             industry: 'Hotels',      country: 'United States', marketCap: 79000000000,   marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Asset-light global hotel franchisor — fee-based royalty economics across 8,000+ properties from Waldorf Astoria to Hampton.', breakdown: null, locked: true },
-  { ticker: 'MAR',   name: 'Marriott International',        industry: 'Hotels',      country: 'United States', marketCap: 99000000000,   marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'The world’s largest hotel company — an asset-light, fee-driven model spanning Ritz-Carlton to Courtyard, powered by the Bonvoy loyalty flywheel.', breakdown: null, locked: true },
+  { ticker: 'HLT',   name: 'Hilton Worldwide',             industry: 'Hotels',      country: 'United States', marketCap: 79000000000,   marketCapDate: '28 Jun 2026', verdict: null, tier: 2, oneLiner: 'Asset-light global hotel franchisor — fee-based royalty economics across 8,000+ properties from Waldorf Astoria to Hampton.', breakdown: HLT_BREAKDOWN },
+  { ticker: 'MAR',   name: 'Marriott International',        industry: 'Hotels',      country: 'United States', marketCap: 99000000000,   marketCapDate: '28 Jun 2026', verdict: null, tier: 2, oneLiner: 'The world’s largest hotel company — an asset-light, fee-driven model spanning Ritz-Carlton to Courtyard, powered by the Bonvoy loyalty flywheel.', breakdown: MAR_BREAKDOWN },
 
   // === OIL & GAS · USA ===
   { ticker: 'CVX',   name: 'Chevron',                      industry: 'Oil & Gas',           country: 'United States', marketCap: 340000000000,  marketCapDate: '28 Jun 2026', verdict: null, oneLiner: 'Integrated oil & gas major — upstream-to-downstream energy with a 4%+ dividend, now pivoting into powering AI data centers.', breakdown: null, locked: true },
