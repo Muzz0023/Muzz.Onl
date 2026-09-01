@@ -25521,31 +25521,33 @@ const QSR_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════
-// GOOG_BREAKDOWN — Alphabet Inc. Coverage data (Tier 2, drop 1 of n)
-// SOURCE: Muzz's supplied qualitative material — strategic overview,
-// corporate structure, culture and workforce, and the pending acquisitions
-// note.
+// GOOG_BREAKDOWN — Alphabet Inc. Coverage data (Tier 2, drops 1-2)
+// SOURCE: Muzz's supplied material — strategic overview, corporate
+// structure, culture and workforce, pending acquisitions, the Commitments
+// and Contingencies note, Business Combinations, and the Human Capital
+// per-employee table FY2015-FY2025.
 //
-// TABS LIVE: OVERVIEW, MOAT.
-// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS.
+// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
 //
-// TIER 2 — no financial statements supplied yet. Tier 1 requires the
-// multi-year income statement, balance sheet and cash flow.
+// STILL TIER 2. Only revenue and net income exist, taken from the
+// per-employee table rather than the statements. No cost lines, no balance
+// sheet, no cash flow, and no Services / Cloud / Other Bets segment split.
 //
-// VINTAGE IS MIXED — FLAGGED IN-APP. The strategic and workforce sections
-// read as FY2024 material: headcount is dated 31 Dec 2024 (183,323) and the
-// AI narrative tops out at Gemini 2.0 (2024). The acquisitions note is
-// FY2025: Wiz signed Mar 2025, Intersect Dec 2025, both expected to close
-// in 2026. Time-sensitive items should be re-checked against the current
-// filing.
+// VERIFIED: revenue/employees and net income/employees reproduce the
+// supplied per-employee columns in all 11 years to within ~$12. The
+// residual is the revenue column rounded to the nearest $1m while the
+// per-employee figures were struck off exact revenue. Not a fault.
 //
-// The 183,323 headcount is NOT built as a numbers series — a single dated
-// data point would render as a one-point chart. It goes in when a
-// multi-year series arrives.
+// MARGIN CAVEAT CARRIED IN-APP: the derived net margin is CONSOLIDATED, so
+// it is struck after Other Bets losses and after unallocated Alphabet-level
+// costs. The core business earns more than that line shows. Do not compare
+// it with a single-segment company without that adjustment.
 //
-// "facts" stat block deliberately unpopulated (needs founded/HQ/CEO, not
-// supplied). "leadership" not built — only Sundar Pichai is named, which is
-// not enough for the executives/board renderer.
+// The $16.9bn data-centre-lease credit derivatives referenced in Muzz's
+// commentary come from an EARLIER derivatives audit not included in this
+// drop, so they are mentioned in prose but NOT built as a derivatives
+// section. Send that source and it goes in properly.
 // ════════════════════════════════════════════════════════════════
 const GOOG_BREAKDOWN = {
   overview: {
@@ -25651,6 +25653,14 @@ const GOOG_BREAKDOWN = {
     },
     acquisitions: [
       {
+        year: 'Aug 2024',
+        target: 'character.ai \u2014 LLM technology licence',
+        price: '$2.7bn cash',
+        funding: 'Cash, plus cancellation of Alphabet\u2019s convertible instruments',
+        featured: true,
+        note: 'COMPLETED. Structured as a NON-EXCLUSIVE LICENCE to Character\u2019s then-current large language model technology, plus the hiring of certain employees \u2014 but accounted for as a business combination under ASC 805. Alphabet recorded $2.7bn of goodwill and $413m of intangible assets. Note what that means: essentially the entire $2.7bn went to GOODWILL, with only $413m attributable to identifiable assets \u2014 the value was the team and the arrangement, not the technology on its own. Goodwill was recorded across BOTH Google Services and Google Cloud, and is deductible for tax purposes. The licence-plus-hiring structure is the shape the whole industry adopted in 2024; the accounting treated it as an acquisition regardless of the legal form.',
+      },
+      {
         year: 'Mar 2025',
         target: 'Wiz \u2014 cloud security platform',
         price: '$32.0bn, all cash',
@@ -25702,6 +25712,554 @@ const GOOG_BREAKDOWN = {
           division: 'AI research \u2014 DeepMind and Google Research',
           moatStrength: 'Strong',
           biggestRisk: 'Centralised rather than scattered, with an owned full stack from silicon to model. The moat is the combination of talent, compute and distribution in one company. The risk is that frontier model capability is proving easier to replicate than distribution \u2014 which argues the distribution, not the research, is the durable half.',
+        },
+      ],
+    },
+  },
+  numbers: {
+    employees: {
+      label: 'Total Employees',
+      unit: '',
+      series: [
+        {
+          year: 2015,
+          value: 61814,
+        },
+        {
+          year: 2016,
+          value: 72053,
+        },
+        {
+          year: 2017,
+          value: 80110,
+        },
+        {
+          year: 2018,
+          value: 98771,
+        },
+        {
+          year: 2019,
+          value: 118899,
+        },
+        {
+          year: 2020,
+          value: 135301,
+        },
+        {
+          year: 2021,
+          value: 156500,
+        },
+        {
+          year: 2022,
+          value: 190234,
+        },
+        {
+          year: 2023,
+          value: 182502,
+          down: true,
+        },
+        {
+          year: 2024,
+          value: 183323,
+        },
+        {
+          year: 2025,
+          value: 190820,
+        },
+      ],
+      note: 'Headcount grew 208.7% over eleven years, from 61,814 to 190,820. The shape matters more than the total: it ran up 22.0% in FY2022 alone to 190,234, FELL to 182,502 in FY2023 \u2014 the only decline in the series \u2014 and has since drifted back to 190,820. Alphabet employs essentially the same number of people today as it did in FY2022.',
+    },
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 1213146,
+        },
+        {
+          year: 2016,
+          value: 1252861,
+        },
+        {
+          year: 2017,
+          value: 1383786,
+        },
+        {
+          year: 2018,
+          value: 1385219,
+        },
+        {
+          year: 2019,
+          value: 1361286,
+          down: true,
+        },
+        {
+          year: 2020,
+          value: 1349046,
+          down: true,
+        },
+        {
+          year: 2021,
+          value: 1646243,
+        },
+        {
+          year: 2022,
+          value: 1486778,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 1684331,
+        },
+        {
+          year: 2024,
+          value: 1909296,
+        },
+        {
+          year: 2025,
+          value: 2111080,
+        },
+      ],
+      note: 'Revenue per head rose 74.0%, from $1.21m to $2.11m, and crossed $2m for the first time in FY2025. But it went BACKWARDS in three years \u2014 FY2019, FY2020 and most sharply FY2022, when the hiring surge outran revenue and the figure fell 9.7%. The recovery since is the clearest evidence of the post-FY2022 discipline.',
+    },
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 264471,
+        },
+        {
+          year: 2016,
+          value: 270329,
+        },
+        {
+          year: 2017,
+          value: 158057,
+          down: true,
+        },
+        {
+          year: 2018,
+          value: 311184,
+        },
+        {
+          year: 2019,
+          value: 288841,
+          down: true,
+        },
+        {
+          year: 2020,
+          value: 297628,
+        },
+        {
+          year: 2021,
+          value: 485834,
+        },
+        {
+          year: 2022,
+          value: 315254,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 404352,
+        },
+        {
+          year: 2024,
+          value: 546128,
+        },
+        {
+          year: 2025,
+          value: 692642,
+        },
+      ],
+      note: 'Profit per head rose 161.9%, from $264k to $693k \u2014 more than twice the rate of revenue per head, so margin per person improved as well as volume. The FY2017 trough of $158k is the EU Shopping fine and the US tax reform charge, not an operating collapse. FY2022\'s fall to $315k is the hiring surge.',
+    },
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Revenue',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 74989,
+          },
+          {
+            year: 2016,
+            value: 90272,
+          },
+          {
+            year: 2017,
+            value: 110855,
+          },
+          {
+            year: 2018,
+            value: 136819,
+          },
+          {
+            year: 2019,
+            value: 161857,
+          },
+          {
+            year: 2020,
+            value: 182527,
+          },
+          {
+            year: 2021,
+            value: 257637,
+          },
+          {
+            year: 2022,
+            value: 282836,
+          },
+          {
+            year: 2023,
+            value: 307394,
+          },
+          {
+            year: 2024,
+            value: 350018,
+          },
+          {
+            year: 2025,
+            value: 402836,
+          },
+        ],
+        note: 'PARTIAL INCOME STATEMENT \u2014 only revenue and net income are available, sourced from the per-employee table rather than the financial statements. Cost of revenue, operating expense, operating income, tax and EPS are NOT yet supplied, and neither is the Google Services / Cloud / Other Bets split. Revenue grew 437% over eleven years, from $75.0bn to $402.8bn, and rose in every single year \u2014 no down years at all, which almost nothing else in this library can claim.',
+      },
+      netIncome: {
+        label: 'Net Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 16348,
+          },
+          {
+            year: 2016,
+            value: 19478,
+          },
+          {
+            year: 2017,
+            value: 12662,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 30736,
+          },
+          {
+            year: 2019,
+            value: 34343,
+          },
+          {
+            year: 2020,
+            value: 40269,
+          },
+          {
+            year: 2021,
+            value: 76033,
+          },
+          {
+            year: 2022,
+            value: 59972,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 73795,
+          },
+          {
+            year: 2024,
+            value: 100118,
+          },
+          {
+            year: 2025,
+            value: 132170,
+          },
+        ],
+        note: 'Net income grew 708% over eleven years, from $16.3bn to $132.2bn. Two down years: FY2017 (\u221235.0%, the EU Shopping fine plus US tax reform) and FY2022 (\u221221.1%). FY2025 at $132.2bn is a record and up 32.0% on FY2024 \u2014 and that is AFTER roughly $5bn of fresh antitrust and privacy charges went through the FY2025 income statement.',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin \u2014 Derived',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 21.8,
+          },
+          {
+            year: 2016,
+            value: 21.58,
+          },
+          {
+            year: 2017,
+            value: 11.42,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 22.46,
+          },
+          {
+            year: 2019,
+            value: 21.22,
+          },
+          {
+            year: 2020,
+            value: 22.06,
+          },
+          {
+            year: 2021,
+            value: 29.51,
+          },
+          {
+            year: 2022,
+            value: 21.2,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 24.01,
+          },
+          {
+            year: 2024,
+            value: 28.6,
+          },
+          {
+            year: 2025,
+            value: 32.81,
+          },
+        ],
+        note: 'Derived as net income \u00f7 revenue. Margin sat in a 21\u201322% band for six of the first seven years, then stepped to 29.5% in FY2021 and has reached 32.81% \u2014 the highest of the period, and 11 points above the FY2015 level. The FY2017 reading of 11.42% is the fine-and-tax-charge year. NOTE: this is the CONSOLIDATED margin, so it is struck AFTER Other Bets losses and after unallocated Alphabet-level costs. The core business earns more than this line shows.',
+      },
+      extraLines: [
+        {
+          label: 'Revenue per Employee \u2014 cross-check',
+          unit: 'USD',
+          series: [
+            {
+              year: 2015,
+              value: 1213146,
+            },
+            {
+              year: 2016,
+              value: 1252861,
+            },
+            {
+              year: 2017,
+              value: 1383786,
+            },
+            {
+              year: 2018,
+              value: 1385219,
+            },
+            {
+              year: 2019,
+              value: 1361286,
+            },
+            {
+              year: 2020,
+              value: 1349046,
+            },
+            {
+              year: 2021,
+              value: 1646243,
+            },
+            {
+              year: 2022,
+              value: 1486778,
+            },
+            {
+              year: 2023,
+              value: 1684331,
+            },
+            {
+              year: 2024,
+              value: 1909296,
+            },
+            {
+              year: 2025,
+              value: 2111080,
+            },
+          ],
+          note: 'Revenue \u00f7 employees reproduces the supplied per-employee column in all eleven years to within about $12. The residual is the revenue column being rounded to the nearest $1m while the per-employee figures were struck off exact revenue. Not a discrepancy.',
+        },
+      ],
+    },
+  },
+  risks: {
+    tldr: 'Six antitrust fronts moved in 2025; three closed. Roughly $5bn of charges hit the FY2025 income statement and net income still hit a record $132.2bn. The pattern is fines and behavioural remedies, not break-up \u2014 with one exception: US ad tech structural remedies, where judgment is pending and the outcome would change the business rather than tax it.',
+    riskSummary: {
+      preamble: 'Three things to take from the antitrust scoreboard, in order of how much they should move a valuation.',
+      categories: [
+        {
+          num: '01',
+          name: 'The worst-case outcomes keep NOT happening',
+          description: 'The pattern across every resolved front is behavioural remedies and fines, not structural break-up. No Chrome divestiture. No Android breakup. Epic resolved by settlement. EU AdSense annulled outright. Australia and Japan closed, Japan with no monetary penalty at all.',
+          drivers: [
+            'US Search judgment imposed distribution restrictions and data sharing \u2014 not divestiture.',
+            'EU AdSense fine annulled by the General Court.',
+            'Japan JFTC: cease-and-desist, no financial penalty.',
+            'Epic: settled rather than litigated to conclusion.',
+          ],
+          mitigations: [
+            'Fines of even $5bn a year run at roughly 4% of net income.',
+            'Alphabet has absorbed a decade of this while compounding net income 708%.',
+            'Price the fines as a recurring operating cost, not as an existential threat.',
+          ],
+        },
+        {
+          num: '02',
+          name: 'FY2025 carries ~$5bn of one-off charges',
+          emerging: true,
+          description: 'Roughly $5bn of fresh charges flowed through the FY2025 income statement: $3.5bn for EU ad tech, $1.4bn for the Texas privacy settlement, plus the ACCC charge. These are the "significant charges" to identify when normalising FY2025 earnings.',
+          drivers: [
+            '$3.5bn EU ad tech charge, Q3 2025 \u2014 bank guarantees posted in lieu of cash.',
+            '$1.4bn Texas privacy settlement, finalised October 2025.',
+            'ACCC charge recognised Q2 2025.',
+          ],
+          mitigations: [
+            'For an owner-earnings build, treat these the same way as any other non-recurring charge.',
+            'Note the cash timing differs from the accounting: the EU charge was secured by bank guarantees rather than paid.',
+            'FY2025 net income of $132.2bn is a record DESPITE absorbing all of this.',
+          ],
+        },
+        {
+          num: '03',
+          name: 'Ad tech structural remedies \u2014 the one genuine threat',
+          emerging: true,
+          description: 'A forced divestiture of the publisher-side stack is the single scenario in the entire register that changes the business rather than taxing it. Everything else is a cost; this would remove an asset and a revenue stream.',
+          drivers: [
+            'Publisher tools already ruled unlawfully exclusionary, April 2025.',
+            'DOJ seeking structural remedies \u2014 ad exchange and publisher server.',
+            'The filing itself concedes these could have a material adverse effect.',
+            'Closing arguments November 2025; final judgment awaited.',
+          ],
+          mitigations: [
+            'Model as a scenario, not a haircut \u2014 the outcome is binary.',
+            'Google will appeal the adverse liability finding regardless of the remedy.',
+            'CHECK THIS EVERY QUARTER. It is the one line in the register with a live judgment pending and an unbounded outcome.',
+          ],
+        },
+      ],
+      summaryInsight: '2025 is the year the antitrust decade crystallised. Six separate fronts moved, three closed, and roughly $5bn of charges landed \u2014 and net income still hit a record $132.2bn, up 32%. That is the honest summary: the regulatory pressure is real, relentless and expensive, and so far it has been a tax rather than a constraint. The question for a valuation is whether ad tech is where that changes.',
+    },
+    riskFactors: {
+      summary: 'The antitrust and legal register, grouped by where each front actually stands rather than by jurisdiction. Cash impact to date: $3.0bn paid on EU Shopping, $4.9bn net charged on EU Android, $1.7bn charged then annulled on AdSense, $3.5bn charged on EU ad tech, $1.4bn paid on privacy.',
+      categories: [
+        {
+          name: '1 \u00b7 Resolved \u2014 off the board',
+          items: [
+            {
+              risk: 'EU Shopping (2017) \u2014 CLOSED',
+              meaning: '\u20ac2.4bn fine. $3.0bn paid in Q3 2024. Fully concluded, cash out the door, no residual exposure.',
+            },
+            {
+              risk: 'Australia \u00b7 ACCC (2025) \u2014 CLOSED',
+              meaning: 'Settled August 2025 with changes to the Android agreements plus a charge recognised in Q2 2025. Court-approved December 2025.',
+            },
+            {
+              risk: 'Japan \u00b7 JFTC (2025) \u2014 RESOLVED',
+              meaning: 'Cease-and-desist in April 2025 requiring Android agreement changes. NO MONETARY PENALTY.',
+            },
+          ],
+        },
+        {
+          name: '2 \u00b7 Judged, under appeal',
+          items: [
+            {
+              risk: 'EU Android (2018) \u2014 appeal to the ECJ pending',
+              meaning: '$5.1bn charged in 2018, reduced by $217m in 2022, so about $4.9bn net. Unchanged this year. The appeal has been running seven years.',
+            },
+            {
+              risk: 'EU AdSense (2019) \u2014 GOOGLE WON, Commission appealing',
+              meaning: 'The General Court annulled the \u20ac1.5bn fine in September 2024. The Commission\u2019s appeal to the ECJ is pending. $1.7bn had been charged and was annulled \u2014 a rare outright win.',
+            },
+            {
+              risk: 'US DOJ Search \u2014 JUDGED, and the doomsday scenarios did NOT land',
+              meaning: 'Final judgment entered December 2025. Remedies imposed: restrictions on how Google distributes its services, mandatory sharing of certain search data with competitors, and an obligation to offer syndication services to competitors. CRITICALLY, WHAT IT DID NOT INCLUDE: no Chrome divestiture and no Android breakup. Google appealed January 2026 and moved to pause certain remedies; the DOJ and states cross-appealed February 2026 seeking more. Years of appellate road ahead. Compliance costs are not yet quantifiable. NOTE THE CROSS-REFERENCE: this is the same proceeding that Apple flags in its Item 1A as the single largest identifiable risk to ITS earnings, because a reversal could bar Google from paying Apple for search distribution.',
+            },
+          ],
+        },
+        {
+          name: '3 \u00b7 Live \u2014 and where the real money is',
+          items: [
+            {
+              risk: 'US Ad Tech \u00b7 DOJ \u2014 THE ONE THAT COULD CHANGE THE BUSINESS',
+              meaning: 'Mixed ruling April 2025 in E.D. Virginia: advertiser tools and the DoubleClick/AdMeld acquisitions ruled NOT anticompetitive, but PUBLISHER TOOLS ruled unlawfully exclusionary. Remedies trial September 2025, closing arguments November 2025, final judgment awaited. The DOJ seeks STRUCTURAL remedies \u2014 the filing itself says these could have a material adverse effect, which is divestiture language aimed at the ad exchange and publisher server. Google will appeal the adverse liability finding. This is the single scenario in the whole register that changes the business rather than taxing it. Check every quarter.',
+            },
+            {
+              risk: 'US Ad Tech \u00b7 Texas states case',
+              meaning: 'Trial follows the DOJ remedies decision, so the timing is downstream of the case above.',
+            },
+            {
+              risk: 'EU Ad Tech \u2014 fined, appealing',
+              meaning: 'Decision landed September 2025: \u20ac3.0bn fine for self-preferencing plus a cease-and-desist order. $3.5bn charge taken in Q3 2025. Bank guarantees posted IN LIEU OF CASH, so the charge hit earnings without the cash leaving. Appeal filed November 2025. A UK Statement of Objections is also outstanding.',
+            },
+            {
+              risk: 'Google Play \u00b7 Epic \u2014 lost, complied, then SETTLED',
+              meaning: 'Google lost the appeal in July 2025 and is petitioning the US Supreme Court. The significant shift: it IMPLEMENTED the ordered remedies in October 2025 while appealing, then settled with Epic in October 2025 to modify those remedies and resolve related suits, with a joint motion to modify the injunction pending. THE PLAY STORE BUSINESS MODEL HAS ALREADY CHANGED IN PRACTICE \u2014 this is no longer a future risk, it is a completed repricing. Separately, the states settlement was preliminarily approved November 2025 with escrow funded, final approval pending.',
+            },
+            {
+              risk: 'EU Digital Markets Act \u2014 escalated',
+              meaning: 'Preliminary findings of NON-compliance issued March 2025 on BOTH the Play and Search investigations; Google has responded. DMA fines can theoretically reach 10% of global revenue \u2014 on FY2025 revenue of $402.8bn that is a theoretical $40.3bn ceiling. No loss is estimable. Treat as a tail, not a base case: ceilings are almost never applied, and the pattern across this entire register is behavioural remedies and fines rather than maximums.',
+            },
+          ],
+        },
+        {
+          name: '4 \u00b7 Non-antitrust legal',
+          items: [
+            {
+              risk: 'Privacy \u2014 Texas AG settled',
+              meaning: '$1.4bn settlement finalised October 2025, covering location, biometrics and incognito claims. Ongoing investigations continue into location data, user choices and advertising practices.',
+            },
+            {
+              risk: 'Intellectual property \u2014 the sharp edge is import bans',
+              meaning: 'Damages, royalties and injunction risk as usual, but the specific exposure flagged is ITC IMPORT-BAN risk on Pixel hardware. An import ban is a different kind of problem from a damages award: it stops a product line rather than costing money.',
+            },
+            {
+              risk: 'AI and content moderation \u2014 NEW named categories',
+              meaning: 'The claims list now explicitly names AI and content moderation as litigation categories for the first time. Same pattern as Apple\u2019s FY2025 filing, where four separate risk factors gained AI language. Neither company can yet size it.',
+            },
+            {
+              risk: 'Russia, private actions and non-income taxes',
+              meaning: 'Russian penalties continue to compound and are still assessed as non-material. Overlapping private actions across the US and Europe continue with no estimates possible. Global non-income tax audits on product and service treatment and on employee benefits, where outcomes may differ materially.',
+            },
+          ],
+        },
+      ],
+    },
+    commitmentsAndContingencies: {
+      summary: 'Two commitment blocks matter, and one of them is new. Content licensing is a known, declining obligation. Financial guarantees are a NEW disclosure this year and point directly at the AI build-out.',
+      categories: [
+        {
+          name: 'Content licensing \u2014 $7.7bn, declining',
+          definition: 'Future fixed and minimum guaranteed commitments for YouTube content, media rights and streaming deals.',
+          kosCase: 'Down from $8.8bn, so it is being paid down rather than grown. Mostly payable quarterly through Q1 2030. At $7.7bn against $402.8bn of revenue this is not a solvency question \u2014 it is a reminder that YouTube\u2019s content costs are contractual and forward-committed, not discretionary.',
+        },
+        {
+          name: 'Financial guarantees \u2014 $5.7bn, NEW THIS YEAR',
+          definition: 'Backstop agreements supporting counterparty procurement of long-lead-time equipment for future power purchase agreements.',
+          kosCase: 'Maximum potential payments $5.7bn, terms running through August 2026, with Alphabet potentially receiving the assets if triggered. TRANSLATION: Alphabet is now guaranteeing the procurement of power infrastructure \u2014 turbines, transformers, grid equipment for data centre energy. It is underwriting its suppliers\u2019 ability to buy the equipment it will eventually need. Read this alongside the pending $4.8bn Intersect acquisition of data centre and ENERGY infrastructure: both say the same thing, which is that Alphabet expects the constraint on AI capacity to be physical and is putting its balance sheet behind securing it.',
+          critical: true,
+        },
+        {
+          name: 'Indemnifications \u2014 framework unchanged',
+          definition: 'Advertisers, Network partners, distribution partners, Cloud customers, lessors, service providers, and officers and directors.',
+          kosCase: 'Maximum exposure is not estimable. Historical payments have been immaterial, and no material claims were probable or reasonably possible as of 31 December 2025.',
+        },
+        {
+          name: 'Legal matters \u2014 accounting policy',
+          definition: 'Accrue when probable and estimable; disclose when reasonably possible. Legal fees expensed as incurred.',
+          kosCase: 'The filing retains an explicit warning that some matters seek speculative, substantial or indeterminate amounts, structural remedies, or major business-practice changes, and could be material individually or in aggregate. That sentence is doing real work given what sits in the ad tech register.',
+        },
+        {
+          name: 'Business combinations \u2014 accounting policy',
+          definition: 'Results consolidated from the acquisition date; purchase price allocated to assets and liabilities at fair value, except acquired revenue contracts which follow the revenue policy.',
+          kosCase: 'Excess over fair value of identifiable net assets goes to goodwill. Acquisition-related expenses are recognised SEPARATELY from the combination and expensed as incurred \u2014 worth knowing ahead of Wiz, because the deal costs on a $32.0bn transaction will hit the income statement directly rather than being capitalised into the purchase price.',
         },
       ],
     },
