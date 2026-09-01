@@ -16207,6 +16207,482 @@ const DE_BREAKDOWN = {
   },
 };
 
+
+// ═════════════════════════════════════════════════════════════════
+// PM_BREAKDOWN — Philip Morris International Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied tobacco data drop — income statement, balance
+// sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// NEGATIVE EQUITY: shareholders' equity is negative in every year, so the
+// supplied ROE, price-to-book and any debt-to-equity ratio carry no
+// information. Net debt to EBITDA and return on capital are the measures
+// that work; the unusable ones are retained but flagged in-app.
+// The supplied 'Operating expense' line duplicates SG&A exactly in every
+// year, so only SG&A is carried. Total opex = cost of revenue + SG&A.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: D&A is not supplied; an implied series is derived.
+// FY2022 Swedish Match acquisition adds $12.98B of goodwill and $14.98B
+// of cash acquisitions in one year — FY2021 is not comparable with
+// what follows. Supplied EPS is 19% and 44% above net income / shares
+// in FY2023-24. Net income runs ~$0.5B below EBT minus tax every year,
+// consistent with the disclosed minority interest.
+// ═════════════════════════════════════════════════════════════════
+const PM_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:31410}, {year:2022,value:31760}, {year:2023,value:35170}, {year:2024,value:37880}, {year:2025,value:40650} ],
+        note: 'Revenue grew from $31.41B to $40.65B, up 29.4%, and rose in every year. Growth accelerated after the FY2022 Swedish Match acquisition \u2014 +10.7%, +7.7%, +7.3% in the three years since.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:10030}, {year:2022,value:11100}, {year:2023,value:12890}, {year:2024,value:13330}, {year:2025,value:13370} ],
+        note: 'Cost of revenue grew 33.3%, marginally faster than revenue.'
+      },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:21380}, {year:2022,value:20660}, {year:2023,value:22280}, {year:2024,value:24550}, {year:2025,value:27280} ],
+        note: 'Gross profit grew from $21.38B to $27.28B, up 27.6%.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:68.07}, {year:2022,value:65.05}, {year:2023,value:63.35}, {year:2024,value:64.81}, {year:2025,value:67.11} ],
+        note: 'Gross margin held a 63.35%\u201368.07% band across five years, ending at 67.11%. Two-thirds of every dollar of revenue survives the cost line \u2014 this is what pricing power on an addictive product looks like, and it did not move even through the acquisition.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:8300}, {year:2022,value:7850}, {year:2023,value:9050}, {year:2024,value:11330}, {year:2025,value:10560} ],
+          note: 'SG&A grew 27.2%, from $8.30B to a peak of $11.33B (FY2024) before falling back to $10.56B. The FY2024 spike is the outlier.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:26.42}, {year:2022,value:24.72}, {year:2023,value:25.73}, {year:2024,value:29.91}, {year:2025,value:25.98} ],
+          note: 'SG&A ran 24.72%\u201329.91% of revenue, ending at 25.98% \u2014 back near the low after the FY2024 bulge.'
+        },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:18330}, {year:2022,value:18950}, {year:2023,value:21940}, {year:2024,value:24660}, {year:2025,value:23920} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:13080}, {year:2022,value:12810}, {year:2023,value:13230}, {year:2024,value:13220}, {year:2025,value:16730} ],
+        note: 'Operating income was essentially flat for four years \u2014 $13.08B, $12.81B, $13.23B, $13.22B \u2014 then jumped 26.6% to $16.73B in FY2025. The step-change arrives after three years of the acquisition being digested.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:41.64}, {year:2022,value:40.33}, {year:2023,value:37.62}, {year:2024,value:34.9}, {year:2025,value:41.16} ],
+        note: 'Operating margin fell from 41.64% to 34.90% (FY2024) as the acquisition diluted it, then recovered sharply to 41.16% \u2014 essentially back to the pre-deal level.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-737}, {year:2022,value:-768}, {year:2023,value:-1530}, {year:2024,value:-1760}, {year:2025,value:-1590} ],
+        note: 'Interest expense more than doubled from $737M to a peak of $1.76B, tracking the debt raised for Swedish Match. It has since eased to $1.59B.'
+      },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:2670}, {year:2022,value:2240}, {year:2023,value:2340}, {year:2024,value:3020}, {year:2025,value:2740} ],
+        note: 'The FY2024 effective rate of 28.68% is the highest of the period against the lowest pre-tax income \u2014 a double hit. FY2025 at 18.77% is the lowest.'
+      },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:21.57}, {year:2022,value:19.06}, {year:2023,value:22.05}, {year:2024,value:28.68}, {year:2025,value:18.77} ],
+        note: 'Ranged 18.77%\u201328.68% \u2014 a wide band for a business this stable, and the swings materially affect reported net income.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:9110}, {year:2022,value:9050}, {year:2023,value:7810}, {year:2024,value:7060}, {year:2025,value:11350} ],
+        note: 'Net income fell from $9.11B to $7.06B between FY2021 and FY2024 \u2014 down 22.5% \u2014 before jumping 60.8% to $11.35B in FY2025. The four-year decline came from interest and unusual items, not from the business.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:29}, {year:2022,value:28.49}, {year:2023,value:22.21}, {year:2024,value:18.63}, {year:2025,value:27.92} ],
+        note: 'Net margin fell from 29.00% to 18.63% (FY2024) then recovered to 27.92%.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:6.08}, {year:2022,value:5.98}, {year:2023,value:6.01}, {year:2024,value:6.57}, {year:2025,value:7.54} ],
+        note: 'The supplied EPS rose from $6.08 to $7.54 across a period in which net income first fell 22.5% then recovered. The two do not track: FY2024 EPS of $6.57 on 1.55B shares implies $10.18B against reported net income of $7.06B \u2014 44% higher. FY2023 is 19% out. FY2021, FY2022 and FY2025 reconcile within 4%. This looks like an adjusted EPS measure sitting in a statutory series. Retained exactly as supplied.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:1550}, {year:2022,value:1550}, {year:2023,value:1550}, {year:2024,value:1550}, {year:2025,value:1560} ],
+        note: 'Share count is essentially frozen at 1.55B\u20131.56B. Philip Morris has not bought back a share since FY2022.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:14070}, {year:2022,value:13890}, {year:2023,value:14630}, {year:2024,value:15000}, {year:2025,value:18720} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:44.79}, {year:2022,value:43.73}, {year:2023,value:41.6}, {year:2024,value:39.6}, {year:2025,value:46.05} ],
+          note: 'EBITDA margin troughed at 39.60% (FY2024) and recovered to 46.05%, the best of the period.'
+        },
+        { label: 'Implied D&A \u2014 EBITDA minus Operating Income', unit: 'M USD', series: [ {year:2021,value:990}, {year:2022,value:1080}, {year:2023,value:1400}, {year:2024,value:1780}, {year:2025,value:1990} ],
+          note: 'D&A is not supplied, so this is derived as EBITDA minus operating income: $0.99B, $1.08B, $1.40B, $1.78B, $1.99B. It doubled over the period as the acquired intangibles began amortising.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:12380}, {year:2022,value:11770}, {year:2023,value:10610}, {year:2024,value:10520}, {year:2025,value:14590} ] },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:12600}, {year:2022,value:12220}, {year:2023,value:11780}, {year:2024,value:13290}, {year:2025,value:14910} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:-220}, {year:2022,value:-450}, {year:2023,value:-1170}, {year:2024,value:-2770}, {year:2025,value:-320} ],
+          note: 'Unusual items are a drag in every year: \u2212$220M, \u2212$450M, \u2212$1.17B, \u2212$2.77B, \u2212$320M. The FY2024 charge of $2.77B is 26% of that year\u2019s pre-tax income and is the single largest reason net income bottomed there.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:143.58}, {year:2022,value:141.55}, {year:2023,value:169.4}, {year:2024,value:187.25}, {year:2025,value:147.4} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:109}, {year:2022,value:180}, {year:2023,value:465}, {year:2024,value:620}, {year:2025,value:621} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-628}, {year:2022,value:-588}, {year:2023,value:-1060}, {year:2024,value:-1140}, {year:2025,value:-966} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2024,value:206}, {year:2025,value:94} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:17.75}, {year:2022,value:16.68}, {year:2023,value:8.65}, {year:2024,value:7.51}, {year:2025,value:10.52} ],
+          note: 'Interest coverage fell from 17.75\u00d7 to 7.51\u00d7 (FY2024) and recovered to 10.52\u00d7. The deterioration is entirely acquisition-driven.'
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:4500}, {year:2022,value:3210}, {year:2023,value:3060}, {year:2024,value:4220}, {year:2025,value:4870} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:3940}, {year:2022,value:4760}, {year:2023,value:4390}, {year:2024,value:4680}, {year:2025,value:5810} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:8720}, {year:2022,value:9890}, {year:2023,value:10770}, {year:2024,value:9450}, {year:2025,value:11480} ],
+        note: 'Inventory grew from $8.72B to $11.48B, up 31.6%.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2021,value:1.15}, {year:2022,value:1.12}, {year:2023,value:1.2}, {year:2024,value:1.41}, {year:2025,value:1.16} ],
+        note: 'Inventory turns just 1.16\u00d7 a year, essentially unchanged from 1.15\u00d7 five years ago.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2021,value:317.39}, {year:2022,value:325.89}, {year:2023,value:304.17}, {year:2024,value:258.87}, {year:2025,value:314.66} ],
+        note: 'Days inventory of 313, having ranged 259\u2013325. Tobacco leaf is aged for two to three years before use, so this enormous figure is structural rather than a working capital problem \u2014 but it is real capital tied up.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:557}, {year:2022,value:1760}, {year:2023,value:1440}, {year:2024,value:1790}, {year:2025,value:2180} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:17720}, {year:2022,value:19620}, {year:2023,value:19760}, {year:2024,value:20170}, {year:2025,value:24360} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:6690}, {year:2022,value:7300}, {year:2023,value:8150}, {year:2024,value:7900}, {year:2025,value:9080} ] },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:6680}, {year:2022,value:19660}, {year:2023,value:16780}, {year:2024,value:16600}, {year:2025,value:17260} ],
+        note: 'Goodwill leapt from $6.68B to $19.66B in FY2022 \u2014 a $12.98B increase in one year, matching the $14.98B of cash acquisitions in the same year. This is Swedish Match arriving, and it makes FY2021 non-comparable with everything after.'
+      },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:2820}, {year:2022,value:6730}, {year:2023,value:9860}, {year:2024,value:11330}, {year:2025,value:10880} ],
+        note: 'Other intangibles grew from $2.82B to $10.88B, up 286%, almost entirely in FY2022\u2013FY2024. Combined with goodwill, $28.14B of the $69.19B balance sheet \u2014 40.7% \u2014 is intangible.'
+      },
+      deferredTaxesCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Current', unit: 'M USD', series: [ {year:2021,value:895}, {year:2022,value:603}, {year:2023,value:814}, {year:2024,value:940}, {year:2025,value:1250} ] },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:726}, {year:2022,value:1960}, {year:2023,value:2340}, {year:2024,value:2520}, {year:2025,value:2070} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:2020}, {year:2022,value:3340}, {year:2023,value:5020}, {year:2024,value:2190}, {year:2025,value:3380} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:41290}, {year:2022,value:61680}, {year:2023,value:65300}, {year:2024,value:61780}, {year:2025,value:69190} ],
+        note: 'Total assets jumped from $41.29B to $61.68B in FY2022, up 49.4% in a single year, and now stand at $69.19B.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:3330}, {year:2022,value:4080}, {year:2023,value:4140}, {year:2024,value:3950}, {year:2025,value:4410} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:9500}, {year:2022,value:11380}, {year:2023,value:11340}, {year:2024,value:11750}, {year:2025,value:12700} ] },
+      accruedIncomeTaxes: { label: 'Current Income Taxes Payable', unit: 'M USD', series: [ {year:2021,value:1030}, {year:2022,value:1040}, {year:2023,value:1160}, {year:2024,value:1260}, {year:2025,value:1260} ] },
+      shortTermDebt: { label: 'Short-Term Borrowings', unit: 'M USD', series: [ {year:2021,value:225}, {year:2022,value:5640}, {year:2023,value:1970}, {year:2024,value:137}, {year:2025,value:168} ],
+        note: 'Short-term borrowings spiked to $5.64B in FY2022 and have been run down to $168M.'
+      },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:2750}, {year:2022,value:2600}, {year:2023,value:4750}, {year:2024,value:3410}, {year:2025,value:3530} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:24760}, {year:2022,value:34910}, {year:2023,value:41240}, {year:2024,value:42140}, {year:2025,value:45090} ],
+        note: 'Long-term debt grew from $24.76B to $45.09B \u2014 up 82.1%, or $20.33B. Nearly all of it funded the acquisition.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:27735}, {year:2022,value:43150}, {year:2023,value:47960}, {year:2024,value:45687}, {year:2025,value:48788} ],
+        note: 'Total debt grew from $27.74B to $48.79B, up 75.9%. Against negative equity, this is the number that matters, not any leverage ratio built on book value.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:2240}, {year:2022,value:2070}, {year:2023,value:2110}, {year:2024,value:1510}, {year:2025,value:2600} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:49500}, {year:2022,value:67990}, {year:2023,value:74750}, {year:2024,value:71650}, {year:2025,value:77210} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2021,value:2230}, {year:2022,value:2230}, {year:2023,value:2290}, {year:2024,value:2340}, {year:2025,value:2450} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:33080}, {year:2022,value:34290}, {year:2023,value:34090}, {year:2024,value:32870}, {year:2025,value:35400} ] },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:-10110}, {year:2022,value:-8960}, {year:2023,value:-11230}, {year:2024,value:-11750}, {year:2025,value:-9990} ],
+        note: 'Common equity is NEGATIVE in every year, from \u2212$10.11B to \u2212$9.99B. This is not distress \u2014 it is the arithmetic result of $35.55B of treasury stock and a \u2212$12.30B reserve sitting against $35.40B of retained earnings. A business earning 26.79% on capital with negative book value is a capital-return machine, not a troubled one.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:-6.52}, {year:2022,value:-5.78}, {year:2023,value:-7.23}, {year:2024,value:-7.56}, {year:2025,value:-6.42} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:-29.43}, {year:2022,value:-33.2}, {year:2023,value:-26.54}, {year:2024,value:-25.38}, {year:2025,value:-29.89} ],
+        note: 'NOT MEANINGFUL. Price to book is reported at \u2212$25 to \u2212$33 because book value per share is negative. It cannot be compared to any positive-equity company.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:-2.74}, {year:2022,value:-4.82}, {year:2023,value:-4.27}, {year:2024,value:-3.89}, {year:2025,value:-4.88} ],
+        note: 'NOT MEANINGFUL. Equity is negative in every year, so this ratio is negative and cannot be interpreted. Use net debt to EBITDA instead.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:23235}, {year:2022,value:39940}, {year:2023,value:44900}, {year:2024,value:41467}, {year:2025,value:43918} ],
+          note: 'Net debt of $43.92B, up from $23.24B \u2014 an $20.68B increase in five years.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:4460}, {year:2022,value:4430}, {year:2023,value:4930}, {year:2024,value:2660}, {year:2025,value:2970} ] },
+        { label: 'Long-Term Leases', unit: 'M USD', series: [ {year:2021,value:367}, {year:2022,value:456}, {year:2023,value:479}, {year:2024,value:457}, {year:2025,value:575} ] },
+        { label: 'Current Portion of Leases', unit: 'M USD', series: [ {year:2021,value:240}, {year:2022,value:212}, {year:2023,value:227}, {year:2024,value:214}, {year:2025,value:242} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-9580}, {year:2022,value:-9560}, {year:2023,value:-11820}, {year:2024,value:-11310}, {year:2025,value:-12300} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-35840}, {year:2022,value:-35920}, {year:2023,value:-35790}, {year:2024,value:-35640}, {year:2025,value:-35550} ],
+          note: 'Treasury stock is essentially frozen at \u2212$35.55B to \u2212$35.92B. Philip Morris stopped repurchasing after FY2022 to fund the acquisition and pay down debt.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:-8210}, {year:2022,value:-6310}, {year:2023,value:-9450}, {year:2024,value:-9870}, {year:2025,value:-8030} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:-19600}, {year:2022,value:-35340}, {year:2023,value:-37870}, {year:2024,value:-39680}, {year:2025,value:-38140} ],
+          note: 'Tangible book value of \u2212$38.14B, having deteriorated from \u2212$19.60B \u2014 the acquisition added $28.14B of goodwill and intangibles to an already negative book.'
+        },
+        { label: 'Treasury Stock as % of Retained Earnings', unit: '%', series: [ {year:2021,value:108.34}, {year:2022,value:104.75}, {year:2023,value:104.99}, {year:2024,value:108.43}, {year:2025,value:100.42} ],
+          note: 'Treasury stock equals 100.4% of retained earnings \u2014 the company has bought back marginally more than everything it has ever retained. This is precisely why equity is negative.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2021,value:1900}, {year:2022,value:2650}, {year:2023,value:1780}, {year:2024,value:1880}, {year:2025,value:1970} ],
+          note: 'Minority interest of $1.78B\u2013$2.65B \u2014 material, and the reason net income sits below pre-tax income minus tax in every year.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:2150}, {year:2022,value:1260}, {year:2023,value:2210}, {year:2024,value:2110}, {year:2025,value:1460} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:18.98}, {year:2022,value:15.55}, {year:2023,value:13.02}, {year:2024,value:13}, {year:2025,value:15.96} ],
+          note: 'Return on assets fell from 18.98% to 13.00% as the asset base ballooned, recovering to 15.96%.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:39.15}, {year:2022,value:27.77}, {year:2023,value:21.56}, {year:2024,value:21.82}, {year:2025,value:26.79} ],
+          note: 'Return on capital of 39.15% falling to 21.56% then recovering to 26.79%. THIS is the measure that works here, and it tells the real story: the acquisition roughly halved returns on capital, and only about half of that has been won back.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:-103.08}, {year:2022,value:-131.23}, {year:2023,value:-104.94}, {year:2024,value:-77.69}, {year:2025,value:-132.39} ],
+          note: 'NOT MEANINGFUL. Return on equity is reported as \u2212103% to \u2212132% purely because the denominator is negative while earnings are positive. It carries no information about the business. Use return on capital.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:1.97}, {year:2022,value:3.11}, {year:2023,value:3.28}, {year:2024,value:3.05}, {year:2025,value:2.61} ],
+          note: 'Gross leverage rose from 1.97\u00d7 to a peak of 3.28\u00d7 (FY2023) and has come back to 2.61\u00d7.'
+        },
+        { label: 'Net Debt to EBITDA', unit: 'x', series: [ {year:2021,value:1.65}, {year:2022,value:2.88}, {year:2023,value:3.07}, {year:2024,value:2.76}, {year:2025,value:2.35} ],
+          note: 'Net leverage of 2.35\u00d7, down from a peak of 3.07\u00d7 (FY2023). This is the honest leverage measure for Philip Morris \u2014 debt-to-equity is unusable because equity is negative.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:11970}, {year:2022,value:10800}, {year:2023,value:9200}, {year:2024,value:12220}, {year:2025,value:12230} ],
+        note: 'Operating cash flow of $11.97B, $10.80B, $9.20B, $12.22B, $12.23B \u2014 dipped through the acquisition years and has recovered to the highest of the period.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:9150}, {year:2022,value:7360}, {year:2023,value:7880}, {year:2024,value:8180}, {year:2025,value:8940} ],
+        note: 'Free cash flow is remarkably steady at $7.36B\u2013$9.15B across all five years, ending at $8.94B \u2014 barely below where it started despite the debt load doubling. This stability is the whole investment case.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:9110}, {year:2022,value:9050}, {year:2023,value:7810}, {year:2024,value:7060}, {year:2025,value:11350} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:9610}, {year:2022,value:7840}, {year:2023,value:8830}, {year:2024,value:9290}, {year:2025,value:9930} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:76.44}, {year:2022,value:68.15}, {year:2023,value:85.65}, {year:2024,value:66.94}, {year:2025,value:73.1} ],
+          note: 'Conversion ran 66.9%\u201385.7%, ending at 73.1%.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:131.39}, {year:2022,value:119.34}, {year:2023,value:117.8}, {year:2024,value:173.09}, {year:2025,value:107.75} ],
+          note: 'Operating cash flow ran 108%\u2013173% of net income, ending at 107.8%. Consistently above reported earnings.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:-2360}, {year:2022,value:-15680}, {year:2023,value:-3600}, {year:2024,value:-1090}, {year:2025,value:-3970} ],
+          note: 'The FY2022 investing outflow of $15.68B is the acquisition. Every other year runs $1.09B\u2013$3.97B.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-11980}, {year:2022,value:3810}, {year:2023,value:-5580}, {year:2024,value:-9480}, {year:2025,value:-8130} ],
+          note: 'FY2022 shows a financing INFLOW of $3.81B \u2014 the only positive year \u2014 as $15.73B of short-term debt was raised to fund the deal.'
+        },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:19.72}, {year:2022,value:145.19}, {year:2023,value:39.13}, {year:2024,value:8.92}, {year:2025,value:32.46} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-775}, {year:2022,value:-209} ],
+          note: 'Buybacks of $775M and $209M, then nothing at all from FY2023. The entire capital return is now the dividend.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-7580}, {year:2022,value:-7810}, {year:2023,value:-7960}, {year:2024,value:-8200}, {year:2025,value:-8620} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:4.89}, {year:2022,value:5.04}, {year:2023,value:5.14}, {year:2024,value:5.29}, {year:2025,value:5.53} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $4.89 to $5.53, up 13.0%.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:83.21}, {year:2022,value:86.3}, {year:2023,value:101.92}, {year:2024,value:116.15}, {year:2025,value:75.95} ],
+          note: 'Payout ran 83.2% of net income in FY2021 and 116.1% in FY2024, when the dividend exceeded earnings. FY2025 fell back to 75.9%.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:8355}, {year:2022,value:8019}, {year:2023,value:7960}, {year:2024,value:8200}, {year:2025,value:8620} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:91.31}, {year:2022,value:108.95}, {year:2023,value:101.02}, {year:2024,value:100.24}, {year:2025,value:96.42} ],
+          note: 'Shareholder returns ran 91.3%, 108.9%, 101.0%, 100.2% and 96.4% of free cash flow. Philip Morris distributes essentially every dollar it generates, every year, with almost no margin. There is nothing left over.'
+        },
+        { label: 'Gain / (Loss) on Sale of Investments', unit: 'M USD', series: [ {year:2024,value:-2320} ] },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2021,value:549}, {year:2022,value:-1290}, {year:2023,value:-862}, {year:2024,value:552}, {year:2025,value:-1200} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2024,value:-1} ] },
+        { label: 'Total Short-Term Debt Issued', unit: 'M USD', series: [ {year:2022,value:15730}, {year:2023,value:1900}, {year:2024,value:100}, {year:2025,value:189} ] },
+        { label: 'Total Short-Term Debt Repaid', unit: 'M USD', series: [ {year:2022,value:-4800}, {year:2023,value:-5600}, {year:2024,value:-5060}, {year:2025,value:-170} ] },
+        { label: 'Foreign Exchange Rate Adjustments', unit: 'M USD', series: [ {year:2021,value:-417}, {year:2022,value:-213}, {year:2023,value:-95}, {year:2024,value:-536}, {year:2025,value:504} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2021,value:-2110}, {year:2022,value:-14980}, {year:2023,value:-1780}, {year:2024,value:43} ],
+          note: '$14.98B of cash acquisitions in FY2022 \u2014 more than seven times any other year in the series.'
+        },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-2790}, {year:2022,value:-1280}, {year:2023,value:-71}, {year:2024,value:1110}, {year:2025,value:638} ] },
+      ],
+    },
+  },
+};
+
+
+// ═════════════════════════════════════════════════════════════════
+// MO_BREAKDOWN — Altria Group, Inc. Coverage data (Tier 2)
+// SOURCE: Muzz's supplied tobacco data drop — income statement, balance
+// sheet and cash flow, FY2021–FY2025 (USD, $M).
+// Figures entered EXACTLY as supplied. Deferred tax left where the
+// source placed it and EPS left unreconciled, per Muzz's standing call.
+// NEGATIVE EQUITY: shareholders' equity is negative in every year, so the
+// supplied ROE, price-to-book and any debt-to-equity ratio carry no
+// information. Net debt to EBITDA and return on capital are the measures
+// that work; the unusable ones are retained but flagged in-app.
+// The supplied 'Operating expense' line duplicates SG&A exactly in every
+// year, so only SG&A is carried. Total opex = cost of revenue + SG&A.
+// Derived lines are pure arithmetic on the supplied figures.
+// No forward projections — actuals only.
+// TABS: INCOME, BALANCE, CASH FLOW. OVERVIEW / MOAT / RISKS / THESIS
+// awaiting Muzz's qualitative source material.
+// CONTINGENCIES: D&A is not supplied; an implied series is derived.
+// Cost of revenue falls 63.7% in FY2022 on flat revenue — a
+// presentation change that makes FY2021 non-comparable on every cost,
+// margin and inventory-turn measure. Supplied EPS reconciles in no
+// year (FY2021 is 238% above net income / shares). Supplied ROE is
+// positive in FY2021 and negative after, despite equity being negative
+// throughout. Free cash flow EXCEEDS operating cash flow in FY2022 and
+// FY2023. All flagged in-app, none corrected.
+// ═════════════════════════════════════════════════════════════════
+const MO_BREAKDOWN = {
+  numbers: {
+    incomeStatement: {
+      totalRevenue: { label: 'Revenue', unit: 'M USD', series: [ {year:2021,value:21110}, {year:2022,value:20690}, {year:2023,value:20500}, {year:2024,value:20440}, {year:2025,value:20140} ],
+        note: 'Revenue FELL in every single year, from $21.11B to $20.14B \u2014 down 4.6%. Altria is a US-only business selling a product in structural volume decline, and the top line reflects it. Compare Philip Morris, up 29.4% over the same period.'
+      },
+      costOfSales: { label: 'Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:7170}, {year:2022,value:2600}, {year:2023,value:2540}, {year:2024,value:2650}, {year:2025,value:2550} ],
+        note: 'Cost of revenue collapses from $7.17B (FY2021) to $2.60B (FY2022) \u2014 a 63.7% fall on revenue that barely moved. This is a presentation change, not an operating one, and it makes FY2021 non-comparable with FY2022 onward on every cost, margin and turnover measure.'
+      },
+      grossProfit: { label: 'Gross Profit \u2014 Revenue minus Cost of Revenue', unit: 'M USD', series: [ {year:2021,value:13940}, {year:2022,value:18090}, {year:2023,value:17960}, {year:2024,value:17790}, {year:2025,value:17590} ],
+        note: 'Gross profit appears to jump from $13.94B to $18.09B in FY2022. That is the presentation change, not a real gain.'
+      },
+      grossMargin: { label: 'Gross Margin', unit: '%', series: [ {year:2021,value:66.04}, {year:2022,value:87.43}, {year:2023,value:87.61}, {year:2024,value:87.04}, {year:2025,value:87.34} ],
+        note: 'Gross margin reads 66.04% in FY2021 then 87.43%, 87.61%, 87.04% and 87.34%. A 21-point step-change in one year on flat revenue is definitionally impossible as an operating result. Treat FY2022\u2013FY2025 as one comparable set and FY2021 as a different basis entirely.'
+      },
+      opexLines: [
+        { label: 'Selling, General & Administrative', unit: 'M USD', series: [ {year:2021,value:2020}, {year:2022,value:2020}, {year:2023,value:2190}, {year:2024,value:2260}, {year:2025,value:2250} ],
+          note: 'SG&A is remarkably flat at $2.02B\u2013$2.26B across all five years \u2014 it has barely moved in absolute terms while revenue declined.'
+        },
+        { label: 'SG&A as % of Revenue', unit: '%', series: [ {year:2021,value:9.57}, {year:2022,value:9.76}, {year:2023,value:10.68}, {year:2024,value:11.06}, {year:2025,value:11.17} ],
+          note: 'SG&A rose from 9.57% of revenue to 11.17% \u2014 fixed costs against a shrinking top line.'
+        },
+      ],
+      totalExpenses: { label: 'Total Operating Expenses', unit: 'M USD', series: [ {year:2021,value:9190}, {year:2022,value:4610}, {year:2023,value:4730}, {year:2024,value:4910}, {year:2025,value:4800} ] },
+      operatingProfit: { label: 'Operating Income', unit: 'M USD', series: [ {year:2021,value:11920}, {year:2022,value:16080}, {year:2023,value:15780}, {year:2024,value:15540}, {year:2025,value:15340} ],
+        note: 'Operating income reads $11.92B then $16.08B \u2014 the same FY2022 presentation change. On the comparable FY2022\u2013FY2025 basis it has declined every year, from $16.08B to $15.34B, down 4.6%, exactly tracking revenue.'
+      },
+      operatingMargin: { label: 'Operating Margin', unit: '%', series: [ {year:2021,value:56.47}, {year:2022,value:77.72}, {year:2023,value:76.98}, {year:2024,value:76.03}, {year:2025,value:76.17} ],
+        note: 'Operating margin reads 56.47% then 77.72%, 76.98%, 76.03%, 76.17%. On the comparable basis it is slipping gently \u2014 down 1.55 points across four years.'
+      },
+      interestExpense: { label: 'Interest Expense', unit: 'M USD', series: [ {year:2021,value:-1190}, {year:2022,value:-1130}, {year:2023,value:-1140}, {year:2024,value:-1120}, {year:2025,value:-1170} ] },
+      provisionForTaxes: { label: 'Income Tax Expense', unit: 'M USD', series: [ {year:2021,value:1350}, {year:2022,value:1630}, {year:2023,value:2800}, {year:2024,value:2390}, {year:2025,value:2440} ] },
+      taxRate: { label: 'Effective Tax Rate', unit: '%', series: [ {year:2021,value:35.28}, {year:2022,value:21.99}, {year:2023,value:25.6}, {year:2024,value:17.53}, {year:2025,value:26.01} ],
+        note: 'Ranged 17.53%\u201335.28%. The wide swings come from applying tax to a pre-tax figure that is itself distorted by unusual items.'
+      },
+      netIncome: { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:2480}, {year:2022,value:5760}, {year:2023,value:8130}, {year:2024,value:11260}, {year:2025,value:6950} ],
+        note: 'Net income of $2.48B, $5.76B, $8.13B, $11.26B, $6.95B \u2014 a 4.5-fold swing across five years on revenue that fell 4.6%. Every bit of that volatility is below the operating line, and it reconciles exactly to pre-tax income minus tax in all five years.'
+      },
+      profitMargin: { label: 'Net Profit Margin', unit: '%', series: [ {year:2021,value:11.72}, {year:2022,value:27.86}, {year:2023,value:39.65}, {year:2024,value:55.1}, {year:2025,value:34.5} ],
+        note: 'Net margin of 11.72%, 27.86%, 39.65%, 55.10%, 34.50%. On a business whose operating margin barely moves. The bottom line here is a function of investment writedowns and gains, not of selling cigarettes.'
+      },
+      eps: { label: 'Earnings Per Share', unit: 'USD per share', series: [ {year:2021,value:4.61}, {year:2022,value:4.84}, {year:2023,value:4.95}, {year:2024,value:5.12}, {year:2025,value:5.42} ],
+        note: 'The supplied EPS rises smoothly every year \u2014 $4.61, $4.84, $4.95, $5.12, $5.42 \u2014 while net income swings from $2.48B to $11.26B and back to $6.95B. FY2021 EPS of $4.61 on 1.82B shares implies $8.39B against $2.48B reported, 238% higher. No year reconciles. This is an adjusted EPS measure sitting in a statutory series. Retained exactly as supplied \u2014 do not use it without checking the filed accounts.'
+      },
+      sharesOutstanding: { label: 'Shares Outstanding', unit: 'M shares', series: [ {year:2021,value:1820}, {year:2022,value:1790}, {year:2023,value:1760}, {year:2024,value:1690}, {year:2025,value:1670} ],
+        note: 'Share count fell from 1.82B to 1.67B, down 8.2%, and fell in every year. This is the only reason the adjusted EPS line rises on a shrinking business.'
+      },
+      extraLines: [
+        { label: 'EBITDA', unit: 'M USD', series: [ {year:2021,value:12160}, {year:2022,value:16300}, {year:2023,value:16050}, {year:2024,value:15820}, {year:2025,value:15610} ] },
+        { label: 'EBITDA Margin', unit: '%', series: [ {year:2021,value:57.6}, {year:2022,value:78.78}, {year:2023,value:78.29}, {year:2024,value:77.4}, {year:2025,value:77.51} ],
+          note: 'EBITDA margin reads 57.60% then 78.78% falling to 77.51%.'
+        },
+        { label: 'Implied D&A \u2014 EBITDA minus Operating Income', unit: 'M USD', series: [ {year:2021,value:240}, {year:2022,value:220}, {year:2023,value:270}, {year:2024,value:280}, {year:2025,value:270} ],
+          note: 'D&A is not supplied, so this is derived as EBITDA minus operating income: $240M, $220M, $270M, $280M, $270M. Astonishingly small \u2014 roughly 1.3% of revenue \u2014 against $15.34B of operating income. Altria owns almost no physical capital.'
+        },
+        { label: 'EBT Including Unusual Items', unit: 'M USD', series: [ {year:2021,value:3820}, {year:2022,value:7390}, {year:2023,value:10930}, {year:2024,value:13660}, {year:2025,value:9390} ],
+          note: 'Pre-tax income including unusual items ranges $3.82B\u2013$13.66B; excluding them it ranges $4.79B\u2013$15.15B and is flat at roughly $15B for the last three years. The second series describes the business; the first describes the accounting.'
+        },
+        { label: 'EBT Excluding Unusual Items', unit: 'M USD', series: [ {year:2021,value:4790}, {year:2022,value:11370}, {year:2023,value:15040}, {year:2024,value:15150}, {year:2025,value:14780} ] },
+        { label: 'Unusual Items \u2014 EBT Incl. minus EBT Excl.', unit: 'M USD', series: [ {year:2021,value:-970}, {year:2022,value:-3980}, {year:2023,value:-4110}, {year:2024,value:-1490}, {year:2025,value:-5390} ],
+          note: 'Unusual items are the dominant force in the MO income statement: \u2212$970M, \u2212$3.98B, \u2212$4.11B, \u2212$1.49B, \u2212$5.39B. Over five years they total \u2212$15.94B, against $34.58B of cumulative reported net income. Pre-tax income EXCLUDING them is far steadier: $4.79B, $11.37B, $15.04B, $15.15B, $14.78B.'
+        },
+        { label: 'Operating Income as % of Net Income', unit: '%', series: [ {year:2021,value:480.65}, {year:2022,value:279.17}, {year:2023,value:194.1}, {year:2024,value:138.01}, {year:2025,value:220.72} ] },
+        { label: 'Interest & Investment Income', unit: 'M USD', series: [ {year:2021,value:26}, {year:2022,value:70}, {year:2023,value:160}, {year:2024,value:87}, {year:2025,value:98} ] },
+        { label: 'Net Interest Expense', unit: 'M USD', series: [ {year:2021,value:-1160}, {year:2022,value:-1060}, {year:2023,value:-978}, {year:2024,value:-1040}, {year:2025,value:-1080} ] },
+        { label: 'Gain / (Loss) from Asset Sale', unit: 'M USD', series: [ {year:2024,value:-2700} ] },
+        { label: 'Interest Coverage \u2014 Operating Income \u00f7 Interest Expense', unit: 'x', series: [ {year:2021,value:10.02}, {year:2022,value:14.23}, {year:2023,value:13.84}, {year:2024,value:13.88}, {year:2025,value:13.11} ] },
+      ],
+    },
+    balanceSheet: {
+      cash: { label: 'Cash & Equivalents', unit: 'M USD', series: [ {year:2021,value:4540}, {year:2022,value:4030}, {year:2023,value:3690}, {year:2024,value:3130}, {year:2025,value:4470} ] },
+      accountsReceivable: { label: 'Total Receivables', unit: 'M USD', series: [ {year:2021,value:47}, {year:2022,value:1870}, {year:2023,value:567}, {year:2024,value:177}, {year:2025,value:263} ] },
+      inventory: { label: 'Inventory', unit: 'M USD', series: [ {year:2021,value:1190}, {year:2022,value:1180}, {year:2023,value:1220}, {year:2024,value:1080}, {year:2025,value:1070} ],
+        note: 'Inventory of $1.07B \u2014 barely a tenth of Philip Morris at $11.48B, on a business generating half the revenue.'
+      },
+      inventoryTurnover: { label: 'Inventory Turnover \u2014 Cost of Revenue \u00f7 Inventory', unit: 'x', series: [ {year:2021,value:6.03}, {year:2022,value:2.2}, {year:2023,value:2.08}, {year:2024,value:2.45}, {year:2025,value:2.38} ],
+        note: 'Inventory turns 2.38\u00d7 on the current basis, against 6.03\u00d7 on the FY2021 basis. Not comparable across the FY2022 break.'
+      },
+      dio: { label: 'Days Inventory Outstanding', unit: 'days', series: [ {year:2021,value:60.53}, {year:2022,value:165.91}, {year:2023,value:175.48}, {year:2024,value:148.98}, {year:2025,value:153.36} ],
+        note: 'Days inventory reads 61 in FY2021 then 149\u2013175 thereafter. The step-change is the cost-line presentation change, not a change in how stock is held.'
+      },
+      prepaidAndOther: { label: 'Total Other Current Assets', unit: 'M USD', series: [ {year:2021,value:298}, {year:2022,value:123}, {year:2023,value:112}, {year:2024,value:121}, {year:2025,value:118} ] },
+      totalCurrentAssets: { label: 'Total Current Assets', unit: 'M USD', series: [ {year:2021,value:6080}, {year:2022,value:7220}, {year:2023,value:5590}, {year:2024,value:4510}, {year:2025,value:5930} ] },
+      ppeNet: { label: 'Net Property, Plant & Equipment', unit: 'M USD', series: [ {year:2021,value:1550}, {year:2022,value:1610}, {year:2023,value:1650}, {year:2024,value:1620}, {year:2025,value:1710} ],
+        note: 'Net PP&E of just $1.71B on a $35.02B balance sheet \u2014 4.9%. Altria is about as asset-light as a manufacturer gets.'
+      },
+      goodwill: { label: 'Goodwill', unit: 'M USD', series: [ {year:2021,value:5180}, {year:2022,value:5180}, {year:2023,value:6790}, {year:2024,value:6950}, {year:2025,value:5790} ] },
+      otherIntangibles: { label: 'Total Other Intangibles', unit: 'M USD', series: [ {year:2021,value:12310}, {year:2022,value:12380}, {year:2023,value:13690}, {year:2024,value:12970}, {year:2025,value:11880} ],
+        note: 'Other intangibles of $11.88B against a $35.02B balance sheet. Combined with $5.79B of goodwill, half the asset base is intangible.'
+      },
+      deferredTaxesNonCurrent: { label: 'Deferred Tax Assets \u2014 Long-Term Non-Current', unit: 'M USD', series: [ {year:2021,value:3690}, {year:2022,value:2900}, {year:2023,value:2800}, {year:2024,value:3750}, {year:2025,value:3370} ] },
+      otherNonCurrentAssets: { label: 'Total Other Long-Term Assets', unit: 'M USD', series: [ {year:2021,value:923}, {year:2022,value:965}, {year:2023,value:845}, {year:2024,value:934}, {year:2025,value:1100} ] },
+      totalAssets: { label: 'Total Assets', unit: 'M USD', series: [ {year:2021,value:39520}, {year:2022,value:36950}, {year:2023,value:38570}, {year:2024,value:35180}, {year:2025,value:35020} ],
+        note: 'Total assets shrank from $39.52B to $35.02B, down 11.4%, as the investment portfolio was run down.'
+      },
+      accountsPayable: { label: 'Total Accounts Payable', unit: 'M USD', series: [ {year:2021,value:449}, {year:2022,value:552}, {year:2023,value:582}, {year:2024,value:700}, {year:2025,value:750} ] },
+      accruedLiabilities: { label: 'Total Accrued Expenses', unit: 'M USD', series: [ {year:2021,value:1650}, {year:2022,value:1650}, {year:2023,value:2620}, {year:2024,value:2470}, {year:2025,value:2880} ] },
+      currentLongTermDebt: { label: 'Current Portion of Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:1110}, {year:2022,value:1560}, {year:2023,value:1120}, {year:2024,value:1530}, {year:2025,value:1570} ] },
+      longTermDebt: { label: 'Long-Term Debt', unit: 'M USD', series: [ {year:2021,value:26940}, {year:2022,value:25120}, {year:2023,value:25110}, {year:2024,value:23400}, {year:2025,value:24140} ],
+        note: 'Long-term debt fell from $26.94B to $24.14B, down 10.4%. Modest deleveraging while returning everything to shareholders.'
+      },
+      totalDebt: { label: 'Total Debt \u2014 Long-Term + Current Portion', unit: 'M USD', series: [ {year:2021,value:28050}, {year:2022,value:26680}, {year:2023,value:26230}, {year:2024,value:24930}, {year:2025,value:25710} ],
+        note: 'Total debt of $25.71B, down from $28.05B.'
+      },
+      otherLongTermLiabilities: { label: 'Other Non-Current Liabilities', unit: 'M USD', series: [ {year:2021,value:283}, {year:2022,value:324}, {year:2023,value:1620}, {year:2024,value:365}, {year:2025,value:744} ] },
+      totalLiabilities: { label: 'Total Liabilities', unit: 'M USD', series: [ {year:2021,value:41130}, {year:2022,value:40880}, {year:2023,value:42060}, {year:2024,value:37370}, {year:2025,value:38470} ] },
+      additionalPaidInCapital: { label: 'Additional Paid-In Capital', unit: 'M USD', series: [ {year:2021,value:5860}, {year:2022,value:5890}, {year:2023,value:5910}, {year:2024,value:5910}, {year:2025,value:5920} ] },
+      retainedEarnings: { label: 'Retained Earnings', unit: 'M USD', series: [ {year:2021,value:30660}, {year:2022,value:29790}, {year:2023,value:31090}, {year:2024,value:35520}, {year:2025,value:35450} ] },
+      shareholderEquity: { label: 'Total Common Equity', unit: 'M USD', series: [ {year:2021,value:-1610}, {year:2022,value:-3970}, {year:2023,value:-3540}, {year:2024,value:-2240}, {year:2025,value:-3500} ],
+        note: 'Common equity is NEGATIVE in every year, \u2212$1.61B to \u2212$3.50B. Like Philip Morris, this is the product of relentless buybacks \u2014 $43.18B of treasury stock against $35.45B of retained earnings \u2014 not of financial distress.'
+      },
+      bookValuePerShare: { label: 'Book Value Per Share', unit: 'USD per share', series: [ {year:2021,value:-0.88}, {year:2022,value:-2.23}, {year:2023,value:-2.01}, {year:2024,value:-1.32}, {year:2025,value:-2.09} ] },
+      priceToBook: { label: 'Price to Book', unit: 'x', series: [ {year:2021,value:-78.01}, {year:2022,value:-30.78}, {year:2023,value:-34.15}, {year:2024,value:-52.01}, {year:2025,value:-32.85} ],
+        note: 'NOT MEANINGFUL. Reported at \u2212$30 to \u2212$78 because book value per share is negative.'
+      },
+      ltDebtToEquity: { label: 'Total Debt to Equity', unit: 'x', series: [ {year:2021,value:-17.42}, {year:2022,value:-6.72}, {year:2023,value:-7.41}, {year:2024,value:-11.13}, {year:2025,value:-7.35} ],
+        note: 'NOT MEANINGFUL. Equity is negative in every year. Use net debt to EBITDA.'
+      },
+      extraLines: [
+        { label: 'Net Debt \u2014 Total Debt minus Cash', unit: 'M USD', series: [ {year:2021,value:23510}, {year:2022,value:22650}, {year:2023,value:22540}, {year:2024,value:21800}, {year:2025,value:21240} ],
+          note: 'Net debt of $21.24B, down from $23.51B.'
+        },
+        { label: 'Long-Term Investments', unit: 'M USD', series: [ {year:2021,value:13480}, {year:2022,value:9600}, {year:2023,value:10010}, {year:2024,value:8200}, {year:2025,value:8620} ],
+          note: 'Long-term investments fell from $13.48B to $8.62B, down 36.1%, with $3.88B coming off in FY2022 alone. This is the equity stake portfolio being written down and sold, and it is the source of most of the unusual items above.'
+        },
+        { label: 'Total Current Unearned Revenue', unit: 'M USD', series: [ {year:2021,value:287}, {year:2022,value:252}, {year:2023,value:2700} ] },
+        { label: 'Unearned Revenue \u2014 Non-Current', unit: 'M USD', series: [ {year:2022,value:2700} ] },
+        { label: 'Comprehensive Income & Other', unit: 'M USD', series: [ {year:2021,value:-3060}, {year:2022,value:-2770}, {year:2023,value:-2670}, {year:2024,value:-2400}, {year:2025,value:-2630} ] },
+        { label: 'Treasury Stock', unit: 'M USD', series: [ {year:2021,value:-36010}, {year:2022,value:-37820}, {year:2023,value:-38800}, {year:2024,value:-42190}, {year:2025,value:-43180} ],
+          note: 'Treasury stock grew from \u2212$36.01B to \u2212$43.18B \u2014 $7.17B of stock retired in five years, and Altria kept buying back throughout, unlike Philip Morris.'
+        },
+        { label: 'Total Equity', unit: 'M USD', series: [ {year:2021,value:-1610}, {year:2022,value:-3920}, {year:2023,value:-3490}, {year:2024,value:-2190}, {year:2025,value:-3450} ] },
+        { label: 'Tangible Book Value', unit: 'M USD', series: [ {year:2021,value:-19090}, {year:2022,value:-21530}, {year:2023,value:-24020}, {year:2024,value:-22160}, {year:2025,value:-21170} ],
+          note: 'Tangible book value of \u2212$21.17B, improved slightly from \u2212$24.02B.'
+        },
+        { label: 'Treasury Stock as % of Retained Earnings', unit: '%', series: [ {year:2021,value:117.45}, {year:2022,value:126.96}, {year:2023,value:124.8}, {year:2024,value:118.78}, {year:2025,value:121.81} ],
+          note: 'Treasury stock equals 121.8% of retained earnings, up from 117.4%. Altria has repurchased more than a fifth again beyond everything it has ever retained \u2014 an even more extreme position than Philip Morris at 100.4%.'
+        },
+        { label: 'Total Minority Interest', unit: 'M USD', series: [ {year:2022,value:50}, {year:2023,value:50}, {year:2024,value:50}, {year:2025,value:50} ],
+          note: 'Minority interest is immaterial at $50M.'
+        },
+        { label: 'Pension & Other Post-Retirement Benefits', unit: 'M USD', series: [ {year:2021,value:1640}, {year:2022,value:1220}, {year:2023,value:1210}, {year:2024,value:1070}, {year:2025,value:1060} ] },
+        { label: 'Return on Assets', unit: '%', series: [ {year:2021,value:17.14}, {year:2022,value:26.28}, {year:2023,value:26.11}, {year:2024,value:26.33}, {year:2025,value:27.32} ],
+          note: 'Return on assets of 27.32%, and stable at 26\u201327% for four straight years.'
+        },
+        { label: 'Return on Capital', unit: '%', series: [ {year:2021,value:25.31}, {year:2022,value:40.85}, {year:2023,value:43.34}, {year:2024,value:42.7}, {year:2025,value:42.63} ],
+          note: 'Return on capital of 25.31% then 40.85%, 43.34%, 42.70%, 42.63%. Setting aside the FY2021 basis change, Altria earns a remarkably stable 42\u201343% on capital \u2014 higher than Philip Morris at 26.79%, and among the highest returns in this entire coverage.'
+        },
+        { label: 'Return on Equity', unit: '%', series: [ {year:2021,value:364.24}, {year:2022,value:-208.5}, {year:2023,value:-219.34}, {year:2024,value:-396.76}, {year:2025,value:-246.35} ],
+          note: 'NOT MEANINGFUL, and the supplied series demonstrates why: it reads +364.24% in FY2021 and negative in every year since, despite equity being negative and net income positive throughout. Computing net income \u00f7 common equity gives \u2212154% for FY2021, not +364%. Neither figure means anything. Retained as supplied; use return on capital.'
+        },
+        { label: 'Total Debt to EBITDA', unit: 'x', series: [ {year:2021,value:2.31}, {year:2022,value:1.64}, {year:2023,value:1.63}, {year:2024,value:1.58}, {year:2025,value:1.65} ],
+          note: 'Gross leverage of 1.65\u00d7, improved from 2.31\u00d7 \u2014 though most of that improvement is the FY2022 EBITDA restatement rather than debt reduction.'
+        },
+        { label: 'Net Debt to EBITDA', unit: 'x', series: [ {year:2021,value:1.93}, {year:2022,value:1.39}, {year:2023,value:1.4}, {year:2024,value:1.38}, {year:2025,value:1.36} ],
+          note: 'Net leverage of 1.36\u00d7 \u2014 low, and the right way to read Altria\u2019s balance sheet given equity is negative.'
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: { label: 'Cash from Operations', unit: 'M USD', series: [ {year:2021,value:8410}, {year:2022,value:8260}, {year:2023,value:9290}, {year:2024,value:8750}, {year:2025,value:9290} ],
+        note: 'Operating cash flow is the steadiest line in the whole MO dataset \u2014 $8.26B to $9.29B across all five years, with no year outside that band, against net income ranging from $2.48B to $11.26B. Cash generation is essentially a constant here.'
+      },
+      freeCashFlow: { label: 'Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:7370}, {year:2022,value:8350}, {year:2023,value:15410}, {year:2024,value:6780}, {year:2025,value:9230} ],
+        note: 'Free cash flow of $7.37B, $8.35B, $15.41B, $6.78B, $9.23B. The FY2023 figure of $15.41B EXCEEDS that year\u2019s operating cash flow of $9.29B by $6.12B, which no conventional free cash flow definition permits. FY2022 also exceeds operating cash flow. The source\u2019s free cash flow definition is evidently picking up investing inflows and asset sales. Treat the FY2022 and FY2023 figures with caution.'
+      },
+      extraLines: [
+        { label: 'Net Income', unit: 'M USD', series: [ {year:2021,value:2480}, {year:2022,value:5760}, {year:2023,value:8130}, {year:2024,value:11260}, {year:2025,value:6950} ] },
+        { label: 'Unlevered Free Cash Flow', unit: 'M USD', series: [ {year:2021,value:8110}, {year:2022,value:9050}, {year:2023,value:16120}, {year:2024,value:7480}, {year:2025,value:9960} ] },
+        { label: 'FCF Conversion \u2014 FCF \u00f7 Operating Cash Flow', unit: '%', series: [ {year:2021,value:87.63}, {year:2022,value:101.09}, {year:2023,value:165.88}, {year:2024,value:77.49}, {year:2025,value:99.35} ],
+          note: 'Conversion reads 87.6%, 101.1%, 165.9%, 77.5% and 99.4%. Any figure above 100% is a signal that the free cash flow line is not OCF minus capex.'
+        },
+        { label: 'Operating Cash Flow as % of Net Income', unit: '%', series: [ {year:2021,value:339.11}, {year:2022,value:143.4}, {year:2023,value:114.27}, {year:2024,value:77.71}, {year:2025,value:133.67} ],
+          note: 'Operating cash flow ran 339% of net income in FY2021 and 78% in FY2024 \u2014 a spread that reflects earnings volatility, not cash volatility.'
+        },
+        { label: 'Cash from Investing', unit: 'M USD', series: [ {year:2021,value:1210}, {year:2022,value:782}, {year:2023,value:-1280}, {year:2024,value:2180}, {year:2025,value:-341} ],
+          note: 'Cash from investing was a net INFLOW in FY2021, FY2022 and FY2024 \u2014 $1.21B, $782M and $2.18B. Altria has been harvesting its investment portfolio, not deploying capital.'
+        },
+        { label: 'Cash from Financing', unit: 'M USD', series: [ {year:2021,value:-10030}, {year:2022,value:-9540}, {year:2023,value:-8370}, {year:2024,value:-11490}, {year:2025,value:-7620} ] },
+        { label: 'Cash from Investing as % of Operating Cash Flow', unit: '%', series: [ {year:2021,value:14.39}, {year:2022,value:9.47}, {year:2023,value:13.78}, {year:2024,value:24.91}, {year:2025,value:3.67} ] },
+        { label: 'Repurchase of Common Stock', unit: 'M USD', series: [ {year:2021,value:-1680}, {year:2022,value:-1830}, {year:2023,value:-1000}, {year:2024,value:-3400}, {year:2025,value:-1000} ],
+          note: 'Buybacks of $1.68B, $1.83B, $1.00B, $3.40B and $1.00B \u2014 $8.91B over five years, sustained throughout unlike Philip Morris, which stopped entirely.'
+        },
+        { label: 'Common Dividends Paid', unit: 'M USD', series: [ {year:2021,value:-6450}, {year:2022,value:-6600}, {year:2023,value:-6780}, {year:2024,value:-6850}, {year:2025,value:-6960} ] },
+        { label: 'Dividends Per Share \u2014 Derived', unit: 'USD per share', series: [ {year:2021,value:3.54}, {year:2022,value:3.69}, {year:2023,value:3.85}, {year:2024,value:4.05}, {year:2025,value:4.17} ],
+          note: 'Derived as dividends paid \u00f7 shares outstanding. Rose from $3.54 to $4.17, up 17.6% \u2014 more than double the 7.9% growth in the total dividend, because the share count shrank.'
+        },
+        { label: 'Dividend Payout Ratio \u2014 Dividends \u00f7 Net Income', unit: '%', series: [ {year:2021,value:260.08}, {year:2022,value:114.58}, {year:2023,value:83.39}, {year:2024,value:60.83}, {year:2025,value:100.14} ],
+          note: 'Payout ran 260.1% of net income in FY2021 and 60.8% in FY2024. Measured against operating cash flow, which is far steadier, it runs a consistent 73\u201380% \u2014 that is the more useful read.'
+        },
+        { label: 'Total Shareholder Returns \u2014 Buybacks + Dividends', unit: 'M USD', series: [ {year:2021,value:8130}, {year:2022,value:8430}, {year:2023,value:7780}, {year:2024,value:10250}, {year:2025,value:7960} ] },
+        { label: 'Shareholder Returns as % of Free Cash Flow', unit: '%', series: [ {year:2021,value:110.31}, {year:2022,value:100.96}, {year:2023,value:50.49}, {year:2024,value:151.18}, {year:2025,value:86.24} ],
+          note: 'Shareholder returns ran 110.4%, 101.0%, 50.5%, 151.2% and 86.2% of free cash flow. Measured against the steadier operating cash flow, returns ran 84\u2013117%. Either way, Altria distributes essentially everything it earns.'
+        },
+        { label: 'Change in Inventories', unit: 'M USD', series: [ {year:2021,value:57}, {year:2022,value:14}, {year:2023,value:-15}, {year:2024,value:102}, {year:2025,value:-27} ] },
+        { label: 'Gain / (Loss) on Sale of Assets', unit: 'M USD', series: [ {year:2024,value:2700} ] },
+        { label: 'Sale / Purchase of Intangible Assets', unit: 'M USD', series: [ {year:2022,value:1000}, {year:2023,value:1700} ] },
+        { label: 'Total Short-Term Debt Issued', unit: 'M USD', series: [ {year:2023,value:2000} ] },
+        { label: 'Total Short-Term Debt Repaid', unit: 'M USD', series: [ {year:2023,value:-2000} ] },
+        { label: 'Cash Acquisitions', unit: 'M USD', series: [ {year:2023,value:-2750} ],
+          note: 'A single $2.75B acquisition in FY2023 and nothing in any other year.'
+        },
+        { label: 'Net Change in Cash', unit: 'M USD', series: [ {year:2021,value:-412}, {year:2022,value:-503}, {year:2023,value:-370}, {year:2024,value:-563}, {year:2025,value:1330} ] },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
@@ -16216,8 +16692,8 @@ const COVERAGE_DATA = [
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: ORCL_BREAKDOWN },
   { ticker: 'UBER',  name: 'Uber Technologies',              industry: 'Technology',    country: 'United States', marketCap: 175000000000,  marketCapDate: '8 Jul 2026',  verdict: null, tier: 2, oneLiner: 'Global rideshare and delivery network \u2014 a two-sided marketplace toll on urban movement.',       breakdown: UBER_BREAKDOWN },
   { ticker: 'META',  name: 'Meta Platforms',                 industry: 'Technology',    country: 'United States', marketCap: 1500000000000, marketCapDate: '8 Jul 2026',  verdict: null, tier: 2, oneLiner: 'Facebook, Instagram and WhatsApp \u2014 the world\u2019s largest social advertising machine.',            breakdown: META_BREAKDOWN },
-  { ticker: 'PM',    name: 'Philip Morris International',    industry: 'Tobacco',       country: 'United States', marketCap: 280000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'International tobacco and smoke-free products (IQOS, ZYN) \u2014 pricing power on addiction.',        breakdown: null, locked: true },
-  { ticker: 'MO',    name: 'Altria Group',                   industry: 'Tobacco',       country: 'United States', marketCap: 100000000000,  marketCapDate: '8 Jul 2026',  verdict: null, oneLiner: 'US tobacco (Marlboro domestic) \u2014 high-yield cash machine with a shrinking volume base.',        breakdown: null, locked: true },
+  { ticker: 'PM',    name: 'Philip Morris International',    industry: 'Tobacco',       country: 'United States', marketCap: 280000000000,  marketCapDate: '8 Jul 2026',  verdict: null, tier: 2, oneLiner: 'International tobacco and smoke-free products (IQOS, ZYN) \u2014 pricing power on addiction.',        breakdown: PM_BREAKDOWN },
+  { ticker: 'MO',    name: 'Altria Group',                   industry: 'Tobacco',       country: 'United States', marketCap: 100000000000,  marketCapDate: '8 Jul 2026',  verdict: null, tier: 2, oneLiner: 'US tobacco (Marlboro domestic) \u2014 high-yield cash machine with a shrinking volume base.',        breakdown: MO_BREAKDOWN },
   { ticker: 'PLTR',  name: 'Palantir Technologies',          industry: 'Technology',    country: 'United States', marketCap: 270000000000,  marketCapDate: '29 Jun 2026', verdict: null, tier: 2, oneLiner: 'AI and data-analytics software platforms (Gotham, Foundry, AIP) for government and enterprise.',        breakdown: PLTR_BREAKDOWN },
 
   // === RAILWAYS · CANADA & USA ===
