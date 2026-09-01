@@ -32426,7 +32426,8 @@ const RACE_BREAKDOWN = {
 // value-added services, and Visa Commercial Solutions / Visa Direct.
 // Scale figures are FY2024 (Visa's year ends 30 September).
 //
-// TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES.
+// TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES,
+// COMMITMENTS.
 // TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS.
 //
 // CHECKED BEFORE BUILDING:
@@ -33074,7 +33075,7 @@ const V_BREAKDOWN = {
           ],
         },
         {
-          name: '5 \u00b7 Litigation \u2014 and the retrospective responsibility plans',
+          name: '5 \u00b7 Litigation \u2014 the cases and the plans that absorb them',
           items: [
             {
               risk: 'The exposure',
@@ -33087,6 +33088,26 @@ const V_BREAKDOWN = {
             {
               risk: 'THE MITIGANT, AND ITS STATED LIMIT',
               meaning: 'Visa operates retrospective responsibility plans for certain US and Europe (VE territory) litigation, providing financial protection through different mechanisms. But the filing states plainly that if those plans FAIL TO SUFFICIENTLY COVER settlements, judgments or losses, the impact could materially harm liquidity and financial condition \u2014 and IN AN EXTREME CASE EVEN THREATEN SOLVENCY. That is unusually direct language for a company of this quality, and it is the single starkest sentence in the risk factors. It should be read alongside the Class B conversion mechanism, because the two are the same issue viewed from different ends: the litigation is funded by an equity structure that unwinds only when the litigation resolves.',
+            },
+            {
+              risk: 'DOJ ANTITRUST \u00b7 filed 24 September 2024, SDNY \u2014 the headline matter',
+              meaning: 'Alleges Visa monopolised or attempted to monopolise general-purpose debit network services AND card-not-present debit, through agreements with merchants, acquirers and others. Seeks INJUNCTIVE RELIEF rather than damages. It follows civil investigative demands going back to 2012 and running through 2021\u201323 on debit and routing. Parallel class actions filed from October 2024 in SDNY and NDCA echo the DOJ theories and DO seek damages, covering putative classes of merchants and consumers from October 2020 and parties paying routing fees from September 2020. THIS IS THE HIGHEST NEAR-TERM STRATEGIC RISK IN THE FILING \u2014 not because of the money, but because injunctive relief on debit economics and routing changes the business prospectively, and no retrospective responsibility plan covers a practice change.',
+            },
+            {
+              risk: 'US covered litigation \u00b7 MDL 1720 and the settlement history',
+              meaning: 'The 2012 settlement was VACATED in 2016 after roughly $4.0bn of escrow and $0.5bn of eight-month interchange reductions, with about $1.1bn later returned to escrow as a takedown. The 2018 Amended Settlement added $900m in total, Visa\u2019s $600m share from escrow, received final approval in December 2019 and was affirmed by the Second Circuit in March 2023 \u2014 with $700m returned to defendants on opt-outs, of which Visa re-deposited about $467m. The separate INJUNCTIVE RELIEF CLASS was certified in September 2021 with NO OPT-OUT, and the proposed injunctive settlement of March 2024 \u2014 credit interchange reductions and caps plus streamlined surcharging \u2014 was DENIED preliminary approval in June 2024. Visa has settled with merchants representing about 73% of Visa-branded sales volume among damages-class opt-outs.',
+            },
+            {
+              risk: 'Europe merchant litigation \u00b7 the volume problem',
+              meaning: 'MORE THAN 1,150 MERCHANTS have sued since July 2013 over interchange \u2014 UK domestic, other EEA domestic, intra-EEA and inter-regional, with some fee and rule claims. More than 475 have settled, about 600 remain outstanding, 30-plus are threatened, and Visa expects more. The UK Supreme Court found in June 2020 that UK domestic interchange restricted competition for one merchant; the CAT found pre-IFR rates restrictive in November 2021 and the Court of Appeal affirmed in October 2022. A merits trial ran February to March 2024. UK COLLECTIVE ACTIONS WERE CERTIFIED IN JUNE 2024 for commercial-card claims, and in October 2024 the Court of Appeal refused permission to appeal that certification. Claims issued, served or preserved seek SEVERAL BILLION DOLLARS.',
+            },
+            {
+              risk: 'The other US matters',
+              meaning: 'FTC civil investigative demand from 2019\u201320 on whether Visa inhibited merchant routing choice under the Durbin Amendment, still ongoing. ATM access fee litigation in DDC with classes certified in August 2021 seeking TREBLE DAMAGES; a preliminary class settlement was reached in Mackmin in July 2024 while Burke remains pending. The EMV chip liability shift class action continues after decertification and summary judgment motions were denied. MiCamp Solutions and Mirage Wine & Spirits \u2014 the latter naming Apple alongside Visa and Mastercard over Apple Pay, with trial set for 2026. Plus US income tax litigation filed June 2024 challenging the IRS denial of 2008\u201315 deductions for internally developed software, which is potential UPSIDE rather than exposure.',
+            },
+            {
+              risk: 'Europe regulatory and international',
+              meaning: 'The European Commission\u2019s preliminary probe into client incentive agreements opened in December 2022 and CLOSED in October 2024. A new preliminary probe into ACQUIRER FEES opened in August 2024 with Visa cooperating. German banks are challenging the no-access-fee rule on domestic ATM withdrawals, most seeking damages, with Visa\u2019s jurisdiction challenges producing mixed results and appeals pending. In Israel a class certification motion filed in November 2021 alleges cross-border interchange and Honor All Cards are anti-competitive.',
             },
           ],
         },
@@ -33547,6 +33568,297 @@ const V_BREAKDOWN = {
         'THE MATERIALITY STATEMENT IS EXPLICIT AND COVERS THREE YEARS, including third-party incidents. Few filings in this coverage go that far.',
         'About 3.2% of all employees work in cybersecurity, supported by three fusion centres and a formal three-lines-of-defence model validated by Internal Audit and examined by financial regulators.',
         'The residual risk is honestly stated elsewhere in Item 1A: partner controls and patching are inconsistent, cascading impacts spread quickly, insurance may not fully cover losses, and recovery may be slow despite continuity planning. A strong programme does not remove ecosystem exposure it does not control.',
+      ],
+    },
+    commitmentsAndContingencies: {
+      summary: 'Visa carries its interchange litigation through two RETROSPECTIVE RESPONSIBILITY PLANS \u2014 structures with no real equivalent elsewhere in this coverage. The US plan absorbs monetary outcomes through a cash escrow, through downward adjustment of the Class B conversion rate (which works like a buyback of the as-converted share count), and through indemnities and loss-sharing from Visa U.S.A. members. The Europe plan has NO ESCROW at all: losses are recovered by reducing the Class A conversion rates on the Series B and C preferred stock. In both cases the member banks that benefited from interchange bear the cost of litigating it \u2014 which is why the capital structure cannot simplify until the litigation ends.',
+      categories: [
+        {
+          name: 'US plan \u00b7 the six mechanisms',
+          definition: 'What absorbs a US covered litigation loss, in order.',
+          kosCase: 'LITIGATION ESCROW, funded at the board\u2019s discretion on the litigation committee\u2019s request. CONVERSION FEATURE \u2014 each escrow deposit adjusts the Class B-1/B-2 conversion rate DOWN, which is economically similar to a Class A buyback because it reduces the as-converted share count. MAKE-WHOLE AGREEMENTS under which certain former Class B-1 holders reimburse Visa in cash for deposits that would have reduced their conversion, active until the B-1 rate reaches zero. INDEMNITIES from Visa U.S.A. members where other mechanisms fall short. INTERCHANGE JUDGMENT SHARING between Visa U.S.A., Visa International and certain US members. LOSS-SHARING under which members cover specified portions of final judgments after the earlier mechanisms are exhausted.',
+          critical: true,
+          stats: [
+            {
+              label: 'ESCROW BALANCE FY2024',
+              value: '$3,089m',
+            },
+            {
+              label: 'FY2024 DEPOSITS',
+              value: '$1,500m',
+            },
+            {
+              label: 'US COVERED ACCRUAL',
+              value: '$1,537m',
+            },
+            {
+              label: 'ESCROW vs ACCRUAL',
+              value: '+$1,552m',
+            },
+          ],
+        },
+        {
+          name: 'The Mastercard omnibus split',
+          definition: 'How monetary outcomes divide between the two networks.',
+          kosCase: 'Under the omnibus agreement with Mastercard, monetary outcomes not otherwise allocated split VISA 66.6667% / MASTERCARD 33.3333%, and Visa bears no liability for amounts assigned to Mastercard-related claims. Any headline settlement figure in the interchange litigation should be multiplied by two-thirds before it reaches Visa.',
+          stats: [
+            {
+              label: 'VISA SHARE',
+              value: '66.6667%',
+            },
+            {
+              label: 'MASTERCARD',
+              value: '33.3333%',
+            },
+          ],
+        },
+        {
+          name: 'Europe plan \u00b7 equity, not cash',
+          definition: 'How a VE territory covered loss is absorbed.',
+          kosCase: 'NO ESCROW ACCOUNT EXISTS. Recovery comes from periodic reductions to the Class A conversion rates on the Series B and C preferred stock, supported by a UK loss-sharing agreement under which UK members are severally liable up to their upfront Visa Europe cash consideration once triggers are met, and a litigation management deed giving Visa conduct of the cases with reporting and consent rights through the VE Territory Litigation Management Committee. Accounting: when a covered loss becomes probable and estimable, Visa records the loss and a contra-equity "right to recover"; actual conversion-rate reductions happen no more than every six months unless a single loss exceeds \u20ac20m.',
+          critical: true,
+          stats: [
+            {
+              label: 'RECOVERY AVAILABLE FY2024',
+              value: '$2,130m',
+            },
+            {
+              label: 'FY2023',
+              value: '$4,171m',
+            },
+            {
+              label: 'CHANGE',
+              value: '\u221248.9%',
+            },
+            {
+              label: 'ON BOOK BASIS',
+              value: '$387m',
+            },
+          ],
+        },
+        {
+          name: 'What the Europe plan does NOT cover',
+          definition: 'The stated limits.',
+          kosCase: 'It covers interchange litigation in the VE territory for the pre-closing covered period only. It does NOT cover European Commission fines or penalties, and it does not cover all litigation types. For certain inter-regional multilateral interchange fee claims \u2014 issuer outside the VE territory, merchant inside it \u2014 protection is LIMITED TO 70% of liabilities. Practice changes forced by adverse rulings are not covered by anything: a rate cap or rule change reduces future revenue and no plan offsets that.',
+          critical: true,
+        },
+        {
+          name: 'Eighth Anniversary Release \u00b7 July 2024',
+          definition: 'The scheduled release of protection back to preferred holders.',
+          kosCase: 'Assessed 21 June 2024 and issued in July 2024. Released $2.7bn of as-converted value from the Series B and C preferred, issuing 99,264 shares of Series A preferred \u2014 each converting 100:1 into Class A on an eligible sale, so about 9.93 million Class A-equivalent shares \u2014 plus $5m of cash in lieu of fractional shares. THIS IS WHY EUROPE CAPACITY HALVED IN A YEAR.',
+          stats: [
+            {
+              label: 'AS-CONVERTED RELEASED',
+              value: '$2.7bn',
+            },
+            {
+              label: 'SERIES A ISSUED',
+              value: '99,264 sh',
+            },
+            {
+              label: 'CLASS A EQUIVALENT',
+              value: '~9.93m sh',
+            },
+            {
+              label: 'CASH IN LIEU',
+              value: '$5m',
+            },
+          ],
+        },
+        {
+          name: 'Legal matters \u00b7 the accounting policy',
+          definition: 'When a liability gets booked.',
+          kosCase: 'A liability is recorded only when a loss is PROBABLE AND REASONABLY ESTIMABLE, judged on case specifics, history with similar matters, counsel\u2019s advice and management judgement, and reassessed as information emerges. Where a loss is only reasonably possible, or probable but not estimable, Visa discloses the nature of the claim without a number. Visa states it cannot estimate a potential loss or range at trial if negotiated resolutions cannot be reached \u2014 which is the honest position and also means the reserve is not a ceiling.',
+        },
+      ],
+      tables: [
+        {
+          title: 'US LITIGATION ESCROW \u00b7 MOVEMENT ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+          ],
+          rows: [
+            [
+              'Balance, beginning of period',
+              '1,764',
+              '1,449',
+            ],
+            [
+              'Deposits into the escrow account',
+              '1,500',
+              '1,000',
+            ],
+            [
+              'Payments to opt-out merchants, net of interest',
+              '(175)',
+              '(685)',
+            ],
+            [
+              'BALANCE, END OF PERIOD',
+              '3,089',
+              '1,764',
+            ],
+          ],
+          emphasis: [
+            3,
+          ],
+          note: 'Both years reconcile exactly. Deposits rose 50% to $1,500m while opt-out payments fell 74%, so the escrow grew 75% in a single year. This is RESTRICTED CASH held against future settlements \u2014 it is not available for buybacks, dividends or investment, and it does not appear in ordinary cash.',
+        },
+        {
+          title: 'US COVERED LITIGATION ACCRUAL \u00b7 MOVEMENT ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+          ],
+          rows: [
+            [
+              'Balance, beginning of period',
+              '1,621',
+              '1,441',
+            ],
+            [
+              'Provision for interchange multidistrict litigation',
+              '140',
+              '906',
+            ],
+            [
+              'Payments for US covered litigation',
+              '(224)',
+              '(726)',
+            ],
+            [
+              'BALANCE, END OF PERIOD',
+              '1,537',
+              '1,621',
+            ],
+          ],
+          emphasis: [
+            3,
+          ],
+          note: 'The FY2024 provision of $140m is 85% below FY2023\u2019s $906m. Visa states the balance reflects its best estimate of its share of a probable and reasonably estimable loss, that the estimate could MATERIALLY VARY with developments, and that it cannot estimate a loss or range at trial if negotiated resolutions cannot be reached.',
+        },
+        {
+          title: 'TOTAL LITIGATION RESERVE \u00b7 ALL MATTERS ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+          ],
+          rows: [
+            [
+              'Balance, beginning of period',
+              '1,751',
+              '1,456',
+            ],
+            [
+              'Provision for UNCOVERED legal matters',
+              '322',
+              '21',
+            ],
+            [
+              'Provision for COVERED legal matters',
+              '248',
+              '1,024',
+            ],
+            [
+              'Payments for legal matters',
+              '(594)',
+              '(750)',
+            ],
+            [
+              'BALANCE, END OF PERIOD',
+              '1,727',
+              '1,751',
+            ],
+          ],
+          emphasis: [
+            1,
+            4,
+          ],
+          note: 'THE HIGHLIGHTED ROW IS THE ONE THAT MOVED. Provisions for UNCOVERED matters \u2014 those outside both retrospective responsibility plans, so borne directly by Class A shareholders \u2014 jumped from $21m to $322m, a 15-fold increase, while covered provisions fell 76%. Deducting the $1,537m US covered accrual leaves roughly $190m of reserve for everything else. Note this is the accounting RESERVE, not the escrow: three different numbers that are routinely confused.',
+        },
+        {
+          title: 'EUROPE PLAN \u00b7 CAPACITY TO ABSORB FUTURE LOSSES ($M)',
+          columns: [
+            '',
+            'As-converted FY2024',
+            'Book value FY2024',
+            'As-converted FY2023',
+          ],
+          rows: [
+            [
+              'Series B preferred',
+              '684',
+              '104',
+              '\u2014',
+            ],
+            [
+              'Series C preferred',
+              '1,550',
+              '387',
+              '\u2014',
+            ],
+            [
+              'Total',
+              '2,234',
+              '491',
+              '4,311',
+            ],
+            [
+              'Less: right to recover for covered losses',
+              '(104)',
+              '(104)',
+              '(140)',
+            ],
+            [
+              'RECOVERY AVAILABLE',
+              '2,130',
+              '387',
+              '4,171',
+            ],
+          ],
+          emphasis: [
+            4,
+          ],
+          note: 'EUROPE PROTECTION HALVED IN ONE YEAR \u2014 $4,171m to $2,130m, down 48.9% \u2014 because of the Eighth Anniversary Release. That happened in the same year UK collective actions were CERTIFIED for commercial-card claims and the Court of Appeal refused permission to appeal certification. Protection shrank while exposure crystallised. Note also that capacity is market-linked: the as-converted figure depends on the Class A share price, so the cushion falls if the stock falls \u2014 exactly when it would be needed.',
+        },
+        {
+          title: 'EUROPE PLAN \u00b7 PREFERRED STOCK BOOK VALUE MOVEMENT ($M)',
+          columns: [
+            '',
+            'Series B',
+            'Series C',
+          ],
+          rows: [
+            [
+              'Balance, beginning of period',
+              '441',
+              '801',
+            ],
+            [
+              'Recovery through conversion-rate reduction',
+              '(161)',
+              '(20)',
+            ],
+            [
+              'Eighth Anniversary Release',
+              '(176)',
+              '(394)',
+            ],
+            [
+              'BALANCE, END OF PERIOD',
+              '104',
+              '387',
+            ],
+          ],
+          emphasis: [
+            3,
+          ],
+          note: 'Both columns reconcile exactly. Right to recover for covered losses moved from $(140)m opening, through $(139)m of losses and $175m of recovery, to $(104)m at year end.',
+        },
       ],
     },
   },
@@ -48322,6 +48634,39 @@ function MuzzApp() {
                                   </div>
                                 ))}
                               </div>
+
+                              {/* MOVEMENT SCHEDULES */}
+                              {commitmentsAndContingencies.tables && commitmentsAndContingencies.tables.length > 0 && commitmentsAndContingencies.tables.map((tb, ti) => (
+                                <div key={ti} style={{marginTop:'12px'}}>
+                                  {tb.title && <SectionHeading>// {tb.title}</SectionHeading>}
+                                  <div style={{overflowX:'auto',marginBottom:'6px'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                          {(tb.columns || []).map((c, ci) => (
+                                            <th key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'7px 9px',color:amberDim,letterSpacing:'0.8px',fontWeight:600,fontSize:'9px',whiteSpace:'nowrap'}}>{c}</th>
+                                          ))}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {(tb.rows || []).map((r, ri) => {
+                                          const hot = (tb.emphasis || []).indexOf(ri) >= 0;
+                                          return (
+                                            <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: hot ? 'rgba(245,158,11,0.08)' : 'transparent'}}>
+                                              {r.map((cell, ci) => (
+                                                <td key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'6px 9px',color: hot ? amber : (ci === 0 ? 'rgba(224,234,255,0.85)' : 'rgba(224,234,255,0.7)'),fontWeight: hot || ci === 0 ? 600 : 400,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{cell}</td>
+                                              ))}
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  {tb.note && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'8px'}}>{tb.note}</div>
+                                  )}
+                                </div>
+                              ))}
                             </>
                           )}
 
