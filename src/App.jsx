@@ -18892,9 +18892,10 @@ const TASE_BREAKDOWN = {
 // AAPL_BREAKDOWN — Apple Inc. Coverage data
 // SOURCE: Muzz's supplied 10-K material — Item 1 (Company Background,
 // Products, Services, Segments, Markets & Distribution, R&D, Seasonality,
-// Supply of Components, Intellectual Property), Item 3 (Legal Proceedings)
-// and the Commitments, Contingencies & Supply Concentrations note.
-// FY2025 filing, with FY2024 comparisons and post-filing developments.
+// Supply of Components, Intellectual Property), Item 1A (Risk Factors),
+// Item 1C (Cybersecurity), Item 3 (Legal Proceedings), the Commitments,
+// Contingencies & Supply Concentrations note, and the Derivative
+// Instruments and Hedging note. FY2025 filing with FY2024 comparisons.
 //
 // TABS LIVE: OVERVIEW, MOAT, RISKS.
 // TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS —
@@ -18902,17 +18903,20 @@ const TASE_BREAKDOWN = {
 //
 // TIER BADGE DELIBERATELY NOT SET. Tier 1 in this app means a full
 // breakdown INCLUDING multi-year income statement, balance sheet and cash
-// flow. Setting Tier 1 before the financials exist would repeat exactly the
-// mismatch flagged at the start of this coverage build. The badge goes on
-// when the numbers land.
+// flow. The badge goes on when the numbers land.
 //
-// CONTINGENCIES: the post-filing Epic items (Ninth Circuit 11 Dec 2025,
-// cert petition 21 May 2026, cert granted Jun 2026) post-date the 10-K and
-// are carried as supplied, with Muzz's own verify-before-relying caveat
-// preserved in the risk item text.
+// RISK WEIGHTS: the supplied register carries an A/B/C weight and an
+// FY2025-change column per risk. The renderer reads only {risk, meaning}
+// per item, so both are preserved inline at the head of each meaning
+// rather than dropped.
+//
+// CONTINGENCIES: post-filing Epic items (Ninth Circuit 11 Dec 2025, cert
+// petition 21 May 2026, cert granted Jun 2026) post-date the 10-K and are
+// carried as supplied, with the verify-before-relying caveat preserved.
+// Item 1C describes governance structure only — Apple makes no statement
+// that no material incident has occurred, and that is noted in-app.
 // The "facts" stat block is NOT populated — its renderer expects founded /
-// HQ / CEO / incorporated, none of which are in this drop. Employees,
-// segment count and the channel split are carried in distribution instead.
+// HQ / CEO / incorporated, none of which are in these drops.
 // ════════════════════════════════════════════════════════════════
 const AAPL_BREAKDOWN = {
   overview: {
@@ -19136,97 +19140,388 @@ const AAPL_BREAKDOWN = {
     },
   },
   risks: {
+    tldr: 'Twenty-seven risk factors across five categories, plus the Item 3 case detail. Four carry the analysis: Google search licensing, tariffs and Section 232, the new AI cluster, and single-category iPhone concentration. Three separate legal systems are working to loosen Apple\u2019s control of distribution and payment on its own platforms.',
     riskFactors: {
-      tldr: 'Three separate legal systems are working to loosen Apple\u2019s control of distribution and payment on its own platforms, and the supply chain section gained four new risk admissions in a single year. Base case is that App Store economics compress gradually rather than break.',
+      summary: 'Weights are A (highest) to C, as assessed against materiality to earnings. Six of the twenty-seven carry an A weight: #2 tariffs and geopolitics, #3 competition and rapid technological change, #9 third-party IP access, #15 confidential and personal data loss, #20 media/political/regulatory scrutiny including Google search licensing, and #22 net sales and gross margin volatility. The FY2025 change column records what moved against the prior year.',
       categories: [
         {
-          name: 'Regulatory \u00b7 EU Digital Markets Act',
+          name: '1 \u00b7 Macroeconomic and Industry Risks',
           items: [
             {
-              risk: 'Article 5(4) \u2014 fined and under appeal',
-              meaning: 'Commission opened a formal noncompliance investigation on 25 Mar 2024 into how developers may communicate and promote offers to end users for App Store apps, and how they may conclude contracts with those users. On 23 Apr 2025 it fined Apple \u20ac500 million and issued a cease-and-desist order requiring removal of technical and commercial restrictions preventing developers steering users to alternative distribution channels. Apple has appealed and maintains it complies. \u20ac500m is immaterial to Apple\u2019s financials in isolation.',
+              risk: '#1 \u00b7 Global and regional economic conditions',
+              meaning: 'WEIGHT B \u00b7 unchanged from FY2024. A majority of sales are outside the U.S., and a majority of supplier facilities are outside the U.S. Recession, inflation, tighter credit, higher rates and FX all hit consumer spending. The same conditions hit suppliers, carriers, resellers and developers, producing insolvency, credit risk on receivables, derivative counterparty failure, reduced liquidity and limits on issuing new debt.',
             },
             {
-              risk: 'Article 6(4) \u2014 preliminary findings issued, the asymmetric tail',
-              meaning: 'Second investigation opened 24 Jun 2024 into whether Apple\u2019s new contractual requirements for third-party developers and app marketplaces violate the DMA. Preliminary findings issued 23 Apr 2025. If a violation is finalised: cease-and-desist plus fines of up to 10% of annual worldwide net sales \u2014 on $416bn that is a theoretical $41bn ceiling. Ceilings are almost never applied and the actual Art 5(4) fine came in at a rounding error, so treat this as a tail scenario rather than a base case. But it is the ONLY line in the entire filing where a single regulatory outcome could exceed a full year of net income.',
-              critical: true,
+              risk: '#2 \u00b7 Political events, trade disputes, geopolitics, disasters',
+              meaning: 'WEIGHT A \u00b7 HEAVILY REWRITTEN \u2014 tariffs, rare earths and Section 232 all new. U.S. tariffs from Q2 FY2025 on imports including China, India, Japan, South Korea, Taiwan, Vietnam and the EU, plus retaliatory measures by others, and a Section 232 investigation into semiconductors and derivative products. Restrictions can force supplier changes, business restructuring, product withdrawal and price increases. Manufacturing is concentrated in China mainland, India, Japan, South Korea, Taiwan and Vietnam. This is the risk that has ALREADY shown up in the numbers: Products gross margin fell from 37.2% to 36.8% in FY2025 while mix improved toward Pro models. The Section 232 semiconductor investigation is the open-ended part \u2014 semis are in every product Apple sells, and a sector tariff would be harder to route around than country-specific measures. Apple\u2019s own language concedes it may not be able to mitigate.',
             },
             {
-              risk: 'Breach of a cease-and-desist order',
-              meaning: 'If a cease-and-desist order is breached, the Commission may impose further fines.',
+              risk: '#3 \u00b7 Highly competitive markets and rapid technological change',
+              meaning: 'WEIGHT A \u00b7 wearables added; flat/contracting markets added; IP-enforcement dependency added. Aggressive pricing, margin pressure and short product cycles. Apple must fund large R&D with uncertain return, and regulators can force IP sharing with competitors. Apple holds a MINORITY share in smartphones, PCs, tablets and \u2014 new this year \u2014 wearables. Some of those markets may be flat or contracting.',
             },
           ],
         },
         {
-          name: 'Regulatory \u00b7 DOJ antitrust (United States)',
+          name: '2 \u00b7 Business Risks',
           items: [
             {
-              risk: 'Monopolisation claim in smartphones',
-              meaning: 'Filed 21 Mar 2024 in the U.S. District Court for the District of New Jersey by the DOJ plus a number of state and district attorneys general. Alleges monopolisation or attempted monopolisation in \u201cperformance smartphones\u201d and \u201csmartphones\u201d, seeking equitable relief. Various parallel civil suits in state and federal courts allege similar violations and seek monetary damages and nonmonetary relief. Apple believes it has substantial defences and intends to defend vigorously. As at the 10-K: no trial date, no ruling, no reserve disclosed.',
+              risk: '#4 \u00b7 Product and service transitions',
+              meaning: 'WEIGHT B \u00b7 unchanged. Apple must continually launch new offerings, stimulate demand, navigate regulatory barriers to market access, and manage ramp, third-party integration, purchase commitments and inventory. New offerings may supersede existing ones at lower revenue and lower margin.',
+            },
+            {
+              risk: '#5 \u00b7 Outsourcing partners',
+              meaning: 'WEIGHT B \u00b7 unchanged. Single-source partners in the U.S., Asia and Europe for components; final assembly of substantially all hardware primarily in Asia; outsourced logistics. Reduced direct control over cost, quality and quantity, while Apple remains liable to the consumer for warranty. Supplier code-of-conduct violations occur.',
+            },
+            {
+              risk: '#6 \u00b7 Component sourcing',
+              meaning: 'WEIGHT B \u00b7 supplier failure, consolidation and alternative-source difficulty all added. Single and limited sources; industry-wide shortages with semiconductor precedent; custom components from one source; yield and capacity ramp constraints. New in FY2025: suppliers may fail or consolidate, may not renew agreements, and Apple may not find an alternative source.',
+            },
+            {
+              risk: '#7 \u00b7 Design and manufacturing defects',
+              meaning: 'WEIGHT B \u00b7 AI safety language NEW. Hardware, software and service defects; outages and slowdowns. Risk rises in specialised applications including health. NEW: AI features increase safety risk \u2014 harmful, inaccurate or negative content. Exposure to liability claims, recalls, write-offs, warranty cost and regulatory fines.',
+            },
+            {
+              risk: '#8 \u00b7 Inventory and asset write-downs',
+              meaning: 'WEIGHT C \u00b7 unchanged. Write-downs where cost exceeds net realisable value; impairment review of capital assets at supplier facilities, inventory prepayments and long-lived assets. Purchase obligations typically run up to 150 days, with cancellation fee reserves accrued.',
+            },
+            {
+              risk: '#9 \u00b7 Third-party IP access',
+              meaning: 'WEIGHT A \u00b7 AI training and output infringement is NEW. Products must license third-party technology, and infringement allegations follow. Exacerbated by machine learning and AI \u2014 copyrighted material used for training, and potential reproduction of copyrighted material in outputs. Failure to license means modifying or ceasing to sell products. This is the sharpest of the AI cluster: acquiring copyrighted material for training and potentially reproducing it in outputs is an unresolved legal question industry-wide, and Apple is a defendant-rich target. It does not change FY2026 earnings, but it is the kind of exposure that produces a large one-off settlement with no warning.',
+            },
+            {
+              risk: '#10 \u00b7 Third-party developer support',
+              meaning: 'WEIGHT B \u00b7 wearables added. Purchase decisions depend on app availability. Competing platforms include Android, Windows, PlayStation, Nintendo and Xbox. Apple\u2019s minority share \u2014 now including wearables \u2014 makes developers less inclined to build for its platforms.',
+            },
+            {
+              risk: '#11 \u00b7 Digital content',
+              meaning: 'WEIGHT C \u00b7 unchanged. Licences are often short-term with no renewal guarantee; content owners may compete with Apple, restrict access or raise cost. Own-produced content is costly amid competition for talent, content and subscribers.',
+            },
+            {
+              risk: '#12 \u00b7 Talent, key personnel and culture',
+              meaning: 'WEIGHT B \u00b7 culture and export controls made explicit. Dependence on the CEO, executive team and skilled employees. Silicon Valley competition raises compensation cost. Immigration, labour, employment laws and EXPORT CONTROLS affect recruiting. A distinctive and inclusive culture is named in the filing as a driver of success.',
+            },
+            {
+              risk: '#13 \u00b7 Carriers and resellers',
+              meaning: 'WEIGHT C \u00b7 unchanged. Resellers offer financing, instalment and subsidy plans that can be modified or discontinued at any time. Apple invests in staffing reseller stores, displays and digital marketing \u2014 substantial spend with no assured return. Reseller financial weakness or reduced ordering hits results directly.',
+            },
+            {
+              risk: '#14 \u00b7 IT failures and network disruption',
+              meaning: 'WEIGHT C \u00b7 unchanged. Apple and its supply chain depend on complex IT. Exposure to disasters, power and telecom failure, ransomware and break-ins. Continuity and disaster-recovery planning may be inadequate. Failures can block online services, customer transactions, manufacturing and shipping.',
+            },
+            {
+              risk: '#15 \u00b7 Loss of confidential and personal data',
+              meaning: 'WEIGHT A \u00b7 attacker-sophistication and geopolitical-escalation language SHARPENED. Apple stores personal, health and financial data of customers and employees, and security measures cannot be absolute. It must share data with suppliers and third parties. Attacks are regular and expected to accelerate in frequency and sophistication, using tools to evade detection and destroy forensic evidence, and they escalate during geopolitical tension. Apple states it is at GREATER risk than others because of its profile and the value of its data. Insurance may be insufficient.',
+            },
+            {
+              risk: '#16 \u00b7 New strategies, relationships and acquisitions',
+              meaning: 'WEIGHT C \u00b7 unchanged. Management distraction, unexpected liabilities, regulatory approval failure, counterparty non-performance, onerous conditions, impairment and write-offs.',
             },
           ],
         },
         {
-          name: 'Litigation \u00b7 Epic Games',
+          name: '3 \u00b7 Legal and Regulatory Compliance Risks',
           items: [
             {
-              risk: 'The 2021 injunction and the 2025 contempt finding',
+              risk: '#17 \u00b7 Litigation and government investigations',
+              meaning: 'WEIGHT B \u00b7 AI-driven novel claims added. The volume and alleged magnitude of claims has generally increased over time and may keep increasing. Significant patent claims on standards-enabled products and non-practising entity assertions, with the risk exacerbated as machine learning and AI are integrated. Plaintiffs seek broad injunctive relief and substantial damages. Settlements can cut revenue and raise cost of sales.',
+            },
+            {
+              risk: '#18 \u00b7 Complex and changing global laws',
+              meaning: 'WEIGHT B \u00b7 online safety, age verification and AI added to the list. Roughly twenty subject areas are listed, including antitrust, privacy, data localisation, online safety, age verification, financial services, digital platforms, machine learning and AI, national security, tax and climate. Compliance is onerous, and products could be banned, delayed or prohibited from importation.',
+            },
+            {
+              risk: '#19 \u00b7 Varied stakeholder expectations (social and environmental)',
+              meaning: 'WEIGHT C \u00b7 REFRAMED \u2014 now cuts both ways, including anti-ESG conflict. Apple makes public statements on values and environmental impact and pursues goals dependent on third-party performance and data outside its control. Risk arises both from failure to achieve those goals AND from evolving, varied and at times CONFLICTING federal, state and international laws. In FY2024 this risk was one-directional; in FY2025 conflicting law is itself named as a risk.',
+            },
+            {
+              risk: '#20 \u00b7 Media, political and regulatory scrutiny \u2014 including Google search licensing',
+              meaning: 'WEIGHT A \u00b7 the Google remedy timeline and the Epic injunction are the year\u2019s biggest additions. A U.S. court order prevents Apple from imposing any commission or fee on certain consumer purchases and has changed how developers communicate alternative purchasing in the U.S. App Store. The EU DMA has changed iOS, iPadOS, the App Store and Safari \u2014 alternative distribution, alternative payment processing, new fee structures and new APIs \u2014 and the Commission has CHALLENGED Apple\u2019s compliance plan; the DMA carries significant fines. U.S. civil antitrust suits allege monopolisation in \u201cperformance smartphones\u201d and smartphones. GOOGLE: violation found 5 Aug 2024; the D.C. District Court ordered remedies on 2 Sept 2025; the matter is subject to further proceedings and appeal by BOTH the DOJ and Google, and a reversal could impose the DOJ\u2019s original remedies prohibiting Google from offering Apple commercial terms for search distribution.',
+            },
+            {
+              risk: '#21 \u00b7 Personal data laws',
+              meaning: 'WEIGHT B \u00b7 minors, age verification and AI disclosure risk added. Growing and inconsistent federal, state and international regimes restrict transfers even among Apple\u2019s own subsidiaries. Specific obligations apply to minors\u2019 data and to sensitive health, biometric, financial and payment card data, with breach notification and government audit. AI features exacerbate inadvertent-disclosure risk. New online safety and mandatory age verification laws require significant product modification.',
+            },
+          ],
+        },
+        {
+          name: '4 \u00b7 Financial Risks',
+          items: [
+            {
+              risk: '#22 \u00b7 Net sales and gross margin volatility \u2014 and single-category concentration',
+              meaning: 'WEIGHT A \u00b7 tariffs added to the margin driver list; iPhone concentration stated plainly. Margins vary by product, service, segment and channel. Pressure comes from pricing actions, competition, compressed cycles, supply shortages, component and content cost, warranty, mix shifts including REGULATORY-FORCED changes to offerings, FX, inflation, new or increased tariffs and retaliation, and lower-margin new offerings. Apple states plainly that a significant portion of net sales comes from a SINGLE PRODUCT CATEGORY. iPhone is roughly half of revenue and drives the attach rate for Services, Watch and AirPods \u2014 so a tariff on Chinese assembly, a China demand decline, a DMA-forced App Store change and an iPhone product miss are NOT independent events. They all route through the same product line.',
+            },
+            {
+              risk: '#23 \u00b7 Foreign exchange',
+              meaning: 'WEIGHT B \u00b7 unchanged. Exposure on non-USD sales, cost of goods sold and operating expense. A weak foreign currency cuts the USD value of sales and pushes international price rises, creating demand risk; declining to raise prices hits margin instead. A strong foreign currency raises component cost and can trigger derivative losses. Hedges may offset none, or only part, of adverse moves.',
+            },
+            {
+              risk: '#24 \u00b7 Investment portfolio and credit',
+              meaning: 'WEIGHT C \u00b7 unchanged. Cash, equivalents and marketable securities are exposed to liquidity, credit deterioration, market, political, sovereign and interest rate risk.',
+            },
+            {
+              risk: '#25 \u00b7 Receivables and prepayments',
+              meaning: 'WEIGHT B \u00b7 long-term supply prepayments added. A substantial majority of trade receivables are uncollateralised, uninsured and without bank support, and are concentrated in carriers and resellers, with higher collectibility risk in certain international markets. Vendor non-trade receivables are unsecured. Prepayments are made on long-term supply agreements. As of 27 September 2025, vendor non-trade receivables were concentrated among a few vendors primarily in Asia.',
+            },
+            {
+              risk: '#26 \u00b7 Tax',
+              meaning: 'WEIGHT B \u00b7 unchanged. Taxed in the U.S. and numerous foreign jurisdictions including Ireland and Singapore. OECD global minimum tax proposals apply. The effective rate is affected by earnings mix, deferred tax valuation, new taxes, law changes and interpretation. Subject to IRS and foreign examinations with inherently uncertain outcomes.',
+            },
+          ],
+        },
+        {
+          name: '5 \u00b7 General Risks',
+          items: [
+            {
+              risk: '#27 \u00b7 Stock price volatility',
+              meaning: 'WEIGHT C \u00b7 unchanged. Substantial past volatility, sometimes unrelated to operating performance. Volatility can push the average buyback price above the stock\u2019s price at a point in time. Apple states the price should reflect expectations of growth, profitability, a continued or growing dividend, and full consummation of the repurchase programme \u2014 NONE of which are obligations. Missing those expectations can hit investor confidence and employee retention.',
+            },
+          ],
+        },
+        {
+          name: '6 \u00b7 Item 3 \u00b7 Legal Proceedings (case detail)',
+          items: [
+            {
+              risk: 'EU DMA \u00b7 Article 5(4) \u2014 fined and under appeal',
+              meaning: 'Formal noncompliance investigation opened 25 Mar 2024 into how developers may communicate and promote offers to end users for App Store apps, and how they may conclude contracts with those users. On 23 Apr 2025 the Commission fined Apple \u20ac500 million and issued a cease-and-desist order requiring removal of technical and commercial restrictions preventing developers steering users to alternative distribution channels. Apple has appealed and maintains it complies. \u20ac500m is immaterial in isolation \u2014 noise.',
+            },
+            {
+              risk: 'EU DMA \u00b7 Article 6(4) \u2014 preliminary findings, the asymmetric tail',
+              meaning: 'Second investigation opened 24 Jun 2024 into whether Apple\u2019s new contractual requirements for third-party developers and app marketplaces violate the DMA. Preliminary findings issued 23 Apr 2025. If a violation is finalised: cease-and-desist plus fines of up to 10% of annual worldwide net sales \u2014 on $416bn that is a theoretical $41bn ceiling. Ceilings are almost never applied and the Art 5(4) fine came in at a rounding error, so treat this as a tail scenario, not a base case. But it is the ONLY line in the entire filing where a single regulatory outcome could exceed a full year of net income. Breach of a cease-and-desist order allows the Commission to impose further fines.',
+            },
+            {
+              risk: 'DOJ antitrust \u00b7 monopolisation claim in smartphones',
+              meaning: 'Filed 21 Mar 2024 in the U.S. District Court for the District of New Jersey by the DOJ plus a number of state and district attorneys general, alleging monopolisation or attempted monopolisation in \u201cperformance smartphones\u201d and \u201csmartphones\u201d and seeking equitable relief. Various parallel civil suits in state and federal courts allege similar violations and seek monetary damages and nonmonetary relief. Apple believes it has substantial defences and intends to defend vigorously. As at the 10-K: no trial date, no ruling, no reserve disclosed.',
+            },
+            {
+              risk: 'Epic Games \u00b7 the 2021 injunction and the 2025 contempt finding',
               meaning: 'In 2021 the California District Court found certain App Review Guideline provisions violated California\u2019s UCL and enjoined Apple from prohibiting developers including buttons, external links or calls to action directing customers to non-IAP purchasing mechanisms, on U.S. storefronts of the iOS and iPadOS App Stores. Apple implemented a compliance plan on 16 Jan 2024 and moved to narrow or vacate on 30 Sep 2024. On 30 Apr 2025 the court found Apple in violation and enjoined it from imposing ANY commission or fee on purchases made outside an app, from restricting how developers guide consumers to out-of-app purchases, and from otherwise interfering with a consumer\u2019s choice. The motion to narrow or vacate was denied the same day.',
-              critical: true,
             },
             {
-              risk: 'Criminal contempt referral',
+              risk: 'Epic Games \u00b7 criminal contempt referral',
               meaning: 'Apple was referred to the U.S. Attorney for the Northern District of California for a determination whether criminal contempt proceedings are appropriate. This is the item with no financial number attached and the most reputational weight. A referral is not a charge and the U.S. Attorney may do nothing. But a court finding that Apple acted in bad faith, affirmed on appeal, is the kind of fact that shapes how the DOJ monopolisation case and the EU proceedings are argued. It raises the probability of adverse outcomes elsewhere more than it creates direct cost.',
             },
             {
               risk: 'POST-FILING \u00b7 Ninth Circuit, 11 Dec 2025 \u2014 a partial win read as a loss',
-              meaning: 'The panel unanimously affirmed the civil contempt finding based on Apple\u2019s wilful violations, affirmed several sanctions and modified or reversed others in part, and remanded. It also affirmed denial of Apple\u2019s request to vacate or modify the injunction and denied reassignment to a different judge. BUT it found the trial judge went too far in barring any commission at all, since the original injunction only outlawed PROHIBITIVE commissions \u2014 Apple should be allowed to charge some fees on linked transactions, limited and tied to the costs of the services Apple provides in facilitating steering links. On remand the parties will litigate the rate. The commercial question is now \u201cwhat rate\u201d, not \u201cwhether\u201d \u2014 a materially better position than the 10-K describes. The filing captured the worst moment of this case rather than its resolution.',
+              meaning: 'The panel unanimously affirmed the civil contempt finding based on Apple\u2019s wilful violations, affirmed several sanctions and modified or reversed others in part, and remanded. It also affirmed denial of Apple\u2019s request to vacate or modify the injunction and denied reassignment to a different judge. BUT it found the trial judge went too far in barring any commission at all, since the original injunction only outlawed PROHIBITIVE commissions \u2014 Apple should be allowed to charge some fees on linked transactions, limited and tied to the costs of the services Apple provides in facilitating steering links. On remand the parties will litigate the rate. The commercial question is now \u201cwhat rate\u201d, not \u201cwhether\u201d \u2014 a materially better position than the 10-K describes. The filing captured the worst moment of this case, not its resolution.',
             },
             {
-              risk: 'POST-FILING \u00b7 Supreme Court certiorari granted',
-              meaning: 'Panel rehearing denied. Apple filed a petition for certiorari on 21 May 2026 challenging the civil contempt finding, and the U.S. Supreme Court granted certiorari in June 2026. The legal question is narrow: Apple argues the Ninth Circuit permits contempt for violating the SPIRIT of an injunction where other circuits do not; Epic contends the Ninth Circuit found the commission violated the injunction\u2019s TEXT because it had a prohibitive effect on steering, and that no circuit conflict exists. VERIFY CURRENT POSTURE BEFORE RELYING ON THIS \u2014 the cert grant is recent and the remand proceedings run in parallel.',
+              risk: 'POST-FILING \u00b7 Supreme Court certiorari granted \u2014 VERIFY BEFORE RELYING',
+              meaning: 'Panel rehearing denied. Apple filed a petition for certiorari on 21 May 2026 challenging the civil contempt finding, and the U.S. Supreme Court granted certiorari in June 2026. The legal question is narrow: Apple argues the Ninth Circuit permits contempt for violating the SPIRIT of an injunction where other circuits do not; Epic contends the Ninth Circuit found the commission violated the injunction\u2019s TEXT because it had a prohibitive effect on steering, and that no circuit conflict exists. VERIFY THE CURRENT POSTURE BEFORE RELYING ON THIS \u2014 the cert grant is recent and the remand proceedings run in parallel.',
             },
             {
-              risk: 'The standard that constrains the model',
-              meaning: 'The court\u2019s framing is that fees on linked transactions must be tied to the COST of services Apple provides in facilitating the link. That is cost-plus reasoning, not value-capture reasoning. Apple\u2019s 27% link-out commission was set by reference to what IAP earns; a cost-tied fee is a different and much smaller number. If that framing survives, the U.S. link-out channel becomes close to margin-neutral for Apple.',
-            },
-            {
-              risk: 'Size the exposure before worrying about it',
-              meaning: 'Services was $109bn in FY2025 at 75.4% gross margin. App Store commissions are a portion of that; U.S. link-out purchases are a portion of those, and only for developers who bother to implement external links. The direct revenue at risk is real but not large. The reason to care is precedent: the EU has ordered the same steering freedom under the DMA, and the argument that App Store economics rest on a contractual chokepoint rather than a value exchange is now judicially endorsed in two jurisdictions.',
-            },
-          ],
-        },
-        {
-          name: 'Intellectual property',
-          items: [
-            {
-              risk: 'Third-party licensing dependency \u2014 wording hardened in FY2025',
-              meaning: 'Many of Apple\u2019s products and services include technology or IP that MUST BE LICENSED from third parties (FY2024 wording: products \u201care designed to include\u201d third-party IP). It may be necessary in future to seek or renew licences covering various aspects of Apple\u2019s products, processes and services. Apple has generally obtained such licences on commercially reasonable terms in the past, but there is no guarantee they can be obtained in future on reasonable terms, or at all.',
-            },
-            {
-              risk: 'AI and machine learning infringement exposure',
-              meaning: 'Item 1A adds that machine learning and AI create new infringement exposure \u2014 training data and reproduction of copyrighted material in outputs. Paired with the hardened third-party licensing language, this looks like Apple Intelligence bringing a category of licensing risk that did not previously sit in the hardware business.',
-            },
-          ],
-        },
-        {
-          name: 'Supply chain',
-          items: [
-            {
-              risk: 'Single and limited-source components',
-              meaning: 'Certain components come from single or limited sources, and new products often use custom components available from only one source. Suppliers may fail, consolidate, or choose to concentrate on common components rather than Apple-customised ones \u2014 all three added as new disclosures in FY2025.',
-            },
-            {
-              risk: 'Trade restrictions and rare earths',
-              meaning: 'New FY2025 sentence: trade restrictions can increase cost or limit availability of products and of the components, rare earths and other raw materials that go into them. Rare earth processing is concentrated in China, which restricted exports of several during 2025.',
-            },
-            {
-              risk: 'Already visible in the numbers',
-              meaning: 'Products gross margin fell from 37.2% to 36.8% on tariff costs while the mix improved \u2014 the first visible dollar of what the supply chain section describes.',
+              risk: 'The standard that constrains the model \u2014 and how to size it',
+              meaning: 'The court\u2019s framing is that fees on linked transactions must be tied to the COST of services Apple provides in facilitating the link. That is cost-plus reasoning, not value-capture reasoning. Apple\u2019s 27% link-out commission was set by reference to what IAP earns; a cost-tied fee is a different and much smaller number. If that framing survives, the U.S. link-out channel becomes close to margin-neutral. SIZE IT FIRST: Services was $109bn in FY2025 at 75.4% gross margin. App Store commissions are a portion of that; U.S. link-out purchases are a portion of those, and only for developers who bother to implement external links. The direct revenue at risk is real but not large. The reason to care is PRECEDENT \u2014 the EU has ordered the same steering freedom under the DMA, and the argument that App Store economics rest on a contractual chokepoint rather than a value exchange is now judicially endorsed in two jurisdictions.',
             },
           ],
         },
       ],
+    },
+    riskSummary: {
+      preamble: 'Twenty-seven risk factors across five categories, weighted A (highest) to C. Four of them carry the analysis. The rest are either boilerplate or amplifications of these four.',
+      categories: [
+        {
+          num: '01',
+          name: 'Google search licensing (#20)',
+          emerging: true,
+          description: 'The single largest identifiable risk to earnings in this filing, and the one Apple wrote up in the most legally precise language. The payments are high-margin and essentially costless to deliver \u2014 they flow close to 100% to operating income. Apple does not disclose the amount; the widely-used estimate is around $20bn a year, which against FY2025 operating income of roughly $127bn is meaningful.',
+          drivers: [
+            'Google violation found 5 Aug 2024.',
+            'D.C. District Court ordered remedies 2 Sept 2025 \u2014 the FAVOURABLE outcome for Apple.',
+            'Subject to further proceedings and appeal by BOTH the DOJ and Google.',
+            'A reversal could impose the DOJ\u2019s original remedies prohibiting Google from offering Apple commercial terms for search distribution.',
+          ],
+          mitigations: [
+            'Model this as a SCENARIO, not a haircut.',
+            'Base case: payments continue.',
+            'Downside case: a step reduction in Services operating income with NO offsetting cost saving \u2014 because there is no cost to remove.',
+          ],
+        },
+        {
+          num: '02',
+          name: 'Tariffs and Section 232 (#2 and #22)',
+          emerging: true,
+          description: 'The risk that has already shown up in the numbers. Products gross margin fell from 37.2% to 36.8% in FY2025 while product mix improved toward Pro models \u2014 that divergence is the tariff cost becoming visible.',
+          drivers: [
+            'U.S. tariffs from Q2 FY2025 on China, India, Japan, South Korea, Taiwan, Vietnam and the EU.',
+            'Retaliatory measures by other jurisdictions.',
+            'Section 232 investigation into semiconductors and derivative products \u2014 the open-ended part.',
+            'Manufacturing concentrated in exactly the countries being tariffed.',
+          ],
+          mitigations: [
+            'Semis are in every product Apple sells, so a sector tariff would be harder to route around than country-specific measures.',
+            'Apple\u2019s own language concedes it may not be able to mitigate.',
+            'Treat as a variance argument: widen the distribution around gross margin rather than lowering the base-case forecast.',
+          ],
+        },
+        {
+          num: '03',
+          name: 'The AI cluster (#7, #9, #17, #18, #21)',
+          description: 'New and structurally different from Apple\u2019s historic risks. Four separate risk factors now carry AI language where FY2024 had one passing mention: product safety, IP training and outputs, novel litigation, and privacy disclosure.',
+          drivers: [
+            '#7 Safety \u2014 AI features can produce harmful, inaccurate or negative content.',
+            '#9 IP \u2014 copyrighted material used for training, and potential reproduction in outputs. The sharpest of the four.',
+            '#17 Litigation \u2014 patent and NPE risk exacerbated as ML/AI is integrated.',
+            '#18 and #21 Regulation \u2014 AI added to the global law list; AI exacerbates inadvertent-disclosure risk.',
+          ],
+          mitigations: [
+            'Acquiring copyrighted material for training and potentially reproducing it in outputs is an unresolved legal question industry-wide, and Apple is a defendant-rich target.',
+            'This does not change FY2026 earnings.',
+            'It is the kind of exposure that produces a large one-off settlement with no warning \u2014 size it as a tail, not a run-rate.',
+          ],
+        },
+        {
+          num: '04',
+          name: 'Single-category concentration (#22)',
+          emerging: true,
+          description: 'Apple stating the concentration problem in its own words: \u201ca significant portion of net sales comes from a single product category\u201d. iPhone is roughly half of revenue and drives the attach rate for Services, Watch and AirPods.',
+          drivers: [
+            'A tariff on Chinese assembly.',
+            'A Greater China demand decline.',
+            'A DMA-forced App Store change.',
+            'An iPhone product miss.',
+          ],
+          mitigations: [
+            'These are NOT independent events \u2014 they all route through the same product line.',
+            'Every other risk in the document is amplified by this single dependency.',
+            'That correlation is what a margin of safety is really compensating you for.',
+          ],
+        },
+      ],
+      summaryInsight: 'Apple\u2019s risk factors got materially longer and more specific this year. That is not necessarily a sign the business deteriorated \u2014 legal drafting responds to litigation exposure, and a year with an Epic injunction, a DMA challenge and a Google remedies order will produce more disclosure regardless. But the direction is consistent across every section of this filing, from Supply of Components through to Item 1A: more concentration acknowledged, more regulatory constraint, less freedom of action. Worth carrying into how you set the DISCOUNT RATE rather than the growth rate.',
+    },
+    cyber: {
+      tldr: 'Item 1C is materially unchanged from FY2024. Note what the disclosure does and does not say: it describes GOVERNANCE STRUCTURE ONLY. Apple makes no statement that no material incident has occurred.',
+      rows: [
+        {
+          category: 'Accountability and leadership',
+          points: [
+            'Management, led by the Head of Corporate Information Security, has overall responsibility for identifying, assessing and managing material cybersecurity risk.',
+            'The leader has 25+ years in the industry and leadership roles at other large technology companies.',
+            'Has led Apple\u2019s team since 2016 \u2014 nine years of continuity in the role.',
+          ],
+          meaning: 'A single named accountable owner with long tenure. Continuity in this seat is itself a control.',
+        },
+        {
+          category: 'Team functions',
+          points: [
+            'Policies, standards and procedures.',
+            'Employee training.',
+            'Security controls.',
+            'Risk and compliance posture.',
+            'Monitoring and response.',
+            'Testing and assessments.',
+          ],
+          meaning: 'The standard six-function security programme. Nothing unusual, and nothing quantified.',
+        },
+        {
+          category: 'Coordination and third parties',
+          points: [
+            'Cross-company coordination.',
+            'Third parties engaged to assess, test or assist with security processes and incident response.',
+          ],
+          meaning: 'External validation is used, but the filing does not name the assessors or disclose findings.',
+        },
+        {
+          category: 'Supplier risk',
+          points: [
+            'A dedicated Supplier Trust team manages information security risk arising through supplier relationships.',
+          ],
+          meaning: 'Read alongside Item 1A #15: Apple must share data with suppliers and third parties, so supplier security is a direct extension of its own attack surface.',
+        },
+        {
+          category: 'Escalation',
+          points: [
+            'Processes to log, track, address, escalate and report incidents.',
+            'Coverage spans Apple AND its suppliers.',
+            'Escalation runs to senior management and the Audit and Finance Committee.',
+          ],
+          meaning: 'Incident reporting reaches board level by design, not by exception.',
+        },
+        {
+          category: 'Enterprise risk management',
+          points: [
+            'The ERM programme covers financial, operational, compliance and reputational risk.',
+            'It reflects management\u2019s cybersecurity risk assessment.',
+          ],
+          meaning: 'Cyber is integrated into ERM rather than sitting as an isolated technical function.',
+        },
+        {
+          category: 'Board oversight',
+          points: [
+            'The Audit Committee assists the Board with oversight.',
+            'Regular review with the Head of Corporate Information Security, the General Counsel, and the Heads of Compliance and Business Conduct, Business Assurance and Internal Audit.',
+            'The Committee Chair reports to the Board and recommends actions.',
+          ],
+          meaning: 'Four separate control functions in the room, and a named reporting line to the full Board.',
+        },
+      ],
+      takeaways: [
+        'Materially unchanged from FY2024 \u2014 this section is stable while almost every other section of the filing expanded.',
+        'The disclosure describes governance structure only. Apple makes NO statement that no material incident has occurred, and the absence of such a statement should not be read as one.',
+        'Item 1A #15 does the real work on this risk: attacks are expected to accelerate in frequency and sophistication, escalate during geopolitical tension, and Apple states it is at greater risk than others because of its profile and the value of its data. Insurance may be insufficient.',
+      ],
+    },
+    derivatives: {
+      summary: 'Apple uses derivatives to PARTIALLY offset business exposure to foreign exchange and interest rate risk \u2014 not to speculate. The hedging is explicitly not comprehensive: Apple may choose not to hedge certain exposures because of accounting considerations or prohibitive economic cost, and there is no assurance hedges offset more than a portion of the financial impact. All derivatives are recorded at fair value, accounting treatment is driven by intended use and hedge designation, and cash flows are classified in the same section as the hedged item \u2014 generally operating activities.',
+      risksHedged: [
+        {
+          name: 'FX \u00b7 Forecasted revenue and inventory purchases',
+          icon: '\u1f310',
+          description: 'Gross margin protection on forecasted transactions. This is the operational hedge, and its horizon is short: typically UP TO 12 MONTHS.',
+          instruments: 'Forwards, options and other instruments \u2014 designated as CASH FLOW hedges',
+          purpose: 'Buys time to reprice, not immunity. A sustained dollar move gets absorbed within a year regardless of hedging. With a majority of sales outside the U.S., FX remains a real driver of reported results rather than a managed-away risk.',
+        },
+        {
+          name: 'FX \u00b7 Foreign-currency term debt and marketable securities',
+          icon: '\u1f4b1',
+          description: 'Apple issues yen and euro term debt and swaps it back to USD for the life of the bond. Maximum horizon 17 years as of 27 Sept 2025 \u2014 down from 18 years in FY2024.',
+          instruments: 'Forwards, cross-currency swaps and other \u2014 CASH FLOW or FAIR VALUE hedges',
+          purpose: 'The 17-year figure is NOT a policy change \u2014 it is the same hedges ageing. Last year\u2019s longest-dated swap had 18 years to run; this year it has 17. Expect 16 next year unless Apple issues new long-dated foreign-currency paper. It is a bond maturity, not a hedging strategy decision.',
+        },
+        {
+          name: 'FX \u00b7 Remeasurement exposures \u2014 NOT designated',
+          icon: '\u26a0',
+          description: 'Remeasurement of non-functional-currency assets and liabilities, plus certain gross margin exposures. This book grew 19% to $109.1bn and is now 1.7x the designated FX book \u2014 and the gap widened, since designated FX shrank 2%.',
+          instruments: 'Various \u2014 NOT designated as accounting hedges',
+          purpose: 'This is the number to watch. Non-designated derivatives take fair value changes STRAIGHT to the income statement with no AOCI deferral, so a larger non-designated book means more FX noise landing in Other income/(expense) quarter to quarter. It is mostly intended \u2014 these instruments offset remeasurement gains and losses that also hit OI&E \u2014 but it is an imperfect offset BY DESIGN, and a bigger book means bigger gross movements on both sides. If you see an OI&E surprise in a quarter with a sharp dollar move, this is usually where it came from.',
+        },
+        {
+          name: 'Interest rate \u00b7 Term debt and marketable securities',
+          icon: '\u1f4ca',
+          description: 'Notional fell 12% to $12.9bn. Hedged items in fair value hedges: $12.6bn of current and non-current term debt, down from $13.5bn.',
+          instruments: 'Interest rate swaps, options and other \u2014 CASH FLOW or FAIR VALUE hedges',
+          purpose: 'Manages the cost and fair value of term debt.',
+        },
+      ],
+      hedgeTypes: [
+        {
+          name: 'Cash flow hedge \u00b7 effective portion',
+          description: 'Deferred in AOCI and reclassified into earnings when the hedged transaction affects earnings, in the SAME income statement line.',
+        },
+        {
+          name: 'Fair value hedge \u00b7 effective portion',
+          description: 'Recognised in the income statement line the hedge relates to, offset by the change in value of the hedged item.',
+        },
+        {
+          name: 'Amounts excluded from effectiveness assessment',
+          description: 'Recognised straight-line over the life of the hedge in the related income statement line; fair value changes on excluded amounts go to OCI.',
+        },
+        {
+          name: 'NOT designated as accounting hedges',
+          description: 'Fair value changes recognised DIRECTLY in the income statement \u2014 no deferral. This is now the largest book at $109.1bn.',
+        },
+      ],
+      pros: [
+        'Notional discipline: total notional grew only 9% to $184.6bn, and the designated books actually SHRANK (FX \u22122%, interest rate \u221212%).',
+        'Long-dated debt FX exposure is matched to bond maturity rather than rolled short.',
+        'Explicit policy that hedging is partial and not comprehensive \u2014 no pretence of immunity.',
+      ],
+      cons: [
+        'The non-designated FX book grew 19% to $109.1bn and now runs 1.7x the designated book \u2014 more fair value movement landing directly in Other income/(expense).',
+        'Operational FX hedges run only 12 months. A sustained dollar move is absorbed within a year regardless.',
+        'DISCLOSURE GOT THINNER: FY2024 gave a full table of hedged items in fair value hedges across categories; FY2025 collapsed it to a single sentence covering term debt only ($12.6bn). Almost certainly because marketable securities under fair value hedges became immaterial rather than anything defensive \u2014 but it is a real loss of visibility, and do not assume the missing categories went to zero. The FY2024 table is the last one with that detail.',
+      ],
+      bigPicture: 'Item 1A says it plainly: hedges may not offset any, or more than a portion, of adverse moves. With a majority of sales outside the U.S. and only a 12-month horizon on operational hedges, FX is a real driver of reported results, not a managed-away risk. The hedging programme buys time to reprice \u2014 that is all it is designed to do.',
     },
     purchaseObligations: {
       asOf: '27 September 2025',
