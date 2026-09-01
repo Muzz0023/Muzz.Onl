@@ -25945,6 +25945,306 @@ const GOOG_BREAKDOWN = {
           },
         ],
       },
+      executiveTakeaways: [
+        'THE CEO WAS THE LOWEST-PAID NAMED OFFICER IN FY2024. Pichai\u2019s $10.7m sits below all five of his reports, and below the CFO\u2019s $50.0m by a factor of nearly five. That is entirely an artefact of the triennial grant cycle \u2014 he received $226m in FY2022 and essentially nothing in the two years since. FY2025 is the next scheduled grant year, so the reported number will spike again.',
+        'COMPENSATION ACTUALLY PAID IS NOT CASH AND NOT A BOARD DECISION. Pichai\u2019s FY2024 CAP of $215.7m came in a year he received no meaningful equity grant. Ninety per cent of it \u2014 $193.4m \u2014 is the market revaluing awards granted in December 2022 that were still unvested. In FY2022 the effect ran the other way: $225.9m reported, $115.8m actually paid, because the stock fell. The two measures moved in opposite directions in consecutive years, which is the clearest demonstration that neither number on its own tells you what the board decided to pay.',
+        'THE 32:1 PAY RATIO IS THE FLATTERING VERSION. It is struck on a non-grant year. Applying the same $331,894 median employee compensation to the FY2022 grant year gives roughly 681:1. Both numbers are technically correct and neither describes the underlying policy \u2014 which is why the ratio is close to useless for a company that grants triennially.',
+        'THE MEDIAN ALPHABET EMPLOYEE EARNED $331,894 IN FY2024. That is the figure worth sitting with. It is an extraordinary median for a workforce of 183,000, it is a large part of why the pay ratio looks modest even in grant years, and it connects directly to the $27.1bn share-based compensation line \u2014 the AI talent market priced into the median, not just the top.',
+        'RELATIVE TSR IS THE ONLY PERFORMANCE MEASURE. No revenue target, no margin target, no return-on-capital target, no cash flow target. PSUs pay 0% below the 25th percentile against the S&P 100, 100% at median and 200% at the 75th. The consequence is that multiple expansion and operating improvement pay identically, and a strong operating period inside a falling market pays nothing. For a company entering its heaviest capex cycle, a metric that ignores returns on that capital is a genuine governance gap \u2014 not a scandal, but a gap.',
+        'THE FY2025 CHANGE IS DIRECTIONALLY GOOD. Alphabet eliminated the SVP cash bonus programme and moved the $2m of value into PSUs. Less guaranteed cash, more equity contingent on three-year relative performance. It increases alignment \u2014 within the limits of the TSR-only metric above.',
+        'PICHAI TAKES NO CASH BONUS. Every other named officer receives $850k to $2m of cash incentive; the CEO receives none. His variable compensation is entirely equity, which is the strongest alignment structure among the group, and worth noting given how often the $226m headline gets read as a cash payout.',
+      ],
+      tables: [
+        {
+          title: 'SUMMARY COMPENSATION TABLE \u00b7 FY2024 ($)',
+          columns: [
+            'Named executive officer',
+            'Salary',
+            'Bonus',
+            'Stock awards',
+            'Cash incentive',
+            'Other',
+            'TOTAL',
+          ],
+          rows: [
+            [
+              'Sundar Pichai \u00b7 CEO',
+              '2,015,385',
+              '\u2014',
+              '405,630',
+              '\u2014',
+              '8,304,028',
+              '10,725,043',
+            ],
+            [
+              'Anat Ashkenazi \u00b7 CFO (from Jul)',
+              '423,077',
+              '9,900,000',
+              '38,522,579',
+              '850,000',
+              '282,479',
+              '49,978,135',
+            ],
+            [
+              'Philipp Schindler \u00b7 CBO',
+              '1,007,692',
+              '\u2014',
+              '43,972,310',
+              '2,000,000',
+              '44,007',
+              '47,024,009',
+            ],
+            [
+              'Prabhakar Raghavan \u00b7 SVP',
+              '1,007,692',
+              '\u2014',
+              '43,972,310',
+              '2,000,000',
+              '12,164',
+              '46,992,166',
+            ],
+            [
+              'Ruth Porat \u00b7 President & CIO',
+              '1,007,692',
+              '\u2014',
+              '27,143,064',
+              '2,000,000',
+              '15,671',
+              '30,166,427',
+            ],
+            [
+              'Kent Walker \u00b7 CLO',
+              '1,007,692',
+              '\u2014',
+              '27,143,064',
+              '2,000,000',
+              '12,004',
+              '30,162,760',
+            ],
+          ],
+          emphasis: [
+            0,
+          ],
+          note: 'Every row sums exactly to its stated total. Two things stand out. THE CEO IS THE LOWEST-PAID NEO IN FY2024 at $10.7m \u2014 below all five reports \u2014 because he only receives equity in grant years, and 2024 was not one. And Pichai takes NO CASH BONUS at all: his entire variable compensation is stock, while every other officer takes $850k\u2013$2m in cash incentive. His $8.3m of "other compensation" is predominantly personal security.',
+        },
+        {
+          title: 'THE TRIENNIAL PATTERN \u00b7 SUNDAR PICHAI SCT ($)',
+          columns: [
+            'Year',
+            'Salary',
+            'Stock awards',
+            'Other',
+            'TOTAL',
+            'Grant year?',
+          ],
+          rows: [
+            [
+              'FY2022',
+              '2,000,000',
+              '218,037,684',
+              '5,947,461',
+              '225,985,145',
+              'YES \u2014 mega-grant',
+            ],
+            [
+              'FY2023',
+              '2,000,000',
+              '0',
+              '6,802,824',
+              '8,802,824',
+              'no',
+            ],
+            [
+              'FY2024',
+              '2,015,385',
+              '405,630',
+              '8,304,028',
+              '10,725,043',
+              'no',
+            ],
+          ],
+          emphasis: [
+            0,
+          ],
+          note: 'Pichai receives a large equity package roughly ONCE EVERY THREE YEARS rather than annually, and SEC rules require the entire grant-date value to be reported in the year granted. So FY2022 reads $226m and the two following years read under $11m each \u2014 the same underlying pay policy, reported three different ways. FY2025 IS THE NEXT SCHEDULED GRANT YEAR, so expect the reported figure to spike again and expect the headlines that follow it to be wrong. The grant splits into time-vesting RSUs and PSUs tied to three-year relative TSR, which can pay anywhere from zero to double.',
+        },
+        {
+          title: 'PAY VERSUS PERFORMANCE \u00b7 COMPENSATION ACTUALLY PAID',
+          columns: [
+            'Year',
+            'CEO SCT',
+            'CEO CAP',
+            'Alphabet TSR',
+            'Peer TSR',
+            'Net income',
+            '1-yr TSR percentile',
+          ],
+          rows: [
+            [
+              'FY2021',
+              '\u2014',
+              '$267.3m',
+              '216%',
+              '134%',
+              '$76.0bn',
+              '94th',
+            ],
+            [
+              'FY2022',
+              '$225.9m',
+              '$115.8m',
+              '132.7%',
+              '\u2014',
+              '$59.97bn',
+              '14th',
+            ],
+            [
+              'FY2023',
+              '$8.8m',
+              '$235.1m',
+              '210.8%',
+              '\u2014',
+              '$73.8bn',
+              '87th',
+            ],
+            [
+              'FY2024',
+              '$10.7m',
+              '$215.6m',
+              '285.9%',
+              '158.48%',
+              '$100.1bn',
+              '73rd',
+            ],
+          ],
+          emphasis: [
+            1,
+          ],
+          note: 'READ THE TWO CEO COLUMNS AGAINST EACH OTHER. In FY2022 reported pay was $225.9m while Compensation Actually Paid was $115.8m \u2014 the grant landed in a falling market, so the mark-to-market halved it. In FY2023 reported pay was $8.8m while CAP was $235.1m, because the stock recovered and revalued awards granted years earlier. The two measures moved in OPPOSITE directions in consecutive years. Neither is cash. CAP is an unrealised mark on unvested stock, and in FY2024 Pichai received no equity grant at all yet posted a $215.6m CAP purely from the share price.',
+        },
+        {
+          title: 'HOW $10.7M BECOMES $215.7M \u00b7 THE FY2024 CAP BRIDGE ($)',
+          columns: [
+            'Component',
+            'Amount',
+          ],
+          rows: [
+            [
+              'SCT total as reported',
+              '10,725,043',
+            ],
+            [
+              'Less: grant-date value of FY2024 stock awards',
+              '(405,630)',
+            ],
+            [
+              'Plus: change in fair value of unvested PRIOR-year awards',
+              '193,446,915',
+            ],
+            [
+              'Plus: change in fair value to vesting date, older awards',
+              '9,935,070',
+            ],
+            [
+              'Plus: dividend equivalents not reflected elsewhere',
+              '1,971,071',
+            ],
+            [
+              'COMPENSATION ACTUALLY PAID',
+              '215,672,469',
+            ],
+          ],
+          emphasis: [
+            2,
+            5,
+          ],
+          note: 'The bridge reconciles to the dollar. NOTE WHERE THE MONEY IS: $193.4m of the $215.7m \u2014 90% of it \u2014 is the revaluation of awards granted in earlier years, chiefly the December 2022 package, the majority of which was still unvested at 31 December 2024. This is not compensation decided in 2024; it is the 2022 decision being re-priced by the market. That is exactly what the SEC intends the measure to show, but it means CAP tells you about the share price, not about the board\u2019s pay judgement.',
+        },
+        {
+          title: 'FY2025 TARGET EQUITY AWARDS ($M)',
+          columns: [
+            'Executive',
+            'GSU (time-vesting)',
+            'PSU (performance)',
+            'Total equity',
+            'Salary',
+            'Total target',
+          ],
+          rows: [
+            [
+              'Philipp Schindler \u00b7 CBO',
+              '24',
+              '14',
+              '38',
+              '1',
+              '39',
+            ],
+            [
+              'Anat Ashkenazi \u00b7 CFO',
+              '19',
+              '8',
+              '27',
+              '1',
+              '28',
+            ],
+            [
+              'Ruth Porat \u00b7 President & CIO',
+              '19',
+              '7',
+              '26',
+              '1',
+              '27',
+            ],
+            [
+              'Kent Walker \u00b7 CLO',
+              '19',
+              '7',
+              '26',
+              '1',
+              '27',
+            ],
+          ],
+          emphasis: [
+            0,
+          ],
+          note: 'PSU counts were struck using a $186.13 share price, the February 2025 average. THE STRUCTURAL CHANGE: Alphabet ELIMINATED the SVP cash bonus programme for 2025 and folded the $2m of bonus value into PSUs \u2014 less cash, more performance-linked equity. Schindler is the highest-paid non-CEO at $39m target, and his PSU share is the largest at 37% of equity versus 27\u201330% for the others, which is consistent with running the advertising revenue engine.',
+        },
+        {
+          title: 'PSU VESTING CURVE \u00b7 3-YEAR RELATIVE TSR vs S&P 100 (2025\u20132027)',
+          columns: [
+            'Alphabet TSR percentile',
+            'PSUs earned',
+            'Label',
+          ],
+          rows: [
+            [
+              'Below 25th',
+              '0%',
+              'No vesting',
+            ],
+            [
+              '25th percentile',
+              '50%',
+              'Threshold',
+            ],
+            [
+              '50th percentile',
+              '100%',
+              'Target',
+            ],
+            [
+              '75th percentile and above',
+              '200%',
+              'Maximum',
+            ],
+          ],
+          emphasis: [
+            0,
+            3,
+          ],
+          note: 'Linear interpolation between the points \u2014 a 40th percentile finish vests roughly 80%. THE CRITICAL OBSERVATION FOR AN OWNER: relative TSR is the ONLY financial measure Alphabet uses for performance-based pay. Not revenue, not operating margin, not return on capital, not free cash flow. That has a real consequence \u2014 multiple expansion pays out identically to operating improvement, so an executive can earn a 200% payout in a period where the business did nothing new and the market simply re-rated the sector. It also cuts the other way: a genuinely excellent operating stretch inside a de-rating market pays zero.',
+        },
+      ],
     },
     shareholders: {
       asOf: 'Proxy statement, director nominees as of 8 April 2025',
@@ -40101,6 +40401,39 @@ function MuzzApp() {
                                   )}
                                 </>
                               )}
+
+                              {/* COMPENSATION AND OTHER NUMERIC TABLES */}
+                              {leadership.tables && leadership.tables.length > 0 && leadership.tables.map((tb, ti) => (
+                                <div key={ti} style={{marginBottom:'10px'}}>
+                                  {tb.title && <SectionHeading>// {tb.title}</SectionHeading>}
+                                  <div style={{overflowX:'auto',marginBottom:'6px'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amber}`}}>
+                                          {(tb.columns || []).map((c, ci) => (
+                                            <th key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'7px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',whiteSpace:'nowrap'}}>{c}</th>
+                                          ))}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {(tb.rows || []).map((r, ri) => {
+                                          const hot = (tb.emphasis || []).indexOf(ri) >= 0;
+                                          return (
+                                            <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: hot ? 'rgba(245,158,11,0.08)' : 'transparent'}}>
+                                              {r.map((cell, ci) => (
+                                                <td key={ci} style={{textAlign: ci === 0 ? 'left' : 'right',padding:'6px 9px',color: hot ? amber : (ci === 0 ? 'rgba(224,234,255,0.85)' : 'rgba(224,234,255,0.7)'),fontWeight: hot || ci === 0 ? 600 : 400,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{cell}</td>
+                                              ))}
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  {tb.note && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>{tb.note}</div>
+                                  )}
+                                </div>
+                              ))}
                             </>
                           )}
 
