@@ -25529,7 +25529,7 @@ const QSR_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
 // DERIVATIVES, COMMITMENTS.
-// TABS DARK: THESIS only.
+// ALL ELEVEN TABS LIVE.
 //
 // STILL TIER 2. Only revenue and net income exist, taken from the
 // per-employee table rather than the statements. No cost lines, no balance
@@ -25607,8 +25607,36 @@ const GOOG_BREAKDOWN = {
           description: 'Relational, key-value, document and in-memory databases, plus a unified platform combining data lakes, warehouses and governance. The competitive point is CROSS-CLOUD COMPATIBILITY: the analytics tools work in multi-cloud environments, and data is delivered directly to AI agents and LLMs across any cloud. For a third-place provider, working well inside a rival\u2019s environment is a sensible wedge.',
         },
         {
-          name: 'Other Bets \u2014 the portfolio',
-          description: 'Waymo (autonomous ride-hailing, already generating revenue), Verily (precision health, data platforms, clinical research), Wing (drone delivery), Intrinsic (industrial robotics software), and Fiber and Project Taara (connectivity). Stages run from pure R&D through early commercialisation to real revenue. IMPORTANT STRUCTURAL POINT: each operates independently, many with THEIR OWN BOARDS AND EXTERNAL INVESTORS \u2014 so Alphabet does not wholly own the upside on the ones that work, while funding the ones that do not.',
+          name: 'Waymo \u2014 autonomous driving',
+          description: 'The largest and most advanced Other Bet, and the only one with a live commercial service. Started as Google\u2019s Self-Driving Car Project in 2009, spun out 2016. Fully driverless paid robotaxi operations in Phoenix, San Francisco and Los Angeles, with Austin in early service. Over 20 million public-road miles and more than 20 billion simulated. Fleet is Jaguar I-PACE EVs; the Via freight programme is paused. Business model is robotaxi rides today and potentially licensing the Waymo Driver later. STILL UNPROFITABLE, with improving unit economics and disciplined headcount since 2023. Competitors: Cruise (paused after safety issues), Tesla FSD, Zoox, Motional. This is the one moonshot with a credible path to mattering.',
+        },
+        {
+          name: 'Verily \u2014 healthcare and life sciences',
+          description: 'Spun out of Google X in 2015. Clinical trial software (Verily Study Platform), population health analytics (Viewpoint), the Baseline research platform, and Onduo for virtual chronic care. Sells SaaS to hospitals, insurers and pharma. Partners include Mayo Clinic, Dexcom and the NIH All of Us programme. Leaner after 2022\u201324 restructuring and shifting from moonshots toward enterprise health platforms. Still loss-making. Discontinued: the glucose-sensing contact lens (2018) and Verb Surgical with J&J (2020).',
+        },
+        {
+          name: 'Calico \u2014 longevity and aging',
+          description: 'Founded 2013 to treat aging as a biological problem. Chaired by Art Levinson \u2014 who also chairs Apple\u2019s board, a governance link worth knowing. Research spans senescence, DNA repair, epigenetics, cancer biology and immune decline. Flagship partnership with AbbVie, over $1bn invested since 2014 and renewed through 2030. NO COMMERCIAL PRODUCTS AFTER TWELVE YEARS, historically burning over $500m a year, and unusually secretive. Now focused on the clinical pipeline rather than open-ended biology.',
+        },
+        {
+          name: 'Wing \u2014 drone delivery',
+          description: 'Autonomous small-package delivery, 5\u201310 minutes, payloads of 1\u20131.5kg. AUSTRALIA IS THE LARGEST MARKET \u2014 Canberra, Logan, Gold Coast and Ipswich \u2014 with US operations in Virginia and Dallas\u2013Fort Worth and limited Finnish activity. Partners include Walmart, Walgreens, DoorDash and Coles and Woolworths pilots. Constraints are real: small payloads, weather sensitivity, slow-moving airspace regulation, and a need for dense customer clusters.',
+        },
+        {
+          name: 'X \u2014 the moonshot factory',
+          description: 'The R&D lab that produces future Other Bets, killing ideas quickly unless they can reach 10x impact. Graduates include Waymo, Wing and Verily \u2014 and Loon and Makani, both dissolved. Current projects: MINERAL (AI and robotics for agriculture, plant-level crop diagnostics), TIDAL (underwater robotics monitoring fish farms and ocean ecosystems, partnered in Norway and Japan), and TAARA (laser-based free-space optical internet delivering 20Gbps+ across rivers and valleys, commercially live in Kenya, Congo and India).',
+        },
+        {
+          name: 'Intrinsic \u2014 industrial robotics software',
+          description: 'Graduated from X in 2021. Builds AI software that makes industrial robots easier to program, through demonstration and high-level instruction rather than manual coding, plus perception, motion planning and simulation. Partnership with Siemens since 2023\u201324. The stated ambition is to become the Android of robotics \u2014 a universal layer across robot brands. Early stage, pre-profit, small revenue.',
+        },
+        {
+          name: 'Isomorphic Labs \u2014 AI drug discovery',
+          description: 'Founded 2021 out of DeepMind\u2019s AlphaFold work, led by Demis Hassabis, who also runs DeepMind. Uses AI to design molecules, predict protein structures and model disease pathways. Multi-year, multi-hundred-million-dollar partnerships with Eli Lilly and Novartis. Revenue is milestone payments; no commercial drug yet. This is the clearest case of Alphabet trying to convert frontier AI research directly into a business.',
+        },
+        {
+          name: 'Former Other Bets \u2014 what the failure rate looks like',
+          description: 'The graveyard is the honest part of the record. LOON (stratospheric internet balloons, shut 2021 as unsustainable). MAKANI (airborne wind energy kites, shut 2020). EVERYDAY ROBOTS (shut 2023, folded elsewhere). CHRONICLE (cybersecurity, folded into Google Cloud). SANDBOXAQ (spun out entirely). GOOGLE FIBER (moved into Google Services, no longer a Bet). Also outside Other Bets: Stadia, Google+, Google Glass and Boston Dynamics, which was bought and sold. Read this list alongside the $40bn of cumulative losses \u2014 it is what a high failure tolerance actually costs.',
         },
       ],
     },
@@ -31461,6 +31489,73 @@ const GOOG_BREAKDOWN = {
         'Read alongside Item 1A: AI creates NEW attack surfaces (AI-generated phishing, deepfakes, prompt exploitation), Alphabet states its code always contains unknown bugs, and hosting government cloud customers elevates nation-state exposure. The programme is strong; the surface is growing faster.',
       ],
     },
+  },
+  thesis: {
+    vision: 'Alphabet is a holding company with Berkshire economics and the opposite personality. Both run on permanent capital: Berkshire on insurance float, Alphabet on search and YouTube advertising plus subscriptions. Both use that capital to fund everything else. The difference is what they do with it. BERKSHIRE BUYS PROVEN WINNERS AND LEAVES THEM ALONE. ALPHABET BUILDS THE NEXT BIG THING FROM SCRATCH. Berkshire accepts lower returns for lower risk; Alphabet accepts higher risk for the chance of far higher returns. Underwriting Alphabet means deciding whether the second model earns its cost \u2014 and the company\u2019s own history contains an uncomfortable answer.',
+    strategicImperatives: [
+      {
+        number: '01',
+        title: 'The two engines \u2014 permanent capital, different durability',
+        points: [
+          'BERKSHIRE: insurance float from GEICO, National Indemnity and others. Extremely stable, grows most years, costs nothing when underwriting is disciplined, and requires no share issuance. It is free leverage on a business almost impossible to disrupt.',
+          'ALPHABET: Google Search and YouTube advertising plus subscriptions. Massive \u2014 $294.7bn of advertising in FY2025 \u2014 but structurally more fragile. It is cyclical, it sits in a competitive and heavily regulated ecosystem, and Alphabet\u2019s own filing says users are ONE CLICK AWAY.',
+          'Both engines fund everything else. Only one of them is genuinely hard to attack. That is the first and largest difference, and it should show up in the discount rate rather than the growth rate.',
+        ],
+      },
+      {
+        number: '02',
+        title: 'Build versus buy \u2014 the philosophical split',
+        points: [
+          'BERKSHIRE ACQUIRES: BNSF, GEICO, Clayton Homes, See\u2019s Candies, Pilot. Already-proven businesses with economic moats, predictable cash flow and owner-oriented management. Buffett explicitly avoids betting on the invention of the next big thing.',
+          'ALPHABET BUILDS: Waymo, Verily, Calico, Wing, Intrinsic, Isomorphic Labs, and X as the factory that produces them. It rarely buys anything mature \u2014 its acquisitions are small, and mostly acqui-hires.',
+          'The failure tolerance follows from the model. Berkshire\u2019s is very low; Alphabet\u2019s is very high, because failure is the expected outcome of most moonshots and the core business pays for it.',
+          'Neither is wrong. They are different organisms solving different problems with different capital.',
+        ],
+      },
+      {
+        number: '03',
+        title: 'THE UNCOMFORTABLE FINDING \u2014 Alphabet\u2019s best returns came from acting like Berkshire',
+        points: [
+          'Alphabet\u2019s two greatest businesses outside Search were ACQUIRED, not built. Android cost roughly $50m in 2005. YouTube cost roughly $1.65bn in 2006. Combined: about $1.7bn.',
+          'In both cases Alphabet ran the Berkshire playbook exactly \u2014 bought a small business with a strong founding team and real product-market fit, did not rebuild it, left the founders to run it, and supplied capital to scale.',
+          'SIZE THE RESULT. YouTube advertising alone was $40,367m of revenue in FY2025 \u2014 more than 23 times the combined purchase price, every single year \u2014 before counting YouTube subscription revenue or the Play Store and mobile search franchise that Android protects.',
+          'Now size the alternative. Other Bets lost $40,076m cumulatively between FY2018 and FY2025 and has produced no comparable business. Roughly $1.7bn of Berkshire-style acquisition has returned more than $40bn of moonshot spending.',
+          'THE HONEST COUNTERPOINT, because the finding is too neat otherwise: Alphabet DID build Search, Chrome, Gmail and Google Cloud internally, and Cloud alone now earns $13.9bn of operating profit. The pattern is not that building fails \u2014 it is that building EXTENSIONS OF THE CORE has worked, while building DIVERSIFICATION AWAY from the core mostly has not. Waymo is the one live exception.',
+        ],
+      },
+      {
+        number: '04',
+        title: 'Why Alphabet has no real choice \u2014 tech decays, moats do not renew themselves',
+        points: [
+          'Berkshire invests in slow-decay industries. A railroad is still a railroad in forty years; a chocolate bar is still a chocolate bar. Those moats compound simply by staying alive.',
+          'Alphabet\u2019s moats do not. Nokia, BlackBerry, Yahoo and MySpace each lost dominant positions within a few years of ceasing to innovate. Search is now attacked by AI chatbots, YouTube by TikTok, Cloud by AWS and Azure, Android by Apple\u2019s ecosystem.',
+          'BERKSHIRE OUTSOURCES INNOVATION AND THIS IS THE SHARPEST PART OF THE COMPARISON. It benefits from Apple\u2019s research without spending a dollar on it. GEICO uses AI pricing without building models. BNSF uses logistics technology without inventing it. Berkshire compounds capital; it does not create technology.',
+          'So the moonshots are not an indulgence. In this industry, standing still is the higher-risk strategy. That reframes the spending: it is closer to a maintenance cost of remaining relevant than to discretionary optionality.',
+        ],
+      },
+      {
+        number: '05',
+        title: 'What the moonshots actually cost \u2014 and the line the comparison misses',
+        points: [
+          'The Other Bets drag on group operating profit: 8.13% in FY2022, 4.86% in FY2023, 3.95% in FY2024 \u2014 then BACK UP TO 5.82% in FY2025 as the loss widened 69% to $7,515m while segment revenue fell.',
+          'NOTE ON FY2022: the commonly quoted 6.19% uses the pre-restatement Other Bets loss of $4,636m. On the consistent basis that reconciles to total income from operations, it is $6,083m and 8.13%.',
+          'BUT OTHER BETS IS NOT THE WHOLE BILL. Alphabet-level activities \u2014 DeepMind, Google Research and central compute \u2014 lost $16,760m in FY2025, up 59% in a year, and now loses 2.2 TIMES what Other Bets loses. It sits in a separate segment line and is almost never counted.',
+          'COMBINED FRONTIER SPEND IS $24,275m \u2014 17.4% of Google Services operating profit and 18.8% of group operating profit. The true cost of trying to invent the next big thing is roughly 2.4x what the Other Bets line alone suggests. A 4\u20136% tax becomes a 19% one.',
+          'The Berkshire parallel still holds, though. Berkshire tolerates Pilot at low single-digit margins, BNSF\u2019s capital intensity and low utility returns because they are strategic and durable. Alphabet tolerates Waymo\u2019s losses for the same structural reason. Both accept optical drag for something they want to own.',
+        ],
+      },
+      {
+        number: '06',
+        title: 'What to underwrite, and what to watch',
+        points: [
+          'UNDERWRITE THE CORE, NOT THE OPTIONS. Google Services earns a 40.68% operating margin at $342.7bn of revenue, and Cloud has gone from a 7.3% loss margin to 23.7% profit in three years. That is the business you are buying. Everything else is a call option funded out of it.',
+          'PRICE THE OPTIONS AT SOMETHING, NOT AT ZERO AND NOT AT A TRILLION. Waymo is the most advanced autonomous driving company in the world and still unprofitable. Isomorphic Labs has real pharma partnerships and no approved drug. And remember the ownership caveat: many Bets have their own boards and OUTSIDE INVESTORS, so Alphabet funds the losses in full without wholly owning the upside.',
+          'WATCH THE CAPITAL, NOT THE NARRATIVE. FY2025 is the year the model showed strain: ROIC fell from 25.56% to 21.61% while NOPAT grew 14%, because invested capital grew 35%. Free cash flow rose 0.7% while operating cash flow rose 31.5%. And Alphabet borrowed to fund capex for the first time in its history.',
+          'THE ONE-LINE VERSION: Berkshire is a low-risk, value-compounding holding company; Alphabet is a high-risk, innovation-driven one. Both models work. Alphabet\u2019s just requires you to be right about more things, and to accept that roughly a fifth of the core\u2019s profit is spent every year on being right about them.',
+        ],
+      },
+    ],
+    bigPicture: 'Alphabet = build the next big thing. Berkshire = buy the next big thing. Both are holding companies running on permanent capital, and both work \u2014 but they are opposite personalities, and the evidence inside Alphabet\u2019s own accounts is not entirely flattering to its own model. Roughly $1.7bn spent on Android and YouTube produced more value than $40bn of cumulative Other Bets losses, and the frontier spend is now running at about 19% of group operating profit once Alphabet-level activities are counted. The counterweight is genuine: in technology, not innovating is the higher-risk position, and Alphabet built Search, Chrome and Cloud internally. The question a buyer actually has to answer is narrower than "do moonshots work" \u2014 it is whether a 40.68% margin core business, growing, with a repriced App Store and a search licensing deal under appeal, is worth the price AFTER deducting a fifth of its profit for experiments that may never pay. Answer that and the rest is detail.',
   },
 };
 
