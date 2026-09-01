@@ -32426,7 +32426,7 @@ const RACE_BREAKDOWN = {
 // value-added services, and Visa Commercial Solutions / Visa Direct.
 // Scale figures are FY2024 (Visa's year ends 30 September).
 //
-// TABS LIVE: OVERVIEW, MOAT, RISKS, DERIVATIVES.
+// TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES.
 // TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS.
 //
 // CHECKED BEFORE BUILDING:
@@ -32793,6 +32793,44 @@ const V_BREAKDOWN = {
       location: 'San Francisco Bay Area \u2014 owned and leased premises',
       description: 'As of 30 September 2024 Visa owned or leased 135 OFFICE LOCATIONS IN 83 COUNTRIES, including FOUR DATA CENTRES in the United States, the United Kingdom and Singapore. Visa states the facilities are suitable and adequate for ongoing business needs. Note how small the physical footprint is relative to what runs through it: four data centres carry 234 billion processed transactions a year. This is an asset-light network, and the property note is the clearest evidence of it \u2014 there is no factory, no fleet and no inventory anywhere in this business.',
     },
+    equityStructure: {
+      summary: 'A multi-class structure built around litigation, not around founder control. Class A is the listed, publicly traded stock. Class B-1 and B-2 are held largely by US financial institutions and exist to fund the US covered litigation through the retrospective responsibility plan \u2014 they CONVERT to Class A only when that litigation is finally resolved. Class C and the Series A, B and C preferred relate to the Visa Europe acquisition. The result is a permanent conversion overhang whose timing nobody controls.',
+      classes: [
+        {
+          name: 'Class A \u2014 the listed stock',
+          votingRights: 'Full voting',
+          dividendRights: 'Full economic rights',
+          boardElections: 'Votes on directors',
+          control: 'What public shareholders own. The share count is NOT stable \u2014 it grows as other classes convert.',
+          color: 'amber',
+        },
+        {
+          name: 'Class B-1 and B-2 \u2014 US litigation classes',
+          votingRights: 'Vote on certain significant transactions only',
+          dividendRights: 'Economic rights adjusted by litigation outcomes',
+          boardElections: 'No ordinary director vote',
+          control: 'Held largely by US financial institutions. CONVERT TO CLASS A ON FINAL RESOLUTION OF THE US COVERED LITIGATION. This is the mechanism by which member banks bear the cost of interchange litigation \u2014 and it is why the litigation and the capital structure are the same problem.',
+          color: 'red',
+        },
+        {
+          name: 'Class C and Series A/B/C preferred \u2014 Visa Europe',
+          votingRights: 'Vote on certain significant transactions',
+          dividendRights: 'Economic rights per terms',
+          boardElections: 'No ordinary director vote',
+          control: 'Series B and C preferred convert to Series A preferred or Class A NO LATER THAN 2028, with potential holdbacks. Unlike the Class B conversion, this one has a deadline.',
+          color: 'slate',
+        },
+      ],
+      controlProtection: 'Holders of Class B-1, B-2, C and the Series A, B and C preferred hold voting rights over certain significant transactions including mergers and consolidations, and the filing states plainly that their interests MAY DIFFER from those of Class A holders. Ownership is also capped: generally no person may hold more than 15% of Class A, or of total common on an as-converted basis, without board approval \u2014 and COMPETITORS ARE CAPPED AT 5%.',
+      legalProtections: [
+        'No stockholder action by written consent.',
+        'Special meetings may be called only by the board, the Chair, the CEO, or holders of at least 15% of voting power held continuously for at least one year.',
+        'Affirmative votes of Class B-1, B-2, C and Series A/B/C preferred required for certain mergers and consolidations.',
+        'General 15% ownership cap on Class A and on total common as-converted, absent board approval.',
+        'Competitors capped at 5% on an as-converted basis.',
+      ],
+      keyTakeaway: 'Do not model per-share figures off a stable Class A count. Two separate conversion streams increase it: the Class B classes on final resolution of US covered litigation, on no timetable at all, and the Series B and C preferred by 2028 at the latest. Both dilute voting, and subsequent sales of converted stock could pressure the Class A price. The structure exists for a defensible reason \u2014 it makes the banks that benefited from interchange bear the cost of litigating it \u2014 but for a Class A holder it is an overhang with an unknowable clock, and it does not clear until the litigation does.',
+    },
   },
   moat: {
     preamble: 'Visa\u2019s moat is a two-sided network where neither side can defect alone: 4.6 billion credentials on one side, more than 150 million merchant locations on the other, and an issuer economics model that pays banks to keep issuing. What makes it unusually durable is that Visa takes no credit risk and holds no receivable \u2014 it is a toll on the nominal value of commerce, so inflation passes through it. What makes it assailable is that the toll is set partly by regulators, and that account-to-account rails can move money without touching a card at all.',
@@ -32848,6 +32886,212 @@ const V_BREAKDOWN = {
     },
   },
   risks: {
+    tldr: 'Almost none of Visa\u2019s risk is competitive. The pressure is regulators setting price AND routing, governments building free real-time rails, merchants litigating acceptance cost, and a legacy litigation structure that resolves on nobody\u2019s schedule. The moat is intact; the toll is contested.',
+    riskSummary: {
+      preamble: 'Four things carry the analysis. The rest is either boilerplate or downstream of these.',
+      categories: [
+        {
+          num: '01',
+          name: 'Regulated price AND regulated routing',
+          emerging: true,
+          description: 'Visa is one of very few businesses where regulators set what it may charge AND require that customers be able to route around it. Dodd-Frank and the EU IFR do both. The EU additionally requires scheme and processing separation.',
+          drivers: [
+            'US routing mandates now extended to card-not-present debit.',
+            'A proposal to lower US debit interchange further and auto-adjust biennially.',
+            'Growing regulatory interest in CREDIT routing and fees.',
+            'PSR reviews of scheme and processing fees in the UK.',
+          ],
+          mitigations: [
+            'This already shows in the numbers: 22.8% of Visa-branded transactions no longer run over VisaNet.',
+            'Model brand volume and PROCESSED volume separately \u2014 they earn differently.',
+            'Watch credit routing specifically. Debit-style rules extending to credit is the single largest identifiable revenue risk in the register.',
+          ],
+        },
+        {
+          num: '02',
+          name: 'Disintermediation by non-card rails',
+          emerging: true,
+          description: 'RTP is live in more than 80 countries. FedNow, Pix and UPI are government-backed and free or near-free at the point of use. Open banking mandates give third parties direct account access. Visa states that its economics on these flows MAY BE LESS FAVOURABLE.',
+          drivers: [
+            '80+ countries with live RTP, extending into cross-border linkages.',
+            'CBDC exploration including the Digital Euro.',
+            'Open banking access rights spreading across Australia, Brazil, Canada, Hong Kong and Mexico, and the US CFPB data rights rule from October 2024.',
+          ],
+          mitigations: [
+            'Visa is building the bypass itself \u2014 Tink, Visa A2A, Pismo\u2019s RTP support, Protect for A2A.',
+            'That is the right response, but it trades interchange-linked economics for service fees.',
+            'The honest question is not whether Visa participates but at what margin.',
+          ],
+        },
+        {
+          num: '03',
+          name: 'The litigation and capital structure are one problem',
+          emerging: true,
+          description: 'The retrospective responsibility plans fund US covered litigation. Class B-1 and B-2 convert to Class A only when that litigation finally resolves. So the overhang and the protection are two ends of the same mechanism, and neither clears until the other does.',
+          drivers: [
+            'US class actions with potential treble damages.',
+            'Indemnity obligations to partners even where Visa is not a defendant.',
+            'Series B and C preferred convert no later than 2028 regardless.',
+            'Conversions increase Class A shares and could pressure the price on sale.',
+          ],
+          mitigations: [
+            'The filing concedes that if the plans fail to cover losses it could threaten SOLVENCY in an extreme case \u2014 language worth taking at face value rather than as boilerplate.',
+            'Size the conversion overhang before modelling per-share figures; the Class A count is not stable.',
+            'This is a scenario, not a haircut.',
+          ],
+        },
+        {
+          num: '04',
+          name: 'Settlement guarantee \u2014 the one balance-sheet exposure',
+          description: 'Visa indemnifies issuers and acquirers against settlement failure. For a business that otherwise takes no credit risk and holds no receivable, this is the exception, and it concentrates precisely when conditions are worst.',
+          drivers: [
+            'Liquidity and loss exposure during settlement timing gaps.',
+            'Concentrated in concurrent or large-client failures.',
+            'Recovery uncertain.',
+          ],
+          mitigations: [
+            'Immaterial in normal conditions and never yet tested at scale.',
+            'But it correlates with financial stress \u2014 it is a tail risk, not a running cost.',
+            'Hold it against the toll-road framing: the toll booth does carry one counterparty risk.',
+          ],
+        },
+      ],
+      summaryInsight: 'Visa\u2019s risk profile is unusual in that almost none of it is competitive. No rival network is taking share through a better product. The pressure comes from regulators setting price and routing, governments building free alternatives, merchants litigating acceptance cost, and a legacy litigation structure that will not resolve on a schedule anyone controls. That is a business whose moat is intact and whose TOLL is contested \u2014 which is a different thing to underwrite, and it belongs in the discount rate rather than the growth rate.',
+    },
+    riskFactors: {
+      summary: 'The register grouped by where the pressure actually comes from. Note what is NOT here: no rival network taking share with a better product.',
+      categories: [
+        {
+          name: '1 \u00b7 Regulatory \u2014 the defining risk',
+          items: [
+            {
+              risk: 'Fees and rules under scrutiny in every major market',
+              meaning: 'Interchange, merchant discount rates, scheme and processing fees, routing choice and operating rules are all under review somewhere. US: Dodd-Frank debit caps, routing mandates now EXTENDED TO CARD-NOT-PRESENT debit, a proposal to lower debit interchange further and auto-adjust it biennially, Illinois restricting interchange on tax and tips, and growing interest in CREDIT routing. EU/UK: IFR caps, scheme and processing separation, PSR reviews of scheme fees, and post-Brexit scrutiny of UK-EU cross-border rates. Plus new or expanded caps across LatAm, APAC including the RBA and New Zealand, and CEE/MEA.',
+            },
+            {
+              risk: 'CONTAGION \u2014 regulators copy each other',
+              meaning: 'A cap, routing rule or fee remedy in one region propagates elsewhere, and debit-style rules extend to credit. This is the mechanism that turns a local intervention into a global one, and it is why the US credit-routing interest matters more than its current status suggests.',
+            },
+            {
+              risk: 'Market access and localisation',
+              meaning: 'China, India, Indonesia, Thailand and Vietnam promote domestic schemes through ownership rules, data localisation and on-shore processing mandates. Nigeria and South Africa mandate on-shore processing. Regional initiatives include EPI in the EU and GCC and Southeast Asian efforts.',
+            },
+            {
+              risk: 'CHINA SPECIFICALLY',
+              meaning: 'UnionPay dominance, continuing uncertainty on the timing of a BCCI licence, and the PHASE-OUT OF DUAL-BRANDED CARDS which directly reduces Visa volumes. Alipay and WeChat Pay are entrenched local alternatives. Note that Visa\u2019s stated opportunity figures already exclude China entirely.',
+            },
+            {
+              risk: 'Real-time payments and CBDCs',
+              meaning: 'RTP networks are live in MORE THAN 80 COUNTRIES \u2014 FedNow, Pix, UPI and others \u2014 and are extending into cross-border linkages, competing directly in consumer, P2P, B2C and B2B flows. Central bank digital currency work including the Digital Euro could alter both domestic and cross-border economics.',
+            },
+            {
+              risk: 'Prudential and supervisory designation',
+              meaning: 'Designation as a systemically important payment system brings central-bank-style requirements on governance, cyber, capital and liquidity, authorisation, clearing and settlement practices, and member and merchant access. Canada recently designated VisaNet a prominent payment system.',
+            },
+            {
+              risk: 'Data, privacy, cybersecurity and AI rules',
+              meaning: 'Fragmented regimes \u2014 US state laws, GDPR, China PIPL, India PDPA \u2014 raise cost and constrain data flows. The EU AI Act phases in through August 2026 for high-risk uses with uncertain scope and cost. This matters disproportionately for Visa because its risk and identity products are built on the cross-border data flows being restricted.',
+            },
+            {
+              risk: 'Tax',
+              meaning: 'Ongoing audits and disputes, plus global minimum tax and digital services taxes that could lift both the effective rate and cash taxes.',
+            },
+          ],
+        },
+        {
+          name: '2 \u00b7 Business and competitive',
+          items: [
+            {
+              risk: 'Competitive intensity across card AND non-card rails',
+              meaning: 'Cash and cheques, cards, wallets, RTP, BNPL, crypto, ACH and A2A, closed-loop systems and domestic schemes. Rivals include networks, wallets, fintechs, big tech, processors and GOVERNMENTS operating national rails \u2014 some with different cost structures, wider channels or better technology, and able to disintermediate Visa from processing, from higher-margin services, or both.',
+            },
+            {
+              risk: 'Disintermediation \u2014 the structural threat',
+              meaning: 'Alternative rails including RTP, ACH, bank-led P2P and stablecoin or crypto arrangements can bypass network processing and the value-added services layer entirely. Government-backed systems such as FedNow, Pix and UPI, together with open-banking mandates, tilt the field toward non-card flows WHERE VISA\u2019S ECONOMICS MAY BE LESS FAVOURABLE. That last clause is Visa conceding the margin question.',
+            },
+            {
+              risk: 'Revenue concentration in large clients',
+              meaning: 'Meaningful concentration in large clients whose contracts can be terminated or shifted to non-Visa products. Consolidation among issuers, or a co-brand moving, can relocate an entire portfolio to a competitor.',
+            },
+            {
+              risk: 'Incentives and price competition',
+              meaning: 'Up-front payments, fee discounts, rebates and performance incentives pressure NET revenue and margin unless offset by productivity or volume. Client incentives net against revenue rather than sitting in expenses, so gross and net revenue can diverge materially.',
+            },
+            {
+              risk: 'Merchant pressure on acceptance cost',
+              meaning: 'Merchants lobby, litigate, steer, surcharge and set acceptance conditions such as PIN-only or selective acceptance \u2014 all of which can depress usage and raise compliance and litigation expense. Debates within EMVCo and the PCI Security Standards Council can affect routing choice and economics.',
+            },
+            {
+              risk: 'Dependence on ecosystem partners',
+              meaning: 'Success depends on issuers, acquirers, processors, platforms, fintechs and vendors following the rules and delivering quality experiences. Their failures damage Visa\u2019s brand and usage \u2014 exposure Visa carries without direct control.',
+            },
+            {
+              risk: 'Brand and reputation',
+              meaning: 'Brand value is central to acceptance. Threats include outages, security incidents, compliance failures by Visa OR partners, controversial commerce, negative media and political scrutiny.',
+            },
+            {
+              risk: 'Macro, geopolitical and climate',
+              meaning: 'Cross-border exposure ties results to recessions, inflation and rates, FX, energy costs, trade slowdowns, health crises, war and extreme weather. The Russia exit is the worked example of a sanctions event removing a revenue stream outright.',
+            },
+            {
+              risk: 'SETTLEMENT GUARANTEE \u2014 the one balance-sheet risk',
+              meaning: 'Visa INDEMNIFIES issuers and acquirers against settlement failures, creating genuine liquidity and loss exposure during timing gaps, especially in concurrent or large-client failures, with uncertain recovery. This is the one place where a business that takes no credit risk does carry counterparty exposure \u2014 worth holding against the toll-road framing.',
+            },
+          ],
+        },
+        {
+          name: '3 \u00b7 Technology and cybersecurity',
+          items: [
+            {
+              risk: 'Technology change outpacing the roadmap',
+              meaning: 'Mobile and in-app, ecommerce, tokenisation, crypto and distributed ledger, cloud authorisation, biometrics, FIDO2, 3DS2 and dCVV2. Generative AI is framed as both opportunity and novel security risk. New technology may attract IP claims or face shifting standards requiring licences, redesigns or sunsetting. Co-development partners are sometimes competitors.',
+            },
+            {
+              risk: 'Cybersecurity and operational resilience',
+              meaning: 'Power, network and software failures, ransomware, zero-days, DDoS, insider error, physical breaches, extreme weather and geopolitical events. Some attacks are state-directed. AI-augmented phishing and deepfakes, automated campaigns and supply-chain compromise raise frequency and impact. Partner controls and patching are inconsistent, and cascading impacts spread quickly. Insurance may not fully cover losses and recovery may be slow despite continuity planning.',
+            },
+            {
+              risk: 'Cyber compliance and reporting',
+              meaning: 'Fragmented global privacy, cybersecurity and incident-reporting rules with SHORT disclosure timelines \u2014 raising non-compliance risk during complex investigations, when the facts are least clear.',
+            },
+          ],
+        },
+        {
+          name: '4 \u00b7 Structural and organisational',
+          items: [
+            {
+              risk: 'M&A, joint ventures and strategic investments',
+              meaning: 'Synergies may not materialise or may take longer; deals distract management; integration of culture, people, systems and CONTROLS at acquired entities is difficult and raises cyber and resilience risk. Approvals may be delayed or conditioned, acquired entities may carry litigation or unidentified liabilities, and outcomes include dilution, added debt and near-term earnings drag. Read against Pismo, Prosa and Featurespace \u2014 two of the three are still pending regulatory approval.',
+            },
+            {
+              risk: 'Talent and leadership continuity',
+              meaning: 'Intense competition for fintech, technology and cyber talent, constrained by immigration and work authorisation. Explicit need for robust succession planning. Hybrid work and inclusion expectations, and scrutiny of those programmes, both carry execution risk.',
+            },
+            {
+              risk: 'CAPITAL STRUCTURE \u2014 conversion overhang and divergent voting',
+              meaning: 'Class B-1 and B-2 convert to Class A on final resolution of the US covered litigation. Series B and C preferred convert to Series A preferred or Class A NO LATER THAN 2028, with potential holdbacks. Each conversion increases Class A shares outstanding, dilutes voting, and subsequent sales could pressure the Class A price. Separately, holders of Class B-1, B-2, C and Series A/B/C preferred hold voting rights over certain significant transactions and MAY HAVE INTERESTS THAT DIFFER from Class A holders.',
+            },
+          ],
+        },
+        {
+          name: '5 \u00b7 Litigation \u2014 and the retrospective responsibility plans',
+          items: [
+            {
+              risk: 'The exposure',
+              meaning: 'Numerous civil suits, government actions and enforcement investigations across antitrust and competition, consumer protection, privacy and intellectual property. US class actions carry potential TREBLE DAMAGES. Some commercial agreements require Visa to indemnify partners even where Visa is not itself a defendant.',
+            },
+            {
+              risk: 'Business-model impact, not just cost',
+              meaning: 'Outcomes \u2014 or merely the pressure of ongoing actions \u2014 can force changes to default interchange levels, to operating rules and their enforcement, to fees and pricing, or to how Visa conducts business. Actions in one jurisdiction influence regulators and litigants elsewhere, triggering copycat inquiries.',
+            },
+            {
+              risk: 'THE MITIGANT, AND ITS STATED LIMIT',
+              meaning: 'Visa operates retrospective responsibility plans for certain US and Europe (VE territory) litigation, providing financial protection through different mechanisms. But the filing states plainly that if those plans FAIL TO SUFFICIENTLY COVER settlements, judgments or losses, the impact could materially harm liquidity and financial condition \u2014 and IN AN EXTREME CASE EVEN THREATEN SOLVENCY. That is unusually direct language for a company of this quality, and it is the single starkest sentence in the risk factors. It should be read alongside the Class B conversion mechanism, because the two are the same issue viewed from different ends: the litigation is funded by an equity structure that unwinds only when the litigation resolves.',
+            },
+          ],
+        },
+      ],
+    },
     governmentalRegulation: {
       summary: 'Visa operates under a complex and expanding global regime that reaches products, PRICING, data, ROUTING and market access. Two of those matter more than the rest: regulators in several major markets set or cap what Visa may charge, and mandate that merchants be able to route transactions away from it. That is unusual \u2014 most businesses in this coverage face regulation of conduct, not of price and of customer choice simultaneously. It is also the mechanism behind the 22.8% of Visa-branded transactions that no longer run over VisaNet.',
       sections: [
@@ -33189,6 +33433,120 @@ const V_BREAKDOWN = {
           ],
           note: 'From forward contracts designated as net investment hedges and from swap interest differentials. A $245m swing across two years, from a gain to a loss. Immaterial against Visa\u2019s earnings, but it is the kind of line that explains an otherwise puzzling movement in other income and expense.',
         },
+        {
+          title: 'MARKET RISK SENSITIVITIES \u00b7 STATED IMPACTS',
+          columns: [
+            'Exposure',
+            'Shock',
+            'FY2024 impact',
+            'FY2023 impact',
+          ],
+          rows: [
+            [
+              'FX transaction \u2014 forwards',
+              '10% weakening of functional currency',
+              '$(329)m fair value loss',
+              '$(236)m',
+            ],
+            [
+              'FX translation \u2014 Visa Europe in EUR',
+              '\u00b110% EUR/USD move',
+              '\u00b1$2.1bn OCI translation adjustment',
+              '\u00b1$1.9bn',
+            ],
+            [
+              'Interest rates \u2014 investment portfolio',
+              '+100 bps',
+              'No material impact to fair value',
+              'No material impact',
+            ],
+            [
+              'Interest rates \u2014 debt and swaps',
+              '+100 bps',
+              'No material impact to interest expense',
+              'No material impact',
+            ],
+            [
+              'Equity \u2014 marketable securities',
+              'Carrying value',
+              '$63m',
+              '$163m',
+            ],
+            [
+              'Equity \u2014 NON-marketable securities',
+              'Carrying value',
+              '$1.4bn',
+              '$1.4bn',
+            ],
+          ],
+          emphasis: [
+            1,
+            5,
+          ],
+          note: 'TWO ROWS MATTER. The EUR translation swing of \u00b1$2.1bn dwarfs everything else in this table and is the largest single accounting sensitivity Visa discloses \u2014 it runs through OCI rather than earnings, and is partially offset by EUR senior notes designated as a net investment hedge. And the $1.4bn of NON-MARKETABLE equity is carried at values that depend on judgement rather than market prices, reviewed for impairment periodically. Marketable equity fell 61% to $63m while the non-marketable book held flat \u2014 so essentially all of Visa\u2019s equity exposure is now in positions with no observable price. Alphabet\u2019s FY2025 earnings contained roughly $24.6bn of gains on exactly that kind of asset; Visa\u2019s book is far smaller, but the valuation mechanics are identical.',
+        },
+      ],
+    },
+    cyber: {
+      tldr: 'Visa makes the materiality statement explicitly: as of 30 September 2024 it is NOT AWARE of any cybersecurity incident, direct or third-party, in the past THREE fiscal years that materially affected strategy, results or financial condition. That is a stronger statement than most filings make \u2014 Apple\u2019s Item 1C, for comparison, describes governance only and makes no such claim.',
+      rows: [
+        {
+          category: 'Standards and governance',
+          points: [
+            'Cybersecurity is a key enterprise risk inside the ERM framework, not an IT function.',
+            'Programme aligned to ISO 27002 AND PCI DSS, plus applicable law.',
+            'Company-wide Key Controls define protection requirements; annual training mandatory.',
+            'Exceptions require senior approval with Compliance and Risk Committee oversight.',
+            'Recently acquired entities follow a TAILORED set of Key Controls sized to their scale and hosting model, reporting to the CISO, President of Technology, management committees and board.',
+          ],
+          meaning: 'The designated-entity provision is the notable detail \u2014 it directly addresses the integration control gap named in the structural risk factors, and it exists because Visa is buying companies (Pismo, Featurespace, Prosa) faster than it can fully absorb them.',
+        },
+        {
+          category: 'Operations \u2014 three cyber fusion centres',
+          points: [
+            'Fusion centres in the US, UK and Singapore providing 24/7 monitoring, threat intelligence and incident response.',
+            'Threat intelligence drawn from both commercial AND government sources.',
+            'Ongoing employee awareness including deepfake and generative-AI social engineering.',
+            'Incident playbooks define escalation to the Executive and Disclosure Committees, with set CEO and board notification thresholds.',
+          ],
+          meaning: 'Three centres across three continents gives genuine follow-the-sun coverage. Note the fusion centres sit in the same three countries as the four data centres.',
+        },
+        {
+          category: 'Testing and assurance \u2014 three lines of defence',
+          points: [
+            'Continuous internal and external assessment of public-facing assets.',
+            'Vulnerability disclosure and BUG BOUNTY programmes.',
+            'Strict remediation SLAs, with compliance and exceptions tracked to management and board.',
+            'Line 1: engineering and technology teams accountable for Key Controls. Line 2: independent security and risk teams overseeing assessment and remediation. Line 3: Internal Audit validating effectiveness.',
+            'Regular examinations by financial regulators and external auditors include deep cyber components.',
+          ],
+          meaning: 'A formal three-lines model with external regulator examination is a materially stronger assurance structure than most filings in this coverage describe. The regulatory oversight Visa complains about elsewhere is, here, a control.',
+        },
+        {
+          category: 'Third-party risk',
+          points: [
+            'Risk-based due diligence and CONTRACTUAL AUDIT RIGHTS over service providers, vendors and suppliers.',
+            'Controls scaled to the criticality and sensitivity of the access granted.',
+            'If a third party is compromised, Visa can isolate or terminate the connection.',
+          ],
+          meaning: 'The ability to sever a compromised connection matters more here than at most companies, because the risk factors explicitly name cascading ecosystem failure as the concern.',
+        },
+        {
+          category: 'People and board oversight',
+          points: [
+            'Roughly 1,000 CYBERSECURITY PROFESSIONALS as of 30 September 2024.',
+            'CISO has 30+ years of experience, has been at Visa since 2015, and reports to the President of Technology.',
+            'President of Technology in post since 2013, covering technology strategy, engineering, cyber, IT and operations infrastructure.',
+            'The Board oversees ERM; the Audit and Risk Committee owns cyber oversight specifically.',
+            'CISO briefs the Audit and Risk Committee TWICE A YEAR and the full board annually.',
+          ],
+          meaning: 'Roughly 1,000 dedicated professionals against ~31,600 total employees \u2014 about 3.2% of the entire company works on cybersecurity. For a business whose product is trust in a network, that allocation is the point.',
+        },
+      ],
+      takeaways: [
+        'THE MATERIALITY STATEMENT IS EXPLICIT AND COVERS THREE YEARS, including third-party incidents. Few filings in this coverage go that far.',
+        'About 3.2% of all employees work in cybersecurity, supported by three fusion centres and a formal three-lines-of-defence model validated by Internal Audit and examined by financial regulators.',
+        'The residual risk is honestly stated elsewhere in Item 1A: partner controls and patching are inconsistent, cascading impacts spread quickly, insurance may not fully cover losses, and recovery may be slow despite continuity planning. A strong programme does not remove ecosystem exposure it does not control.',
       ],
     },
   },
