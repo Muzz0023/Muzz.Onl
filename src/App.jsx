@@ -32427,8 +32427,8 @@ const RACE_BREAKDOWN = {
 // Scale figures are FY2024 (Visa's year ends 30 September).
 //
 // TABS LIVE: OVERVIEW, MOAT, RISKS (+ CYBER sub-tab), DERIVATIVES,
-// COMMITMENTS.
-// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS.
+// COMMITMENTS, SEGMENTS, COMPETITORS.
+// TABS DARK: INCOME, BALANCE, CASH FLOW, THESIS.
 //
 // CHECKED BEFORE BUILDING:
 //   the four new-flow components ($145T B2B + $20T B2C + $20T P2P +
@@ -33032,6 +33032,1756 @@ const V_BREAKDOWN = {
         'THE NEW-FLOWS AGENDA SITS WITH ONE PERSON. Chris Newkirk runs both Visa Commercial Solutions and Visa Direct \u2014 the entire $200 trillion opportunity described in the strategy section reports to a single executive with five years at the company. That is either clear accountability or a concentration of execution risk, and the financials will eventually say which.',
         'CFO CONTINUITY IS THE THING TO WATCH. Chris Suh arrived in July 2023 from Electronic Arts, having spent 26 years at Microsoft including as CFO of Cloud + AI. Two years in post is the shortest tenure among the named executives, and it coincides with the period in which value-added services became a quarter of revenue.',
       ],
+    },
+    competitors: {
+      preamble: 'Nilson Report data (issue 1264, May 2024) covering all consumer, small business and commercial credit, debit and prepaid cards, calendar years 2008\u20132023. Amex, Diners/Discover and JCB include third-party issuer business; JCB includes some estimates and other payment-related products; Mastercard EXCLUDES Maestro and Cirrus. Note the basis differs from Visa\u2019s own fiscal-year figures elsewhere in this build.',
+      middleLabel: 'VISA',
+      majorCompetitors: [
+        'Mastercard',
+        'American Express',
+        'JCB',
+        'Discover / Diners Club',
+        'UnionPay',
+      ],
+      categories: [
+        {
+          category: 'Global card networks \u00b7 2023 payments volume ($bn)',
+          icon: '\u1f4b3',
+          featured: true,
+          rows: [
+            {
+              type: 'Payments volume',
+              ourProduct: 'Visa $12,620bn \u00b7 56.8% of the five networks',
+              competitors: 'Mastercard $7,344bn (33.1%) \u00b7 Amex $1,665bn (7.5%) \u00b7 JCB $321bn (1.4%) \u00b7 Discover/Diners $256bn (1.2%)',
+            },
+            {
+              type: 'Total volume incl. cash',
+              ourProduct: 'Visa $15,114bn',
+              competitors: 'Mastercard $9,029bn \u00b7 Amex $1,680bn \u00b7 JCB $329bn \u00b7 Discover/Diners $272bn',
+            },
+            {
+              type: 'Total transactions (bn)',
+              ourProduct: 'Visa 284bn \u00b7 57.8% of the five networks',
+              competitors: 'Mastercard 184bn (37.5%) \u00b7 Amex 12bn \u00b7 JCB 7bn \u00b7 Discover/Diners 4bn',
+            },
+            {
+              type: 'Cards in force (m)',
+              ourProduct: 'Visa 4,484m',
+              competitors: 'Mastercard 2,948m \u00b7 JCB 156m \u00b7 Amex 141m \u00b7 Discover/Diners 72m',
+            },
+          ],
+        },
+        {
+          category: 'THE 15-YEAR SCOREBOARD \u00b7 2008\u20132023 CAGR',
+          icon: '\u1f4c8',
+          featured: true,
+          rows: [
+            {
+              type: 'Payments volume',
+              ourProduct: 'Visa 10.75% \u00b7 4.63x \u00b7 SHARE +7.2 pts',
+              competitors: 'JCB 11.47% \u00b7 Mastercard 9.43% (share \u22121.5 pts) \u00b7 Amex 6.23% (\u22124.7 pts) \u00b7 Discover 4.31%',
+            },
+            {
+              type: 'TRANSACTIONS \u2014 the one Visa lost',
+              ourProduct: 'Visa 11.34% \u00b7 5.01x \u00b7 SHARE \u22122.2 pts',
+              competitors: 'JCB 16.59% \u00b7 MASTERCARD 12.88% \u00b7 5.4x \u00b7 SHARE +5.8 pts \u00b7 Amex 5.60% \u00b7 Discover 5.47%',
+            },
+            {
+              type: 'Cards in force',
+              ourProduct: 'Visa 6.24% \u00b7 2.48x',
+              competitors: 'MASTERCARD 7.61% \u00b7 3.01x \u00b7 JCB 6.46% \u00b7 Amex 3.19% \u00b7 Discover 1.11%',
+            },
+            {
+              type: 'Visa vs Mastercard card ratio',
+              ourProduct: '1.84x in 2008 \u2192 1.52x in 2023',
+              competitors: 'Mastercard has been closing the credential gap for fifteen straight years',
+            },
+          ],
+        },
+        {
+          category: 'Beyond the card networks',
+          icon: '\u1f310',
+          rows: [
+            {
+              type: 'Local and regional networks',
+              ourProduct: 'Visa debit and VisaNet routing',
+              competitors: 'NYCE, Pulse and STAR in the US \u00b7 Interac in Canada \u00b7 eftpos in Australia \u2014 often bank-owned or government-backed, and strong in debit specifically',
+            },
+            {
+              type: 'Real-time payment networks',
+              ourProduct: 'Visa Direct, Visa A2A, Tink',
+              competitors: 'FedNow (US) \u00b7 Pix (Brazil) \u00b7 UPI (India) and 80+ countries, with cross-border linkages such as PayNow\u2013UPI emerging \u2014 also potential CUSTOMERS for Visa risk services',
+            },
+            {
+              type: 'Digital wallets',
+              ourProduct: 'Visa credentials inside wallets, tokenisation',
+              competitors: 'Can drive Visa volume, but may be funded by A2A or RTP instead of a card \u2014 the same wallet is both channel and threat',
+            },
+            {
+              type: 'Alternative providers',
+              ourProduct: 'Visa Installments, BNPL credentials',
+              competitors: 'Closed ecosystems, BNPL providers, crypto platforms \u2014 partner and competitor at once',
+            },
+            {
+              type: 'Payment processors',
+              ourProduct: 'Visa DPS, Visa Acceptance Platform, Pismo',
+              competitors: 'Compete to process Visa transactions on behalf of issuers and acquirers \u2014 and EU IFR MANDATES third-party processing access',
+            },
+            {
+              type: 'New flows',
+              ourProduct: 'Visa Direct, B2B Connect, Currencycloud',
+              competitors: 'ACH, RTP, wires, other global and local networks, and bank-led blockchain B2B pilots',
+            },
+            {
+              type: 'Value-added services',
+              ourProduct: '200+ products, ~$9bn revenue',
+              competitors: 'Technology, data and consulting firms, merchant services providers, and governments \u2014 with generative AI tightening competition in fraud, risk and identity specifically',
+            },
+          ],
+        },
+      ],
+      keyTakeaway: 'THE SCOREBOARD SAYS SOMETHING THE HEADLINE SHARE DOES NOT. Over fifteen years Visa GAINED 7.2 points of payments-volume share among the five global networks, reaching 56.8% \u2014 but LOST 2.2 points of TRANSACTION share, while Mastercard gained 5.8. Mastercard compounded transactions at 12.88% against Visa\u2019s 11.34%, and cards at 7.61% against 6.24%, narrowing the credential ratio from 1.84x to 1.52x. Visa is winning on dollars and losing on units, which means its average ticket is growing faster than its rival\u2019s. That is fine while interchange is ad valorem \u2014 and it is exactly the wrong exposure if regulators move pricing toward fixed per-transaction fees, which is precisely what debit caps do. American Express is the real loser: down 4.7 points of dollar share and 3.2 points of transactions.',
+    },
+  },
+  numbers: {
+    segments: {
+      wmGeography: {
+        preamble: 'Nominal payments and cash volume \u2014 gross dollar volume \u2014 split by where the CARD WAS ISSUED, not where it was spent. US means activity on US-issued cards; International means everything else. "Nominal" means not FX-adjusted: reported in dollars at prevailing rates, so growth includes currency movement. All figures in $ billions. This is VOLUME, not revenue \u2014 Visa earns a small fee on it.',
+        prNote: 'THE FY2017 BREAK IS THE VISA EUROPE ACQUISITION, which closed on 21 June 2016 \u2014 so FY2017 is the first full year of consolidation. International debit jumps 3.28x, international commercial 2.07x and international payments volume 1.71x between FY2016 and FY2017. PRE-FY2017 INTERNATIONAL FIGURES ARE NOT COMPARABLE to later ones, and any growth rate spanning that boundary is meaningless.',
+        lines: [
+          {
+            label: 'US \u2014 total nominal volume',
+            unit: 'B USD',
+            series: [
+              {
+                year: 2013,
+                value: 2167,
+              },
+              {
+                year: 2014,
+                value: 2369,
+              },
+              {
+                year: 2015,
+                value: 2594,
+              },
+              {
+                year: 2016,
+                value: 2850,
+              },
+              {
+                year: 2017,
+                value: 3188,
+              },
+              {
+                year: 2018,
+                value: 3499,
+              },
+              {
+                year: 2019,
+                value: 3873,
+              },
+              {
+                year: 2020,
+                value: 4007,
+              },
+              {
+                year: 2021,
+                value: 4725,
+              },
+              {
+                year: 2022,
+                value: 5548,
+              },
+              {
+                year: 2023,
+                value: 6044,
+              },
+              {
+                year: 2024,
+                value: 6387,
+              },
+            ],
+          },
+          {
+            label: 'International \u2014 total nominal payments volume',
+            unit: 'B USD',
+            series: [
+              {
+                year: 2013,
+                value: 2030,
+              },
+              {
+                year: 2014,
+                value: 2198,
+              },
+              {
+                year: 2015,
+                value: 2290,
+              },
+              {
+                year: 2016,
+                value: 2321,
+              },
+              {
+                year: 2017,
+                value: 3974,
+              },
+              {
+                year: 2018,
+                value: 4562,
+              },
+              {
+                year: 2019,
+                value: 4743,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 4707,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 5243,
+              },
+              {
+                year: 2022,
+                value: 5921,
+              },
+              {
+                year: 2023,
+                value: 6042,
+              },
+              {
+                year: 2024,
+                value: 6597,
+              },
+            ],
+            note: 'Grew from $2,030bn to $6,597bn, but see the FY2017 break. International was 48.4% of payments volume in FY2013 and 50.8% in FY2024 \u2014 a much smaller shift than the raw growth suggests, because most of it arrived through acquisition rather than organic gain.',
+          },
+          {
+            label: 'Total Nominal Payments Volume',
+            unit: 'B USD',
+            series: [
+              {
+                year: 2013,
+                value: 4197,
+              },
+              {
+                year: 2014,
+                value: 4567,
+              },
+              {
+                year: 2015,
+                value: 4884,
+              },
+              {
+                year: 2016,
+                value: 5171,
+              },
+              {
+                year: 2017,
+                value: 7162,
+              },
+              {
+                year: 2018,
+                value: 8063,
+              },
+              {
+                year: 2019,
+                value: 8616,
+              },
+              {
+                year: 2020,
+                value: 8714,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 9968,
+              },
+              {
+                year: 2022,
+                value: 11469,
+              },
+              {
+                year: 2023,
+                value: 12087,
+              },
+              {
+                year: 2024,
+                value: 12984,
+              },
+            ],
+            note: 'Consumer credit plus consumer debit plus commercial. Reconciles exactly in all twelve years. Grew 209% over eleven years. THE ONE DOWN YEAR WAS FY2020, not zero as the source labels claim.',
+          },
+          {
+            label: 'Cash Volume',
+            unit: 'B USD',
+            series: [
+              {
+                year: 2013,
+                value: 2530,
+              },
+              {
+                year: 2014,
+                value: 2591,
+              },
+              {
+                year: 2015,
+                value: 2508,
+                down: true,
+              },
+              {
+                year: 2016,
+                value: 2294,
+                down: true,
+              },
+              {
+                year: 2017,
+                value: 2892,
+              },
+              {
+                year: 2018,
+                value: 2997,
+              },
+              {
+                year: 2019,
+                value: 2835,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 2619,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 2561,
+                down: true,
+              },
+              {
+                year: 2022,
+                value: 2558,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 2454,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 2496,
+              },
+            ],
+            note: 'THE ONLY DECLINING LINE IN THE ENTIRE VOLUME DATASET. Peaked at $2,997bn in FY2018 and has fallen to $2,496bn, down 16.7%, with declines in SEVEN of eleven years. International cash fell hardest, from $2,435bn to $1,893bn, down 22.3%. This is the cash-displacement thesis showing up directly in Visa\u2019s own numbers \u2014 ATM and cash-advance activity shrinking while purchase volume compounds.',
+          },
+          {
+            label: 'Total Nominal Volume',
+            unit: 'B USD',
+            series: [
+              {
+                year: 2013,
+                value: 6726,
+              },
+              {
+                year: 2014,
+                value: 7158,
+              },
+              {
+                year: 2015,
+                value: 7392,
+              },
+              {
+                year: 2016,
+                value: 7465,
+              },
+              {
+                year: 2017,
+                value: 10054,
+              },
+              {
+                year: 2018,
+                value: 11060,
+              },
+              {
+                year: 2019,
+                value: 11451,
+              },
+              {
+                year: 2020,
+                value: 11333,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 12529,
+              },
+              {
+                year: 2022,
+                value: 14026,
+              },
+              {
+                year: 2023,
+                value: 14541,
+              },
+              {
+                year: 2024,
+                value: 15480,
+              },
+            ],
+            note: 'Payments volume plus cash volume. $15.48 TRILLION in FY2024, against the $16 trillion stated in Item 1 \u2014 the difference is the fiscal-year basis. Reconciles exactly in all twelve years.',
+          },
+          {
+            label: 'Processed Transactions',
+            unit: 'M',
+            series: [
+              {
+                year: 2013,
+                value: 58472,
+              },
+              {
+                year: 2014,
+                value: 64993,
+              },
+              {
+                year: 2015,
+                value: 70968,
+              },
+              {
+                year: 2016,
+                value: 83159,
+              },
+              {
+                year: 2017,
+                value: 111215,
+              },
+              {
+                year: 2018,
+                value: 124320,
+              },
+              {
+                year: 2019,
+                value: 138329,
+              },
+              {
+                year: 2020,
+                value: 140839,
+              },
+              {
+                year: 2021,
+                value: 164733,
+              },
+              {
+                year: 2022,
+                value: 192530,
+              },
+              {
+                year: 2023,
+                value: 212579,
+              },
+              {
+                year: 2024,
+                value: 233758,
+              },
+            ],
+            note: 'The transactions Visa ACTUALLY ROUTES on VisaNet for authorisation, clearing and settlement \u2014 excluding on-us transactions handled entirely by an issuer and brand-only activity switched elsewhere. 233,758m = 233.8 BILLION, matching the 234bn stated in Item 1. Grew at a 13.43% CAGR over eleven years, and rose in every single year including FY2020. Hold this against the 303bn of BRANDED transactions: the 69bn gap is 22.8%.',
+          },
+        ],
+      },
+      wmSegmentPnl: {
+        preamble: 'Volume by product category, $ billions, with the US and international split. Read the mix rather than the levels: consumer credit was 54.4% of payments volume in FY2013 and is 40.9% now, while consumer debit went from 34.3% to 46.3%. DEBIT OVERTOOK CREDIT and is now the largest category \u2014 which matters because debit is precisely where interchange caps and routing mandates bite hardest.',
+        segments: [
+          {
+            name: 'Consumer Debit',
+            type: 'Largest category \u00b7 46.3% of payments volume',
+            featured: true,
+            profitEngine: true,
+            note: 'THE LARGEST AND MOST REGULATED CATEGORY. Grew 318% over eleven years with NO DOWN YEARS \u2014 the only series in the dataset that genuinely never fell. It overtook consumer credit as the largest category. That is a mixed blessing: debit carries lower interchange, is subject to Dodd-Frank caps and routing mandates in the US and the IFR in Europe, and is the subject of the DOJ case filed in September 2024.',
+            metrics: [
+              {
+                label: 'Consumer debit \u2014 US',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 1046,
+                  },
+                  {
+                    year: 2014,
+                    value: 1128,
+                  },
+                  {
+                    year: 2015,
+                    value: 1201,
+                  },
+                  {
+                    year: 2016,
+                    value: 1320,
+                  },
+                  {
+                    year: 2017,
+                    value: 1373,
+                  },
+                  {
+                    year: 2018,
+                    value: 1496,
+                  },
+                  {
+                    year: 2019,
+                    value: 1699,
+                  },
+                  {
+                    year: 2020,
+                    value: 1848,
+                  },
+                  {
+                    year: 2021,
+                    value: 2387,
+                  },
+                  {
+                    year: 2022,
+                    value: 2622,
+                  },
+                  {
+                    year: 2023,
+                    value: 2826,
+                  },
+                  {
+                    year: 2024,
+                    value: 2990,
+                  },
+                ],
+              },
+              {
+                label: 'Consumer debit \u2014 International',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 392,
+                  },
+                  {
+                    year: 2014,
+                    value: 454,
+                  },
+                  {
+                    year: 2015,
+                    value: 463,
+                  },
+                  {
+                    year: 2016,
+                    value: 454,
+                  },
+                  {
+                    year: 2017,
+                    value: 1491,
+                  },
+                  {
+                    year: 2018,
+                    value: 1757,
+                  },
+                  {
+                    year: 2019,
+                    value: 1878,
+                  },
+                  {
+                    year: 2020,
+                    value: 1975,
+                  },
+                  {
+                    year: 2021,
+                    value: 2440,
+                  },
+                  {
+                    year: 2022,
+                    value: 2727,
+                  },
+                  {
+                    year: 2023,
+                    value: 2680,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 3026,
+                  },
+                ],
+                note: 'The FY2016 to FY2017 jump from $454bn to $1,491bn is Visa Europe, not growth. THE FY2017 BREAK IS THE VISA EUROPE ACQUISITION, which closed on 21 June 2016 \u2014 so FY2017 is the first full year of consolidation. International debit jumps 3.28x, international commercial 2.07x and international payments volume 1.71x between FY2016 and FY2017. PRE-FY2017 INTERNATIONAL FIGURES ARE NOT COMPARABLE to later ones, and any growth rate spanning that boundary is meaningless.',
+              },
+              {
+                label: 'Consumer debit \u2014 total',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 1438,
+                  },
+                  {
+                    year: 2014,
+                    value: 1581,
+                  },
+                  {
+                    year: 2015,
+                    value: 1665,
+                  },
+                  {
+                    year: 2016,
+                    value: 1774,
+                  },
+                  {
+                    year: 2017,
+                    value: 2864,
+                  },
+                  {
+                    year: 2018,
+                    value: 3253,
+                  },
+                  {
+                    year: 2019,
+                    value: 3577,
+                  },
+                  {
+                    year: 2020,
+                    value: 3824,
+                  },
+                  {
+                    year: 2021,
+                    value: 4828,
+                  },
+                  {
+                    year: 2022,
+                    value: 5349,
+                  },
+                  {
+                    year: 2023,
+                    value: 5506,
+                  },
+                  {
+                    year: 2024,
+                    value: 6016,
+                  },
+                ],
+              },
+              {
+                label: 'Share of payments volume \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 34.3,
+                  },
+                  {
+                    year: 2014,
+                    value: 34.6,
+                  },
+                  {
+                    year: 2015,
+                    value: 34.1,
+                  },
+                  {
+                    year: 2016,
+                    value: 34.3,
+                  },
+                  {
+                    year: 2017,
+                    value: 40.0,
+                  },
+                  {
+                    year: 2018,
+                    value: 40.3,
+                  },
+                  {
+                    year: 2019,
+                    value: 41.5,
+                  },
+                  {
+                    year: 2020,
+                    value: 43.9,
+                  },
+                  {
+                    year: 2021,
+                    value: 48.4,
+                  },
+                  {
+                    year: 2022,
+                    value: 46.6,
+                  },
+                  {
+                    year: 2023,
+                    value: 45.6,
+                  },
+                  {
+                    year: 2024,
+                    value: 46.3,
+                  },
+                ],
+                note: '34.3% to 46.3%. The single biggest mix shift in the dataset.',
+              },
+            ],
+          },
+          {
+            name: 'Consumer Credit',
+            type: 'Was largest \u00b7 now 40.9%',
+            featured: true,
+            note: 'Grew 133% over eleven years but LOST 13.5 points of mix to debit. Fell in FY2020 \u2014 the source labels claim no down years, which is wrong. Credit carries higher interchange than debit, so this mix shift is a quiet headwind to yield that volume growth alone does not reveal.',
+            metrics: [
+              {
+                label: 'Consumer credit \u2014 US',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 786,
+                  },
+                  {
+                    year: 2014,
+                    value: 872,
+                  },
+                  {
+                    year: 2015,
+                    value: 980,
+                  },
+                  {
+                    year: 2016,
+                    value: 1079,
+                  },
+                  {
+                    year: 2017,
+                    value: 1309,
+                  },
+                  {
+                    year: 2018,
+                    value: 1441,
+                  },
+                  {
+                    year: 2019,
+                    value: 1540,
+                  },
+                  {
+                    year: 2020,
+                    value: 1518,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 1641,
+                  },
+                  {
+                    year: 2022,
+                    value: 2047,
+                  },
+                  {
+                    year: 2023,
+                    value: 2230,
+                  },
+                  {
+                    year: 2024,
+                    value: 2355,
+                  },
+                ],
+              },
+              {
+                label: 'Consumer credit \u2014 International',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 1498,
+                  },
+                  {
+                    year: 2014,
+                    value: 1600,
+                  },
+                  {
+                    year: 2015,
+                    value: 1676,
+                  },
+                  {
+                    year: 2016,
+                    value: 1720,
+                  },
+                  {
+                    year: 2017,
+                    value: 2177,
+                  },
+                  {
+                    year: 2018,
+                    value: 2443,
+                  },
+                  {
+                    year: 2019,
+                    value: 2484,
+                  },
+                  {
+                    year: 2020,
+                    value: 2362,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 2396,
+                  },
+                  {
+                    year: 2022,
+                    value: 2694,
+                  },
+                  {
+                    year: 2023,
+                    value: 2810,
+                  },
+                  {
+                    year: 2024,
+                    value: 2959,
+                  },
+                ],
+              },
+              {
+                label: 'Consumer credit \u2014 total',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 2284,
+                  },
+                  {
+                    year: 2014,
+                    value: 2472,
+                  },
+                  {
+                    year: 2015,
+                    value: 2656,
+                  },
+                  {
+                    year: 2016,
+                    value: 2799,
+                  },
+                  {
+                    year: 2017,
+                    value: 3486,
+                  },
+                  {
+                    year: 2018,
+                    value: 3885,
+                  },
+                  {
+                    year: 2019,
+                    value: 4024,
+                  },
+                  {
+                    year: 2020,
+                    value: 3880,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 4036,
+                  },
+                  {
+                    year: 2022,
+                    value: 4741,
+                  },
+                  {
+                    year: 2023,
+                    value: 5040,
+                  },
+                  {
+                    year: 2024,
+                    value: 5314,
+                  },
+                ],
+              },
+              {
+                label: 'Share of payments volume \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 54.4,
+                  },
+                  {
+                    year: 2014,
+                    value: 54.1,
+                  },
+                  {
+                    year: 2015,
+                    value: 54.4,
+                  },
+                  {
+                    year: 2016,
+                    value: 54.1,
+                  },
+                  {
+                    year: 2017,
+                    value: 48.7,
+                  },
+                  {
+                    year: 2018,
+                    value: 48.2,
+                  },
+                  {
+                    year: 2019,
+                    value: 46.7,
+                  },
+                  {
+                    year: 2020,
+                    value: 44.5,
+                  },
+                  {
+                    year: 2021,
+                    value: 40.5,
+                  },
+                  {
+                    year: 2022,
+                    value: 41.3,
+                  },
+                  {
+                    year: 2023,
+                    value: 41.7,
+                  },
+                  {
+                    year: 2024,
+                    value: 40.9,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Commercial',
+            type: 'The new-flows wedge \u00b7 12.7%',
+            note: 'Small-business, corporate, purchasing, fleet, government and B2B. Grew 249% over eleven years \u2014 the fastest of the three categories \u2014 but its share of payments volume moved only from 11.3% to 12.7%. HOLD THAT AGAINST THE STRATEGY: Visa describes a $145 trillion B2B opportunity, and after eleven years commercial volume is $1,654bn. The opportunity is real; the conversion rate so far is modest.',
+            metrics: [
+              {
+                label: 'Commercial \u2014 US',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 334,
+                  },
+                  {
+                    year: 2014,
+                    value: 370,
+                  },
+                  {
+                    year: 2015,
+                    value: 412,
+                  },
+                  {
+                    year: 2016,
+                    value: 450,
+                  },
+                  {
+                    year: 2017,
+                    value: 506,
+                  },
+                  {
+                    year: 2018,
+                    value: 562,
+                  },
+                  {
+                    year: 2019,
+                    value: 634,
+                  },
+                  {
+                    year: 2020,
+                    value: 641,
+                  },
+                  {
+                    year: 2021,
+                    value: 697,
+                  },
+                  {
+                    year: 2022,
+                    value: 879,
+                  },
+                  {
+                    year: 2023,
+                    value: 988,
+                  },
+                  {
+                    year: 2024,
+                    value: 1042,
+                  },
+                ],
+              },
+              {
+                label: 'Commercial \u2014 International',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 140,
+                  },
+                  {
+                    year: 2014,
+                    value: 145,
+                  },
+                  {
+                    year: 2015,
+                    value: 151,
+                  },
+                  {
+                    year: 2016,
+                    value: 148,
+                  },
+                  {
+                    year: 2017,
+                    value: 306,
+                  },
+                  {
+                    year: 2018,
+                    value: 363,
+                  },
+                  {
+                    year: 2019,
+                    value: 381,
+                  },
+                  {
+                    year: 2020,
+                    value: 370,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 406,
+                  },
+                  {
+                    year: 2022,
+                    value: 500,
+                  },
+                  {
+                    year: 2023,
+                    value: 553,
+                  },
+                  {
+                    year: 2024,
+                    value: 612,
+                  },
+                ],
+              },
+              {
+                label: 'Commercial \u2014 total',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 474,
+                  },
+                  {
+                    year: 2014,
+                    value: 515,
+                  },
+                  {
+                    year: 2015,
+                    value: 563,
+                  },
+                  {
+                    year: 2016,
+                    value: 598,
+                  },
+                  {
+                    year: 2017,
+                    value: 812,
+                  },
+                  {
+                    year: 2018,
+                    value: 925,
+                  },
+                  {
+                    year: 2019,
+                    value: 1015,
+                  },
+                  {
+                    year: 2020,
+                    value: 1011,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 1103,
+                  },
+                  {
+                    year: 2022,
+                    value: 1379,
+                  },
+                  {
+                    year: 2023,
+                    value: 1540,
+                  },
+                  {
+                    year: 2024,
+                    value: 1654,
+                  },
+                ],
+              },
+              {
+                label: 'Share of payments volume \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 11.3,
+                  },
+                  {
+                    year: 2014,
+                    value: 11.3,
+                  },
+                  {
+                    year: 2015,
+                    value: 11.5,
+                  },
+                  {
+                    year: 2016,
+                    value: 11.6,
+                  },
+                  {
+                    year: 2017,
+                    value: 11.3,
+                  },
+                  {
+                    year: 2018,
+                    value: 11.5,
+                  },
+                  {
+                    year: 2019,
+                    value: 11.8,
+                  },
+                  {
+                    year: 2020,
+                    value: 11.6,
+                  },
+                  {
+                    year: 2021,
+                    value: 11.1,
+                  },
+                  {
+                    year: 2022,
+                    value: 12.0,
+                  },
+                  {
+                    year: 2023,
+                    value: 12.7,
+                  },
+                  {
+                    year: 2024,
+                    value: 12.7,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Cash Volume',
+            type: 'In structural decline',
+            featured: true,
+            note: 'ATM withdrawals, cash advances and quasi-cash. The only declining line in the dataset, down 16.7% from its FY2018 peak with seven down years out of eleven.',
+            metrics: [
+              {
+                label: 'Cash \u2014 US',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 446,
+                  },
+                  {
+                    year: 2014,
+                    value: 469,
+                  },
+                  {
+                    year: 2015,
+                    value: 492,
+                  },
+                  {
+                    year: 2016,
+                    value: 520,
+                  },
+                  {
+                    year: 2017,
+                    value: 544,
+                  },
+                  {
+                    year: 2018,
+                    value: 562,
+                  },
+                  {
+                    year: 2019,
+                    value: 573,
+                  },
+                  {
+                    year: 2020,
+                    value: 573,
+                  },
+                  {
+                    year: 2021,
+                    value: 635,
+                  },
+                  {
+                    year: 2022,
+                    value: 631,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 610,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 604,
+                    down: true,
+                  },
+                ],
+                note: 'US cash volume peaked at $635bn in FY2021 and has fallen every year since.',
+              },
+              {
+                label: 'Cash \u2014 International',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 2083,
+                  },
+                  {
+                    year: 2014,
+                    value: 2122,
+                  },
+                  {
+                    year: 2015,
+                    value: 2016,
+                    down: true,
+                  },
+                  {
+                    year: 2016,
+                    value: 1775,
+                    down: true,
+                  },
+                  {
+                    year: 2017,
+                    value: 2348,
+                  },
+                  {
+                    year: 2018,
+                    value: 2435,
+                  },
+                  {
+                    year: 2019,
+                    value: 2262,
+                    down: true,
+                  },
+                  {
+                    year: 2020,
+                    value: 2045,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 1927,
+                    down: true,
+                  },
+                  {
+                    year: 2022,
+                    value: 1927,
+                  },
+                  {
+                    year: 2023,
+                    value: 1844,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 1893,
+                  },
+                ],
+                note: 'Down 22.3% from the FY2018 peak of $2,435bn. International is 75.8% of all Visa cash volume.',
+              },
+              {
+                label: 'Cash \u2014 total',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 2530,
+                  },
+                  {
+                    year: 2014,
+                    value: 2591,
+                  },
+                  {
+                    year: 2015,
+                    value: 2508,
+                    down: true,
+                  },
+                  {
+                    year: 2016,
+                    value: 2294,
+                    down: true,
+                  },
+                  {
+                    year: 2017,
+                    value: 2892,
+                  },
+                  {
+                    year: 2018,
+                    value: 2997,
+                  },
+                  {
+                    year: 2019,
+                    value: 2835,
+                    down: true,
+                  },
+                  {
+                    year: 2020,
+                    value: 2619,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 2561,
+                    down: true,
+                  },
+                  {
+                    year: 2022,
+                    value: 2558,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 2454,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 2496,
+                  },
+                ],
+                note: 'DATA-QUALITY FLAG ON THE SOURCE. The supplied tables label every series "Down Years 0/12". That is correct only for consumer debit. Consumer credit, commercial and total nominal volume each fell in FY2020, and CASH VOLUME FELL IN SEVEN OF ELEVEN YEARS. The down-year markers below are recomputed from the figures rather than carried from the source labels.',
+              },
+              {
+                label: 'Cash as % of total nominal volume \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 37.6,
+                  },
+                  {
+                    year: 2014,
+                    value: 36.2,
+                    down: true,
+                  },
+                  {
+                    year: 2015,
+                    value: 33.9,
+                    down: true,
+                  },
+                  {
+                    year: 2016,
+                    value: 30.7,
+                    down: true,
+                  },
+                  {
+                    year: 2017,
+                    value: 28.8,
+                    down: true,
+                  },
+                  {
+                    year: 2018,
+                    value: 27.1,
+                    down: true,
+                  },
+                  {
+                    year: 2019,
+                    value: 24.8,
+                    down: true,
+                  },
+                  {
+                    year: 2020,
+                    value: 23.1,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 20.4,
+                    down: true,
+                  },
+                  {
+                    year: 2022,
+                    value: 18.2,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 16.9,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 16.1,
+                    down: true,
+                  },
+                ],
+                note: 'FROM 37.6% TO 16.1% IN ELEVEN YEARS, falling in every single year. This is the clearest single series in the whole Visa build: cash is being displaced on Visa\u2019s own rails, and the displacement is what funds the purchase-volume growth above.',
+              },
+            ],
+          },
+        ],
+      },
+      revenueByCategory: {
+        description: 'Mix of total nominal payments volume by category, and the geographic split. Every build-up reconciles exactly across twelve years. Averages 2013\u201324: consumer credit 47.5%, consumer debit 40.8%, commercial 11.7%.',
+        mix2024: [
+          {
+            label: 'Consumer debit',
+            value: 6016,
+            pct: 46.3,
+          },
+          {
+            label: 'Consumer credit',
+            value: 5314,
+            pct: 40.9,
+          },
+          {
+            label: 'Commercial',
+            value: 1654,
+            pct: 12.7,
+          },
+        ],
+        lines: [
+          {
+            label: 'US share of payments volume',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 51.6,
+              },
+              {
+                year: 2014,
+                value: 51.9,
+              },
+              {
+                year: 2015,
+                value: 53.1,
+              },
+              {
+                year: 2016,
+                value: 55.1,
+              },
+              {
+                year: 2017,
+                value: 44.5,
+                down: true,
+              },
+              {
+                year: 2018,
+                value: 43.4,
+                down: true,
+              },
+              {
+                year: 2019,
+                value: 45.0,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 46.0,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 47.4,
+              },
+              {
+                year: 2022,
+                value: 48.4,
+              },
+              {
+                year: 2023,
+                value: 50.0,
+              },
+              {
+                year: 2024,
+                value: 49.2,
+              },
+            ],
+            note: '51.6% in FY2013, dipping to 43.4% in FY2018 after Visa Europe consolidated, and back to 49.2%. The US has been REGAINING share of volume since FY2018.',
+          },
+          {
+            label: 'International share of payments volume',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 48.4,
+              },
+              {
+                year: 2014,
+                value: 48.1,
+              },
+              {
+                year: 2015,
+                value: 46.9,
+              },
+              {
+                year: 2016,
+                value: 44.9,
+              },
+              {
+                year: 2017,
+                value: 55.5,
+              },
+              {
+                year: 2018,
+                value: 56.6,
+              },
+              {
+                year: 2019,
+                value: 55.0,
+              },
+              {
+                year: 2020,
+                value: 54.0,
+              },
+              {
+                year: 2021,
+                value: 52.6,
+              },
+              {
+                year: 2022,
+                value: 51.6,
+              },
+              {
+                year: 2023,
+                value: 50.0,
+              },
+              {
+                year: 2024,
+                value: 50.8,
+              },
+            ],
+          },
+          {
+            label: 'Consumer credit share',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 54.4,
+              },
+              {
+                year: 2014,
+                value: 54.1,
+              },
+              {
+                year: 2015,
+                value: 54.4,
+              },
+              {
+                year: 2016,
+                value: 54.1,
+              },
+              {
+                year: 2017,
+                value: 48.7,
+              },
+              {
+                year: 2018,
+                value: 48.2,
+              },
+              {
+                year: 2019,
+                value: 46.7,
+              },
+              {
+                year: 2020,
+                value: 44.5,
+              },
+              {
+                year: 2021,
+                value: 40.5,
+              },
+              {
+                year: 2022,
+                value: 41.3,
+              },
+              {
+                year: 2023,
+                value: 41.7,
+              },
+              {
+                year: 2024,
+                value: 40.9,
+              },
+            ],
+          },
+          {
+            label: 'Consumer debit share',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 34.3,
+              },
+              {
+                year: 2014,
+                value: 34.6,
+              },
+              {
+                year: 2015,
+                value: 34.1,
+              },
+              {
+                year: 2016,
+                value: 34.3,
+              },
+              {
+                year: 2017,
+                value: 40.0,
+              },
+              {
+                year: 2018,
+                value: 40.3,
+              },
+              {
+                year: 2019,
+                value: 41.5,
+              },
+              {
+                year: 2020,
+                value: 43.9,
+              },
+              {
+                year: 2021,
+                value: 48.4,
+              },
+              {
+                year: 2022,
+                value: 46.6,
+              },
+              {
+                year: 2023,
+                value: 45.6,
+              },
+              {
+                year: 2024,
+                value: 46.3,
+              },
+            ],
+          },
+          {
+            label: 'Commercial share',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 11.3,
+              },
+              {
+                year: 2014,
+                value: 11.3,
+              },
+              {
+                year: 2015,
+                value: 11.5,
+              },
+              {
+                year: 2016,
+                value: 11.6,
+              },
+              {
+                year: 2017,
+                value: 11.3,
+              },
+              {
+                year: 2018,
+                value: 11.5,
+              },
+              {
+                year: 2019,
+                value: 11.8,
+              },
+              {
+                year: 2020,
+                value: 11.6,
+              },
+              {
+                year: 2021,
+                value: 11.1,
+              },
+              {
+                year: 2022,
+                value: 12.0,
+              },
+              {
+                year: 2023,
+                value: 12.7,
+              },
+              {
+                year: 2024,
+                value: 12.7,
+              },
+            ],
+          },
+          {
+            label: 'Cash share of total nominal volume',
+            unit: '%',
+            series: [
+              {
+                year: 2013,
+                value: 37.6,
+              },
+              {
+                year: 2014,
+                value: 36.2,
+              },
+              {
+                year: 2015,
+                value: 33.9,
+              },
+              {
+                year: 2016,
+                value: 30.7,
+              },
+              {
+                year: 2017,
+                value: 28.8,
+              },
+              {
+                year: 2018,
+                value: 27.1,
+              },
+              {
+                year: 2019,
+                value: 24.8,
+              },
+              {
+                year: 2020,
+                value: 23.1,
+              },
+              {
+                year: 2021,
+                value: 20.4,
+              },
+              {
+                year: 2022,
+                value: 18.2,
+              },
+              {
+                year: 2023,
+                value: 16.9,
+              },
+              {
+                year: 2024,
+                value: 16.1,
+              },
+            ],
+          },
+        ],
+      },
     },
   },
   moat: {
