@@ -18889,34 +18889,42 @@ const TASE_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════
-// AAPL_BREAKDOWN — Apple Inc. Coverage data
-// SOURCE: Muzz's supplied 10-K material — Item 1 (Company Background,
-// Products, Services, Segments, Markets & Distribution, R&D, Seasonality,
-// Supply of Components, Intellectual Property), Item 1A (Risk Factors),
-// Item 1C (Cybersecurity), Item 3 (Legal Proceedings), the Commitments,
-// Contingencies & Supply Concentrations note, and the Derivative
-// Instruments and Hedging note. FY2025 filing with FY2024 comparisons.
+// AAPL_BREAKDOWN — Apple Inc. Coverage data (Tier 2, pending financials)
+// SOURCE: Muzz's supplied 10-K material across three drops — Item 1, Item
+// 1A, Item 1C, Item 2 (Properties), Item 3, Human Capital, the Commitments
+// & Contingencies note, the Derivative Instruments and Hedging note, and
+// the Share-Based Compensation note. Plus compiled (not filed) material on
+// pricing power, acquisition strategy and competition.
 //
-// TABS LIVE: OVERVIEW, MOAT, RISKS.
-// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS —
-// no financial statements have been supplied yet.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME, RISKS.
+// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
 //
-// TIER BADGE DELIBERATELY NOT SET. Tier 1 in this app means a full
-// breakdown INCLUDING multi-year income statement, balance sheet and cash
-// flow. The badge goes on when the numbers land.
+// TIER 2, NOT TIER 1 — DELIBERATE. Tier 1 requires a full breakdown
+// INCLUDING multi-year income statement, balance sheet and cash flow. Only
+// revenue and net income are available (from the per-employee table), so
+// the income statement is PARTIAL and there is no balance sheet or cash
+// flow at all. Tier 2's own definition covers this exactly: "some sections
+// may be light or not yet populated". Flip to Tier 1 when the statements
+// land.
 //
-// RISK WEIGHTS: the supplied register carries an A/B/C weight and an
-// FY2025-change column per risk. The renderer reads only {risk, meaning}
-// per item, so both are preserved inline at the head of each meaning
-// rather than dropped.
+// CEO TRANSITION — VERIFIED. Muzz's pricing-power doc flagged this as
+// unconfirmed. It is confirmed: Apple Newsroom (April 2026) announced Tim
+// Cook becomes executive chairman and John Ternus becomes CEO effective
+// 1 September 2026, approved unanimously by the Board following a
+// long-term succession planning process. Carried as fact in leadership.
 //
-// CONTINGENCIES: post-filing Epic items (Ninth Circuit 11 Dec 2025, cert
-// petition 21 May 2026, cert granted Jun 2026) post-date the 10-K and are
-// carried as supplied, with the verify-before-relying caveat preserved.
-// Item 1C describes governance structure only — Apple makes no statement
-// that no material incident has occurred, and that is noted in-app.
-// The "facts" stat block is NOT populated — its renderer expects founded /
-// HQ / CEO / incorporated, none of which are in these drops.
+// CONFIDENCE LABELLING: moat.acquisitionStrategy is explicitly marked
+// COMPILED, NOT SOURCED — deal prices are tracker estimates, several deals
+// are unconfirmed by Apple, and trackers disagree on the total count.
+// Everything else in this breakdown is filing-derived.
+//
+// RISK WEIGHTS: the supplied Item 1A register carries an A/B/C weight and
+// an FY2025-change column. The renderer reads only {risk, meaning} per
+// item, so both are preserved inline at the head of each meaning.
+//
+// The "facts" stat block remains unpopulated — its renderer dispatches on
+// founded/incorporated/warehouses/network/teamMembers/euronext/coasts, and
+// none of those fit Apple. HQ is carried in overview.headquarters instead.
 // ════════════════════════════════════════════════════════════════
 const AAPL_BREAKDOWN = {
   overview: {
@@ -19101,6 +19109,40 @@ const AAPL_BREAKDOWN = {
         },
       ],
     },
+    headquarters: {
+      location: 'Cupertino, California',
+      description: 'As of 27 September 2025 Apple owned or leased facilities and land for corporate functions, R&D, data centres, retail and other purposes at locations throughout the U.S. and in various places outside the U.S. Apple believes its existing facilities and equipment, which are used by ALL reportable segments, are in good operating condition and suitable for the conduct of its business.',
+    },
+    properties: {
+      summary: {
+        globalFootprint: 'Owned and leased facilities and land across the U.S. and in various places outside the U.S., covering corporate functions, research and development, data centres, retail and other purposes.',
+        condition: 'Apple states its existing facilities and equipment are in good operating condition and are suitable for the conduct of its business.',
+        management: 'Facilities and equipment are used by ALL reportable segments \u2014 they are not managed or allocated by segment. This matters when reading the geographic segment disclosure: the segments share one physical and R&D base, so segment profitability is a revenue-side split, not a fully separable P&L.',
+        improvement: 'Item 2 is a short, low-information disclosure by design. Apple gives no square footage, no facility count and no owned-versus-leased split \u2014 unusually thin for a company of this size, and a deliberate contrast with the detail it provides on segments and services.',
+      },
+    },
+    leadership: {
+      asOf: '1 September 2026',
+      executives: [
+        {
+          name: 'John Ternus',
+          role: 'Chief Executive Officer',
+          since: 'CEO effective 1 Sept 2026 \u00b7 25 years at Apple \u00b7 previously SVP, Hardware Engineering',
+        },
+        {
+          name: 'Tim Cook',
+          role: 'Executive Chairman of the Board',
+          since: 'CEO Aug 2011 \u2013 Aug 2026 \u00b7 joined Apple 1998 as SVP Worldwide Operations',
+        },
+      ],
+      executiveTakeaways: [
+        'CONFIRMED, NOT RUMOUR: Apple announced that Tim Cook becomes executive chairman and John Ternus becomes CEO effective 1 September 2026. The transition was approved unanimously by the Board and followed a long-term succession planning process. Source: Apple Newsroom, April 2026.',
+        'Cook led Apple for 15 years, from August 2011. He is NOT leaving the company \u2014 as executive chairman he continues to assist with certain aspects of the business, including engaging with policymakers around the world, and has indicated he will keep managing relationships with the U.S. administration and the Chinese government.',
+        'Ternus spent 25 years at Apple and came up through Hardware Engineering, shipping iPhone, iPad, Mac, AirPods and Apple Watch. The succession signals a product-and-engineering emphasis rather than an operations one.',
+        'WHY THIS MATTERS FOR THE COVERAGE: every risk in the Item 1A register that turns on execution \u2014 the AI catch-up, the tariff response, the App Store legal position, the Greater China decline \u2014 now sits with a new chief executive in his first year. That is not a reason to change the numbers, but it is a reason to widen the range around them.',
+        'The handover coincides with an unusually heavy product cycle and with the Google search licensing appeal still live. A first-year CEO facing a possible step-down in high-margin Services revenue is a different proposition to a fifteen-year incumbent facing the same thing.',
+      ],
+    },
   },
   moat: {
     preamble: 'Apple holds a broad collection of IP rights across hardware, software and services \u2014 patents, designs, copyrights, trademarks, trade secrets and other forms, in the U.S. and various foreign countries. It regularly files patent, design, copyright and trademark applications on innovations arising from its hardware, software and service research, development, design and marketing, and is currently pursuing thousands of applications worldwide. The accumulated portfolio is large, no single right is solely responsible for protecting Apple\u2019s products and services, and duration is believed adequate relative to the expected lives of those products and services. But Apple itself states it relies PRIMARILY on the innovative skills, technical competence and marketing abilities of its personnel \u2014 which is the tell about where the real barrier sits.',
@@ -19138,6 +19180,21 @@ const AAPL_BREAKDOWN = {
           moatStrength: 'Weak',
           biggestRisk: 'Single-sourced custom components, newly disclosed supplier-failure and consolidation risk, and rare earth exposure concentrated in China.',
         },
+        {
+          division: 'Market share (all four hardware categories)',
+          moatStrength: 'Weak',
+          biggestRisk: 'Apple states in the filing that it holds a MINORITY share in the global smartphone, PC, tablet and wearables markets, and that some of those markets have experienced little to no growth or contracted overall. A defensive disclosure written for the antitrust cases \u2014 but true.',
+        },
+        {
+          division: 'Pricing power \u2014 hardware',
+          moatStrength: 'Moderate',
+          biggestRisk: 'Flagship sticker price frozen in a $999\u2013$1,199 band since 2017 (2.3%/yr, below inflation). Products gross margin fell 37.2% \u2192 36.8% on tariffs while mix IMPROVED \u2014 Apple ate part of the cost. The 2026 price rises are cost-driven margin defence, not value-driven expansion.',
+        },
+        {
+          division: 'Pricing power \u2014 services',
+          moatStrength: 'Strong',
+          biggestRisk: 'Apple TV up 200% in seven years and Apple One up 47%, but from deliberate underpricing toward market rates rather than above them. iCloud+ 2TB has been $9.99 since 2011 \u2014 fifteen years flat on falling input costs.',
+        },
       ],
       buffettTakeaways: [
         'The IP section is the one place Apple tells you where the moat is NOT. Patents expire on a schedule you can model; ecosystems do not. There is no patent cliff to underwrite here.',
@@ -19145,6 +19202,686 @@ const AAPL_BREAKDOWN = {
         'Paired with the Item 1A addition that machine learning and AI create new infringement exposure \u2014 training data and reproduction of copyrighted material in outputs \u2014 this looks like Apple Intelligence bringing a category of licensing risk that did not previously sit in the hardware business.',
         'Dropping \u201caccessories\u201d from the scope of IP holdings is almost certainly compression rather than a signal, but it sits alongside Wearables, Home & Accessories declining 4% in FY2025. Two small things pointing the same way in one filing; probably coincidence, cheap to watch.',
         'FRAMING: none of the legal exposure is a line item. It is an argument about the durability of Services margin. Apple earns 75.4% Services gross margin partly because it controls distribution and payment on its own platforms. If a terminal value leans on that margin holding where it is, the legal section is the reason to test a lower one.',
+        'COMPETITION \u00b7 The single most useful sentence in Item 1: \u201cThe Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets.\u201d Apple telling you, in a legal document, that it leads none of its four hardware categories. If you think the moat is SHARE, this contradicts you. If you think the moat is the profitable slice of a large installed base plus the Services attach rate on top, this is exactly what you would expect: minority units, majority profits. FY2025 supports the second reading.',
+        'COMPETITION \u00b7 Principal competitive factors as Apple lists them: price; product and service features including security; relative price and performance; quality and reliability; design and technology innovation; a strong third-party software and accessories ecosystem; marketing and distribution capability; service and support; corporate reputation; and the ability to effectively protect and ENFORCE IP rights \u2014 the last of these newly added in FY2025.',
+        'COMPETITION \u00b7 Apple designs and develops NEARLY THE ENTIRE SOLUTION \u2014 hardware, operating system, numerous software applications and related services. That vertical-integration statement is new to the FY2025 text and is the structural answer to why minority share still produces majority profit.',
+        'COMPETITION \u00b7 Rivals compete primarily through aggressive pricing and very low cost structures, and by imitating Apple\u2019s products and infringing its IP. Certain competitors have the resources, experience or cost structures to operate at little or no profit, or at a loss. Competition is expected to INTENSIFY as rivals imitate Apple\u2019s approach to integrating components seamlessly, or collaborate to offer integrated solutions.',
+        'PRICING POWER VERDICT \u00b7 Grade B, not A. The case for a high grade: Apple raised prices across nearly its whole hardware line and two major services within three months of mid-2026 and the stock was fine; Services gross margin of 75.4% is extraordinary and rising; iPhone revenue grows on Pro mix without sticker increases, which is the highest-quality form of ASP growth there is. The case against \u201cextreme\u201d: Apple could NOT fully pass through tariff costs \u2014 Products gross margin fell while mix improved, which is the cleanest empirical test available and Apple partially failed it.',
+        'PRICING POWER VERDICT \u00b7 The App Store take rate is the largest single price Apple sets, and it is now being set by COURTS instead. That is not a margin risk \u2014 it is the removal of price-setting authority in a $109bn segment. Pricing power is also regional: Greater China has declined three consecutive years, from $72.6bn to $64.4bn. Whatever pricing power means, it does not apply there right now.',
+        'PRICING POWER VERDICT \u00b7 Do NOT carry \u201cresilient in recessions\u201d as an established fact. Apple has not faced a genuine consumer recession since becoming a $1,000-phone company; 2020 was a stimulus-supported downturn with a hardware boom. The claim may well be true, but it is UNTESTED AT CURRENT PRICE POINTS. Equally, do not carry \u201c4\u20135% annual price increases\u201d into a forecast \u2014 that CAGR is arithmetically right from 2007 but since 2017 the flagship has risen 2.3% a year, below inflation. In real terms it has gotten cheaper.',
+        'FOR THE MODEL \u00b7 Apple can likely DEFEND gross margin around the mid-to-high 40s but is unlikely to EXPAND it much from here, with Services mix doing the lifting rather than price. If a DCF assumes margin expansion from pricing, this section argues against it.',
+        'ACQUISITIONS \u00b7 The one genuine strategic change. \u201cAcquire-to-build, not acquire-to-expand\u201d now needs a qualifier. Apple bought Pixelmator and MotionVFX \u2014 two working software businesses with existing products and users \u2014 then in January 2026 launched Creator Studio, a $12.99/month or $129/year bundle packaging Final Cut Pro, Logic Pro, Pixelmator Pro, Motion, Compressor and MainStage, aimed squarely at Adobe Creative Cloud. That is acquisition feeding directly into a NEW first-party subscription line that depends on neither the App Store take rate nor Google search payments. Small today; the honest counterweight is that Adobe is entrenched and the creative professional market is a fraction of Apple\u2019s base. Treat it as evidence of DIRECTION \u2014 that management sees the Services concentration risk and is acting on it \u2014 not as a revenue line worth modelling.',
+        'ACQUISITIONS \u00b7 Antitrust is now a real limiter on deal size. With a DOJ monopolisation suit live and DMA proceedings ongoing, any sizeable acquisition would draw immediate scrutiny. Apple\u2019s restraint through the AI cycle is consistent with fifteen years of behaviour AND with what a company facing an active monopolisation suit would do regardless of preference \u2014 the two explanations are not separable from the outside.',
+        'BALANCE SHEET CORRECTION \u00b7 The \u201c~$150bn+ cash reserves\u201d framing is years out of date. After sustained buybacks and with term debt outstanding, cash and marketable securities are roughly $130bn against roughly $95bn of term debt, leaving net cash in the TENS of billions rather than the hundreds. Apple no longer has a fortress cash pile sitting idle; it has been deliberately spending it down toward net-cash-neutral. Verify against the FY2025 balance sheet when it lands.',
+      ],
+    },
+    pricingPower: {
+      label: 'Pricing Power \u00b7 Long-Term',
+      description: 'US launch prices for the top flagship iPhone against three services lines. The iPhone series is the one to read carefully: the headline sticker has been FROZEN in a $999\u2013$1,199 band since the iPhone X in 2017. Apple\u2019s ASP growth has come from mix, storage upsell and Services, not from raising the headline number. iCloud+ 2TB is the counter-example \u2014 $9.99 since 2011, fifteen years of flat pricing on a product whose input costs fell.',
+      products: [
+        {
+          name: 'iPhone \u00b7 top flagship US launch price',
+          unit: 'USD per unit',
+          color: 'amber',
+          series: [
+            {
+              year: 2007,
+              value: 599,
+            },
+            {
+              year: 2010,
+              value: 599,
+            },
+            {
+              year: 2014,
+              value: 649,
+            },
+            {
+              year: 2017,
+              value: 999,
+            },
+            {
+              year: 2020,
+              value: 1099,
+            },
+            {
+              year: 2023,
+              value: 1199,
+            },
+            {
+              year: 2024,
+              value: 1199,
+            },
+            {
+              year: 2025,
+              value: 1199,
+            },
+          ],
+        },
+        {
+          name: 'Apple TV \u00b7 monthly (was Apple TV+)',
+          unit: 'USD per month',
+          color: 'amber',
+          series: [
+            {
+              year: 2019,
+              value: 4.99,
+            },
+            {
+              year: 2025,
+              value: 12.99,
+            },
+            {
+              year: 2026,
+              value: 14.99,
+            },
+          ],
+        },
+        {
+          name: 'Apple One Individual \u00b7 monthly',
+          unit: 'USD per month',
+          color: 'amber',
+          series: [
+            {
+              year: 2020,
+              value: 14.95,
+            },
+            {
+              year: 2025,
+              value: 19.95,
+            },
+            {
+              year: 2026,
+              value: 21.95,
+            },
+          ],
+        },
+        {
+          name: 'iCloud+ 2TB \u00b7 monthly',
+          unit: 'USD per month',
+          color: 'amber',
+          series: [
+            {
+              year: 2011,
+              value: 9.99,
+            },
+            {
+              year: 2019,
+              value: 9.99,
+            },
+            {
+              year: 2023,
+              value: 9.99,
+            },
+            {
+              year: 2026,
+              value: 9.99,
+            },
+          ],
+        },
+      ],
+    },
+    acquisitionStrategy: {
+      summary: 'COMPILED, NOT SOURCED \u2014 unlike the rest of this coverage, none of this section is auditable against the filing. Deal prices are estimates from trackers, several deals are unconfirmed by Apple, and trackers disagree on the total count (roughly 124\u2013138 acquisitions all time). Treat with lower confidence than the 10-K sections. The strategy itself is consistent: small bolt-ons for technology, talent and IP, funded entirely from internal cash. The largest deal ever remains Beats at ~$3bn in 2014 \u2014 over a decade ago. Cadence has run about three a year since 2020, rising to six-plus in 2025, heavily AI-weighted. Peak years were 2013 (15 deals), 2017 (13) and 2015 (12), so the current pace is well below historic.',
+      fundingMethods: [
+        {
+          type: 'Cash',
+          emoji: '\u1f4b5',
+          usage: 'Effectively 100%',
+          note: 'Funded from internal cash flow. The cash flow line \u2014 \u201cPayments made in connection with business acquisitions, net\u201d \u2014 has been negligible: $0m in FY2024 and $33m in FY2023. Pixelmator closed in FY2025, so this line may be non-zero for the first time in years.',
+        },
+        {
+          type: 'Debt',
+          emoji: '\u1f4b3',
+          usage: 'Essentially never for M&A',
+          note: 'Apple carries term debt, but it has not been raised to fund acquisitions since Beats.',
+        },
+        {
+          type: 'Equity',
+          emoji: '\u1f9fe',
+          usage: 'Not since Beats (2014)',
+          note: 'Beats was cash plus stock. Every deal since has been cash.',
+        },
+      ],
+      majorAcquisitions: [
+        {
+          name: 'PlasmaSolve',
+          year: 2026,
+          price: 'Undisclosed',
+          funding: 'Cash',
+          country: 'Czech Republic',
+          feature: 'Plasma process simulation software for semiconductor manufacturing \u2014 classic acqui-hire pattern.',
+        },
+        {
+          name: 'MotionVFX',
+          year: 2026,
+          price: 'Undisclosed',
+          funding: 'Cash',
+          country: 'Poland',
+          feature: 'Final Cut Pro plugins, templates and AI tracking. ~70 employees. Part of the new buy-a-product pattern, not acqui-hire.',
+        },
+        {
+          name: '6+ AI-focused companies',
+          year: 2025,
+          price: 'Undisclosed',
+          funding: 'Cash',
+          country: 'Various',
+          feature: 'AI/ML capability for Siri and Apple Intelligence. Note what Apple did NOT do: with Apple Intelligence widely seen as behind, it bought six small companies and licensed capability from Google rather than making a headline acquisition.',
+        },
+        {
+          name: 'Pixelmator / Photomator',
+          year: 2025,
+          price: 'Undisclosed',
+          funding: 'Cash',
+          country: 'Lithuania',
+          feature: 'Announced Nov 2024, closed after regulatory approval. THE STRATEGIC CHANGE \u2014 Apple bought a working software business with existing products and users, then shipped it inside Creator Studio sixteen months later.',
+        },
+        {
+          name: 'Mira',
+          year: 2023,
+          price: 'Undisclosed',
+          funding: 'Cash',
+          country: 'USA',
+          feature: 'AR headset \u2014 Vision Pro supply chain.',
+        },
+        {
+          name: 'Xnor.ai',
+          year: 2020,
+          price: '~$200m',
+          funding: 'Cash',
+          country: 'USA',
+          feature: 'Edge AI, on-device machine learning.',
+        },
+        {
+          name: 'Intel modem division',
+          year: 2019,
+          price: '~$1bn',
+          funding: 'Cash',
+          country: 'USA',
+          feature: '5G modems \u2014 vertical integration of a single-sourced component.',
+        },
+        {
+          name: 'Shazam',
+          year: 2018,
+          price: '~$400m',
+          funding: 'Cash',
+          country: 'UK',
+          feature: 'Music identification.',
+        },
+        {
+          name: 'Beats Electronics',
+          year: 2014,
+          price: '~$3bn',
+          funding: 'Cash + stock',
+          country: 'USA',
+          feature: 'LARGEST EVER, and still is. Headphones plus streaming. The only deal since with equity in it.',
+        },
+        {
+          name: 'PrimeSense',
+          year: 2013,
+          price: '~$360m',
+          funding: 'Cash',
+          country: 'Israel',
+          feature: '3D depth sensing \u2014 became Face ID.',
+        },
+        {
+          name: 'Siri',
+          year: 2010,
+          price: '~$200m',
+          funding: 'Cash',
+          country: 'USA',
+          feature: 'Virtual assistant.',
+        },
+      ],
+    },
+  },
+  numbers: {
+    employees: {
+      label: 'Full-Time Equivalent Employees',
+      unit: '',
+      series: [
+        {
+          year: 2015,
+          value: 110000,
+        },
+        {
+          year: 2016,
+          value: 116000,
+        },
+        {
+          year: 2017,
+          value: 123000,
+        },
+        {
+          year: 2018,
+          value: 132000,
+        },
+        {
+          year: 2019,
+          value: 137000,
+        },
+        {
+          year: 2020,
+          value: 147000,
+        },
+        {
+          year: 2021,
+          value: 154000,
+        },
+        {
+          year: 2022,
+          value: 164000,
+        },
+        {
+          year: 2023,
+          value: 161000,
+        },
+        {
+          year: 2024,
+          value: 164000,
+        },
+        {
+          year: 2025,
+          value: 166000,
+        },
+      ],
+      note: 'Headcount grew 50.9% over eleven years, from 110,000 to 166,000 \u2014 while revenue grew 78.1%. FY2023 is the only decline in the series (164,000 \u2192 161,000) and it was recovered within two years. Apple has added roughly 5,100 people a year on average while nearly doubling revenue.',
+    },
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 2124682,
+        },
+        {
+          year: 2016,
+          value: 1859819,
+        },
+        {
+          year: 2017,
+          value: 1863707,
+        },
+        {
+          year: 2018,
+          value: 2012083,
+        },
+        {
+          year: 2019,
+          value: 1898869,
+        },
+        {
+          year: 2020,
+          value: 1867449,
+        },
+        {
+          year: 2021,
+          value: 2375571,
+        },
+        {
+          year: 2022,
+          value: 2404451,
+        },
+        {
+          year: 2023,
+          value: 2380031,
+        },
+        {
+          year: 2024,
+          value: 2384939,
+        },
+        {
+          year: 2025,
+          value: 2506993,
+        },
+      ],
+      note: 'Revenue per employee rose from $2.12m (2015) to $2.51m (2025), up 18.0%. The step-change is FY2021 \u2014 $1.87m to $2.38m in a single year, a 27.2% jump \u2014 and the level has held above $2.37m every year since. That is one of the highest figures of any company at this scale, and it is the arithmetic expression of the asset-light, outsourced-manufacturing model: the people who assemble Apple\u2019s products are not Apple\u2019s employees.',
+    },
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 485400,
+        },
+        {
+          year: 2016,
+          value: 393841,
+        },
+        {
+          year: 2017,
+          value: 393092,
+        },
+        {
+          year: 2018,
+          value: 451748,
+        },
+        {
+          year: 2019,
+          value: 403701,
+        },
+        {
+          year: 2020,
+          value: 390884,
+        },
+        {
+          year: 2021,
+          value: 614156,
+        },
+        {
+          year: 2022,
+          value: 608549,
+        },
+        {
+          year: 2023,
+          value: 602457,
+        },
+        {
+          year: 2024,
+          value: 571683,
+        },
+        {
+          year: 2025,
+          value: 674759,
+        },
+      ],
+      note: 'Net income per employee rose from $485k (2015) to $675k (2025), up 39.0% \u2014 more than twice the rate of revenue per employee, so margin per head improved as well as volume per head. The FY2020 trough of $391k and the FY2025 peak of $675k bracket a 72.6% swing. Every Apple employee generated more profit in FY2025 than the median S&P 500 company generates in revenue per employee.',
+    },
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Revenue',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 233715,
+          },
+          {
+            year: 2016,
+            value: 215639,
+          },
+          {
+            year: 2017,
+            value: 229234,
+          },
+          {
+            year: 2018,
+            value: 265595,
+          },
+          {
+            year: 2019,
+            value: 260174,
+          },
+          {
+            year: 2020,
+            value: 274515,
+          },
+          {
+            year: 2021,
+            value: 365817,
+          },
+          {
+            year: 2022,
+            value: 394328,
+          },
+          {
+            year: 2023,
+            value: 383285,
+          },
+          {
+            year: 2024,
+            value: 391035,
+          },
+          {
+            year: 2025,
+            value: 416161,
+          },
+        ],
+        note: 'PARTIAL INCOME STATEMENT \u2014 only revenue and net income have been supplied so far, sourced from the per-employee table rather than from the financial statements. Cost of sales, operating expense, operating income, tax and EPS are NOT yet available. Revenue grew 78.1% over eleven years, from $233.7bn to $416.2bn. Note the two down years: FY2016 (\u22127.7%) and FY2023 (\u22122.8%), and the FY2020\u2013FY2021 surge of +33.3% in a single year.',
+      },
+      netIncome: {
+        label: 'Net Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 53394,
+          },
+          {
+            year: 2016,
+            value: 45687,
+          },
+          {
+            year: 2017,
+            value: 48351,
+          },
+          {
+            year: 2018,
+            value: 59531,
+          },
+          {
+            year: 2019,
+            value: 55256,
+          },
+          {
+            year: 2020,
+            value: 57411,
+          },
+          {
+            year: 2021,
+            value: 94680,
+          },
+          {
+            year: 2022,
+            value: 99803,
+          },
+          {
+            year: 2023,
+            value: 96995,
+          },
+          {
+            year: 2024,
+            value: 93736,
+          },
+          {
+            year: 2025,
+            value: 112010,
+          },
+        ],
+        note: 'Net income grew 109.8% over eleven years, from $53.4bn to $112.0bn \u2014 comfortably ahead of the 78.1% revenue growth. FY2025 is the record at $112.0bn, up 19.5% on FY2024, and it follows two years of decline from the FY2022 level. Three down years in eleven: FY2016, FY2019 and FY2024.',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin \u2014 Derived',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 22.85,
+          },
+          {
+            year: 2016,
+            value: 21.19,
+          },
+          {
+            year: 2017,
+            value: 21.09,
+          },
+          {
+            year: 2018,
+            value: 22.41,
+          },
+          {
+            year: 2019,
+            value: 21.24,
+          },
+          {
+            year: 2020,
+            value: 20.91,
+          },
+          {
+            year: 2021,
+            value: 25.88,
+          },
+          {
+            year: 2022,
+            value: 25.31,
+          },
+          {
+            year: 2023,
+            value: 25.31,
+          },
+          {
+            year: 2024,
+            value: 23.97,
+          },
+          {
+            year: 2025,
+            value: 26.92,
+          },
+        ],
+        note: 'Derived as net income \u00f7 revenue from the supplied figures. Margin sat in a 20.9%\u201322.9% band for six years to FY2020, then stepped up to 25\u201326% and reached 26.92% in FY2025 \u2014 the highest of the period. That step-change coincides with the Services mix rising toward 26% of revenue at 75.4% gross margin. The margin story is mix, not price.',
+      },
+      extraLines: [
+        {
+          label: 'Share-Based Compensation Expense',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 10833,
+            },
+            {
+              year: 2024,
+              value: 11688,
+            },
+            {
+              year: 2025,
+              value: 12863,
+            },
+          ],
+          note: 'SBC at $12.9bn is a real expense and should be treated as one \u2014 roughly 10% of FY2025 operating income. It grew 10% in FY2025.',
+        },
+        {
+          label: 'Income Tax Benefit Related to SBC',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: -3421,
+            },
+            {
+              year: 2024,
+              value: -3350,
+            },
+            {
+              year: 2025,
+              value: -3602,
+            },
+          ],
+        },
+        {
+          label: 'Net After-Tax Cost of SBC',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 7412,
+            },
+            {
+              year: 2024,
+              value: 8338,
+            },
+            {
+              year: 2025,
+              value: 9261,
+            },
+          ],
+          note: 'FOR OWNER EARNINGS THIS IS THE RIGHT FIGURE: $9.3bn is the genuine economic cost to shareholders, whether it shows up as cash or as dilution. Apple neutralises the dilution through buybacks, which means the cost appears in the FINANCING line rather than operating cash flow. Cash flow from operations is therefore overstated relative to true owner earnings by approximately this amount. And note what that implies about the buyback: a portion of it is not discretionary capital allocation at all, it is simply cleaning up share issuance from compensation. Only the buyback ABOVE the SBC-offsetting amount is genuine return of capital.',
+        },
+        {
+          label: 'Cash Paid to Taxing Authorities for Employee Tax on Vested RSUs',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 5600,
+            },
+            {
+              year: 2024,
+              value: 5600,
+            },
+            {
+              year: 2025,
+              value: 6100,
+            },
+          ],
+          note: 'The cash piece people miss. Most vested RSUs are NET SHARE SETTLED \u2014 Apple withholds shares equal to the employee\u2019s tax obligation and remits cash to the taxing authorities. That is $6.1bn of actual cash out the door in FY2025, sitting in financing activities rather than operating. It is not optional and it scales with the share price. Any cash-flow bridge needs this line.',
+        },
+        {
+          label: 'RSUs Outstanding at Year End',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2024,
+              value: 163.326,
+            },
+            {
+              year: 2025,
+              value: 151.574,
+            },
+          ],
+          note: 'THE READ THAT MATTERS: Apple granted 73.5m units against 76.8m vested, so it issued FEWER units than it settled. With forfeitures of 8.4m, the outstanding pool fell 7%. Apple is granting fewer units at higher prices \u2014 exactly what you would expect if it targets a fixed DOLLAR value of compensation. Dilution pressure is shrinking in share terms even as the dollar cost rises.',
+        },
+        {
+          label: 'Weighted-Average Grant-Date Fair Value per RSU Granted',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2023,
+              value: 150.87,
+            },
+            {
+              year: 2024,
+              value: 173.78,
+            },
+            {
+              year: 2025,
+              value: 226.68,
+            },
+          ],
+          note: 'Up 30% in FY2025 \u2014 but that is the STOCK PRICE, not a pay rise. Apple sets grant-date fair value at the closing price on the grant date, so the per-unit figure mostly reflects where AAPL traded during the grant window. SBC expense grew only 10% against that 30% move, which is the fixed-dollar-target mechanism working.',
+        },
+        {
+          label: 'Total Vesting-Date Fair Value of RSUs',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2023,
+              value: 15900,
+            },
+            {
+              year: 2024,
+              value: 15800,
+            },
+            {
+              year: 2025,
+              value: 17100,
+            },
+          ],
+        },
+        {
+          label: 'Unrecognised Compensation Cost on Outstanding RSUs',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2025,
+              value: 21800,
+            },
+          ],
+          note: '$21.8bn unrecognised over a weighted-average 2.5 years gives a FLOOR for forward SBC of roughly $8.7bn a year from grants already made, before any new issuance. Expect the reported number to keep running above that as new grants layer on.',
+        },
       ],
     },
   },
@@ -19614,7 +20351,7 @@ const AAPL_BREAKDOWN = {
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
+  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: ORCL_BREAKDOWN },
