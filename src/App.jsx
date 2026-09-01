@@ -32249,7 +32249,7 @@ const GOOG_BREAKDOWN = {
 
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
-  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
+  { ticker: 'GOOG', tickerDisplay: 'GOOG / GOOGL',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: AAPL_BREAKDOWN },
   { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: MSFT_BREAKDOWN },
   { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: AMZN_BREAKDOWN },
@@ -42140,7 +42140,7 @@ function MuzzApp() {
                       <div>
                         <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {selected.industry} · {selected.country}</div>
                         <div style={{display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap'}}>
-                          <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.ticker}</div>
+                          <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.tickerDisplay || selected.ticker}</div>
                           {selected.tier && (() => {
                             const tierColors = {
                               1: { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.5)',   text:'rgba(34,197,94,0.95)' },
@@ -43094,8 +43094,8 @@ function MuzzApp() {
                         { id:'segments',   label:'OPERATING SEGMENTS', keys:['operatingSegments'] },
                         { id:'lines',      label:'BUSINESS LINES', keys:['businessLines'] },
                         { id:'business',   label:'BUSINESS',   keys:['customers','distribution','supplyChain','reinvestment'] },
-                        { id:'operations', label:'OPERATIONS', keys:['rawMaterials','rawMaterialsCategories','properties','facilityMatrix','bottlerAgreements','bottlingInvestments','topBottlers','acquisitions','reece'] },
-                        { id:'leadership', label:'LEADERSHIP', keys:['leadership','deepBench'] },
+                        { id:'operations', label:'OPERATIONS', keys:['rawMaterials','rawMaterialsCategories','properties','facilityMatrix','bottlerAgreements','bottlingInvestments','topBottlers','acquisitions','deepBench','reece'] },
+                        { id:'leadership', label:'LEADERSHIP', keys:['leadership'] },
                         { id:'competitors', label:'COMPETITORS', keys:['competitors'] },
                         { id:'ownership',  label:'OWNERSHIP',  keys:['equityStructure','shareholders','regulatory'] },
                       ];
@@ -52247,7 +52247,7 @@ function MuzzApp() {
                         <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background: c.progress === 'research' ? 'rgba(245,158,11,0.14)' : 'rgba(148,163,184,0.08)',border: c.progress === 'research' ? `0.5px solid ${amber}` : '0.5px solid rgba(148,163,184,0.3)',borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color: c.progress === 'research' ? amber : 'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{c.progress === 'research' ? '\u25cf IN RESEARCH' : '🔒 QUEUED'}</span>
                       )}
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
-                        <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
+                        <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.tickerDisplay || c.ticker}</span>
                         <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                       </div>
                       {isFlashing ? (
@@ -52486,7 +52486,7 @@ function MuzzApp() {
                         })()}
                         {/* Top row: ticker + name */}
                         <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',paddingRight: (isLocked || c.tier) ? '90px' : 0}}>
-                          <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
+                          <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.tickerDisplay || c.ticker}</span>
                           <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                         </div>
                         {isFlashing ? (
