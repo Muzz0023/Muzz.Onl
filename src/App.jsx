@@ -45295,6 +45295,518 @@ const MA_BREAKDOWN = {
   },
 };
 
+
+// ════════════════════════════════════════════════════════════════
+// MCO_BREAKDOWN — Moody's Corporation Coverage data (Tier 2, drop 1)
+// SOURCE: Muzz's supplied Item 1 material — company overview, strategy,
+// prospects for growth, MIS and MA segment overviews with by-the-numbers
+// disclosures, and the restructuring note. FY2024, year end 31 December.
+//
+// TABS LIVE: OVERVIEW, MOAT.
+// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+//
+// VERIFIED BEFORE BUILDING:
+//   the nine MA customer categories sum EXACTLY to the stated 14,800.
+//   every restructuring expense row and column reconciles, and all three
+//   liability roll-forward years tie. The gap between the expense table
+//   and the liability in FY2022 and FY2023 is exactly the real estate
+//   line — non-cash impairments that never touch a liability.
+//
+// WHY THIS COMPANY IS DIFFERENT FROM THE TWO NETWORKS ALREADY BUILT:
+// the customer is not the consumer. Issuers pay for a rating whose value
+// depends entirely on investors believing it. Most MIS revenue arrives
+// only when debt is actually issued, so a very high-quality franchise
+// carries a genuinely cyclical top line.
+// ════════════════════════════════════════════════════════════════
+const MCO_BREAKDOWN = {
+  overview: {
+    identity: {
+      name: 'Moody\u2019s Corporation',
+      ticker: 'MCO',
+      description: 'A global integrated risk assessment firm reporting in two segments. MOODY\u2019S INVESTORS SERVICE publishes credit ratings and assessment services on debt obligations and the entities that issue them \u2014 corporates, financial institutions, governments and structured finance. MOODY\u2019S ANALYTICS provides data and information, research and insights, and decision solutions across credit, market, financial crime, supply chain, catastrophe and climate risk. Roughly 16,000 employees across more than 40 countries.',
+      industryPosition: [
+        '$75.8 TRILLION OF TOTAL RATED DEBT OUTSTANDING. That is the number to hold onto \u2014 it is roughly two and a half times world GDP, and every dollar of it carries an opinion Moody\u2019s issued and continues to monitor.',
+        'MIS rates 33,300+ organisations and structured deals using 190+ RATING METHODOLOGIES: 14,400+ US public finance issuers, 8,900+ structured finance deals, 4,800+ non-financial corporates, 3,300+ financial institutions, 1,000+ infrastructure and project finance issuers, 380+ sub-sovereigns, 140+ SOVEREIGNS and 50 supranational institutions.',
+        'MA serves 14,800+ CUSTOMERS operating across 165+ countries. The disclosed customer categories sum EXACTLY to 14,800 \u2014 6,700+ corporates and professional services, 2,600+ commercial banks, 1,900+ asset managers, 900+ government entities, 900+ insurance companies, 800+ real estate entities, 600+ educational institutions, 200+ securities dealers and investment banks, and 200+ others.',
+        'THE TWO SEGMENTS EARN COMPLETELY DIFFERENTLY. MIS revenue is MAJORITY ISSUER-PAID FEES ON DEBT ISSUANCE \u2014 transactional and tied to the issuance cycle \u2014 with partial stability from recurring annual monitoring fees. MA is subscription and SaaS, and recurring. One is cyclical, one is contracted, and the mix is the whole story of how this company behaves through a cycle.',
+        'MA describes itself as running THE WORLD\u2019S LARGEST DATABASE ON COMPANIES AND CREDIT, and MIS as the "agency of choice" with more than 115 years of history.',
+        'Moody\u2019s frames its addressable risk far beyond credit: properties, securities, people, economies, ESG and climate sit alongside credit and companies in its own description of what it covers.',
+      ],
+    },
+    buffettFraming: {
+      headline: 'A toll on the issuance of debt \u2014 paid by the issuer, trusted by the investor',
+      body: 'The economics are extraordinary and the structure is uncomfortable, and both facts matter. Moody\u2019s sells an opinion. The ISSUER pays for it, but the opinion is only worth paying for because INVESTORS believe it. That inversion \u2014 the customer is not the consumer \u2014 is the central feature of the business, and it is why ratings agencies survived 2008 despite being at the centre of it: an issuer cannot self-certify, and no investor base will accept an opinion the market does not recognise. The moat is not technology or scale in the ordinary sense. It is that a Moody\u2019s rating is written into investment mandates, regulatory capital rules and index eligibility, so the demand for one is largely non-discretionary.',
+      bottomLine: 'What you are buying is a duopoly position in a market where the product is credibility and the customer is compelled. The risks are not competitive \u2014 nobody is going to build a rival with 115 years of accumulated trust and 190 methodologies. They are: the ISSUANCE CYCLE, because most MIS revenue arrives only when someone issues debt; REGULATION, since the whole edifice rests on official recognition of ratings that regulators have periodically tried to reduce reliance on; and PRIVATE CREDIT, which Moody\u2019s lists as an opportunity but which by construction routes borrowing away from the public markets that generate rating fees. Moody\u2019s Analytics is the answer to the first of those \u2014 recurring subscription revenue to offset a transactional core \u2014 and it is the same diversification logic Visa and Mastercard apply with value-added services.',
+    },
+    businessLines: {
+      description: 'Two reportable segments, and four capability blocks Moody\u2019s describes across them: RATINGS (the agency of choice), RESEARCH & INSIGHTS (a premier fixed income research business), DATA & INFORMATION (an unparalleled database on companies and credit), and DECISION SOLUTIONS (subscription businesses serving KYC, banking and insurance workflows). The stated purpose is to let banks, insurers, investors, corporations and governments ISSUE, ORIGINATE, SELECT AND UNDERWRITE; IDENTIFY, MEASURE, MONITOR AND MANAGE RISK; and VERIFY, COMPLY, PLAN AND REPORT.',
+      lines: [
+        {
+          name: 'MIS \u00b7 Moody\u2019s Investors Service \u2014 the ratings franchise',
+          description: 'More than 115 years old. Publishes credit ratings and assessment services on debt obligations, programmes and facilities, and on the entities that issue them, across corporate, financial institution, governmental and structured finance markets. $75.8 TRILLION of rated debt outstanding across 33,300+ rated organisations and structured deals, using 190+ rating methodologies. Revenue is MAJORITY ISSUER-PAID on debt issuance, with partial stability from recurring annual fees on debt monitoring, bank ratings, insurance and mutual funds.',
+          revenueProfile: 'Issuer-paid, transactional',
+          highlight: true,
+          marginNote: 'Cyclical: revenue arrives when debt is issued',
+        },
+        {
+          name: 'MIS \u00b7 What a rating actually buys the issuer',
+          description: 'Moody\u2019s states four benefits and they are worth reading literally, because they explain why the fee gets paid. ACCESS TO CAPITAL \u2014 institutional investors worldwide use Moody\u2019s opinions, so a rating makes debt attractive to a wider buyer base and facilitates both domestic and international capital. TRANSPARENCY AND MARKET STABILITY \u2014 a rating signals willingness to be transparent and provides an independent benchmark, and Moody\u2019s claims ratings help maintain investor confidence ESPECIALLY DURING MARKET STRESS. PLANNING AND BUDGETING \u2014 helps issuers formulate capital plans and funding strategies. ANALYTICAL CAPABILITIES \u2014 depth and breadth of research.',
+          revenueProfile: 'The value proposition',
+          highlight: true,
+        },
+        {
+          name: 'MIS \u00b7 Non-ratings revenue',
+          description: 'Financial instruments pricing services in Asia-Pacific, Second Party Opinions and Net Zero Assessments, and ICRA\u2019s non-ratings operations. Reported in the MIS Other line of business and stated as NOT MATERIAL to the segment.',
+          revenueProfile: 'Immaterial',
+        },
+        {
+          name: 'MA \u00b7 Research & Insights',
+          description: 'A leading fixed income and economic research business \u2014 economic forecasts and models, models and analytics, and research. One of the two feeds into the Decision Solutions layer.',
+          revenueProfile: 'Subscription',
+        },
+        {
+          name: 'MA \u00b7 Data & Information',
+          description: 'The world\u2019s largest database on companies and credit, built from MIS ratings feeds, private and public company data, and other proprietary data. THIS IS THE ASSET THE WHOLE ANALYTICS SEGMENT RESTS ON, and note where part of it comes from: the ratings business feeds the data business, which is a genuine structural advantage over a standalone data vendor.',
+          revenueProfile: 'Subscription',
+          highlight: true,
+        },
+        {
+          name: 'MA \u00b7 Decision Solutions \u2014 KYC, Banking, Insurance',
+          description: 'Cloud-based subscription tools embedded in customer workflows: lending and origination, underwriting, portfolio management, regulatory compliance, KYC, investment analysis, and ESG and climate assessment. Data and Information feeds in from one side and Research and Insights from the other, with the stated aim of STREAMLINING CUSTOMERS\u2019 CRITICAL WORKFLOWS. Embedded workflow software is materially harder to displace than a data feed.',
+          revenueProfile: 'Subscription \u00b7 SaaS',
+          highlight: true,
+        },
+        {
+          name: 'Coverage breadth \u2014 what Moody\u2019s claims to assess',
+          description: 'Credit, companies, properties, securities, people, economies, ESG and climate. The stated ambition is an INTEGRATED view of interconnected risk \u2014 supply chain failures, cyberattacks, geopolitical tensions, sanctions and security issues, and extreme weather events \u2014 rather than credit alone. That breadth is the growth thesis and also the place where Moody\u2019s competes with specialists rather than on its ratings franchise.',
+          revenueProfile: 'The expansion',
+        },
+        {
+          name: 'Restructuring \u00b7 the 2024 efficiency programme',
+          description: 'Approved by the CEO on 19 DECEMBER 2024 to realign toward high-priority growth areas, consolidate functions and improve operating leverage, through staff reductions, exiting leased offices and RETIRING LEGACY SOFTWARE APPLICATIONS. Charges of $200\u2013250m in total against ANNUAL SAVINGS OF $250\u2013300m once complete \u2014 a payback of roughly ten months. Only $45m was recognised in FY2024, so $155\u2013205m is still to come. Cash outlays run through 2027, substantial completion by end 2026.',
+          revenueProfile: 'Margin programme',
+          highlight: true,
+        },
+      ],
+      tables: [
+        {
+          title: 'MIS BY THE NUMBERS \u00b7 WHAT $75.8 TRILLION OF RATED DEBT LOOKS LIKE',
+          columns: [
+            'Category',
+            'Rated entities or deals',
+          ],
+          rows: [
+            [
+              'US public finance issuers',
+              '14,400+',
+            ],
+            [
+              'Structured finance deals',
+              '8,900+',
+            ],
+            [
+              'Non-financial corporates',
+              '4,800+',
+            ],
+            [
+              'Financial institutions',
+              '3,300+',
+            ],
+            [
+              'Infrastructure and project finance issuers',
+              '1,000+',
+            ],
+            [
+              'Sub-sovereigns',
+              '380+',
+            ],
+            [
+              'SOVEREIGNS',
+              '140+',
+            ],
+            [
+              'Supranational institutions',
+              '50',
+            ],
+            [
+              'TOTAL RATED ORGANISATIONS AND STRUCTURED DEALS',
+              '33,300+',
+            ],
+            [
+              'Rating methodologies',
+              '190+',
+            ],
+            [
+              'Total rated debt outstanding',
+              '$75.8+ trillion',
+            ],
+          ],
+          emphasis: [
+            6,
+            8,
+            10,
+          ],
+          note: 'The components sum to 32,970 against a stated 33,300+, which is consistent since every line carries a plus sign. TWO ROWS DESERVE ATTENTION. US public finance at 14,400+ issuers is by far the largest count \u2014 municipalities, school districts, utilities \u2014 a long tail of small issuers that each pay a fee. And 140+ SOVEREIGNS means Moody\u2019s rates the creditworthiness of most of the countries on earth, which is the clearest illustration of why this is a regulated activity rather than an ordinary information business.',
+        },
+        {
+          title: 'MA BY THE NUMBERS \u00b7 14,800 CUSTOMERS, AND THEY SUM EXACTLY',
+          columns: [
+            'Customer type',
+            'Count',
+          ],
+          rows: [
+            [
+              'Corporates and professional services',
+              '6,700+',
+            ],
+            [
+              'Commercial banks',
+              '2,600+',
+            ],
+            [
+              'Asset managers',
+              '1,900+',
+            ],
+            [
+              'Government entities',
+              '900+',
+            ],
+            [
+              'Insurance companies',
+              '900+',
+            ],
+            [
+              'Real estate entities',
+              '800+',
+            ],
+            [
+              'Educational institutions',
+              '600+',
+            ],
+            [
+              'Securities dealers and investment banks',
+              '200+',
+            ],
+            [
+              'Others',
+              '200+',
+            ],
+            [
+              'TOTAL MA CUSTOMERS',
+              '14,800+',
+            ],
+            [
+              'Countries where MA customers operate',
+              '165+',
+            ],
+          ],
+          emphasis: [
+            0,
+            9,
+          ],
+          note: 'The nine categories sum to EXACTLY 14,800 \u2014 a rare case of a disclosure table reconciling to the digit. Note the composition: corporates and professional services are 45.3% of the customer base, far larger than commercial banks at 17.6%. MA is NOT primarily a bank-facing business, which matters because it means the segment is less correlated with financial-sector cycles than the ratings franchise it sits alongside.',
+        },
+        {
+          title: 'RESTRUCTURING \u00b7 TWO PROGRAMMES, ONE MUCH LARGER ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+            'FY2022',
+            'Cumulative',
+          ],
+          rows: [
+            [
+              '2022\u201323 GEOLOCATION PROGRAMME',
+              '',
+              '',
+              '',
+              '',
+            ],
+            [
+              'Employee termination costs',
+              '14',
+              '51',
+              '85',
+              '150',
+            ],
+            [
+              'Real estate related costs',
+              '\u2014',
+              '36',
+              '27',
+              '63',
+            ],
+            [
+              'Other costs',
+              '\u2014',
+              '\u2014',
+              '1',
+              '1',
+            ],
+            [
+              'Total geolocation programme',
+              '14',
+              '87',
+              '113',
+              '214',
+            ],
+            [
+              '2024 STRATEGIC & OPERATIONAL EFFICIENCY',
+              '',
+              '',
+              '',
+              '',
+            ],
+            [
+              'Employee termination costs',
+              '41',
+              '\u2014',
+              '\u2014',
+              '41',
+            ],
+            [
+              'Other costs',
+              '4',
+              '\u2014',
+              '\u2014',
+              '4',
+            ],
+            [
+              'Total strategic programme',
+              '45',
+              '\u2014',
+              '\u2014',
+              '45',
+            ],
+            [
+              'TOTAL RESTRUCTURING',
+              '59',
+              '87',
+              '113',
+              '',
+            ],
+          ],
+          emphasis: [
+            4,
+            8,
+            9,
+          ],
+          note: 'Every row and column reconciles. The 2022\u201323 programme was a post-COVID geolocation exercise \u2014 exiting leases, relocating job functions \u2014 substantially complete by end 2023 at $214m cumulative. THE 2024 PROGRAMME IS THE LARGER ONE AND HAS BARELY STARTED: $45m recognised against total expected charges of $200\u2013250m.',
+        },
+        {
+          title: 'RESTRUCTURING LIABILITY ROLL-FORWARD ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+            'FY2022',
+          ],
+          rows: [
+            [
+              'Balance as of 1 January',
+              '36',
+              '64',
+              '\u2014',
+            ],
+            [
+              'Geolocation \u2014 cost incurred and adjustments',
+              '14',
+              '51',
+              '86',
+            ],
+            [
+              'Geolocation \u2014 cash payments',
+              '(42)',
+              '(79)',
+              '(22)',
+            ],
+            [
+              'Strategic \u2014 cost incurred and adjustments',
+              '44',
+              '\u2014',
+              '\u2014',
+            ],
+            [
+              'Strategic \u2014 cash payments',
+              '(5)',
+              '\u2014',
+              '\u2014',
+            ],
+            [
+              'BALANCE AS OF 31 DECEMBER',
+              '47',
+              '36',
+              '64',
+            ],
+          ],
+          emphasis: [
+            5,
+          ],
+          note: 'All three years reconcile. NOTE THE DIFFERENCE FROM THE EXPENSE TABLE: the liability records $86m for FY2022 against $113m of expense, and $51m against $87m in FY2023. The gap in each year is exactly the REAL ESTATE line \u2014 non-cash right-of-use and leasehold impairments that never touch a liability. Substantially all of the remaining $47m is expected to be paid in 2025.',
+        },
+        {
+          title: 'THE 2024 PROGRAMME, SIZED',
+          columns: [
+            'Component',
+            'Amount',
+            'Nature',
+          ],
+          rows: [
+            [
+              'Personnel \u2014 severance, equity modifications',
+              '$170\u2013200m',
+              'Cash',
+            ],
+            [
+              'Office lease exits',
+              '$10\u201320m',
+              'NON-CASH',
+            ],
+            [
+              'Shortened life of software assets',
+              '$20\u201330m',
+              'NON-CASH amortisation',
+            ],
+            [
+              'TOTAL EXPECTED CHARGES',
+              '$200\u2013250m',
+              '',
+            ],
+            [
+              '\u2014 recognised in FY2024',
+              '$45m',
+              '',
+            ],
+            [
+              '\u2014 still to come',
+              '$155\u2013205m',
+              '',
+            ],
+            [
+              'ANNUAL SAVINGS ONCE COMPLETE',
+              '$250\u2013300m',
+              'Recurring',
+            ],
+            [
+              'Cash outlays',
+              '$170\u2013200m through 2027',
+              '',
+            ],
+            [
+              'Substantial completion',
+              'End of 2026',
+              '',
+            ],
+          ],
+          emphasis: [
+            3,
+            6,
+          ],
+          note: 'THE PAYBACK IS ROUGHLY TEN MONTHS \u2014 $200\u2013250m of one-off charges against $250\u2013300m of recurring annual savings. That is an unusually good ratio, and it says something about where the cost sat: retiring LEGACY SOFTWARE APPLICATIONS and consolidating duplicated functions, rather than cutting into revenue-generating capacity. Moody\u2019s states savings will strengthen operating margin with some redeployed into strategic investment \u2014 so do not model the full $250\u2013300m falling to the bottom line.',
+        },
+      ],
+    },
+    customers: {
+      mainCustomers: 'THE CUSTOMER IS NOT THE CONSUMER, AND THAT IS THE WHOLE POINT. In MIS the ISSUERS pay \u2014 corporates, financial institutions, governments, sovereigns and structured finance sponsors \u2014 but the product only has value because INVESTORS rely on it. Moody\u2019s says so directly: investors seek its opinions and particularly value the knowledge of its analysts and the depth of its research. In MA the relationship is conventional: 14,800+ paying subscribers across 165+ countries, weighted toward corporates and professional services rather than banks.',
+      distributionNetwork: [
+        'MIS ratings published globally and consumed by institutional investors worldwide \u2014 the distribution is the market itself.',
+        'Ratings embedded in investment mandates, regulatory capital frameworks and index eligibility rules, which is what makes demand largely non-discretionary.',
+        'MA delivered as cloud-based subscription software embedded into customer workflows for monitoring, compliance and reporting under global regulations.',
+        'MIS ratings feeds flow INTO the MA data platform \u2014 an internal distribution channel no standalone data vendor can replicate.',
+        'Approximately 16,000 employees across more than 40 countries.',
+        'Moody\u2019s Local expanding the domestic ratings footprint in Latin America.',
+        'Increased majority stake in the GCR Africa affiliate.',
+        'ICRA in India, contributing both ratings and non-ratings operations.',
+      ],
+    },
+    reinvestment: {
+      headline: 'Invest with intent to grow and scale',
+      breakdown: [
+        {
+          label: 'Grow and strengthen the core',
+          amount: 'Credibility, transparency, technology, data, analytics',
+          detail: 'The stated first priority. For a business whose product is an opinion, "credibility and transparency" are not soft words \u2014 they are the asset being maintained. Illustrative investments named: enhancements to ratings quality and product extensions.',
+        },
+        {
+          label: 'Integrated solutions',
+          amount: 'Multiple risks, one view',
+          detail: 'Letting customers manage multiple risks by bringing together Moody\u2019s capabilities. The stated logic is that risks are interconnected \u2014 supply chain failures, cyberattacks, geopolitical tension, sanctions, extreme weather \u2014 and customers want a complete view rather than eight separate vendors.',
+        },
+        {
+          label: 'Scale in priority growth markets',
+          amount: 'Emerging markets',
+          detail: 'Expansion in emerging markets with differentiated products. Concrete moves: increased majority stake in GCR Africa, and Moody\u2019s Local extending domestic ratings in Latin America. Developing capital markets is named as one of three MIS growth building blocks.',
+        },
+        {
+          label: 'New products, content and technology \u2014 including Gen AI',
+          amount: 'The stated technology bet',
+          detail: 'Generative AI appears in both the strategy and the growth outlook. The argument Moody\u2019s makes is the interesting one: PROPRIETARY, TRUSTED DATA BECOMES MORE VALUABLE IN A GEN AI WORLD, not less, because models are only as good as what they are grounded in. Whether that holds is the central question for the MA segment.',
+        },
+        {
+          label: 'Acquisitions, joint ventures and partnerships',
+          amount: 'Extend ownership and participation',
+          detail: 'Investments that extend ownership and participation in joint ventures, plus acquisitions and strategic partnerships that accelerate the ability to scale. Moody\u2019s explicitly pairs internally-led organic development with targeted acquisition.',
+        },
+        {
+          label: 'Execution priorities',
+          amount: 'Customer first \u00b7 people and culture \u00b7 collaborate and modernise',
+          detail: 'The three stated execution priorities beneath the growth strategy. "Collaborate, modernise and innovate" is the one with a price attached \u2014 the 2024 restructuring programme retires legacy software applications, which is modernisation with a $200\u2013250m charge on it.',
+        },
+      ],
+      note: 'The growth outlook names the drivers explicitly: global economic health and capital markets activity, fiscal and monetary policy shifts, business investment, M&A and REFINANCING NEEDS, expansion of the data and analytics market, DISINTERMEDIATION OF CREDIT MARKETS as borrowing shifts from banks to capital markets, and advances in Gen AI. Disintermediation is the most important of those for MIS \u2014 every dollar that moves from a bank loan to a public bond is a dollar that needs rating.',
+    },
+  },
+  moat: {
+    preamble: 'Moody\u2019s moat is unlike anything else in this coverage. It is not scale economics, network effects in the usual sense, or switching costs. IT IS INSTITUTIONALISED CREDIBILITY: a Moody\u2019s rating is written into investment mandates, regulatory capital rules and index eligibility, so an issuer wanting the widest possible buyer base has little practical choice but to buy one. That position took 115 years and cannot be bought. The vulnerability is the mirror image \u2014 the same official recognition that creates the demand could be reduced by the regulators who granted it, and most of the revenue only arrives when someone actually issues debt.',
+    summary: {
+      headline: 'A duopoly selling credibility into a market where the buyer is compelled and the payer is conflicted',
+      breakdown: [
+        {
+          division: 'MIS \u00b7 the ratings franchise',
+          moatStrength: 'Very Strong',
+          biggestRisk: '$75.8 trillion of rated debt across 33,300+ entities using 190+ methodologies, built over 115 years. No competitor can accumulate that record, and no issuer can self-certify. The risk is not a rival agency \u2014 it is regulatory reduction of mandated reliance on ratings, which would attack the demand rather than the supplier.',
+        },
+        {
+          division: 'The issuance cycle',
+          moatStrength: 'Weak \u2014 the structural cyclicality',
+          biggestRisk: 'THE MAJORITY OF MIS REVENUE IS ISSUER-PAID ON DEBT ISSUANCE. When issuance stops, the transactional revenue stops with it, and only the recurring monitoring fees continue. This is a high-quality business with a genuinely cyclical top line, and the cycle is set by interest rates and refinancing walls that Moody\u2019s does not control.',
+        },
+        {
+          division: 'Recurring monitoring fees',
+          moatStrength: 'Strong',
+          biggestRisk: 'Annual fees on debt monitoring, bank ratings, insurance and mutual funds provide the floor under the cycle. Moody\u2019s describes this as partial stability \u2014 the honest word, since it cushions rather than removes the cyclicality.',
+        },
+        {
+          division: 'MA \u00b7 data and information',
+          moatStrength: 'Strong',
+          biggestRisk: 'The world\u2019s largest database on companies and credit, fed partly BY THE RATINGS BUSINESS ITSELF. That internal feed is a real structural edge over any standalone data vendor. The exposure is that data businesses compete on product against well-funded specialists, not on regulatory position.',
+        },
+        {
+          division: 'MA \u00b7 decision solutions',
+          moatStrength: 'Strong',
+          biggestRisk: 'Cloud subscription tools embedded in lending, underwriting, KYC and compliance workflows. Embedded workflow software is far harder to rip out than a data feed, and it converts a cyclical company into a partly contracted one. This is the most important thing happening at Moody\u2019s that is not the ratings business.',
+        },
+        {
+          division: 'Private credit',
+          moatStrength: 'The contested one',
+          biggestRisk: 'Moody\u2019s lists private credit among the evolving risks it will build new coverage for \u2014 framed as an opportunity. Read it the other way as well: private credit BY CONSTRUCTION routes borrowing away from public markets, and a privately placed loan between a fund and a borrower need not be rated at all. If disintermediation from banks to capital markets is the tailwind, disintermediation from public markets to private funds is the offsetting headwind, and both are running at once.',
+        },
+        {
+          division: 'The issuer-pays conflict',
+          moatStrength: 'Structural, permanent',
+          biggestRisk: 'The issuer pays for an opinion whose value depends entirely on investors believing it is independent. That tension survived 2008 and is now heavily regulated, but it never goes away, and it is the reason this business faces conduct regulation that an ordinary data company does not.',
+        },
+        {
+          division: 'Beyond credit \u2014 ESG, climate, cyber, supply chain',
+          moatStrength: 'Moderate',
+          biggestRisk: 'The integrated-risk expansion is the growth story, covering properties, securities, people, economies, ESG and climate. But outside credit Moody\u2019s has no incumbency and no regulatory mandate \u2014 it competes on product merit against specialists, exactly as Visa and Mastercard do in value-added services.',
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG', tickerDisplay: 'GOOG / GOOGL',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
@@ -45318,7 +45830,7 @@ const COVERAGE_DATA = [
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: MA_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: MCO_BREAKDOWN , tier: 2, progress: 'research' },
   { ticker: 'SPGI',  name: 'S&P Global',                     industry: 'Financial Services', country: 'United States', marketCap: 130000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Ratings, indices and market data — a toll booth on global capital markets.', breakdown: SPGI_BREAKDOWN },
 
   // === MEDIA/PRESS · USA ===
