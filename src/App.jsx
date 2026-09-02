@@ -39636,7 +39636,7 @@ const V_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════
-// MA_BREAKDOWN — Mastercard Incorporated Coverage data (Tier 2, drop 1)
+// MA_BREAKDOWN — Mastercard Incorporated Coverage data (Tier 1)
 // SOURCE: Muzz's supplied Item 1 material — overview, payment network and
 // the four-party transaction, strategy and the three priorities, payment
 // products and applications, security and franchise. FY2024 (year end
@@ -39644,7 +39644,7 @@ const V_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, RISKS,
 // DERIVATIVES, COMMITMENTS.
-// TABS DARK: BALANCE, CASH FLOW, THESIS.
+// TABS DARK: THESIS only.
 //
 // THE COMPARISON THIS BUILD EXISTS FOR: Mastercard switches ~70% of its own
 // branded transactions against Visa's 77.2% (234bn of 303bn), so its
@@ -42572,6 +42572,1713 @@ const MA_BREAKDOWN = {
         },
       ],
     },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 5747,
+          },
+          {
+            year: 2016,
+            value: 6721,
+          },
+          {
+            year: 2017,
+            value: 5933,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 9982,
+          },
+          {
+            year: 2019,
+            value: 6988,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 10113,
+          },
+          {
+            year: 2021,
+            value: 7421,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 7008,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 8588,
+          },
+          {
+            year: 2024,
+            value: 8442,
+            down: true,
+          },
+        ],
+        note: 'Volatile rather than trending \u2014 peaks in FY2018 and FY2020, troughs either side. $8,442m at FY2024.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1079,
+          },
+          {
+            year: 2016,
+            value: 1416,
+          },
+          {
+            year: 2017,
+            value: 1969,
+          },
+          {
+            year: 2018,
+            value: 2276,
+          },
+          {
+            year: 2019,
+            value: 2514,
+          },
+          {
+            year: 2020,
+            value: 2646,
+          },
+          {
+            year: 2021,
+            value: 3006,
+          },
+          {
+            year: 2022,
+            value: 3425,
+          },
+          {
+            year: 2023,
+            value: 4060,
+          },
+          {
+            year: 2024,
+            value: 3773,
+            down: true,
+          },
+        ],
+        note: 'Grew 250% over nine years, then FELL 7.1% in FY2024 \u2014 the first decline in the series.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 10984,
+          },
+          {
+            year: 2016,
+            value: 13228,
+          },
+          {
+            year: 2017,
+            value: 13797,
+          },
+          {
+            year: 2018,
+            value: 16171,
+          },
+          {
+            year: 2019,
+            value: 16902,
+          },
+          {
+            year: 2020,
+            value: 19113,
+          },
+          {
+            year: 2021,
+            value: 16949,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 16606,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 18961,
+          },
+          {
+            year: 2024,
+            value: 19724,
+          },
+        ],
+        note: 'Grew 80% over nine years, well behind total assets at 196%.',
+      },
+      ppeNet: {
+        label: 'Property, Equipment & Right-of-Use Assets, net',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 675,
+          },
+          {
+            year: 2016,
+            value: 733,
+          },
+          {
+            year: 2017,
+            value: 829,
+          },
+          {
+            year: 2018,
+            value: 921,
+          },
+          {
+            year: 2019,
+            value: 1828,
+          },
+          {
+            year: 2020,
+            value: 1902,
+          },
+          {
+            year: 2021,
+            value: 1907,
+          },
+          {
+            year: 2022,
+            value: 2006,
+          },
+          {
+            year: 2023,
+            value: 2061,
+          },
+          {
+            year: 2024,
+            value: 2138,
+          },
+        ],
+        note: 'Only $2,138m of physical assets. The step up in FY2019 from $921m to $1,828m is the adoption of right-of-use lease accounting, not a building programme. PP&E is 4.4% of total assets \u2014 almost identical to Visa\u2019s 4.0%. Both are asset-light in the same way.',
+      },
+      goodwill: {
+        label: 'Goodwill',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1891,
+          },
+          {
+            year: 2016,
+            value: 1756,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 3035,
+          },
+          {
+            year: 2018,
+            value: 2904,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 4021,
+          },
+          {
+            year: 2020,
+            value: 4960,
+          },
+          {
+            year: 2021,
+            value: 7662,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 7522,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 7660,
+          },
+          {
+            year: 2024,
+            value: 9193,
+          },
+        ],
+        note: 'Grew 386% to $9,193m, and JUMPED 20.0% IN FY2024 on the Recorded Future acquisition. Goodwill plus intangibles is 30.4% of total assets, against 48.5% at Visa \u2014 Mastercard has bought less, and smaller.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 16250,
+          },
+          {
+            year: 2016,
+            value: 18675,
+          },
+          {
+            year: 2017,
+            value: 21329,
+          },
+          {
+            year: 2018,
+            value: 24860,
+          },
+          {
+            year: 2019,
+            value: 29236,
+          },
+          {
+            year: 2020,
+            value: 33584,
+          },
+          {
+            year: 2021,
+            value: 37669,
+          },
+          {
+            year: 2022,
+            value: 38724,
+          },
+          {
+            year: 2023,
+            value: 42448,
+          },
+          {
+            year: 2024,
+            value: 48081,
+          },
+        ],
+        note: 'Grew 196% over nine years and rose EVERY year. Liabilities plus equity plus redeemable non-controlling interest reconciles to this in nine of ten years \u2014 FY2022 is out by $3m.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 472,
+          },
+          {
+            year: 2016,
+            value: 609,
+          },
+          {
+            year: 2017,
+            value: 933,
+          },
+          {
+            year: 2018,
+            value: 537,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 489,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 527,
+          },
+          {
+            year: 2021,
+            value: 738,
+          },
+          {
+            year: 2022,
+            value: 926,
+          },
+          {
+            year: 2023,
+            value: 834,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 929,
+          },
+        ],
+        note: 'Trivially small at $929m \u2014 Mastercard buys almost nothing physical. Visa\u2019s is $479m.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 6269,
+          },
+          {
+            year: 2016,
+            value: 7206,
+          },
+          {
+            year: 2017,
+            value: 8793,
+          },
+          {
+            year: 2018,
+            value: 11593,
+          },
+          {
+            year: 2019,
+            value: 11904,
+          },
+          {
+            year: 2020,
+            value: 11847,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 13162,
+          },
+          {
+            year: 2022,
+            value: 14171,
+          },
+          {
+            year: 2023,
+            value: 16284,
+          },
+          {
+            year: 2024,
+            value: 19920,
+          },
+        ],
+        note: 'Grew 218% \u2014 nearly three times faster than current assets at 80%.',
+      },
+      currentRatio: {
+        label: 'Current Liabilities / Current Assets',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 0.57,
+          },
+          {
+            year: 2016,
+            value: 0.54,
+          },
+          {
+            year: 2017,
+            value: 0.64,
+          },
+          {
+            year: 2018,
+            value: 0.72,
+          },
+          {
+            year: 2019,
+            value: 0.7,
+          },
+          {
+            year: 2020,
+            value: 0.62,
+          },
+          {
+            year: 2021,
+            value: 0.78,
+          },
+          {
+            year: 2022,
+            value: 0.85,
+          },
+          {
+            year: 2023,
+            value: 0.86,
+          },
+          {
+            year: 2024,
+            value: 1.01,
+          },
+        ],
+        note: 'ROSE FROM 0.57x TO 1.01x \u2014 current liabilities now EXCEED current assets for the first time. Visa\u2019s equivalent is 0.78x. Not a liquidity problem for a business generating $14.8bn of operating cash flow, but the trend is one direction and worth watching.',
+      },
+      longTermDebt: {
+        label: 'Long-Term Debt \u2014 FY2019 onward only',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2019,
+            value: 8527,
+          },
+          {
+            year: 2020,
+            value: 12023,
+          },
+          {
+            year: 2021,
+            value: 13109,
+          },
+          {
+            year: 2022,
+            value: 13749,
+          },
+          {
+            year: 2023,
+            value: 14344,
+          },
+          {
+            year: 2024,
+            value: 17476,
+          },
+        ],
+        note: 'LONG-TERM DEBT IS NOT CARRIED FOR FY2015\u2013FY2018 AND HERE IS WHY. In those four years the supplied long-term debt figures are IDENTICAL to total current liabilities \u2014 6,269 / 7,206 / 8,793 / 11,593 in both columns. Four consecutive exact matches is a transcription error, not a coincidence, and from FY2019 the two columns diverge normally. Every ratio built on those years (long-term debt to equity, to net income, and the combined-liability ratios) inherits the error and should not be used before FY2019. On the years that are usable, debt grew 105% from $8,527m to $17,476m, including a 21.8% jump in FY2024. Against $12,874m of net income that is 1.36x \u2014 conservative in absolute terms, though the trend is upward.',
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 10188,
+          },
+          {
+            year: 2016,
+            value: 12991,
+          },
+          {
+            year: 2017,
+            value: 15761,
+          },
+          {
+            year: 2018,
+            value: 19371,
+          },
+          {
+            year: 2019,
+            value: 23245,
+          },
+          {
+            year: 2020,
+            value: 27067,
+          },
+          {
+            year: 2021,
+            value: 30257,
+          },
+          {
+            year: 2022,
+            value: 32347,
+          },
+          {
+            year: 2023,
+            value: 35451,
+          },
+          {
+            year: 2024,
+            value: 41566,
+          },
+        ],
+        note: 'Grew 308% against equity growth of just 7.5%. That gap is the buyback programme.',
+      },
+      debtToEquity: {
+        label: 'Total Liabilities to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2015,
+            value: 1.68,
+          },
+          {
+            year: 2016,
+            value: 2.29,
+          },
+          {
+            year: 2017,
+            value: 2.87,
+          },
+          {
+            year: 2018,
+            value: 3.57,
+          },
+          {
+            year: 2019,
+            value: 3.93,
+          },
+          {
+            year: 2020,
+            value: 4.17,
+          },
+          {
+            year: 2021,
+            value: 4.1,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 5.09,
+          },
+          {
+            year: 2023,
+            value: 5.08,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 6.38,
+          },
+        ],
+        note: 'ROSE FROM 1.68x TO 6.38x. Visa\u2019s is 0.43x. THE DIFFERENCE IS ALMOST ENTIRELY THE DENOMINATOR: Mastercard\u2019s equity is $6.5bn because buybacks have retired so much stock, while Visa\u2019s is $39.1bn. This ratio says far more about capital return policy than about leverage.',
+      },
+      additionalPaidInCapital: {
+        label: 'Additional Paid-In Capital',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 4004,
+          },
+          {
+            year: 2016,
+            value: 4183,
+          },
+          {
+            year: 2017,
+            value: 4365,
+          },
+          {
+            year: 2018,
+            value: 4580,
+          },
+          {
+            year: 2019,
+            value: 4787,
+          },
+          {
+            year: 2020,
+            value: 4982,
+          },
+          {
+            year: 2021,
+            value: 5061,
+          },
+          {
+            year: 2022,
+            value: 5298,
+          },
+          {
+            year: 2023,
+            value: 5893,
+          },
+          {
+            year: 2024,
+            value: 6642,
+          },
+        ],
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 16222,
+          },
+          {
+            year: 2016,
+            value: 19418,
+          },
+          {
+            year: 2017,
+            value: 22364,
+          },
+          {
+            year: 2018,
+            value: 27283,
+          },
+          {
+            year: 2019,
+            value: 33984,
+          },
+          {
+            year: 2020,
+            value: 38747,
+          },
+          {
+            year: 2021,
+            value: 45648,
+          },
+          {
+            year: 2022,
+            value: 53607,
+          },
+          {
+            year: 2023,
+            value: 62564,
+          },
+          {
+            year: 2024,
+            value: 72907,
+          },
+        ],
+        note: 'Grew $56,685m over nine years against $74,856m of cumulative net income \u2014 a 75.7% retention rate. THE BUFFETT TEST: market value grew roughly $380,000m over the same period, implying $6.70 of market value per $1 retained, against Alphabet at $13.98 and VISA AT $79.14. Do not read that spread as an economic difference. Mastercard charges buybacks to TREASURY STOCK so retained earnings keep compounding; Visa\u2019s accumulated income actually FELL in FY2024. Same behaviour, different presentation, and the test is measuring the presentation.',
+      },
+      shareholderEquity: {
+        label: 'Total Stockholders\u2019 Equity',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 6062,
+          },
+          {
+            year: 2016,
+            value: 5684,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 5497,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 5418,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 5917,
+          },
+          {
+            year: 2020,
+            value: 6488,
+          },
+          {
+            year: 2021,
+            value: 7383,
+          },
+          {
+            year: 2022,
+            value: 6359,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 6975,
+          },
+          {
+            year: 2024,
+            value: 6515,
+            down: true,
+          },
+        ],
+        note: 'GREW JUST 7.5% IN NINE YEARS \u2014 $6,062m to $6,515m \u2014 while net income grew 238%. Additional paid-in capital of $6,642m plus retained earnings of $72,907m totals $79,549m, against equity of $6,515m, implying about $73,034m of treasury stock and accumulated other comprehensive loss. Mastercard has retired roughly its entire book value in repurchased shares.',
+      },
+      bookValuePerShare: {
+        label: 'Book Value Per Share',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 5.33,
+          },
+          {
+            year: 2016,
+            value: 5.16,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 5.13,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 5.17,
+          },
+          {
+            year: 2019,
+            value: 5.79,
+          },
+          {
+            year: 2020,
+            value: 6.45,
+          },
+          {
+            year: 2021,
+            value: 7.44,
+          },
+          {
+            year: 2022,
+            value: 6.55,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 7.37,
+          },
+          {
+            year: 2024,
+            value: 7.03,
+            down: true,
+          },
+        ],
+        note: '$5.33 to $7.03, a 3.1% CAGR \u2014 far below earnings growth, and it FELL in FY2024. Book value is close to meaningless as a valuation anchor here.',
+      },
+      investedCapital: {
+        label: 'Invested Capital \u2014 SEE THE WARNING',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 19719,
+          },
+          {
+            year: 2016,
+            value: 17576,
+          },
+          {
+            year: 2017,
+            value: 17545,
+          },
+          {
+            year: 2018,
+            value: 17086,
+          },
+          {
+            year: 2019,
+            value: 11624,
+          },
+          {
+            year: 2020,
+            value: 10344,
+          },
+          {
+            year: 2021,
+            value: 3285,
+          },
+          {
+            year: 2022,
+            value: 6603,
+          },
+          {
+            year: 2023,
+            value: 4748,
+          },
+          {
+            year: 2024,
+            value: 4234,
+          },
+        ],
+        note: 'CARRIED AS SUPPLIED BUT NOT RELIABLE. Invested capital is shown FALLING 79%, from $19,719m to $4,234m, while total assets TRIPLED from $16,250m to $48,081m. That direction is implausible on any standard definition, and the series does not reconcile to the balance sheet lines above.',
+      },
+      extraLines: [
+        {
+          label: 'Return on Invested Capital \u2014 SEE THE WARNING',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 312,
+            },
+            {
+              year: 2016,
+              value: 244,
+            },
+            {
+              year: 2017,
+              value: 159,
+            },
+            {
+              year: 2018,
+              value: 257,
+            },
+            {
+              year: 2019,
+              value: 65,
+            },
+            {
+              year: 2020,
+              value: 69,
+            },
+            {
+              year: 2021,
+              value: 37,
+            },
+            {
+              year: 2022,
+              value: 18,
+            },
+            {
+              year: 2023,
+              value: 21,
+            },
+            {
+              year: 2024,
+              value: 20,
+            },
+          ],
+          note: 'NOT REPRODUCIBLE FROM THE SUPPLIED INPUTS, AND THE YEAR LABELS APPEAR REVERSED. Stated ROIC runs 312% in FY2015 down to 20% in FY2024 \u2014 the opposite direction to every other return metric, since ROE rose from 62.8% to 197.6% over the same period. Net income divided by the stated invested capital gives 19.3% for FY2015 and 304.1% for FY2024, which is close to the stated series read backwards. Use ROE and ROA instead: both tie exactly in all ten years.',
+        },
+        {
+          label: 'Return on Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 62.8,
+            },
+            {
+              year: 2016,
+              value: 71.4,
+            },
+            {
+              year: 2017,
+              value: 71.2,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 108.1,
+            },
+            {
+              year: 2019,
+              value: 137.2,
+            },
+            {
+              year: 2020,
+              value: 98.8,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 117.7,
+            },
+            {
+              year: 2022,
+              value: 156.2,
+            },
+            {
+              year: 2023,
+              value: 160.5,
+            },
+            {
+              year: 2024,
+              value: 197.6,
+            },
+          ],
+          note: '197.6% in FY2024 \u2014 arithmetically correct and economically meaningless in isolation, because equity is only $6.5bn. Visa\u2019s 50.4% is on a $39.1bn base. Ties exactly in all ten years.',
+        },
+        {
+          label: 'Return on Assets',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 23.4,
+            },
+            {
+              year: 2016,
+              value: 21.7,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 18.4,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 23.6,
+            },
+            {
+              year: 2019,
+              value: 27.8,
+            },
+            {
+              year: 2020,
+              value: 19.1,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 23.1,
+            },
+            {
+              year: 2022,
+              value: 25.6,
+            },
+            {
+              year: 2023,
+              value: 26.4,
+            },
+            {
+              year: 2024,
+              value: 26.8,
+            },
+          ],
+          note: '26.8%, up from 23.4%. THE HONEST COMPARISON: Visa earns 20.9%. On assets \u2014 the one base neither company has engineered away \u2014 Mastercard earns MORE. Ties exactly in all ten years.',
+        },
+        {
+          label: 'Restricted Security Deposits Held for Customers \u2014 ASSET',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 895,
+            },
+            {
+              year: 2016,
+              value: 991,
+            },
+            {
+              year: 2017,
+              value: 1085,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1080,
+            },
+            {
+              year: 2019,
+              value: 1370,
+            },
+            {
+              year: 2020,
+              value: 1696,
+            },
+            {
+              year: 2021,
+              value: 1873,
+            },
+            {
+              year: 2022,
+              value: 1568,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 1845,
+            },
+            {
+              year: 2024,
+              value: 1874,
+              down: true,
+            },
+          ],
+        },
+        {
+          label: 'Restricted Security Deposits Held for Customers \u2014 LIABILITY',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 895,
+            },
+            {
+              year: 2016,
+              value: 991,
+            },
+            {
+              year: 2017,
+              value: 1085,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1080,
+            },
+            {
+              year: 2019,
+              value: 1370,
+            },
+            {
+              year: 2020,
+              value: 1696,
+            },
+            {
+              year: 2021,
+              value: 1873,
+            },
+            {
+              year: 2022,
+              value: 1568,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 1845,
+            },
+            {
+              year: 2024,
+              value: 1874,
+              down: true,
+            },
+          ],
+          note: 'IDENTICAL ON BOTH SIDES IN ALL TEN YEARS \u2014 collateral Mastercard holds from customers and owes straight back. It inflates assets and liabilities by $1,874m with no economic substance. Visa has the same item at $3,524m. This is the balance-sheet trace of the settlement guarantee: the $13,466m of risk mitigation in the COMMITMENTS tab is mostly held elsewhere.',
+        },
+        {
+          label: 'Restricted Cash for Litigation Settlement',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 541,
+            },
+            {
+              year: 2016,
+              value: 543,
+            },
+            {
+              year: 2017,
+              value: 546,
+            },
+            {
+              year: 2018,
+              value: 553,
+            },
+            {
+              year: 2019,
+              value: 584,
+            },
+            {
+              year: 2020,
+              value: 596,
+            },
+            {
+              year: 2021,
+              value: 586,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 589,
+            },
+          ],
+          note: 'Ran $541m to $589m through FY2022 and then DISAPPEARS \u2014 no figure for FY2023 or FY2024. Compare Visa, whose litigation escrow GREW to $3,089m over the same period. Different structures: Visa pre-funds through escrow, Mastercard accrues and pays.',
+        },
+        {
+          label: 'Settlement Assets',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2021,
+              value: 1319,
+            },
+            {
+              year: 2022,
+              value: 1270,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 1233,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 1821,
+            },
+          ],
+          note: 'Reported under this name from FY2021; before that "settlement due from customers". Rose 47.7% in FY2024.',
+        },
+        {
+          label: 'Settlement Obligations',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2021,
+              value: 913,
+            },
+            {
+              year: 2022,
+              value: 1111,
+            },
+            {
+              year: 2023,
+              value: 1399,
+            },
+            {
+              year: 2024,
+              value: 2316,
+            },
+          ],
+          note: 'Rose 65.5% in FY2024 to $2,316m, against settlement assets of $1,821m \u2014 a net $495m obligation. These are the mechanical flows behind the $64.9bn settlement guarantee.',
+        },
+        {
+          label: 'Other Intangible Assets, net',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 803,
+            },
+            {
+              year: 2016,
+              value: 722,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1120,
+            },
+            {
+              year: 2018,
+              value: 991,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 1417,
+            },
+            {
+              year: 2020,
+              value: 1753,
+            },
+            {
+              year: 2021,
+              value: 3671,
+            },
+            {
+              year: 2022,
+              value: 3859,
+            },
+            {
+              year: 2023,
+              value: 4086,
+            },
+            {
+              year: 2024,
+              value: 5435,
+            },
+          ],
+          note: 'Grew 577% to $5,435m, up 33.0% in FY2024 on Recorded Future.',
+        },
+        {
+          label: 'Other Assets',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1580,
+            },
+            {
+              year: 2016,
+              value: 1929,
+            },
+            {
+              year: 2017,
+              value: 2298,
+            },
+            {
+              year: 2018,
+              value: 3303,
+            },
+            {
+              year: 2019,
+              value: 4525,
+            },
+            {
+              year: 2020,
+              value: 5365,
+            },
+            {
+              year: 2021,
+              value: 6994,
+            },
+            {
+              year: 2022,
+              value: 7580,
+            },
+            {
+              year: 2023,
+              value: 8325,
+            },
+            {
+              year: 2024,
+              value: 9959,
+            },
+          ],
+          note: 'Grew 530% to $9,959m and rose every year \u2014 now 20.7% of total assets, the second-largest asset category after current assets. Large and undisclosed in composition.',
+        },
+        {
+          label: 'Accrued Expenses',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 2763,
+            },
+            {
+              year: 2016,
+              value: 3318,
+            },
+            {
+              year: 2017,
+              value: 3931,
+            },
+            {
+              year: 2018,
+              value: 4747,
+            },
+            {
+              year: 2019,
+              value: 5489,
+            },
+            {
+              year: 2020,
+              value: 5430,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 6642,
+            },
+            {
+              year: 2022,
+              value: 7801,
+            },
+            {
+              year: 2023,
+              value: 8517,
+            },
+            {
+              year: 2024,
+              value: 10393,
+            },
+          ],
+          note: 'THE LARGEST LIABILITY LINE at $10,393m \u2014 bigger than long-term debt. Grew 276% and jumped 22.0% in FY2024. This is where rebates and incentives payable would sit.',
+        },
+        {
+          label: 'Accrued Litigation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 709,
+            },
+            {
+              year: 2016,
+              value: 722,
+            },
+            {
+              year: 2017,
+              value: 709,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1591,
+            },
+            {
+              year: 2019,
+              value: 914,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 842,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 840,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1094,
+            },
+            {
+              year: 2023,
+              value: 723,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 930,
+            },
+          ],
+          note: '$930m at FY2024. Note this EXCEEDS the $903m of identified accruals in the COMMITMENTS tab, so roughly $27m relates to matters not separately disclosed.',
+        },
+        {
+          label: 'Other Liabilities \u2014 non-current',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 572,
+            },
+            {
+              year: 2016,
+              value: 524,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1438,
+            },
+            {
+              year: 2018,
+              value: 1877,
+            },
+            {
+              year: 2019,
+              value: 2729,
+            },
+            {
+              year: 2020,
+              value: 3111,
+            },
+            {
+              year: 2021,
+              value: 3591,
+            },
+            {
+              year: 2022,
+              value: 4034,
+            },
+            {
+              year: 2023,
+              value: 4474,
+            },
+            {
+              year: 2024,
+              value: 4553,
+            },
+          ],
+          note: 'Grew 696% to $4,553m.',
+        },
+        {
+          label: 'Redeemable Non-Controlling Interest',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2017,
+              value: 71,
+            },
+            {
+              year: 2018,
+              value: 71,
+            },
+            {
+              year: 2019,
+              value: 74,
+            },
+            {
+              year: 2020,
+              value: 29,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 29,
+            },
+            {
+              year: 2022,
+              value: 21,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 22,
+            },
+          ],
+          note: 'Small and now nil. Sits between liabilities and equity, which is why the balance sheet only reconciles when it is included.',
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Cash from Operations',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 4135,
+          },
+          {
+            year: 2014,
+            value: 3407,
+            down: true,
+          },
+          {
+            year: 2015,
+            value: 4043,
+          },
+          {
+            year: 2016,
+            value: 4637,
+          },
+          {
+            year: 2017,
+            value: 5664,
+          },
+          {
+            year: 2018,
+            value: 6223,
+          },
+          {
+            year: 2019,
+            value: 8183,
+          },
+          {
+            year: 2020,
+            value: 7224,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 9463,
+          },
+          {
+            year: 2022,
+            value: 11195,
+          },
+          {
+            year: 2023,
+            value: 11980,
+          },
+          {
+            year: 2024,
+            value: 14780,
+          },
+        ],
+        note: 'Grew 257% over eleven years, from $4,135m to $14,780m, with two down years \u2014 FY2014 and FY2020. UP 23.4% IN FY2024, the fastest growth in the series. Cash conversion is 1.15x net income, against VISA AT 1.01x \u2014 Mastercard converts earnings to cash better, and Visa\u2019s ratio was falling.',
+      },
+      capex: {
+        label: 'Capital Expenditures',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 299,
+          },
+          {
+            year: 2014,
+            value: 334,
+          },
+          {
+            year: 2015,
+            value: 342,
+          },
+          {
+            year: 2016,
+            value: 382,
+          },
+          {
+            year: 2017,
+            value: 423,
+          },
+          {
+            year: 2018,
+            value: 504,
+          },
+          {
+            year: 2019,
+            value: 731,
+          },
+          {
+            year: 2020,
+            value: 708,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 814,
+          },
+          {
+            year: 2022,
+            value: 1077,
+          },
+          {
+            year: 2023,
+            value: 1088,
+          },
+          {
+            year: 2024,
+            value: 1194,
+          },
+        ],
+        note: '$1,194m \u2014 grew 299% over eleven years, roughly in line with operating cash flow, so the ratio has been stable rather than rising.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2013,
+            value: 7.23,
+          },
+          {
+            year: 2014,
+            value: 9.8,
+          },
+          {
+            year: 2015,
+            value: 8.46,
+          },
+          {
+            year: 2016,
+            value: 8.24,
+          },
+          {
+            year: 2017,
+            value: 7.47,
+          },
+          {
+            year: 2018,
+            value: 8.1,
+          },
+          {
+            year: 2019,
+            value: 8.93,
+          },
+          {
+            year: 2020,
+            value: 9.8,
+          },
+          {
+            year: 2021,
+            value: 8.6,
+          },
+          {
+            year: 2022,
+            value: 9.62,
+          },
+          {
+            year: 2023,
+            value: 9.08,
+          },
+          {
+            year: 2024,
+            value: 8.08,
+          },
+        ],
+        note: 'REMARKABLY STABLE AT 7.2\u20139.8% FOR TWELVE YEARS, averaging 8.62% and 8.08% in FY2024. Visa runs 6.30%. Both are extraordinarily asset-light \u2014 for contrast, Alphabet\u2019s FY2025 capex was 55.5% of operating cash flow. Neither payments network needs meaningful capital to grow, which is the whole investment case.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow \u2014 derived',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2013,
+            value: 3836,
+          },
+          {
+            year: 2014,
+            value: 3073,
+            down: true,
+          },
+          {
+            year: 2015,
+            value: 3701,
+          },
+          {
+            year: 2016,
+            value: 4255,
+          },
+          {
+            year: 2017,
+            value: 5241,
+          },
+          {
+            year: 2018,
+            value: 5719,
+          },
+          {
+            year: 2019,
+            value: 7452,
+          },
+          {
+            year: 2020,
+            value: 6516,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 8649,
+          },
+          {
+            year: 2022,
+            value: 10118,
+          },
+          {
+            year: 2023,
+            value: 10892,
+          },
+          {
+            year: 2024,
+            value: 13586,
+          },
+        ],
+        note: 'Operating cash flow less capital expenditure. $13,586m in FY2024, up 24.4%. That is 48.2% OF NET REVENUE converted to free cash flow, against Visa at 52.0% \u2014 close, and the gap is smaller than the net margin gap of nine points, because Mastercard converts cash better.',
+      },
+      extraLines: [
+        {
+          label: 'Operating Cash Flow to Net Income \u2014 derived',
+          unit: 'x',
+          series: [
+            {
+              year: 2015,
+              value: 1.06,
+            },
+            {
+              year: 2016,
+              value: 1.14,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1.45,
+            },
+            {
+              year: 2018,
+              value: 1.06,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 1.01,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 1.13,
+            },
+            {
+              year: 2021,
+              value: 1.09,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1.13,
+            },
+            {
+              year: 2023,
+              value: 1.07,
+            },
+            {
+              year: 2024,
+              value: 1.15,
+            },
+          ],
+          note: '1.15x in FY2024 and above 1.0x in every year \u2014 what a business with no inventory and no credit book should produce. Visa\u2019s equivalent fell to 1.01x in FY2024, its weakest since FY2020.',
+        },
+      ],
+    },
   },
   moat: {
     preamble: 'The same two-sided network economics as Visa, at roughly 60% of the scale on dollar volume. What is distinctive here is the FRANCHISE MODEL \u2014 the contractual governance layer that sets participant standards, monitors compliance and holds licence suspension powers. Mastercard treats it as a first-class strategic asset, and it is what allows a network to enforce behaviour across parties it does not own. The weakness is the mirror image of Visa\u2019s: regulated pricing, mandated routing, and a switched share of its own branded volume that is LOWER than Visa\u2019s.',
@@ -43609,7 +45316,7 @@ const COVERAGE_DATA = [
 
   // === FINANCIAL SERVICES · USA ===
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 1, progress: 'research' },
-  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: MA_BREAKDOWN , tier: 2, progress: 'research' },
+  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: MA_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
   { ticker: 'SPGI',  name: 'S&P Global',                     industry: 'Financial Services', country: 'United States', marketCap: 130000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Ratings, indices and market data — a toll booth on global capital markets.', breakdown: SPGI_BREAKDOWN },
