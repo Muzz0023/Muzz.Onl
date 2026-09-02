@@ -45304,7 +45304,7 @@ const MA_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS (+ CYBER),
 // DERIVATIVES.
-// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
+// TABS DARK: BALANCE, CASH FLOW, THESIS.
 //
 // VERIFIED BEFORE BUILDING:
 //   the nine MA customer categories sum EXACTLY to the stated 14,800.
@@ -45892,6 +45892,102 @@ const MCO_BREAKDOWN = {
       ],
       keyTakeaway: 'TWO BUSINESSES, TWO COMPLETELY DIFFERENT COMPETITIVE POSITIONS. MIS is protected by NRSRO status, 115 years of record and the fact that ratings are written into mandates and capital rules \u2014 its real competitor is not another agency but the decision not to seek a rating at all. MA has none of that protection: it competes on product merit against diversified software and data companies, and its one structural edge is the ratings feed flowing in from the other segment. The group is often valued as a single high-quality franchise; it is actually a regulated near-duopoly bolted to a competitive software business, and the second is now the larger of the two by headcount.',
     },
+    leadership: {
+      asOf: 'Board of directors as disclosed',
+      board: [
+        {
+          name: 'Vincent A. Forlenza',
+          category: 'CHAIR OF THE BOARD \u00b7 Independent',
+          role: 'Director since April 2018 (~7 yrs) \u00b7 Chair of the Board \u00b7 former Chairman and CEO of BECTON DICKINSON, a heavily regulated medical technology company, with deep M&A experience \u00b7 sits on Compensation & HR, Executive, and Governance & Nominating \u00b7 THE CHAIR AND CEO ROLES ARE SEPARATE, and notably the Chair comes from outside financial services entirely \u2014 useful on a board where every other member is a market participant of some kind',
+        },
+        {
+          name: 'Robert Fauber',
+          category: 'President & CEO \u00b7 the only insider',
+          role: 'Director since October 2020 (~5 yrs) \u00b7 CEO since 2021 \u00b7 previously PRESIDENT OF MOODY\u2019S INVESTORS SERVICE and Chief Operating Officer of Moody\u2019s Corporation \u00b7 earlier Citigroup and NationsBank \u00b7 Executive Committee \u00b7 The one management director on a nine-person board, and he came up through the ratings franchise itself',
+        },
+        {
+          name: 'Leslie F. Seidman',
+          category: 'Independent \u00b7 FORMER FASB CHAIR',
+          role: 'Director since December 2013 (~12 yrs) \u00b7 Chairs Governance & Nominating; also on Audit and Executive \u00b7 FORMER CHAIR OF THE FINANCIAL ACCOUNTING STANDARDS BOARD \u00b7 previously accounting policy at JP Morgan and auditor at Arthur Young \u00b7 FINRA Public Governor \u00b7 CPA \u00b7 holds cyber and ESG oversight certifications \u00b7 A FORMER ACCOUNTING-STANDARDS SETTER ON THE BOARD OF A CREDIT RATING AGENCY is an unusually well-matched appointment \u2014 both institutions exist to make financial information comparable and both depend entirely on being believed',
+        },
+        {
+          name: 'Jorge A. Bermudez',
+          category: 'Independent \u00b7 AUDIT CHAIR \u00b7 former bank CRO',
+          role: 'Director since April 2011 (~14 yrs \u2014 the longest tenure) \u00b7 CHAIRS THE AUDIT COMMITTEE; also on Executive and Governance & Nominating \u00b7 former CHIEF RISK OFFICER OF CITIGROUP after decades across Citi\u2019s US and Latin American businesses \u00b7 extensive credit and risk leadership \u00b7 A career credit risk officer chairing audit at a company whose product is a credit opinion \u2014 the technical fit is exact',
+        },
+        {
+          name: 'Bruce Van Saun',
+          category: 'Independent \u00b7 sitting bank CEO \u00b7 the ISSUER view',
+          role: 'Director since March 2016 (~9 yrs) \u00b7 Chairman and CEO of CITIZENS FINANCIAL GROUP \u00b7 previously Group Finance Director of RBS, with senior roles at Bank of New York, Deutsche Bank, Wasserstein Perella and Kidder Peabody \u00b7 Compensation & HR; Governance & Nominating \u00b7 Brings the perspective of a bank that both PAYS for ratings on its own debt and USES them in its lending decisions',
+        },
+        {
+          name: 'Jose M. Minaya',
+          category: 'Independent \u00b7 asset management \u00b7 the INVESTOR view',
+          role: 'Director since October 2022 (~3 yrs) \u00b7 Global Head of BNY Investments & Wealth; CEO of NUVEEN 2020\u201324 \u00b7 Audit; Governance & Nominating \u00b7 THE INVESTOR SIDE OF THE RATINGS MARKET. In a business where the issuer pays and the investor consumes, having a large asset manager\u2019s former CEO on the board is the structural counterweight to Van Saun\u2019s issuer perspective',
+        },
+        {
+          name: 'Th\u00e9r\u00e8se Esperdy',
+          category: 'Independent \u00b7 Compensation Chair \u00b7 capital markets',
+          role: 'Director since March 2019 (~6 yrs) \u00b7 CHAIRS COMPENSATION & HR; also on Executive and Governance & Nominating \u00b7 global investment banking leader at JPMORGAN and LEHMAN BROTHERS with deep capital markets expertise \u00b7 Capital markets is the issuance side \u2014 the activity that generates the majority of MIS revenue \u2014 so this is direct knowledge of the cycle that drives the top line',
+        },
+        {
+          name: 'Sumit Dhawan',
+          category: 'Independent \u00b7 CYBERSECURITY \u00b7 newest director',
+          role: 'Director since July 2025 (<1 yr) \u00b7 CEO of PROOFPOINT since 2023, a cybersecurity company \u00b7 formerly President and Chief Customer Officer of VMware, with senior roles at Instart and Citrix \u00b7 25+ years in cloud and security \u00b7 Compensation & HR; Governance & Nominating \u00b7 A sitting cybersecurity CEO, added the year DORA takes effect and against a risk register naming material non-public information alongside cyber threats',
+        },
+        {
+          name: 'Zig Serafin',
+          category: 'Independent \u00b7 software and AI',
+          role: 'Director since July 2021 (~4 yrs) \u00b7 CEO and formerly President and COO of QUALTRICS \u00b7 previously Corporate Vice President at MICROSOFT \u00b7 AI, user experience and collaboration expertise \u00b7 Compensation & HR; Governance & Nominating \u00b7 Relevant to Moody\u2019s Analytics, which is now 46.5% of revenue and competes on product against software vendors with no regulatory protection',
+        },
+      ],
+      boardTakeaways: {
+        title: 'Governance assessment \u00b7 board of directors',
+        verdict: 'NINE DIRECTORS, EIGHT INDEPENDENT (88.9%) \u2014 a materially SMALLER board than Visa\u2019s or Mastercard\u2019s twelve. Average tenure is 6.72 years, almost identical to Mastercard\u2019s 6.75, ranging from Bermudez at ~14 years to Dhawan at under one. Chair and CEO are separate, and the Chair comes from outside financial services entirely. WHAT STANDS OUT IS THE FIT: a former FASB Chair on the board of a company whose product is financial information, a former Citigroup Chief Risk Officer chairing Audit at a credit rating agency, and BOTH SIDES OF THE RATINGS MARKET REPRESENTED \u2014 Van Saun from a bank that pays for ratings, Minaya from an asset manager that consumes them. For a business built on the tension between who pays and who believes, that balance is deliberate. The gaps are size and depth: nine people covering ratings, software, cyber, audit and compensation leaves several directors on three committees each.',
+        scores: [
+          {
+            label: 'Independence \u2014 8 of 9 (88.9%)',
+            rating: 'strong',
+          },
+          {
+            label: 'Chair and CEO roles separated',
+            rating: 'strong',
+          },
+          {
+            label: 'Accounting and standards expertise (Seidman, former FASB Chair)',
+            rating: 'strong',
+          },
+          {
+            label: 'Credit risk expertise (Bermudez, former Citi CRO, chairs Audit)',
+            rating: 'strong',
+          },
+          {
+            label: 'Both sides of the ratings market present (Van Saun, Minaya)',
+            rating: 'strong',
+          },
+          {
+            label: 'Capital markets and issuance cycle (Esperdy)',
+            rating: 'strong',
+          },
+          {
+            label: 'Cybersecurity and software (Dhawan, Serafin)',
+            rating: 'strong',
+          },
+          {
+            label: 'Tenure disclosed and assessable \u2014 average 6.72 yrs',
+            rating: 'strong',
+          },
+          {
+            label: 'Board size \u2014 9 against 12 at both payments networks',
+            rating: 'moderate',
+          },
+          {
+            label: 'International representation \u2014 thin for a company earning 45.9% abroad',
+            rating: 'weak',
+          },
+        ],
+      },
+    },
   },
   numbers: {
     employees: {
@@ -46041,6 +46137,856 @@ const MCO_BREAKDOWN = {
         },
       ],
       note: 'Peaked at $164,534 in FY2021 and is $129,981 now, DOWN 21.0% from peak. Visa earns $624,778 and Mastercard $364,772. The FY2016 trough of $25,094 is the ratings settlement year.',
+    },
+    segments: {
+      wmSegmentPnl: {
+        preamble: 'Revenue by segment and geography, $ millions. EVERY LEVEL RECONCILES: MA US plus non-US to MA total, MIS US plus non-US to MIS total, and MA plus MIS to total company revenue, in all nine years. This is the most important table in the Moody\u2019s build, because it separates the cyclical business from the contracted one and shows exactly what each did when the cycle turned.',
+        segments: [
+          {
+            name: 'MIS \u00b7 Moody\u2019s Investors Service',
+            type: 'Ratings \u00b7 53.5% of revenue \u00b7 CYCLICAL',
+            featured: true,
+            profitEngine: true,
+            note: 'THE 2022 COLLAPSE IS THE WHOLE ARGUMENT. MIS revenue fell 29.2% in a single year, from $3,812m to $2,699m, as debt issuance stopped on the rate shock. It has still not fully recovered: FY2024 at $3,793m is 0.5% BELOW the FY2021 peak, three years later. Two down years in nine \u2014 2018 and 2022. AND THE RECOVERY IS ENTIRELY AMERICAN: MIS US revenue of $2,446m has EXCEEDED its 2021 peak by 4.4%, while MIS non-US at $1,347m remains 8.2% BELOW. Whatever came back in 2024, it came back in the United States.',
+            metrics: [
+              {
+                label: 'MIS revenue \u2014 total',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 2370.8,
+                  },
+                  {
+                    year: 2017,
+                    value: 2773.8,
+                  },
+                  {
+                    year: 2018,
+                    value: 2712.4,
+                    down: true,
+                  },
+                  {
+                    year: 2019,
+                    value: 2875,
+                  },
+                  {
+                    year: 2020,
+                    value: 3292,
+                  },
+                  {
+                    year: 2021,
+                    value: 3812,
+                  },
+                  {
+                    year: 2022,
+                    value: 2699,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 2860,
+                  },
+                  {
+                    year: 2024,
+                    value: 3793,
+                  },
+                ],
+                note: 'Up 60% over eight years, but with a 29.2% single-year fall in the middle of it.',
+              },
+              {
+                label: 'MIS revenue \u2014 United States',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 1501.9,
+                  },
+                  {
+                    year: 2017,
+                    value: 1702.8,
+                  },
+                  {
+                    year: 2018,
+                    value: 1619.2,
+                    down: true,
+                  },
+                  {
+                    year: 2019,
+                    value: 1721,
+                  },
+                  {
+                    year: 2020,
+                    value: 2068,
+                  },
+                  {
+                    year: 2021,
+                    value: 2344,
+                  },
+                  {
+                    year: 2022,
+                    value: 1634,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 1750,
+                  },
+                  {
+                    year: 2024,
+                    value: 2446,
+                  },
+                ],
+                note: 'JUMPED 39.8% IN FY2024 ALONE, from $1,750m to $2,446m \u2014 the largest single-year move anywhere in this build. That is the refinancing wave arriving.',
+              },
+              {
+                label: 'MIS revenue \u2014 international',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 868.9,
+                  },
+                  {
+                    year: 2017,
+                    value: 1071.0,
+                  },
+                  {
+                    year: 2018,
+                    value: 1093.2,
+                  },
+                  {
+                    year: 2019,
+                    value: 1154,
+                  },
+                  {
+                    year: 2020,
+                    value: 1224,
+                  },
+                  {
+                    year: 2021,
+                    value: 1468,
+                  },
+                  {
+                    year: 2022,
+                    value: 1065,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 1110,
+                  },
+                  {
+                    year: 2024,
+                    value: 1347,
+                  },
+                ],
+                note: 'Still 8.2% below the 2021 peak. Grew just 21.4% in FY2024 against 39.8% in the US.',
+              },
+              {
+                label: 'MIS \u2014 EMEA',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 686,
+                  },
+                  {
+                    year: 2020,
+                    value: 727,
+                  },
+                  {
+                    year: 2021,
+                    value: 930,
+                  },
+                  {
+                    year: 2022,
+                    value: 648,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 679,
+                  },
+                  {
+                    year: 2024,
+                    value: 868,
+                  },
+                ],
+              },
+              {
+                label: 'MIS \u2014 Asia Pacific',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 320,
+                  },
+                  {
+                    year: 2020,
+                    value: 345,
+                  },
+                  {
+                    year: 2021,
+                    value: 357,
+                  },
+                  {
+                    year: 2022,
+                    value: 271,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 271,
+                  },
+                  {
+                    year: 2024,
+                    value: 284,
+                  },
+                ],
+                note: 'FY2024 at $284m is still 20.4% below the FY2021 peak of $357m \u2014 the weakest recovery of any region in either segment.',
+              },
+              {
+                label: 'MIS \u2014 Americas ex-US',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 148,
+                  },
+                  {
+                    year: 2020,
+                    value: 152,
+                  },
+                  {
+                    year: 2021,
+                    value: 181,
+                  },
+                  {
+                    year: 2022,
+                    value: 146,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 160,
+                  },
+                  {
+                    year: 2024,
+                    value: 195,
+                  },
+                ],
+              },
+              {
+                label: 'US share of MIS revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2016,
+                    value: 63.3,
+                  },
+                  {
+                    year: 2017,
+                    value: 61.4,
+                  },
+                  {
+                    year: 2018,
+                    value: 59.7,
+                    down: true,
+                  },
+                  {
+                    year: 2019,
+                    value: 59.9,
+                    down: true,
+                  },
+                  {
+                    year: 2020,
+                    value: 62.8,
+                  },
+                  {
+                    year: 2021,
+                    value: 61.5,
+                  },
+                  {
+                    year: 2022,
+                    value: 60.5,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 61.2,
+                  },
+                  {
+                    year: 2024,
+                    value: 64.5,
+                  },
+                ],
+                note: '64.5% in FY2024, up from 61.5% in FY2021. MIS IS A MAJORITY-US BUSINESS and became more so through the recovery.',
+              },
+            ],
+          },
+          {
+            name: 'MA \u00b7 Moody\u2019s Analytics',
+            type: 'Subscription \u00b7 46.5% of revenue \u00b7 CONTRACTED',
+            featured: true,
+            note: 'MA HAS NEVER HAD A DOWN YEAR. Revenue grew 167% over eight years, from $1,233m to $3,295m, rising in every single one \u2014 including 2022, when it GREW 15.1% while MIS fell 29.2%. That is the whole case for owning the two segments together. MA overtook MIS as the larger segment in 2022 at 50.6% of revenue and held the lead through 2023 at 51.7%, before MIS reclaimed it in 2024. Note also that MA is majority INTERNATIONAL at 57.8% of its revenue, the mirror image of MIS.',
+            metrics: [
+              {
+                label: 'MA revenue \u2014 total',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 1233.4,
+                  },
+                  {
+                    year: 2017,
+                    value: 1430.3,
+                  },
+                  {
+                    year: 2018,
+                    value: 1730.3,
+                  },
+                  {
+                    year: 2019,
+                    value: 1954,
+                  },
+                  {
+                    year: 2020,
+                    value: 2079,
+                  },
+                  {
+                    year: 2021,
+                    value: 2406,
+                  },
+                  {
+                    year: 2022,
+                    value: 2769,
+                  },
+                  {
+                    year: 2023,
+                    value: 3056,
+                  },
+                  {
+                    year: 2024,
+                    value: 3295,
+                  },
+                ],
+                note: 'Zero down years in nine. Growth has moderated though: +21.0% in 2018, +15.1% in 2022, +7.8% in FY2024 \u2014 the slowest year in the series.',
+              },
+              {
+                label: 'MA revenue \u2014 United States',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 603.6,
+                  },
+                  {
+                    year: 2017,
+                    value: 645.6,
+                  },
+                  {
+                    year: 2018,
+                    value: 710.4,
+                  },
+                  {
+                    year: 2019,
+                    value: 823,
+                  },
+                  {
+                    year: 2020,
+                    value: 887,
+                  },
+                  {
+                    year: 2021,
+                    value: 1072,
+                  },
+                  {
+                    year: 2022,
+                    value: 1231,
+                  },
+                  {
+                    year: 2023,
+                    value: 1321,
+                  },
+                  {
+                    year: 2024,
+                    value: 1390,
+                  },
+                ],
+              },
+              {
+                label: 'MA revenue \u2014 international',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2016,
+                    value: 629.8,
+                  },
+                  {
+                    year: 2017,
+                    value: 784.7,
+                  },
+                  {
+                    year: 2018,
+                    value: 1019.9,
+                  },
+                  {
+                    year: 2019,
+                    value: 1131,
+                  },
+                  {
+                    year: 2020,
+                    value: 1192,
+                  },
+                  {
+                    year: 2021,
+                    value: 1334,
+                  },
+                  {
+                    year: 2022,
+                    value: 1538,
+                  },
+                  {
+                    year: 2023,
+                    value: 1735,
+                  },
+                  {
+                    year: 2024,
+                    value: 1905,
+                  },
+                ],
+                note: 'Grew 202% over eight years against 130% for the US. International is now 57.8% of MA revenue.',
+              },
+              {
+                label: 'MA \u2014 EMEA',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 760,
+                  },
+                  {
+                    year: 2020,
+                    value: 818,
+                  },
+                  {
+                    year: 2021,
+                    value: 936,
+                  },
+                  {
+                    year: 2022,
+                    value: 1060,
+                  },
+                  {
+                    year: 2023,
+                    value: 1207,
+                  },
+                  {
+                    year: 2024,
+                    value: 1306,
+                  },
+                ],
+                note: 'EMEA alone is $1,306m \u2014 LARGER THAN MA\u2019S ENTIRE US BUSINESS at $1,390m only just. Europe is the core of Moody\u2019s Analytics.',
+              },
+              {
+                label: 'MA \u2014 Asia Pacific',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 231,
+                  },
+                  {
+                    year: 2020,
+                    value: 226,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 239,
+                  },
+                  {
+                    year: 2022,
+                    value: 268,
+                  },
+                  {
+                    year: 2023,
+                    value: 299,
+                  },
+                  {
+                    year: 2024,
+                    value: 345,
+                  },
+                ],
+              },
+              {
+                label: 'MA \u2014 Americas ex-US',
+                unit: 'M USD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 140,
+                  },
+                  {
+                    year: 2020,
+                    value: 148,
+                  },
+                  {
+                    year: 2021,
+                    value: 159,
+                  },
+                  {
+                    year: 2022,
+                    value: 210,
+                  },
+                  {
+                    year: 2023,
+                    value: 229,
+                  },
+                  {
+                    year: 2024,
+                    value: 254,
+                  },
+                ],
+              },
+              {
+                label: 'MA share of total revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2016,
+                    value: 34.2,
+                  },
+                  {
+                    year: 2017,
+                    value: 34.0,
+                    down: true,
+                  },
+                  {
+                    year: 2018,
+                    value: 38.9,
+                  },
+                  {
+                    year: 2019,
+                    value: 40.5,
+                  },
+                  {
+                    year: 2020,
+                    value: 38.7,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 38.7,
+                  },
+                  {
+                    year: 2022,
+                    value: 50.6,
+                  },
+                  {
+                    year: 2023,
+                    value: 51.7,
+                  },
+                  {
+                    year: 2024,
+                    value: 46.5,
+                    down: true,
+                  },
+                ],
+                note: '34.2% to 46.5%, PEAKING AT 51.7% IN 2023 when MA was briefly the larger segment. The direction of travel over eight years is what matters: Moody\u2019s is steadily becoming less of a ratings agency and more of a data and software company.',
+              },
+            ],
+          },
+        ],
+      },
+      wmGeography: {
+        preamble: 'Total company revenue by geography, FY2010\u2013FY2024, $ millions. US plus non-US reconciles to total revenue in every year. The headline is how LITTLE the split has moved: the US was 53.6% of revenue in 2010 and is 54.1% now.',
+        prNote: 'THE SEGMENT-LEVEL SPLIT IS THE INTERESTING PART, AND THE TWO SEGMENTS POINT OPPOSITE WAYS. MA earns 57.8% of its revenue outside the US; MIS earns only 35.5% of its outside. So the growth segment is international-weighted and the cyclical one is American-weighted. Set that against the workforce: 66.8% OF MOODY\u2019S EMPLOYEES ARE OUTSIDE THE US while only 45.9% of revenue is \u2014 a substantial offshore cost base serving onshore revenue, which is part of how a business with 15,838 people sustains its margin.',
+        lines: [
+          {
+            label: 'United States',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 1089.5,
+              },
+              {
+                year: 2011,
+                value: 1177.0,
+              },
+              {
+                year: 2012,
+                value: 1464.1,
+              },
+              {
+                year: 2013,
+                value: 1626.5,
+              },
+              {
+                year: 2014,
+                value: 1814.5,
+              },
+              {
+                year: 2015,
+                value: 2009.0,
+              },
+              {
+                year: 2016,
+                value: 2105.5,
+              },
+              {
+                year: 2017,
+                value: 2348.4,
+              },
+              {
+                year: 2018,
+                value: 2329.6,
+                down: true,
+              },
+              {
+                year: 2019,
+                value: 2544,
+              },
+              {
+                year: 2020,
+                value: 2955,
+              },
+              {
+                year: 2021,
+                value: 3416,
+              },
+              {
+                year: 2022,
+                value: 2865,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 3071,
+              },
+              {
+                year: 2024,
+                value: 3836,
+              },
+            ],
+            note: 'Grew 252% over fourteen years. Two down years, 2018 and 2022 \u2014 both driven by MIS, since MA has never declined.',
+          },
+          {
+            label: 'International',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 942.5,
+              },
+              {
+                year: 2011,
+                value: 1103.7,
+              },
+              {
+                year: 2012,
+                value: 1266.2,
+              },
+              {
+                year: 2013,
+                value: 1346.0,
+              },
+              {
+                year: 2014,
+                value: 1519.8,
+              },
+              {
+                year: 2015,
+                value: 1475.5,
+                down: true,
+              },
+              {
+                year: 2016,
+                value: 1498.7,
+              },
+              {
+                year: 2017,
+                value: 1855.7,
+              },
+              {
+                year: 2018,
+                value: 2113.1,
+              },
+              {
+                year: 2019,
+                value: 2285,
+              },
+              {
+                year: 2020,
+                value: 2416,
+              },
+              {
+                year: 2021,
+                value: 2802,
+              },
+              {
+                year: 2022,
+                value: 2603,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 2845,
+              },
+              {
+                year: 2024,
+                value: 3252,
+              },
+            ],
+            note: 'Grew 245% over fourteen years \u2014 almost exactly in line with the US, which is why the geographic mix has barely moved.',
+          },
+          {
+            label: 'Total revenue',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2010,
+                value: 2032.0,
+              },
+              {
+                year: 2011,
+                value: 2280.7,
+              },
+              {
+                year: 2012,
+                value: 2730.3,
+              },
+              {
+                year: 2013,
+                value: 2972.5,
+              },
+              {
+                year: 2014,
+                value: 3334.3,
+              },
+              {
+                year: 2015,
+                value: 3484.5,
+              },
+              {
+                year: 2016,
+                value: 3604.2,
+              },
+              {
+                year: 2017,
+                value: 4204.1,
+              },
+              {
+                year: 2018,
+                value: 4442.7,
+              },
+              {
+                year: 2019,
+                value: 4829,
+              },
+              {
+                year: 2020,
+                value: 5371,
+              },
+              {
+                year: 2021,
+                value: 6218,
+              },
+              {
+                year: 2022,
+                value: 5468,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 5916,
+              },
+              {
+                year: 2024,
+                value: 7088,
+              },
+            ],
+            note: '$2,032m to $7,088m, up 249% over fourteen years, with ONE down year: FY2022.',
+          },
+          {
+            label: 'US share of revenue \u2014 derived',
+            unit: '%',
+            series: [
+              {
+                year: 2010,
+                value: 53.6,
+              },
+              {
+                year: 2011,
+                value: 51.6,
+              },
+              {
+                year: 2012,
+                value: 53.6,
+              },
+              {
+                year: 2013,
+                value: 54.7,
+                down: true,
+              },
+              {
+                year: 2014,
+                value: 54.4,
+                down: true,
+              },
+              {
+                year: 2015,
+                value: 57.7,
+                down: true,
+              },
+              {
+                year: 2016,
+                value: 58.4,
+              },
+              {
+                year: 2017,
+                value: 55.9,
+                down: true,
+              },
+              {
+                year: 2018,
+                value: 52.4,
+              },
+              {
+                year: 2019,
+                value: 52.7,
+                down: true,
+              },
+              {
+                year: 2020,
+                value: 55.0,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 54.9,
+              },
+              {
+                year: 2022,
+                value: 52.4,
+              },
+              {
+                year: 2023,
+                value: 51.9,
+                down: true,
+              },
+              {
+                year: 2024,
+                value: 54.1,
+              },
+            ],
+            note: '53.6% in 2010, 54.1% in 2024 \u2014 essentially unchanged across fourteen years, despite everything that happened in between. It peaked at 56.0% in 2017 and troughed at 52.4% in 2018.',
+          },
+        ],
+      },
     },
     incomeStatement: {
       totalRevenue: {
