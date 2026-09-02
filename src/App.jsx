@@ -50317,6 +50317,2506 @@ const MCO_BREAKDOWN = {
   },
 };
 
+
+// ════════════════════════════════════════════════════════════════
+// ASX_BREAKDOWN — ASX Limited Coverage data (Tier 1)
+// SOURCE: Muzz's supplied income statement, balance sheet and cash flow,
+// FY2019-FY2026. Year ended 30 JUNE, reported in AUSTRALIAN DOLLARS.
+// Units are M AUD throughout, which the formatter now renders as A$.
+//
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW.
+// TABS DARK: RISKS, THESIS.
+//
+// EVERY IDENTITY RECONCILES — twelve separate checks, no exceptions:
+//   four segments = total segment revenue          6/6 years disclosed
+//   old four segments = total                      FY2019 and FY2020
+//   six expense lines = total operating expenses   8/8
+//   revenue + interest + other - opex - D&A = PBT  8/8
+//   PBT - tax = net profit after tax               8/8
+//   current asset lines = total current assets     8/8
+//   current + non-current = total assets           8/8
+//   assets - liabilities = equity                  8/8
+//   capital + retained + reserves = equity         8/8
+//   operating cash flow before collateral          8/8
+//   + collateral movements = reported OCF          8/8
+//   cash roll-forward                              8/8
+// This is the only company in the library where that is true.
+//
+// TWO THINGS THE READER MUST NOT DO. Do not use reported operating cash
+// flow: it was -3,404.0 in FY2023 and +5,095.0 in FY2021 on collateral
+// movements alone. Do not read total assets as the business: 87.4% of
+// liabilities are amounts owed back to clearing participants. Look-through
+// lines stripping both are derived on the BALANCE tab.
+// ════════════════════════════════════════════════════════════════
+const ASX_BREAKDOWN = {
+  overview: {
+    identity: {
+      name: 'ASX Limited',
+      ticker: 'ASX',
+      description: 'Australia\u2019s primary securities exchange and clearing house, and one of the few genuinely vertically integrated exchange groups in the world \u2014 it runs listing, trading, clearing, settlement and market data under one roof. Four reportable segments since FY2021: LISTINGS, MARKETS, TECHNOLOGY & DATA, and SECURITIES & PAYMENTS. Reports in Australian dollars with a 30 JUNE YEAR END, so an "FY2026" column here is the year to 30 June 2026 and is not comparable to a December or September year elsewhere in this library.',
+      industryPosition: [
+        'EVERY SINGLE ACCOUNTING IDENTITY IN THIS BUILD RECONCILES \u2014 segment revenue, operating expenses, profit before tax, net profit, all four balance sheet subtotals, and all four cash flow subtotals, across eight years. Twelve separate checks, no exceptions. That is the only company in this coverage library of which that is true.',
+        'THE HEADLINE IS UNCOMFORTABLE: EPS was 254.1 cents in FY2019 and 249.3 cents in FY2026. SEVEN YEARS, NO EARNINGS GROWTH \u2014 down 1.9%. Revenue grew 45.5% over the same period. The gap is entirely cost.',
+        'OPERATING EXPENSES GREW 148.7% AGAINST REVENUE GROWTH OF 45.5% \u2014 3.3 times faster. Opex went from 25.1% of revenue to 42.9%. That single ratio is the whole ASX story.',
+        'THE BALANCE SHEET IS MOSTLY OTHER PEOPLE\u2019S MONEY. Amounts owing to participants are A$9,161.5m of A$10,487m total liabilities \u2014 87.4% \u2014 and financial assets at amortised cost are 68.9% of total assets. Strip the participant balances from both sides and a A$14.5bn balance sheet becomes a A$5.3bn one.',
+        'REPORTED OPERATING CASH FLOW IS UNUSABLE. It was NEGATIVE A$3,404.0m in FY2023 and POSITIVE A$5,095.0m in FY2021, driven entirely by collateral movements. The line that matters is "operating cash flow before collateral movements", which went from A$456.3m to A$620.2m and never left that band.',
+        'FY2023 carried a A$248.4m CHESS write-off \u2014 capitalised costs on the failed blockchain settlement replacement, derecognised. It cut EPS 37.6% in a single year.',
+        'Capex has risen 123.4% since FY2019 to A$189.0m, or 14.9% of revenue and 30.5% of pre-collateral operating cash flow. ASX is now MORE capital-intensive than Visa, Mastercard or Moody\u2019s.',
+      ],
+    },
+    buffettFraming: {
+      headline: 'A monopoly that has not converted its position into earnings growth',
+      body: 'The position is close to unassailable. ASX runs the listing venue, the trading venue, the clearing house and the settlement system for Australian equities \u2014 vertical integration that most jurisdictions have broken up and that regulators here have repeatedly examined without dismantling. Revenue arrives from listing fees, trading and clearing fees, market data and technical services, and none of it depends on ASX picking winners. It also earns NET INTEREST INCOME on the participant collateral it holds, which turns the clearing function into a rates play on top of a fee business.',
+      bottomLine: 'And yet EPS is lower than it was seven years ago. That is the fact any thesis has to start from. Revenue grew 45.5% while operating expenses grew 148.7%, and the causes are visible in the disclosure: staff costs up 110.5%, technology up 195.3%, administration up 231.9%, and a A$248.4m CHESS write-off in FY2023 for a replacement system that was abandoned. This is not a business losing its moat. It is a business whose moat is intact and whose cost base has run away from it, partly through a decade of failed and then restarted technology replacement that the regulator has effectively mandated. The question is not whether ASX keeps its monopoly \u2014 it is whether the spending ever stops.',
+    },
+  },
+  numbers: {
+    segments: {
+      wmSegmentPnl: {
+        preamble: 'Four reportable segments from FY2021. THE FY2019 AND FY2020 COMPARATIVES ARE ON THE OLD SEGMENT NAMES \u2014 Listings and Issuer Services, Derivatives and OTC Markets, Trading Services, and Equity Post-Trade Services \u2014 which do not map cleanly to the current four and are therefore NOT chained here. Both old sets sum exactly to their stated total segment revenue (A$949.0m and A$873.2m), so the totals are comparable even though the components are not.',
+        segments: [
+          {
+            name: 'Markets',
+            type: 'Largest segment \u00b7 32.6% of revenue',
+            featured: true,
+            profitEngine: true,
+            note: 'Derivatives, OTC and cash market trading. THE STRONGEST PERFORMER: up 44.4% since FY2021 and the largest single revenue line at A$414.2m. Grew 18.4% in FY2026 alone \u2014 the fastest of any segment \u2014 which is volatility working in ASX\u2019s favour.',
+            metrics: [
+              {
+                label: 'Markets revenue',
+                unit: 'M AUD',
+                series: [
+                  {
+                    year: 2021,
+                    value: 286.8,
+                  },
+                  {
+                    year: 2022,
+                    value: 300.2,
+                  },
+                  {
+                    year: 2023,
+                    value: 293.1,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 314.9,
+                  },
+                  {
+                    year: 2025,
+                    value: 349.7,
+                  },
+                  {
+                    year: 2026,
+                    value: 414.2,
+                  },
+                ],
+              },
+              {
+                label: 'Share of segment revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2021,
+                    value: 29.8,
+                  },
+                  {
+                    year: 2022,
+                    value: 28.8,
+                  },
+                  {
+                    year: 2023,
+                    value: 28.9,
+                  },
+                  {
+                    year: 2024,
+                    value: 30.0,
+                  },
+                  {
+                    year: 2025,
+                    value: 31.0,
+                  },
+                  {
+                    year: 2026,
+                    value: 32.6,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Securities & Payments',
+            type: 'Clearing and settlement \u00b7 26.7%',
+            featured: true,
+            note: 'Clearing, settlement and payments \u2014 the CHESS franchise. Up only 19.2% since FY2021 and STILL BELOW ITS FY2022 LEVEL of A$300.7m until FY2026. This is the segment the abandoned CHESS replacement was meant to modernise, and the A$248.4m write-off in FY2023 sits against it.',
+            metrics: [
+              {
+                label: 'Securities & Payments revenue',
+                unit: 'M AUD',
+                series: [
+                  {
+                    year: 2021,
+                    value: 284.1,
+                  },
+                  {
+                    year: 2022,
+                    value: 300.7,
+                  },
+                  {
+                    year: 2023,
+                    value: 258.6,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 267.3,
+                  },
+                  {
+                    year: 2025,
+                    value: 288.4,
+                  },
+                  {
+                    year: 2026,
+                    value: 338.7,
+                  },
+                ],
+              },
+              {
+                label: 'Share of segment revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2021,
+                    value: 29.5,
+                  },
+                  {
+                    year: 2022,
+                    value: 28.9,
+                  },
+                  {
+                    year: 2023,
+                    value: 25.5,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 25.4,
+                    down: true,
+                  },
+                  {
+                    year: 2025,
+                    value: 25.6,
+                    down: true,
+                  },
+                  {
+                    year: 2026,
+                    value: 26.7,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Technology & Data',
+            type: 'Fastest growing \u00b7 23.6%',
+            featured: true,
+            note: 'Market data, connectivity and technical services. UP 45.5% SINCE FY2021 \u2014 the fastest growth of any segment \u2014 and it has risen in every single year. The closest ASX has to a recurring, volume-independent revenue stream, and the one most comparable to what Moody\u2019s Analytics does.',
+            metrics: [
+              {
+                label: 'Technology & Data revenue',
+                unit: 'M AUD',
+                series: [
+                  {
+                    year: 2021,
+                    value: 206.0,
+                  },
+                  {
+                    year: 2022,
+                    value: 224.2,
+                  },
+                  {
+                    year: 2023,
+                    value: 243.1,
+                  },
+                  {
+                    year: 2024,
+                    value: 257.9,
+                  },
+                  {
+                    year: 2025,
+                    value: 278.9,
+                  },
+                  {
+                    year: 2026,
+                    value: 299.8,
+                  },
+                ],
+              },
+              {
+                label: 'Share of segment revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2021,
+                    value: 21.4,
+                  },
+                  {
+                    year: 2022,
+                    value: 21.5,
+                  },
+                  {
+                    year: 2023,
+                    value: 23.9,
+                  },
+                  {
+                    year: 2024,
+                    value: 24.5,
+                  },
+                  {
+                    year: 2025,
+                    value: 24.7,
+                  },
+                  {
+                    year: 2026,
+                    value: 23.6,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Listings',
+            type: 'Weakest \u00b7 17.1%',
+            note: 'Initial and annual listing fees. UP ONLY 17.4% SINCE FY2021, AND LOWER IN FY2026 THAN IN FY2023 \u2014 A$217.7m against A$221.1m. That is the IPO drought showing directly, and it is the segment most exposed to whether companies choose to list publicly at all. Its share of revenue has fallen from 19.3% to 17.1%.',
+            metrics: [
+              {
+                label: 'Listings revenue',
+                unit: 'M AUD',
+                series: [
+                  {
+                    year: 2021,
+                    value: 185.4,
+                  },
+                  {
+                    year: 2022,
+                    value: 216.7,
+                  },
+                  {
+                    year: 2023,
+                    value: 221.1,
+                  },
+                  {
+                    year: 2024,
+                    value: 210.9,
+                    down: true,
+                  },
+                  {
+                    year: 2025,
+                    value: 211.0,
+                  },
+                  {
+                    year: 2026,
+                    value: 217.7,
+                  },
+                ],
+              },
+              {
+                label: 'Share of segment revenue \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2021,
+                    value: 19.3,
+                  },
+                  {
+                    year: 2022,
+                    value: 20.8,
+                    down: true,
+                  },
+                  {
+                    year: 2023,
+                    value: 21.8,
+                  },
+                  {
+                    year: 2024,
+                    value: 20.1,
+                    down: true,
+                  },
+                  {
+                    year: 2025,
+                    value: 18.7,
+                    down: true,
+                  },
+                  {
+                    year: 2026,
+                    value: 17.1,
+                    down: true,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Total segment revenue',
+            type: 'All four segments',
+            note: 'Grew 45.5% over eight years with ONE down year, FY2023. Reconciles exactly to the sum of the four segments in all six years they are disclosed, and to the old four in FY2019 and FY2020.',
+            metrics: [
+              {
+                label: 'Total segment revenue',
+                unit: 'M AUD',
+                series: [
+                  {
+                    year: 2019,
+                    value: 873.2,
+                  },
+                  {
+                    year: 2020,
+                    value: 949.0,
+                  },
+                  {
+                    year: 2021,
+                    value: 962.3,
+                  },
+                  {
+                    year: 2022,
+                    value: 1041.8,
+                  },
+                  {
+                    year: 2023,
+                    value: 1015.9,
+                    down: true,
+                  },
+                  {
+                    year: 2024,
+                    value: 1051.0,
+                  },
+                  {
+                    year: 2025,
+                    value: 1128.0,
+                  },
+                  {
+                    year: 2026,
+                    value: 1270.4,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Total Segment Revenue',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 873.2,
+          },
+          {
+            year: 2020,
+            value: 949.0,
+          },
+          {
+            year: 2021,
+            value: 962.3,
+          },
+          {
+            year: 2022,
+            value: 1041.8,
+          },
+          {
+            year: 2023,
+            value: 1015.9,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 1051.0,
+          },
+          {
+            year: 2025,
+            value: 1128.0,
+          },
+          {
+            year: 2026,
+            value: 1270.4,
+          },
+        ],
+        note: 'Grew 45.5% over eight years with one down year. NOTE THIS EXCLUDES NET INTEREST INCOME, which ASX reports separately below the revenue line and which contributed A$73.2m in FY2026.',
+      },
+      totalExpenses: {
+        label: 'Total Operating Expenses',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 219.1,
+          },
+          {
+            year: 2020,
+            value: 239.8,
+          },
+          {
+            year: 2021,
+            value: 259.7,
+          },
+          {
+            year: 2022,
+            value: 286.3,
+          },
+          {
+            year: 2023,
+            value: 362.0,
+          },
+          {
+            year: 2024,
+            value: 396.3,
+          },
+          {
+            year: 2025,
+            value: 435.3,
+          },
+          {
+            year: 2026,
+            value: 545.0,
+          },
+        ],
+        note: 'ROSE IN EVERY SINGLE YEAR, up 148.7% \u2014 3.3 TIMES THE 45.5% REVENUE GROWTH. Operating expenses were 25.1% of revenue in FY2019 and are 42.9% now. This is the single most important series in the ASX build, and it is why EPS has gone nowhere.',
+      },
+      opexLines: [
+        {
+          label: 'Employee / staff costs',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 127.7,
+            },
+            {
+              year: 2020,
+              value: 145.4,
+            },
+            {
+              year: 2021,
+              value: 154.3,
+            },
+            {
+              year: 2022,
+              value: 171.7,
+            },
+            {
+              year: 2023,
+              value: 200.8,
+            },
+            {
+              year: 2024,
+              value: 240.5,
+            },
+            {
+              year: 2025,
+              value: 241.7,
+            },
+            {
+              year: 2026,
+              value: 268.8,
+            },
+          ],
+          note: 'UP 110.5% over eight years and rising every year, from A$127.7m to A$268.8m. Now 49.3% of operating expenses. The FY2023 jump of 16.9% and FY2024 jump of 19.8% are the largest.',
+        },
+        {
+          label: 'Technology / equipment',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 32.2,
+            },
+            {
+              year: 2020,
+              value: 37.3,
+            },
+            {
+              year: 2021,
+              value: 45.4,
+            },
+            {
+              year: 2022,
+              value: 50.6,
+            },
+            {
+              year: 2023,
+              value: 54.8,
+            },
+            {
+              year: 2024,
+              value: 59.4,
+            },
+            {
+              year: 2025,
+              value: 79.5,
+            },
+            {
+              year: 2026,
+              value: 95.1,
+            },
+          ],
+          note: 'UP 195.3% \u2014 the fastest-growing major cost line, from A$32.2m to A$95.1m, rising every year and up 19.6% in FY2026 alone. Consistent with a decade of mandated systems replacement.',
+        },
+        {
+          label: 'Administration',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 41.3,
+            },
+            {
+              year: 2020,
+              value: 47.4,
+            },
+            {
+              year: 2021,
+              value: 50.6,
+            },
+            {
+              year: 2022,
+              value: 55.1,
+            },
+            {
+              year: 2023,
+              value: 96.5,
+            },
+            {
+              year: 2024,
+              value: 85.5,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 62.8,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 137.1,
+            },
+          ],
+          note: 'UP 231.9% AND VIOLENTLY VOLATILE: A$96.5m in FY2023, A$62.8m in FY2025, then A$137.1m in FY2026 \u2014 more than DOUBLING in a single year. Movements of this size in an administration line usually mean regulatory, remediation or legal cost rather than ordinary overhead.',
+        },
+        {
+          label: 'Occupancy',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 17.9,
+            },
+            {
+              year: 2020,
+              value: 9.7,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 9.4,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 8.9,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 9.9,
+            },
+            {
+              year: 2024,
+              value: 10.9,
+            },
+            {
+              year: 2025,
+              value: 26.7,
+            },
+            {
+              year: 2026,
+              value: 12.6,
+              down: true,
+            },
+          ],
+          note: 'The A$26.7m spike in FY2025 against A$10.9m in FY2024 stands out, and it connects to the balance sheet: RIGHT-OF-USE ASSETS JUMPED FROM A$29.0m TO A$191.4m IN FY2026 and lease liabilities from A$35.9m to A$215.2m. A major new property commitment was signed.',
+        },
+        {
+          label: 'Postage \u2014 disclosed separately from FY2025',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2025,
+              value: 15.2,
+            },
+            {
+              year: 2026,
+              value: 17.9,
+            },
+          ],
+          note: 'Included within other lines before FY2025, so the FY2025 and FY2026 opex components are not strictly comparable to earlier years at the line level. Totals reconcile in all eight years regardless.',
+        },
+        {
+          label: 'ASIC industry funding levy \u2014 disclosed separately from FY2025',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2025,
+              value: 9.4,
+            },
+            {
+              year: 2026,
+              value: 13.5,
+            },
+          ],
+          note: 'The cost of being regulated, now shown on its own line: A$13.5m in FY2026, up 43.6%. Small, but the fact that it warranted separate disclosure is itself informative.',
+        },
+      ],
+      operatingProfit: {
+        label: 'Profit Before Income Tax',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 705.1,
+          },
+          {
+            year: 2020,
+            value: 720.8,
+          },
+          {
+            year: 2021,
+            value: 687.9,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 730.3,
+          },
+          {
+            year: 2023,
+            value: 447.2,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 681.5,
+          },
+          {
+            year: 2025,
+            value: 719.2,
+          },
+          {
+            year: 2026,
+            value: 710.6,
+            down: true,
+          },
+        ],
+        note: 'Reconciles exactly in all eight years from revenue plus net interest income less expenses, D&A and one-offs. THE FY2023 COLLAPSE TO A$447.2m FROM A$730.3m IS THE CHESS WRITE-OFF \u2014 A$248.4m of capitalised costs derecognised, partly offset by a A$25.5m impairment reversal.',
+      },
+      operatingMargin: {
+        label: 'Pre-Tax Margin on Segment Revenue',
+        unit: '%',
+        series: [
+          {
+            year: 2019,
+            value: 80.75,
+          },
+          {
+            year: 2020,
+            value: 75.95,
+          },
+          {
+            year: 2021,
+            value: 71.48,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 70.1,
+          },
+          {
+            year: 2023,
+            value: 44.02,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 64.84,
+          },
+          {
+            year: 2025,
+            value: 63.76,
+            down: true,
+          },
+          {
+            year: 2026,
+            value: 55.94,
+            down: true,
+          },
+        ],
+        note: 'FELL FROM 80.75% TO 55.94% over eight years. That figure is flattered by net interest income being counted in the numerator but not the denominator, so read the direction rather than the level \u2014 and the direction is relentlessly down.',
+      },
+      provisionForTaxes: {
+        label: 'Income Tax Expense',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 213.1,
+          },
+          {
+            year: 2020,
+            value: 222.2,
+          },
+          {
+            year: 2021,
+            value: 207.0,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 221.8,
+          },
+          {
+            year: 2023,
+            value: 129.9,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 207.3,
+          },
+          {
+            year: 2025,
+            value: 216.6,
+          },
+          {
+            year: 2026,
+            value: 225.7,
+          },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate \u2014 derived',
+        unit: '%',
+        series: [
+          {
+            year: 2019,
+            value: 30.22,
+          },
+          {
+            year: 2020,
+            value: 30.83,
+          },
+          {
+            year: 2021,
+            value: 30.09,
+          },
+          {
+            year: 2022,
+            value: 30.37,
+          },
+          {
+            year: 2023,
+            value: 29.05,
+          },
+          {
+            year: 2024,
+            value: 30.42,
+          },
+          {
+            year: 2025,
+            value: 30.12,
+          },
+          {
+            year: 2026,
+            value: 31.76,
+          },
+        ],
+        note: 'REMARKABLY STABLE AT 28.9\u201331.8% across eight years, sitting just below Australia\u2019s 30% corporate rate throughout. No tax-driven distortion anywhere in this series, unlike every US company in this library in FY2017.',
+      },
+      netIncome: {
+        label: 'Net Profit After Tax',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 492.0,
+          },
+          {
+            year: 2020,
+            value: 498.6,
+          },
+          {
+            year: 2021,
+            value: 480.9,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 508.5,
+          },
+          {
+            year: 2023,
+            value: 317.3,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 474.2,
+          },
+          {
+            year: 2025,
+            value: 502.6,
+          },
+          {
+            year: 2026,
+            value: 484.9,
+            down: true,
+          },
+        ],
+        note: 'A$492.0m in FY2019 and A$484.9m in FY2026 \u2014 DOWN 1.4% OVER SEVEN YEARS. FY2026 fell 3.5% despite revenue rising 12.6%, because operating expenses rose 25.2%, D&A rose 38.3% and net interest income fell 15.7%. Operating leverage running in reverse.',
+      },
+      profitMargin: {
+        label: 'Net Margin on Segment Revenue',
+        unit: '%',
+        series: [
+          {
+            year: 2019,
+            value: 56.34,
+          },
+          {
+            year: 2020,
+            value: 52.54,
+          },
+          {
+            year: 2021,
+            value: 49.97,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 48.81,
+          },
+          {
+            year: 2023,
+            value: 31.23,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 45.12,
+          },
+          {
+            year: 2025,
+            value: 44.56,
+            down: true,
+          },
+          {
+            year: 2026,
+            value: 38.17,
+            down: true,
+          },
+        ],
+        note: 'From 56.35% to 38.17%. Same caveat as the pre-tax margin \u2014 the denominator excludes net interest income \u2014 but an 18-point decline is not a measurement artefact.',
+      },
+      eps: {
+        label: 'Basic EPS',
+        unit: 'AUD per share',
+        series: [
+          {
+            year: 2019,
+            value: 2.541,
+          },
+          {
+            year: 2020,
+            value: 2.576,
+          },
+          {
+            year: 2021,
+            value: 2.484,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 2.627,
+          },
+          {
+            year: 2023,
+            value: 1.639,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 2.448,
+          },
+          {
+            year: 2025,
+            value: 2.591,
+          },
+          {
+            year: 2026,
+            value: 2.493,
+            down: true,
+          },
+        ],
+        note: 'A$2.541 in FY2019 to A$2.493 in FY2026 \u2014 DOWN 1.9% ACROSS SEVEN YEARS. Diluted EPS is identical to basic to the tenth of a cent in every year, so there is effectively no dilution. Peak was A$2.627 in FY2022; the FY2023 trough of A$1.639 is the CHESS write-off.',
+      },
+      extraLines: [
+        {
+          label: 'Net Interest Income',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 98.8,
+            },
+            {
+              year: 2020,
+              value: 83.8,
+            },
+            {
+              year: 2021,
+              value: 46.7,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 41.1,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 70.8,
+            },
+            {
+              year: 2024,
+              value: 76.7,
+            },
+            {
+              year: 2025,
+              value: 86.8,
+            },
+            {
+              year: 2026,
+              value: 73.2,
+              down: true,
+            },
+          ],
+          note: 'EARNED ON PARTICIPANT COLLATERAL, and it is a pure rates play. It collapsed from A$98.8m in FY2019 to A$41.1m in FY2022 as rates hit zero, recovered to A$86.8m by FY2025, and fell again to A$73.2m in FY2026. The gross flows are enormous relative to the net: FY2025 saw A$623.9m of interest received against A$524.5m paid. This line is 5.8% of segment revenue but 10.3% of pre-tax profit \u2014 a meaningful and entirely uncontrollable earnings contributor.',
+        },
+        {
+          label: 'Interest Received',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 133.5,
+            },
+            {
+              year: 2020,
+              value: 101.8,
+            },
+            {
+              year: 2021,
+              value: 53.7,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 46.4,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 354.0,
+            },
+            {
+              year: 2024,
+              value: 550.9,
+            },
+            {
+              year: 2025,
+              value: 623.9,
+            },
+            {
+              year: 2026,
+              value: 490.9,
+              down: true,
+            },
+          ],
+        },
+        {
+          label: 'Interest Paid',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 116.2,
+            },
+            {
+              year: 2020,
+              value: 76.1,
+            },
+            {
+              year: 2021,
+              value: 15.3,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 13.1,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 297.6,
+            },
+            {
+              year: 2024,
+              value: 458.0,
+            },
+            {
+              year: 2025,
+              value: 524.5,
+            },
+            {
+              year: 2026,
+              value: 407.9,
+              down: true,
+            },
+          ],
+          note: 'The gross interest flows show the scale of the collateral pool: A$490.9m received and A$407.9m paid in FY2026, against a A$73.2m net contribution. ASX is running a large matched book on other people\u2019s money.',
+        },
+        {
+          label: 'Depreciation & Amortisation',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 47.8,
+            },
+            {
+              year: 2020,
+              value: 52.0,
+            },
+            {
+              year: 2021,
+              value: 55.5,
+            },
+            {
+              year: 2022,
+              value: 52.4,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 39.1,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 40.0,
+            },
+            {
+              year: 2025,
+              value: 49.3,
+            },
+            {
+              year: 2026,
+              value: 68.2,
+            },
+          ],
+          note: 'UP 38.3% IN FY2026 ALONE, to A$68.2m \u2014 the largest single-year rise in the series. The FY2023 drop to A$39.1m is the mirror of the CHESS write-off, which removed the asset being amortised.',
+        },
+        {
+          label: 'Share of Net Loss of Equity Accounted Investments',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: -5.1,
+            },
+            {
+              year: 2020,
+              value: -5.0,
+            },
+            {
+              year: 2021,
+              value: -5.9,
+            },
+            {
+              year: 2022,
+              value: -13.9,
+            },
+            {
+              year: 2023,
+              value: -15.5,
+            },
+            {
+              year: 2024,
+              value: -9.9,
+            },
+            {
+              year: 2025,
+              value: -11.0,
+            },
+            {
+              year: 2026,
+              value: -8.3,
+            },
+          ],
+          note: 'A loss in EVERY year of the series, totalling A$74.6m over eight years. Small individually but persistently negative \u2014 whatever these investments are, they have never contributed.',
+        },
+        {
+          label: 'CHESS Capitalised Costs Derecognised \u00b7 FY2023',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2023,
+              value: -248.4,
+            },
+          ],
+          note: 'THE SINGLE LARGEST ITEM IN THE INCOME STATEMENT. A$248.4m of capitalised development cost on the abandoned blockchain-based CHESS replacement, written off in FY2023. It cut profit before tax 38.8% and EPS 37.6% in one year. For scale, it is roughly half of a normal year\u2019s net profit, spent and then removed. The replacement programme has since restarted on conventional technology, which is part of why technology costs and capex are both climbing.',
+        },
+        {
+          label: 'Total Comprehensive Income',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 484.1,
+            },
+            {
+              year: 2020,
+              value: 498.3,
+            },
+            {
+              year: 2021,
+              value: 469.5,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 510.6,
+            },
+            {
+              year: 2023,
+              value: 293.4,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 474.2,
+            },
+            {
+              year: 2025,
+              value: 540.6,
+            },
+            {
+              year: 2026,
+              value: 466.9,
+              down: true,
+            },
+          ],
+          note: 'Diverges from net profit by the fair value movement on equity investments, which swung from a A$38.8m GAIN in FY2025 to an A$18.8m LOSS in FY2026 \u2014 a A$57.6m swing that never touches reported earnings.',
+        },
+        {
+          label: 'Implied Shares Outstanding \u2014 derived',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2019,
+              value: 193.6,
+            },
+            {
+              year: 2020,
+              value: 193.6,
+            },
+            {
+              year: 2021,
+              value: 193.6,
+            },
+            {
+              year: 2022,
+              value: 193.6,
+            },
+            {
+              year: 2023,
+              value: 193.6,
+            },
+            {
+              year: 2024,
+              value: 193.7,
+            },
+            {
+              year: 2025,
+              value: 194.0,
+            },
+            {
+              year: 2026,
+              value: 194.5,
+            },
+          ],
+          note: 'DERIVED: net profit divided by basic EPS. Essentially FLAT at 193.6m to 194.5m across eight years. ASX does not buy back stock \u2014 contributed capital actually ROSE 3.0% \u2014 so every cent of EPS growth has to come from earnings. There is none.',
+        },
+      ],
+    },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 333.1,
+          },
+          {
+            year: 2020,
+            value: 858.1,
+          },
+          {
+            year: 2021,
+            value: 5357.8,
+          },
+          {
+            year: 2022,
+            value: 4972.2,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 1008.6,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 1243.1,
+          },
+          {
+            year: 2025,
+            value: 1008.2,
+            down: true,
+          },
+          {
+            year: 2026,
+            value: 680.8,
+            down: true,
+          },
+        ],
+        note: 'Wildly volatile because it moves with participant collateral, not with the business. A$5,357.8m in FY2021 and A$680.8m in FY2026. Read it with the amounts owing to participants, not on its own.',
+      },
+      accountsReceivable: {
+        label: 'Trade & Other Receivables',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 390.6,
+          },
+          {
+            year: 2020,
+            value: 761.6,
+          },
+          {
+            year: 2021,
+            value: 362.6,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 857.1,
+          },
+          {
+            year: 2023,
+            value: 619.4,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 659.3,
+          },
+          {
+            year: 2025,
+            value: 702.9,
+          },
+          {
+            year: 2026,
+            value: 583.5,
+            down: true,
+          },
+        ],
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 12678.4,
+          },
+          {
+            year: 2020,
+            value: 14641.9,
+          },
+          {
+            year: 2021,
+            value: 13765.5,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 15331.9,
+          },
+          {
+            year: 2023,
+            value: 13664.4,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 14104.4,
+          },
+          {
+            year: 2025,
+            value: 14645.2,
+          },
+          {
+            year: 2026,
+            value: 11271.1,
+            down: true,
+          },
+        ],
+        note: 'Dominated by financial assets at amortised cost \u2014 the invested participant collateral \u2014 which are 88.4% of current assets in FY2026.',
+      },
+      ppeNet: {
+        label: 'Property, Plant & Equipment',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 61.5,
+          },
+          {
+            year: 2020,
+            value: 62.1,
+          },
+          {
+            year: 2021,
+            value: 58.2,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 51.7,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 42.6,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 53.4,
+          },
+          {
+            year: 2025,
+            value: 59.2,
+          },
+          {
+            year: 2026,
+            value: 68.4,
+          },
+        ],
+        note: 'Only A$68.4m. For an exchange, the physical footprint is trivial; the asset is the licence and the software.',
+      },
+      goodwill: {
+        label: 'Intangible Assets',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 2458.3,
+          },
+          {
+            year: 2020,
+            value: 2496.8,
+          },
+          {
+            year: 2021,
+            value: 2566.5,
+          },
+          {
+            year: 2022,
+            value: 2637.3,
+          },
+          {
+            year: 2023,
+            value: 2468.9,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 2566.4,
+          },
+          {
+            year: 2025,
+            value: 2703.6,
+          },
+          {
+            year: 2026,
+            value: 2835.1,
+          },
+        ],
+        note: 'A$2,835.1m and rising every year except FY2023, when the CHESS write-off removed A$248.4m. This is 19.6% of reported total assets \u2014 but 53.4% OF LOOK-THROUGH ASSETS once participant balances are stripped out. Most of it is goodwill from the 2006 SFE merger, and it is by far the largest real asset ASX owns.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 15330.3,
+          },
+          {
+            year: 2020,
+            value: 17414.8,
+          },
+          {
+            year: 2021,
+            value: 16597.0,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 18237.5,
+          },
+          {
+            year: 2023,
+            value: 16342.7,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 16886.5,
+          },
+          {
+            year: 2025,
+            value: 17569.4,
+          },
+          {
+            year: 2026,
+            value: 14473.4,
+            down: true,
+          },
+        ],
+        note: 'Swings between A$14.5bn and A$18.2bn with no relationship to the size of the business, because it moves with the collateral pool. See the look-through lines below.',
+      },
+      accountsPayable: {
+        label: 'Trade & Other Payables',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 349.3,
+          },
+          {
+            year: 2020,
+            value: 726.8,
+          },
+          {
+            year: 2021,
+            value: 332.0,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 810.5,
+          },
+          {
+            year: 2023,
+            value: 623.7,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 656.9,
+          },
+          {
+            year: 2025,
+            value: 695.3,
+          },
+          {
+            year: 2026,
+            value: 561.7,
+            down: true,
+          },
+        ],
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 11138.5,
+          },
+          {
+            year: 2020,
+            value: 13346.3,
+          },
+          {
+            year: 2021,
+            value: 12507.2,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 14069.9,
+          },
+          {
+            year: 2023,
+            value: 12375.7,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 12569.1,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 13132.1,
+          },
+          {
+            year: 2026,
+            value: 10005.7,
+            down: true,
+          },
+        ],
+      },
+      longTermDebt: {
+        label: 'Debt Securities on Issue',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2023,
+            value: 20.0,
+          },
+          {
+            year: 2024,
+            value: 276.4,
+          },
+          {
+            year: 2025,
+            value: 275.0,
+          },
+          {
+            year: 2026,
+            value: 275.0,
+          },
+        ],
+        note: 'ASX HAD NO DEBT AT ALL UNTIL FY2023. A$275m of debt securities was issued in FY2024 and remains outstanding, moving from non-current to current in FY2026 \u2014 so it matures within a year. Trivial against A$3,986.4m of equity, but the debt-free era ended.',
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 11413.9,
+          },
+          {
+            year: 2020,
+            value: 13694.4,
+          },
+          {
+            year: 2021,
+            value: 12860.7,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 14432.1,
+          },
+          {
+            year: 2023,
+            value: 12702.1,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 13161.8,
+          },
+          {
+            year: 2025,
+            value: 13696.6,
+          },
+          {
+            year: 2026,
+            value: 10487.0,
+            down: true,
+          },
+        ],
+        note: '87.4% of this is amounts owing to participants \u2014 money ASX holds and owes straight back. It is not leverage in any meaningful sense.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 801.7,
+          },
+          {
+            year: 2020,
+            value: 603.8,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 629.9,
+          },
+          {
+            year: 2022,
+            value: 697.8,
+          },
+          {
+            year: 2023,
+            value: 557.8,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 619.1,
+          },
+          {
+            year: 2025,
+            value: 699.0,
+          },
+          {
+            year: 2026,
+            value: 768.3,
+            down: true,
+          },
+        ],
+        note: 'A$801.7m in FY2019 and A$768.3m in FY2026 \u2014 LOWER THAN SEVEN YEARS AGO. Cumulative net profit over the period was A$3,758.9m and dividends were A$3,625.9m, so ASX has distributed 96.5% of everything it earned. THE BUFFETT RETAINED-EARNINGS TEST CANNOT BE APPLIED HERE: retained earnings went backwards, so there is no denominator.',
+      },
+      shareholderEquity: {
+        label: 'Total Equity',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 3916.4,
+          },
+          {
+            year: 2020,
+            value: 3720.4,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 3736.3,
+          },
+          {
+            year: 2022,
+            value: 3805.4,
+          },
+          {
+            year: 2023,
+            value: 3640.6,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 3724.7,
+          },
+          {
+            year: 2025,
+            value: 3872.8,
+          },
+          {
+            year: 2026,
+            value: 3986.4,
+          },
+        ],
+        note: 'A$3,916.4m to A$3,986.4m \u2014 up just 1.8% over eight years while the company earned A$3,758.9m. Nearly all of the modest increase came from issuing shares, not from retaining profit.',
+      },
+      additionalPaidInCapital: {
+        label: 'Contributed Capital',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 3027.2,
+          },
+          {
+            year: 2020,
+            value: 3027.2,
+          },
+          {
+            year: 2021,
+            value: 3027.2,
+          },
+          {
+            year: 2022,
+            value: 3027.2,
+          },
+          {
+            year: 2023,
+            value: 3027.2,
+          },
+          {
+            year: 2024,
+            value: 3046.6,
+          },
+          {
+            year: 2025,
+            value: 3073.6,
+          },
+          {
+            year: 2026,
+            value: 3118.9,
+          },
+        ],
+        note: 'Rose 3.0%, from A$3,027.2m to A$3,118.9m. Note the direction: ASX ISSUES shares while Visa, Mastercard and Moody\u2019s all retire them.',
+      },
+      extraLines: [
+        {
+          label: 'Amounts Owing to Participants \u2014 current',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 10601.0,
+            },
+            {
+              year: 2020,
+              value: 12477.2,
+            },
+            {
+              year: 2021,
+              value: 12014.8,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 13076.7,
+            },
+            {
+              year: 2023,
+              value: 11584.7,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 11774.6,
+            },
+            {
+              year: 2025,
+              value: 12274.1,
+            },
+            {
+              year: 2026,
+              value: 8961.5,
+              down: true,
+            },
+          ],
+          note: 'THE DEFINING BALANCE SHEET ITEM. A$8,961.5m of clearing participant margins and commitments held by ASX and owed straight back. Together with the A$200.0m non-current portion it is 87.4% of total liabilities. It has no economic substance for shareholders \u2014 but it is why ASX earns net interest income, and why it is regulated as systemic infrastructure.',
+        },
+        {
+          label: 'Financial Assets at Amortised Cost',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 10825.4,
+            },
+            {
+              year: 2020,
+              value: 12511.4,
+            },
+            {
+              year: 2021,
+              value: 7565.4,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 8959.2,
+            },
+            {
+              year: 2023,
+              value: 11957.5,
+            },
+            {
+              year: 2024,
+              value: 12159.4,
+            },
+            {
+              year: 2025,
+              value: 12895.6,
+            },
+            {
+              year: 2026,
+              value: 9965.9,
+              down: true,
+            },
+          ],
+          note: 'The other side of the collateral: A$9,965.9m, or 68.9% of total assets. This is where the participant money is invested and where the interest is earned.',
+        },
+        {
+          label: 'Look-through Total Assets \u2014 DERIVED',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 4529.3,
+            },
+            {
+              year: 2020,
+              value: 4737.6,
+            },
+            {
+              year: 2021,
+              value: 4382.2,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 4960.8,
+            },
+            {
+              year: 2023,
+              value: 4558.0,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 4911.9,
+            },
+            {
+              year: 2025,
+              value: 5095.3,
+            },
+            {
+              year: 2026,
+              value: 5311.9,
+              down: true,
+            },
+          ],
+          note: 'DERIVED: total assets less all amounts owing to participants. A$14,473.4m of reported assets becomes A$5,311.9m. This is the balance sheet an owner actually has a claim on, and it makes the intangible concentration visible \u2014 A$2,835.1m of intangibles is 53.4% of it.',
+        },
+        {
+          label: 'Look-through Total Liabilities \u2014 DERIVED',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 612.9,
+            },
+            {
+              year: 2020,
+              value: 1017.2,
+            },
+            {
+              year: 2021,
+              value: 645.9,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 1155.4,
+            },
+            {
+              year: 2023,
+              value: 917.4,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 1187.2,
+            },
+            {
+              year: 2025,
+              value: 1222.5,
+            },
+            {
+              year: 2026,
+              value: 1325.5,
+              down: true,
+            },
+          ],
+          note: 'DERIVED the same way: A$10,487.0m becomes A$1,325.5m. Against A$3,986.4m of equity that is a genuinely unlevered business. Look-through assets less look-through liabilities equals total equity exactly in all eight years, which is the check that the adjustment is clean.',
+        },
+        {
+          label: 'Right-of-Use Assets',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2020,
+              value: 74.9,
+            },
+            {
+              year: 2021,
+              value: 64.3,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 58.3,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 47.9,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 48.0,
+            },
+            {
+              year: 2025,
+              value: 29.0,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 191.4,
+            },
+          ],
+          note: 'JUMPED FROM A$29.0m TO A$191.4m IN FY2026 \u2014 a 6.6-fold increase \u2014 with lease liabilities rising from A$35.9m to A$215.2m alongside. A major new property lease was signed, and it is why occupancy cost and D&A both move from here.',
+        },
+        {
+          label: 'Lease Liabilities \u2014 total',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2020,
+              value: 81.1,
+            },
+            {
+              year: 2021,
+              value: 72.4,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 67.6,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 58.6,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 57.9,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 35.9,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 215.2,
+            },
+          ],
+        },
+        {
+          label: 'Revenue Received in Advance \u2014 total',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 148.89999999999998,
+            },
+            {
+              year: 2020,
+              value: 160.1,
+            },
+            {
+              year: 2021,
+              value: 193.60000000000002,
+            },
+            {
+              year: 2022,
+              value: 218.8,
+            },
+            {
+              year: 2023,
+              value: 186.0,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 165.1,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 161.4,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 186.0,
+            },
+          ],
+          note: 'Contracted future revenue, A$186.0m in FY2026 and 14.6% of segment revenue. Grew 25.0% over eight years \u2014 far slower than revenue, so the recurring share is not increasing.',
+        },
+        {
+          label: 'Return on Equity \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2019,
+              value: 12.56,
+            },
+            {
+              year: 2020,
+              value: 13.4,
+            },
+            {
+              year: 2021,
+              value: 12.87,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 13.36,
+            },
+            {
+              year: 2023,
+              value: 8.72,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 12.73,
+            },
+            {
+              year: 2025,
+              value: 12.98,
+            },
+            {
+              year: 2026,
+              value: 12.16,
+              down: true,
+            },
+          ],
+          note: '12.17% in FY2026, down from 12.56% in FY2019. Flat for seven years, which follows directly from flat earnings on flat equity. Visa earns 50.4%, Mastercard 197.6%, Moody\u2019s 55.3% \u2014 though all three have shrunk their equity through buybacks and ASX has not.',
+        },
+        {
+          label: 'Return on Look-through Assets \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2019,
+              value: 10.86,
+            },
+            {
+              year: 2020,
+              value: 10.52,
+            },
+            {
+              year: 2021,
+              value: 10.97,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 10.25,
+            },
+            {
+              year: 2023,
+              value: 6.96,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 9.65,
+            },
+            {
+              year: 2025,
+              value: 9.86,
+            },
+            {
+              year: 2026,
+              value: 9.13,
+              down: true,
+            },
+          ],
+          note: 'DERIVED, and the fairest comparison available: net profit over assets excluding participant balances. 9.13% in FY2026 against 10.09% in FY2019. Visa earns 20.9% on assets and Mastercard 26.8%. Even adjusting for the collateral distortion, ASX earns roughly a third of what a payments network does on the capital it actually controls.',
+        },
+      ],
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash Flow Before Collateral Movements',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 456.3,
+          },
+          {
+            year: 2020,
+            value: 469.1,
+          },
+          {
+            year: 2021,
+            value: 565.8,
+          },
+          {
+            year: 2022,
+            value: 586.0,
+          },
+          {
+            year: 2023,
+            value: 545.7,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 495.9,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 574.3,
+          },
+          {
+            year: 2026,
+            value: 620.2,
+          },
+        ],
+        note: 'THIS IS THE LINE TO USE, NOT THE REPORTED TOTAL. It strips out participant margin and financial asset movements and shows the actual cash the business generates: A$456.3m in FY2019 to A$620.2m in FY2026, up 35.9%, and it never left the A$456\u2013620m band across eight years including a pandemic and a rate cycle. Remarkably stable \u2014 and note it grew SLOWER than revenue at 45.5%.',
+      },
+      capex: {
+        label: 'Payments for Intangibles & PP&E',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 84.6,
+          },
+          {
+            year: 2020,
+            value: 82.2,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 101.3,
+          },
+          {
+            year: 2022,
+            value: 105.8,
+          },
+          {
+            year: 2023,
+            value: 103.1,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 137.8,
+          },
+          {
+            year: 2025,
+            value: 171.9,
+          },
+          {
+            year: 2026,
+            value: 189.0,
+          },
+        ],
+        note: 'UP 123.4% SINCE FY2019 to A$189.0m, and rising steeply since FY2023. That is 14.9% OF REVENUE and 30.5% of pre-collateral operating cash flow \u2014 against Visa at 6.30%, Mastercard at 8.08% and Moody\u2019s at 11.2%. ASX IS NOW THE MOST CAPITAL-INTENSIVE COMPANY OF THE FOUR, and the CHESS replacement programme is the reason.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Pre-Collateral Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2019,
+            value: 18.54,
+          },
+          {
+            year: 2020,
+            value: 17.52,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 17.9,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 18.05,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 18.89,
+          },
+          {
+            year: 2024,
+            value: 27.79,
+          },
+          {
+            year: 2025,
+            value: 29.93,
+          },
+          {
+            year: 2026,
+            value: 30.47,
+          },
+        ],
+        note: 'From 18.54% to 30.47% \u2014 nearly a third of operating cash flow now goes to capital expenditure, and the trend has been one direction since FY2022.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow \u2014 pre-collateral, DERIVED',
+        unit: 'M AUD',
+        series: [
+          {
+            year: 2019,
+            value: 371.7,
+          },
+          {
+            year: 2020,
+            value: 386.9,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 464.5,
+          },
+          {
+            year: 2022,
+            value: 480.2,
+          },
+          {
+            year: 2023,
+            value: 442.6,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 358.1,
+            down: true,
+          },
+          {
+            year: 2025,
+            value: 402.4,
+          },
+          {
+            year: 2026,
+            value: 431.2,
+          },
+        ],
+        note: 'DERIVED: pre-collateral operating cash flow less capital expenditure. A$431.2m in FY2026 against A$371.7m in FY2019 \u2014 up 16.0% in seven years, or 2.2% a year. As a share of revenue it FELL from 42.6% to 33.9%, because capex grew faster than cash generation.',
+      },
+      extraLines: [
+        {
+          label: 'Net Operating Cash Flow \u2014 AS REPORTED',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 89.9,
+            },
+            {
+              year: 2020,
+              value: 1335.3,
+            },
+            {
+              year: 2021,
+              value: 5095.0,
+            },
+            {
+              year: 2022,
+              value: 203.4,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: -3404.0,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 480.3,
+            },
+            {
+              year: 2025,
+              value: 302.9,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 262.1,
+              down: true,
+            },
+          ],
+          note: 'DO NOT USE THIS LINE FOR ANALYSIS. It was NEGATIVE A$3,404.0m in FY2023 and POSITIVE A$5,095.0m in FY2021 \u2014 an A$8.5bn swing between two years \u2014 driven entirely by movements in participant margins and in the financial assets those margins are invested in. Neither movement tells you anything about the business. It is included only so the reconciliation is visible: pre-collateral cash flow plus the two collateral lines equals this figure exactly in all eight years.',
+        },
+        {
+          label: 'Dividends Paid',
+          unit: 'M AUD',
+          series: [
+            {
+              year: 2019,
+              value: 432.7,
+            },
+            {
+              year: 2020,
+              value: 696.5,
+            },
+            {
+              year: 2021,
+              value: 454.8,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 440.6,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 457.3,
+            },
+            {
+              year: 2024,
+              value: 390.6,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 395.1,
+            },
+            {
+              year: 2026,
+              value: 358.3,
+              down: true,
+            },
+          ],
+          note: 'A$358.3m in FY2026, DOWN 9.3% \u2014 and down 48.6% from the A$696.5m paid in FY2020. Cumulative dividends of A$3,625.9m over eight years against cumulative net profit of A$3,758.9m: A 96.5% PAYOUT RATIO ACROSS THE PERIOD. That is why retained earnings are lower than they were in FY2019, and it is the clearest statement of ASX\u2019s capital policy \u2014 distribute nearly everything, retain almost nothing, grow not at all.',
+        },
+        {
+          label: 'Dividend as % of Pre-Collateral Free Cash Flow \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2019,
+              value: 116.41,
+            },
+            {
+              year: 2020,
+              value: 180.02,
+            },
+            {
+              year: 2021,
+              value: 97.91,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 91.75,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 103.32,
+            },
+            {
+              year: 2024,
+              value: 109.08,
+              down: true,
+            },
+            {
+              year: 2025,
+              value: 98.19,
+              down: true,
+            },
+            {
+              year: 2026,
+              value: 83.09,
+              down: true,
+            },
+          ],
+          note: '83.1% in FY2026, down from 116.4% in FY2019 and a peak of 180.0% in FY2020 \u2014 years in which the dividend EXCEEDED free cash flow. The FY2026 reduction is the first real acknowledgement that the payout had to come down as capex rose.',
+        },
+      ],
+    },
+  },
+  moat: {
+    preamble: 'ASX owns the strongest structural position of any company in this coverage library and has converted it into no earnings growth for seven years. Those two facts are both true and they are the whole analysis. It is the licensed monopoly listing venue, the dominant trading venue, and the sole clearing and settlement facility for Australian cash equities \u2014 a vertical integration most developed markets have unbundled. The moat is not in question. What is in question is whether a regulated monopoly whose costs grew 3.3 times faster than its revenue can be described as a good business at any price.',
+    summary: {
+      headline: 'An unassailable position, a runaway cost base, and seven years of no earnings growth',
+      breakdown: [
+        {
+          division: 'Clearing and settlement \u00b7 the licensed monopoly',
+          moatStrength: 'Very Strong',
+          biggestRisk: 'ASX is the sole clearing and settlement facility for Australian cash equities. There is no competitor and entry requires a licence that has not been granted. THE RISK IS NOT COMPETITION, IT IS THE REGULATOR: the RBA and ASIC have repeatedly reviewed competition in clearing, and the abandoned CHESS replacement has intensified supervision rather than relieved it.',
+        },
+        {
+          division: 'Listings \u00b7 the venue franchise',
+          moatStrength: 'Strong but shrinking',
+          biggestRisk: 'Effectively the only place to list in Australia at scale. But revenue is A$217.7m in FY2026 against A$221.1m in FY2023 \u2014 LOWER THAN THREE YEARS AGO. A monopoly on listings is worth nothing if companies stop listing, and private capital has made staying private materially easier.',
+        },
+        {
+          division: 'Markets \u00b7 trading and derivatives',
+          moatStrength: 'Strong',
+          biggestRisk: 'The best-performing segment, up 44.4% since FY2021 and up 18.4% in FY2026 alone. Benefits directly from volatility, which is uncorrelated with everything else here. Chi-X and other venues compete in cash equities but not in the derivatives franchise.',
+        },
+        {
+          division: 'Technology & Data',
+          moatStrength: 'Strong',
+          biggestRisk: 'Market data and connectivity \u2014 up 45.5% since FY2021, rising every year, and the closest thing ASX has to recurring revenue independent of trading volume. Structurally the same business as Moody\u2019s Analytics, and the one segment where growth looks self-sustaining.',
+        },
+        {
+          division: 'Net interest on participant collateral',
+          moatStrength: 'Strong but uncontrollable',
+          biggestRisk: 'A$73.2m in FY2026, 10.3% of pre-tax profit, earned on A$9.2bn of client money. It collapsed to A$41.1m in FY2022 at zero rates and recovered with the cycle. Genuinely free money \u2014 and entirely at the mercy of the RBA.',
+        },
+        {
+          division: 'THE COST BASE',
+          moatStrength: 'Weak \u2014 the actual problem',
+          biggestRisk: 'Operating expenses up 148.7% against revenue up 45.5%, taking opex from 25.1% to 42.9% of revenue. Staff +110.5%, technology +195.3%, administration +231.9%. Capex up 123.4% to 30.5% of operating cash flow. NOTHING IN THE MOAT PROTECTS AGAINST THIS, and it is self-inflicted plus regulator-mandated in roughly unknown proportions.',
+        },
+        {
+          division: 'Technology execution \u00b7 CHESS',
+          moatStrength: 'Weak',
+          biggestRisk: 'A$248.4m of capitalised cost derecognised in FY2023 on an abandoned blockchain settlement replacement \u2014 more than a third of a year\u2019s earnings, spent and removed. The programme has restarted on conventional technology, which is why technology cost and capex are both still climbing. The regulator now supervises delivery. This is the single clearest evidence that a protected position does not guarantee competent execution.',
+        },
+        {
+          division: 'Capital allocation',
+          moatStrength: 'Weak',
+          biggestRisk: 'ASX distributed 96.5% of cumulative net profit as dividends over eight years, so retained earnings are LOWER than in FY2019 and equity has grown 1.8% \u2014 mostly by issuing shares rather than retaining profit. The dividend exceeded free cash flow in FY2019 and FY2020. It was finally cut 9.3% in FY2026. Distributing everything is defensible for a mature monopoly; doing it while capex triples is harder to defend.',
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG', tickerDisplay: 'GOOG / GOOGL',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
@@ -50404,7 +52904,7 @@ const COVERAGE_DATA = [
   { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: TCL_BREAKDOWN },
 
   // === STOCK EXCHANGES · AUSTRALIA ===
-  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Stock Exchanges',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null, locked: true },
+  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Stock Exchanges',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: ASX_BREAKDOWN, tier: 1 },
 
   // === TECHNOLOGY · AUSTRALIA ===
   { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, tier: 2, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: PXA_BREAKDOWN },
