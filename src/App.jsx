@@ -39634,6 +39634,329 @@ const V_BREAKDOWN = {
   },
 };
 
+
+// ════════════════════════════════════════════════════════════════
+// MA_BREAKDOWN — Mastercard Incorporated Coverage data (Tier 2, drop 1)
+// SOURCE: Muzz's supplied Item 1 material — overview, payment network and
+// the four-party transaction, strategy and the three priorities, payment
+// products and applications, security and franchise. FY2024 (year end
+// 31 December — NOT the same period as Visa's 30 September year).
+//
+// TABS LIVE: OVERVIEW, MOAT.
+// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+//
+// THE COMPARISON THIS BUILD EXISTS FOR: Mastercard switches ~70% of its own
+// branded transactions against Visa's 77.2% (234bn of 303bn), so its
+// unswitched gap is ~30% vs Visa's 22.8%. Both attribute it to domestic
+// routing — Mastercard states it switches nearly all cross-border.
+//
+// AND THE DIVERGENCE: Mastercard began processing DOMESTIC transactions in
+// China via joint venture in 2024. Visa has no licence and excludes China
+// from its stated opportunity entirely.
+// ════════════════════════════════════════════════════════════════
+const MA_BREAKDOWN = {
+  overview: {
+    identity: {
+      name: 'Mastercard Incorporated',
+      ticker: 'MA',
+      description: 'A payments network that describes itself as a TECHNOLOGY COMPANY in the global payments industry. It runs a proprietary four-party network switching authorisation, clearing and settlement, plus ACH capability in both batch and real-time account-based form. Brands are Mastercard, Maestro (PIN debit) and Cirrus (ATM). Like Visa it does not issue cards, extend credit, earn interest, or set the rates acquirers charge merchants \u2014 account holder relationships belong to the customers, not to Mastercard.',
+      industryPosition: [
+        'SCALE: roughly 150 MILLION acceptance locations and more than 250 MILLION DIGITAL ACCESS POINTS, operating in more than 220 countries and territories and settling in more than 150 currencies.',
+        'THE PROCESSING GAP IS LARGER THAN VISA\u2019S. Mastercard switches approximately 70% of Mastercard- and Maestro-branded card transactions, so roughly 30% of its own branded volume runs on someone else\u2019s rails. Visa\u2019s equivalent figure is 22.8%. Mastercard states it switches NEARLY ALL CROSS-BORDER transactions, which means the unswitched remainder is domestic \u2014 the same local-scheme and routing pressure that produces Visa\u2019s gap.',
+        'CROSS-BORDER IS ROUGHLY 30% OF TOTAL VOLUME and carries materially higher fees than domestic. That is a disproportionate share of profit sitting in the most travel-sensitive and geopolitically exposed line.',
+        'DIGITAL PENETRATION: about 70% of in-person branded transactions are contactless, 30% of ALL transactions are tokenised, and Click to Pay usage nearly doubled year on year.',
+        'MASTERCARD MOVE reaches more than 10 BILLION endpoints across 155+ countries, originating from 60+ countries, paying out to bank accounts, wallets, cards and cash.',
+        'CHINA: in 2024 Mastercard BEGAN PROCESSING DOMESTIC TRANSACTIONS IN CHINA through a joint venture, so its cards are now accepted for both domestic and cross-border use there. Visa is still awaiting a licence and excludes China from its stated opportunity entirely. This is the single clearest strategic divergence between the two networks.',
+        'Revenue is classified into just TWO categories: payment network, and value-added services and solutions. Both are stated NET of rebates and incentives \u2014 the equivalent of Visa\u2019s client incentives line, which ran to 38.3% of net revenue.',
+      ],
+    },
+    buffettFraming: {
+      headline: 'The same toll road, one lane narrower',
+      body: 'The mechanics are identical to Visa\u2019s. An account holder buys from a merchant; after the issuer authorises, the ISSUER pays the acquirer the transaction value less the interchange fee and other fees, and posts the transaction to the account holder. The acquirer pays the merchant net of the merchant discount rate. Mastercard never advances the money and never carries the credit. It moves data, sets the rules, and takes a fee \u2014 so revenue scales with the nominal value of commerce and inflation passes through rather than eroding it. Interchange is not Mastercard revenue: it is collected and remitted through settlement to compensate issuers, and Mastercard earns switching and network fees on top.',
+      bottomLine: 'The two-sided network is the same asset Visa owns and it is the second-largest in the world. What differs is position, not structure. Mastercard is smaller on dollar volume, switches a SMALLER SHARE of its own branded transactions, and carries a higher cross-border mix \u2014 which is more profitable and more cyclical. Set against that, it has been compounding transactions and credentials faster than Visa for fifteen years, it is further ahead on services as a share of revenue, and it got into domestic China processing while Visa did not. The one genuine structural advantage is the absence of Visa\u2019s multi-class share structure and retrospective responsibility plans: Mastercard carries its litigation directly, which makes the exposure easier to read and harder to absorb.',
+    },
+    businessLines: {
+      description: 'Three stated strategic priorities \u2014 consumer payments, commercial and new payment flows, and services and other solutions \u2014 supported by six enablers: people, brand, data and AI, technology, franchise, and doing well by doing good. The company is explicit that the priorities are INTERDEPENDENT, and describes the mechanism as a flywheel: payments volume drives switching, switching brings incremental data, data creates services, services win renewed customer deals, and those deals drive more volume.',
+      lines: [
+        {
+          name: 'The four-party transaction \u2014 how Mastercard earns',
+          description: 'Account holder buys from merchant. The issuer authorises, then pays the acquirer the transaction value MINUS the interchange fee and other applicable fees, and posts it to the account holder. The acquirer pays the merchant net of the MERCHANT DISCOUNT RATE. Mastercard switches the transaction \u2014 authorisation, clearing, settlement \u2014 and earns fees on GDV plus per-transaction switching fees. IT DOES NOT ISSUE, LEND, OR EARN INTEREST, and interchange is not its revenue: interchange is collected and remitted to issuers through settlement.',
+          revenueProfile: 'GDV fees + switching',
+          highlight: true,
+        },
+        {
+          name: 'Consumer payments \u2014 credit, debit, prepaid, bill pay',
+          description: 'Credit across standard, premium and affluent segments. Debit through Mastercard, MAESTRO (PIN-based) and CIRRUS (ATM access). Prepaid for unbanked, payroll, health and gig use cases. Plus an integrated bill payment network using card or account-based methods. Enabled by Digital First instant issuance and wallet provisioning, tokenisation and passkey biometrics, Click to Pay, and Tap on Phone / SoftPOS acceptance for small merchants.',
+          revenueProfile: 'Core network',
+          highlight: true,
+          marginNote: '~70% of in-person branded transactions contactless; 30% of all transactions tokenised',
+        },
+        {
+          name: 'Commercial payments \u2014 the B2B push',
+          description: 'Small business credit, debit and prepaid; commercial travel and entertainment, procurement and fleet cards. SMART DATA for expense management and reporting. VIRTUAL CARD NUMBERS \u2014 dynamic one-time credentials with spend controls through In Control. RECEIVABLES MANAGER automates supplier reconciliation. In 2024 VCN was integrated into third-party AP and ERP platforms and enabled inside digital wallets. Addresses a stated $120 TRILLION-plus B2B market \u2014 for comparison Visa states $145 trillion.',
+          revenueProfile: 'New flows',
+          highlight: true,
+        },
+        {
+          name: 'Mastercard Move \u2014 disbursements and remittances',
+          description: 'Domestic and cross-border payouts across C2C, B2C, G2C and cross-border flows, reaching MORE THAN 10 BILLION ENDPOINTS in 155+ countries from 60+ originating countries, paying out to bank accounts, wallets, cards and cash. 2024 added ALIAS-BASED REMITTANCES \u2014 send by phone number or email \u2014 and deepened B2C and G2C partnerships including social aid and gig payouts. Visa Direct\u2019s comparable reach is 11.0bn endpoints across 195+ countries.',
+          revenueProfile: 'New flows',
+        },
+        {
+          name: 'Security solutions',
+          description: 'Prevention through EMV chip, contactless security and global monitoring. Identification via device intelligence, biometrics and behavioural analytics. Detection through real-time fraud scoring, breach alerts and network-level monitoring. And CONTINUITY: STAND-IN PROCESSING authorises transactions when an issuer\u2019s own systems fail \u2014 a capability with no direct equivalent in the Visa disclosure. 2024 brought the RECORDED FUTURE acquisition, adding cyber threat intelligence, and DECISION INTELLIGENCE PRO using generative AI for fraud detection.',
+          revenueProfile: 'Value-added services',
+          highlight: true,
+        },
+        {
+          name: 'Consumer acquisition & engagement',
+          description: 'Marketing services running data-driven growth campaigns, AI-based personalisation of product and content recommendations, and a global loyalty and rewards platform covering issuer and merchant offers, airport lounge access, concierge and emergency services. Underpinned by the Priceless brand franchise.',
+          revenueProfile: 'Value-added services',
+        },
+        {
+          name: 'Business & market insights',
+          description: 'Advanced analytics across marketing, credit risk and experimentation. Business intelligence for portfolio and trend optimisation. Economic and LOCATION insights from spending patterns and geolocation. Payments consulting and operational insights on reconciliation and settlement, delivered through Mastercard Advisors. Built on anonymised network data \u2014 the flywheel\u2019s data-to-services step made commercial.',
+          revenueProfile: 'Value-added services',
+        },
+        {
+          name: 'Processing & gateway',
+          description: 'Turnkey issuer processing for banks and fintechs, and payment gateways giving merchants a single interface for e-commerce, in-app payments and fraud prevention, including support for alternative payment methods. Modular and API-enabled. This is where Mastercard competes with the processors that would otherwise sit between it and its customers.',
+          revenueProfile: 'Value-added services',
+        },
+        {
+          name: 'Open banking & account-based payments',
+          description: 'Open banking APIs for data access, consent management, lending and payments, plus ACH batch and RTP rails for real-time transfers. Expanded across Europe, the US and Latin America in 2024. Governed by stated Data & Tech Responsibility Principles covering privacy, consent and transparency. THE SAME STRATEGIC TENSION AS VISA: building the account-to-account rails that move money without a card.',
+          revenueProfile: 'Value-added services',
+          highlight: true,
+        },
+        {
+          name: 'Digital innovation \u2014 including the Multi-Token Network',
+          description: 'Contactless, Tap on Phone and SmartPOS for merchants; Digital First, Click to Pay, tokenisation and passkey biometrics; instant provisioning to mobile wallets. Plus the MULTI-TOKEN NETWORK for programmable blockchain payments, in pilot expansion \u2014 an explicit blockchain interoperability play that Visa\u2019s Item 1 does not match.',
+          revenueProfile: 'Enabler',
+        },
+      ],
+      tables: [
+        {
+          title: 'MASTERCARD vs VISA \u00b7 LIKE-FOR-LIKE ON DROP 1 DISCLOSURE',
+          columns: [
+            'Metric',
+            'Mastercard',
+            'Visa',
+          ],
+          rows: [
+            [
+              'Acceptance locations',
+              '~150 million',
+              '150 million+',
+            ],
+            [
+              'Digital access points',
+              '250 million+',
+              'not disclosed',
+            ],
+            [
+              'Countries and territories',
+              '220+',
+              '200+',
+            ],
+            [
+              'Currencies',
+              '150+',
+              'not disclosed',
+            ],
+            [
+              'SHARE OF OWN BRANDED TRANSACTIONS SWITCHED',
+              '~70%',
+              '77.2% (234bn of 303bn)',
+            ],
+            [
+              '\u2014 implied unswitched gap',
+              '~30%',
+              '22.8%',
+            ],
+            [
+              'Contactless share of in-person',
+              '~70%',
+              '>90% in ~60 countries; >80% ex-US',
+            ],
+            [
+              'Tokenisation',
+              '30% of all transactions',
+              '11.5bn tokens provisioned',
+            ],
+            [
+              'Money-movement endpoints',
+              '10bn+ across 155+ countries',
+              '11.0bn across 195+ countries',
+            ],
+            [
+              'Stated B2B opportunity',
+              '$120T+',
+              '$145T',
+            ],
+            [
+              'Cross-border share of volume',
+              '~30%',
+              'not disclosed',
+            ],
+            [
+              'Domestic processing in China',
+              'YES \u2014 via joint venture from 2024',
+              'No licence; China excluded from TAM',
+            ],
+          ],
+          emphasis: [
+            4,
+            5,
+            11,
+          ],
+          note: 'TWO ROWS MATTER MOST. First, Mastercard switches a SMALLER share of its own branded transactions than Visa \u2014 roughly 70% against 77.2% \u2014 so proportionally more of its brand volume earns brand fees without switching fees. It notes it switches nearly all CROSS-BORDER, which means the unswitched remainder is domestic, the same local-scheme and routing pressure behind Visa\u2019s gap. Second, Mastercard began processing DOMESTIC transactions in China through a joint venture in 2024, while Visa is still awaiting a licence and excludes China from its stated opportunity altogether. That is the clearest strategic divergence between the two networks in this material.',
+        },
+        {
+          title: 'THE STATED FLYWHEEL \u00b7 WHY THE PRIORITIES ARE CALLED INTERDEPENDENT',
+          columns: [
+            'Step',
+            'What happens',
+          ],
+          rows: [
+            [
+              '1 \u00b7 Payments volume',
+              'Growth in carded and account-based volume across consumer and commercial',
+            ],
+            [
+              '2 \u00b7 Switching',
+              'More volume means more transactions switched over Mastercard\u2019s own rails',
+            ],
+            [
+              '3 \u00b7 Incremental data',
+              'Switching brings transaction data onto the network',
+            ],
+            [
+              '4 \u00b7 Data-driven services',
+              'That data becomes security, insight, personalisation and analytics products',
+            ],
+            [
+              '5 \u00b7 Differentiated offerings',
+              'Services differentiate the payments proposition itself',
+            ],
+            [
+              '6 \u00b7 New and renewed deals',
+              'Differentiation wins customer portfolios',
+            ],
+            [
+              '\u2192 back to step 1',
+              'Won portfolios drive greater payments volume growth',
+            ],
+          ],
+          emphasis: [
+            2,
+            3,
+          ],
+          note: 'READ STEPS 2 AND 3 AGAINST THE PROCESSING GAP. The flywheel depends on SWITCHING to generate the data that feeds services \u2014 but roughly 30% of Mastercard-branded transactions are not switched by Mastercard, so that share generates brand fees and no transaction data. The flywheel and the routing regulation act on the same variable in opposite directions, which is why domestic switching expansion (China, and elsewhere) matters more than its current revenue suggests.',
+        },
+      ],
+    },
+    customers: {
+      mainCustomers: 'The same four-party structure as Visa. ISSUERS are the account holders\u2019 financial institutions and hold the customer relationship \u2014 Mastercard explicitly states that in most cases account holder relationships belong to and are managed by its customers, not by it. ACQUIRERS are the merchants\u2019 financial institutions. MERCHANTS accept at roughly 150 million locations and 250 million digital access points. ACCOUNT HOLDERS pay Mastercard nothing directly. Governments, digital partners and fintechs are named as an increasingly explicit fifth constituency.',
+      distributionNetwork: [
+        'A globally integrated, distributed peer-to-peer network with 24/7 availability and sub-second response, applying layered services such as fraud scoring and tokenisation per transaction.',
+        'More than 220 countries and territories, settling in more than 150 currencies.',
+        'Approximately 150 million acceptance locations plus more than 250 million digital access points.',
+        'STAND-IN PROCESSING, which authorises transactions on the issuer\u2019s behalf when the issuer\u2019s own systems are unavailable \u2014 continuity infrastructure that deepens issuer dependence.',
+        'Mastercard Move across 155+ countries with 10bn+ endpoints, originating in 60+ countries.',
+        'ACH batch and real-time account-based rails, domestic and cross-border.',
+        'Open banking APIs across Europe, the US and Latin America.',
+        'A domestic switching joint venture in CHINA from 2024.',
+        'Issuer processing and gateway services, giving Mastercard a position in the processing layer as well as the network layer.',
+      ],
+    },
+    reinvestment: {
+      headline: 'Six stated enablers beneath the three priorities',
+      breakdown: [
+        {
+          label: 'Franchise \u2014 the governance model',
+          amount: 'The distinctive one',
+          detail: 'Mastercard gives the franchise model far more prominence than Visa gives any equivalent. Five core functions: participant onboarding with due diligence before access; operating standards covering technical, operational and financial rules; a common safety and security framework; responsible stewardship through performance monitoring and proactive audits; and a dispute and compliance framework. It holds RISK-TIERED ACCESS AND LICENCE SUSPENSION POWERS. This is the contractual machinery that makes a network governable, and it is a genuine moat component rather than boilerplate.',
+        },
+        {
+          label: 'Data & AI',
+          amount: 'The flywheel input',
+          detail: 'Anonymised network data feeding security, insights, personalisation and analytics. Generative AI now runs fraud detection through Decision Intelligence Pro, and the Recorded Future acquisition adds external cyber threat intelligence to internal network signal.',
+        },
+        {
+          label: 'Technology',
+          amount: 'Peer-to-peer architecture',
+          detail: 'A distributed network rather than a hub-and-spoke one, with 24/7 availability, sub-second response and modular services applied per transaction. Being modernised to carry ACH, RTP and open banking alongside cards \u2014 the multi-rail claim depends on this.',
+        },
+        {
+          label: 'Security \u2014 multi-layered',
+          amount: 'Defence in depth',
+          detail: 'Encryption, tokenisation, segmentation, zero-trust access and anomaly detection across network, platforms and data centres. 24/7 SOC operations with AI behavioural monitoring, red-team testing and crisis simulation, public-private collaboration including FS-ISAC, and CYBER INSURANCE for residual risk \u2014 an explicit acknowledgement that controls do not eliminate exposure.',
+        },
+        {
+          label: 'Brand',
+          amount: 'Priceless',
+          detail: 'Mastercard, Maestro and Cirrus, with the Priceless platform carrying consumer engagement. The brand is licensed to participants under the franchise rules, so it is a contractual instrument as well as a marketing asset.',
+        },
+        {
+          label: 'People and doing well by doing good',
+          amount: 'The remaining two enablers',
+          detail: 'Named alongside the other four in the strategy framework. Includes SMB cybersecurity education and free tooling through CyberSecure and Trust Center \u2014 which raises the security floor across the ecosystem Mastercard does not directly control.',
+        },
+      ],
+      note: 'Enterprise resilience sits underneath all six: business continuity and disaster recovery frameworks, geographic data centre redundancy with regularly tested dual-site failover, cyber risk insurance at high limits, and stress tests for systemic events such as a major bank outage or third-party processor failure.',
+    },
+  },
+  moat: {
+    preamble: 'The same two-sided network economics as Visa, at roughly 60% of the scale on dollar volume. What is distinctive here is the FRANCHISE MODEL \u2014 the contractual governance layer that sets participant standards, monitors compliance and holds licence suspension powers. Mastercard treats it as a first-class strategic asset, and it is what allows a network to enforce behaviour across parties it does not own. The weakness is the mirror image of Visa\u2019s: regulated pricing, mandated routing, and a switched share of its own branded volume that is LOWER than Visa\u2019s.',
+    summary: {
+      headline: 'The second-largest network in the world, with a better governance layer and a wider processing gap',
+      breakdown: [
+        {
+          division: 'The payment network',
+          moatStrength: 'Very Strong',
+          biggestRisk: '~150m acceptance locations, 250m+ digital access points, 220+ countries, 150+ currencies. The two-sided network is genuinely hard to replicate and neither side can defect alone. The risk is not a better network \u2014 it is regulators capping what this one may charge and requiring merchants be able to route around it.',
+        },
+        {
+          division: 'Switching \u2014 and the 30% that gets away',
+          moatStrength: 'Moderate',
+          biggestRisk: 'MASTERCARD SWITCHES ONLY ~70% OF ITS OWN BRANDED TRANSACTIONS, against Visa\u2019s 77.2%. It switches nearly all cross-border, so the missing 30% is domestic \u2014 lost to local schemes and routing mandates. Every unswitched transaction earns brand fees but no switching fee AND generates no transaction data, which starves the services flywheel at its second step.',
+        },
+        {
+          division: 'Franchise governance',
+          moatStrength: 'Strong',
+          biggestRisk: 'Onboarding due diligence, binding operating standards, proactive audits, risk-tiered access and licence suspension powers. This is the machinery that keeps a network of thousands of independent participants coherent, and it compounds: higher trust brings more merchants, more volume, more data, better security. Its limit is that it governs participants, not regulators.',
+        },
+        {
+          division: 'Cross-border \u2014 the profit concentration',
+          moatStrength: 'Strong but cyclical',
+          biggestRisk: 'Roughly 30% of volume, at materially higher fees, so a disproportionate share of profit. That makes results sensitive to travel, geopolitics and sanctions in a way domestic volume is not \u2014 and it is the line most exposed to cross-border interchange regulation and to RTP schemes linking up across borders.',
+        },
+        {
+          division: 'Value-added services',
+          moatStrength: 'Strong',
+          biggestRisk: 'One of only two reported revenue categories, which is itself telling \u2014 Mastercard elevates services to half the revenue architecture where Visa buries them across four lines. Security, processing and gateway, engagement, insights, open banking and digital authentication. The advantage is the network data feeding them; the exposure is that these compete on product merit against specialists, not on network position.',
+        },
+        {
+          division: 'Domestic China processing',
+          moatStrength: 'Strategic advantage over Visa',
+          biggestRisk: 'Mastercard began switching DOMESTIC Chinese transactions through a joint venture in 2024. Visa has no licence and excludes China from its stated opportunity. Whether this converts into material volume against UnionPay, Alipay and WeChat Pay is unproven \u2014 but Mastercard has the access and Visa does not.',
+        },
+        {
+          division: 'Open banking and A2A',
+          moatStrength: 'Weak',
+          biggestRisk: 'The same tension as Visa. Mastercard is building the account-to-account and ACH rails that let money move without a card, on the argument that it should own the standards and earn from the flows either way. Correct strategically, and lower-margin than interchange-linked card volume.',
+        },
+        {
+          division: 'Regulatory position',
+          moatStrength: 'Weak',
+          biggestRisk: 'Interchange caps and domestic preference rules across the EU, India and the US create structural pressure, explicitly acknowledged as pushing Mastercard toward services and data monetisation. The company competes with local and government-backed schemes that regulators are actively empowering.',
+        },
+      ],
+    },
+  },
+};
+
 const COVERAGE_DATA = [
   // === TECHNOLOGY · USA ===
   { ticker: 'GOOG', tickerDisplay: 'GOOG / GOOGL',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: GOOG_BREAKDOWN , tier: 1, progress: 'research' },
@@ -39655,7 +39978,7 @@ const COVERAGE_DATA = [
 
   // === FINANCIAL SERVICES · USA ===
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 1, progress: 'research' },
-  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null , locked: true, progress: 'research' },
+  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: MA_BREAKDOWN , tier: 2, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null , locked: true, progress: 'research' },
   { ticker: 'SPGI',  name: 'S&P Global',                     industry: 'Financial Services', country: 'United States', marketCap: 130000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Ratings, indices and market data — a toll booth on global capital markets.', breakdown: SPGI_BREAKDOWN },
