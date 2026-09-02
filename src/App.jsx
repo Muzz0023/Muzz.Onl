@@ -39642,8 +39642,8 @@ const V_BREAKDOWN = {
 // products and applications, security and franchise. FY2024 (year end
 // 31 December — NOT the same period as Visa's 30 September year).
 //
-// TABS LIVE: OVERVIEW, MOAT.
-// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (per-employee only).
+// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, RISKS, THESIS.
 //
 // THE COMPARISON THIS BUILD EXISTS FOR: Mastercard switches ~70% of its own
 // branded transactions against Visa's 77.2% (234bn of 303bn), so its
@@ -39905,6 +39905,459 @@ const MA_BREAKDOWN = {
         },
       ],
       note: 'Enterprise resilience sits underneath all six: business continuity and disaster recovery frameworks, geographic data centre redundancy with regularly tested dual-site failover, cyber risk insurance at high limits, and stress tests for systemic events such as a major bank outage or third-party processor failure.',
+    },
+    equityStructure: {
+      summary: 'MUCH SIMPLER THAN VISA\u2019S, AND THAT IS THE POINT. Two classes only: CLASS A carries one vote per share and is the listed stock; CLASS B is NON-VOTING and held by principal and affiliate customers \u2014 the banks. At 31 December 2024 public investors held 89.9% of equity and 90.6% of voting power, the Mastercard Foundation held 9.3% and 9.4%, and Class B customers held 0.7% of equity and NO voting power at all. There is no litigation-linked conversion mechanism, no preferred stock, and no retrospective responsibility plan. Visa carries Class A, B-1, B-2, C and three preferred series whose conversion waits on the US covered litigation; Mastercard carries two classes and a charitable foundation on a published timetable.',
+      classes: [
+        {
+          name: 'Class A \u2014 the listed stock',
+          votingRights: 'One vote per share',
+          dividendRights: 'Full economic rights',
+          boardElections: 'Votes on directors, no cumulative voting',
+          control: '89.9% of equity held by public investors plus 9.3% by the Mastercard Foundation. No person may beneficially own more than 15% of Class A or 15% of total voting power.',
+          color: 'amber',
+        },
+        {
+          name: 'Class B \u2014 principal and affiliate customers',
+          votingRights: 'NON-VOTING \u2014 zero voting power',
+          dividendRights: 'Economic rights only',
+          boardElections: 'No vote',
+          control: 'Held by the member banks. Just 0.7% of equity at FY2024, down from 0.8%. Separates the customers\u2019 economic interest from any control over the company \u2014 the structural answer to the conflict that Visa handles through its Class B litigation classes.',
+          color: 'slate',
+        },
+        {
+          name: 'Mastercard Foundation \u2014 Class A holder',
+          votingRights: 'Votes as an ordinary Class A holder',
+          dividendRights: 'Full economic rights',
+          boardElections: 'Votes on directors',
+          control: 'Received 135 MILLION newly authorised Class A shares by donation at the 2006 IPO. A private Canadian charitable foundation controlled by directors who must be INDEPENDENT of Mastercard and its principal customers. Held 9.3% of equity and 9.4% of voting power at FY2024, down from 10.4% and 10.5%.',
+          color: 'green',
+        },
+      ],
+      controlProtection: 'The distinctive provision is on the BOARD, not the share register: any representative of a Mastercard COMPETITOR, or of a Foundation competitor, is disqualified from board service outright. Visa caps competitors at 5% of stock; Mastercard bars them from the boardroom entirely. Combined with the 15% ownership ceiling, no cumulative voting and no action by written consent, plus Delaware Section 203, a hostile approach is close to impossible.',
+      legalProtections: [
+        'No person may beneficially own more than 15% of Class A stock or 15% of total voting power, with limited exceptions.',
+        'Any representative of a Mastercard competitor OR a Foundation competitor is disqualified from serving on the board.',
+        'No cumulative voting \u2014 minority holders cannot aggregate votes to elect a specific director.',
+        'No stockholder action by written consent; action requires a formal meeting and vote.',
+        'Incorporated in Delaware, so DGCL Section 203 restrictions on business combinations apply.',
+        'Mastercard Foundation directors must be independent of Mastercard and its principal customers.',
+      ],
+      keyTakeaway: 'BOTH NETWORKS HAVE A SHARE OVERHANG, BUT ONLY ONE HAS A TIMETABLE. Visa\u2019s Class B converts when the US covered litigation finally resolves \u2014 on no schedule anyone controls. Mastercard\u2019s overhang is the Foundation selling down under an ORDERLY SEVEN-YEAR PLAN running from March 2024 to 2031, having received court approval in July 2023 to advance its sale date from May 2027 to January 2024. The Foundation has committed to remain a long-term holder. Equity fell from 10.4% to 9.3% in the first year, which annualises to roughly a point a year \u2014 predictable supply rather than an unknowable cliff. For a Class A buyer that difference is worth real money, because you can price a schedule and you cannot price an open question.',
+    },
+    acquisitions: {
+      heading: 'ACQUISITIONS \u2014 CASH-FUNDED, CAPABILITY-LED, NO DILUTION',
+      preamble: 'A consistent pattern: technology, fintech and data targets, funded with CASH OR SHORT-TERM DEBT and never with large-scale stock issuance. Targets typically have SaaS models or network effects. The strategic logic is defensive as much as expansive \u2014 most of these buy capability that protects the network (fraud, identity, compliance) rather than volume. Compare Visa, whose FY2024 list was Pismo, Prosa and Featurespace: the same instinct, different targets.',
+      timeline: [
+        {
+          year: '2017',
+          target: 'Brighterion \u2014 AI fraud detection',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          note: 'Machine learning for fraud prevention. The earliest of the AI-risk purchases, and the foundation of what became Decision Intelligence.',
+        },
+        {
+          year: '2019',
+          target: 'Transfast \u2014 cross-border payments',
+          price: '~$300m',
+          funding: 'Cash',
+          note: 'Remittances and B2B cross-border. Feeds directly into what is now Mastercard Move.',
+        },
+        {
+          year: '2019',
+          target: 'Vyze \u2014 point-of-sale financing',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          note: 'Entry into buy-now-pay-later before BNPL became a category.',
+        },
+        {
+          year: '2021',
+          target: 'Ekata \u2014 identity verification',
+          price: '$850m',
+          funding: 'Cash',
+          featured: true,
+          note: 'The largest disclosed deal in this list. Identity verification and fraud prevention \u2014 the capability underneath digital and authentication solutions.',
+        },
+        {
+          year: '2021',
+          target: 'Aiia \u2014 open banking, Europe',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          note: 'Bought the open banking rails that let money move without a card. Visa bought Tink for the same reason in the same period.',
+        },
+        {
+          year: '2021',
+          target: 'CipherTrace \u2014 crypto forensics',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          note: 'Crypto AML compliance. Reads alongside the Multi-Token Network and the stablecoin threat named in the competitive landscape.',
+        },
+        {
+          year: '2024',
+          target: 'Recorded Future \u2014 cyber threat intelligence',
+          price: 'Undisclosed',
+          funding: 'Cash',
+          featured: true,
+          note: 'Adds EXTERNAL threat intelligence to internal network signal. Announced alongside Decision Intelligence Pro, the generative-AI fraud engine \u2014 the two are complementary.',
+        },
+      ],
+      note: 'Also relevant though not in the deal list: VOCALINK, the real-time payments infrastructure Mastercard operates and modernises. That is a genuine structural difference from Visa \u2014 Mastercard does not merely compete with real-time rails, it RUNS one. Discipline is the stated hallmark: cash funding, no dilution, and a willingness to walk away on valuation.',
+    },
+    competitors: {
+      preamble: 'Fourteen named pressure vectors, and almost none of them is another card network taking share with a better product. The threats are governments building parallel rails, regulators mandating local routing, wallets owning the customer interface, and account-based payments bypassing cards entirely. Mastercard\u2019s stated response is consistent: participate in the thing that threatens you.',
+      middleLabel: 'MASTERCARD',
+      majorCompetitors: [
+        'Visa',
+        'American Express',
+        'China UnionPay',
+        'JCB',
+        'Discover',
+      ],
+      categories: [
+        {
+          category: 'Card networks and local schemes',
+          icon: '\u1f4b3',
+          featured: true,
+          rows: [
+            {
+              type: 'Global purpose networks',
+              ourProduct: 'Global scale, trusted brand, settlement guarantee',
+              competitors: 'Visa \u00b7 American Express \u00b7 JCB \u00b7 China UnionPay \u00b7 Discover \u2014 competing issuer by issuer, with REGULATORY ASYMMETRY THAT MAY FAVOUR THREE-PARTY MODELS',
+            },
+            {
+              type: 'Domestic debit and ATM networks',
+              ourProduct: 'On-soil presence, interoperability, local partnerships',
+              competitors: 'National POS and ATM schemes \u2014 national preference for local rails and switching mandates, with MASTERCARD MAINLY USED FOR CROSS-BORDER in those markets. This is the admission behind the ~30% unswitched gap',
+            },
+            {
+              type: 'Domestic scheme preference',
+              ourProduct: 'Local licensing, franchise structure, regional data centres',
+              competitors: 'National regulators requiring on-soil data and domestic routing in emerging and regulated economies',
+            },
+          ],
+        },
+        {
+          category: 'The disintermediation threats',
+          icon: '\u1f504',
+          featured: true,
+          rows: [
+            {
+              type: 'Real-time A2A and ACH',
+              ourProduct: 'OPERATES AND MODERNISES VOCALINK; embeds A2A and open banking',
+              competitors: 'RTP and ACH providers, fintechs and interlinked A2A networks \u2014 account-based payments may erode card volumes AND interchange economics',
+            },
+            {
+              type: 'Digital public infrastructure and CBDCs',
+              ourProduct: 'Engages regulators; sells standards, interoperability, cyber and advisory to governments',
+              competitors: 'Pix (Brazil) \u00b7 UPI (India) \u00b7 FedNow (US) \u00b7 CBDC pilots \u2014 STATE-BACKED SYSTEMS THAT MAY REPLACE CARD FLOWS',
+            },
+            {
+              type: 'Wallets, BNPL and fintechs',
+              ourProduct: 'Tokenisation, Click to Pay, passkeys, wallet enablement \u2014 partnering rather than fighting',
+              competitors: 'Apple Pay \u00b7 PayPal \u00b7 Afterpay \u00b7 Klarna \u00b7 Stripe \u00b7 Adyen \u2014 they own the consumer relationship, can bypass card rails, and want the data',
+            },
+            {
+              type: 'Digital currencies',
+              ourProduct: 'Blockchain settlement integration, Multi-Token Network, compliance leadership',
+              competitors: 'Stablecoins and crypto platforms \u2014 24/7 programmable value transfer that can bypass intermediaries entirely',
+            },
+            {
+              type: 'Government-backed protectionism',
+              ourProduct: 'Government relationships, compliance credibility, local investment',
+              competitors: 'Central banks and regulators favouring local schemes and restricting foreign networks',
+            },
+          ],
+        },
+        {
+          category: 'Margin and services pressure',
+          icon: '\u2696',
+          rows: [
+            {
+              type: 'Pricing pressure from issuers and merchants',
+              ourProduct: 'Multi-year BUNDLED contracts combining rails plus services',
+              competitors: 'Global issuers and merchants driving INCENTIVE ESCALATION and declining margin per transaction \u2014 the same dynamic that took Visa\u2019s client incentives to 38.3% of net revenue',
+            },
+            {
+              type: 'Point-solution providers',
+              ourProduct: 'Unified full-service stack plus selective M&A',
+              competitors: 'Fraud and AI firms, open-banking aggregators, loyalty vendors \u2014 specialised tools attacking the integrated stack piece by piece',
+            },
+          ],
+        },
+        {
+          category: 'Operating and macro exposure',
+          icon: '\u1f30d',
+          rows: [
+            {
+              type: 'Information security and resilience',
+              ourProduct: 'Multi-layered programme, cloud-native architecture, external assessment, cyber insurance',
+              competitors: 'Cyber attackers and infrastructure risk \u2014 outages, breaches, fraud',
+            },
+            {
+              type: 'Macro and geopolitical',
+              ourProduct: 'Geographic diversification, hedging, flexible opex model',
+              competitors: 'Inflation, FX, war and sanctions \u2014 hitting cross-border hardest, which is ~30% of volume at the highest fees',
+            },
+            {
+              type: 'Talent',
+              ourProduct: 'The "Mastercard Way" culture, ethical leadership, ESG integration',
+              competitors: 'Global competition for AI and data expertise',
+            },
+          ],
+        },
+      ],
+      keyTakeaway: 'THE MOST REVEALING ROW IS THE DOMESTIC DEBIT ONE, because Mastercard states plainly that in markets with strong local schemes it is MAINLY USED FOR CROSS-BORDER. That is the company itself explaining the ~30% of branded transactions it does not switch. The second most revealing is Vocalink: Mastercard does not merely compete with real-time rails, it OWNS AND OPERATES ONE. Where Visa\u2019s answer to A2A is Tink and a UK launch, Mastercard\u2019s is an incumbent national RTP operator. Whether that converts to economics is unproven, but it is a materially different starting position \u2014 and it is why the multi-rail claim here is more than marketing.',
+    },
+  },
+  numbers: {
+    employees: {
+      label: 'Total Employees',
+      unit: 'count',
+      series: [
+        {
+          year: 2015,
+          value: 11300,
+        },
+        {
+          year: 2016,
+          value: 11900,
+        },
+        {
+          year: 2017,
+          value: 13400,
+        },
+        {
+          year: 2018,
+          value: 14800,
+        },
+        {
+          year: 2019,
+          value: 18600,
+        },
+        {
+          year: 2020,
+          value: 21000,
+        },
+        {
+          year: 2021,
+          value: 24000,
+        },
+        {
+          year: 2022,
+          value: 29900,
+        },
+        {
+          year: 2023,
+          value: 33400,
+        },
+        {
+          year: 2024,
+          value: 35300,
+        },
+      ],
+      note: 'Grew 212% over nine years, from 11,300 to 35,300, and rose in EVERY year. Visa employed about 31,600 at FY2024. Mastercard now carries roughly 12% more people than Visa on materially less revenue.',
+    },
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 855487,
+        },
+        {
+          year: 2016,
+          value: 905546,
+        },
+        {
+          year: 2017,
+          value: 932612,
+        },
+        {
+          year: 2018,
+          value: 1010135,
+        },
+        {
+          year: 2019,
+          value: 907689,
+          down: true,
+        },
+        {
+          year: 2020,
+          value: 728619,
+          down: true,
+        },
+        {
+          year: 2021,
+          value: 786833,
+        },
+        {
+          year: 2022,
+          value: 743893,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 751438,
+          down: true,
+        },
+        {
+          year: 2024,
+          value: 797017,
+        },
+      ],
+      note: 'PEAKED IN 2018 AT $1,010,135 AND HAS FALLEN 21.1% SINCE, to $797,017. Over the same period headcount grew 139% while implied revenue grew about 88% \u2014 so people have been added almost twice as fast as revenue. VISA EARNS $1,136,899 PER EMPLOYEE, 42.6% MORE. Some of that gap is real efficiency and some is mix: Mastercard\u2019s services businesses are more labour-intensive than switching, and services are a larger share of its revenue. Either way it is the clearest operating difference between the two networks.',
+    },
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 336991,
+        },
+        {
+          year: 2016,
+          value: 340252,
+        },
+        {
+          year: 2017,
+          value: 292164,
+          down: true,
+        },
+        {
+          year: 2018,
+          value: 395203,
+        },
+        {
+          year: 2019,
+          value: 436452,
+        },
+        {
+          year: 2020,
+          value: 305286,
+          down: true,
+        },
+        {
+          year: 2021,
+          value: 361958,
+        },
+        {
+          year: 2022,
+          value: 331104,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 335329,
+        },
+        {
+          year: 2024,
+          value: 364772,
+        },
+      ],
+      note: 'Peaked at $436,452 in 2019 and is $364,772 now, down 16.4%. VISA EARNS $624,778 PER EMPLOYEE, 71.3% MORE. The gap on profit is wider than the gap on revenue, which says Mastercard\u2019s additional headcount is not yet earning its keep at Visa\u2019s margin \u2014 or that it is buying future revenue.',
+    },
+    incomeStatement: {
+      extraLines: [
+        {
+          label: 'Implied Net Revenue \u2014 DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 9667,
+            },
+            {
+              year: 2016,
+              value: 10776,
+            },
+            {
+              year: 2017,
+              value: 12497,
+            },
+            {
+              year: 2018,
+              value: 14950,
+            },
+            {
+              year: 2019,
+              value: 16883,
+            },
+            {
+              year: 2020,
+              value: 15301,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 18884,
+            },
+            {
+              year: 2022,
+              value: 22242,
+            },
+            {
+              year: 2023,
+              value: 25098,
+            },
+            {
+              year: 2024,
+              value: 28135,
+            },
+          ],
+          note: 'DERIVED, NOT SUPPLIED: revenue per employee multiplied by headcount. Gives roughly $28,135m for FY2024 and $9,667m for FY2015 \u2014 a useful cross-check for when the income statement arrives, and it shows the single down year was FY2020.',
+        },
+        {
+          label: 'Implied Net Income \u2014 DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 3808,
+            },
+            {
+              year: 2016,
+              value: 4049,
+            },
+            {
+              year: 2017,
+              value: 3915,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 5849,
+            },
+            {
+              year: 2019,
+              value: 8118,
+            },
+            {
+              year: 2020,
+              value: 6411,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 8687,
+            },
+            {
+              year: 2022,
+              value: 9900,
+            },
+            {
+              year: 2023,
+              value: 11200,
+            },
+            {
+              year: 2024,
+              value: 12876,
+            },
+          ],
+          note: 'DERIVED the same way. About $12,876m for FY2024. Implies a net margin near 45.8%, against Visa\u2019s 54.96% \u2014 a nine-point gap that the income statement should explain.',
+        },
+      ],
     },
   },
   moat: {
