@@ -45297,7 +45297,7 @@ const MA_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════
-// MCO_BREAKDOWN — Moody's Corporation Coverage data (Tier 2, drop 1)
+// MCO_BREAKDOWN — Moody's Corporation Coverage data (Tier 1)
 // SOURCE: Muzz's supplied Item 1 material — company overview, strategy,
 // prospects for growth, MIS and MA segment overviews with by-the-numbers
 // disclosures, and the restructuring note. FY2024, year end 31 December.
@@ -45305,7 +45305,7 @@ const MA_BREAKDOWN = {
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, CASH FLOW,
 // RISKS (+ CYBER),
 // DERIVATIVES.
-// TABS DARK: BALANCE, THESIS.
+// TABS DARK: THESIS only.
 //
 // VERIFIED BEFORE BUILDING:
 //   the nine MA customer categories sum EXACTLY to the stated 14,800.
@@ -48149,6 +48149,810 @@ const MCO_BREAKDOWN = {
         },
       ],
     },
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1767,
+          },
+          {
+            year: 2016,
+            value: 2081,
+          },
+          {
+            year: 2017,
+            value: 1071,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 1685,
+          },
+          {
+            year: 2019,
+            value: 2597,
+          },
+          {
+            year: 2020,
+            value: 2130,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 1811,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 1769,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 2130,
+          },
+          {
+            year: 2024,
+            value: 2408,
+          },
+        ],
+        note: 'Volatile rather than trending. The FY2017 trough of $1,071m is the year the $864m RMBS settlement was paid and Bureau van Dijk was acquired. $2,408m now, up 13.1%.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 802,
+          },
+          {
+            year: 2016,
+            value: 887,
+          },
+          {
+            year: 2017,
+            value: 1147,
+          },
+          {
+            year: 2018,
+            value: 1287,
+          },
+          {
+            year: 2019,
+            value: 1419,
+          },
+          {
+            year: 2020,
+            value: 1430,
+          },
+          {
+            year: 2021,
+            value: 1720,
+          },
+          {
+            year: 2022,
+            value: 1652,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 1659,
+          },
+          {
+            year: 2024,
+            value: 1801,
+          },
+        ],
+        note: 'Grew 125% over nine years, roughly with revenue. Fell once, in FY2022.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 3243,
+          },
+          {
+            year: 2016,
+            value: 3253,
+          },
+          {
+            year: 2017,
+            value: 2580,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 3386,
+          },
+          {
+            year: 2019,
+            value: 3679,
+          },
+          {
+            year: 2020,
+            value: 4509,
+          },
+          {
+            year: 2021,
+            value: 4011,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 4094,
+          },
+          {
+            year: 2023,
+            value: 4341,
+          },
+          {
+            year: 2024,
+            value: 5290,
+          },
+        ],
+        note: 'Grew 63% over nine years \u2014 well behind total assets at 204%.',
+      },
+      totalAssets: {
+        label: 'Total Assets',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 5103,
+          },
+          {
+            year: 2016,
+            value: 5327,
+          },
+          {
+            year: 2017,
+            value: 8594,
+          },
+          {
+            year: 2018,
+            value: 9526,
+          },
+          {
+            year: 2019,
+            value: 10265,
+          },
+          {
+            year: 2020,
+            value: 12409,
+          },
+          {
+            year: 2021,
+            value: 14680,
+          },
+          {
+            year: 2022,
+            value: 14349,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 14622,
+          },
+          {
+            year: 2024,
+            value: 15505,
+          },
+        ],
+        note: 'Grew 204% over nine years, but the shape matters: +61% IN FY2017 ALONE on the Bureau van Dijk acquisition, then +18% in FY2021 on RMS. This is an acquisition-built balance sheet.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable & Accrued Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 566,
+          },
+          {
+            year: 2016,
+            value: 1443,
+          },
+          {
+            year: 2017,
+            value: 750,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 695,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 773,
+          },
+          {
+            year: 2020,
+            value: 1039,
+          },
+          {
+            year: 2021,
+            value: 1142,
+          },
+          {
+            year: 2022,
+            value: 1011,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 1076,
+          },
+          {
+            year: 2024,
+            value: 1344,
+          },
+        ],
+        note: 'The FY2016 spike to $1,443m from $566m is the RMBS settlement being accrued before it was paid in January 2017 \u2014 which is exactly why cash troughed the following year.',
+      },
+      longTermDebt: {
+        label: 'Long-Term Debt',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 3380,
+          },
+          {
+            year: 2016,
+            value: 3063,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 5111,
+          },
+          {
+            year: 2018,
+            value: 5226,
+          },
+          {
+            year: 2019,
+            value: 5581,
+          },
+          {
+            year: 2020,
+            value: 6422,
+          },
+          {
+            year: 2021,
+            value: 7413,
+          },
+          {
+            year: 2022,
+            value: 7389,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 7001,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 6731,
+            down: true,
+          },
+        ],
+        note: 'Grew 99% over nine years, but PEAKED IN FY2021 AT $7,413m and has fallen every year since to $6,731m, down 9.2%. Moody\u2019s is deleveraging. The FY2017 jump from $3,063m to $5,111m funded Bureau van Dijk. At 3.27x net income and 1.81x equity this is now moderate, having been 7.96x equity as recently as FY2018.',
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt to Equity',
+        unit: 'x',
+        series: [
+          {
+            year: 2018,
+            value: 7.96,
+          },
+          {
+            year: 2019,
+            value: 6.71,
+          },
+          {
+            year: 2020,
+            value: 3.64,
+          },
+          {
+            year: 2021,
+            value: 2.54,
+          },
+          {
+            year: 2022,
+            value: 2.75,
+          },
+          {
+            year: 2023,
+            value: 2.01,
+          },
+          {
+            year: 2024,
+            value: 1.81,
+          },
+        ],
+        note: 'Reproduces exactly. NOT CALCULABLE BEFORE FY2018 because equity was NEGATIVE. From 7.96x in FY2018 to 1.81x now \u2014 a dramatic deleveraging driven mostly by equity rebuilding rather than debt repayment.',
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 5436,
+          },
+          {
+            year: 2016,
+            value: 6354,
+          },
+          {
+            year: 2017,
+            value: 8709,
+          },
+          {
+            year: 2018,
+            value: 8869,
+          },
+          {
+            year: 2019,
+            value: 9428,
+          },
+          {
+            year: 2020,
+            value: 10646,
+          },
+          {
+            year: 2021,
+            value: 11764,
+          },
+          {
+            year: 2022,
+            value: 11860,
+          },
+          {
+            year: 2023,
+            value: 11146,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 11778,
+          },
+        ],
+        note: 'THE SOURCE LABELS THIS "TOTAL DEBT", WHICH IS WRONG. It reconciles to total assets less equity in 6 of 7 checkable years \u2014 exactly in FY2018, FY2020, FY2021, FY2023 and FY2024, within $6m in FY2019, and $200m out in FY2022. Long-term debt is only $6,731m of the $11,778m, so reading this as debt would overstate leverage by 75%. Carried under the correct label.',
+      },
+      additionalPaidInCapital: {
+        label: 'Capital Surplus',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 451,
+          },
+          {
+            year: 2016,
+            value: 477,
+          },
+          {
+            year: 2017,
+            value: 528,
+          },
+          {
+            year: 2018,
+            value: 600,
+          },
+          {
+            year: 2019,
+            value: 642,
+          },
+          {
+            year: 2020,
+            value: 735,
+          },
+          {
+            year: 2021,
+            value: 885,
+          },
+          {
+            year: 2022,
+            value: 1054,
+          },
+          {
+            year: 2023,
+            value: 1228,
+          },
+          {
+            year: 2024,
+            value: 1451,
+          },
+        ],
+        note: 'Rose every year, up 222% \u2014 share-based compensation accumulating.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 6709,
+          },
+          {
+            year: 2016,
+            value: 6688,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 7465,
+          },
+          {
+            year: 2018,
+            value: 8584,
+          },
+          {
+            year: 2019,
+            value: 9656,
+          },
+          {
+            year: 2020,
+            value: 11011,
+          },
+          {
+            year: 2021,
+            value: 12762,
+          },
+          {
+            year: 2022,
+            value: 13616,
+          },
+          {
+            year: 2023,
+            value: 14659,
+          },
+          {
+            year: 2024,
+            value: 16071,
+          },
+        ],
+        note: 'Grew $9,362m over nine years against $13,969m of cumulative net income \u2014 a 67.0% retention rate. THE BUFFETT TEST: market value grew roughly $66,730m over the same period, implying $7.13 OF MARKET VALUE PER $1 RETAINED. For comparison, Mastercard $6.70, Alphabet $13.98 and Visa $79.14 \u2014 though Visa\u2019s is an artefact of charging buybacks to retained earnings. Moody\u2019s and Mastercard sit close together, which is the more meaningful pairing. FELL ONCE, in FY2016, when net income of $266m did not cover the dividend.',
+      },
+      shareholderEquity: {
+        label: 'Total Stockholders\u2019 Equity',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2018,
+            value: 656,
+          },
+          {
+            year: 2019,
+            value: 831,
+          },
+          {
+            year: 2020,
+            value: 1763,
+          },
+          {
+            year: 2021,
+            value: 2916,
+          },
+          {
+            year: 2022,
+            value: 2689,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 3476,
+          },
+          {
+            year: 2024,
+            value: 3727,
+          },
+        ],
+        note: 'NEGATIVE IN FY2015, FY2016 AND FY2017 \u2014 the filing shows a deficit in all three, the result of sustained buybacks plus the RMBS settlement. Equity turned positive in FY2018 at $656m and is $3,727m now, a 468% rebuild in six years. That transition is the single biggest change in the balance sheet over the period, and it is why the leverage ratios look so different at either end.',
+      },
+      investedCapital: {
+        label: 'Invested Capital \u2014 SEE THE WARNING',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 2795,
+          },
+          {
+            year: 2016,
+            value: 1811,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 6749,
+          },
+          {
+            year: 2018,
+            value: 6882,
+          },
+          {
+            year: 2019,
+            value: 8773,
+          },
+          {
+            year: 2020,
+            value: 11408,
+          },
+          {
+            year: 2021,
+            value: 11527,
+          },
+          {
+            year: 2022,
+            value: 11569,
+          },
+          {
+            year: 2023,
+            value: 11416,
+          },
+          {
+            year: 2024,
+            value: 1753,
+            down: true,
+          },
+        ],
+        note: 'CARRIED AS SUPPLIED, BUT THE FY2024 FIGURE CANNOT BE RIGHT. It reads $1,753m against $11,416m the year before \u2014 AN 84.6% COLLAPSE \u2014 while long-term debt fell only 3.9% and equity ROSE 7.2%. Debt plus equity alone is $10,458m. A leading digit appears to have been dropped: $11,753m would fit the trend precisely. Do not use the FY2024 value.',
+      },
+      extraLines: [
+        {
+          label: 'Return on Invested Capital \u2014 SEE THE WARNING',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 19,
+            },
+            {
+              year: 2016,
+              value: 15,
+            },
+            {
+              year: 2017,
+              value: 13,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 19,
+            },
+            {
+              year: 2019,
+              value: 17,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 18,
+            },
+            {
+              year: 2021,
+              value: 22,
+            },
+            {
+              year: 2022,
+              value: 5,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 50,
+            },
+            {
+              year: 2024,
+              value: 30,
+              down: true,
+            },
+          ],
+          note: 'NOT REPRODUCIBLE FROM THE SUPPLIED INPUTS. Net income over the stated invested capital gives 117.4% for FY2024 against a stated 30%, 14.1% for FY2023 against 50%, and 11.9% for FY2022 against 5%. No standard definition produces the stated series, and it inherits the invested capital error above. USE ROE AND ROA, WHICH BOTH TIE EXACTLY.',
+        },
+        {
+          label: 'Return on Equity',
+          unit: '%',
+          series: [
+            {
+              year: 2018,
+              value: 201.2,
+            },
+            {
+              year: 2019,
+              value: 171.1,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 100.9,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 75.9,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 51.1,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 46.2,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 55.3,
+            },
+          ],
+          note: 'TIES EXACTLY IN ALL SEVEN YEARS WITH POSITIVE EQUITY. Not calculable for FY2015\u2013FY2017. The apparent decline from 201.2% to 55.3% is not deterioration \u2014 it is the equity base rebuilding from almost nothing. Read it alongside ROA.',
+        },
+        {
+          label: 'Return on Assets',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 18.6,
+            },
+            {
+              year: 2016,
+              value: 5.2,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 11.7,
+            },
+            {
+              year: 2018,
+              value: 13.8,
+            },
+            {
+              year: 2019,
+              value: 13.9,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 14.3,
+            },
+            {
+              year: 2021,
+              value: 15.1,
+            },
+            {
+              year: 2022,
+              value: 9.6,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 11.0,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 13.3,
+            },
+          ],
+          note: 'TIES EXACTLY IN ALL TEN YEARS, and this is the honest return measure here because assets are the one base Moody\u2019s has not engineered. 13.3% in FY2024. VISA EARNS 20.9% AND MASTERCARD 26.8% \u2014 so on the cleanest comparison, Moody\u2019s earns roughly half what a payments network does on its asset base. The FY2016 trough of 5.2% is the settlement.',
+        },
+        {
+          label: 'Deferred Revenue',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 635,
+            },
+            {
+              year: 2016,
+              value: 683,
+            },
+            {
+              year: 2017,
+              value: 883,
+            },
+            {
+              year: 2018,
+              value: 953,
+            },
+            {
+              year: 2019,
+              value: 1050,
+            },
+            {
+              year: 2020,
+              value: 1089,
+            },
+            {
+              year: 2021,
+              value: 1249,
+            },
+            {
+              year: 2022,
+              value: 1258,
+            },
+            {
+              year: 2023,
+              value: 1316,
+            },
+            {
+              year: 2024,
+              value: 1454,
+            },
+          ],
+          note: 'THE MOST UNDERRATED LINE ON THIS BALANCE SHEET. Up 129% to $1,454m and rising in EVERY single year \u2014 including FY2022, when it grew 15.5% while revenue FELL 12.1%. That is contracted future revenue accumulating through the worst issuance year in a decade, and it is the balance-sheet proof of what the segment data shows: MA\u2019s subscription base kept compounding while MIS collapsed. At 20.5% of annual revenue it is a genuine forward indicator.',
+        },
+        {
+          label: 'Long-Term Debt to Net Income',
+          unit: 'x',
+          series: [
+            {
+              year: 2015,
+              value: 3.59,
+            },
+            {
+              year: 2016,
+              value: 11.51,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 5.11,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 3.99,
+            },
+            {
+              year: 2019,
+              value: 3.93,
+            },
+            {
+              year: 2020,
+              value: 3.61,
+            },
+            {
+              year: 2021,
+              value: 3.35,
+            },
+            {
+              year: 2022,
+              value: 5.38,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 4.36,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 3.27,
+            },
+          ],
+          note: 'Reproduces exactly in all ten years. The FY2016 reading of 11.51x is the settlement year, and FY2022 at 5.38x is the issuance downturn \u2014 in both cases the denominator moved, not the debt.',
+        },
+      ],
+    },
     cashFlow: {
       operatingCashFlow: {
         label: 'Cash from Operations',
@@ -49536,7 +50340,7 @@ const COVERAGE_DATA = [
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial Services',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: V_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial Services',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: MA_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial Services',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null , locked: true, progress: 'research' },
-  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: MCO_BREAKDOWN , tier: 2, progress: 'research' },
+  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial Services',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: MCO_BREAKDOWN , tier: 1, progress: 'research' },
   { ticker: 'SPGI',  name: 'S&P Global',                     industry: 'Financial Services', country: 'United States', marketCap: 130000000000,  marketCapDate: '1 Sep 2026', verdict: null, tier: 2, oneLiner: 'Ratings, indices and market data — a toll booth on global capital markets.', breakdown: SPGI_BREAKDOWN },
 
   // === MEDIA/PRESS · USA ===
