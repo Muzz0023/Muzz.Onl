@@ -39642,8 +39642,9 @@ const V_BREAKDOWN = {
 // products and applications, security and franchise. FY2024 (year end
 // 31 December — NOT the same period as Visa's 30 September year).
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (per-employee only).
-// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, RISKS, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
+// DERIVATIVES, COMMITMENTS.
+// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
 //
 // THE COMPARISON THIS BUILD EXISTS FOR: Mastercard switches ~70% of its own
 // branded transactions against Visa's 77.2% (234bn of 303bn), so its
@@ -40404,6 +40405,486 @@ const MA_BREAKDOWN = {
           division: 'Regulatory position',
           moatStrength: 'Weak',
           biggestRisk: 'Interchange caps and domestic preference rules across the EU, India and the US create structural pressure, explicitly acknowledged as pushing Mastercard toward services and data monetisation. The company competes with local and government-backed schemes that regulators are actively empowering.',
+        },
+      ],
+    },
+  },
+  risks: {
+    tldr: 'Mastercard carries its interchange litigation DIRECTLY \u2014 no escrow, no retrospective responsibility plan, no litigation-linked share classes. Identified accruals of ~$903m against Visa\u2019s $1,727m reserve and $3,089m escrow. And on the DOJ, Mastercard faces an investigation where Visa faces a lawsuit.',
+    derivatives: {
+      summary: 'A conservative, programmatic hedging book with no speculative positions permitted. Total notional of $10,203m at 31 December 2024, up 37.3% from $7,430m \u2014 about 36.3% of revenue, almost identical to Visa\u2019s 37.9% and comparable to Alphabet\u2019s 32%. Three instrument families only: FX forwards and options, interest rate swaps, and euro-denominated debt used as a natural hedge. Every column reconciles in both years. Roughly 65% of exposure sits in EUR, GBP, AUD and emerging-market currencies, tracking cross-border revenue.',
+      accountingNote: 'Designations under ASC 815 across cash flow, fair value and net investment hedges. Cash flow hedge gains and losses defer in AOCI and reclassify to income when the hedged transaction occurs. The fair value hedge runs through interest expense with the swap and the debt offsetting. Net investment hedge effectiveness goes to the currency translation adjustment in AOCI, with forward points amortised to G&A. Non-designated positions hit G&A immediately, netted against the FX exposures they offset. Centralised treasury framework with counterparty limits, mark-to-market monitoring, independent effectiveness testing and audit committee oversight; NO MATERIAL INEFFECTIVENESS reported in FY2022\u201324.',
+      risksHedged: [
+        {
+          name: 'FX cash flow hedges \u00b7 THE ONE THAT MOVED',
+          icon: '\u1f310',
+          description: 'Notional QUADRUPLED from $1,006m to $3,951m, up 292.7%. Assets went from $2m to $135m.',
+          instruments: 'Foreign exchange forwards and options',
+          purpose: 'Hedges variability in forecast revenues and expenses in non-functional currencies. Contracts are generally 18 months or less, BUT IN APRIL 2024 MASTERCARD ENTERED LONG-DATED CONTRACTS OF UP TO SEVEN YEARS against foreign-denominated assets \u2014 that is the change behind the quadrupling, and it extends hedge duration well beyond anything in the prior book.',
+        },
+        {
+          name: 'FX net investment hedges \u00b7 NEW THIS YEAR',
+          icon: '\u1f4b1',
+          description: 'From ZERO to $2,511m of notional, plus $54m of assets. A programme that did not exist a year earlier.',
+          instruments: 'Euro-denominated debt and FX forwards',
+          purpose: 'Protects the value of foreign subsidiaries\u2019 net assets, mainly EUR. In FY2024 \u20ac1.3bn of debt was designated, \u20ac400m de-designated and \u20ac109m re-designated in April. Produced a PRE-TAX FX GAIN OF $104m against a $67m loss in 2023, and an after-tax AOCI gain of $295m against $181m. Using euro debt as the hedge is a natural offset that costs nothing extra.',
+        },
+        {
+          name: 'Interest rate fair value hedge',
+          icon: '\u1f4ca',
+          description: 'Steady at $1,000m of notional; liability fell from $79m to $63m.',
+          instruments: 'Interest rate swaps, SOFR-based',
+          purpose: 'Synthetically converts $1.0bn of 3.85% Senior Notes DUE 2050 to variable rate \u2014 26 years remaining. Net impact on interest expense immaterial across FY2022\u201324. Compare Visa, which hedges $3.9bn of senior notes the same way.',
+        },
+        {
+          name: 'FX not designated \u00b7 halved',
+          icon: '\u2696',
+          description: 'Notional FELL 49.5%, from $5,424m to $2,741m. Assets $17m, liabilities $30m.',
+          instruments: 'Short-duration FX forwards and swaps',
+          purpose: 'Economic hedges of monetary assets, liabilities and SETTLEMENT exposures, typically under five days. Gains and losses hit G&A immediately with no deferral. Note the direction: Mastercard shrank its non-designated book by half while VISA GREW ITS EQUIVALENT BY 137.5%. Opposite choices in the same year.',
+        },
+      ],
+      pros: [
+        'Every column reconciles in both years \u2014 notional, assets and liabilities all sum exactly to the stated totals.',
+        'No speculative positions permitted, and no material hedge ineffectiveness reported across three years.',
+        'The net investment hedge uses EURO DEBT the company already has, so the hedge costs nothing beyond the borrowing itself.',
+        'The net fair value position swung from a $147m net LIABILITY to a $107m net ASSET \u2014 a $254m improvement.',
+      ],
+      cons: [
+        'THE SEVEN-YEAR FX CONTRACTS ARE THE ONE THING TO WATCH. Extending hedge duration from 18 months to seven years means locking in rates far further out, and a long-dated hedge that moves against you cannot be rolled cheaply. Mastercard describes the purpose as hedging foreign-denominated ASSETS, which is defensible \u2014 but it is a structural change in the book, not an incremental one.',
+        'Total notional grew 37.3% in a year while revenue grew roughly 12%. The book is expanding faster than the exposure it covers.',
+      ],
+      bigPicture: 'This is a treasury book doing treasury work. $10.2bn of notional on a business turning over $28bn of revenue and trillions of payment volume is proportionate, the instruments are plain, and the largest position exists to swap the rate on one identified bond issue. It is materially more conventional than Alphabet\u2019s $16.9bn credit derivatives book, and it sits at almost exactly the same notional-to-revenue ratio as Visa. The only genuinely new feature is duration.',
+      tables: [
+        {
+          title: 'DERIVATIVE FAIR VALUE AND NOTIONAL ($M)',
+          columns: [
+            '',
+            'FY2024 notional',
+            'FY2024 assets',
+            'FY2024 liabilities',
+            'FY2023 notional',
+            'FY2023 assets',
+            'FY2023 liabilities',
+          ],
+          rows: [
+            [
+              'DESIGNATED AS HEDGING INSTRUMENTS',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX contracts in a cash flow hedge',
+              '3,951',
+              '135',
+              '6',
+              '1,006',
+              '2',
+              '25',
+            ],
+            [
+              'Interest rate contracts in a fair value hedge',
+              '1,000',
+              '\u2014',
+              '63',
+              '1,000',
+              '\u2014',
+              '79',
+            ],
+            [
+              'FX contracts in a net investment hedge',
+              '2,511',
+              '54',
+              '\u2014',
+              '\u2014',
+              '\u2014',
+              '\u2014',
+            ],
+            [
+              'NOT DESIGNATED',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+            ],
+            [
+              'FX contracts',
+              '2,741',
+              '17',
+              '30',
+              '5,424',
+              '34',
+              '79',
+            ],
+            [
+              'TOTAL',
+              '10,203',
+              '206',
+              '99',
+              '7,430',
+              '36',
+              '183',
+            ],
+          ],
+          emphasis: [
+            1,
+            3,
+            6,
+          ],
+          note: 'All three columns reconcile exactly in both years. TWO ROWS CHANGED THE BOOK. The cash flow hedge notional quadrupled on the new seven-year contracts entered in April 2024. And the net investment hedge went from nothing to $2,511m \u2014 a programme created within the year. Meanwhile the non-designated book HALVED. Net position moved from a $147m liability to a $107m asset.',
+        },
+        {
+          title: 'SHARE-BASED COMPENSATION ($M)',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+            'FY2022',
+          ],
+          rows: [
+            [
+              'Share-based compensation expense',
+              '526',
+              '460',
+              '295',
+            ],
+            [
+              'Income tax benefit recognised for equity awards',
+              '111',
+              '99',
+              '61',
+            ],
+            [
+              'Income tax benefit realised on options exercised',
+              '77',
+              '95',
+              '49',
+            ],
+            [
+              'Total intrinsic value of options exercised',
+              '354',
+              '487',
+              '231',
+            ],
+            [
+              'RSUs \u2014 weighted-average grant-date fair value granted',
+              '472',
+              '350',
+              '340',
+            ],
+            [
+              'RSUs \u2014 total grant-date fair value vested',
+              '340',
+              '235',
+              '305',
+            ],
+            [
+              'RSUs \u2014 intrinsic value converted to Class A',
+              '477',
+              '253',
+              '420',
+            ],
+            [
+              'PSUs \u2014 weighted-average grant-date fair value granted',
+              '512',
+              '365',
+              '335',
+            ],
+            [
+              'PSUs \u2014 total grant-date fair value vested',
+              '99',
+              '12',
+              '\u2014',
+            ],
+            [
+              'PSUs \u2014 intrinsic value converted to Class A',
+              '122',
+              '14',
+              '\u2014',
+            ],
+          ],
+          emphasis: [
+            0,
+          ],
+          note: 'SBC OF $526m IS ROUGHLY 1.87% OF REVENUE \u2014 against Alphabet at 6.73% and Costco at 0.31%. It grew 55.9% in FY2023 then 14.3% in FY2024. At this scale share-based pay is a real but second-order valuation input here, unlike at Alphabet where it is first-order. Note the PSU lines only start producing vested value in FY2023: the programme is maturing.',
+        },
+        {
+          title: 'EQUITY AWARD ROLL-FORWARD FY2024 \u00b7 UNITS IN MILLIONS',
+          columns: [
+            '',
+            'RSUs',
+            'PSUs',
+            'Options',
+          ],
+          rows: [
+            [
+              'Outstanding at 1 January 2024',
+              '2.2',
+              '0.6',
+              '3.0',
+            ],
+            [
+              'Granted',
+              '1.0',
+              '0.2',
+              '0.2',
+            ],
+            [
+              'Converted / exercised',
+              '(1.0)',
+              '(0.3)',
+              '(1.1)',
+            ],
+            [
+              'Forfeited / other',
+              '(0.1)',
+              '0.1',
+              '\u2014',
+            ],
+            [
+              'OUTSTANDING AT 31 DECEMBER 2024',
+              '2.1',
+              '0.6',
+              '2.1',
+            ],
+            [
+              'Weighted-average grant-date fair value / exercise price',
+              '$403',
+              '$396',
+              '$273',
+            ],
+            [
+              'Aggregate intrinsic value ($m)',
+              '1,081',
+              '325',
+              '524',
+            ],
+            [
+              'Unrecognised compensation cost ($m)',
+              '378',
+              '37',
+              '16',
+            ],
+            [
+              'Weighted-average recognition period (years)',
+              '1.8',
+              '1.6',
+              '1.6',
+            ],
+          ],
+          emphasis: [
+            4,
+            7,
+          ],
+          note: 'All three roll-forwards reconcile. TOTAL UNRECOGNISED COMPENSATION COST IS $431m, spread over roughly 1.7 years \u2014 a small and short pipeline. Options outstanding FELL from 3.0m to 2.1m as 1.1m were exercised at a weighted-average $163 against a $273 book price, so the option overhang is shrinking. Options carry 5.2 years of remaining contractual term.',
+        },
+        {
+          title: 'PSU PERFORMANCE MEASURES \u00b7 THE COMPARISON WITH VISA THAT MATTERS',
+          columns: [
+            '',
+            'Mastercard',
+            'Visa',
+          ],
+          rows: [
+            [
+              'Performance measures',
+              'Net revenue growth, EPS growth AND relative TSR',
+              'Relative TSR ONLY',
+            ],
+            [
+              'Type',
+              'Two performance conditions plus one market condition',
+              'Market condition only',
+            ],
+            [
+              'Valuation model',
+              'Monte Carlo simulation',
+              'Not disclosed in supplied material',
+            ],
+            [
+              'Vesting period',
+              'Three years',
+              'Three years',
+            ],
+            [
+              'Post-vest hold',
+              'MANDATORY ONE-YEAR HOLD, dividend-equivalent eligible',
+              'None disclosed',
+            ],
+            [
+              'Payout range',
+              'Not disclosed in supplied material',
+              '0% below 25th pct, 100% at median, 200% at 75th',
+            ],
+          ],
+          emphasis: [
+            0,
+            4,
+          ],
+          note: 'THIS IS A GENUINE GOVERNANCE DIFFERENCE, NOT A DETAIL. Visa pays its performance stock units on RELATIVE TSR ALONE \u2014 no revenue, margin, return or cash flow target \u2014 which means multiple expansion pays identically to operating improvement. Mastercard uses NET REVENUE GROWTH AND EPS GROWTH ALONGSIDE relative TSR, so two of its three measures are things management actually controls. It also imposes a mandatory one-year hold AFTER vesting, extending the effective horizon to four years. On incentive design Mastercard is clearly ahead.',
+        },
+      ],
+    },
+    commitmentsAndContingencies: {
+      summary: 'Mastercard carries its interchange litigation DIRECTLY on the balance sheet. There is no escrow, no retrospective responsibility plan, and no multi-class share structure funding it \u2014 which makes the exposure far easier to read than Visa\u2019s and considerably harder to absorb. Identified accruals total roughly $903m: $559m for the US interchange MDL, $251m for the UK consumer settlement and $93m for the bank ATM consumer class. Visa\u2019s total litigation reserve is $1,727m with a further $3,089m of restricted escrow behind it.',
+      categories: [
+        {
+          name: 'US interchange MDL \u00b7 largely settled, with a tail',
+          definition: 'The long-running antitrust litigation over interchange fees and network rules.',
+          kosCase: 'The Damages Class settlement became FINAL in August 2023, and together with more than 250 opt-out settlements now covers MORE THAN 90% OF MASTERCARD US INTERCHANGE VOLUME. What remains is 65 merchants still litigating, asserting $12 BILLION of single damages on Mastercard volume, with the FIRST TRIAL SET FOR OCTOBER 2025. Under cost-sharing agreements Mastercard would pay 36% of any Mastercard-only judgment. The Rules Relief Class reached a settlement in March 2024 but the COURT DENIED PRELIMINARY APPROVAL IN JUNE \u2014 the same fate as Visa\u2019s injunctive relief settlement in the same month \u2014 and talks continue with no trial date.',
+          critical: true,
+          stats: [
+            {
+              label: 'ACCRUED FY2024',
+              value: '$559m',
+            },
+            {
+              label: 'FY2023',
+              value: '$596m',
+            },
+            {
+              label: 'OPT-OUTS REMAINING',
+              value: '65 merchants',
+            },
+            {
+              label: 'CLAIMED SINGLE DAMAGES',
+              value: '$12bn',
+            },
+          ],
+        },
+        {
+          name: 'Europe and the UK',
+          definition: 'Merchant and consumer claims since 2012 over cross-border and domestic interchange.',
+          kosCase: 'After settlements and judgments, \u00a30.3bn ($0.4bn) of unresolved MERCHANT claims remain \u2014 far smaller than Visa\u2019s European exposure, where more than 1,150 merchants have sued and roughly 600 remain outstanding seeking several billion dollars. The UK merchant collective for commercial cards was CERTIFIED IN JUNE 2024 with permission to appeal denied \u2014 again mirroring Visa exactly. On the UK consumer collective covering 1992\u20132008 pass-through claims, the court found no causal link between intra-EEA and UK domestic fees in February 2024 and dismissed five years of damages on statute grounds in June, with appeal allowed; a SETTLEMENT was reached in December 2024 with \u00a3200m ($251m) accrued and an approval hearing in February 2025. Portugal has a consumer collective claiming roughly \u20ac0.4bn.',
+          critical: true,
+          stats: [
+            {
+              label: 'UNRESOLVED MERCHANT CLAIMS',
+              value: '\u00a30.3bn',
+            },
+            {
+              label: 'UK CONSUMER ACCRUAL',
+              value: '\u00a3200m / $251m',
+            },
+            {
+              label: 'PORTUGAL CLAIM',
+              value: '~\u20ac0.4bn',
+            },
+          ],
+        },
+        {
+          name: 'ATM surcharge \u00b7 non-discrimination rule',
+          definition: 'Independent ATM operators and two consumer classes, running since 2011.',
+          kosCase: 'Claims that Visa and Mastercard rules force the same surcharge across networks. Class certifications were upheld in 2023. The BANK ATM CONSUMER CLASS settled with Mastercard in May 2024 with final approval indicated for January 2025 and $93m accrued. The ATM operators and non-bank ATM consumer matters continue, with plaintiffs alleging MORE THAN $1 BILLION of single damages against all defendants.',
+          stats: [
+            {
+              label: 'SETTLED CLASS ACCRUAL',
+              value: '$93m',
+            },
+            {
+              label: 'REMAINING CLAIMS',
+              value: '>$1bn single',
+            },
+          ],
+        },
+        {
+          name: 'EMV liability shift',
+          definition: 'Merchants alleging the networks conspired to shift card-present fraud chargebacks.',
+          kosCase: 'Bank defendants and EMVCo were dismissed; the class was certified in 2020; and the court DENIED the networks\u2019 summary judgment in September 2024. Plaintiffs\u2019 experts allege more than $1 billion of single damages against the four networks. Visa faces the same case.',
+          stats: [
+            {
+              label: 'CLAIMED SINGLE DAMAGES',
+              value: '>$1bn',
+            },
+            {
+              label: 'STATUS',
+              value: 'SJ denied Sep 2024',
+            },
+          ],
+        },
+        {
+          name: 'Government matters \u00b7 THE KEY DIFFERENCE FROM VISA',
+          definition: 'Antitrust attention from the DOJ and the European Commission.',
+          kosCase: 'The US DOJ issued a CIVIL INVESTIGATIVE DEMAND in March 2023 focused on US debit and competition with other networks and technology companies; Mastercard is cooperating. The European Commission sent an information request on ACQUIRER NETWORK FEES in the EU and EEA in August 2024. NOTE THE STAGE. Mastercard faces an INVESTIGATION. Visa faces an actual DOJ LAWSUIT, filed September 2024, alleging monopolisation of general-purpose debit and card-not-present debit and seeking injunctive relief. Same regulator, same subject matter, very different position \u2014 and Visa\u2019s copycat class actions followed within a month.',
+          critical: true,
+          stats: [
+            {
+              label: 'DOJ',
+              value: 'CID, Mar 2023',
+            },
+            {
+              label: 'VISA',
+              value: 'LAWSUIT, Sep 2024',
+            },
+            {
+              label: 'EC',
+              value: 'Info request, Aug 2024',
+            },
+          ],
+        },
+        {
+          name: 'Australia and other matters',
+          definition: 'Smaller proceedings.',
+          kosCase: 'The ACCC alleges certain debit programme agreements lessened competition, seeking declarations and fines, with a liability hearing set for March 2025. Separately a Florida TCPA class action covers roughly 381,000 unsolicited faxes promoting a co-brand card at $500 statutory damages each \u2014 about $190m at maximum \u2014 certified in 2021 but narrowed, with decertification motions pending.',
+        },
+      ],
+      tables: [
+        {
+          title: 'IDENTIFIED LITIGATION ACCRUALS \u00b7 MASTERCARD vs VISA ($M)',
+          columns: [
+            '',
+            'Mastercard FY2024',
+            'Visa FY2024',
+          ],
+          rows: [
+            [
+              'US interchange accrual',
+              '559',
+              '1,537',
+            ],
+            [
+              'UK consumer collective settlement',
+              '251',
+              '\u2014',
+            ],
+            [
+              'Bank ATM consumer class',
+              '93',
+              '\u2014',
+            ],
+            [
+              'TOTAL IDENTIFIED / TOTAL RESERVE',
+              '903',
+              '1,727',
+            ],
+            [
+              'Restricted litigation escrow',
+              'NONE \u2014 no escrow exists',
+              '3,089',
+            ],
+            [
+              'Retrospective responsibility plan',
+              'NONE',
+              'US and Europe plans',
+            ],
+            [
+              'Litigation-linked share classes',
+              'NONE',
+              'Class B-1, B-2, Series B and C preferred',
+            ],
+          ],
+          emphasis: [
+            3,
+            4,
+            6,
+          ],
+          note: 'THE STRUCTURAL DIFFERENCE IS THE POINT. Visa funds its US interchange litigation through an escrow and absorbs losses by reducing the Class B conversion rate, which is why its share structure cannot simplify until the litigation ends. Mastercard has no escrow, no plan and no litigation-linked classes \u2014 it accrues and pays. That makes the exposure transparent and immediate rather than deferred and complex. It also means there is no member-bank cushion: a judgment lands on Class A shareholders directly, softened only by the 36% cost-sharing cap on Mastercard-only judgments.',
         },
       ],
     },
