@@ -45302,8 +45302,8 @@ const MA_BREAKDOWN = {
 // prospects for growth, MIS and MA segment overviews with by-the-numbers
 // disclosures, and the restructuring note. FY2024, year end 31 December.
 //
-// TABS LIVE: OVERVIEW, MOAT.
-// TABS DARK: NUMBERS, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS.
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS (+ CYBER).
+// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
 //
 // VERIFIED BEFORE BUILDING:
 //   the nine MA customer categories sum EXACTLY to the stated 14,800.
@@ -45705,6 +45705,64 @@ const MCO_BREAKDOWN = {
           ],
           note: 'THE PAYBACK IS ROUGHLY TEN MONTHS \u2014 $200\u2013250m of one-off charges against $250\u2013300m of recurring annual savings. That is an unusually good ratio, and it says something about where the cost sat: retiring LEGACY SOFTWARE APPLICATIONS and consolidating duplicated functions, rather than cutting into revenue-generating capacity. Moody\u2019s states savings will strengthen operating margin with some redeployed into strategic investment \u2014 so do not model the full $250\u2013300m falling to the bottom line.',
         },
+        {
+          title: 'WORKFORCE BY SEGMENT \u00b7 EVERY SUBTOTAL RECONCILES',
+          columns: [
+            'Segment',
+            'FY2024 US',
+            'FY2024 non-US',
+            'FY2024 total',
+            'FY2023 total',
+            'Change',
+          ],
+          rows: [
+            [
+              'MA \u2014 Moody\u2019s Analytics',
+              '2,989',
+              '5,156',
+              '8,145',
+              '7,864',
+              '+4%',
+            ],
+            [
+              'MIS \u2014 Moody\u2019s Investors Service',
+              '1,571',
+              '4,186',
+              '5,757',
+              '5,360',
+              '+7%',
+            ],
+            [
+              'MSS \u2014 Moody\u2019s Shared Services',
+              '696',
+              '1,240',
+              '1,936',
+              '1,936',
+              '0%',
+            ],
+            [
+              'TOTAL MOODY\u2019S',
+              '5,256',
+              '10,582',
+              '15,838',
+              '15,160',
+              '+4%',
+            ],
+            [
+              '\u2014 non-US share of headcount',
+              '',
+              '66.8%',
+              '',
+              '65.5%',
+              '',
+            ],
+          ],
+          emphasis: [
+            0,
+            3,
+          ],
+          note: 'Every row and column ties. THE COMPOSITION IS THE SURPRISE: MA employs 8,145 people against MIS\u2019s 5,757 \u2014 the analytics segment is 51.4% of headcount and the ratings franchise only 36.3%. MIS grew faster in the year (+7% against +4%), and shared services was flat. MA\u2019s people are software engineers, product managers, data analysts, advisory teams and economists; MIS\u2019s are credit analysts, methodology professionals and software engineers. Two-thirds of the whole company sits outside the US.',
+        },
       ],
     },
     customers: {
@@ -45756,6 +45814,382 @@ const MCO_BREAKDOWN = {
       ],
       note: 'The growth outlook names the drivers explicitly: global economic health and capital markets activity, fiscal and monetary policy shifts, business investment, M&A and REFINANCING NEEDS, expansion of the data and analytics market, DISINTERMEDIATION OF CREDIT MARKETS as borrowing shifts from banks to capital markets, and advances in Gen AI. Disintermediation is the most important of those for MIS \u2014 every dollar that moves from a bank loan to a public bond is a dollar that needs rating.',
     },
+    headquarters: {
+      location: '7 World Trade Center, 250 Greenwich Street, New York',
+      description: 'As of 31 December 2024 Moody\u2019s operated from 29 US offices and 102 NON-US OFFICE LOCATIONS \u2014 131 in total, ALL OF WHICH ARE LEASED. Moody\u2019s owns no property at all. That is lighter than Visa, which owns or leases 135 offices plus four data centres, and it is consistent with a business whose only real asset is people and methodology. It also means the climate and continuity risks named in Item 1A depend partly on landlords. Note the geographic split mirrors the workforce: 102 of 131 offices are outside the US, against 66.8% of employees.',
+    },
+    competitors: {
+      preamble: 'Moody\u2019s describes competition segment by segment, and the two segments face completely different fields. MIS competes in a market with high regulatory barriers and a 115-year record; MA competes in financial information and enterprise risk software against well-funded diversified players with no such protection.',
+      middleLabel: 'MOODY\u2019S',
+      majorCompetitors: [
+        'S&P Global Ratings',
+        'Fitch Ratings',
+        'Investment banks and brokerages',
+        'In-house credit research',
+        'Financial information and risk software vendors',
+      ],
+      categories: [
+        {
+          category: 'MIS \u00b7 the ratings franchise',
+          icon: '\u1f4ca',
+          featured: true,
+          rows: [
+            {
+              type: 'Other credit rating agencies',
+              ourProduct: '$75.8tn rated debt, 33,300+ entities, 190+ methodologies, NRSRO status',
+              competitors: 'S&P Global Ratings and Fitch are the recognised alternatives; more NRSROs and LOCAL AGENCIES are named in the risk factors as intensifying discounting',
+            },
+            {
+              type: 'Investment banks and brokerage firms',
+              ourProduct: 'Independent third-party opinion with regulatory recognition',
+              competitors: 'Offer credit opinions and research \u2014 but without NRSRO status, so they cannot substitute for a rating in mandates or capital rules',
+            },
+            {
+              type: 'IN-HOUSE CREDIT RESEARCH',
+              ourProduct: 'Analyst depth and 115 years of accumulated record',
+              competitors: 'Moody\u2019s states plainly that MANY USERS OF ITS RATINGS ALSO HAVE IN-HOUSE CREDIT RESEARCH CAPABILITIES. The real substitute is a customer forming its own view \u2014 and generative AI lowers the cost of doing exactly that',
+            },
+            {
+              type: 'Unrated and alternative approaches',
+              ourProduct: 'Coverage extension into private credit',
+              competitors: 'The risk factors name DISINTERMEDIATED CREDIT AND UNRATED OR ALTERNATIVE APPROACHES as able to dent demand \u2014 the borrower who never seeks a rating is the competitor that never appears in a market-share table',
+            },
+          ],
+        },
+        {
+          category: 'MA \u00b7 no regulatory protection here',
+          icon: '\u1f5a5',
+          featured: true,
+          rows: [
+            {
+              type: 'Decision Solutions',
+              ourProduct: 'Cloud subscription tools embedded in lending, underwriting, KYC and compliance workflows',
+              competitors: 'Providers of software and analytic solutions \u2014 competing on product, integration and price with no barrier from ratings recognition',
+            },
+            {
+              type: 'Research & Insights',
+              ourProduct: 'A leading fixed income and economic research business',
+              competitors: 'Providers of economic data, financial research and analysis',
+            },
+            {
+              type: 'Data & Information',
+              ourProduct: 'The world\u2019s largest database on companies and credit, fed partly by MIS ratings feeds',
+              competitors: 'Providers of commercial and financial data \u2014 the internal ratings feed is the one edge a standalone vendor cannot replicate',
+            },
+            {
+              type: 'Generative AI',
+              ourProduct: 'Proprietary trusted data as the grounding layer',
+              competitors: 'New models, faster timelines, lower-cost data and PROPRIETARY CLIENT TOOLS. Moody\u2019s argues its data becomes more valuable as models proliferate; the counter-argument is that models lower the cost of substituting for the analysis built on top of it',
+            },
+            {
+              type: 'Vendors who are also rivals',
+              ourProduct: 'Third-party technology licensing',
+              competitors: 'The risk factors note that SOME VENDORS ALSO COMPETE WITH MOODY\u2019S \u2014 dependency and rivalry in the same relationship',
+            },
+          ],
+        },
+      ],
+      keyTakeaway: 'TWO BUSINESSES, TWO COMPLETELY DIFFERENT COMPETITIVE POSITIONS. MIS is protected by NRSRO status, 115 years of record and the fact that ratings are written into mandates and capital rules \u2014 its real competitor is not another agency but the decision not to seek a rating at all. MA has none of that protection: it competes on product merit against diversified software and data companies, and its one structural edge is the ratings feed flowing in from the other segment. The group is often valued as a single high-quality franchise; it is actually a regulated near-duopoly bolted to a competitive software business, and the second is now the larger of the two by headcount.',
+    },
+  },
+  numbers: {
+    employees: {
+      label: 'Total Employees',
+      unit: 'count',
+      series: [
+        {
+          year: 2015,
+          value: 10400,
+        },
+        {
+          year: 2016,
+          value: 10600,
+        },
+        {
+          year: 2017,
+          value: 12000,
+        },
+        {
+          year: 2018,
+          value: 13000,
+        },
+        {
+          year: 2019,
+          value: 11081,
+          down: true,
+        },
+        {
+          year: 2020,
+          value: 11490,
+        },
+        {
+          year: 2021,
+          value: 13460,
+        },
+        {
+          year: 2022,
+          value: 14426,
+        },
+        {
+          year: 2023,
+          value: 15160,
+        },
+        {
+          year: 2024,
+          value: 15838,
+        },
+      ],
+      note: 'Grew 52% over nine years to 15,838, with ONE unexplained break: headcount FELL 14.8% in FY2019, from 13,000 to 11,081, while revenue ROSE 8.7%. That is almost certainly a reclassification or disposal rather than a reduction, but the supplied material does not explain it. FY2024 splits MA 8,145, MIS 5,757 and shared services 1,936 \u2014 MA IS THE LARGER SEGMENT BY PEOPLE at 51.4%, and 66.8% of all employees are outside the US.',
+    },
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 335000,
+        },
+        {
+          year: 2016,
+          value: 340943,
+        },
+        {
+          year: 2017,
+          value: 350333,
+        },
+        {
+          year: 2018,
+          value: 341692,
+          down: true,
+        },
+        {
+          year: 2019,
+          value: 435877,
+        },
+        {
+          year: 2020,
+          value: 467455,
+        },
+        {
+          year: 2021,
+          value: 462001,
+          down: true,
+        },
+        {
+          year: 2022,
+          value: 379057,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 390135,
+        },
+        {
+          year: 2024,
+          value: 447560,
+        },
+      ],
+      note: 'PEAKED AT $467,455 IN FY2020 and is $447,560 now, down 4.3%. VISA EARNS $1,136,899 AND MASTERCARD $797,017 \u2014 Moody\u2019s earns 44% of Visa\u2019s revenue per head. That is not a criticism; it is the business model. A ratings analyst writing an opinion on a sovereign is not a marginal transaction over a switching network. Moody\u2019s is a people business in a way neither payments network is.',
+    },
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        {
+          year: 2015,
+          value: 90481,
+        },
+        {
+          year: 2016,
+          value: 25094,
+          down: true,
+        },
+        {
+          year: 2017,
+          value: 83333,
+        },
+        {
+          year: 2018,
+          value: 100692,
+          down: true,
+        },
+        {
+          year: 2019,
+          value: 128314,
+        },
+        {
+          year: 2020,
+          value: 154765,
+        },
+        {
+          year: 2021,
+          value: 164534,
+        },
+        {
+          year: 2022,
+          value: 95248,
+          down: true,
+        },
+        {
+          year: 2023,
+          value: 105983,
+        },
+        {
+          year: 2024,
+          value: 129981,
+        },
+      ],
+      note: 'Peaked at $164,534 in FY2021 and is $129,981 now, DOWN 21.0% from peak. Visa earns $624,778 and Mastercard $364,772. The FY2016 trough of $25,094 is the ratings settlement year.',
+    },
+    incomeStatement: {
+      totalRevenue: {
+        label: 'Revenue',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 3484,
+          },
+          {
+            year: 2016,
+            value: 3604,
+          },
+          {
+            year: 2017,
+            value: 4204,
+          },
+          {
+            year: 2018,
+            value: 4442,
+          },
+          {
+            year: 2019,
+            value: 4829,
+          },
+          {
+            year: 2020,
+            value: 5371,
+          },
+          {
+            year: 2021,
+            value: 6218,
+          },
+          {
+            year: 2022,
+            value: 5468,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 5916,
+          },
+          {
+            year: 2024,
+            value: 7088,
+          },
+        ],
+        note: 'Grew 103% over nine years but FELL 12.1% IN FY2022, from $6,218m to $5,468m, as debt issuance collapsed on the rate shock. That single year is the clearest illustration of what "majority issuer-paid on debt issuance" means \u2014 neither Visa nor Mastercard has ever posted a decline of that size outside a pandemic.',
+      },
+      netIncome: {
+        label: 'Net Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 941,
+          },
+          {
+            year: 2016,
+            value: 266,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 1000,
+          },
+          {
+            year: 2018,
+            value: 1309,
+          },
+          {
+            year: 2019,
+            value: 1422,
+          },
+          {
+            year: 2020,
+            value: 1778,
+          },
+          {
+            year: 2021,
+            value: 2214,
+          },
+          {
+            year: 2022,
+            value: 1374,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 1607,
+          },
+          {
+            year: 2024,
+            value: 2058,
+          },
+        ],
+        note: 'TWO COLLAPSES WORTH UNDERSTANDING. FY2022: net income fell 37.9% on a 12.1% revenue decline \u2014 3.1 TIMES THE MAGNITUDE, which is operating leverage running in reverse. FY2016: net income fell 71.7% to $266m while revenue ROSE 3.4%, taking margin from 27.0% to 7.4% \u2014 consistent with the pre-crisis RMBS ratings settlement accrued that year. Both are the kind of year a toll road does not have.',
+      },
+      profitMargin: {
+        label: 'Net Margin \u2014 derived',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 27.0,
+          },
+          {
+            year: 2016,
+            value: 7.4,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 23.8,
+          },
+          {
+            year: 2018,
+            value: 29.5,
+          },
+          {
+            year: 2019,
+            value: 29.4,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 33.1,
+          },
+          {
+            year: 2021,
+            value: 35.6,
+          },
+          {
+            year: 2022,
+            value: 25.1,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 27.2,
+          },
+          {
+            year: 2024,
+            value: 29.0,
+          },
+        ],
+        note: '29.0% in FY2024 against VISA AT 55.0% AND MASTERCARD AT 45.7%. Moody\u2019s carries heavy acquisition amortisation and interest expense that neither network does, and it is a labour business rather than a switching one. Peak was 35.6% in FY2021.',
+      },
+    },
   },
   moat: {
     preamble: 'Moody\u2019s moat is unlike anything else in this coverage. It is not scale economics, network effects in the usual sense, or switching costs. IT IS INSTITUTIONALISED CREDIBILITY: a Moody\u2019s rating is written into investment mandates, regulatory capital rules and index eligibility, so an issuer wanting the widest possible buyer base has little practical choice but to buy one. That position took 115 years and cannot be bought. The vulnerability is the mirror image \u2014 the same official recognition that creates the demand could be reduced by the regulators who granted it, and most of the revenue only arrives when someone actually issues debt.',
@@ -45802,6 +46236,303 @@ const MCO_BREAKDOWN = {
           moatStrength: 'Moderate',
           biggestRisk: 'The integrated-risk expansion is the growth story, covering properties, securities, people, economies, ESG and climate. But outside credit Moody\u2019s has no incumbency and no regulatory mandate \u2014 it competes on product merit against specialists, exactly as Visa and Mastercard do in value-added services.',
         },
+      ],
+    },
+  },
+  risks: {
+    tldr: 'Moody\u2019s risk profile is the inverse of a payments network\u2019s. Visa and Mastercard have stable revenue and contested pricing; Moody\u2019s has protected pricing and volatile revenue. FY2022 showed a 12.1% revenue fall producing a 37.9% earnings fall.',
+    riskSummary: {
+      preamble: 'Three things carry the analysis, and the first one dominates the other two.',
+      categories: [
+        {
+          num: '01',
+          name: 'The issuance cycle IS the risk',
+          emerging: true,
+          description: 'Most MIS revenue arrives only when someone issues debt. FY2022 is the worked example: a 12.1% revenue decline produced a 37.9% earnings decline \u2014 3.1 times the magnitude.',
+          drivers: [
+            'Rates, spreads, growth, refinancing walls and M&A cycles, none of which Moody\u2019s controls.',
+            'Operating leverage runs in reverse: the cost base is people, and people are not variable.',
+            'FY2022 revenue $5,468m against $6,218m the year before.',
+            'Recovery took two years \u2014 FY2024 revenue of $7,088m is only 14.0% above FY2021.',
+          ],
+          mitigations: [
+            'Recurring annual monitoring fees provide what Moody\u2019s calls PARTIAL stability \u2014 the honest word.',
+            'MA subscription revenue is the structural answer, and MA is already the larger segment by headcount.',
+            'Model this company through a cycle, not off a trailing year.',
+          ],
+        },
+        {
+          num: '02',
+          name: 'Disintermediation runs both ways',
+          emerging: true,
+          description: 'Moody\u2019s names the shift from bank lending to capital markets as a growth driver, and in the same filing names DISINTERMEDIATED CREDIT AND UNRATED OR ALTERNATIVE APPROACHES as a demand risk. Both are true simultaneously.',
+          drivers: [
+            'Public bond issuance needs rating; private credit largely does not.',
+            'Customer consolidation and more NRSROs and local agencies intensify discounting.',
+            'Many users of MIS ratings already have IN-HOUSE credit research.',
+            'GenAI lowers the cost of building that in-house capability.',
+          ],
+          mitigations: [
+            'Moody\u2019s is building private credit coverage rather than ignoring it.',
+            'A rating is written into mandates, capital rules and index eligibility \u2014 an in-house view is not a substitute for those purposes.',
+            'But the marginal borrower choosing a private lender never enters the funnel at all.',
+          ],
+        },
+        {
+          num: '03',
+          name: 'Regulation of the opinion itself',
+          description: 'SEC, ESMA and FCA supervise MIS directly, and rule changes can constrain rating practices and business models \u2014 not merely conduct. Three new regimes land in 2024\u201326.',
+          drivers: [
+            'EU ESG Ratings Regulation, ESMA-supervised, 18-month implementation from publication.',
+            'EU AI Act phasing in from July 2024.',
+            'DORA effective early 2025, applying to MIS as a CRA and reaching MA through client contracts.',
+            'UK ESG ratings legislation intended for 2025.',
+          ],
+          mitigations: [
+            'A REAL WIN WORTH NOTING: the FCA reviewed competition in wholesale market data including credit ratings across 2023\u201324, and in February 2024 DECLINED TO PURSUE ANY REMEDIES OR INTERVENTIONS.',
+            'Compliance depth is itself a barrier for smaller agencies.',
+            'But the same official recognition that creates non-discretionary demand is granted by regulators, and could be narrowed by them.',
+          ],
+        },
+      ],
+      summaryInsight: 'Moody\u2019s risk profile is almost the inverse of a payments network\u2019s. Visa and Mastercard have stable revenue and contested pricing; Moody\u2019s has protected pricing and volatile revenue. Nobody is going to out-compete a 115-year rating record, and no regulator is proposing to abolish ratings \u2014 but the top line depends on an issuance cycle set by interest rates, and FY2022 showed a 12% revenue fall producing a 38% earnings fall. The quality of the franchise and the volatility of the earnings are both real, and they are not in tension: this is a very good business that happens to be cyclical.',
+    },
+    riskFactors: {
+      summary: 'Item 1A grouped as Moody\u2019s presents it \u2014 legal and regulatory, business and operating, technology and data. The issuance-cycle item inside category B is the one that actually moves the numbers.',
+      categories: [
+        {
+          name: 'A \u00b7 Legal and regulatory',
+          items: [
+            {
+              risk: 'Direct supervision of the ratings franchise in every major market',
+              meaning: 'MIS is regulated by the SEC as an NRSRO under Section 15E of the Exchange Act, by ESMA across the EU, by the FCA in the UK, and by authorities in Australia, Hong Kong, China and elsewhere. Rule changes raise cost and legal risk and can CONSTRAIN RATING PRACTICES AND BUSINESS MODELS directly \u2014 a regulator can tell this company how to do the thing it sells.',
+            },
+            {
+              risk: 'Three emerging regimes arriving at once',
+              meaning: 'EU ESG RATINGS REGULATION \u2014 text finalised February 2024, 18-month implementation, ESMA-supervised, with some MIS products potentially in scope and MA products not expected to be. EU AI ACT from July 2024, phased, with both segments assessing implications. DORA on digital operational resilience, effective early 2025, applying to MIS as a credit rating agency and reaching MA indirectly through contractual demands from regulated clients.',
+            },
+            {
+              risk: 'Litigation exposure attaches to the opinion itself',
+              meaning: 'Ratings-related suits, market investigations and increasing scrutiny including on climate, ESG and generative AI. Costly, lengthy, uncertain. This is the structural cost of selling an opinion that investors act on.',
+            },
+            {
+              risk: 'Compliance programme risk',
+              meaning: 'Anti-corruption, sanctions, antitrust and securities rules. Failures or employee misconduct trigger penalties and reputational harm \u2014 and for a business whose asset is credibility, the second matters more than the first.',
+            },
+            {
+              risk: 'Intellectual property in a generative-AI world',
+              meaning: 'Risk of theft or misuse, shifting legal protections specifically in the GenAI context, costly enforcement, and competitor patents. Moody\u2019s argument is that proprietary data becomes MORE valuable as models proliferate; that only holds if the data stays proprietary.',
+            },
+            {
+              risk: 'Tax',
+              meaning: 'OECD Pillar II and audit outcomes can move the effective rate and cash flows.',
+            },
+          ],
+        },
+        {
+          name: 'B \u00b7 Business and operating',
+          items: [
+            {
+              risk: 'MACRO AND ISSUANCE SENSITIVITY \u2014 the defining risk',
+              meaning: 'Debt issuance volumes hinge on rates, spreads, growth, and refinancing and M&A cycles. Named alongside them: DISINTERMEDIATED CREDIT AND UNRATED OR ALTERNATIVE APPROACHES CAN DENT DEMAND. That is the private credit threat stated in the company\u2019s own words \u2014 and FY2022 showed exactly what it costs, with revenue down 12.1% and net income down 37.9%.',
+            },
+            {
+              risk: 'Competition and generative-AI disruption',
+              meaning: 'New models, faster timelines, lower-cost data and proprietary client tools. Note the two-sided framing: GenAI is both the opportunity Moody\u2019s is investing behind AND a route by which a customer builds in-house what it currently buys. Execution gaps in Moody\u2019s own GenAI could cost share and margin.',
+            },
+            {
+              risk: 'Pricing pressure',
+              meaning: 'More NRSROs, local agencies, customer consolidation, and free or cheap information intensifying discounts. The competition note adds the sharpest version: MANY USERS OF MIS RATINGS ALSO HAVE IN-HOUSE CREDIT RESEARCH. The substitute for buying an opinion is forming your own.',
+            },
+            {
+              risk: 'Reputation and credibility \u2014 the actual asset',
+              meaning: 'Conflicts, methodology or timing errors, climate and ESG positioning, and GenAI missteps can damage trust and therefore demand. For most companies reputation is a risk; here it is the product.',
+            },
+            {
+              risk: 'Talent',
+              meaning: 'Retaining analysts, data scientists and engineers amid wage inflation. With 15,838 people producing $447,560 of revenue each, this is a labour business and the risk is proportionate.',
+            },
+            {
+              risk: 'M&A and technology investment',
+              meaning: 'Integration, controls, cyber exposure and synergy risk, with failure triggering GOODWILL AND INTANGIBLE IMPAIRMENTS against what the filing itself calls a large MA balance. Worth watching in a downturn.',
+            },
+            {
+              risk: 'Global footprint',
+              meaning: 'FX, sanctions and trade barriers with US-China tensions named specifically, data localisation, payment cycles, staffing and divergent legal standards. Two-thirds of employees are outside the US.',
+            },
+            {
+              risk: 'Infrastructure continuity and climate',
+              meaning: 'Outages, capacity limits, cloud and vendor failures, disaster recovery gaps at smaller sites, and integration vulnerabilities from acquisitions. Extreme weather threatening offices, grids, vendors and customers \u2014 note that all 131 Moody\u2019s offices are LEASED, so continuity depends on landlords too.',
+            },
+          ],
+        },
+        {
+          name: 'C \u00b7 Technology and data',
+          items: [
+            {
+              risk: 'Cybersecurity and material non-public information',
+              meaning: 'State-sponsored and criminal threats including ransomware, supply-chain compromise, deepfakes and insiders. Third-party and cloud dependencies expand the attack surface. Incidents bring fines, litigation and churn. NOTE THE MNPI ANGLE: Moody\u2019s holds unpublished rating actions, which are market-moving \u2014 a breach here is not only a data loss, it is a securities problem.',
+            },
+            {
+              risk: 'Privacy and data law',
+              meaning: 'GDPR, UK GDPR, CCPA, many US state laws and Chinese regulations. Non-compliance means large fines and costly process change.',
+            },
+            {
+              risk: 'Third-party technology reliance',
+              meaning: 'Licensing, quality and availability, price increases and vendor cyber issues \u2014 and the pointed detail that SOME VENDORS ALSO COMPETE WITH MOODY\u2019S.',
+            },
+          ],
+        },
+      ],
+    },
+    governmentalRegulation: {
+      summary: 'Extensive global regulation applying DIRECTLY to MIS as a credit rating agency and INDIRECTLY to MA through the obligations of its financial-sector clients. The distinction matters: MIS is supervised, examined and inspected by name, while MA mostly inherits requirements via contractual demands from regulated customers. Regulation raises cost and legal risk and can affect profitability, competitiveness and demand \u2014 and in this business it can also constrain rating practices themselves.',
+      sections: [
+        {
+          number: '01',
+          name: 'United States \u00b7 the NRSRO regime',
+          bullets: [
+            {
+              label: 'Framework',
+              text: 'Credit rating agencies are regulated under SECTION 15E OF THE EXCHANGE ACT.',
+            },
+            {
+              label: 'Status',
+              text: 'MIS is registered as a NATIONALLY RECOGNISED STATISTICAL RATING ORGANISATION with the SEC, subject to oversight and examinations.',
+            },
+            {
+              label: 'Why it matters',
+              text: 'NRSRO status is what makes a Moody\u2019s rating usable in regulatory capital rules and investment mandates. It is simultaneously the source of the moat and the lever a regulator holds.',
+            },
+          ],
+        },
+        {
+          number: '02',
+          name: 'European Union \u00b7 ESMA supervision',
+          bullets: [
+            {
+              label: 'Framework',
+              text: 'Credit rating agencies are regulated under a pan-EU framework supervised by ESMA, with MIS EU subsidiaries registered and subject to PERIODIC INSPECTIONS.',
+            },
+            {
+              label: 'ESG Ratings Regulation',
+              text: 'Agreed text finalised February 2024, with an 18-month implementation period after publication in the Official Journal. ESG rating and score providers become regulated and supervised by ESMA. SOME MIS PRODUCTS MAY FALL IN SCOPE; MA products are NOT expected to.',
+            },
+            {
+              label: 'EU AI Act',
+              text: 'Adopted July 2024, phased implementation, with both MIS and MA assessing implications.',
+            },
+            {
+              label: 'DORA',
+              text: 'Effective early 2025. Applies to MIS as a credit rating agency, requiring oversight of IT systems AND third-party ICT providers. MA may face contractual requests from regulated clients to demonstrate compliance.',
+            },
+          ],
+        },
+        {
+          number: '03',
+          name: 'United Kingdom \u00b7 FCA, and a review that went Moody\u2019s way',
+          bullets: [
+            {
+              label: 'Status',
+              text: 'MIS UK is registered with and regulated by the FCA.',
+            },
+            {
+              label: 'THE FCA REVIEW',
+              text: 'Across 2023\u201324 the FCA examined COMPETITION IN WHOLESALE MARKET DATA, including credit ratings data. In FEBRUARY 2024 IT DECLINED TO PURSUE ANY REMEDIES OR INTERVENTIONS. That is a genuine and underappreciated positive \u2014 a competition regulator looked directly at ratings pricing and structure and chose not to act.',
+            },
+            {
+              label: 'ESG ratings',
+              text: 'HM Treasury consulted in March 2023 and the UK government intends to legislate in 2025.',
+            },
+          ],
+        },
+        {
+          number: '04',
+          name: 'Other jurisdictions',
+          bullets: [
+            {
+              label: 'Coverage',
+              text: 'Australia, Hong Kong, China and others regulate rating activities directly.',
+            },
+            {
+              label: 'Effect',
+              text: 'Divergent standards across markets raise compliance cost and complicate a single global methodology set \u2014 Moody\u2019s maintains 190+ methodologies partly because of this.',
+            },
+          ],
+        },
+        {
+          number: '05',
+          name: 'How MA is reached',
+          bullets: [
+            {
+              label: 'Indirect',
+              text: 'MA products and services are regulated indirectly through clients \u2014 banks and financial institutions \u2014 whose own obligations flow down as contractual requirements.',
+            },
+            {
+              label: 'DORA specifically',
+              text: 'MA may face client demands to evidence operational resilience compliance even though the regulation does not apply to it directly.',
+            },
+            {
+              label: 'Implication',
+              text: 'MA carries regulatory COST without regulatory PROTECTION \u2014 the opposite of MIS, where regulation creates the demand.',
+            },
+          ],
+        },
+      ],
+    },
+    cyber: {
+      tldr: 'A NIST-aligned programme embedded in enterprise risk management, with a dedicated CISO reporting to the Chief Administrative Officer and a Cyber Committee escalating to executives and the board. NOTE WHAT IS ABSENT: unlike Visa, which states explicitly that no cyber incident materially affected it in the past three fiscal years, the supplied Moody\u2019s material makes NO EQUIVALENT MATERIALITY STATEMENT. That may simply be outside this extract, but it is the one thing a reader should look for and it is not here.',
+      rows: [
+        {
+          category: 'Governance',
+          points: [
+            'Global internal cybersecurity team led by a CISO with 20+ years of experience holding CISSP and CISM, reporting to the Chief Administrative Officer \u2014 an executive team member.',
+            'A CYBER COMMITTEE chaired by the CISO, including the Chief Technology & Security Officer, the CAO, the Chief Risk & Resiliency Officer, Legal and senior leaders.',
+            'The committee identifies risks, sets mitigations, validates people, process and technology, and escalates to executives and the board under the Incident Response Plan.',
+            'Regular board updates from the CISO, CTSO and CAO; the Audit Committee reviews financial and compliance risks including cybersecurity.',
+          ],
+          meaning: 'The CISO reporting to the CAO rather than to a CTO or CIO is a deliberate separation \u2014 security does not report to the function it audits.',
+        },
+        {
+          category: 'Framework and assurance',
+          points: [
+            'Programme aligned to NIST and embedded in enterprise risk management, with escalation into ERM via the Incident Response Plan.',
+            'Continuous automated monitoring plus internal analysts; the IRP is tested regularly and calibrated to emerging threats.',
+            'INTERNAL CONTROLS INDEPENDENTLY ASSESSES control design and effectiveness against NIST, with results shared to the Cyber Committee \u2014 a genuine second line.',
+            'Routine vulnerability scans, penetration tests, RED TEAMING, tabletop exercises and phishing drills, all tracked for improvement.',
+          ],
+          meaning: 'Independent internal assessment against an external framework, reported to a committee the CISO chairs but does not control, is a stronger structure than self-attestation.',
+        },
+        {
+          category: 'Certifications and regulatory coverage',
+          points: [
+            'ISO 27001 and SOC 1 / SOC 2 for certain MA products, with broader alignment to NIST.',
+            'SOX audits, plus GDPR, UK GDPR and CCPA privacy compliance and FTC oversight where applicable.',
+            'DORA applies to MIS as a credit rating agency from early 2025, requiring oversight of IT systems AND third-party ICT providers.',
+          ],
+          meaning: 'DORA is the change to watch \u2014 it converts operational resilience from good practice into a supervised obligation, and it reaches vendors as well as Moody\u2019s own systems.',
+        },
+        {
+          category: 'Third-party risk',
+          points: [
+            'Tools and processes to monitor vendor cyber risk, with the Incident Response Plan explicitly covering vendor incidents.',
+            'External assessments by insurers, customers and agencies in some jurisdictions.',
+          ],
+          meaning: 'Note the risk factors name the sharper problem: some technology vendors also COMPETE with Moody\u2019s, which complicates dependency.',
+        },
+        {
+          category: 'Training and culture',
+          points: [
+            'The "InfoSafe" programme: annual policy certification, mandatory cyber training, ongoing phishing simulations, communications, expert talks and TARGETED MODULES FOR DEVELOPERS.',
+            'Completion is monitored, and suspected incidents require immediate escalation.',
+          ],
+          meaning: 'Developer-specific training is the detail that suggests this is operational rather than ceremonial.',
+        },
+      ],
+      takeaways: [
+        'The structure is sound: NIST alignment, ERM integration, independent internal assessment, red teaming, and a CISO who reports outside the technology organisation.',
+        'THE MNPI DIMENSION IS SPECIFIC TO THIS COMPANY. Moody\u2019s holds unpublished rating actions that move markets. A breach here is a securities problem as well as a data-protection one, and the risk factors name material non-public information explicitly alongside cyber threats.',
+        'NO MATERIALITY STATEMENT ON PAST INCIDENTS appears in the supplied material. Visa states plainly that nothing material occurred in three fiscal years including third-party events. That absence is worth checking against the full filing.',
       ],
     },
   },
