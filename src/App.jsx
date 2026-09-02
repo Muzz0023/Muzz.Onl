@@ -35711,7 +35711,7 @@ const V_BREAKDOWN = {
       },
       eps: {
         label: 'Diluted EPS \u2014 Class A',
-        unit: 'USD',
+        unit: 'USD per share',
         series: [
           {
             year: 2013,
@@ -36434,7 +36434,7 @@ const V_BREAKDOWN = {
         },
         {
           label: 'Diluted EPS \u2014 Class C',
-          unit: 'USD',
+          unit: 'USD per share',
           series: [
             {
               year: 2013,
@@ -36488,6 +36488,124 @@ const V_BREAKDOWN = {
             },
           ],
           note: 'Class C earnings per share run at almost exactly FOUR TIMES Class A \u2014 $38.97 against $9.73 in FY2024, a ratio of 4.005 \u2014 which reveals the Class C conversion rate into Class A. FY2024 also shows Class B-1 basic EPS of $15.46 and Class B-2 of $15.45, implying a B conversion rate of about 1.59. Those two classes were reported combined as "Class B" before FY2023.',
+        },
+        {
+          label: 'Basic EPS \u2014 Class B-1',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2023,
+              value: 13.26,
+            },
+            {
+              year: 2024,
+              value: 15.46,
+            },
+          ],
+          note: 'Reported separately only from FY2023 \u2014 before that Class B-1 and B-2 were presented combined as "Class B". At $15.46 against Class A\u2019s $9.73 the implied conversion rate is 1.589.',
+        },
+        {
+          label: 'Basic EPS \u2014 Class B-2',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2024,
+              value: 15.45,
+            },
+          ],
+          note: 'First reported separately in FY2024, one cent below Class B-1 at $15.45.',
+        },
+        {
+          label: 'Diluted Weighted-Average Shares \u2014 Class B-1',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2022,
+              value: 245,
+            },
+            {
+              year: 2023,
+              value: 245,
+            },
+            {
+              year: 2024,
+              value: 148,
+              down: true,
+            },
+          ],
+          note: 'FY2022 is the combined "Class B" presentation. THE COUNT FELL 39.6% IN FY2024, from 245m to 148m, as escrow deposits reduced the conversion rate \u2014 the mechanism described in the COMMITMENTS tab, which has the same economic effect as buying back Class A stock.',
+        },
+        {
+          label: 'Diluted Weighted-Average Shares \u2014 Class B-2',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2024,
+              value: 49,
+            },
+          ],
+        },
+        {
+          label: 'Diluted Weighted-Average Shares \u2014 Class C',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2013,
+              value: 28,
+            },
+            {
+              year: 2014,
+              value: 26,
+              down: true,
+            },
+            {
+              year: 2015,
+              value: 22,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 19,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 14,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 12,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 12,
+            },
+            {
+              year: 2020,
+              value: 11,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 10,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 10,
+            },
+            {
+              year: 2023,
+              value: 10,
+            },
+            {
+              year: 2024,
+              value: 16,
+            },
+          ],
+          note: 'Fell from 28m to 10m as Class C steadily converted into Class A, then ROSE to 16m in FY2024 \u2014 the first increase in the series, following the Eighth Anniversary Release described in COMMITMENTS.',
         },
         {
           label: 'Diluted Weighted-Average Shares \u2014 Class A',
@@ -49705,7 +49823,12 @@ function MuzzApp() {
                       if (unit === '%')              return v.toFixed(1) + '%';
                       if (unit === 'x')              return v.toFixed(2) + 'x';
                       if (unit === 'days')           return v.toFixed(1) + 'd';
-                      if (unit === 'USD')            return '$' + Math.round(v).toLocaleString();
+                      if (unit === 'USD') {
+                        // Never discard decimals that are actually present -- Math.round()
+                        // silently turned $9.73 of EPS into $10.
+                        const uDec = v !== Math.floor(v);
+                        return '$' + v.toLocaleString(undefined, { minimumFractionDigits: uDec ? 2 : 0, maximumFractionDigits: 2 });
+                      }
                       return v.toLocaleString();
                     };
 
