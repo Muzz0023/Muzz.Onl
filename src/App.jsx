@@ -40109,6 +40109,209 @@ const MA_BREAKDOWN = {
       ],
       keyTakeaway: 'THE MOST REVEALING ROW IS THE DOMESTIC DEBIT ONE, because Mastercard states plainly that in markets with strong local schemes it is MAINLY USED FOR CROSS-BORDER. That is the company itself explaining the ~30% of branded transactions it does not switch. The second most revealing is Vocalink: Mastercard does not merely compete with real-time rails, it OWNS AND OPERATES ONE. Where Visa\u2019s answer to A2A is Tink and a UK launch, Mastercard\u2019s is an incumbent national RTP operator. Whether that converts to economics is unproven, but it is a materially different starting position \u2014 and it is why the multi-rail claim here is more than marketing.',
     },
+    leadership: {
+      asOf: 'Board of directors and executive officers as of 12 February 2025',
+      executives: [
+        {
+          name: 'Michael Miebach',
+          featured: true,
+          age: 57,
+          tenureYears: 15,
+          since: 'Joined 2010 \u00b7 CEO Jan 2021',
+          role: 'President and Chief Executive Officer \u00b7 previously President (2020), Chief Product Officer (2016\u201320) and President of Middle East & Africa (2010\u201315) \u00b7 before Mastercard, Managing Director at Barclays covering MENA and Sub-Saharan Africa, and Citigroup roles across Germany, Austria, the UK and Turkey \u00b7 An emerging-markets and product career rather than a finance one',
+        },
+        {
+          name: 'Sachin Mehra',
+          featured: true,
+          age: 54,
+          tenureYears: 15,
+          since: 'Joined 2010 \u00b7 CFO Apr 2019',
+          role: 'Chief Financial Officer \u00b7 previously Chief Financial Operations Officer (2018\u201319), EVP Commercial Products (2015\u201318), EVP and Business Financial Officer for North America (2013\u201315), and CORPORATE TREASURER (2010\u201313) \u00b7 before Mastercard, VP and Treasurer at Hess, and treasury and finance roles at GM and GMAC \u00b7 SIX YEARS IN POST against Visa\u2019s CFO at two \u2014 and he ran commercial products, so the B2B strategy has a CFO who has operated it',
+        },
+        {
+          name: 'Edward McLaughlin',
+          featured: true,
+          age: 59,
+          tenureYears: 24,
+          since: 'Joined 2001',
+          role: 'President and Chief Technology Officer, Mastercard Technology, since May 2017 \u00b7 previously CIO (2016\u201317), Chief Emerging Payments Officer (2010\u201315), Chief Franchise Development Officer, and SVP Bill Payment & Healthcare \u00b7 before Mastercard, Group VP of Product and Strategy at Metavante and CO-FOUNDER AND CEO OF PAYTRUST \u00b7 Payments architecture, cloud migration and cyber resilience \u2014 a founder running the technology organisation',
+        },
+        {
+          name: 'Craig Vosburg',
+          featured: true,
+          age: 57,
+          tenureYears: 18,
+          since: 'Joined 2007 \u00b7 role May 2024',
+          role: 'Chief Services Officer \u00b7 previously Chief Product Officer (2021\u201324), President North America (2016\u201320), EVP US Market Development (2010\u201314), and head of Mastercard Advisors across regions \u00b7 before Mastercard, Bain, A.T. Kearney and CoreStates Financial \u00b7 RUNS THE HALF OF THE REVENUE ARCHITECTURE THAT IS NOT THE NETWORK \u2014 value-added services is one of only two reported revenue categories',
+        },
+        {
+          name: 'Jon M. Huntsman Jr.',
+          featured: true,
+          age: 64,
+          tenureYears: 1,
+          since: 'Joined April 2024',
+          role: 'Vice Chair and President, Strategic Growth \u00b7 THE MOST UNUSUAL APPOINTMENT IN EITHER BUILD. Former Vice Chair of Policy at Ford, GOVERNOR OF UTAH 2005\u201309, and US AMBASSADOR TO RUSSIA, CHINA AND SINGAPORE, plus US Trade Ambassador \u00b7 Chairman of the Atlantic Council and the Huntsman Cancer Foundation \u00b7 Hired in April 2024 \u2014 the same year Mastercard began domestic processing in China through a joint venture. A former ambassador to China and Russia joining a payments network as the localisation and market-access pressure intensifies is not a coincidence',
+        },
+        {
+          name: 'Linda Kirkpatrick',
+          age: 48,
+          tenureYears: 27,
+          since: 'Joined 1998 \u00b7 role Jan 2024',
+          role: 'President, Americas \u00b7 THE LONGEST-SERVING EXECUTIVE AT 27 YEARS and the youngest at 48 \u00b7 previously President North America (2021\u201323), President US Issuers (2020), EVP Merchants & Acceptance (2016\u201320), SVP Core Merchants (2013\u201316), SVP Franchise Development (2011\u201313) and VP US Region (2008\u201311) \u00b7 began in investor relations at Mastercard \u00b7 Has run both the merchant and the issuer side, which is rare',
+        },
+        {
+          name: 'Ling Hai',
+          age: 54,
+          tenureYears: 15,
+          since: 'Joined 2010 \u00b7 role Jan 2024',
+          role: 'President, Asia Pacific, Europe, Middle East & Africa \u00b7 previously Co-President International Markets (2022\u201323), Co-President Asia Pacific (2015\u201321), President Enterprise Development (2014\u201315) and PRESIDENT GREATER CHINA (2010\u201314) \u00b7 before Mastercard, Booz Allen Hamilton and Bank of America \u00b7 Runs everything outside the Americas \u2014 which given ~70% of revenue is ex-US is the larger half of the business',
+        },
+        {
+          name: 'Jorn Lambert',
+          age: 53,
+          tenureYears: 23,
+          since: 'Joined 2002 \u00b7 role May 2024',
+          role: 'Chief Product Officer \u00b7 previously Chief Digital Officer (2020\u201324), EVP Digital Solutions (2018\u201320), EVP Digital Channels (2013\u201318) and Group Head of Emerging Payments Europe (2002\u201313) \u00b7 before Mastercard, Clearstream \u00b7 Twenty-three years, almost all of it in digital and emerging payments \u2014 the tokenisation and Click to Pay agenda runs through him',
+        },
+        {
+          name: 'Raj Seshadri',
+          age: 59,
+          tenureYears: 9,
+          since: 'Joined 2016 \u00b7 role May 2024',
+          role: 'Chief Commercial Payments Officer \u00b7 previously President Data & Services (2020\u201324) and President US Issuers (2016\u201319) \u00b7 before Mastercard, Managing Director and Global Marketing Officer at iShares BlackRock, plus Citigroup, US Trust and McKinsey \u00b7 OWNS THE $120 TRILLION B2B OPPORTUNITY \u2014 and came to it from running data and services, which is how Mastercard intends to win it',
+        },
+        {
+          name: 'Tim Murphy',
+          age: 57,
+          tenureYears: 24,
+          since: 'Joined 2000 \u00b7 role Apr 2021',
+          role: 'Chief Administrative Officer \u00b7 previously GENERAL COUNSEL (2014\u201321), Chief Product Officer (2009\u201314), President US Region, EVP Customer Business Planning & Analysis, and SVP Associate General Counsel \u00b7 before Mastercard, associate at Cleary Gottlieb in New York and London \u00b7 A general counsel who also ran product \u2014 unusual, and useful when the rules themselves are the contested asset',
+        },
+        {
+          name: 'Raja Rajamannar',
+          age: 63,
+          tenureYears: 12,
+          since: 'Joined 2013 \u00b7 role May 2024',
+          role: 'Chief Marketing and Communications Officer \u00b7 previously President Healthcare (2016\u201324) and Chief Marketing Officer (2013\u201315) \u00b7 before Mastercard, Chief Transformation Officer at Anthem/WellPoint, Chief Innovation and Marketing Officer at Humana, and EVP and CMO at Citi Global Cards \u00b7 Owns Priceless and the brand-visibility problem named in Item 1A',
+        },
+      ],
+      board: [
+        {
+          name: 'Michael Miebach',
+          category: 'CEO \u00b7 the only insider',
+          role: 'President and Chief Executive Officer since January 2021, director since 2021 (4 yrs) \u00b7 Age 57 \u00b7 joined Mastercard 2010 \u00b7 previously President (2020), Chief Product Officer (2016\u201320) and President of Middle East & Africa (2010\u201315) \u00b7 before Mastercard, Managing Director at Barclays for MENA and Sub-Saharan Africa, and executive roles at Citigroup across Germany, Austria, the UK and Turkey \u00b7 Board focus: full-board leadership, strategy, technology and product',
+        },
+        {
+          name: 'Rima Qureshi',
+          category: 'Independent \u00b7 longest-serving',
+          role: 'Director since 2011 (14 yrs \u2014 the longest tenure on the board) \u00b7 former EVP and Chief Strategy Officer of VERIZON \u00b7 corporate strategy at a global telco, with large-scale M&A planning \u00b7 Board focus: strategy, partnerships and technology ecosystem alignment \u00b7 Brings the platform and connectivity lens',
+        },
+        {
+          name: 'Julius Genachowski',
+          category: 'Independent \u00b7 REGULATOR',
+          role: 'Director since 2014 (11 yrs) \u00b7 FORMER CHAIRMAN OF THE US FEDERAL COMMUNICATIONS COMMISSION \u00b7 a national technology and communications regulator on the board of a company regulated as critical infrastructure \u00b7 Board focus: risk and cyber oversight, policy and regulatory affairs \u00b7 NOTE: Visa discloses NO director with a regulatory or public-policy background; Mastercard has two',
+        },
+        {
+          name: 'Merit E. Janow',
+          category: 'Independent \u00b7 TRADE AND COMPETITION POLICY',
+          role: 'Director since 2022 (3 yrs) \u00b7 Dean Emerita of Columbia SIPA since March 2022 and Professor of Practice in International Economic Law and International Affairs at Columbia since 1993 \u00b7 expertise in international trade and COMPETITION POLICY \u2014 directly relevant to a company facing antitrust action on three continents \u00b7 Board focus: risk and compliance, nominating and governance, public policy oversight',
+        },
+        {
+          name: 'Harit Talwar',
+          category: 'Independent \u00b7 the payments operator',
+          role: 'Director since 2022 (3 yrs) \u00b7 former Partner at GOLDMAN SACHS where he led the global consumer business \u2014 building both MARCUS and the APPLE CARD \u00b7 built a large digital consumer and partnership card franchise from scratch \u00b7 Board focus: product and partnerships, credit and fraud risk, pricing and loyalty \u00b7 The closest Mastercard equivalent to Visa\u2019s Bill Ready, and notably he built a co-brand with the largest big-tech platform in payments',
+        },
+        {
+          name: 'Richard K. Davis',
+          category: 'Independent \u00b7 US bank operator',
+          role: 'Director since 2018 (7 yrs) \u00b7 former Executive Chairman and CEO of US BANCORP \u00b7 long-tenured US bank operator with direct payments and MERCHANT ACQUIRING experience \u2014 US Bancorp owns Elavon \u00b7 Board focus: audit and risk, North America strategy, financial operations discipline',
+        },
+        {
+          name: 'C\u00e2ndido Botelho Bracher',
+          category: 'Independent \u00b7 LatAm issuer',
+          role: 'Director since 2021 (4 yrs) \u00b7 board member of ITA\u00da UNIBANCO since September 2021 and its former CEO \u00b7 large-bank CEO experience in Latin America and universal banking \u00b7 Board focus: Latin America strategy, issuer relationships, credit and risk discipline \u00b7 Brings the issuer\u2019s view from the region where Pix has moved fastest',
+        },
+        {
+          name: 'Choon Phong Goh',
+          category: 'Independent \u00b7 travel and co-brand',
+          role: 'Director since 2018 (7 yrs) \u00b7 CEO of SINGAPORE AIRLINES since January 2011 \u00b7 global airline operator with deep loyalty and alliance experience and complex operations \u00b7 Board focus: merchant acceptance, CROSS-BORDER growth, resilience and operations \u00b7 Directly relevant given cross-border is ~30% of volume at the highest fees, and travel is its largest driver',
+        },
+        {
+          name: 'Oki Matsumoto',
+          category: 'Independent \u00b7 fintech founder',
+          role: 'Director since 2016 (9 yrs) \u00b7 Founder, Chairman and former CEO of MONEX GROUP, chair since February 2011 \u00b7 fintech and online brokerage founder \u00b7 Board focus: technology and innovation, Asia strategy, open banking and wealth adjacencies \u00b7 The Japan and Asia distribution perspective',
+        },
+        {
+          name: 'Gabrielle Sulzberger',
+          category: 'Independent \u00b7 private equity',
+          role: 'Director since 2018 (7 yrs) \u00b7 Senior Managing Director at CENTERBRIDGE since January 2024 and Senior Advisor at Teneo since April 2024 \u00b7 private equity and government affairs advisory \u00b7 Board focus: audit and finance, nominating and governance, investor and stakeholder engagement',
+        },
+        {
+          name: 'Lance Uggla',
+          category: 'Independent \u00b7 growth investor',
+          role: 'Director since 2019 (6 yrs) \u00b7 Vice Chair of GENERAL ATLANTIC since December 2023 and founder of GA BeyondNetZero since April 2022 \u00b7 growth-equity investor with climate and transition focus \u00b7 Board focus: strategy and M&A, ESG and climate opportunity, capital deployment',
+        },
+        {
+          name: 'Youngme Moon',
+          category: 'Independent \u00b7 brand and platform strategy',
+          role: 'Director since 2019 (6 yrs) \u00b7 Professor at HARVARD BUSINESS SCHOOL since July 2014 \u00b7 consumer, brand and platform strategy scholar \u00b7 Board focus: brand and marketing, talent and culture, strategy refresh \u00b7 Relevant to the brand-visibility risk named in Item 1A',
+        },
+      ],
+      boardTakeaways: {
+        title: 'Governance assessment \u00b7 board of directors, February 2025',
+        verdict: 'Twelve directors, ELEVEN INDEPENDENT \u2014 91.7%, identical to Visa. Average tenure 6.75 years, ranging from Rima Qureshi at 14 to Janow and Talwar at 3. Mastercard DISCLOSES tenure where Visa does not, so this board can actually be assessed on refreshment. The composition differs from Visa\u2019s in a way that reflects each company\u2019s position: VISA\u2019S BOARD IS MERCHANT-WEIGHTED, with five of twelve from retail and consumer goods. MASTERCARD\u2019S IS ISSUER-WEIGHTED \u2014 a former US Bancorp CEO, a former Ita\u00fa CEO, and the Goldman partner who built Marcus and the Apple Card. And where Visa discloses no director with a regulatory or public-policy background, Mastercard has two: a former FCC Chairman and a Columbia professor of international trade and competition policy. For a company regulated as financial market infrastructure, that is the right gap to have filled.',
+        scores: [
+          {
+            label: 'Independence \u2014 11 of 12 (91.7%)',
+            rating: 'strong',
+          },
+          {
+            label: 'Regulatory and public-policy expertise (Genachowski, Janow)',
+            rating: 'strong',
+          },
+          {
+            label: 'Issuer and banking depth (Davis, Bracher, Talwar)',
+            rating: 'strong',
+          },
+          {
+            label: 'Payments operating experience (Talwar)',
+            rating: 'strong',
+          },
+          {
+            label: 'Tenure disclosed and assessable \u2014 average 6.75 yrs',
+            rating: 'strong',
+          },
+          {
+            label: 'International representation \u2014 Brazil, Singapore, Japan',
+            rating: 'strong',
+          },
+          {
+            label: 'Board refreshment \u2014 4 directors added since 2019',
+            rating: 'moderate',
+          },
+          {
+            label: 'Merchant-side perspective \u2014 thinner than Visa\u2019s',
+            rating: 'moderate',
+          },
+          {
+            label: 'Technology operating depth \u2014 mostly strategy, not engineering',
+            rating: 'moderate',
+          },
+          {
+            label: 'Cybersecurity specialist \u2014 none comparable to Visa\u2019s Pamela Murphy',
+            rating: 'weak',
+          },
+        ],
+      },
+      executiveTakeaways: [
+        'AVERAGE EXECUTIVE TENURE IS 16.6 YEARS against Visa\u2019s 10.9. Linda Kirkpatrick has been there 27 years, Edward McLaughlin and Tim Murphy 24 each, Jorn Lambert 23. This is a promote-from-within organisation to an unusual degree \u2014 the disclosure itself notes roughly 60% internal promotion with strong bench depth, and names four CEO-capable executives with over ten years\u2019 tenure.',
+        'SIX OF ELEVEN EXECUTIVES TOOK THEIR CURRENT ROLE DURING 2024. Ling Hai and Linda Kirkpatrick in January, Jon Huntsman in April, and Craig Vosburg, Jorn Lambert, Raja Rajamannar and Raj Seshadri in May. That is a wholesale reshuffle of the leadership team in a single year, executed almost entirely through internal moves. Worth watching whether it settles.',
+        'THE HUNTSMAN HIRE IS THE MOST UNUSUAL APPOINTMENT IN EITHER PAYMENTS BUILD. A former Governor of Utah and US Ambassador to Russia, China AND Singapore joined in April 2024 as Vice Chair and President of Strategic Growth \u2014 the same year Mastercard began domestic processing in China through a joint venture, and against a risk register naming data localisation in India, China and Saudi Arabia as a mid-to-long-term threat. Hiring a diplomat into an operating role says the market-access problem is being treated as a diplomatic one.',
+        'THE CFO HAS SIX YEARS IN POST AND RAN COMMERCIAL PRODUCTS BEFORE THAT. Sachin Mehra was Corporate Treasurer, then EVP Commercial Products, then Chief Financial Operations Officer, then CFO. Compare Visa, whose CFO arrived from Electronic Arts two years ago. Mastercard\u2019s B2B strategy has a finance chief who has actually operated the business it depends on.',
+        'THE TECHNOLOGY ORGANISATION IS RUN BY A FOUNDER. Edward McLaughlin co-founded and ran Paytrust before joining in 2001, and has been President and CTO since 2017. Twenty-four years of tenure in the seat where the multi-rail claim either becomes real or does not.',
+        'SERVICES HAS ITS OWN CHIEF OFFICER, WHICH VISA DOES NOT HAVE. Craig Vosburg runs value-added services as one of only two reported revenue categories. At Visa, services are spread across four revenue lines with no single executive owning them. That organisational choice matches the reporting choice, and both say Mastercard takes services more seriously as a business rather than an attachment.',
+      ],
+    },
   },
   numbers: {
     employees: {
@@ -40411,6 +40614,381 @@ const MA_BREAKDOWN = {
   },
   risks: {
     tldr: 'Mastercard carries its interchange litigation DIRECTLY \u2014 no escrow, no retrospective responsibility plan, no litigation-linked share classes. Identified accruals of ~$903m against Visa\u2019s $1,727m reserve and $3,089m escrow. And on the DOJ, Mastercard faces an investigation where Visa faces a lawsuit.',
+    riskSummary: {
+      preamble: 'Four items carry the analysis. Two of them are things Visa does not disclose at all.',
+      categories: [
+        {
+          num: '01',
+          name: 'The settlement guarantee, quantified',
+          emerging: true,
+          description: 'Net settlement exposure of $64,919m at FY2024 \u2014 2.3x revenue and 5.0x net income. Visa carries the identical guarantee and publishes no number.',
+          drivers: [
+            'Gross exposure $78,385m, up 4.5% year on year.',
+            'Risk mitigation arrangements cover only 17.2% of gross.',
+            'Concentrates in concurrent or large-customer failures.',
+            'Duration is short \u2014 generally a few days.',
+          ],
+          mitigations: [
+            'Cash collateral, letters of credit and guarantees from customers below risk standards.',
+            'Historically low losses from settlement failure.',
+            'This is a tail risk, not a running cost \u2014 but it correlates with banking stress, which is exactly when it would fire.',
+          ],
+        },
+        {
+          num: '02',
+          name: 'CBDC and DPI design can sideline four-party networks',
+          emerging: true,
+          description: 'The filing says it directly. This is not competition for the network; it is architecture that may not need one.',
+          drivers: [
+            'Pix, UPI and FedNow already live and government-backed.',
+            'Open banking payment initiation under the CFPB rule from April 2026.',
+            'Direct issuer-to-merchant links and big tech platforms.',
+            'CBDC design choices still being set by central banks.',
+          ],
+          mitigations: [
+            'Mastercard OWNS AND OPERATES Vocalink, an incumbent national RTP system \u2014 a materially different starting position from Visa\u2019s.',
+            'Sells standards, interoperability, cyber and advisory INTO government schemes.',
+            'But participating in a lower-margin rail is not the same as defending a higher-margin one.',
+          ],
+        },
+        {
+          num: '03',
+          name: 'Regulated as infrastructure, not just as a company',
+          description: 'Financial market infrastructure designation brings central-bank supervision, collateral and governance mandates, and APPROVAL REQUIREMENTS FOR RULE CHANGES.',
+          drivers: [
+            'Bank of England recognised payment system; Vocalink a specified service provider.',
+            'ECB systemic importance regulation and EU scheme/processing separation.',
+            'Formal oversight in the UK, Australia, Brazil, India, Mexico, South Africa and Canada.',
+            'Canada registration under the Retail Payment Activities Act, framework due September 2025.',
+          ],
+          mitigations: [
+            'Compliance depth is itself a barrier to entry for smaller networks.',
+            'But a network that needs approval to change its own operating rules cannot move at commercial speed \u2014 that is a real strategic cost, not just an expense line.',
+          ],
+        },
+        {
+          num: '04',
+          name: 'Brand visibility disappearing into the interface',
+          description: 'Named explicitly: visibility can drop in embedded experiences and super-apps. The franchise model LICENSES the brand to participants \u2014 if consumers stop seeing it, the licence is worth less.',
+          drivers: [
+            'Wallets and super-apps own the checkout interface.',
+            'Co-brand cards put the partner brand on the front.',
+            'Embedded and invisible payments by design.',
+          ],
+          mitigations: [
+            'Tokenisation keeps Mastercard in the transaction even when invisible.',
+            'Priceless and sponsorship spending maintains consumer salience.',
+            'But this is a slow erosion of the asset the whole franchise structure rests on.',
+          ],
+        },
+      ],
+      summaryInsight: 'The register reads almost identically to Visa\u2019s in structure \u2014 regulated price, regulated routing, regulated access, plus disintermediation \u2014 with three differences that matter. Mastercard QUANTIFIES the settlement guarantee at $64.9bn where Visa does not. It carries financial market infrastructure designation and an owned RTP system, which is both a hedge against disintermediation and a separate operational liability. And it earns roughly 70% of revenue outside the US against Visa\u2019s 58.9%, so the FX and foreign regulatory surface is proportionally larger. The moat is the same; the exposures are differently distributed.',
+    },
+    riskFactors: {
+      summary: 'The register grouped by where the pressure comes from. Note two items Visa does not disclose at all: a quantified settlement guarantee, and the statement that CBDC and DPI design choices can sideline four-party networks.',
+      categories: [
+        {
+          name: '1 \u00b7 Legal and regulatory',
+          items: [
+            {
+              risk: 'Systemic importance designation \u2014 supervised like infrastructure',
+              meaning: 'Central bank oversight of switching, with mandates on governance, collateral and risk management, and APPROVALS REQUIRED FOR RULE CHANGES. Raises compliance cost and SLOWS PRODUCT CHANGE \u2014 a network that must seek approval to alter its own operating rules moves at regulator speed. Formal oversight now in the UK, Australia, Brazil, India, Mexico, South Africa and Canada, plus EU scheme and processing separation.',
+            },
+            {
+              risk: 'Interchange and network fee scrutiny',
+              meaning: 'Caps, litigation, merchant and regulator pressure, and routing mandates. Lowers issuer economics, which reduces rewards and marketing, which reduces volume \u2014 and forces higher incentives to compensate. Watch the Illinois tax-and-gratuity law and the DORMANT US CREDIT ROUTING BILL, which could return.',
+            },
+            {
+              risk: 'Limits on no-surcharge rules',
+              meaning: 'The US and Canada already permit credit surcharging subject to caps and conditions. More surcharging means consumer pushback at the till and lower card preference.',
+            },
+            {
+              risk: 'Preferential and protective government action',
+              meaning: 'Domestic switch mandates, data localisation, digital public infrastructure programmes and foreign ownership caps. Risks loss of domestic volumes, FORCED TECHNOLOGY TRANSFER, higher local infrastructure cost and outright market access limits. India, China and Saudi data rules, plus the rise of Pix, UPI and FedNow.',
+            },
+          ],
+        },
+        {
+          name: '2 \u00b7 Competition and disintermediation',
+          items: [
+            {
+              risk: 'Rival pressure across every rail',
+              meaning: 'Visa, Amex, UnionPay and JCB on cards; local debit schemes domestically; wallets and BNPL at the interface; account-to-account and digital public infrastructure underneath; crypto alongside. The named consequence is price competition, share loss, HIGHER REBATES AND INCENTIVES, and lower cross-border take.',
+            },
+            {
+              risk: 'DISINTERMEDIATION \u2014 the structural one',
+              meaning: 'Direct issuer-to-merchant links, big tech platforms, open banking payment initiation, and CBDC design choices. The filing states plainly that DESIGN CHOICES IN CBDC AND DPI CAN SIDELINE FOUR-PARTY NETWORKS. That is the clearest articulation of the existential question in either build \u2014 not that Mastercard loses a competition, but that the architecture stops requiring it.',
+            },
+            {
+              risk: 'Rapid technology shifts',
+              meaning: 'AI and machine learning, privacy technology, blockchain and standards uptake. Obsolescence risk, slower product cycles, higher R&D, plus patent disputes and licensing cost.',
+            },
+          ],
+        },
+        {
+          name: '3 \u00b7 Pricing and customers',
+          items: [
+            {
+              risk: 'Ongoing pricing pressure',
+              meaning: 'Customer consolidation, merchant leverage and regulatory caps drive incentives up and yield down. The named early-warning metric is REBATES AND INCENTIVES AS A PERCENTAGE OF GROSS REVENUE \u2014 the exact line that reached 38.3% of net revenue at Visa.',
+            },
+            {
+              risk: 'Customer concentration',
+              meaning: 'Top-five revenue weight, merger activity shifting portfolios between schemes, and bank failures. A single portfolio moving can reset revenue suddenly. Consolidation increases buyer power, and exclusivity arrangements with rivals persist.',
+            },
+            {
+              risk: 'Merchant acceptance-cost pushback',
+              meaning: 'Litigation, regulatory petitions, surcharging and co-brand demands. Larger merchants set the benchmark that others then demand.',
+            },
+            {
+              risk: 'Government business',
+              meaning: 'Funding cycles, anti-corruption exposure and reputational spillover. Note the specific flag: RECORDED FUTURE\u2019S GOVERNMENT TIES CAN AFFECT PERCEPTIONS IN OTHER MARKETS \u2014 buying a cyber intelligence firm with state customers carries a cost in jurisdictions wary of US government proximity.',
+            },
+          ],
+        },
+        {
+          name: '4 \u00b7 Operational and settlement',
+          items: [
+            {
+              risk: 'SETTLEMENT GUARANTEE \u2014 quantified, unlike Visa\u2019s',
+              meaning: 'Mastercard guarantees settlement between customers, and DISCLOSES THE NUMBER: gross exposure of $78,385m at FY2024, less $13,466m of risk mitigation, giving NET SETTLEMENT EXPOSURE OF $64,919m. That is 2.3x revenue and 5.0x net income. Duration is short \u2014 generally a few days \u2014 and historical losses have been low, but the risk concentrates precisely when banks fail. Visa discloses the same guarantee as a risk factor and gives no figure at all.',
+            },
+            {
+              risk: 'Real-time payments operational risk \u2014 Vocalink specifically',
+              meaning: 'Outages, Bank of England intervention and security events DISTINCT FROM THE CARD RAILS. Owning national RTP infrastructure is a competitive advantage and a separate operational liability at the same time \u2014 "specified service provider" status heightens the oversight.',
+            },
+            {
+              risk: 'Cybersecurity and data compromise',
+              meaning: 'Nation-state and criminal attacks, supply-chain compromise and AI-boosted threats. SEC cyber disclosure rules add time-sensitive reporting risk on top of the incident itself.',
+            },
+            {
+              risk: 'Service disruption and catastrophic events',
+              meaning: 'Power and telecom failure, extreme weather, data centre incidents and vendor outages. Mitigated by multi-region active-active architecture and vendor redundancy.',
+            },
+            {
+              risk: 'M&A execution and inherited risk',
+              meaning: 'Antitrust and national security scrutiny, target data gaps and IP issues. Deal failure, cost overrun, impairment and inherited cyber exposure. Recorded Future is named as adding cybercrime law exposure alongside its capability.',
+            },
+          ],
+        },
+        {
+          name: '5 \u00b7 Macro, FX and stakeholders',
+          items: [
+            {
+              risk: 'Global economic and political shocks',
+              meaning: 'Recession, travel decline, conflict and pandemic \u2014 hitting cross-border GDV hardest, which is the highest-yield volume. Russia exit repercussions continue.',
+            },
+            {
+              risk: 'FX \u2014 larger exposure than Visa',
+              meaning: 'Roughly 70% OF REVENUE IS EARNED OUTSIDE THE US, against 58.9% international for Visa. Strong dollar pressures reported revenue and conversion limits can trap cash. A 10% adverse move on outstanding FX derivatives is a $475m loss before offsets, versus $329m at Visa \u2014 a larger sensitivity on a smaller notional book, because of the new seven-year contracts.',
+            },
+            {
+              risk: 'Brand visibility and ESG polarisation',
+              meaning: 'A specific and underrated one: BRAND VISIBILITY CAN DROP IN EMBEDDED EXPERIENCES AND SUPER-APPS. If the payment disappears into the interface, the network brand stops driving consumer preference \u2014 which is the asset the whole franchise model licenses.',
+            },
+            {
+              risk: 'Talent and culture',
+              meaning: 'Technology talent scarcity, hybrid work, immigration friction, and pay transparency regimes adding compliance and reputational angles.',
+            },
+            {
+              risk: 'Capital structure and the Foundation',
+              meaning: 'Anti-takeover provisions reduce M&A optionality, and the Foundation\u2019s staged sell-down creates overhang optics. Mitigated by the structured seven-year plan and the Foundation\u2019s commitment to remain a long-term holder.',
+            },
+          ],
+        },
+      ],
+    },
+    governmentalRegulation: {
+      summary: 'Eleven regulatory areas, and the shape is the same as Visa\u2019s: regulated PRICE, regulated ROUTING and regulated MARKET ACCESS all at once. Two features are distinctive here. First, Mastercard is formally regulated as FINANCIAL MARKET INFRASTRUCTURE in several jurisdictions \u2014 a Bank of England recognised payment system, with VOCALINK separately designated a "specified service provider" \u2014 so it carries central-bank style supervision that a pure card network does not. Second, roughly 70% of revenue is earned outside the US, against 58.9% international for Visa, so the foreign regulatory surface is proportionally larger.',
+      sections: [
+        {
+          number: '01',
+          name: 'Payments oversight \u00b7 regulated as financial market infrastructure',
+          bullets: [
+            {
+              label: 'EU',
+              text: 'Systemic importance regulation under the ECB, plus a requirement to SEPARATE SCHEME from switching and processing \u2014 brand and licensing kept apart from the network itself.',
+            },
+            {
+              label: 'United Kingdom',
+              text: 'The Bank of England designates Mastercard a RECOGNISED PAYMENT SYSTEM and VOCALINK a SPECIFIED SERVICE PROVIDER. Owning national RTP infrastructure brings central-bank supervision that Visa does not carry.',
+            },
+            {
+              label: 'Elsewhere',
+              text: 'Formal oversight in Australia, Brazil, India, Mexico, South Africa and Canada.',
+            },
+            {
+              label: 'Cost',
+              text: 'Separate reporting lines and controls for scheme versus processing, subsidiary licensing as payment institutions and money transmitters, and ongoing supervision and audit.',
+            },
+          ],
+        },
+        {
+          number: '02',
+          name: 'Interchange and routing \u00b7 regulated price and regulated choice',
+          bullets: [
+            {
+              label: 'United States',
+              text: 'Durbin debit caps. Proposals to extend routing mandates TO CREDIT sit in a currently inactive bill \u2014 dormant, not dead. Illinois banned interchange on the tax and gratuity portion of a transaction in May 2024, now under litigation.',
+            },
+            {
+              label: 'Europe',
+              text: 'IFR caps on consumer credit and debit interchange, and an EC settlement resolving the interregional fee probe.',
+            },
+            {
+              label: 'Canada',
+              text: 'Registered under the Retail Payment Activities Act in November 2024, with an operational risk and safeguarding framework required by September 2025.',
+            },
+            {
+              label: 'Effect',
+              text: 'Direct pressure on transaction economics and pricing flexibility. Mastercard\u2019s stated response is to diversify revenue through value-added services \u2014 the same answer Visa gives.',
+            },
+          ],
+        },
+        {
+          number: '03',
+          name: 'Open banking and data access',
+          bullets: [
+            {
+              label: 'US CFPB final rule',
+              text: 'Issued October 2024, with compliance PHASED FROM APRIL 2026 by institution size. Data providers must share covered data with consumers and authorised third parties.',
+            },
+            {
+              label: 'Consequence',
+              text: 'Opens competition from third-party payment initiators and changes how customer data flows. Mastercard\u2019s response is to position itself as the infrastructure and security layer rather than resist the rule.',
+            },
+          ],
+        },
+        {
+          number: '04',
+          name: 'Preferential and protective government action',
+          bullets: [
+            {
+              label: 'Markets',
+              text: 'India, China and Saudi Arabia have data localisation laws, with emerging proposals in the EU and elsewhere mandating on-soil storage. Some markets mandate that domestic switching be done ONLY BY LOCAL FIRMS.',
+            },
+            {
+              label: 'Effect',
+              text: 'Limits cross-border processing efficiency, restricts global data analytics, and forces infrastructure duplication. This is the direct cause of the ~30% of branded transactions Mastercard does not switch.',
+            },
+            {
+              label: 'Response',
+              text: 'On-soil processing, domestic partnerships and joint ventures \u2014 the China JV is the worked example.',
+            },
+          ],
+        },
+        {
+          number: '05',
+          name: 'AML, sanctions and anti-corruption',
+          bullets: [
+            {
+              label: 'Regimes',
+              text: 'Bank Secrecy Act, USA PATRIOT Act and OFAC in the US; AML directives and CFT requirements in the EU; FCPA and UK Bribery Act for anti-bribery.',
+            },
+            {
+              label: 'Embargoes',
+              text: 'Crimea, Donetsk, Luhansk, Cuba, Iran, North Korea and Syria \u2014 the same list Visa carries.',
+            },
+            {
+              label: 'Mechanism',
+              text: 'Screening obligations are pushed CONTRACTUALLY onto issuers and acquirers, so compliance failures by customers become Mastercard\u2019s exposure.',
+            },
+          ],
+        },
+        {
+          number: '06',
+          name: 'Issuer and acquirer regulation',
+          bullets: [
+            {
+              label: 'PSD2 and PSD3',
+              text: 'Require banks to grant third-party processors access, and regulate fees, disclosure and authentication standards.',
+            },
+            {
+              label: 'Effect',
+              text: 'ENABLES ROUTING AWAY FROM MASTERCARD PRODUCTS, and strong customer authentication adds checkout friction. The response is biometrics, passkeys and tokenisation to reduce that friction.',
+            },
+          ],
+        },
+        {
+          number: '07',
+          name: 'High-risk merchant categories',
+          bullets: [
+            {
+              label: 'Sectors',
+              text: 'Gambling including fantasy sports, adult content, firearms, alcohol and tobacco.',
+            },
+            {
+              label: 'Obligation',
+              text: 'Prohibited-merchant lists, monitoring and blocking mechanisms, with reputational as well as regulatory exposure.',
+            },
+          ],
+        },
+        {
+          number: '08',
+          name: 'Privacy, data protection, AI and cybersecurity',
+          bullets: [
+            {
+              label: 'United States',
+              text: 'GLBA, FTC safeguarding, state privacy laws, and the SEC CYBER DISCLOSURE RULE requiring a Form 8-K within FOUR DAYS of a material incident.',
+            },
+            {
+              label: 'Europe',
+              text: 'GDPR and UK GDPR, with the EU AI Act emerging.',
+            },
+            {
+              label: 'Response',
+              text: 'Privacy by Design, Data by Design and AI Governance frameworks, with data minimisation.',
+            },
+            {
+              label: 'Tension',
+              text: 'The same one Visa faces: the risk and insights products are built on exactly the cross-border data flows being restricted.',
+            },
+          ],
+        },
+        {
+          number: '09',
+          name: 'Sustainability and ESG disclosure',
+          bullets: [
+            {
+              label: 'Regimes',
+              text: 'UK SECR, EU CSRD and the Due Diligence Directive, plus proposed SEC climate rules.',
+            },
+            {
+              label: 'Effect',
+              text: 'Reporting workload and stakeholder scrutiny; aligned to TCFD and GRI.',
+            },
+          ],
+        },
+        {
+          number: '10',
+          name: 'Emerging topics',
+          bullets: [
+            {
+              label: 'Under review',
+              text: 'BNPL, open banking expansion, digital currencies, marijuana transactions, prepaid payroll, identity theft, marketing and operational resilience.',
+            },
+            {
+              label: 'Effect',
+              text: 'Potential changes to product economics and the compliance perimeter.',
+            },
+          ],
+        },
+        {
+          number: '11',
+          name: 'Corporate and disclosure governance',
+          bullets: [
+            {
+              label: 'Structure',
+              text: 'Incorporated in Delaware in 2001; principal subsidiary Mastercard International Incorporated dating to 1966. Class A voting and Class B non-voting stock.',
+            },
+            {
+              label: 'Obligations',
+              text: 'Standard 10-K, 10-Q and 8-K reporting, with separate ESG and EEO-1 reports NOT incorporated by reference.',
+            },
+          ],
+        },
+      ],
+    },
     derivatives: {
       summary: 'A conservative, programmatic hedging book with no speculative positions permitted. Total notional of $10,203m at 31 December 2024, up 37.3% from $7,430m \u2014 about 36.3% of revenue, almost identical to Visa\u2019s 37.9% and comparable to Alphabet\u2019s 32%. Three instrument families only: FX forwards and options, interest rate swaps, and euro-denominated debt used as a natural hedge. Every column reconciles in both years. Roughly 65% of exposure sits in EUR, GBP, AUD and emerging-market currencies, tracking cross-border revenue.',
       accountingNote: 'Designations under ASC 815 across cash flow, fair value and net investment hedges. Cash flow hedge gains and losses defer in AOCI and reclassify to income when the hedged transaction occurs. The fair value hedge runs through interest expense with the swap and the debt offsetting. Net investment hedge effectiveness goes to the currency translation adjustment in AOCI, with forward points amortised to G&A. Non-designated positions hit G&A immediately, netted against the FX exposures they offset. Centralised treasury framework with counterparty limits, mark-to-market monitoring, independent effectiveness testing and audit committee oversight; NO MATERIAL INEFFECTIVENESS reported in FY2022\u201324.',
@@ -40728,6 +41306,116 @@ const MA_BREAKDOWN = {
             4,
           ],
           note: 'THIS IS A GENUINE GOVERNANCE DIFFERENCE, NOT A DETAIL. Visa pays its performance stock units on RELATIVE TSR ALONE \u2014 no revenue, margin, return or cash flow target \u2014 which means multiple expansion pays identically to operating improvement. Mastercard uses NET REVENUE GROWTH AND EPS GROWTH ALONGSIDE relative TSR, so two of its three measures are things management actually controls. It also imposes a mandatory one-year hold AFTER vesting, extending the effective horizon to four years. On incentive design Mastercard is clearly ahead.',
+        },
+        {
+          title: 'ESTIMATED SETTLEMENT EXPOSURE ($M) \u00b7 THE FIGURE VISA DOES NOT PUBLISH',
+          columns: [
+            '',
+            'FY2024',
+            'FY2023',
+            'Change',
+          ],
+          rows: [
+            [
+              'Gross settlement exposure',
+              '78,385',
+              '75,023',
+              '+4.5%',
+            ],
+            [
+              'Risk mitigation arrangements applied',
+              '(13,466)',
+              '(12,167)',
+              '+10.7%',
+            ],
+            [
+              'NET SETTLEMENT EXPOSURE',
+              '64,919',
+              '62,856',
+              '+3.3%',
+            ],
+            [
+              '\u2014 as a multiple of implied revenue',
+              '2.3x',
+              '',
+              '',
+            ],
+            [
+              '\u2014 as a multiple of implied net income',
+              '5.0x',
+              '',
+              '',
+            ],
+            [
+              '\u2014 risk mitigation as % of gross',
+              '17.2%',
+              '16.2%',
+              '',
+            ],
+          ],
+          emphasis: [
+            2,
+            4,
+          ],
+          note: 'Both years reconcile exactly. THIS IS THE LARGEST QUANTIFIED EXPOSURE IN EITHER PAYMENTS BUILD. Mastercard guarantees settlement between customers, so it stands behind the gap between transaction date and settlement date \u2014 generally a few days. Gross exposure is estimated as average daily payment volume over the prior three months multiplied by the days of exposure. Customers below Mastercard\u2019s risk standards must post cash collateral, letters of credit or guarantees, but those arrangements cover only 17.2% of gross. Historical losses have been low. The point is not that this is likely to fire \u2014 it is that a business described as taking no credit risk carries $64.9bn of counterparty exposure, and Visa carries the same guarantee without publishing a figure.',
+        },
+        {
+          title: 'MARKET RISK SENSITIVITIES \u00b7 MASTERCARD vs VISA',
+          columns: [
+            'Exposure',
+            'Shock',
+            'Mastercard',
+            'Visa',
+          ],
+          rows: [
+            [
+              'FX derivatives outstanding',
+              '10% adverse move',
+              '$475m loss (FY2023: $414m)',
+              '$329m loss (FY2023: $236m)',
+            ],
+            [
+              'Net investment hedge',
+              '10% USD strengthening',
+              '$279m loss (none outstanding FY2023)',
+              'not disclosed',
+            ],
+            [
+              'EUR translation',
+              '\u00b110% EUR/USD',
+              'not disclosed',
+              '\u00b1$2.1bn OCI',
+            ],
+            [
+              'Fixed-rate debt swaps',
+              '+100 bps',
+              '~$20m loss (FY2023: $29m)',
+              'no material impact',
+            ],
+            [
+              'Available-for-sale portfolio',
+              '+100 bps',
+              'not material',
+              'not material',
+            ],
+            [
+              'Daily settlement FX',
+              '10% move',
+              'not material',
+              'managed by daily procedures',
+            ],
+            [
+              'Revenue earned outside the US',
+              '\u2014',
+              '~70%',
+              '58.9%',
+            ],
+          ],
+          emphasis: [
+            0,
+            6,
+          ],
+          note: 'MASTERCARD\u2019S FX SENSITIVITY IS LARGER THAN VISA\u2019S ON A SMALLER BOOK \u2014 $475m against $329m, on $10.2bn of notional versus $13.6bn. Two reasons. The seven-year contracts entered in April 2024 carry more duration risk per dollar of notional than short-dated hedges. And roughly 70% of Mastercard revenue is earned outside the US against 58.9% for Visa, so the underlying exposure is proportionally larger before any hedging. Note these are DERIVATIVE MARKS BEFORE OFFSETS \u2014 the economic effects are largely offset by the underlying positions.',
         },
       ],
     },
