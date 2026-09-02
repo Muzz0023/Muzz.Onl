@@ -39642,9 +39642,9 @@ const V_BREAKDOWN = {
 // products and applications, security and franchise. FY2024 (year end
 // 31 December — NOT the same period as Visa's 30 September year).
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS,
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, RISKS,
 // DERIVATIVES, COMMITMENTS.
-// TABS DARK: SEGMENTS, BALANCE, CASH FLOW, THESIS.
+// TABS DARK: BALANCE, CASH FLOW, THESIS.
 //
 // THE COMPARISON THIS BUILD EXISTS FOR: Mastercard switches ~70% of its own
 // branded transactions against Visa's 77.2% (234bn of 303bn), so its
@@ -40462,8 +40462,2017 @@ const MA_BREAKDOWN = {
       ],
       note: 'Peaked at $436,452 in 2019 and is $364,772 now, down 16.4%. VISA EARNS $624,778 PER EMPLOYEE, 71.3% MORE. The gap on profit is wider than the gap on revenue, which says Mastercard\u2019s additional headcount is not yet earning its keep at Visa\u2019s margin \u2014 or that it is buying future revenue.',
     },
+    segments: {
+      wmSegmentPnl: {
+        preamble: 'Gross dollar volume by product category, $ billions, FY2013\u2013FY2024. All twelve years reconcile exactly. Total GDV of $9,757bn compares with Visa\u2019s payments volume of $12,984bn \u2014 Mastercard is 75.1% of Visa on this measure. THE MIX IS THE MORE USEFUL COMPARISON: Mastercard is MORE DEBIT-WEIGHTED than Visa, 49.9% against 46.3%, and less credit-weighted, 37.2% against 40.9%. Debit is where interchange caps and routing mandates bite hardest, so Mastercard carries 3.6 points more of the regulated category.',
+        segments: [
+          {
+            name: 'Consumer Debit & Prepaid',
+            type: 'Largest category \u00b7 49.9% of GDV',
+            featured: true,
+            profitEngine: true,
+            note: 'Grew 171% over eleven years at a 9.6% CAGR, and NEVER FELL \u2014 not even in FY2020, when it rose 5.6% while credit fell 9.2%. It overtook consumer credit as the largest category in FY2018 and has extended the lead since. Includes prepaid, digital wallets and government disbursements.',
+            metrics: [
+              {
+                label: 'Consumer debit & prepaid GDV',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 1792,
+                  },
+                  {
+                    year: 2014,
+                    value: 2024,
+                  },
+                  {
+                    year: 2015,
+                    value: 2112,
+                  },
+                  {
+                    year: 2016,
+                    value: 2293,
+                  },
+                  {
+                    year: 2017,
+                    value: 2369,
+                  },
+                  {
+                    year: 2018,
+                    value: 2724,
+                  },
+                  {
+                    year: 2019,
+                    value: 3059,
+                  },
+                  {
+                    year: 2020,
+                    value: 3230,
+                  },
+                  {
+                    year: 2021,
+                    value: 3953,
+                  },
+                  {
+                    year: 2022,
+                    value: 4012,
+                  },
+                  {
+                    year: 2023,
+                    value: 4437,
+                  },
+                  {
+                    year: 2024,
+                    value: 4865,
+                  },
+                ],
+              },
+              {
+                label: 'Share of total GDV \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 43.7,
+                  },
+                  {
+                    year: 2014,
+                    value: 45.0,
+                  },
+                  {
+                    year: 2015,
+                    value: 46.3,
+                  },
+                  {
+                    year: 2016,
+                    value: 47.5,
+                  },
+                  {
+                    year: 2017,
+                    value: 45.2,
+                  },
+                  {
+                    year: 2018,
+                    value: 46.2,
+                  },
+                  {
+                    year: 2019,
+                    value: 47.3,
+                  },
+                  {
+                    year: 2020,
+                    value: 51.0,
+                  },
+                  {
+                    year: 2021,
+                    value: 51.2,
+                  },
+                  {
+                    year: 2022,
+                    value: 49.1,
+                  },
+                  {
+                    year: 2023,
+                    value: 49.1,
+                  },
+                  {
+                    year: 2024,
+                    value: 49.9,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Consumer Credit',
+            type: 'Was largest \u00b7 now 37.2%',
+            note: 'Grew only 83% at a 5.9% CAGR \u2014 the slowest of the three \u2014 and LOST 11.3 POINTS OF MIX, from 48.5% to 37.2%. Fell in FY2015 and again in FY2020. Credit carries higher interchange than debit, so this shift is a quiet yield headwind that volume growth alone conceals.',
+            metrics: [
+              {
+                label: 'Consumer credit GDV',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 1990,
+                  },
+                  {
+                    year: 2014,
+                    value: 2115,
+                  },
+                  {
+                    year: 2015,
+                    value: 2077,
+                    down: true,
+                  },
+                  {
+                    year: 2016,
+                    value: 2135,
+                  },
+                  {
+                    year: 2017,
+                    value: 2289,
+                  },
+                  {
+                    year: 2018,
+                    value: 2520,
+                  },
+                  {
+                    year: 2019,
+                    value: 2670,
+                  },
+                  {
+                    year: 2020,
+                    value: 2425,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 2899,
+                  },
+                  {
+                    year: 2022,
+                    value: 3143,
+                  },
+                  {
+                    year: 2023,
+                    value: 3445,
+                  },
+                  {
+                    year: 2024,
+                    value: 3634,
+                  },
+                ],
+              },
+              {
+                label: 'Share of total GDV \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 48.5,
+                  },
+                  {
+                    year: 2014,
+                    value: 47.0,
+                  },
+                  {
+                    year: 2015,
+                    value: 45.5,
+                  },
+                  {
+                    year: 2016,
+                    value: 44.2,
+                  },
+                  {
+                    year: 2017,
+                    value: 43.7,
+                  },
+                  {
+                    year: 2018,
+                    value: 42.7,
+                  },
+                  {
+                    year: 2019,
+                    value: 41.3,
+                  },
+                  {
+                    year: 2020,
+                    value: 38.3,
+                  },
+                  {
+                    year: 2021,
+                    value: 37.6,
+                  },
+                  {
+                    year: 2022,
+                    value: 38.4,
+                  },
+                  {
+                    year: 2023,
+                    value: 38.2,
+                  },
+                  {
+                    year: 2024,
+                    value: 37.2,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Commercial Credit & Debit',
+            type: 'Fastest growing \u00b7 12.9%',
+            featured: true,
+            note: 'THE FASTEST-GROWING CATEGORY at a 12.8% CAGR, up 291% over eleven years, and mix rose from 7.8% to 12.9%. Business cards, virtual cards, B2B, travel and procurement. Visa\u2019s commercial share is 12.7% \u2014 essentially identical, so neither network is winning the B2B race yet against a stated $120 trillion opportunity.',
+            metrics: [
+              {
+                label: 'Commercial GDV',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 322,
+                  },
+                  {
+                    year: 2014,
+                    value: 360,
+                  },
+                  {
+                    year: 2015,
+                    value: 374,
+                  },
+                  {
+                    year: 2016,
+                    value: 400,
+                  },
+                  {
+                    year: 2017,
+                    value: 583,
+                  },
+                  {
+                    year: 2018,
+                    value: 657,
+                  },
+                  {
+                    year: 2019,
+                    value: 732,
+                  },
+                  {
+                    year: 2020,
+                    value: 682,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 867,
+                  },
+                  {
+                    year: 2022,
+                    value: 1023,
+                  },
+                  {
+                    year: 2023,
+                    value: 1148,
+                  },
+                  {
+                    year: 2024,
+                    value: 1258,
+                  },
+                ],
+              },
+              {
+                label: 'Share of total GDV \u2014 derived',
+                unit: '%',
+                series: [
+                  {
+                    year: 2013,
+                    value: 7.8,
+                  },
+                  {
+                    year: 2014,
+                    value: 8.0,
+                  },
+                  {
+                    year: 2015,
+                    value: 8.2,
+                  },
+                  {
+                    year: 2016,
+                    value: 8.3,
+                  },
+                  {
+                    year: 2017,
+                    value: 11.1,
+                  },
+                  {
+                    year: 2018,
+                    value: 11.1,
+                  },
+                  {
+                    year: 2019,
+                    value: 11.3,
+                  },
+                  {
+                    year: 2020,
+                    value: 10.8,
+                  },
+                  {
+                    year: 2021,
+                    value: 11.2,
+                  },
+                  {
+                    year: 2022,
+                    value: 12.5,
+                  },
+                  {
+                    year: 2023,
+                    value: 12.7,
+                  },
+                  {
+                    year: 2024,
+                    value: 12.9,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Total Gross Dollar Volume',
+            type: 'All categories',
+            featured: true,
+            note: 'Grew 138% at an 8.2% CAGR with ONE down year, FY2020.',
+            metrics: [
+              {
+                label: 'Total GDV',
+                unit: 'B USD',
+                series: [
+                  {
+                    year: 2013,
+                    value: 4104,
+                  },
+                  {
+                    year: 2014,
+                    value: 4499,
+                  },
+                  {
+                    year: 2015,
+                    value: 4563,
+                  },
+                  {
+                    year: 2016,
+                    value: 4828,
+                  },
+                  {
+                    year: 2017,
+                    value: 5241,
+                  },
+                  {
+                    year: 2018,
+                    value: 5901,
+                  },
+                  {
+                    year: 2019,
+                    value: 6461,
+                  },
+                  {
+                    year: 2020,
+                    value: 6337,
+                    down: true,
+                  },
+                  {
+                    year: 2021,
+                    value: 7719,
+                  },
+                  {
+                    year: 2022,
+                    value: 8178,
+                  },
+                  {
+                    year: 2023,
+                    value: 9030,
+                  },
+                  {
+                    year: 2024,
+                    value: 9757,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      wmGeography: {
+        preamble: 'Net revenue by region. Mastercard CHANGED ITS REPORTING BASIS in 2022, from North America / International Markets to Americas / Asia Pacific, Europe, Middle East & Africa. Only the newer basis is carried here, because it reconciles exactly to net revenue in all three years.',
+        prNote: 'THE PRE-2022 ROWS ARE NOT CARRIED, AND HERE IS WHY. On the old North America / International basis the supplied rows do not sum to the net revenue of the year they are labelled with: FY2021 sums to 22,237 against revenue of 18,884, FY2020 sums to 18,884 against 15,301, FY2019 sums to 15,301 against 16,883. THREE OF THE FOUR MATCH THE FOLLOWING YEAR\u2019S REVENUE EXACTLY, which points to a one-year label shift \u2014 but FY2018 matches neither year, and applying the shift would double-count FY2022, which already reconciles on the new basis. The rows cannot be placed reliably, so they are flagged rather than guessed at.',
+        lines: [
+          {
+            label: 'Americas',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2022,
+                value: 10156,
+              },
+              {
+                year: 2023,
+                value: 11135,
+              },
+              {
+                year: 2024,
+                value: 12375,
+              },
+            ],
+            note: '43.9% of net revenue in FY2024, down from 45.7% in FY2022. Includes Latin America, so it is NOT comparable to Visa\u2019s US-only line of 41.1%.',
+          },
+          {
+            label: 'Asia Pacific, Europe, Middle East & Africa',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2022,
+                value: 12081,
+              },
+              {
+                year: 2023,
+                value: 13963,
+              },
+              {
+                year: 2024,
+                value: 15792,
+              },
+            ],
+            note: '56.1% of net revenue and rising. Separately, the risk factors state roughly 70% OF REVENUE IS EARNED OUTSIDE THE US \u2014 which is consistent, since the Americas figure includes Latin America.',
+          },
+        ],
+      },
+      revenueByCategory: {
+        description: 'PAYMENT NETWORK ASSESSMENTS, $ millions. READ THE WARNING BEFORE USING THESE. Mastercard states explicitly that "assessments represent agreed upon standard pricing\u2026 used internally by management to monitor operating performance" and that "ASSESSMENTS DO NOT REPRESENT OUR NET REVENUE." They are a payment-network activity metric only, and exclude value-added services revenue entirely, while net revenue includes it.',
+        mix2024: [
+          {
+            label: 'Transaction processing assessments',
+            value: 13602,
+            pct: 38.9,
+          },
+          {
+            label: 'Domestic assessments',
+            value: 10245,
+            pct: 29.3,
+          },
+          {
+            label: 'Cross-border assessments',
+            value: 10181,
+            pct: 29.1,
+          },
+          {
+            label: 'Other network assessments',
+            value: 936,
+            pct: 2.7,
+          },
+        ],
+        lines: [
+          {
+            label: 'Transaction Processing Assessments',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2015,
+                value: 4345,
+              },
+              {
+                year: 2016,
+                value: 5143,
+              },
+              {
+                year: 2017,
+                value: 6188,
+              },
+              {
+                year: 2018,
+                value: 7391,
+              },
+              {
+                year: 2019,
+                value: 8469,
+              },
+              {
+                year: 2020,
+                value: 8731,
+              },
+              {
+                year: 2021,
+                value: 10799,
+              },
+              {
+                year: 2022,
+                value: 10646,
+                down: true,
+              },
+              {
+                year: 2023,
+                value: 12067,
+              },
+              {
+                year: 2024,
+                value: 13602,
+              },
+            ],
+            note: 'THE LARGEST ASSESSMENT LINE, driven by the NUMBER of switched transactions \u2014 authorisation, clearing and settlement, plus connectivity and network access. Grew 213% over nine years. This is the per-transaction toll, and it is the line that suffers when a branded transaction is routed away from Mastercard\u2019s rails.',
+          },
+          {
+            label: 'Cross-Border Assessments',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2015,
+                value: 3225,
+              },
+              {
+                year: 2016,
+                value: 3568,
+              },
+              {
+                year: 2017,
+                value: 4174,
+              },
+              {
+                year: 2018,
+                value: 4954,
+              },
+              {
+                year: 2019,
+                value: 5606,
+              },
+              {
+                year: 2020,
+                value: 3512,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 4664,
+              },
+              {
+                year: 2022,
+                value: 6597,
+              },
+              {
+                year: 2023,
+                value: 8409,
+              },
+              {
+                year: 2024,
+                value: 10181,
+              },
+            ],
+            note: 'THE MOST CYCLICAL AND MOST PROFITABLE LINE. Collapsed 37.4% in FY2020 as travel stopped, from $5,606m to $3,512m, and did not regain its FY2019 level until FY2022. Since then it has nearly TRIPLED to $10,181m, growing far faster than domestic. Cross-border is roughly 30% of volume but carries materially higher fees.',
+          },
+          {
+            label: 'Domestic Assessments',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2015,
+                value: 4086,
+              },
+              {
+                year: 2016,
+                value: 4411,
+              },
+              {
+                year: 2017,
+                value: 5130,
+              },
+              {
+                year: 2018,
+                value: 6138,
+              },
+              {
+                year: 2019,
+                value: 6781,
+              },
+              {
+                year: 2020,
+                value: 6656,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 8158,
+              },
+              {
+                year: 2022,
+                value: 8794,
+              },
+              {
+                year: 2023,
+                value: 9566,
+              },
+              {
+                year: 2024,
+                value: 10245,
+              },
+            ],
+            note: 'Charges where the merchant country and the country of issuance are the same, driven by domestic volume or cards issued. Grew 151% \u2014 the slowest of the three main lines \u2014 and it is the category most exposed to local schemes and domestic routing mandates.',
+          },
+          {
+            label: 'Other Network Assessments',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2022,
+                value: 766,
+              },
+              {
+                year: 2023,
+                value: 963,
+              },
+              {
+                year: 2024,
+                value: 936,
+                down: true,
+              },
+            ],
+            note: 'Licensing, implementation and other franchise fees. Disclosed only from FY2022, and it FELL in FY2024.',
+          },
+          {
+            label: 'Total Assessments \u2014 derived',
+            unit: 'M USD',
+            series: [
+              {
+                year: 2015,
+                value: 11656,
+              },
+              {
+                year: 2016,
+                value: 13122,
+              },
+              {
+                year: 2017,
+                value: 15492,
+              },
+              {
+                year: 2018,
+                value: 18483,
+              },
+              {
+                year: 2019,
+                value: 20856,
+              },
+              {
+                year: 2020,
+                value: 18899,
+                down: true,
+              },
+              {
+                year: 2021,
+                value: 23621,
+              },
+              {
+                year: 2022,
+                value: 26803,
+              },
+              {
+                year: 2023,
+                value: 31005,
+              },
+              {
+                year: 2024,
+                value: 34964,
+              },
+            ],
+            note: '$34,964m in FY2024 against net revenue of $28,167m. DO NOT READ THE DIFFERENCE AS REBATES AND INCENTIVES. Assessments are a payment-network metric that excludes value-added services revenue, while net revenue includes it, so the two are not two ends of one bridge. The supplied percentage table, which shows these lines summing to 124% of net revenue, invites exactly that mistake. Mastercard\u2019s actual rebates and incentives figure is not in this material \u2014 which matters, because it is the single most comparable line against Visa, where client incentives reached 38.3% of net revenue.',
+          },
+        ],
+      },
+    },
     incomeStatement: {
+      totalRevenue: {
+        label: 'Net Revenue',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 9667,
+          },
+          {
+            year: 2016,
+            value: 10776,
+          },
+          {
+            year: 2017,
+            value: 12497,
+          },
+          {
+            year: 2018,
+            value: 14950,
+          },
+          {
+            year: 2019,
+            value: 16883,
+          },
+          {
+            year: 2020,
+            value: 15301,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 18884,
+          },
+          {
+            year: 2022,
+            value: 22237,
+          },
+          {
+            year: 2023,
+            value: 25098,
+          },
+          {
+            year: 2024,
+            value: 28167,
+          },
+        ],
+        note: 'Grew 191% over nine years with ONE down year, FY2020. Stated NET of rebates and incentives. VALIDATION NOTE: the revenue implied from the per-employee disclosure in the prior drop matched the actual figure EXACTLY in eight of ten years, and within 0.11% in the other two.',
+      },
+      totalExpenses: {
+        label: 'Total Operating Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 4589,
+          },
+          {
+            year: 2016,
+            value: 5015,
+          },
+          {
+            year: 2017,
+            value: 5875,
+          },
+          {
+            year: 2018,
+            value: 7668,
+          },
+          {
+            year: 2019,
+            value: 7219,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 7220,
+          },
+          {
+            year: 2021,
+            value: 8802,
+          },
+          {
+            year: 2022,
+            value: 9973,
+          },
+          {
+            year: 2023,
+            value: 11090,
+          },
+          {
+            year: 2024,
+            value: 12585,
+          },
+        ],
+        note: 'Components reconcile in nine of ten years. FY2015 falls short by exactly $61m, which is the missing litigation provision \u2014 the source leaves that cell blank and it is derived below.',
+      },
+      opexLines: [
+        {
+          label: 'General & Administrative',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 3341,
+            },
+            {
+              year: 2016,
+              value: 3827,
+            },
+            {
+              year: 2017,
+              value: 4653,
+            },
+            {
+              year: 2018,
+              value: 5174,
+            },
+            {
+              year: 2019,
+              value: 5763,
+            },
+            {
+              year: 2020,
+              value: 5910,
+            },
+            {
+              year: 2021,
+              value: 7087,
+            },
+            {
+              year: 2022,
+              value: 8078,
+            },
+            {
+              year: 2023,
+              value: 8927,
+            },
+            {
+              year: 2024,
+              value: 10193,
+            },
+          ],
+          note: '81.0% OF ALL OPERATING EXPENSES and 36.2% of revenue. This is not an overhead line \u2014 it contains personnel, professional fees, data processing and telecoms. Grew 205% over nine years, broadly with revenue.',
+        },
+        {
+          label: '\u2014 Personnel',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 2105,
+            },
+            {
+              year: 2016,
+              value: 2225,
+            },
+            {
+              year: 2017,
+              value: 2687,
+            },
+            {
+              year: 2018,
+              value: 3214,
+            },
+            {
+              year: 2019,
+              value: 3537,
+            },
+            {
+              year: 2020,
+              value: 3787,
+            },
+            {
+              year: 2021,
+              value: 4489,
+            },
+            {
+              year: 2022,
+              value: 5263,
+            },
+            {
+              year: 2023,
+              value: 6022,
+            },
+            {
+              year: 2024,
+              value: 6673,
+            },
+          ],
+          note: 'THE DOMINANT COST IN THE COMPANY. $6,673m is 65.5% of G&A and 23.7% OF REVENUE. VISA SPENDS 17.4% OF REVENUE ON PERSONNEL. That 6.3-point gap is the efficiency difference from the per-employee data made explicit, and it is most of the margin gap between the two networks.',
+        },
+        {
+          label: '\u2014 Data Processing & Telecommunications',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 362,
+            },
+            {
+              year: 2016,
+              value: 420,
+            },
+            {
+              year: 2017,
+              value: 504,
+            },
+            {
+              year: 2018,
+              value: 600,
+            },
+            {
+              year: 2019,
+              value: 666,
+            },
+            {
+              year: 2020,
+              value: 756,
+            },
+            {
+              year: 2021,
+              value: 898,
+            },
+            {
+              year: 2022,
+              value: 926,
+            },
+            {
+              year: 2023,
+              value: 1008,
+            },
+            {
+              year: 2024,
+              value: 1119,
+            },
+          ],
+          note: 'The actual cost of running the network. Grew 209% and rose from 10.8% to 11.0% of G&A. Compare Visa, whose network and processing line grew just 66% while processed transactions grew 300% \u2014 Mastercard discloses this inside G&A rather than as a separate expense, so the two are not directly comparable, but the growth rates are strikingly different.',
+        },
+        {
+          label: '\u2014 Professional Fees',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 310,
+            },
+            {
+              year: 2016,
+              value: 337,
+            },
+            {
+              year: 2017,
+              value: 355,
+            },
+            {
+              year: 2018,
+              value: 377,
+            },
+            {
+              year: 2019,
+              value: 447,
+            },
+            {
+              year: 2020,
+              value: 384,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 433,
+            },
+            {
+              year: 2022,
+              value: 480,
+            },
+            {
+              year: 2023,
+              value: 495,
+            },
+            {
+              year: 2024,
+              value: 549,
+            },
+          ],
+          note: 'Legal and consulting. Up 77% over nine years and only 5.4% of G&A \u2014 a smaller share than in 2015.',
+        },
+        {
+          label: '\u2014 Foreign Exchange Activity',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: -82,
+            },
+            {
+              year: 2016,
+              value: 34,
+            },
+            {
+              year: 2017,
+              value: 106,
+            },
+            {
+              year: 2018,
+              value: -36,
+            },
+            {
+              year: 2019,
+              value: 32,
+            },
+            {
+              year: 2020,
+              value: 9,
+            },
+            {
+              year: 2021,
+              value: 51,
+            },
+            {
+              year: 2022,
+              value: 102,
+            },
+            {
+              year: 2023,
+              value: 85,
+            },
+            {
+              year: 2024,
+              value: 65,
+            },
+          ],
+          note: 'Small and volatile, swinging between gains and losses. This is where non-designated derivative positions land, per the derivatives note.',
+        },
+        {
+          label: '\u2014 Other G&A',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 646,
+            },
+            {
+              year: 2016,
+              value: 811,
+            },
+            {
+              year: 2017,
+              value: 1001,
+            },
+            {
+              year: 2018,
+              value: 1019,
+            },
+            {
+              year: 2019,
+              value: 1081,
+            },
+            {
+              year: 2020,
+              value: 974,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 1216,
+            },
+            {
+              year: 2022,
+              value: 1307,
+            },
+            {
+              year: 2023,
+              value: 1319,
+            },
+            {
+              year: 2024,
+              value: 1787,
+            },
+          ],
+          note: 'JUMPED 35.5% IN FY2024, from $1,319m to $1,787m \u2014 the largest single-year move in any G&A component, and it lifted this line from 14.8% to 17.5% of G&A. Covers travel, facilities and allocations. Worth asking what drove it.',
+        },
+        {
+          label: 'Advertising & Marketing',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 821,
+            },
+            {
+              year: 2016,
+              value: 698,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 771,
+            },
+            {
+              year: 2018,
+              value: 907,
+            },
+            {
+              year: 2019,
+              value: 934,
+            },
+            {
+              year: 2020,
+              value: 657,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 895,
+            },
+            {
+              year: 2022,
+              value: 789,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 825,
+            },
+            {
+              year: 2024,
+              value: 815,
+              down: true,
+            },
+          ],
+          note: 'ESSENTIALLY FLAT FOR A DECADE \u2014 $821m in FY2015 and $815m in FY2024, actually DOWN 0.7% while revenue grew 191%. It fell from 8.5% to 2.9% of revenue. Visa\u2019s marketing grew 78% over a similar period. Mastercard is spending materially less on brand in absolute terms than it did nine years ago, which sits oddly against the brand-visibility risk named in Item 1A.',
+        },
+        {
+          label: 'Depreciation & Amortisation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 366,
+            },
+            {
+              year: 2016,
+              value: 373,
+            },
+            {
+              year: 2017,
+              value: 436,
+            },
+            {
+              year: 2018,
+              value: 459,
+            },
+            {
+              year: 2019,
+              value: 522,
+            },
+            {
+              year: 2020,
+              value: 580,
+            },
+            {
+              year: 2021,
+              value: 726,
+            },
+            {
+              year: 2022,
+              value: 750,
+            },
+            {
+              year: 2023,
+              value: 799,
+            },
+            {
+              year: 2024,
+              value: 897,
+            },
+          ],
+          note: 'Rose every year, up 145%, tracking capitalised software and acquired intangibles from the acquisition programme.',
+        },
+        {
+          label: 'Provision for Litigation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 61,
+            },
+            {
+              year: 2016,
+              value: 117,
+            },
+            {
+              year: 2017,
+              value: 15,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1128,
+            },
+            {
+              year: 2019,
+              value: 0,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 73,
+            },
+            {
+              year: 2021,
+              value: 94,
+            },
+            {
+              year: 2022,
+              value: 356,
+            },
+            {
+              year: 2023,
+              value: 539,
+            },
+            {
+              year: 2024,
+              value: 680,
+              down: true,
+            },
+          ],
+          note: 'THE FY2015 FIGURE OF 61 IS DERIVED, NOT SUPPLIED \u2014 the source leaves it blank and it is the exact amount by which the other components fall short of stated total opex. The line is violently volatile: $0m in FY2019, $1,128m in FY2018, and rising steadily since FY2021 to $680m. Read it against the COMMITMENTS tab \u2014 unlike Visa, none of this is absorbed by an escrow or a share conversion mechanism.',
+        },
+      ],
+      operatingProfit: {
+        label: 'Operating Income \u2014 as stated',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 5078,
+          },
+          {
+            year: 2016,
+            value: 5106,
+          },
+          {
+            year: 2017,
+            value: 5761,
+          },
+          {
+            year: 2018,
+            value: 7622,
+          },
+          {
+            year: 2019,
+            value: 9664,
+          },
+          {
+            year: 2020,
+            value: 8081,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 10082,
+          },
+          {
+            year: 2022,
+            value: 12264,
+          },
+          {
+            year: 2023,
+            value: 14008,
+          },
+          {
+            year: 2024,
+            value: 15582,
+          },
+        ],
+        note: 'THE STATED OPERATING INCOME DOES NOT RECONCILE IN THREE YEARS. Revenue less total operating expenses gives 5,761 for FY2016, 6,622 for FY2017 and 7,282 for FY2018, against stated figures of 5,106, 5,761 and 7,622. CRUCIALLY, THE COMPUTED FIGURES FOR FY2017 AND FY2018 RECONCILE TO NET INCOME EXACTLY once other income and tax are applied, and the stated ones do not \u2014 so the stated values for those two years are wrong. FY2016 fails both ways by $205m, which the supplied lines do not explain. Every other year ties on both routes. Stated figures are carried per the standing rule; the derived line below shows the alternative.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin \u2014 on computed operating income',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 52.53,
+          },
+          {
+            year: 2016,
+            value: 53.46,
+          },
+          {
+            year: 2017,
+            value: 52.99,
+          },
+          {
+            year: 2018,
+            value: 48.71,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 57.24,
+          },
+          {
+            year: 2020,
+            value: 52.81,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 53.39,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 55.15,
+          },
+          {
+            year: 2023,
+            value: 55.81,
+          },
+          {
+            year: 2024,
+            value: 55.32,
+          },
+        ],
+        note: '55.32% in FY2024, computed as revenue less total operating expenses. Compare VISA AT 65.68% \u2014 a 10.4-point gap, and personnel cost explains most of it. Mastercard\u2019s margin has still expanded from 52.53% in FY2015.',
+      },
+      provisionForTaxes: {
+        label: 'Income Tax Provision',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1150,
+          },
+          {
+            year: 2016,
+            value: 1382,
+          },
+          {
+            year: 2017,
+            value: 2607,
+          },
+          {
+            year: 2018,
+            value: 1345,
+            down: true,
+          },
+          {
+            year: 2019,
+            value: 1613,
+          },
+          {
+            year: 2020,
+            value: 1349,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 1620,
+          },
+          {
+            year: 2022,
+            value: 1802,
+          },
+          {
+            year: 2023,
+            value: 2444,
+          },
+          {
+            year: 2024,
+            value: 2380,
+            down: true,
+          },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate \u2014 derived',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 23.19,
+          },
+          {
+            year: 2016,
+            value: 24.48,
+          },
+          {
+            year: 2017,
+            value: 39.97,
+          },
+          {
+            year: 2018,
+            value: 18.67,
+          },
+          {
+            year: 2019,
+            value: 16.58,
+          },
+          {
+            year: 2020,
+            value: 17.38,
+          },
+          {
+            year: 2021,
+            value: 15.72,
+          },
+          {
+            year: 2022,
+            value: 15.36,
+          },
+          {
+            year: 2023,
+            value: 17.92,
+          },
+          {
+            year: 2024,
+            value: 15.6,
+          },
+        ],
+        note: 'Computed on revenue-less-opex plus other income. FY2017 AT 39.97% IS THE OUTLIER \u2014 US tax reform, the same one-off distorting Apple, Alphabet and Visa in that year, and why FY2017 net income FELL while operating income rose. Since FY2019 the rate has run 15\u201318%. NOTE the source states 45% for FY2017 and 17% for FY2018; both are computed off the erroneous operating income figures above.',
+      },
+      netIncome: {
+        label: 'Net Income',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 3808,
+          },
+          {
+            year: 2016,
+            value: 4059,
+          },
+          {
+            year: 2017,
+            value: 3915,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 5859,
+          },
+          {
+            year: 2019,
+            value: 8118,
+          },
+          {
+            year: 2020,
+            value: 6411,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 8687,
+          },
+          {
+            year: 2022,
+            value: 9930,
+          },
+          {
+            year: 2023,
+            value: 11195,
+          },
+          {
+            year: 2024,
+            value: 12874,
+          },
+        ],
+        note: 'Grew 238% over nine years. Two down years: FY2017 on tax reform and FY2020. Reconciles exactly from the COMPUTED operating income in nine of ten years \u2014 FY2016 is the exception, short by $205m.',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 39.39,
+          },
+          {
+            year: 2016,
+            value: 37.67,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 31.33,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 39.19,
+          },
+          {
+            year: 2019,
+            value: 48.08,
+          },
+          {
+            year: 2020,
+            value: 41.9,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 46.0,
+          },
+          {
+            year: 2022,
+            value: 44.66,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 44.61,
+          },
+          {
+            year: 2024,
+            value: 45.71,
+          },
+        ],
+        note: '45.71% in FY2024. VISA EARNS 54.96%. A nine-point gap, consistent with the operating margin difference and traceable to personnel cost.',
+      },
+      eps: {
+        label: 'Diluted EPS',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 3.35,
+          },
+          {
+            year: 2016,
+            value: 3.69,
+          },
+          {
+            year: 2017,
+            value: 3.65,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 5.6,
+          },
+          {
+            year: 2019,
+            value: 7.94,
+          },
+          {
+            year: 2020,
+            value: 6.37,
+            down: true,
+          },
+          {
+            year: 2021,
+            value: 8.76,
+          },
+          {
+            year: 2022,
+            value: 10.22,
+          },
+          {
+            year: 2023,
+            value: 11.83,
+          },
+          {
+            year: 2024,
+            value: 13.89,
+          },
+        ],
+        note: 'Grew 315% against 238% net income growth, because the diluted share count fell 18.5%. Two down years matching net income.',
+      },
       extraLines: [
+        {
+          label: 'Operating Income \u2014 revenue less total opex, DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 5078,
+            },
+            {
+              year: 2016,
+              value: 5761,
+            },
+            {
+              year: 2017,
+              value: 6622,
+            },
+            {
+              year: 2018,
+              value: 7282,
+            },
+            {
+              year: 2019,
+              value: 9664,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 8081,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 10082,
+            },
+            {
+              year: 2022,
+              value: 12264,
+            },
+            {
+              year: 2023,
+              value: 14008,
+            },
+            {
+              year: 2024,
+              value: 15582,
+            },
+          ],
+          note: 'THE STATED OPERATING INCOME DOES NOT RECONCILE IN THREE YEARS. Revenue less total operating expenses gives 5,761 for FY2016, 6,622 for FY2017 and 7,282 for FY2018, against stated figures of 5,106, 5,761 and 7,622. CRUCIALLY, THE COMPUTED FIGURES FOR FY2017 AND FY2018 RECONCILE TO NET INCOME EXACTLY once other income and tax are applied, and the stated ones do not \u2014 so the stated values for those two years are wrong. FY2016 fails both ways by $205m, which the supplied lines do not explain. Every other year ties on both routes. Stated figures are carried per the standing rule; the derived line below shows the alternative.',
+        },
+        {
+          label: 'Income Before Taxes \u2014 derived',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 4958,
+            },
+            {
+              year: 2016,
+              value: 5646,
+            },
+            {
+              year: 2017,
+              value: 6522,
+            },
+            {
+              year: 2018,
+              value: 7204,
+            },
+            {
+              year: 2019,
+              value: 9731,
+            },
+            {
+              year: 2020,
+              value: 7760,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 10307,
+            },
+            {
+              year: 2022,
+              value: 11732,
+            },
+            {
+              year: 2023,
+              value: 13639,
+            },
+            {
+              year: 2024,
+              value: 15254,
+            },
+          ],
+          note: 'Computed operating income plus total other income. Less the tax provision this reconciles to stated net income in nine of ten years.',
+        },
+        {
+          label: 'Total Other Income (Expense)',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: -120,
+            },
+            {
+              year: 2016,
+              value: -115,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: -100,
+            },
+            {
+              year: 2018,
+              value: -78,
+            },
+            {
+              year: 2019,
+              value: 67,
+            },
+            {
+              year: 2020,
+              value: -321,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 225,
+            },
+            {
+              year: 2022,
+              value: -532,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: -369,
+            },
+            {
+              year: 2024,
+              value: -328,
+            },
+          ],
+          note: 'Components reconcile in all ten years. Small relative to operating income \u2014 at most 4.3% of pre-tax profit \u2014 but note FY2021, when a $645m gain on equity investments turned the line POSITIVE. That single mark was 6.3% of pre-tax profit that year.',
+        },
+        {
+          label: '\u2014 Investment Income',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 25,
+            },
+            {
+              year: 2016,
+              value: 43,
+            },
+            {
+              year: 2017,
+              value: 56,
+            },
+            {
+              year: 2018,
+              value: 122,
+            },
+            {
+              year: 2019,
+              value: 97,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 24,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 11,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 61,
+            },
+            {
+              year: 2023,
+              value: 274,
+            },
+            {
+              year: 2024,
+              value: 327,
+            },
+          ],
+          note: 'Up 13-fold since FY2015 on higher rates and a larger investment portfolio.',
+        },
+        {
+          label: '\u2014 Gains (Losses) on Equity Investments, net',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2019,
+              value: 167,
+            },
+            {
+              year: 2020,
+              value: 30,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 645,
+            },
+            {
+              year: 2022,
+              value: -145,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: -61,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: -29,
+            },
+          ],
+          note: 'Disclosed only from FY2019. THE FY2021 GAIN OF $645m IS THE STANDOUT \u2014 followed by three consecutive loss years. Mark-to-market on private and public holdings, the same mechanic that produced Alphabet\u2019s $24.6bn FY2025 paper gain, at a far smaller scale.',
+        },
+        {
+          label: '\u2014 Interest Expense',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: -61,
+            },
+            {
+              year: 2016,
+              value: -95,
+            },
+            {
+              year: 2017,
+              value: -154,
+            },
+            {
+              year: 2018,
+              value: -186,
+            },
+            {
+              year: 2019,
+              value: -224,
+            },
+            {
+              year: 2020,
+              value: -380,
+            },
+            {
+              year: 2021,
+              value: -431,
+            },
+            {
+              year: 2022,
+              value: -471,
+            },
+            {
+              year: 2023,
+              value: -575,
+            },
+            {
+              year: 2024,
+              value: -646,
+            },
+          ],
+          note: 'Grew 959% over nine years, from $61m to $646m \u2014 by far the fastest-growing line in the statement, reflecting a debt balance built from almost nothing.',
+        },
+        {
+          label: 'Diluted Weighted-Average Shares',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2015,
+              value: 1137,
+            },
+            {
+              year: 2016,
+              value: 1101,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1072,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 1047,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 1022,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 1006,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 992,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 971,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 946,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 927,
+              down: true,
+            },
+          ],
+          note: 'FELL IN EVERY SINGLE YEAR, from 1,137m to 927m \u2014 down 18.5% over nine years. Visa\u2019s Class A count fell 17.4% over the same period. Both are buying back stock consistently, but MASTERCARD HAS NO CONVERSION OVERHANG: its only supply is the Foundation\u2019s scheduled sell-down, where Visa faces Class B and preferred conversions on no timetable.',
+        },
+        {
+          label: 'Dividend per Share',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2015,
+              value: 0.67,
+            },
+            {
+              year: 2016,
+              value: 0.79,
+            },
+            {
+              year: 2017,
+              value: 0.91,
+            },
+            {
+              year: 2018,
+              value: 1.08,
+            },
+            {
+              year: 2019,
+              value: 1.32,
+            },
+            {
+              year: 2020,
+              value: 1.6,
+            },
+            {
+              year: 2021,
+              value: 1.76,
+            },
+            {
+              year: 2022,
+              value: 1.96,
+            },
+            {
+              year: 2023,
+              value: 2.28,
+            },
+            {
+              year: 2024,
+              value: 2.64,
+            },
+          ],
+          note: 'ROSE EVERY YEAR, from $0.67 to $2.64 \u2014 up 294%, faster than EPS at 315%\u2026 marginally slower, so the payout ratio has crept up. It is 19.0% of FY2024 EPS. Mastercard began paying in 2009 at $0.06 and has never cut.',
+        },
+        {
+          label: 'Dividend Payout Ratio \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 20.0,
+            },
+            {
+              year: 2016,
+              value: 21.41,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 24.93,
+            },
+            {
+              year: 2018,
+              value: 19.29,
+            },
+            {
+              year: 2019,
+              value: 16.62,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 25.12,
+            },
+            {
+              year: 2021,
+              value: 20.09,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 19.18,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 19.27,
+            },
+            {
+              year: 2024,
+              value: 19.01,
+            },
+          ],
+          note: 'From 20.0% to 19.0% \u2014 remarkably stable, and low. Nearly all capital return is through buybacks rather than dividends.',
+        },
         {
           label: 'Implied Net Revenue \u2014 DERIVED',
           unit: 'M USD',
