@@ -45302,7 +45302,8 @@ const MA_BREAKDOWN = {
 // prospects for growth, MIS and MA segment overviews with by-the-numbers
 // disclosures, and the restructuring note. FY2024, year end 31 December.
 //
-// TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS (+ CYBER),
+// TABS LIVE: OVERVIEW, MOAT, NUMBERS, SEGMENTS, INCOME, CASH FLOW,
+// RISKS (+ CYBER),
 // DERIVATIVES.
 // TABS DARK: BALANCE, THESIS.
 //
@@ -47035,7 +47036,538 @@ const MCO_BREAKDOWN = {
             value: 7088,
           },
         ],
-        note: 'Grew 103% over nine years but FELL 12.1% IN FY2022, from $6,218m to $5,468m, as debt issuance collapsed on the rate shock. That single year is the clearest illustration of what "majority issuer-paid on debt issuance" means \u2014 neither Visa nor Mastercard has ever posted a decline of that size outside a pandemic.',
+        note: 'Grew 103% over nine years with ONE down year \u2014 FY2022, down 12.1% on the issuance collapse. Splits MIS $3,793m and MA $3,295m in FY2024; see the SEGMENTS tab, where MA has never declined and MIS has fallen twice.',
+      },
+      costOfSales: {
+        label: 'Operating Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 976.3,
+          },
+          {
+            year: 2016,
+            value: 1019.6,
+          },
+          {
+            year: 2017,
+            value: 1216.6,
+          },
+          {
+            year: 2018,
+            value: 1245.5,
+          },
+          {
+            year: 2019,
+            value: 1387,
+          },
+          {
+            year: 2020,
+            value: 1475,
+          },
+          {
+            year: 2021,
+            value: 1637,
+          },
+          {
+            year: 2022,
+            value: 1613,
+          },
+          {
+            year: 2023,
+            value: 1687,
+          },
+          {
+            year: 2024,
+            value: 1945,
+          },
+        ],
+        note: 'Moody\u2019s own cost-of-service line, separate from SG&A. Rose every year, up 99% \u2014 almost exactly in line with revenue at 103%, so the gross margin has barely moved. JUMPED 15.3% IN FY2024, the largest increase in the series.',
+      },
+      grossProfit: {
+        label: 'Gross Profit \u2014 revenue less operating expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 2507.7,
+          },
+          {
+            year: 2016,
+            value: 2584.4,
+          },
+          {
+            year: 2017,
+            value: 2987.4,
+          },
+          {
+            year: 2018,
+            value: 3196.5,
+          },
+          {
+            year: 2019,
+            value: 3442,
+          },
+          {
+            year: 2020,
+            value: 3896,
+          },
+          {
+            year: 2021,
+            value: 4581,
+          },
+          {
+            year: 2022,
+            value: 3855,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 4229,
+          },
+          {
+            year: 2024,
+            value: 5143,
+          },
+        ],
+        note: 'Reconciles exactly in all ten years.',
+      },
+      grossMargin: {
+        label: 'Gross Margin',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 71.98,
+          },
+          {
+            year: 2016,
+            value: 71.71,
+          },
+          {
+            year: 2017,
+            value: 71.06,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 71.96,
+          },
+          {
+            year: 2019,
+            value: 71.28,
+          },
+          {
+            year: 2020,
+            value: 72.54,
+          },
+          {
+            year: 2021,
+            value: 73.67,
+          },
+          {
+            year: 2022,
+            value: 70.5,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 71.48,
+          },
+          {
+            year: 2024,
+            value: 72.56,
+          },
+        ],
+        note: 'REMARKABLY STABLE at 71\u201374% across a decade \u2014 71.96% in FY2015 and 72.56% in FY2024. Whatever the issuance cycle does to revenue, the direct cost of producing an opinion moves with it.',
+      },
+      opexLines: [
+        {
+          label: 'Selling, General & Administrative',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 921.3,
+            },
+            {
+              year: 2016,
+              value: 931.2,
+            },
+            {
+              year: 2017,
+              value: 985.9,
+            },
+            {
+              year: 2018,
+              value: 1080.1,
+            },
+            {
+              year: 2019,
+              value: 1167,
+            },
+            {
+              year: 2020,
+              value: 1229,
+            },
+            {
+              year: 2021,
+              value: 1480,
+            },
+            {
+              year: 2022,
+              value: 1527,
+            },
+            {
+              year: 2023,
+              value: 1632,
+            },
+            {
+              year: 2024,
+              value: 1735,
+            },
+          ],
+          note: 'Rose every year, up 88% \u2014 slightly slower than revenue. As a share of gross profit it averaged 34.93% over the decade and is 33.74% now. THE FY2022 READING OF 39.61% IS THE ONE TO NOTE: SG&A kept rising while gross profit fell, which is operating leverage running in reverse.',
+        },
+        {
+          label: 'Depreciation & Amortisation',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 113.5,
+            },
+            {
+              year: 2016,
+              value: 126.7,
+            },
+            {
+              year: 2017,
+              value: 158.3,
+            },
+            {
+              year: 2018,
+              value: 191.9,
+            },
+            {
+              year: 2019,
+              value: 200,
+            },
+            {
+              year: 2020,
+              value: 220,
+            },
+            {
+              year: 2021,
+              value: 257,
+            },
+            {
+              year: 2022,
+              value: 331,
+            },
+            {
+              year: 2023,
+              value: 373,
+            },
+            {
+              year: 2024,
+              value: 431,
+            },
+          ],
+          note: 'THE LINE THAT ACTUALLY MOVED. Up 280% over nine years, from $113.5m to $431m, rising every single year. As a share of gross profit it went from 4.53% to 8.38% \u2014 nearly doubling. This is the acquisition programme amortising: Bureau van Dijk in 2017 and RMS in 2021 both show up here, and it is a large part of why Moody\u2019s net margin sits 26 points below Visa\u2019s.',
+        },
+        {
+          label: 'Charges below the disclosed lines \u2014 DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: -0.1,
+            },
+            {
+              year: 2016,
+              value: 875.5,
+            },
+            {
+              year: 2017,
+              value: 22.2,
+            },
+            {
+              year: 2018,
+              value: 56.5,
+            },
+            {
+              year: 2019,
+              value: 77,
+            },
+            {
+              year: 2020,
+              value: 59,
+            },
+            {
+              year: 2021,
+              value: 0,
+            },
+            {
+              year: 2022,
+              value: 114,
+            },
+            {
+              year: 2023,
+              value: 87,
+            },
+            {
+              year: 2024,
+              value: 102,
+            },
+          ],
+          note: 'DERIVED, NOT SUPPLIED: total expenses less operating expenses, SG&A and D&A. FY2015 and FY2021 come to ZERO, so in those years the three lines are the whole cost base. Elsewhere there is a residual, AND IT CROSS-CHECKS BEAUTIFULLY AGAINST THE RESTRUCTURING TABLE IN THE OVERVIEW: the FY2023 residual of $87m matches the stated restructuring charge TO THE DOLLAR, and FY2022\u2019s $114m is within $1m of the $113m charge. FY2024\u2019s $102m against a $59m charge leaves $43m unexplained. And FY2016\u2019s $875.5m is the pre-crisis RMBS settlement, which is why total expenses hit 82% of revenue that year.',
+        },
+      ],
+      totalExpenses: {
+        label: 'Total Expenses',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 2011,
+          },
+          {
+            year: 2016,
+            value: 2953,
+          },
+          {
+            year: 2017,
+            value: 2383,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 2574,
+          },
+          {
+            year: 2019,
+            value: 2831,
+          },
+          {
+            year: 2020,
+            value: 2983,
+          },
+          {
+            year: 2021,
+            value: 3374,
+          },
+          {
+            year: 2022,
+            value: 3585,
+          },
+          {
+            year: 2023,
+            value: 3779,
+          },
+          {
+            year: 2024,
+            value: 4213,
+          },
+        ],
+        note: 'FELL ONLY ONCE, in FY2017 \u2014 and only because FY2016 contained the settlement. As a share of revenue: 58% in FY2015, 82% IN FY2016, and 59% now. The ten-year average is 60%.',
+      },
+      operatingProfit: {
+        label: 'Operating Income \u2014 as stated',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 1312,
+          },
+          {
+            year: 2016,
+            value: 1444,
+          },
+          {
+            year: 2017,
+            value: 650,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 1868,
+          },
+          {
+            year: 2019,
+            value: 1998,
+          },
+          {
+            year: 2020,
+            value: 2388,
+          },
+          {
+            year: 2021,
+            value: 2844,
+          },
+          {
+            year: 2022,
+            value: 1883,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 2137,
+          },
+          {
+            year: 2024,
+            value: 2875,
+          },
+        ],
+        note: 'THE OPERATING INCOME SERIES DOES NOT RECONCILE BEFORE FY2018. Revenue less total expenses gives 1,473 for FY2015, 651 for FY2016 and 1,821 for FY2017, against stated figures of 1,312, 1,444 and 650. FY2018 THROUGH FY2024 TIE EXACTLY. Note the pattern: the computed FY2016 figure of 651 is almost exactly the STATED FY2017 figure of 650, which suggests the series is shifted by a year across that boundary rather than simply wrong. Stated values are carried per the standing rule; the derived line below shows the alternative.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin \u2014 on computed operating income',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 42.28,
+          },
+          {
+            year: 2016,
+            value: 18.06,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 43.32,
+          },
+          {
+            year: 2018,
+            value: 42.05,
+          },
+          {
+            year: 2019,
+            value: 41.38,
+          },
+          {
+            year: 2020,
+            value: 44.46,
+          },
+          {
+            year: 2021,
+            value: 45.74,
+          },
+          {
+            year: 2022,
+            value: 34.44,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 36.12,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 40.56,
+          },
+        ],
+        note: '40.56% in FY2024, computed as revenue less total expenses. COMPARE VISA AT 65.68% AND MASTERCARD AT 55.32% \u2014 Moody\u2019s is 15 points below Mastercard and 25 below Visa. The FY2016 trough of 18.06% is the settlement year. This is a very profitable business that is nonetheless materially less profitable than a payments network, and D&A plus a people-heavy cost base explains most of the gap.',
+      },
+      provisionForTaxes: {
+        label: 'Income Tax Provision',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2015,
+            value: 458,
+          },
+          {
+            year: 2016,
+            value: 538,
+          },
+          {
+            year: 2017,
+            value: 282,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 351,
+          },
+          {
+            year: 2019,
+            value: 381,
+            down: true,
+          },
+          {
+            year: 2020,
+            value: 452,
+          },
+          {
+            year: 2021,
+            value: 541,
+          },
+          {
+            year: 2022,
+            value: 386,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 327,
+            down: true,
+          },
+          {
+            year: 2024,
+            value: 640,
+          },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate \u2014 as stated',
+        unit: '%',
+        series: [
+          {
+            year: 2015,
+            value: 34,
+          },
+          {
+            year: 2016,
+            value: 37,
+          },
+          {
+            year: 2017,
+            value: 43,
+          },
+          {
+            year: 2018,
+            value: 18,
+          },
+          {
+            year: 2019,
+            value: 19,
+          },
+          {
+            year: 2020,
+            value: 18,
+          },
+          {
+            year: 2021,
+            value: 19,
+          },
+          {
+            year: 2022,
+            value: 20,
+          },
+          {
+            year: 2023,
+            value: 15,
+          },
+          {
+            year: 2024,
+            value: 22,
+          },
+        ],
+        note: 'FY2017 AT 43% IS THE OUTLIER \u2014 US tax reform, the same one-off distorting Apple, Alphabet, Visa and Mastercard in that year. FY2016 at 37% reflects the pre-reform US rate. Since FY2018 the rate has run 15\u201322%, and FY2024 at 22% is the highest of that period. NOTE these rates do not reproduce cleanly from the operating income and tax lines supplied, which is consistent with non-controlling interests and non-operating items not disclosed here.',
       },
       netIncome: {
         label: 'Net Income',
@@ -47084,32 +47616,32 @@ const MCO_BREAKDOWN = {
             value: 2058,
           },
         ],
-        note: 'TWO COLLAPSES WORTH UNDERSTANDING. FY2022: net income fell 37.9% on a 12.1% revenue decline \u2014 3.1 TIMES THE MAGNITUDE, which is operating leverage running in reverse. FY2016: net income fell 71.7% to $266m while revenue ROSE 3.4%, taking margin from 27.0% to 7.4% \u2014 consistent with the pre-crisis RMBS ratings settlement accrued that year. Both are the kind of year a toll road does not have.',
+        note: 'Grew 119% over nine years. TWO COLLAPSES: FY2016 fell 71.7% to $266m on the settlement while revenue ROSE 3.4%, and FY2022 fell 37.9% on a 12.1% revenue decline \u2014 3.1x the magnitude, which is operating leverage in reverse.',
       },
       profitMargin: {
-        label: 'Net Margin \u2014 derived',
+        label: 'Net Profit Margin',
         unit: '%',
         series: [
           {
             year: 2015,
-            value: 27.0,
+            value: 27.01,
           },
           {
             year: 2016,
-            value: 7.4,
+            value: 7.38,
             down: true,
           },
           {
             year: 2017,
-            value: 23.8,
+            value: 23.79,
           },
           {
             year: 2018,
-            value: 29.5,
+            value: 29.47,
           },
           {
             year: 2019,
-            value: 29.4,
+            value: 29.45,
             down: true,
           },
           {
@@ -47118,24 +47650,504 @@ const MCO_BREAKDOWN = {
           },
           {
             year: 2021,
-            value: 35.6,
+            value: 35.61,
           },
           {
             year: 2022,
-            value: 25.1,
+            value: 25.13,
             down: true,
           },
           {
             year: 2023,
-            value: 27.2,
+            value: 27.16,
           },
           {
             year: 2024,
-            value: 29.0,
+            value: 29.03,
           },
         ],
-        note: '29.0% in FY2024 against VISA AT 55.0% AND MASTERCARD AT 45.7%. Moody\u2019s carries heavy acquisition amortisation and interest expense that neither network does, and it is a labour business rather than a switching one. Peak was 35.6% in FY2021.',
+        note: '29.04% in FY2024 against Visa at 54.96% and Mastercard at 45.71%. The FY2016 reading of 7.38% is the settlement year.',
       },
+      eps: {
+        label: 'Diluted EPS',
+        unit: 'USD per share',
+        series: [
+          {
+            year: 2015,
+            value: 4.63,
+          },
+          {
+            year: 2016,
+            value: 1.36,
+            down: true,
+          },
+          {
+            year: 2017,
+            value: 5.15,
+          },
+          {
+            year: 2018,
+            value: 6.74,
+          },
+          {
+            year: 2019,
+            value: 7.42,
+          },
+          {
+            year: 2020,
+            value: 9.39,
+          },
+          {
+            year: 2021,
+            value: 11.78,
+          },
+          {
+            year: 2022,
+            value: 7.44,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 8.73,
+          },
+          {
+            year: 2024,
+            value: 11.26,
+          },
+        ],
+        note: 'RECONCILES EXACTLY IN ALL TEN YEARS against net income divided by diluted shares \u2014 $2,058m / 182.7m = $11.26. Grew 143% over nine years against 119% net income growth, the difference being the 10.2% reduction in share count.',
+      },
+      extraLines: [
+        {
+          label: 'Diluted EPS \u2014 the 24-year record',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2001,
+              value: 1.32,
+            },
+            {
+              year: 2002,
+              value: 1.83,
+            },
+            {
+              year: 2003,
+              value: 2.39,
+            },
+            {
+              year: 2004,
+              value: 1.4,
+              down: true,
+            },
+            {
+              year: 2005,
+              value: 1.84,
+            },
+            {
+              year: 2006,
+              value: 2.58,
+            },
+            {
+              year: 2007,
+              value: 2.58,
+            },
+            {
+              year: 2008,
+              value: 1.87,
+              down: true,
+            },
+            {
+              year: 2009,
+              value: 1.69,
+              down: true,
+            },
+            {
+              year: 2010,
+              value: 2.15,
+            },
+            {
+              year: 2011,
+              value: 2.49,
+            },
+            {
+              year: 2012,
+              value: 3.05,
+            },
+            {
+              year: 2013,
+              value: 3.6,
+            },
+            {
+              year: 2014,
+              value: 4.61,
+            },
+            {
+              year: 2015,
+              value: 4.63,
+            },
+            {
+              year: 2016,
+              value: 1.36,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 5.15,
+            },
+            {
+              year: 2018,
+              value: 6.74,
+            },
+            {
+              year: 2019,
+              value: 7.42,
+            },
+            {
+              year: 2020,
+              value: 9.39,
+            },
+            {
+              year: 2021,
+              value: 11.78,
+            },
+            {
+              year: 2022,
+              value: 7.44,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 8.73,
+            },
+            {
+              year: 2024,
+              value: 11.26,
+            },
+          ],
+          note: '$1.32 in FY2001 to $11.26 in FY2024 \u2014 UP 753%, a 9.77% CAGR over twenty-three years. FIVE DOWN YEARS OUT OF TWENTY-FOUR, and each has a distinct cause: FY2004, FY2008 and FY2009 around the financial crisis, FY2016 the RMBS settlement, FY2022 the rate shock. Note FY2006 and FY2007 were identical at $2.58 \u2014 a flat year before the crisis. THIS IS THE SINGLE BEST SUMMARY OF THE COMPANY: a near-10% compounder that loses a fifth of its years, and recovers every time.',
+        },
+        {
+          label: 'Diluted Weighted-Average Shares',
+          unit: 'M shares',
+          series: [
+            {
+              year: 2013,
+              value: 223.5,
+            },
+            {
+              year: 2014,
+              value: 214.7,
+              down: true,
+            },
+            {
+              year: 2015,
+              value: 203.4,
+              down: true,
+            },
+            {
+              year: 2016,
+              value: 195.4,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 194.2,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 194.4,
+              down: true,
+            },
+            {
+              year: 2019,
+              value: 191.6,
+              down: true,
+            },
+            {
+              year: 2020,
+              value: 189.3,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 187.9,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 184.7,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 184.0,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 182.7,
+              down: true,
+            },
+          ],
+        },
+        {
+          label: 'Share count reduction \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2013,
+              value: 0.0,
+            },
+            {
+              year: 2014,
+              value: 3.9,
+            },
+            {
+              year: 2015,
+              value: 9.0,
+            },
+            {
+              year: 2016,
+              value: 12.6,
+            },
+            {
+              year: 2017,
+              value: 13.1,
+            },
+            {
+              year: 2018,
+              value: 13.0,
+            },
+            {
+              year: 2019,
+              value: 14.3,
+            },
+            {
+              year: 2020,
+              value: 15.3,
+            },
+            {
+              year: 2021,
+              value: 15.9,
+            },
+            {
+              year: 2022,
+              value: 17.4,
+            },
+            {
+              year: 2023,
+              value: 17.7,
+            },
+            {
+              year: 2024,
+              value: 18.3,
+            },
+          ],
+          note: 'FELL IN EVERY SINGLE YEAR since FY2013, from 223.5m to 182.7m \u2014 down 18.3% over eleven years, a steady 1.8% a year. Consistent buyback with no conversion overhang of any kind, which is a simpler picture than either payments network: Visa has Class B and preferred conversions on no timetable, and Mastercard has the Foundation selling down to 2031.',
+        },
+        {
+          label: 'SG&A as % of Gross Profit \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 36.74,
+            },
+            {
+              year: 2016,
+              value: 36.03,
+            },
+            {
+              year: 2017,
+              value: 33.0,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 33.79,
+            },
+            {
+              year: 2019,
+              value: 33.9,
+            },
+            {
+              year: 2020,
+              value: 31.55,
+              down: true,
+            },
+            {
+              year: 2021,
+              value: 32.31,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 39.61,
+            },
+            {
+              year: 2023,
+              value: 38.59,
+            },
+            {
+              year: 2024,
+              value: 33.74,
+              down: true,
+            },
+          ],
+          note: 'Ten-year average 34.93%. Peaked at 39.61% in FY2022 when gross profit fell and SG&A did not.',
+        },
+        {
+          label: 'D&A as % of Gross Profit \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 4.53,
+            },
+            {
+              year: 2016,
+              value: 4.9,
+            },
+            {
+              year: 2017,
+              value: 5.3,
+            },
+            {
+              year: 2018,
+              value: 6.0,
+            },
+            {
+              year: 2019,
+              value: 5.81,
+            },
+            {
+              year: 2020,
+              value: 5.65,
+            },
+            {
+              year: 2021,
+              value: 5.61,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 8.59,
+            },
+            {
+              year: 2023,
+              value: 8.82,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 8.38,
+              down: true,
+            },
+          ],
+          note: 'Ten-year average 6.36%, but the trend is what matters: 4.53% to 8.38%, nearly doubling.',
+        },
+        {
+          label: 'Total Expenses as % of Revenue \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2015,
+              value: 57.72,
+            },
+            {
+              year: 2016,
+              value: 81.94,
+            },
+            {
+              year: 2017,
+              value: 56.68,
+              down: true,
+            },
+            {
+              year: 2018,
+              value: 57.95,
+            },
+            {
+              year: 2019,
+              value: 58.62,
+            },
+            {
+              year: 2020,
+              value: 55.54,
+            },
+            {
+              year: 2021,
+              value: 54.26,
+              down: true,
+            },
+            {
+              year: 2022,
+              value: 65.56,
+            },
+            {
+              year: 2023,
+              value: 63.88,
+              down: true,
+            },
+            {
+              year: 2024,
+              value: 59.44,
+              down: true,
+            },
+          ],
+          note: 'Ten-year average 60%. FY2016 at 81.94% is the settlement.',
+        },
+        {
+          label: 'Operating Income \u2014 revenue less total expenses, DERIVED',
+          unit: 'M USD',
+          series: [
+            {
+              year: 2015,
+              value: 1473,
+            },
+            {
+              year: 2016,
+              value: 651,
+              down: true,
+            },
+            {
+              year: 2017,
+              value: 1821,
+            },
+            {
+              year: 2018,
+              value: 1868,
+            },
+            {
+              year: 2019,
+              value: 1998,
+            },
+            {
+              year: 2020,
+              value: 2388,
+            },
+            {
+              year: 2021,
+              value: 2844,
+            },
+            {
+              year: 2022,
+              value: 1883,
+              down: true,
+            },
+            {
+              year: 2023,
+              value: 2137,
+            },
+            {
+              year: 2024,
+              value: 2875,
+            },
+          ],
+          note: 'THE OPERATING INCOME SERIES DOES NOT RECONCILE BEFORE FY2018. Revenue less total expenses gives 1,473 for FY2015, 651 for FY2016 and 1,821 for FY2017, against stated figures of 1,312, 1,444 and 650. FY2018 THROUGH FY2024 TIE EXACTLY. Note the pattern: the computed FY2016 figure of 651 is almost exactly the STATED FY2017 figure of 650, which suggests the series is shifted by a year across that boundary rather than simply wrong. Stated values are carried per the standing rule; the derived line below shows the alternative.',
+        },
+      ],
     },
     cashFlow: {
       operatingCashFlow: {
