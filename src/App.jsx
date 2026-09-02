@@ -45304,7 +45304,7 @@ const MA_BREAKDOWN = {
 //
 // TABS LIVE: OVERVIEW, MOAT, NUMBERS, INCOME (partial), RISKS (+ CYBER),
 // DERIVATIVES.
-// TABS DARK: BALANCE, CASH FLOW, THESIS.
+// TABS DARK: BALANCE, THESIS.
 //
 // VERIFIED BEFORE BUILDING:
 //   the nine MA customer categories sum EXACTLY to the stated 14,800.
@@ -47136,6 +47136,460 @@ const MCO_BREAKDOWN = {
         ],
         note: '29.0% in FY2024 against VISA AT 55.0% AND MASTERCARD AT 45.7%. Moody\u2019s carries heavy acquisition amortisation and interest expense that neither network does, and it is a labour business rather than a switching one. Peak was 35.6% in FY2021.',
       },
+    },
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Cash from Operations',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2001,
+            value: 321,
+          },
+          {
+            year: 2002,
+            value: 335,
+          },
+          {
+            year: 2003,
+            value: 468,
+          },
+          {
+            year: 2004,
+            value: 526,
+          },
+          {
+            year: 2005,
+            value: 707,
+          },
+          {
+            year: 2006,
+            value: 752,
+          },
+          {
+            year: 2007,
+            value: 988,
+          },
+          {
+            year: 2008,
+            value: 539,
+            down: true,
+          },
+          {
+            year: 2009,
+            value: 643,
+          },
+          {
+            year: 2010,
+            value: 654,
+          },
+          {
+            year: 2011,
+            value: 803,
+          },
+          {
+            year: 2012,
+            value: 823,
+          },
+          {
+            year: 2013,
+            value: 926,
+          },
+          {
+            year: 2014,
+            value: 1018,
+          },
+          {
+            year: 2015,
+            value: 1153,
+          },
+          {
+            year: 2016,
+            value: 1259,
+          },
+          {
+            year: 2017,
+            value: 757,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 1461,
+          },
+          {
+            year: 2019,
+            value: 1675,
+          },
+          {
+            year: 2020,
+            value: 2146,
+          },
+          {
+            year: 2021,
+            value: 2005,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 1474,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 2151,
+          },
+          {
+            year: 2024,
+            value: 2838,
+          },
+        ],
+        note: 'A TWENTY-FOUR YEAR SERIES, from $321m in FY2001 to $2,838m in FY2024 \u2014 up 784%, a 9.94% CAGR. UP 31.9% IN FY2024, the strongest year in the series. But look at the down years, because they are the point: THREE DECLINES OF MORE THAN 25%, each from a completely different cause. FY2008 fell 45.4% when structured finance issuance stopped in the financial crisis. FY2017 fell 39.9% on the $864m pre-crisis RMBS settlement paid that January. FY2022 fell 26.5% on the rate shock. Neither Visa nor Mastercard has a record like this \u2014 Visa\u2019s worst year in twenty was a 3.9% decline.',
+      },
+      capex: {
+        label: 'Capital Expenditures',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2001,
+            value: 15,
+          },
+          {
+            year: 2002,
+            value: 18,
+          },
+          {
+            year: 2003,
+            value: 18,
+          },
+          {
+            year: 2004,
+            value: 21,
+          },
+          {
+            year: 2005,
+            value: 31,
+          },
+          {
+            year: 2006,
+            value: 31,
+          },
+          {
+            year: 2007,
+            value: 181,
+          },
+          {
+            year: 2008,
+            value: 84,
+          },
+          {
+            year: 2009,
+            value: 90,
+          },
+          {
+            year: 2010,
+            value: 79,
+          },
+          {
+            year: 2011,
+            value: 67,
+          },
+          {
+            year: 2012,
+            value: 45,
+          },
+          {
+            year: 2013,
+            value: 42,
+          },
+          {
+            year: 2014,
+            value: 74,
+          },
+          {
+            year: 2015,
+            value: 89,
+          },
+          {
+            year: 2016,
+            value: 115,
+          },
+          {
+            year: 2017,
+            value: 90,
+          },
+          {
+            year: 2018,
+            value: 90,
+          },
+          {
+            year: 2019,
+            value: 69,
+          },
+          {
+            year: 2020,
+            value: 103,
+          },
+          {
+            year: 2021,
+            value: 139,
+          },
+          {
+            year: 2022,
+            value: 283,
+          },
+          {
+            year: 2023,
+            value: 271,
+          },
+          {
+            year: 2024,
+            value: 317,
+          },
+        ],
+        note: 'RISING SHARPLY AND RECENTLY. Capex was $69m in FY2019 and is $317m now \u2014 UP 359% IN FIVE YEARS. The FY2007 spike to $181m stands out in the early years, but the sustained step-up since 2021 is the real change, and it coincides with the SaaS transition and the software investment named in the restructuring programme.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow',
+        unit: '%',
+        series: [
+          {
+            year: 2001,
+            value: 4.7,
+          },
+          {
+            year: 2002,
+            value: 5.4,
+          },
+          {
+            year: 2003,
+            value: 3.8,
+          },
+          {
+            year: 2004,
+            value: 4.0,
+          },
+          {
+            year: 2005,
+            value: 4.4,
+          },
+          {
+            year: 2006,
+            value: 4.1,
+          },
+          {
+            year: 2007,
+            value: 18.3,
+          },
+          {
+            year: 2008,
+            value: 15.6,
+          },
+          {
+            year: 2009,
+            value: 14.0,
+          },
+          {
+            year: 2010,
+            value: 12.1,
+          },
+          {
+            year: 2011,
+            value: 8.3,
+          },
+          {
+            year: 2012,
+            value: 5.5,
+          },
+          {
+            year: 2013,
+            value: 4.5,
+          },
+          {
+            year: 2014,
+            value: 7.3,
+          },
+          {
+            year: 2015,
+            value: 7.7,
+          },
+          {
+            year: 2016,
+            value: 9.1,
+          },
+          {
+            year: 2017,
+            value: 11.9,
+          },
+          {
+            year: 2018,
+            value: 6.2,
+          },
+          {
+            year: 2019,
+            value: 4.1,
+          },
+          {
+            year: 2020,
+            value: 4.8,
+          },
+          {
+            year: 2021,
+            value: 6.9,
+          },
+          {
+            year: 2022,
+            value: 19.2,
+          },
+          {
+            year: 2023,
+            value: 12.6,
+          },
+          {
+            year: 2024,
+            value: 11.2,
+          },
+        ],
+        note: 'ALL 24 STATED RATIOS REPRODUCE EXACTLY from the two series above. The ratio has NEARLY TRIPLED since FY2019, from 4.1% to 11.2%, and hit 19.2% in FY2022 when operating cash flow collapsed while capex kept rising. The 24-year average is 8.6%. VISA RUNS 6.30% AND MASTERCARD 8.08% \u2014 Moody\u2019s is now the most capital-intensive of the three, which was not true five years ago.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow \u2014 derived',
+        unit: 'M USD',
+        series: [
+          {
+            year: 2001,
+            value: 306,
+          },
+          {
+            year: 2002,
+            value: 317,
+          },
+          {
+            year: 2003,
+            value: 450,
+          },
+          {
+            year: 2004,
+            value: 505,
+          },
+          {
+            year: 2005,
+            value: 676,
+          },
+          {
+            year: 2006,
+            value: 721,
+          },
+          {
+            year: 2007,
+            value: 807,
+          },
+          {
+            year: 2008,
+            value: 455,
+            down: true,
+          },
+          {
+            year: 2009,
+            value: 553,
+          },
+          {
+            year: 2010,
+            value: 575,
+          },
+          {
+            year: 2011,
+            value: 736,
+          },
+          {
+            year: 2012,
+            value: 778,
+          },
+          {
+            year: 2013,
+            value: 884,
+          },
+          {
+            year: 2014,
+            value: 944,
+          },
+          {
+            year: 2015,
+            value: 1064,
+          },
+          {
+            year: 2016,
+            value: 1144,
+          },
+          {
+            year: 2017,
+            value: 667,
+            down: true,
+          },
+          {
+            year: 2018,
+            value: 1371,
+          },
+          {
+            year: 2019,
+            value: 1606,
+          },
+          {
+            year: 2020,
+            value: 2043,
+          },
+          {
+            year: 2021,
+            value: 1866,
+            down: true,
+          },
+          {
+            year: 2022,
+            value: 1191,
+            down: true,
+          },
+          {
+            year: 2023,
+            value: 1880,
+          },
+          {
+            year: 2024,
+            value: 2521,
+          },
+        ],
+        note: 'Operating cash flow less capital expenditure. $2,521m in FY2024, up 32.7%. THAT IS 35.6% OF REVENUE CONVERTED TO FREE CASH FLOW, against Visa at 52.0% and Mastercard at 48.2%. Lower than both networks, and the gap is widening as capex rises \u2014 but still an exceptional conversion rate for a business with 15,838 employees.',
+      },
+      extraLines: [
+        {
+          label: 'Dividend per Share \u2014 declared',
+          unit: 'USD per share',
+          series: [
+            {
+              year: 2022,
+              value: 2.8,
+            },
+            {
+              year: 2023,
+              value: 3.08,
+            },
+            {
+              year: 2024,
+              value: 3.4,
+            },
+          ],
+          note: 'DECLARED EQUALS PAID IN EVERY QUARTER OF EVERY YEAR SHOWN \u2014 $0.70, $0.77 and $0.85 per quarter, four times each, with no timing differences at all. On 12 FEBRUARY 2025 the board declared $0.94 per quarter, or $3.76 annualised. That is three consecutive increases of roughly 10%: +10.0%, +10.4%, +10.6%. Remarkably metronomic for a company whose operating cash flow fell 26.5% in the middle of that run \u2014 the dividend was raised straight through the FY2022 downturn.',
+        },
+        {
+          label: 'Dividend as % of Free Cash Flow \u2014 derived',
+          unit: '%',
+          series: [
+            {
+              year: 2024,
+              value: 24.4,
+            },
+          ],
+          note: 'Roughly 181 million shares at $3.40 gives about $615m of dividends against $2,521m of free cash flow \u2014 24.4% of FCF and 29.9% of net income. A LOW PAYOUT WITH A LONG RUNWAY, covered four times over. That headroom is what allowed the dividend to keep rising through FY2022, and it is the practical answer to the cyclicality: the cycle hits reported earnings hard but does not threaten the distribution.',
+        },
+      ],
     },
   },
   moat: {
