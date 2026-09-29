@@ -55674,7 +55674,7 @@ function MuzzApp() {
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
                   <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
-                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"#000",background:"#FFD60A",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
+                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
             </div>
