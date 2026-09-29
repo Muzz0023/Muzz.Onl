@@ -161,22 +161,26 @@ const RevenueCat = {
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 // Liquid Glass material (matches the dashboard): blurred, specular top edge, darkened outer edge
 const LIQUID_GLASS = { background:"rgba(28,28,30,0.5)", backdropFilter:"blur(30px) saturate(180%)", WebkitBackdropFilter:"blur(30px) saturate(180%)", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)" };
-// iOS-style segmented control: one glass capsule, highlight slides to the selected segment
-const Segmented = ({ options, value, onChange }) => {
+// iOS-style segmented control: one glass capsule, highlight slides to the selected segment.
+// Up to 5 options share the width; more than that and the control scrolls sideways.
+const Segmented = ({ options, value, onChange, onDoubleClick }) => {
   const idx = Math.max(0, options.findIndex(o => o.id === value));
   const w = 100 / options.length;
+  const scrolls = options.length > 5;
   return (
-    <div role="tablist" style={{position:"relative",display:"flex",padding:"3px",borderRadius:"999px",background:"rgba(118,118,128,0.22)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)",maxWidth:"560px"}}>
-      <span aria-hidden="true" style={{position:"absolute",top:"3px",bottom:"3px",left:`calc(3px + (100% - 6px) * ${idx * w / 100})`,width:`calc((100% - 6px) * ${w / 100})`,borderRadius:"999px",background:"rgba(255,255,255,0.2)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.3)",transition:"left 0.28s cubic-bezier(0.4,0,0.2,1)"}} />
-      {options.map(o => {
-        const on = o.id === value;
-        return (
-          <button key={o.id} role="tab" aria-selected={on} onClick={() => onChange(o.id)}
-            style={{position:"relative",flex:"1 1 0",minWidth:0,padding:"7px 6px",border:"none",background:"transparent",color:on?"#FFFFFF":"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:on?600:500,letterSpacing:"-0.1px",cursor:"pointer",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"color 0.2s"}}>
-            {o.label}
-          </button>
-        );
-      })}
+    <div style={{borderRadius:"999px",background:"rgba(118,118,128,0.22)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)",maxWidth:scrolls?"100%":"560px",overflowX:scrolls?"auto":"visible",scrollbarWidth:"none"}}>
+      <div role="tablist" style={{position:"relative",display:"flex",padding:"3px",minWidth:scrolls?`${options.length * 92}px`:undefined}}>
+        <span aria-hidden="true" style={{position:"absolute",top:"3px",bottom:"3px",left:`calc(3px + (100% - 6px) * ${idx * w / 100})`,width:`calc((100% - 6px) * ${w / 100})`,borderRadius:"999px",background:"rgba(255,255,255,0.2)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.3)",transition:"left 0.28s cubic-bezier(0.4,0,0.2,1)"}} />
+        {options.map(o => {
+          const on = o.id === value;
+          return (
+            <button key={o.id} role="tab" aria-selected={on} onClick={() => onChange(o.id)} onDoubleClick={onDoubleClick ? () => onDoubleClick(o.id) : undefined}
+              style={{position:"relative",flex:"1 1 0",minWidth:0,padding:"7px 6px",border:"none",background:"transparent",color:on?"#FFFFFF":"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:on?600:500,letterSpacing:"-0.1px",cursor:"pointer",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"color 0.2s"}}>
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -55106,39 +55110,26 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5">
-          {/* Lists — glass chips (Daily, Weekly, General + your own lists) */}
-          <div style={{display:"flex",gap:"8px",marginBottom:"16px",overflowX:"auto",alignItems:"center",padding:"2px 2px 4px",scrollbarWidth:"none"}}>
-            {[
-              {id:'daily', label:'Daily', items: dailyItems},
-              {id:'weekly', label:'Weekly', items: weeklyItems},
-              {id:'general', label:'General', items: generalItems},
-              ...customTaskLists.map(l => ({ id: l.id, label: l.name || 'List', items: parseItems(l.note || ''), custom: l })),
-            ].map(tab => {
-              const on = tasksSubTab === tab.id;
-              const left = tab.items.filter(i => !i.checked).length;
-              return (
-                <button key={tab.id}
-                  onClick={() => setTasksSubTab(tab.id)}
-                  onDoubleClick={tab.custom ? () => {
-                    const newName = window.prompt('Rename list:', tab.custom.name);
-                    if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === tab.custom.id ? {...l, name: newName.trim()} : l));
-                  } : undefined}
-                  title={tab.custom ? 'Double-tap to rename' : undefined}
-                  style={{...LIQUID_GLASS,background:on?"rgba(255,255,255,0.2)":LIQUID_GLASS.background,border:`0.5px solid ${on?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.14)"}`,borderRadius:"999px",padding:"8px 15px",display:"flex",alignItems:"center",gap:"7px",color:on?"#FFFFFF":"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:on?600:500,letterSpacing:"-0.2px",whiteSpace:"nowrap",flexShrink:0,cursor:"pointer",transition:"background 0.2s, color 0.2s"}}>
-                  <span>{tab.label}</span>
-                  {left > 0 && <span style={{fontSize:"13px",fontWeight:500,color:on?"rgba(255,255,255,0.65)":"rgba(235,235,245,0.4)"}}>{left}</span>}
-                  {on && tab.custom && (
-                    <span role="button" aria-label={`Delete ${tab.label}`} onClick={(e) => {
-                      e.stopPropagation();
-                      if (window.confirm(`Delete "${tab.custom.name}" and all its tasks?`)) {
-                        setCustomTaskLists(prev => prev.filter(l => l.id !== tab.custom.id));
-                        setTasksSubTab('daily');
-                      }
-                    }} style={{width:"18px",height:"18px",borderRadius:"50%",background:"rgba(255,255,255,0.18)",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:"12px",lineHeight:1,color:"rgba(255,255,255,0.85)"}}>×</span>
-                  )}
-                </button>
-              );
-            })}
+          {/* Lists — same segmented control as the rest of the app, plus "+" for a new list */}
+          <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"16px"}}>
+            <div style={{flex:1,minWidth:0}}>
+              <Segmented
+                value={tasksSubTab}
+                onChange={setTasksSubTab}
+                onDoubleClick={(id) => {
+                  const list = customTaskLists.find(l => l.id === id);
+                  if (!list) return;
+                  const newName = window.prompt('Rename list:', list.name);
+                  if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === id ? {...l, name: newName.trim()} : l));
+                }}
+                options={[
+                  {id:'daily', label:'Daily'},
+                  {id:'weekly', label:'Weekly'},
+                  {id:'general', label:'General'},
+                  ...customTaskLists.map(l => ({ id: l.id, label: l.name || 'List' })),
+                ]}
+              />
+            </div>
             <button aria-label="New list" onClick={() => {
               const name = window.prompt('Name this list (e.g. Work, Errands, Project X):', '');
               if (!name || !name.trim()) return;
@@ -55220,6 +55211,20 @@ function MuzzApp() {
                     <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
                   <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
+                  {activeCustom && (
+                    <>
+                      <button onClick={() => {
+                        const newName = window.prompt('Rename list:', activeCustom.name);
+                        if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, name: newName.trim()} : l));
+                      }} style={{fontSize:"15px",color:"#0A84FF",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Rename</button>
+                      <button onClick={() => {
+                        if (window.confirm(`Delete "${activeCustom.name}" and all its tasks?`)) {
+                          setCustomTaskLists(prev => prev.filter(l => l.id !== activeCustom.id));
+                          setTasksSubTab('daily');
+                        }
+                      }} style={{fontSize:"15px",color:"#FF453A",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Delete</button>
+                    </>
+                  )}
                   {checked.length > 0 && (
                     <button onClick={clearCompleted} style={{fontSize:"15px",color:"#0A84FF",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Clear done</button>
                   )}
