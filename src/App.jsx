@@ -75438,7 +75438,7 @@ function MuzzApp() {
                     return (
                       <label key={day.date} style={{display:"flex",alignItems:"center",gap:"12px",minHeight:"50px",padding:"0 16px",borderBottom:i<6?sep:"none",cursor:"text"}}>
                         <span style={{flex:1,fontSize:"17px",fontFamily:SANS_FONT,color:"#FFFFFF",letterSpacing:"-0.2px",fontWeight:day.isToday?600:400}}>
-                          {day.isToday ? 'Today' : `${fullDay[day.dayShort.slice(0,3)] || day.dayShort} ${day.dateNum}`}
+                          {day.isToday ? 'Today' : (fullDay[day.dayShort.slice(0,3)] || day.dayShort)}
                         </span>
                         <input type="number" inputMode="numeric" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} onFocus={scrollInputIntoView}
                           style={{...bare,width:"110px",textAlign:"right",color:steps?"#FFFFFF":sec}} />
