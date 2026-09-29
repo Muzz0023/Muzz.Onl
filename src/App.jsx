@@ -55181,14 +55181,14 @@ function MuzzApp() {
               setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
               accentColor = tasksSubTab === 'daily' ? '#0A84FF' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
               borderColor = tasksSubTab === 'daily' ? 'rgba(10,132,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
-              headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase() : tasksSubTab === 'weekly' ? 'THIS WEEK' : 'GENERAL';
+              headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}) : tasksSubTab === 'weekly' ? 'This week' : 'General';
             } else {
               // Custom list — stored as JSON inside the list's `note` field
               noteVal = activeCustom.note || '';
               setNote = (val) => setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, note: val} : l));
               accentColor = activeCustom.color || '#0A84FF';
               borderColor = `${activeCustom.color || '#0A84FF'}33`;
-              headerLabel = (activeCustom.name || 'CUSTOM').toUpperCase();
+              headerLabel = activeCustom.name || 'Custom';
             }
 
             let items = [];
@@ -55227,15 +55227,15 @@ function MuzzApp() {
             const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
 
             return (
-              <div style={{...LIQUID_GLASS,border:`0.5px solid ${borderColor}`,borderRadius:"20px",borderLeft:`2px solid ${accentColor}`}}>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px"}}>
 
                 {/* Header */}
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                  <span style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0",opacity:0.6}}>{headerLabel}</span>
+                  <span style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{headerLabel}</span>
                   <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
                     <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
-                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.3)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
+                  <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
                   {checked.length > 0 && (
                     <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"10px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
                   )}
@@ -55298,30 +55298,33 @@ function MuzzApp() {
 
                   {/* Unchecked */}
                   {unchecked.map(item => (
-                    <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
-                      <button onClick={() => updateItem(item.id, {checked: true})}
-                        style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px solid rgba(235,235,245,0.3)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
+                    <div key={item.id} style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"6px 0"}}>
+                      <button onClick={() => updateItem(item.id, {checked: true})} aria-label="Mark done"
+                        style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid rgba(235,235,245,0.35)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
                       </button>
-                      <input
+                      <textarea
                         id={`item-${item.id}`}
+                        rows={1}
                         value={item.text}
+                        ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
+                        onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }}
                         onChange={(e) => updateItem(item.id, {text: e.target.value})}
                         onKeyDown={(e) => handleKeyDown(e, item)}
                         onFocus={scrollInputIntoView}
-                        placeholder="Task..."
-                        style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"rgba(235,235,245,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
+                        placeholder="New task"
+                        style={{flex:1,minWidth:0,resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
                       />
-                      <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.5)",fontSize:"18px",padding:"4px 6px",flexShrink:0,lineHeight:1}}>×</button>
+                      <button onClick={() => deleteItem(item.id)} aria-label="Delete task" style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.25)",fontSize:"18px",padding:"2px 4px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
                   ))}
 
                   {/* Add button — hidden in empty state since template offers START FRESH */}
                   {items.length > 0 && (
-                  <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0",background:"none",border:"none",cursor:"pointer",marginTop:"4px"}}>
-                    <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
+                  <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",padding:"6px 0",background:"none",border:"none",cursor:"pointer",marginTop:"4px"}}>
+                    <div style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
                       <span style={{color:accentColor,fontSize:"14px",lineHeight:1}}>+</span>
                     </div>
-                    <span style={{color:"rgba(235,235,245,0.25)",fontSize:"15px",fontFamily:"system-ui"}}>New item</span>
+                    <span style={{color:"rgba(235,235,245,0.35)",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>New task</span>
                   </button>
                   )}
 
@@ -55333,18 +55336,18 @@ function MuzzApp() {
                           const el = document.getElementById(`completed-${tasksSubTab}`);
                           if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
                         }}
-                        style={{fontSize:"9px",color:"rgba(235,235,245,0.25)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
+                        style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
                       >
-                        <span>▾ COMPLETED · {checked.length}</span>
+                        <span>Completed ({checked.length})</span>
                       </button>
                       <div id={`completed-${tasksSubTab}`}>
                         {checked.map(item => (
-                          <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
-                            <button onClick={() => updateItem(item.id, {checked: false})}
-                              style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
+                          <div key={item.id} style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"6px 0"}}>
+                            <button onClick={() => updateItem(item.id, {checked: false})} aria-label="Mark not done"
+                              style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
                               ✓
                             </button>
-                            <span style={{flex:1,color:"rgba(235,235,245,0.3)",fontSize:"15px",fontFamily:"system-ui",textDecoration:"line-through"}}>{item.text}</span>
+                            <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.35)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",textDecoration:"line-through",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
                             <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.15)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
                           </div>
                         ))}
