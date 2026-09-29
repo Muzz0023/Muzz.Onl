@@ -55670,11 +55670,6 @@ function MuzzApp() {
         <div style={{padding:isWide?"48px 24px 8px":"64px 24px 8px"}}>
           <div className="max-w-4xl mx-auto">
             <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-              <svg width="34" height="42" viewBox="0 0 24 32" fill="none">
-                <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#dashEliteGrad)" />
-                <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
-                <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
-              </svg>
               <div>
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
@@ -55707,10 +55702,10 @@ function MuzzApp() {
           {/* SUMMARY GRID — four tappable cards */}
           <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
             {[
-              { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, sub:"Portfolio", view:"investments" },
-              { label:"Savings rate", value:`${Math.round(savingsRate)}%`, sub:"Of income", view:"varied" },
-              { label:"Today", value:`${completedDailyTasks}/${dailyTasks.length}`, sub:"Tasks done", view:"tasks" },
-              { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, sub:"Total value", view:"assets" },
+              { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
+              { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
+              { label:"Tasks today", value:`${completedDailyTasks}/${dailyTasks.length}`, view:"tasks" },
+              { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, view:"assets" },
             ].map(card => (
               <button key={card.label} onClick={() => setActiveView(card.view)}
                 style={{...glass,padding:"14px 16px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",position:"relative"}}
@@ -55718,18 +55713,9 @@ function MuzzApp() {
                 <ChevronRight size={16} color={txt.tertiary} strokeWidth={2.5} style={{position:"absolute",top:"14px",right:"12px"}} />
                 <div style={{fontSize:"13px",color:txt.secondary,fontWeight:500}}>{card.label}</div>
                 <div style={{fontSize:"24px",color:txt.primary,fontWeight:700,letterSpacing:"-0.5px",marginTop:"8px",lineHeight:1.1}}>{card.value}</div>
-                <div style={{fontSize:"12px",color:txt.tertiary,marginTop:"4px"}}>{card.sub}</div>
               </button>
             ))}
           </div>
-
-          {/* QUOTE — one quiet line */}
-          {todayQuote && (
-            <div style={{padding:"22px 12px 6px",textAlign:"center"}}>
-              <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.5}}>“{todayQuote.quote}”</div>
-              <div style={{fontSize:"13px",color:txt.tertiary,fontFamily:SANS_FONT,marginTop:"6px"}}>{todayQuote.author}</div>
-            </div>
-          )}
 
           {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
@@ -55755,6 +55741,15 @@ function MuzzApp() {
               <ListRow label="Delete account" danger center last onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }} />
             </div>
           </div>
+
+          {/* QUOTE — quiet footer */}
+          {todayQuote && (
+            <div style={{padding:"30px 12px 0",textAlign:"center"}}>
+              <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.5}}>“{todayQuote.quote}”</div>
+              <div style={{fontSize:"13px",color:txt.tertiary,fontFamily:SANS_FONT,marginTop:"6px"}}>{todayQuote.author}</div>
+            </div>
+          )}
+
 
         </div>
 
