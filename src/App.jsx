@@ -161,6 +161,25 @@ const RevenueCat = {
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 // Liquid Glass material (matches the dashboard): blurred, specular top edge, darkened outer edge
 const LIQUID_GLASS = { background:"rgba(28,28,30,0.5)", backdropFilter:"blur(30px) saturate(180%)", WebkitBackdropFilter:"blur(30px) saturate(180%)", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)" };
+// iOS-style segmented control: one glass capsule, highlight slides to the selected segment
+const Segmented = ({ options, value, onChange }) => {
+  const idx = Math.max(0, options.findIndex(o => o.id === value));
+  const w = 100 / options.length;
+  return (
+    <div role="tablist" style={{position:"relative",display:"flex",padding:"3px",borderRadius:"999px",background:"rgba(118,118,128,0.22)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)",maxWidth:"560px"}}>
+      <span aria-hidden="true" style={{position:"absolute",top:"3px",bottom:"3px",left:`calc(3px + (100% - 6px) * ${idx * w / 100})`,width:`calc((100% - 6px) * ${w / 100})`,borderRadius:"999px",background:"rgba(255,255,255,0.2)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.3)",transition:"left 0.28s cubic-bezier(0.4,0,0.2,1)"}} />
+      {options.map(o => {
+        const on = o.id === value;
+        return (
+          <button key={o.id} role="tab" aria-selected={on} onClick={() => onChange(o.id)}
+            style={{position:"relative",flex:"1 1 0",minWidth:0,padding:"7px 6px",border:"none",background:"transparent",color:on?"#FFFFFF":"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:on?600:500,letterSpacing:"-0.1px",cursor:"pointer",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"color 0.2s"}}>
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 // Share-class aliases. A company can trade under more than one ticker while the
 // coverage library is keyed on one of them, so normalise before any lookup.
 // GOOGL is Alphabet Class A (1 vote); GOOG is Class C (no vote).
@@ -54836,13 +54855,7 @@ function MuzzApp() {
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Reminders</div>
               </div>
             </div>
-            <div style={{display:"flex",gap:"4px"}}>
-              {[{id:'reminders',label:'REMINDERS'},{id:'birthdays',label:'BIRTHDAYS'}].map(tab => (
-                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:remindersSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <Segmented value={remindersSubTab} onChange={setRemindersSubTab} options={[{id:'reminders',label:'Reminders'},{id:'birthdays',label:'Birthdays'}]} />
           </div>
         </div>
 
@@ -55974,13 +55987,7 @@ function MuzzApp() {
               </div>
             </div>
             {/* Main tabs */}
-            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'}].map(tab => (
-                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:billsSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <Segmented value={billsSubTab} onChange={setBillsSubTab} options={[{id:'bills',label:'Bills'},{id:'forecast',label:'Forecast'},{id:'calendar',label:'Calendar'},{id:'goals',label:'Goals'},{id:'debts',label:'Debts'}]} />
           </div>
         </div>
 
@@ -58473,13 +58480,7 @@ function MuzzApp() {
                 <div style={{fontSize:"24px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:500}}>${totalAssets.toLocaleString()}</div>
               </div>
             </div>
-            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'assets',label:'Assets'},{id:'goals',label:'Goals'},{id:'assetMap',label:'Asset map'},{id:'knowledge',label:'Guide'}].map(tab => (
-                <button key={tab.id} onClick={() => tab.view ? setActiveView(tab.id) : setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:assetsSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <Segmented value={assetsSubTab} onChange={setAssetsSubTab} options={[{id:'assets',label:'Assets'},{id:'goals',label:'Goals'},{id:'assetMap',label:'Asset map'},{id:'knowledge',label:'Guide'}]} />
           </div>
         </div>
 
@@ -59896,18 +59897,6 @@ function MuzzApp() {
                 </div>
                 <div style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"0",fontWeight:700,textShadow:"0 0 14px rgba(245,158,11,0.35)"}}>RESEARCH OS →</div>
               </button>
-            </div>
-            <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
-              {[
-                {id:'portfolio',label:'Current portfolio'},
-              ].map(tab => {
-                const isActive = investmentsSubTab === tab.id;
-                return (
-                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:isActive?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
-                  {tab.label}
-                </button>
-                );
-              })}
             </div>
           </div>
         </div>
@@ -75362,20 +75351,7 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* Sub-tab toggle */}
-          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
-            {[
-              { id:'steps', label:'STEPS' },
-              { id:'plan', label:'4-WEEK PLAN' },
-            ].map(tab => {
-              const active = (gymWorkoutTab||'steps') === tab.id;
-              return (
-                <button key={tab.id} onClick={() => setGymWorkoutTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?accent:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+          <Segmented value={gymWorkoutTab||'steps'} onChange={setGymWorkoutTab} options={[{id:'steps',label:'Steps'},{id:'plan',label:'4-week plan'}]} />
 
           {/* STEPS TAB */}
           {(gymWorkoutTab||'steps') === 'steps' && (
