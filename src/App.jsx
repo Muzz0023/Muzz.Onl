@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -55632,6 +55632,16 @@ function MuzzApp() {
       { label: "REV",      level: "NOMINAL" },
     ];
 
+    // Apple-style material over the starfield: translucent, blurred, hairline edge
+    const glass = {background:"rgba(28,28,30,0.55)",backdropFilter:"blur(20px) saturate(160%)",WebkitBackdropFilter:"blur(20px) saturate(160%)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"20px"};
+    const glassHover = "rgba(44,44,46,0.7)";
+    const txt = { primary:"#FFFFFF", secondary:"rgba(235,235,245,0.6)", tertiary:"rgba(235,235,245,0.3)" };
+    const tileColors = { habits:"#FF9F0A", tasks:"#0A84FF", reminders:"#FF453A", gymworkout:"#FF375F", timetable:"#5E5CE6", varied:"#30D158", assets:"#BF5AF2", investments:"#64D2FF" };
+    const groupLabel = {fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600,margin:"0 4px 10px"};
+    const tileBtn = {...glass,display:"flex",alignItems:"center",gap:"12px",padding:"14px 16px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"background 0.15s"};
+    const onIn = (e) => { e.currentTarget.style.background = glassHover; };
+    const onOut = (e) => { e.currentTarget.style.background = glass.background; };
+
     return (
       <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
         {/* LEFT RAIL — desktop only */}
@@ -55641,47 +55651,45 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER — date + greeting */}
-        <div style={{padding:isWide?"48px 24px 8px":"64px 28px 8px"}}>
+        <div style={{padding:isWide?"48px 24px 8px":"64px 24px 8px"}}>
           <div className="max-w-4xl mx-auto">
             <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-              <svg width="36" height="44" viewBox="0 0 24 32" fill="none">
+              <svg width="34" height="42" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#dashEliteGrad)" />
                 <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div>
-                <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",letterSpacing:"0.2px",fontFamily:SANS_FONT}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
-                  <div style={{fontSize:"clamp(24px,5vw,32px)",color:"#f2f6ff",fontWeight:600,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
-                  {isElite && <SeverityPill level="ELITE" label="ELITE" />}
+                  <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"#000",background:"#FFD60A",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 20px 0"}}>
+        <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 16px 0"}}>
 
           {/* HERO — net worth */}
-          <div style={{...palantirPanel,padding:"22px 24px 18px"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
-              <div style={{fontSize:"13px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
-            </div>
-            <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"6px"}}>
-              <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"46px":"38px",color:"#f2f6ff",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
+          <div style={{...glass,padding:"20px 20px 16px"}}>
+            <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
+            <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"4px"}}>
+              <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"46px":"40px",color:txt.primary,fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
               {nwDelta7d !== null && (
-                <span style={{fontSize:"14px",fontWeight:600,fontFamily:SANS_FONT,color:nwDelta7d>=0?"rgba(245,158,11,0.95)":"rgba(248,113,113,0.95)"}}>
-                  {nwDelta7d>=0?"+":""}{nwDelta7d.toFixed(2)}% this week
+                <span style={{fontSize:"15px",fontWeight:600,fontFamily:SANS_FONT,color:nwDelta7d>=0?"#30D158":"#FF453A"}}>
+                  {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% this week
                 </span>
               )}
             </div>
             <div style={{marginTop:"16px"}}>
-              <Sparkline data={nwSeries} w={isWide?640:280} h={44} color="rgba(0,200,255,0.75)" fillOpacity={0.08} />
+              <Sparkline data={nwSeries} w={isWide?640:300} h={48} color="#0A84FF" fillOpacity={0.14} />
             </div>
           </div>
 
           {/* SUMMARY GRID — four tappable cards */}
-          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"14px"}}>
+          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
             {[
               { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, sub:"Portfolio", view:"investments" },
               { label:"Savings rate", value:`${Math.round(savingsRate)}%`, sub:"Of income", view:"varied" },
@@ -55689,69 +55697,65 @@ function MuzzApp() {
               { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, sub:"Total value", view:"assets" },
             ].map(card => (
               <button key={card.label} onClick={() => setActiveView(card.view)}
-                style={{...palantirPanel,padding:"16px 18px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s"}}
-                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.045)"}>
-                <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontWeight:500}}>{card.label}</div>
-                <div style={{fontSize:"22px",color:"#f2f6ff",fontWeight:700,letterSpacing:"-0.4px",marginTop:"6px",lineHeight:1.1}}>{card.value}</div>
-                <div style={{fontSize:"11px",color:"rgba(226,232,240,0.4)",marginTop:"4px"}}>{card.sub}</div>
+                style={{...glass,padding:"14px 16px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",position:"relative"}}
+                onMouseEnter={onIn} onMouseLeave={onOut}>
+                <ChevronRight size={16} color={txt.tertiary} strokeWidth={2.5} style={{position:"absolute",top:"14px",right:"12px"}} />
+                <div style={{fontSize:"13px",color:txt.secondary,fontWeight:500}}>{card.label}</div>
+                <div style={{fontSize:"24px",color:txt.primary,fontWeight:700,letterSpacing:"-0.5px",marginTop:"8px",lineHeight:1.1}}>{card.value}</div>
+                <div style={{fontSize:"12px",color:txt.tertiary,marginTop:"4px"}}>{card.sub}</div>
               </button>
             ))}
           </div>
 
           {/* QUOTE — one quiet line */}
           {todayQuote && (
-            <div style={{padding:"18px 6px 4px",textAlign:"center"}}>
-              <div style={{fontSize:"13px",color:"rgba(226,232,240,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
-              <div style={{fontSize:"11px",color:"rgba(226,232,240,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
+            <div style={{padding:"22px 12px 6px",textAlign:"center"}}>
+              <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.5}}>“{todayQuote.quote}”</div>
+              <div style={{fontSize:"13px",color:txt.tertiary,fontFamily:SANS_FONT,marginTop:"6px"}}>{todayQuote.author}</div>
             </div>
           )}
 
           {/* QUICK-LAUNCH NAV — primary navigation */}
-          <div style={{marginTop:"20px",paddingTop:"20px",borderTop:"1px solid rgba(255,255,255,0.08)"}}>
-            <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",marginBottom:"12px",fontWeight:600}}>Sections</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"22px"}}>
+          <div style={{marginTop:"22px"}}>
+            <div style={groupLabel}>Sections</div>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"26px"}}>
               {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
                 const Icon = item.icon;
                 return (
-                  <button key={item.id} onClick={() => setActiveView(item.id)}
-                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"all 0.15s"}}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.045)"; }}>
-                    <Icon size={16} style={{color:"rgba(0,200,255,0.8)",flexShrink:0}}/>
-                    <span style={{fontSize:"14px",color:"#e8eefc",letterSpacing:"0.1px",fontWeight:500}}>{item.label}</span>
+                  <button key={item.id} onClick={() => setActiveView(item.id)} style={tileBtn} onMouseEnter={onIn} onMouseLeave={onOut}>
+                    <span style={{width:"30px",height:"30px",borderRadius:"8px",background:tileColors[item.id]||"#0A84FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      <Icon size={17} color="#fff" strokeWidth={2.2} />
+                    </span>
+                    <span style={{fontSize:"16px",color:txt.primary,fontWeight:500,letterSpacing:"-0.2px"}}>{item.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            <div style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",marginBottom:"12px",fontWeight:600}}>Account</div>
+            <div style={groupLabel}>Account</div>
             <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
-              <button onClick={() => setActiveView('upgrade')}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
-                {isElite ? 'Elite Status' : 'Upgrade to Elite'}
+              <button onClick={() => setActiveView('upgrade')} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
+                {isElite ? 'Elite status' : 'Upgrade to Elite'}
               </button>
-              <button onClick={() => setActiveView('feedback')}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
-                Feedback & Support
+              <button onClick={() => setActiveView('feedback')} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
+                Feedback & support
               </button>
-              <button onClick={doExport}
-                style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500}}>
-                Export Data
+              <button onClick={doExport} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
+                Export data
               </button>
-              <label style={{padding:"18px 20px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"#e8eefc",fontWeight:500,display:"block"}}>
-                Import Data
+              <label style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
+                Import data
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </label>
               <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
-                style={{padding:"18px 20px",background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:"14px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,fontSize:"14px",color:"rgba(248,113,113,0.9)",fontWeight:500}}>
-                Delete Account
+                style={{...tileBtn,fontSize:"16px",color:"#FF453A",fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
+                Delete account
               </button>
             </div>
 
-            <button onClick={signOut}
-              style={{width:"100%",padding:"14px",background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:"14px",color:"rgba(248,113,113,0.9)",fontFamily:SANS_FONT,fontSize:"14px",cursor:"pointer",fontWeight:600}}>
-              Sign Out
+            <button onClick={signOut} onMouseEnter={onIn} onMouseLeave={onOut}
+              style={{...glass,width:"100%",padding:"14px",color:"#FF453A",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600,transition:"background 0.15s"}}>
+              Sign out
             </button>
           </div>
 
