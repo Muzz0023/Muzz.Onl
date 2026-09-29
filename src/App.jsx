@@ -54847,6 +54847,146 @@ function MuzzApp() {
     const upcomingBdays = birthdays.filter(b => { const d = getBdayDiff(b.date); return d !== null && d <= 30; }).length;
     const pinnedCount = reminders.filter(r => r.permanent).length;
 
+    // ── Apple Reminders-style pieces ──
+    const sec = "rgba(235,235,245,0.6)";
+    const sep = "0.5px solid rgba(255,255,255,0.12)";
+    const card = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"};
+    const groupLabel = {fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,margin:"8px 4px 8px"};
+    const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
+    const bareText = {display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
+    const datePill = {background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark",outline:"none",WebkitAppearance:"none",appearance:"none"};
+    const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
+    const Switch = ({ on, onToggle, label }) => (
+      <button role="switch" aria-checked={on} aria-label={label} onClick={onToggle}
+        style={{position:"relative",width:"51px",height:"31px",borderRadius:"999px",border:"none",padding:0,cursor:"pointer",flexShrink:0,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.2s"}}>
+        <span style={{position:"absolute",top:"2px",left:on?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.3)",transition:"left 0.2s"}} />
+      </button>
+    );
+    const relReminder = (diff) => {
+      if (diff === null) return null;
+      if (diff < 0) return { text: diff === -1 ? 'Overdue by 1 day' : `Overdue by ${-diff} days`, color: "#FF453A" };
+      if (diff === 0) return { text: 'Today', color: "#0A84FF" };
+      if (diff === 1) return { text: 'Tomorrow', color: "#0A84FF" };
+      if (diff <= 7) return { text: `In ${diff} days`, color: "#0A84FF" };
+      return { text: `In ${diff} days`, color: sec };
+    };
+    const relBday = (diff) => {
+      if (diff === null) return null;
+      if (diff === 0) return { text: 'Today 🎉', color: "#0A84FF" };
+      if (diff === 1) return { text: 'Tomorrow', color: "#0A84FF" };
+      if (diff <= 7) return { text: `In ${diff} days`, color: "#0A84FF" };
+      return { text: `In ${diff} days`, color: sec };
+    };
+    const pinned = sortedReminders.filter(r => r.permanent);
+    const dated = sortedReminders.filter(r => !r.permanent);
+    const headerSub = remindersSubTab === 'reminders'
+      ? (overdueCount > 0 ? `${overdueCount} overdue, ${thisWeekCount} this week` : thisWeekCount > 0 ? `${thisWeekCount} this week` : reminders.length > 0 ? 'Nothing due this week' : '')
+      : (birthdays.length > 0 ? (upcomingBdays > 0 ? `${upcomingBdays} in the next 30 days` : 'None in the next 30 days') : '');
+
+    const renderReminderRow = (reminder, last) => {
+      const diff = getReminderDiff(reminder.date);
+      const rel = reminder.permanent ? null : relReminder(diff);
+      const isEditing = editingReminderId === reminder.id;
+      const update = (changes) => setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, ...changes} : r));
+      return (
+        <div key={reminder.id} style={{borderBottom:last?"none":sep}}>
+          {!isEditing ? (
+            <button onClick={() => setEditingReminderId(reminder.id)}
+              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
+                {!reminder.permanent && (
+                  <div style={{fontFamily:SANS_FONT,fontSize:"15px",marginTop:"2px",color:rel?rel.color:sec}}>
+                    {reminder.date ? `${new Date(reminder.date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${rel ? `, ${rel.text.charAt(0).toLowerCase()}${rel.text.slice(1)}` : ''}` : 'No date'}
+                  </div>
+                )}
+              </div>
+              <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px"}} />
+            </button>
+          ) : (
+            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px",background:"rgba(255,255,255,0.04)"}}>
+              <textarea rows={1} autoFocus={!reminder.title} value={reminder.title} placeholder="New reminder"
+                ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
+                onChange={(e) => update({title: e.target.value})} style={bareText} />
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Pinned</span>
+                <Switch on={!!reminder.permanent} label="Pinned" onToggle={() => update({permanent: !reminder.permanent})} />
+              </div>
+              {!reminder.permanent && (
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Date</span>
+                  <input type="date" value={reminder.date||''} onFocus={scrollInputIntoView} onChange={(e) => update({date: e.target.value})} style={datePill} />
+                </div>
+              )}
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
+                <button onClick={() => { setReminders(prev => prev.filter(r => r.id !== reminder.id)); setEditingReminderId(null); }} style={textBtn("#FF453A")}>Delete</button>
+                <button onClick={() => setEditingReminderId(null)} style={{...textBtn("#0A84FF"),fontWeight:600}}>Done</button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const renderBirthdayRow = (bday, last) => {
+      const diff = getBdayDiff(bday.date);
+      const rel = relBday(diff);
+      const isEditing = editingBdayId === bday.id;
+      const update = (changes) => setBirthdays(prev => prev.map(b => b.id === bday.id ? {...b, ...changes} : b));
+      return (
+        <div key={bday.id} style={{borderBottom:last?"none":sep}}>
+          {!isEditing ? (
+            <button onClick={() => setEditingBdayId(bday.id)}
+              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || 'New birthday'}</div>
+                <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>
+                  {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}{bday.category === 'family' ? ', family' : ''}
+                </div>
+              </div>
+              {rel && <span style={{fontFamily:SANS_FONT,fontSize:"15px",color:rel.color,flexShrink:0,marginTop:"1px"}}>{rel.text}</span>}
+              <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px"}} />
+            </button>
+          ) : (
+            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px",background:"rgba(255,255,255,0.04)"}}>
+              <textarea rows={1} autoFocus={!bday.name} value={bday.name} placeholder="Name"
+                ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                onChange={(e) => update({name: e.target.value})} style={bareText} />
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Birthday</span>
+                <input type="date" value={bday.date||''} onFocus={scrollInputIntoView} onChange={(e) => update({date: e.target.value})} style={datePill} />
+              </div>
+              <Segmented value={bday.category||'friend'} onChange={(cat) => update({category: cat})} options={[{id:'friend',label:'Friend'},{id:'family',label:'Family'}]} />
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
+                <button onClick={() => { setBirthdays(prev => prev.filter(b => b.id !== bday.id)); setEditingBdayId(null); }} style={textBtn("#FF453A")}>Delete</button>
+                <button onClick={() => setEditingBdayId(null)} style={{...textBtn("#0A84FF"),fontWeight:600}}>Done</button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const EmptyCard = ({ title, body, examples, onUse, onEmpty }) => (
+      <div style={{...card,padding:"18px"}}>
+        <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>{title}</div>
+        <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>{body}</div>
+        <div style={{display:"flex",flexDirection:"column",gap:"8px",margin:"16px 0 18px"}}>
+          {examples.map((ex, i) => (
+            <div key={i} style={{display:"flex",justifyContent:"space-between",gap:"12px",fontFamily:SANS_FONT}}>
+              <span style={{fontSize:"17px",color:"rgba(235,235,245,0.85)",letterSpacing:"-0.2px"}}>{ex.left}</span>
+              <span style={{fontSize:"15px",color:sec}}>{ex.right}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+          <button onClick={onUse} style={{flex:1,padding:"13px",background:"#0A84FF",border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
+          <button onClick={onEmpty} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
+        </div>
+      </div>
+    );
+
     return (
       <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
@@ -54856,11 +54996,13 @@ function MuzzApp() {
         <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",marginBottom:"16px"}}>
               <div>
-                
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Reminders</div>
+                {headerSub && <div style={{fontSize:"15px",color:overdueCount>0&&remindersSubTab==='reminders'?"#FF453A":sec,fontFamily:SANS_FONT,marginTop:"2px"}}>{headerSub}</div>}
               </div>
+              <button aria-label={remindersSubTab === 'reminders' ? 'New reminder' : 'New birthday'} onClick={remindersSubTab === 'reminders' ? addReminder : addBirthday}
+                style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"40px",height:"40px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"#0A84FF",fontSize:"24px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
             </div>
             <Segmented value={remindersSubTab} onChange={setRemindersSubTab} options={[{id:'reminders',label:'Reminders'},{id:'birthdays',label:'Birthdays'}]} />
           </div>
@@ -54871,205 +55013,64 @@ function MuzzApp() {
           {/* REMINDERS TAB */}
           {remindersSubTab === 'reminders' && (
             <>
-              <button onClick={addReminder} style={{width:"100%",padding:"12px",background:"rgba(10,132,255,0.06)",border:"1px dashed rgba(10,132,255,0.35)",borderRadius:"20px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}>+ ADD REMINDER</button>
-
               {sortedReminders.length === 0 && (() => {
-                const today = new Date();
-                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return localISODate(d); };
+                const base = new Date();
+                const inDays = (n) => { const d = new Date(base); d.setDate(d.getDate()+n); return localISODate(d); };
                 const samples = [
-                  { title: 'Renew car rego',           date: inDays(5),  permanent: false },
-                  { title: 'Dad\'s birthday gift',     date: inDays(14), permanent: false },
+                  { title: 'Renew car rego',            date: inDays(5),  permanent: false },
+                  { title: 'Dad\'s birthday gift',      date: inDays(14), permanent: false },
                   { title: 'Always carry water bottle', date: '',         permanent: true  },
                 ];
-                const useTemplate = () => {
-                  const baseId = Date.now();
-                  setReminders(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, title: s.title, date: s.date, notes: '', permanent: s.permanent }))]);
-                };
                 return (
-                  <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE REMINDERS</div>
-                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Stay on top of important dates and pinned notes.</div>
-                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Pin notes that stay forever (📌), or set dated reminders that count down to "today" automatically.</div>
-                    <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                      {samples.map((s, i) => (
-                        <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${s.permanent?"#0A84FF":"rgba(10,132,255,0.4)"}`,borderRadius:"10px"}}>
-                          {s.permanent && <div style={{fontSize:"8px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>📌 PINNED</div>}
-                          <div style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.85)"}}>{s.title}</div>
-                          {!s.permanent && <div style={{fontSize:"9px",color:"rgba(10,132,255,0.65)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0"}}>IN {Math.round((new Date(s.date) - today)/(86400000))} DAYS</div>}
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={addReminder} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                    </div>
-                  </div>
+                  <EmptyCard
+                    title="Stay on top of what's coming up"
+                    body="Add reminders with a date, or pin ones you always want to see. Here are a few to start with:"
+                    examples={samples.map(s => ({ left: s.title, right: s.permanent ? 'Pinned' : `In ${Math.round((new Date(s.date) - base)/86400000)} days` }))}
+                    onUse={() => { const baseId = Date.now(); setReminders(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, title: s.title, date: s.date, notes: '', permanent: s.permanent }))]); }}
+                    onEmpty={addReminder}
+                  />
                 );
               })()}
 
-              {sortedReminders.map(reminder => {
-                const diff = getReminderDiff(reminder.date);
-                const label = reminder.permanent ? null : getReminderLabel(diff);
-                const isOverdue = !reminder.permanent && diff !== null && diff < 0;
-                const isEditing = editingReminderId === reminder.id;
-                const accent = reminder.permanent ? "#0A84FF" : isOverdue ? "#ef4444" : "#0A84FF";
-
-                return (
-                  <div key={reminder.id} style={{background:isEditing?"rgba(10,132,255,0.06)":"rgba(28,28,30,0.5)",border:`0.5px solid ${accent}20`,borderRadius:"20px",overflow:"hidden",transition:"all 0.15s"}}>
-                    {/* Compact row */}
-                    <button onClick={() => setEditingReminderId(isEditing ? null : reminder.id)}
-                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
-                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{reminder.title || <span style={{color:"rgba(235,235,245,0.4)"}}>Untitled reminder</span>}</div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
-                          {reminder.permanent ? '📌 Pinned' : (reminder.date ? new Date(reminder.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}) : 'No date set')}
-                        </div>
-                      </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {label && <span style={{fontSize:"9px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0",background:label.bg,border:`0.5px solid ${label.color}`,padding:"2px 6px",borderRadius:"10px"}}>{label.text}</span>}
-                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
-                      </div>
-                    </button>
-
-                    {/* Expanded edit panel */}
-                    {isEditing && (
-                      <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid ${accent}20`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                        <textarea
-                          value={reminder.title}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, title:e.target.value} : r))}
-                          placeholder="Reminder..."
-                          className="slick-textarea"
-                          style={{fontFamily:SANS_FONT,width:"100%",minHeight:"50px",resize:"vertical",fontSize:"13px"}}
-                          rows={2}
-                        />
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                          <button
-                            onClick={() => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, permanent:!r.permanent} : r))}
-                            style={{fontSize:"10px",color:reminder.permanent?"#0A84FF":"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",background:reminder.permanent?"rgba(10,132,255,0.08)":"transparent",border:`0.5px solid ${reminder.permanent?"rgba(10,132,255,0.4)":"rgba(235,235,245,0.2)"}`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
-                          >📌 {reminder.permanent?"PINNED":"PIN"}</button>
-                          {!reminder.permanent && (
-                            <input
-                              type="date"
-                              value={reminder.date||''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, date:e.target.value} : r))}
-                              style={{background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.85)",fontFamily:SANS_FONT,fontSize:"11px",padding:"5px 10px",colorScheme:"dark"}}
-                            />
-                          )}
-                          <button onClick={() => { setReminders(prev => prev.filter(r => r.id!==reminder.id)); setEditingReminderId(null); }}
-                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {pinned.length > 0 && (
+                <div>
+                  <div style={groupLabel}>Pinned</div>
+                  <div style={card}>{pinned.map((r, i) => renderReminderRow(r, i === pinned.length - 1))}</div>
+                </div>
+              )}
+              {dated.length > 0 && (
+                <div style={{marginTop:pinned.length > 0 ? "12px" : 0}}>
+                  {pinned.length > 0 && <div style={groupLabel}>Upcoming</div>}
+                  <div style={card}>{dated.map((r, i) => renderReminderRow(r, i === dated.length - 1))}</div>
+                </div>
+              )}
             </>
           )}
 
           {/* BIRTHDAYS TAB */}
           {remindersSubTab === 'birthdays' && (
             <>
-              <button onClick={addBirthday} style={{width:"100%",padding:"12px",background:"rgba(236,72,153,0.06)",border:"0.5px dashed rgba(236,72,153,0.3)",borderRadius:"20px",color:"rgba(236,72,153,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}>+ ADD BIRTHDAY</button>
-
               {sortedBirthdays.length === 0 && (() => {
                 const samples = [
-                  { name: 'Mum',        date: '1962-08-12', category: 'family' },
-                  { name: 'Dad',        date: '1960-03-04', category: 'family' },
-                  { name: 'Sarah',      date: '1996-11-22', category: 'friend' },
-                  { name: 'Liam',       date: '1995-06-18', category: 'friend' },
+                  { name: 'Mum',   date: '1962-08-12', category: 'family' },
+                  { name: 'Dad',   date: '1960-03-04', category: 'family' },
+                  { name: 'Sarah', date: '1996-11-22', category: 'friend' },
+                  { name: 'Liam',  date: '1995-06-18', category: 'friend' },
                 ];
-                const useTemplate = () => {
-                  const baseId = Date.now();
-                  setBirthdays(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, name: s.name, date: s.date, category: s.category }))]);
-                };
                 return (
-                  <div style={{border:"1px solid rgba(236,72,153,0.4)",borderRadius:"20px",padding:"14px",background:"rgba(236,72,153,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"rgba(236,72,153,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.8}}>PREVIEW · SAMPLE BIRTHDAYS</div>
-                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Never forget a birthday again.</div>
-                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Add family + friends. The app sorts by who's coming up next.</div>
-                    <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
-                      {samples.map((s, i) => (
-                        <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(236,72,153,0.15)",borderRadius:"10px"}}>
-                          <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.85)"}}>{s.category === 'family' ? '👪' : '🎂'} {s.name}</span>
-                          <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(236,72,153,0.75)"}}>{new Date(s.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(236,72,153,0.18)",border:"1px solid rgba(236,72,153,0.7)",borderRadius:"20px",color:"rgba(236,72,153,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={addBirthday} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                    </div>
-                  </div>
+                  <EmptyCard
+                    title="Never miss a birthday"
+                    body="Add family and friends and they'll sort by whose birthday is next. For example:"
+                    examples={samples.map(s => ({ left: s.name, right: new Date(s.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) }))}
+                    onUse={() => { const baseId = Date.now(); setBirthdays(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, name: s.name, date: s.date, category: s.category }))]); }}
+                    onEmpty={addBirthday}
+                  />
                 );
               })()}
 
-              {sortedBirthdays.map(bday => {
-                const diff = getBdayDiff(bday.date);
-                const label = getBdayLabel(diff);
-                const isToday = diff === 0;
-                const isSoon = diff !== null && diff <= 7;
-                const isEditing = editingBdayId === bday.id;
-                const accent = isToday ? "#ec4899" : isSoon ? "rgba(236,72,153,0.7)" : "rgba(236,72,153,0.4)";
-
-                return (
-                  <div key={bday.id} style={{background:isEditing?"rgba(236,72,153,0.06)":"rgba(28,28,30,0.5)",border:`0.5px solid rgba(236,72,153,${isToday?0.4:0.2})`,borderRadius:"20px",overflow:"hidden",transition:"all 0.15s",boxShadow:isToday?"0 0 12px rgba(236,72,153,0.15)":"none"}}>
-                    {/* Compact row */}
-                    <button onClick={() => setEditingBdayId(isEditing ? null : bday.id)}
-                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:isToday?`0 0 8px ${accent}`:`0 0 6px ${accent}80`,flexShrink:0}} />
-                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                          {bday.category === 'family' ? '👪 ' : '🎂 '}{bday.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed</span>}
-                        </div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
-                          {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date set'} · {bday.category||'friend'}
-                        </div>
-                      </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {label && <span style={{fontSize:"10px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0"}}>{label.text}</span>}
-                        <span style={{fontSize:"14px",color:`${accent}cc`,fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
-                      </div>
-                    </button>
-
-                    {/* Expanded edit panel */}
-                    {isEditing && (
-                      <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid rgba(236,72,153,0.2)`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                        <input
-                          type="text"
-                          value={bday.name}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, name:e.target.value} : b))}
-                          placeholder="Name..."
-                          className="slick-input"
-                          style={{fontFamily:SANS_FONT,fontSize:"13px"}}
-                        />
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                          <input
-                            type="date"
-                            value={bday.date}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, date:e.target.value} : b))}
-                            style={{background:"rgba(236,72,153,0.06)",border:"0.5px solid rgba(236,72,153,0.25)",borderRadius:"10px",color:"rgba(236,72,153,0.85)",fontFamily:SANS_FONT,fontSize:"11px",padding:"5px 10px",colorScheme:"dark"}}
-                          />
-                          <div style={{display:"flex",gap:"4px"}}>
-                            {['friend','family'].map(cat => (
-                              <button key={cat} onClick={() => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, category:cat} : b))}
-                                style={{fontSize:"10px",fontFamily:SANS_FONT,letterSpacing:"0",padding:"5px 10px",borderRadius:"10px",border:`0.5px solid ${bday.category===cat?"rgba(236,72,153,0.5)":"rgba(235,235,245,0.2)"}`,background:bday.category===cat?"rgba(236,72,153,0.1)":"transparent",color:bday.category===cat?"rgba(236,72,153,0.9)":"rgba(235,235,245,0.55)",cursor:"pointer",fontWeight:600}}>
-                                {cat.toUpperCase()}
-                              </button>
-                            ))}
-                          </div>
-                          <button onClick={() => { setBirthdays(prev => prev.filter(b => b.id!==bday.id)); setEditingBdayId(null); }}
-                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {sortedBirthdays.length > 0 && (
+                <div style={card}>{sortedBirthdays.map((b, i) => renderBirthdayRow(b, i === sortedBirthdays.length - 1))}</div>
+              )}
             </>
           )}
         </div>
