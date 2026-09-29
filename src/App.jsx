@@ -55636,11 +55636,27 @@ function MuzzApp() {
     const glass = {background:"rgba(28,28,30,0.55)",backdropFilter:"blur(20px) saturate(160%)",WebkitBackdropFilter:"blur(20px) saturate(160%)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"20px"};
     const glassHover = "rgba(44,44,46,0.7)";
     const txt = { primary:"#FFFFFF", secondary:"rgba(235,235,245,0.6)", tertiary:"rgba(235,235,245,0.3)" };
-    const tileColors = { habits:"#FF9F0A", tasks:"#0A84FF", reminders:"#FF453A", gymworkout:"#FF375F", timetable:"#5E5CE6", varied:"#30D158", assets:"#BF5AF2", investments:"#64D2FF" };
     const groupLabel = {fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600,margin:"0 4px 10px"};
-    const tileBtn = {...glass,display:"flex",alignItems:"center",gap:"12px",padding:"14px 16px",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,transition:"background 0.15s"};
+    const sectionItems = navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite));
+    // One row of a grouped list: transparent line icon, label, chevron, inset hairline
+    const ListRow = ({ icon: Icon, label, onClick, last, danger, center, chevron = true, as = "button", children }) => {
+      const Tag = as;
+      return (
+        <Tag onClick={onClick} onMouseEnter={onRowIn} onMouseLeave={onRowOut}
+          style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,boxSizing:"border-box",transition:"background 0.15s"}}>
+          {Icon && <Icon size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />}
+          <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:center?"center":"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
+            <span style={{fontSize:"17px",color:danger?"#FF453A":txt.primary,letterSpacing:"-0.4px"}}>{label}</span>
+            {chevron && !center && <ChevronRight size={18} color={txt.tertiary} strokeWidth={2.25} />}
+          </span>
+          {children}
+        </Tag>
+      );
+    };
     const onIn = (e) => { e.currentTarget.style.background = glassHover; };
     const onOut = (e) => { e.currentTarget.style.background = glass.background; };
+    const onRowIn = (e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; };
+    const onRowOut = (e) => { e.currentTarget.style.background = "transparent"; };
 
     return (
       <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -55715,48 +55731,29 @@ function MuzzApp() {
             </div>
           )}
 
-          {/* QUICK-LAUNCH NAV — primary navigation */}
+          {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
             <div style={groupLabel}>Sections</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"26px"}}>
-              {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
-                const Icon = item.icon;
-                return (
-                  <button key={item.id} onClick={() => setActiveView(item.id)} style={tileBtn} onMouseEnter={onIn} onMouseLeave={onOut}>
-                    <span style={{width:"30px",height:"30px",borderRadius:"8px",background:tileColors[item.id]||"#0A84FF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                      <Icon size={17} color="#fff" strokeWidth={2.2} />
-                    </span>
-                    <span style={{fontSize:"16px",color:txt.primary,fontWeight:500,letterSpacing:"-0.2px"}}>{item.label}</span>
-                  </button>
-                );
-              })}
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              {sectionItems.map((item, i) => (
+                <ListRow key={item.id} icon={item.icon} label={item.label} onClick={() => setActiveView(item.id)} last={i === sectionItems.length - 1} />
+              ))}
             </div>
 
             <div style={groupLabel}>Account</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
-              <button onClick={() => setActiveView('upgrade')} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
-                {isElite ? 'Elite status' : 'Upgrade to Elite'}
-              </button>
-              <button onClick={() => setActiveView('feedback')} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
-                Feedback & support
-              </button>
-              <button onClick={doExport} style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
-                Export data
-              </button>
-              <label style={{...tileBtn,fontSize:"16px",color:txt.primary,fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
-                Import data
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
+              <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
+              <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
+              <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
-              </label>
-              <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
-                style={{...tileBtn,fontSize:"16px",color:"#FF453A",fontWeight:500}} onMouseEnter={onIn} onMouseLeave={onOut}>
-                Delete account
-              </button>
+              </ListRow>
             </div>
 
-            <button onClick={signOut} onMouseEnter={onIn} onMouseLeave={onOut}
-              style={{...glass,width:"100%",padding:"14px",color:"#FF453A",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600,transition:"background 0.15s"}}>
-              Sign out
-            </button>
+            <div style={{...glass,overflow:"hidden"}}>
+              <ListRow label="Sign out" danger center onClick={signOut} />
+              <ListRow label="Delete account" danger center last onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }} />
+            </div>
           </div>
 
         </div>
