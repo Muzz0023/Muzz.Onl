@@ -54798,11 +54798,28 @@ function MuzzApp() {
     const today = new Date();
     today.setHours(0,0,0,0);
 
+    // Days until the next birthday, read in local time. Accepts YYYY-MM-DD (date picker),
+    // DD/MM/YYYY, DD-MM-YYYY or DD/MM. Returns null if there's no usable date.
+    const daysUntilBday = (dateStr) => {
+      if (!dateStr) return null;
+      const s = String(dateStr).trim();
+      let m, day, month;
+      if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) { month = +m[2]; day = +m[3]; }
+      else if ((m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/))) { day = +m[1]; month = +m[2]; }
+      else return null;
+      if (!(month >= 1 && month <= 12 && day >= 1 && day <= 31)) return null;
+      let next = new Date(today.getFullYear(), month - 1, day);
+      if (next < today) next = new Date(today.getFullYear() + 1, month - 1, day);
+      return Math.round((next - today) / 86400000);
+    };
+
+    // Soonest birthday first; ones without a date go to the bottom
     const sortedBirthdays = [...birthdays].sort((a, b) => {
-      if (!a.date || !b.date) return 0;
-      const aDate = new Date(a.date); aDate.setFullYear(today.getFullYear()); if (aDate < today) aDate.setFullYear(today.getFullYear()+1);
-      const bDate = new Date(b.date); bDate.setFullYear(today.getFullYear()); if (bDate < today) bDate.setFullYear(today.getFullYear()+1);
-      return aDate - bDate;
+      const da = daysUntilBday(a.date), db = daysUntilBday(b.date);
+      if (da === null && db === null) return (a.name || '').localeCompare(b.name || '');
+      if (da === null) return 1;
+      if (db === null) return -1;
+      return da - db || (a.name || '').localeCompare(b.name || '');
     });
 
     const sortedReminders = [...reminders].sort((a,b) => {
@@ -54818,13 +54835,7 @@ function MuzzApp() {
       return Math.ceil((d - today) / (1000*60*60*24));
     };
 
-    const getBdayDiff = (dateStr) => {
-      if (!dateStr) return null;
-      const d = new Date(dateStr); d.setHours(0,0,0,0);
-      d.setFullYear(today.getFullYear());
-      if (d < today) d.setFullYear(today.getFullYear()+1);
-      return Math.round((d - today) / (1000*60*60*24));
-    };
+    const getBdayDiff = (dateStr) => daysUntilBday(dateStr);
 
     const getReminderLabel = (diff) => {
       if (diff === null) return null;
