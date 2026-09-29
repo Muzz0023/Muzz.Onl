@@ -55106,57 +55106,41 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5">
-          {/* Tab bar with progress */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
+          {/* Lists — glass chips (Daily, Weekly, General + your own lists) */}
+          <div style={{display:"flex",gap:"8px",marginBottom:"16px",overflowX:"auto",alignItems:"center",padding:"2px 2px 4px",scrollbarWidth:"none"}}>
             {[
-              {id:'daily', label:'DAILY', items: dailyItems, color:'#0A84FF'},
-              {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
-              {id:'general', label:'GENERAL', items: generalItems, color:'rgba(34,197,94,0.9)'},
+              {id:'daily', label:'Daily', items: dailyItems},
+              {id:'weekly', label:'Weekly', items: weeklyItems},
+              {id:'general', label:'General', items: generalItems},
+              ...customTaskLists.map(l => ({ id: l.id, label: l.name || 'List', items: parseItems(l.note || ''), custom: l })),
             ].map(tab => {
-              const done = tab.items.filter(i => i.checked).length;
-              const total = tab.items.length;
+              const on = tasksSubTab === tab.id;
+              const left = tab.items.filter(i => !i.checked).length;
               return (
-                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:tasksSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
-                  {tab.label}
-                  {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:SANS_FONT}}>{done}/{total}</span>}
+                <button key={tab.id}
+                  onClick={() => setTasksSubTab(tab.id)}
+                  onDoubleClick={tab.custom ? () => {
+                    const newName = window.prompt('Rename list:', tab.custom.name);
+                    if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === tab.custom.id ? {...l, name: newName.trim()} : l));
+                  } : undefined}
+                  title={tab.custom ? 'Double-tap to rename' : undefined}
+                  style={{...LIQUID_GLASS,background:on?"rgba(255,255,255,0.2)":LIQUID_GLASS.background,border:`0.5px solid ${on?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.14)"}`,borderRadius:"999px",padding:"8px 15px",display:"flex",alignItems:"center",gap:"7px",color:on?"#FFFFFF":"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:on?600:500,letterSpacing:"-0.2px",whiteSpace:"nowrap",flexShrink:0,cursor:"pointer",transition:"background 0.2s, color 0.2s"}}>
+                  <span>{tab.label}</span>
+                  {left > 0 && <span style={{fontSize:"13px",fontWeight:500,color:on?"rgba(255,255,255,0.65)":"rgba(235,235,245,0.4)"}}>{left}</span>}
+                  {on && tab.custom && (
+                    <span role="button" aria-label={`Delete ${tab.label}`} onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Delete "${tab.custom.name}" and all its tasks?`)) {
+                        setCustomTaskLists(prev => prev.filter(l => l.id !== tab.custom.id));
+                        setTasksSubTab('daily');
+                      }
+                    }} style={{width:"18px",height:"18px",borderRadius:"50%",background:"rgba(255,255,255,0.18)",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:"12px",lineHeight:1,color:"rgba(255,255,255,0.85)"}}>×</span>
+                  )}
                 </button>
               );
             })}
-            {/* CUSTOM TASK LISTS */}
-            {customTaskLists.map(list => {
-              let listItems = [];
-              try { listItems = JSON.parse(list.note || ''); if (!Array.isArray(listItems)) listItems = []; } catch { listItems = []; }
-              const done = listItems.filter(i => i.checked).length;
-              const total = listItems.length;
-              const isActive = tasksSubTab === list.id;
-              return (
-                <div key={list.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
-                  <button
-                    onClick={() => setTasksSubTab(list.id)}
-                    onDoubleClick={() => {
-                      const newName = window.prompt('Rename list:', list.name);
-                      if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
-                    }}
-                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
-                    title="Tap to open · Double-tap to rename"
-                  >
-                    {(list.name||'').toUpperCase()}
-                    {total > 0 && <span style={{fontSize:"9px",color:done===total?"rgba(34,197,94,0.9)":"rgba(251,191,36,0.8)"}}>{done}/{total}</span>}
-                  </button>
-                  {isActive && (
-                    <button onClick={() => {
-                      if (window.confirm(`Delete "${list.name}" and all its tasks?`)) {
-                        setCustomTaskLists(prev => prev.filter(l => l.id !== list.id));
-                        setTasksSubTab('daily');
-                      }
-                    }} style={{padding:"8px 10px",background:`${list.color}26`,border:`1px solid ${list.color}99`,borderLeft:`1px solid ${list.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:700,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
-                  )}
-                </div>
-              );
-            })}
-            {/* + ADD CUSTOM LIST */}
-            <button onClick={() => {
-              const name = window.prompt('Name this task list (e.g. Work, Errands, Project X):', '');
+            <button aria-label="New list" onClick={() => {
+              const name = window.prompt('Name this list (e.g. Work, Errands, Project X):', '');
               if (!name || !name.trim()) return;
               const palette = ['#0A84FF','#a855f7','#22c55e','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16','rgba(99,102,241,0.9)'];
               const used = customTaskLists.map(l => l.color);
@@ -55164,7 +55148,7 @@ function MuzzApp() {
               const newList = { id: 'custom_' + Date.now(), name: name.trim(), color, note: '' };
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
-            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(235,235,245,0.4)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
+            }} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"36px",height:"36px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"#0A84FF",fontSize:"22px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -55237,7 +55221,7 @@ function MuzzApp() {
                   </div>
                   <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
                   {checked.length > 0 && (
-                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"10px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
+                    <button onClick={clearCompleted} style={{fontSize:"15px",color:"#0A84FF",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Clear done</button>
                   )}
                 </div>
 
@@ -55276,8 +55260,8 @@ function MuzzApp() {
                       save(newItems);
                     };
                     return (
-                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"20px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
-                        <div style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR TASKS</div>
+                      <div style={{padding:"6px 2px",marginBottom:"8px"}}>
+                        <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginBottom:"6px"}}>Example list</div>
                         <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
                         <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.85}}>
@@ -55289,8 +55273,8 @@ function MuzzApp() {
                           ))}
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"20px",color:accentColor,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"13px",background:"#0A84FF",border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
+                          <button onClick={addItem} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
                         </div>
                       </div>
                     );
@@ -55312,7 +55296,7 @@ function MuzzApp() {
                         onKeyDown={(e) => handleKeyDown(e, item)}
                         onFocus={scrollInputIntoView}
                         placeholder="New task"
-                        style={{flex:1,minWidth:0,resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
+                        style={{flex:1,minWidth:0,resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
                       />
                       <button onClick={() => deleteItem(item.id)} aria-label="Delete task" style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.25)",fontSize:"18px",padding:"2px 4px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
