@@ -55633,7 +55633,8 @@ function MuzzApp() {
     ];
 
     // Apple-style material over the starfield: translucent, blurred, hairline edge
-    const glass = {background:"rgba(28,28,30,0.55)",backdropFilter:"blur(20px) saturate(160%)",WebkitBackdropFilter:"blur(20px) saturate(160%)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"20px"};
+    // Liquid Glass (iOS 26/27): heavier diffusion, bright specular top edge, darkened outer edge for separation
+    const glass = {background:"rgba(28,28,30,0.5)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"24px",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)"};
     const glassHover = "rgba(44,44,46,0.7)";
     const txt = { primary:"#FFFFFF", secondary:"rgba(235,235,245,0.6)", tertiary:"rgba(235,235,245,0.3)" };
     const groupLabel = {fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600,margin:"0 4px 10px"};
@@ -55674,7 +55675,7 @@ function MuzzApp() {
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
                   <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
-                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
+                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0.5px rgba(0,0,0,0.45)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
             </div>
