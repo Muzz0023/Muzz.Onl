@@ -76030,7 +76030,7 @@ function MuzzApp() {
 
                 {/* Last 31 days */}
                 <div style={{padding:"4px 16px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(26px, 1fr))":"repeat(auto-fill, minmax(30px, 1fr))",gap:"6px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(38px, 1fr))":"repeat(7, 1fr)",gap:isWide?"8px":"7px",maxWidth:isWide?"none":"420px"}}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
