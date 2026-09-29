@@ -273,6 +273,9 @@ const StarryBackground = ({ children }) => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
 
+        /* Muzz pages: equal-width digits so totals and prices don't jiggle */
+        .mz-num, .mz-num input, .mz-num select, .mz-num button { font-variant-numeric: tabular-nums; }
+
         /* Hide number input arrows globally */
         input[type=number]::-webkit-outer-spin-button,
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -54841,12 +54844,12 @@ function MuzzApp() {
     const pinnedCount = reminders.filter(r => r.permanent).length;
 
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
@@ -55087,12 +55090,12 @@ function MuzzApp() {
     const overallRate = totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0;
 
     return (
-      <div className="bg-transparent pb-24" style={{minHeight:"100vh"}}>
+      <div className="bg-transparent pb-24 mz-num" style={{minHeight:"100vh"}}>
         <Sidebar />
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div>
@@ -55675,7 +55678,7 @@ function MuzzApp() {
     const onRowOut = (e) => { e.currentTarget.style.background = "transparent"; };
 
     return (
-      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+      <div className="min-h-screen bg-transparent pb-24 mz-num" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
         {/* LEFT RAIL — desktop only */}
         {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
 
@@ -55965,12 +55968,12 @@ function MuzzApp() {
     const bucketAccent = activeBucket?.color || '#0A84FF';
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent mz-num">
         <Sidebar />
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
@@ -58111,10 +58114,10 @@ function MuzzApp() {
 
   if (activeView === 'feedback') {
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>MUZZ.ONL</div>
@@ -58182,10 +58185,10 @@ function MuzzApp() {
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
@@ -58462,12 +58465,12 @@ function MuzzApp() {
     const totalAssets = filledAssets.reduce((sum, a) => sum + a.value, 0);
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent mz-num">
         <Sidebar />
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
@@ -59565,7 +59568,7 @@ function MuzzApp() {
     }
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className={`min-h-screen bg-transparent${researchMode ? '' : ' mz-num'}`}>
         <Sidebar />
         <SaveIndicator />
 
@@ -59873,7 +59876,7 @@ function MuzzApp() {
 
         {/* HEADER — only shown when NOT in research mode */}
         {!researchMode && (
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px",flexWrap:"wrap",gap:"12px"}}>
@@ -75334,12 +75337,11 @@ function MuzzApp() {
     };
 
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar /><SaveIndicator />
-        <div style={{borderBottom:`1px solid ${accent}25`,padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
               <div style={{textAlign:"right"}}>
@@ -75577,11 +75579,11 @@ function MuzzApp() {
     };
     const presets = ['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'];
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar /><SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={()=>setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             
@@ -75920,12 +75922,12 @@ function MuzzApp() {
     ) : 0;
 
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
+        <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
