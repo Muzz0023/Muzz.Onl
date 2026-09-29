@@ -159,6 +159,8 @@ const RevenueCat = {
 // STARRY BACKGROUND COMPONENT
 // ============================================
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+// Liquid Glass material (matches the dashboard): blurred, specular top edge, darkened outer edge
+const LIQUID_GLASS = { background:"rgba(28,28,30,0.5)", backdropFilter:"blur(30px) saturate(180%)", WebkitBackdropFilter:"blur(30px) saturate(180%)", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)" };
 // Share-class aliases. A company can trade under more than one ticker while the
 // coverage library is keyed on one of them, so normalise before any lookup.
 // GOOGL is Alphabet Class A (1 vote); GOOG is Class C (no vote).
@@ -54809,8 +54811,8 @@ function MuzzApp() {
       if (diff === 0) return {text:'🎉 TODAY!', color:'rgba(236,72,153,0.9)'};
       if (diff === 1) return {text:'🎂 TOMORROW', color:'rgba(236,72,153,0.8)'};
       if (diff <= 7) return {text:`🎂 IN ${diff} DAYS`, color:'rgba(236,72,153,0.7)'};
-      if (diff <= 30) return {text:`IN ${diff} DAYS`, color:'rgba(148,163,184,0.4)'};
-      return {text:`${diff} DAYS`, color:'rgba(148,163,184,0.3)'};
+      if (diff <= 30) return {text:`IN ${diff} DAYS`, color:'rgba(235,235,245,0.4)'};
+      return {text:`${diff} DAYS`, color:'rgba(235,235,245,0.3)'};
     };
 
     // KPI calculations
@@ -54825,18 +54827,18 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>REMINDERS</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Reminders</div>
               </div>
             </div>
             <div style={{display:"flex",gap:"4px"}}>
               {[{id:'reminders',label:'REMINDERS'},{id:'birthdays',label:'BIRTHDAYS'}].map(tab => (
-                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:remindersSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:remindersSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -54849,7 +54851,7 @@ function MuzzApp() {
           {/* REMINDERS TAB */}
           {remindersSubTab === 'reminders' && (
             <>
-              <button onClick={addReminder} style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"1px dashed rgba(0,200,255,0.35)",borderRadius:"14px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}>+ ADD REMINDER</button>
+              <button onClick={addReminder} style={{width:"100%",padding:"12px",background:"rgba(10,132,255,0.06)",border:"1px dashed rgba(10,132,255,0.35)",borderRadius:"20px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}>+ ADD REMINDER</button>
 
               {sortedReminders.length === 0 && (() => {
                 const today = new Date();
@@ -54864,22 +54866,22 @@ function MuzzApp() {
                   setReminders(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, title: s.title, date: s.date, notes: '', permanent: s.permanent }))]);
                 };
                 return (
-                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE REMINDERS</div>
-                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Stay on top of important dates and pinned notes.</div>
-                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Pin notes that stay forever (📌), or set dated reminders that count down to "today" automatically.</div>
+                  <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE REMINDERS</div>
+                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Stay on top of important dates and pinned notes.</div>
+                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Pin notes that stay forever (📌), or set dated reminders that count down to "today" automatically.</div>
                     <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
                       {samples.map((s, i) => (
-                        <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:`2px solid ${s.permanent?"#00c8ff":"rgba(0,200,255,0.4)"}`,borderRadius:"10px"}}>
-                          {s.permanent && <div style={{fontSize:"8px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>📌 PINNED</div>}
-                          <div style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.title}</div>
-                          {!s.permanent && <div style={{fontSize:"9px",color:"rgba(0,200,255,0.65)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0.3px"}}>IN {Math.round((new Date(s.date) - today)/(86400000))} DAYS</div>}
+                        <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${s.permanent?"#0A84FF":"rgba(10,132,255,0.4)"}`,borderRadius:"10px"}}>
+                          {s.permanent && <div style={{fontSize:"8px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>📌 PINNED</div>}
+                          <div style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.85)"}}>{s.title}</div>
+                          {!s.permanent && <div style={{fontSize:"9px",color:"rgba(10,132,255,0.65)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0"}}>IN {Math.round((new Date(s.date) - today)/(86400000))} DAYS</div>}
                         </div>
                       ))}
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={addReminder} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={addReminder} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -54890,22 +54892,22 @@ function MuzzApp() {
                 const label = reminder.permanent ? null : getReminderLabel(diff);
                 const isOverdue = !reminder.permanent && diff !== null && diff < 0;
                 const isEditing = editingReminderId === reminder.id;
-                const accent = reminder.permanent ? "#00c8ff" : isOverdue ? "#ef4444" : "#00c8ff";
+                const accent = reminder.permanent ? "#0A84FF" : isOverdue ? "#ef4444" : "#0A84FF";
 
                 return (
-                  <div key={reminder.id} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
+                  <div key={reminder.id} style={{background:isEditing?"rgba(10,132,255,0.06)":"rgba(28,28,30,0.5)",border:`0.5px solid ${accent}20`,borderRadius:"20px",overflow:"hidden",transition:"all 0.15s"}}>
                     {/* Compact row */}
                     <button onClick={() => setEditingReminderId(isEditing ? null : reminder.id)}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                       <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
                       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{reminder.title || <span style={{color:"rgba(148,163,184,0.4)"}}>Untitled reminder</span>}</div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{reminder.title || <span style={{color:"rgba(235,235,245,0.4)"}}>Untitled reminder</span>}</div>
+                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
                           {reminder.permanent ? '📌 Pinned' : (reminder.date ? new Date(reminder.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}) : 'No date set')}
                         </div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {label && <span style={{fontSize:"9px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:label.bg,border:`0.5px solid ${label.color}`,padding:"2px 6px",borderRadius:"10px"}}>{label.text}</span>}
+                        {label && <span style={{fontSize:"9px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0",background:label.bg,border:`0.5px solid ${label.color}`,padding:"2px 6px",borderRadius:"10px"}}>{label.text}</span>}
                         <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
                       </div>
                     </button>
@@ -54925,7 +54927,7 @@ function MuzzApp() {
                         <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
                           <button
                             onClick={() => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, permanent:!r.permanent} : r))}
-                            style={{fontSize:"10px",color:reminder.permanent?"#00c8ff":"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:reminder.permanent?"rgba(0,200,255,0.08)":"transparent",border:`0.5px solid ${reminder.permanent?"rgba(0,200,255,0.4)":"rgba(148,163,184,0.2)"}`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
+                            style={{fontSize:"10px",color:reminder.permanent?"#0A84FF":"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",background:reminder.permanent?"rgba(10,132,255,0.08)":"transparent",border:`0.5px solid ${reminder.permanent?"rgba(10,132,255,0.4)":"rgba(235,235,245,0.2)"}`,padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}
                           >📌 {reminder.permanent?"PINNED":"PIN"}</button>
                           {!reminder.permanent && (
                             <input
@@ -54933,11 +54935,11 @@ function MuzzApp() {
                               value={reminder.date||''}
                               onFocus={scrollInputIntoView}
                               onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, date:e.target.value} : r))}
-                              style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.85)",fontFamily:SANS_FONT,fontSize:"11px",padding:"5px 10px",colorScheme:"dark"}}
+                              style={{background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.85)",fontFamily:SANS_FONT,fontSize:"11px",padding:"5px 10px",colorScheme:"dark"}}
                             />
                           )}
                           <button onClick={() => { setReminders(prev => prev.filter(r => r.id!==reminder.id)); setEditingReminderId(null); }}
-                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
+                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
                         </div>
                       </div>
                     )}
@@ -54950,7 +54952,7 @@ function MuzzApp() {
           {/* BIRTHDAYS TAB */}
           {remindersSubTab === 'birthdays' && (
             <>
-              <button onClick={addBirthday} style={{width:"100%",padding:"12px",background:"rgba(236,72,153,0.06)",border:"0.5px dashed rgba(236,72,153,0.3)",borderRadius:"14px",color:"rgba(236,72,153,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}>+ ADD BIRTHDAY</button>
+              <button onClick={addBirthday} style={{width:"100%",padding:"12px",background:"rgba(236,72,153,0.06)",border:"0.5px dashed rgba(236,72,153,0.3)",borderRadius:"20px",color:"rgba(236,72,153,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}>+ ADD BIRTHDAY</button>
 
               {sortedBirthdays.length === 0 && (() => {
                 const samples = [
@@ -54964,21 +54966,21 @@ function MuzzApp() {
                   setBirthdays(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, name: s.name, date: s.date, category: s.category }))]);
                 };
                 return (
-                  <div style={{border:"1px solid rgba(236,72,153,0.4)",borderLeft:"2px solid rgba(236,72,153,0.9)",borderRadius:"14px",padding:"14px",background:"rgba(236,72,153,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"rgba(236,72,153,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.8}}>PREVIEW · SAMPLE BIRTHDAYS</div>
-                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Never forget a birthday again.</div>
-                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Add family + friends. The app sorts by who's coming up next.</div>
+                  <div style={{border:"1px solid rgba(236,72,153,0.4)",borderRadius:"20px",padding:"14px",background:"rgba(236,72,153,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"rgba(236,72,153,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.8}}>PREVIEW · SAMPLE BIRTHDAYS</div>
+                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Never forget a birthday again.</div>
+                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Add family + friends. The app sorts by who's coming up next.</div>
                     <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
                       {samples.map((s, i) => (
                         <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(236,72,153,0.15)",borderRadius:"10px"}}>
-                          <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.category === 'family' ? '👪' : '🎂'} {s.name}</span>
+                          <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.85)"}}>{s.category === 'family' ? '👪' : '🎂'} {s.name}</span>
                           <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(236,72,153,0.75)"}}>{new Date(s.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
                         </div>
                       ))}
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(236,72,153,0.18)",border:"1px solid rgba(236,72,153,0.7)",borderRadius:"12px",color:"rgba(236,72,153,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={addBirthday} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(236,72,153,0.18)",border:"1px solid rgba(236,72,153,0.7)",borderRadius:"20px",color:"rgba(236,72,153,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={addBirthday} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -54993,21 +54995,21 @@ function MuzzApp() {
                 const accent = isToday ? "#ec4899" : isSoon ? "rgba(236,72,153,0.7)" : "rgba(236,72,153,0.4)";
 
                 return (
-                  <div key={bday.id} style={{background:isEditing?"rgba(236,72,153,0.06)":"rgba(5,12,24,0.6)",border:`0.5px solid rgba(236,72,153,${isToday?0.4:0.2})`,borderLeft:`2px solid ${accent}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s",boxShadow:isToday?"0 0 12px rgba(236,72,153,0.15)":"none"}}>
+                  <div key={bday.id} style={{background:isEditing?"rgba(236,72,153,0.06)":"rgba(28,28,30,0.5)",border:`0.5px solid rgba(236,72,153,${isToday?0.4:0.2})`,borderRadius:"20px",overflow:"hidden",transition:"all 0.15s",boxShadow:isToday?"0 0 12px rgba(236,72,153,0.15)":"none"}}>
                     {/* Compact row */}
                     <button onClick={() => setEditingBdayId(isEditing ? null : bday.id)}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                       <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:isToday?`0 0 8px ${accent}`:`0 0 6px ${accent}80`,flexShrink:0}} />
                       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                          {bday.category === 'family' ? '👪 ' : '🎂 '}{bday.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed</span>}
+                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                          {bday.category === 'family' ? '👪 ' : '🎂 '}{bday.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed</span>}
                         </div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
                           {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date set'} · {bday.category||'friend'}
                         </div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {label && <span style={{fontSize:"10px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{label.text}</span>}
+                        {label && <span style={{fontSize:"10px",color:label.color,fontFamily:SANS_FONT,letterSpacing:"0"}}>{label.text}</span>}
                         <span style={{fontSize:"14px",color:`${accent}cc`,fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
                       </div>
                     </button>
@@ -55035,13 +55037,13 @@ function MuzzApp() {
                           <div style={{display:"flex",gap:"4px"}}>
                             {['friend','family'].map(cat => (
                               <button key={cat} onClick={() => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, category:cat} : b))}
-                                style={{fontSize:"10px",fontFamily:SANS_FONT,letterSpacing:"0.3px",padding:"5px 10px",borderRadius:"10px",border:`0.5px solid ${bday.category===cat?"rgba(236,72,153,0.5)":"rgba(148,163,184,0.2)"}`,background:bday.category===cat?"rgba(236,72,153,0.1)":"transparent",color:bday.category===cat?"rgba(236,72,153,0.9)":"rgba(148,163,184,0.55)",cursor:"pointer",fontWeight:600}}>
+                                style={{fontSize:"10px",fontFamily:SANS_FONT,letterSpacing:"0",padding:"5px 10px",borderRadius:"10px",border:`0.5px solid ${bday.category===cat?"rgba(236,72,153,0.5)":"rgba(235,235,245,0.2)"}`,background:bday.category===cat?"rgba(236,72,153,0.1)":"transparent",color:bday.category===cat?"rgba(236,72,153,0.9)":"rgba(235,235,245,0.55)",cursor:"pointer",fontWeight:600}}>
                                 {cat.toUpperCase()}
                               </button>
                             ))}
                           </div>
                           <button onClick={() => { setBirthdays(prev => prev.filter(b => b.id!==bday.id)); setEditingBdayId(null); }}
-                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
+                            style={{marginLeft:"auto",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>DELETE</button>
                         </div>
                       </div>
                     )}
@@ -55077,28 +55079,28 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div>
-              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>TASKS</div>
+              
+              <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Tasks</div>
             </div>
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5">
           {/* Tab bar with progress */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"1px solid rgba(0,200,255,0.15)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
+          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
             {[
-              {id:'daily', label:'DAILY', items: dailyItems, color:'#00c8ff'},
+              {id:'daily', label:'DAILY', items: dailyItems, color:'#0A84FF'},
               {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
               {id:'general', label:'GENERAL', items: generalItems, color:'rgba(34,197,94,0.9)'},
             ].map(tab => {
               const done = tab.items.filter(i => i.checked).length;
               const total = tab.items.length;
               return (
-                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:tasksSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
                   {tab.label}
                   {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:SANS_FONT}}>{done}/{total}</span>}
                 </button>
@@ -55119,7 +55121,7 @@ function MuzzApp() {
                       const newName = window.prompt('Rename list:', list.name);
                       if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
                     }}
-                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
+                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
                     title="Tap to open · Double-tap to rename"
                   >
                     {(list.name||'').toUpperCase()}
@@ -55140,13 +55142,13 @@ function MuzzApp() {
             <button onClick={() => {
               const name = window.prompt('Name this task list (e.g. Work, Errands, Project X):', '');
               if (!name || !name.trim()) return;
-              const palette = ['#00c8ff','#a855f7','#22c55e','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16','rgba(99,102,241,0.9)'];
+              const palette = ['#0A84FF','#a855f7','#22c55e','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16','rgba(99,102,241,0.9)'];
               const used = customTaskLists.map(l => l.color);
               const color = palette.find(c => !used.includes(c)) || palette[Math.floor(Math.random()*palette.length)];
               const newList = { id: 'custom_' + Date.now(), name: name.trim(), color, note: '' };
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
-            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
+            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(235,235,245,0.4)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -55161,15 +55163,15 @@ function MuzzApp() {
             if (isBuiltIn) {
               noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
               setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
-              accentColor = tasksSubTab === 'daily' ? '#00c8ff' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
-              borderColor = tasksSubTab === 'daily' ? 'rgba(0,200,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
+              accentColor = tasksSubTab === 'daily' ? '#0A84FF' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
+              borderColor = tasksSubTab === 'daily' ? 'rgba(10,132,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
               headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase() : tasksSubTab === 'weekly' ? 'THIS WEEK' : 'GENERAL';
             } else {
               // Custom list — stored as JSON inside the list's `note` field
               noteVal = activeCustom.note || '';
               setNote = (val) => setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, note: val} : l));
-              accentColor = activeCustom.color || '#00c8ff';
-              borderColor = `${activeCustom.color || '#00c8ff'}33`;
+              accentColor = activeCustom.color || '#0A84FF';
+              borderColor = `${activeCustom.color || '#0A84FF'}33`;
               headerLabel = (activeCustom.name || 'CUSTOM').toUpperCase();
             }
 
@@ -55209,17 +55211,17 @@ function MuzzApp() {
             const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
 
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"14px",borderLeft:`2px solid ${accentColor}`}}>
+              <div style={{...LIQUID_GLASS,border:`0.5px solid ${borderColor}`,borderRadius:"20px",borderLeft:`2px solid ${accentColor}`}}>
 
                 {/* Header */}
                 <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                  <span style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0.3px",opacity:0.6}}>{headerLabel}</span>
+                  <span style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0",opacity:0.6}}>{headerLabel}</span>
                   <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
                     <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
+                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.3)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
                   {checked.length > 0 && (
-                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"10px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
+                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"10px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
                   )}
                 </div>
 
@@ -55258,21 +55260,21 @@ function MuzzApp() {
                       save(newItems);
                     };
                     return (
-                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"14px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
-                        <div style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR TASKS</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
+                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"20px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
+                        <div style={{fontSize:"10px",color:accentColor,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR TASKS</div>
+                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
+                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.85}}>
                           {samples.map((s, i) => (
                             <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
-                              <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${s.checked?accentColor:"rgba(148,163,184,0.3)"}`,background:s.checked?accentColor:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#0a0e1a",fontWeight:700}}>{s.checked?'✓':''}</div>
-                              <div style={{flex:1,fontSize:"14px",fontFamily:"system-ui",color:s.checked?"rgba(148,163,184,0.5)":"rgba(224,234,255,0.85)",textDecoration:s.checked?"line-through":"none"}}>{s.text}</div>
+                              <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${s.checked?accentColor:"rgba(235,235,245,0.3)"}`,background:s.checked?accentColor:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#0a0e1a",fontWeight:700}}>{s.checked?'✓':''}</div>
+                              <div style={{flex:1,fontSize:"14px",fontFamily:"system-ui",color:s.checked?"rgba(235,235,245,0.5)":"rgba(235,235,245,0.85)",textDecoration:s.checked?"line-through":"none"}}>{s.text}</div>
                             </div>
                           ))}
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"12px",color:accentColor,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"20px",color:accentColor,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
                     );
@@ -55282,7 +55284,7 @@ function MuzzApp() {
                   {unchecked.map(item => (
                     <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
                       <button onClick={() => updateItem(item.id, {checked: true})}
-                        style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px solid rgba(148,163,184,0.3)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
+                        style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px solid rgba(235,235,245,0.3)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
                       </button>
                       <input
                         id={`item-${item.id}`}
@@ -55291,7 +55293,7 @@ function MuzzApp() {
                         onKeyDown={(e) => handleKeyDown(e, item)}
                         onFocus={scrollInputIntoView}
                         placeholder="Task..."
-                        style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
+                        style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"rgba(235,235,245,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
                       />
                       <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.5)",fontSize:"18px",padding:"4px 6px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
@@ -55303,7 +55305,7 @@ function MuzzApp() {
                     <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
                       <span style={{color:accentColor,fontSize:"14px",lineHeight:1}}>+</span>
                     </div>
-                    <span style={{color:"rgba(148,163,184,0.25)",fontSize:"15px",fontFamily:"system-ui"}}>New item</span>
+                    <span style={{color:"rgba(235,235,245,0.25)",fontSize:"15px",fontFamily:"system-ui"}}>New item</span>
                   </button>
                   )}
 
@@ -55315,7 +55317,7 @@ function MuzzApp() {
                           const el = document.getElementById(`completed-${tasksSubTab}`);
                           if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
                         }}
-                        style={{fontSize:"9px",color:"rgba(148,163,184,0.25)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
+                        style={{fontSize:"9px",color:"rgba(235,235,245,0.25)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
                       >
                         <span>▾ COMPLETED · {checked.length}</span>
                       </button>
@@ -55326,7 +55328,7 @@ function MuzzApp() {
                               style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
                               ✓
                             </button>
-                            <span style={{flex:1,color:"rgba(148,163,184,0.3)",fontSize:"15px",fontFamily:"system-ui",textDecoration:"line-through"}}>{item.text}</span>
+                            <span style={{flex:1,color:"rgba(235,235,245,0.3)",fontSize:"15px",fontFamily:"system-ui",textDecoration:"line-through"}}>{item.text}</span>
                             <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.15)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
                           </div>
                         ))}
@@ -55947,7 +55949,7 @@ function MuzzApp() {
 
     // Legacy alias kept so existing variable references downstream keep working
     const isPersonal = activeBucket?.id === 'bucket_personal';
-    const bucketAccent = activeBucket?.color || '#00c8ff';
+    const bucketAccent = activeBucket?.color || '#0A84FF';
 
     return (
       <div className="min-h-screen bg-transparent">
@@ -55955,26 +55957,26 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>BILLS</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Bills</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Monthly total · all</div>
+                <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Monthly total · all</div>
                 <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontWeight:500}}>${(buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0).toLocaleString()}</div>
                 {activeBucket && totalMonthly !== (buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0) && (
-                  <div style={{fontSize:"9px",color:`${bucketAccent}aa`,fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"2px"}}>{activeBucket.name}: ${totalMonthly.toLocaleString()}</div>
+                  <div style={{fontSize:"9px",color:`${bucketAccent}aa`,fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{activeBucket.name}: ${totalMonthly.toLocaleString()}</div>
                 )}
               </div>
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'}].map(tab => (
-                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:billsSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -55995,7 +55997,7 @@ function MuzzApp() {
                   <button
                     onClick={() => setActiveBucketId(b.id)}
                     onDoubleClick={() => renameBucket(b.id)}
-                    style={{padding:"8px 16px",background:isActive?`${b.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${b.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
+                    style={{padding:"8px 16px",background:isActive?`${b.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${b.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
                     title="Tap to open · Double-tap to rename"
                   >
                     {(b.name||'').toUpperCase()}
@@ -56009,21 +56011,21 @@ function MuzzApp() {
                 </div>
               );
             })}
-            <button onClick={addBucket} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
+            <button onClick={addBucket} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(235,235,245,0.4)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
           </div>
 
           {!activeBucket && (
-            <div style={{padding:"40px 20px",textAlign:"center",fontFamily:SANS_FONT,color:"rgba(148,163,184,0.5)",fontSize:"11px",letterSpacing:"0.3px"}}>
+            <div style={{padding:"40px 20px",textAlign:"center",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.5)",fontSize:"11px",letterSpacing:"0"}}>
               No sections yet. Tap + ADD to create your first bills section.
             </div>
           )}
 
           {activeBucket && (<>
           {/* Income Input — collapsible */}
-          <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+          <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-              <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
+              <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -56036,26 +56038,26 @@ function MuzzApp() {
                   placeholder="0"
                   className="text-xl font-semibold w-32 px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-500"
                 />
-                <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>/month</span>
+                <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>/month</span>
               </div>
             </div>
           </details>
 
           {/* Bills vs Income — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Bills vs income</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Bills vs income</span>
+                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
-              <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+              <div style={{...LIQUID_GLASS,overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Bills vs Income</h2>
+                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Bills vs Income</h2>
               </div>
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                    <tr style={{background:"rgba(10,132,255,0.03)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Category</th>
                       <th className="text-right py-3 px-3 font-semibold">Daily</th>
                       <th className="text-right py-3 px-3 font-semibold">Weekly</th>
@@ -56084,7 +56086,7 @@ function MuzzApp() {
                       <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'halfyear')}</td>
                       <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'annually')}</td>
                     </tr>
-                    <tr style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(34,197,94,0.06)"}}>
+                    <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(34,197,94,0.06)"}}>
                       <td className="py-3 px-4 font-semibold text-green-800">Left Over</td>
                       <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'daily')}</td>
                       <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'weekly')}</td>
@@ -56098,17 +56100,17 @@ function MuzzApp() {
               </div>
 
               {/* Percentage Breakdown */}
-              <div style={{padding:"14px 16px",borderTop:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.03)"}}>
+              <div style={{padding:"14px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(10,132,255,0.03)"}}>
                 <h3 className="font-semibold mb-4">% of Income</h3>
                 <div className="flex flex-col md:flex-row gap-6 items-center">
                   <div className="flex gap-8">
                     <div style={{textAlign:"center"}}>
                       <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Bills</p>
+                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Bills</p>
                     </div>
                     <div style={{textAlign:"center"}}>
                       <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Savings</p>
+                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Savings</p>
                     </div>
                   </div>
                   <div className="flex-1 w-full md:w-auto">
@@ -56131,10 +56133,10 @@ function MuzzApp() {
           )}
 
           {/* Bills List - active bucket — collapsible */}
-          <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+          <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
-              <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
+              <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px"}}>
@@ -56168,29 +56170,29 @@ function MuzzApp() {
                 };
                 const startFresh = () => addBillToBucket(activeBucket.id);
                 return (
-                  <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
+                  <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"20px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
                     <div style={{padding:"12px 14px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
-                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · not your data</div>
-                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
-                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
+                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · not your data</div>
+                      <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
+                      <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
                     </div>
                     <div style={{padding:"10px 14px"}}>
                       {samples.map((s, i) => (
                         <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"6px 0",borderBottom:i<samples.length-1?"0.5px solid rgba(255,255,255,0.04)":"none",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",opacity:0.85}}>
-                          <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                          <div style={{color:"rgba(235,235,245,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
                           <div style={{color:bucketAccent,textAlign:"right"}}>${s.monthly}/mo</div>
-                          <div style={{color:"rgba(148,163,184,0.55)",textAlign:"right",fontSize:"10px"}}>{s.dueDate}</div>
+                          <div style={{color:"rgba(235,235,245,0.55)",textAlign:"right",fontSize:"10px"}}>{s.dueDate}</div>
                         </div>
                       ))}
                       <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:"1px solid rgba(255,255,255,0.07)",marginTop:"4px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600}}>
-                        <div style={{color:"rgba(224,234,255,0.95)"}}>Total</div>
+                        <div style={{color:"rgba(235,235,245,0.95)"}}>Total</div>
                         <div style={{color:bucketAccent,textAlign:"right"}}>${sampleTotal}/mo</div>
                         <div></div>
                       </div>
                     </div>
                     <div style={{padding:"10px 14px 12px",borderTop:"1px solid rgba(255,255,255,0.07)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${bucketAccent}26`,border:`1px solid ${bucketAccent}99`,borderRadius:"12px",color:bucketAccent,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${bucketAccent}26`,border:`1px solid ${bucketAccent}99`,borderRadius:"20px",color:bucketAccent,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -56210,26 +56212,26 @@ function MuzzApp() {
                     }
                   });
                   return (
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:`2px solid ${bucketAccent}`,borderRadius:"14px",padding:"16px 18px",marginBottom:"6px"}}>
+                    <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${bucketAccent}`,borderRadius:"20px",padding:"16px 18px",marginBottom:"6px"}}>
                       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px"}}>
-                        <span style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name} overview</span>
-                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{filledSubs.length} BILL{filledSubs.length!==1?'S':''}</span>
+                        <span style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name} overview</span>
+                        <span style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{filledSubs.length} BILL{filledSubs.length!==1?'S':''}</span>
                       </div>
                       <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"14px"}}>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Monthly</div>
+                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Monthly</div>
                           <div style={{fontSize:"22px",color:bucketAccent,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${totalMonthly.toFixed(0)}</div>
                         </div>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>ANNUAL</div>
-                          <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${annualTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                          
+                          <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${annualTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                         </div>
                         {nextDue && (
                           <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Next due</div>
+                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Next due</div>
                             <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
-                              <span style={{fontSize:"14px",color:"#e0eaff",fontWeight:500}}>{nextDue.sub.name||'Bill'}</span>
-                              <span style={{fontSize:"11px",color:nextDue.daysAway<=3?"#ef4444":nextDue.daysAway<=7?"#f59e0b":"rgba(148,163,184,0.7)",marginLeft:"8px"}}>
+                              <span style={{fontSize:"14px",color:"#FFFFFF",fontWeight:500}}>{nextDue.sub.name||'Bill'}</span>
+                              <span style={{fontSize:"11px",color:nextDue.daysAway<=3?"#ef4444":nextDue.daysAway<=7?"#f59e0b":"rgba(235,235,245,0.7)",marginLeft:"8px"}}>
                                 {nextDue.daysAway===0?'TODAY':nextDue.daysAway===1?'TMRW':`IN ${nextDue.daysAway}D`}
                               </span>
                             </div>
@@ -56263,10 +56265,10 @@ function MuzzApp() {
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                         <div style={{width:"8px",height:"8px",borderRadius:"50%",background:isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent,flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                            {sub?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed bill</span>}
+                          <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {sub?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed bill</span>}
                           </div>
-                          <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                          <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
                             {FREQ_LABEL[freq]}{nd ? ` · Due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
                             {freq !== 'monthly' && sub?.monthly > 0 && (
                               <span style={{color:`${bucketAccent}aa`,marginLeft:"6px"}}>· ${monthlyEq.toFixed(2)}/mo equiv</span>
@@ -56277,11 +56279,11 @@ function MuzzApp() {
                           {sub?.monthly > 0 && (
                             <div style={{textAlign:"right"}}>
                               <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:bucketAccent,fontWeight:600}}>${parseFloat(sub.monthly).toFixed(2)}</div>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>{FREQ_SHORT[freq]}</div>
+                              <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.5)",letterSpacing:"0"}}>{FREQ_SHORT[freq]}</div>
                             </div>
                           )}
                           {daysAway !== null && (
-                            <span style={{fontSize:"9px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",padding:"3px 7px",border:`0.5px solid ${isToday?"rgba(239,68,68,0.4)":isSoon?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.2)"}`,borderRadius:"10px",fontWeight:600}}>
+                            <span style={{fontSize:"9px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",padding:"3px 7px",border:`0.5px solid ${isToday?"rgba(239,68,68,0.4)":isSoon?"rgba(245,158,11,0.4)":"rgba(235,235,245,0.2)"}`,borderRadius:"10px",fontWeight:600}}>
                               {isToday?'TODAY':daysAway===1?'TMRW':`${daysAway}D`}
                             </span>
                           )}
@@ -56293,7 +56295,7 @@ function MuzzApp() {
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(255,255,255,0.07)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Bill name</div>
+                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Bill name</div>
                             <input
                               type="text"
                               value={sub?.name || ''}
@@ -56306,7 +56308,7 @@ function MuzzApp() {
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>COST $</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>COST $</div>
                               <input
                                 type="text"
                                 inputMode="decimal"
@@ -56319,7 +56321,7 @@ function MuzzApp() {
                               />
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Frequency</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Frequency</div>
                               <select
                                 value={freq}
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
@@ -56335,7 +56337,7 @@ function MuzzApp() {
                             </div>
                             {freq === 'monthly' && (
                               <div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Due day</div>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Due day</div>
                                 <input
                                   type="text"
                                   value={sub?.dueDate || ''}
@@ -56349,7 +56351,7 @@ function MuzzApp() {
                             )}
                             {(freq === 'weekly' || freq === 'fortnightly') && (
                               <div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Day of week</div>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Day of week</div>
                                 <select
                                   value={sub?.weekday ?? ''}
                                   onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)}
@@ -56365,7 +56367,7 @@ function MuzzApp() {
                           {/* FORTNIGHTLY anchor date — which "Friday" is the first */}
                           {freq === 'fortnightly' && sub?.weekday !== undefined && sub?.weekday !== '' && (
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FIRST OCCURRENCE (which {WEEKDAYS[parseInt(sub.weekday)]} starts the cycle)</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>FIRST OCCURRENCE (which {WEEKDAYS[parseInt(sub.weekday)]} starts the cycle)</div>
                               <input
                                 type="date"
                                 value={sub?.fortnightAnchor || ''}
@@ -56374,7 +56376,7 @@ function MuzzApp() {
                                 className="slick-input"
                                 style={{fontFamily:SANS_FONT,colorScheme:"dark"}}
                               />
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>
                                 Pick any {WEEKDAYS[parseInt(sub.weekday)]} — the bill will recur every 2 weeks from there.
                               </div>
                             </div>
@@ -56390,7 +56392,7 @@ function MuzzApp() {
                             const trimmed = slots.slice(0, required);
                             return (
                               <div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px"}}>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px"}}>
                                   DUE DATES · {required} per year (DD-MM)
                                 </div>
                                 <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${required}, 1fr)`:"repeat(2, 1fr)",gap:"8px"}}>
@@ -56410,19 +56412,19 @@ function MuzzApp() {
                                     />
                                   ))}
                                 </div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"6px",letterSpacing:"0.5px"}}>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,marginTop:"6px",letterSpacing:"0"}}>
                                   Enter as day-month (e.g. 01-04 for April 1st). Bill will recur on these dates each year.
                                 </div>
                               </div>
                             );
                           })()}
                           {freq !== 'monthly' && sub?.monthly > 0 && (
-                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,padding:"8px 10px",background:`${bucketAccent}10`,border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px"}}>
+                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,padding:"8px 10px",background:`${bucketAccent}10`,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                               ≈ ${monthlyEq.toFixed(2)}/mo · ${(monthlyEq*12).toFixed(0)}/yr equivalent
                             </div>
                           )}
                           <button onClick={() => { removeBillFromBucket(activeBucket.id, index); setEditingBillIdx(null); }}
-                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                         </div>
                       )}
                     </div>
@@ -56432,7 +56434,7 @@ function MuzzApp() {
               </div>{/* end scroll */}
               <button
                 onClick={() => addBillToBucket(activeBucket.id)}
-                style={{width:"100%",marginTop:"16px",padding:"12px",border:`2px dashed ${bucketAccent}55`,borderRadius:"12px",background:"transparent",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer",letterSpacing:"0.3px"}}
+                style={{width:"100%",marginTop:"16px",padding:"12px",border:`2px dashed ${bucketAccent}55`,borderRadius:"20px",background:"transparent",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer",letterSpacing:"0"}}
               >
                 + Add {activeBucket.name} Bill
               </button>
@@ -56442,14 +56444,14 @@ function MuzzApp() {
 
           {/* Breakdown Table — collapsible */}
           {filledSubs.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Cost breakdown</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Cost breakdown</span>
+                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Cost Breakdown</h2>
+                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Cost Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
@@ -56513,11 +56515,11 @@ function MuzzApp() {
                                 />
                               );
                             })()}
-                            <circle cx="110" cy="110" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
-                            <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:SANS_FONT}}>
+                            <circle cx="110" cy="110" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
+                            <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
                               {salaryNum > 0 ? ((filledSubs.reduce((t, s) => t + (parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0), 0) / (salaryNum * 12)) * 100).toFixed(0) : 0}%
                             </text>
-                            <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
+                            <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>
                               of annual income
                             </text>
                           </>
@@ -56539,15 +56541,15 @@ function MuzzApp() {
                           {sortedSubs.map((sub, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-sm">
                               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span style={{color:"rgba(148,163,184,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{sub.name}</span>
-                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>(${Math.round(sub._annual).toLocaleString()}/yr · {((sub._annual / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
+                              <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{sub.name}</span>
+                              <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>(${Math.round(sub._annual).toLocaleString()}/yr · {((sub._annual / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
                             </div>
                           ))}
                           {remaining > 0 && (
                             <div className="flex items-center gap-2 text-sm">
-                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(0,200,255,0.2)"}} />
-                              <span style={{color:"rgba(148,163,184,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>Remaining</span>
-                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((remaining / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
+                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(10,132,255,0.2)"}} />
+                              <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>Remaining</span>
+                              <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((remaining / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
                             </div>
                           )}
                         </>
@@ -56582,8 +56584,8 @@ function MuzzApp() {
                     />
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>$0</span>
-                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${cbAnnualIncome.toLocaleString()}/yr</span>
+                    <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>$0</span>
+                    <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>${cbAnnualIncome.toLocaleString()}/yr</span>
                   </div>
                 </div>
                 );
@@ -56592,9 +56594,9 @@ function MuzzApp() {
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                    <tr style={{background:"rgba(10,132,255,0.03)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                       <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'name') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('name'); setBillsSortDir('asc'); }
@@ -56603,7 +56605,7 @@ function MuzzApp() {
                         Subscription {billsSortBy === 'name' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"center",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"center",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'due') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('due'); setBillsSortDir('asc'); }
@@ -56612,7 +56614,7 @@ function MuzzApp() {
                         Due {billsSortBy === 'due' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'daily') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('daily'); setBillsSortDir('desc'); }
@@ -56621,7 +56623,7 @@ function MuzzApp() {
                         Daily {billsSortBy === 'daily' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'weekly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('weekly'); setBillsSortDir('desc'); }
@@ -56630,7 +56632,7 @@ function MuzzApp() {
                         Weekly {billsSortBy === 'weekly' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'monthly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('monthly'); setBillsSortDir('asc'); }
@@ -56639,7 +56641,7 @@ function MuzzApp() {
                         Monthly {billsSortBy === 'monthly' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'quarterly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('quarterly'); setBillsSortDir('desc'); }
@@ -56648,7 +56650,7 @@ function MuzzApp() {
                         Quarterly {billsSortBy === 'quarterly' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'halfyear') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('halfyear'); setBillsSortDir('desc'); }
@@ -56657,7 +56659,7 @@ function MuzzApp() {
                         Half-Year {billsSortBy === 'halfyear' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'annually') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('annually'); setBillsSortDir('desc'); }
@@ -56695,8 +56697,8 @@ function MuzzApp() {
                       }
                       return billsSortDir === 'asc' ? comparison : -comparison;
                     }).map((sub, idx) => (
-                      <tr key={idx} style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                        <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>
+                      <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                        <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>
                           {sub.name}
                         </td>
                         <td className="py-3 px-3 text-center text-gray-500">
@@ -56717,7 +56719,7 @@ function MuzzApp() {
                   </tbody>
                   <tfoot>
                     <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total Bills</td>
+                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total Bills</td>
                       <td className="py-3 px-3"></td>
                       <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'daily')}</td>
                       <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'weekly')}</td>
@@ -56735,10 +56737,10 @@ function MuzzApp() {
 
           {/* Muzz Advice Categories Info - Personal Only */}
           {isPersonal && filledSubs.length === 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
               <div style={{padding:"14px 16px"}}>
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Muzz can help you save on</div>
-                <p style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Muzz can help you save on</div>
+                <p style={{fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",gap:"6px"}}>
                   {[
                     'STREAMING SERVICES',
@@ -56748,7 +56750,7 @@ function MuzzApp() {
                     'INSURANCE',
                     'SUBSCRIPTION AUDITS',
                   ].map((label,i) => (
-                    <div key={i} style={{padding:"6px 10px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"9px",letterSpacing:"0.3px"}}>
+                    <div key={i} style={{padding:"6px 10px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"9px",letterSpacing:"0"}}>
                       {label}
                     </div>
                   ))}
@@ -56761,7 +56763,7 @@ function MuzzApp() {
           {activeBucket && (activeBucket.bills || []).some(x => x?.name && x.monthly > 0) && (() => {
             const bucket = activeBucket;
             const bills = (bucket.bills || []).filter(x => x?.name && x.monthly > 0);
-            const accent = bucket.color || '#00c8ff';
+            const accent = bucket.color || '#0A84FF';
             const sortedBills = [...bills].map(s => ({ s, nd: computeNextDue(s), mEq: monthlyEquivalent(s) }))
               .sort((a,b) => b.mEq - a.mEq);
             const bucketTotal = sortedBills.reduce((sum, {mEq}) => sum + mEq, 0);
@@ -56795,10 +56797,10 @@ function MuzzApp() {
             });
 
             return (
-              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{bucket.name} constellation</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <details style={{...LIQUID_GLASS,border:`0.5px solid ${accent}25`,borderRadius:"20px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{bucket.name} constellation</span>
+                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   {isWide ? (
@@ -56845,15 +56847,15 @@ function MuzzApp() {
 
                     {/* Bucket node — centre */}
                     <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"14px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
                         {/* Corner ticks */}
                         <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
-                        <span style={{fontSize:isWide?"18px":"15px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.5px"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:isWide?"10px":"9px",color:"rgba(148,163,184,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"2px"}}>{N} BILL{N!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
+                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:isWide?"10px":"9px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} BILL{N!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
                       </div>
                     </div>
 
@@ -56866,7 +56868,7 @@ function MuzzApp() {
                       const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
                       return (
                         <div key={s.id || idx} style={{position:"absolute",left:x,top:y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${dotColor}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
                             {/* Corner ticks */}
                             <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                             <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
@@ -56875,15 +56877,15 @@ function MuzzApp() {
                             <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                               <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                                 <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
                               </div>
                               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(148,163,184,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"7px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"7px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
                               </div>
                               {nd && (
                                 <div style={{paddingLeft:"10px"}}>
-                                  <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.4)",letterSpacing:"0.5px",fontWeight:600}}>
+                                  <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.4)",letterSpacing:"0",fontWeight:600}}>
                                     {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
                                   </span>
                                 </div>
@@ -56902,14 +56904,14 @@ function MuzzApp() {
                       <div style={{position:"relative",maxWidth:"100%"}}>
                         {/* Bucket node — top centre */}
                         <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
-                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"14px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
                             <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
-                            <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                            <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"2px"}}>{billsForSpine.length} BILL{billsForSpine.length!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
+                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                            <span style={{fontSize:"8px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{billsForSpine.length} BILL{billsForSpine.length!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
                           </div>
                         </div>
 
@@ -56927,22 +56929,22 @@ function MuzzApp() {
                               <div key={s.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
                                 <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
                                 <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
-                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
                                   <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
                                   <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                                     <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                                       <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
                                     </div>
                                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
                                     </div>
                                     {nd && (
                                       <div style={{paddingLeft:"10px"}}>
-                                        <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.45)",letterSpacing:"0.5px",fontWeight:600}}>
+                                        <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.45)",letterSpacing:"0",fontWeight:600}}>
                                           {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
                                         </span>
                                       </div>
@@ -56960,7 +56962,7 @@ function MuzzApp() {
 
                   {/* Detail list below — full bill data, since absolute-positioned cards can't expand cleanly */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Bill details</div>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Bill details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {sortedBills.map(({s, nd, mEq}, idx) => {
                         const freq = s.freq || 'monthly';
@@ -56969,15 +56971,15 @@ function MuzzApp() {
                         return (
                           <div key={s.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"10px"}}>
                             <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                              <span style={{color:"#e0eaff",fontWeight:600}}>{s.name}</span>
+                              <span style={{color:"#FFFFFF",fontWeight:600}}>{s.name}</span>
                               <span style={{color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(2)}{FREQ_SHORT[freq]}</span>
                             </div>
-                            <div style={{display:"flex",justifyContent:"space-between",color:"rgba(148,163,184,0.55)",fontSize:"9px"}}>
+                            <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"9px"}}>
                               <span>{FREQ_LABEL[freq]}{freq !== 'monthly' ? ` · $${mEq.toFixed(2)}/mo` : ''}</span>
                               <span>${(mEq*12).toFixed(0)}/yr · {bucketTotal>0?((mEq/bucketTotal)*100).toFixed(1):'0'}%</span>
                             </div>
                             {nd && (
-                              <div style={{color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.45)",fontSize:"9px",marginTop:"2px"}}>
+                              <div style={{color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.45)",fontSize:"9px",marginTop:"2px"}}>
                                 Next: {nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})} · {nd.daysAway===0?'TODAY':nd.daysAway===1?'TMRW':`${nd.daysAway}D away`}
                               </div>
                             )}
@@ -57000,11 +57002,11 @@ function MuzzApp() {
             // Active bucket only — use the same bucket selector as BILLS
             if (!activeBucket) {
               return (
-                <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>NO BUCKET SELECTED · Switch to BILLS tab to set one up</div>
+                <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>NO BUCKET SELECTED · Switch to BILLS tab to set one up</div>
               );
             }
             const forecastBills = (activeBucket.bills||[]).filter(x => x?.name && x.monthly > 0);
-            const forecastAccent = activeBucket.color || '#00c8ff';
+            const forecastAccent = activeBucket.color || '#0A84FF';
             // Calculate expected monthly outflow for each of the next 12 months
             const now = new Date();
             now.setHours(0,0,0,0);
@@ -57070,35 +57072,35 @@ function MuzzApp() {
                 <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
                   {buckets.map(b => {
                     const isActive = b.id === activeBucketId;
-                    const c = b.color || '#00c8ff';
+                    const c = b.color || '#0A84FF';
                     return (
                       <button key={b.id} onClick={() => setActiveBucketId(b.id)}
-                        style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:isActive?c:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                        style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:isActive?c:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                         {b.name.toUpperCase()}
                       </button>
                     );
                   })}
                 </div>
 
-                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"14px",padding:"16px 18px"}}>
+                <div style={{...LIQUID_GLASS,border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"20px",padding:"16px 18px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",gap:"8px",flexWrap:"wrap"}}>
-                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{activeBucket.name.toUpperCase()} · 12-MONTH PROJECTION</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>{forecastBills.length} BILL{forecastBills.length!==1?'S':''}</span>
+                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name.toUpperCase()} · 12-MONTH PROJECTION</span>
+                    <span style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{forecastBills.length} BILL{forecastBills.length!==1?'S':''}</span>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px",marginBottom:"20px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Next 12 months</div>
+                      <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Next 12 months</div>
                       <div style={{fontSize:"22px",color:`${forecastAccent}`,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>AVG PER MONTH</div>
-                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${avgPerMonth.toFixed(0)}</div>
+                      
+                      <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${avgPerMonth.toFixed(0)}</div>
                     </div>
                     <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Highest month</div>
+                      <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Highest month</div>
                       <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
                         <span style={{fontSize:"18px",color:"#f59e0b",fontWeight:600}}>${maxTotal.toFixed(0)}</span>
-                        <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",marginLeft:"8px"}}>{months.find(m => m.total === maxTotal)?.label}</span>
+                        <span style={{fontSize:"11px",color:"rgba(235,235,245,0.5)",marginLeft:"8px"}}>{months.find(m => m.total === maxTotal)?.label}</span>
                       </div>
                     </div>
                   </div>
@@ -57112,9 +57114,9 @@ function MuzzApp() {
                       const isCurrent = i === 0;
                       return (
                         <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative",minWidth:"36px"}}>
-                          <div style={{fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"#f59e0b":isCurrent?`${forecastAccent}`:"rgba(148,163,184,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
+                          <div style={{fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"#f59e0b":isCurrent?`${forecastAccent}`:"rgba(235,235,245,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
                           <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?`linear-gradient(180deg, ${forecastAccent}f2, ${forecastAccent}59)`:`linear-gradient(180deg, ${forecastAccent}80, ${forecastAccent}26)`,border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?`${forecastAccent}cc`:`${forecastAccent}4d`}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?`0 0 12px ${forecastAccent}40`:"none"}}/>
-                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(148,163,184,0.55)",textAlign:"center",letterSpacing:"0.3px"}}>{m.label}</div>
+                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(235,235,245,0.55)",textAlign:"center",letterSpacing:"0"}}>{m.label}</div>
                         </div>
                       );
                     })}
@@ -57123,25 +57125,25 @@ function MuzzApp() {
                 </div>
 
                 {/* Per-month breakdown */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"14px"}}>
+                <div style={{...LIQUID_GLASS,border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"20px"}}>
                   <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${forecastAccent}15`}}>
-                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Month-by-month breakdown</span>
+                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Month-by-month breakdown</span>
                   </div>
                   {months.map((m, i) => {
                     const items = Object.entries(m.breakdown).sort((a,b) => b[1] - a[1]);
                     return (
                       <details key={i} style={{borderBottom:i<11?`0.5px solid ${forecastAccent}10`:"none"}}>
                         <summary style={{padding:"10px 14px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",listStyle:"none"}}>
-                          <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"#e0eaff"}}>{m.label}</span>
+                          <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"#FFFFFF"}}>{m.label}</span>
                           <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:`${forecastAccent}`,fontWeight:600}}>${m.total.toFixed(2)}</span>
                         </summary>
                         <div style={{padding:"4px 14px 12px"}}>
                           {items.length === 0 ? (
-                            <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT}}>No bills due this month</div>
+                            <div style={{fontSize:"10px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT}}>No bills due this month</div>
                           ) : items.map(([name, amt], j) => (
-                            <div key={j} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:j<items.length-1?"0.5px solid rgba(148,163,184,0.05)":"none"}}>
-                              <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{name}</span>
-                              <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(148,163,184,0.75)"}}>${amt.toFixed(2)}</span>
+                            <div key={j} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:j<items.length-1?"0.5px solid rgba(235,235,245,0.05)":"none"}}>
+                              <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>{name}</span>
+                              <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.75)"}}>${amt.toFixed(2)}</span>
                             </div>
                           ))}
                         </div>
@@ -57159,10 +57161,10 @@ function MuzzApp() {
               <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
                 {buckets.map(b => {
                   const isActive = b.id === activeBucketId;
-                  const c = b.color || '#00c8ff';
+                  const c = b.color || '#0A84FF';
                   return (
                     <button key={b.id} onClick={() => setActiveBucketId(b.id)}
-                      style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:isActive?c:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                      style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:isActive?c:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                       {b.name.toUpperCase()}
                     </button>
                   );
@@ -57170,17 +57172,17 @@ function MuzzApp() {
               </div>
 
               {/* Calendar View - Mobile Optimized */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)",borderLeft:`2px solid ${activeBucket?.color || '#00c8ff'}`}}>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${activeBucket?.color || '#0A84FF'}`}}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{activeBucket?.name || 'Bills'} Calendar</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Showing bills from {activeBucket?.name || 'this bucket'}</p>
+                      <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>{activeBucket?.name || 'Bills'} Calendar</h2>
+                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Showing bills from {activeBucket?.name || 'this bucket'}</p>
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}
-                        style={{padding:"6px 10px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.85)",fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer"}}
+                        style={{padding:"6px 10px",background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.85)",fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer"}}
                       >
                         ←
                       </button>
@@ -57189,7 +57191,7 @@ function MuzzApp() {
                       </span>
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}
-                        style={{padding:"6px 10px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.85)",fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer"}}
+                        style={{padding:"6px 10px",background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.85)",fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer"}}
                       >
                         →
                       </button>
@@ -57283,19 +57285,19 @@ function MuzzApp() {
 
               {/* Add/Edit Bill Modal for Selected Date */}
               {selectedCalendarDate && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
                   <div className="p-4 border-b flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-semibold">
                         {new Date(selectedCalendarDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
                       </h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Add or manage bills</p>
+                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Add or manage bills</p>
                     </div>
-                    <button onClick={() => setSelectedCalendarDate(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(148,163,184,0.6)",fontSize:"16px",fontFamily:SANS_FONT}}>×</button>
+                    <button onClick={() => setSelectedCalendarDate(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.6)",fontSize:"16px",fontFamily:SANS_FONT}}>×</button>
                   </div>
                   <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                     {/* Add new bill form */}
-                    <div style={{display:"flex",flexDirection:"column",gap:"6px",padding:"10px 12px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px"}}>
+                    <div style={{display:"flex",flexDirection:"column",gap:"6px",padding:"10px 12px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                       <input
                         type="text"
                         placeholder="Bill name (e.g. Netflix)"
@@ -57303,7 +57305,7 @@ function MuzzApp() {
                         id="newBillName"
                         onFocus={scrollInputIntoView}
                       />
-                      <div style={{display:"flex",alignItems:"center",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",overflow:"hidden"}}>
+                      <div style={{display:"flex",alignItems:"center",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",overflow:"hidden"}}>
                         <span className="pl-3 text-gray-400">$</span>
                         <input
                           type="number"
@@ -57327,7 +57329,7 @@ function MuzzApp() {
                             document.getElementById('newBillAmount').value = '';
                           }
                         }}
-                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"10px",color:"rgba(251,146,60,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}
+                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"10px",color:"rgba(251,146,60,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Bill
                       </button>
@@ -57387,7 +57389,7 @@ function MuzzApp() {
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
                         {(calendarBills[selectedCalendarDate] || []).map((bill, idx) => (
-                          <div key={idx} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"10px"}}>
+                          <div key={idx} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 12px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                             <div className="flex-1 min-w-0">
                               <div className="font-medium truncate">{bill.name}</div>
                             </div>
@@ -57420,10 +57422,10 @@ function MuzzApp() {
           {billsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Small Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Small Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {billSmallGoals.length === 0 && (() => {
@@ -57437,30 +57439,30 @@ function MuzzApp() {
                     };
                     const startFresh = () => setBillSmallGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
                     return (
-                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Short-term savings goals — under $10k, achievable in months.</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Set a target, track your progress. The bar fills as you save.</div>
+                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
+                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Short-term savings goals — under $10k, achievable in months.</div>
+                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Set a target, track your progress. The bar fills as you save.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
                           {samples.map((s, i) => {
                             const pct = Math.min((s.current / s.target) * 100, 100);
                             return (
                               <div key={i}>
                                 <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
-                                  <span style={{color:"#00c8ff"}}>${s.current.toLocaleString()} / ${s.target.toLocaleString()}</span>
+                                  <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#0A84FF"}}>${s.current.toLocaleString()} / ${s.target.toLocaleString()}</span>
                                 </div>
                                 <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"10px",overflow:"hidden"}}>
-                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#0A84FF",boxShadow:"0 0 6px rgba(10,132,255,0.5)"}} />
                                 </div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0.3px"}}>{pct.toFixed(0)}%</div>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}%</div>
                               </div>
                             );
                           })}
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
                     );
@@ -57470,7 +57472,7 @@ function MuzzApp() {
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -57484,7 +57486,7 @@ function MuzzApp() {
                               });
                             }}
                             placeholder="Emergency fund"
-                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBillSmallGoals(prev => prev.filter((_, i) => i !== index))}
@@ -57494,8 +57496,8 @@ function MuzzApp() {
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -57508,12 +57510,12 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -57526,7 +57528,7 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -57550,7 +57552,7 @@ function MuzzApp() {
                   })}
                   <button
                     onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -57558,10 +57560,10 @@ function MuzzApp() {
               </div>
 
               {/* Big Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Big Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Big Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Long-term financial targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {billBigGoals.length === 0 && (() => {
@@ -57575,30 +57577,30 @@ function MuzzApp() {
                     };
                     const startFresh = () => setBillBigGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
                     return (
-                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Long-term targets — house deposit, debt freedom, retirement.</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Years-long milestones. Track the slow climb.</div>
+                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
+                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Long-term targets — house deposit, debt freedom, retirement.</div>
+                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Years-long milestones. Track the slow climb.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
                           {samples.map((s, i) => {
                             const pct = Math.min((s.current / s.target) * 100, 100);
                             return (
                               <div key={i}>
                                 <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
-                                  <span style={{color:"#00c8ff"}}>${(s.current/1000).toFixed(1)}k / ${(s.target/1000).toFixed(0)}k</span>
+                                  <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#0A84FF"}}>${(s.current/1000).toFixed(1)}k / ${(s.target/1000).toFixed(0)}k</span>
                                 </div>
                                 <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"10px",overflow:"hidden"}}>
-                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#0A84FF",boxShadow:"0 0 6px rgba(10,132,255,0.5)"}} />
                                 </div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0.3px"}}>{pct.toFixed(0)}%</div>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}%</div>
                               </div>
                             );
                           })}
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
                     );
@@ -57608,7 +57610,7 @@ function MuzzApp() {
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -57622,7 +57624,7 @@ function MuzzApp() {
                               });
                             }}
                             placeholder="House deposit"
-                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBillBigGoals(prev => prev.filter((_, i) => i !== index))}
@@ -57632,8 +57634,8 @@ function MuzzApp() {
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -57646,12 +57648,12 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -57664,7 +57666,7 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -57688,7 +57690,7 @@ function MuzzApp() {
                   })}
                   <button
                     onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -57738,7 +57740,7 @@ function MuzzApp() {
               const pct = total > 0 ? Math.min((paid / total) * 100, 100) : 0;
 
               return (
-                <div key={debt.id} style={{padding:"14px 16px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(239,68,68,0.5)",borderRadius:"12px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                <div key={debt.id} style={{padding:"14px 16px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   {/* Row 1: Name + Delete */}
                   <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                     <input
@@ -57746,7 +57748,7 @@ function MuzzApp() {
                       value={debt.name}
                       onChange={(e) => updateDebt(debt.id, { name: e.target.value })}
                       placeholder="e.g. Car Loan, Credit Card, HECS..."
-                      style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:500,padding:"7px 10px",outline:"none"}}
+                      style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:500,padding:"7px 10px",outline:"none"}}
                     />
                     <button onClick={() => deleteDebt(debt.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}><Trash2 style={{width:"16px",height:"16px"}} /></button>
                   </div>
@@ -57754,7 +57756,7 @@ function MuzzApp() {
                   {/* Row 2: Total + Paid */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Total Owed</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Total Owed</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -57763,12 +57765,12 @@ function MuzzApp() {
                           value={debt.totalStr || ''}
                           onChange={(e) => updateDebt(debt.id, { total: parseFloat(e.target.value) || 0, totalStr: e.target.value })}
                           placeholder="25000"
-                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Amount Paid</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Amount Paid</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -57777,7 +57779,7 @@ function MuzzApp() {
                           value={debt.paidStr || ''}
                           onChange={(e) => updateDebt(debt.id, { paid: parseFloat(e.target.value) || 0, paidStr: e.target.value })}
                           placeholder="5000"
-                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
@@ -57786,7 +57788,7 @@ function MuzzApp() {
                   {/* Row 3: Progress Bar */}
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{Math.round(pct)}% paid off</span>
+                      <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>{Math.round(pct)}% paid off</span>
                       <span className="text-xs font-semibold text-red-500">${remaining.toLocaleString()} remaining</span>
                     </div>
                     <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
@@ -57800,7 +57802,7 @@ function MuzzApp() {
                   {/* Row 4: Min Payment + Interval */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Min. Payment</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Min. Payment</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -57809,16 +57811,16 @@ function MuzzApp() {
                           value={debt.minPayment || ''}
                           onChange={(e) => updateDebt(debt.id, { minPayment: e.target.value })}
                           placeholder="500"
-                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Per</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Per</label>
                       <select
                         value={debt.minInterval || 'month'}
                         onChange={(e) => updateDebt(debt.id, { minInterval: e.target.value })}
-                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       >
                         <option value="week">Week</option>
                         <option value="fortnight">Fortnight</option>
@@ -57832,34 +57834,34 @@ function MuzzApp() {
                   {/* Row 5: Start Date + Due Date */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Start Date</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Start Date</label>
                       <input
                         type="date"
                         value={debt.startDate || ''}
                         onChange={(e) => updateDebt(debt.id, { startDate: e.target.value })}
-                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       />
                     </div>
                     <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Due Date</label>
+                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Due Date</label>
                       <input
                         type="date"
                         value={debt.dueDate || ''}
                         onChange={(e) => updateDebt(debt.id, { dueDate: e.target.value })}
-                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       />
                     </div>
                   </div>
 
                   {/* Row 6: Notes */}
                   <div>
-                    <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Notes</label>
+                    <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Notes</label>
                     <input
                       type="text"
                       value={debt.notes || ''}
                       onChange={(e) => updateDebt(debt.id, { notes: e.target.value })}
                       placeholder="Extra info..."
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                     />
                   </div>
                 </div>
@@ -57869,28 +57871,28 @@ function MuzzApp() {
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Overview Card */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
                   <div style={{padding:"14px 16px"}}>
                     <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
                     <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Debt</p>
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px"}}>
+                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Total Debt</p>
                         <p className="text-lg font-bold text-red-600">${totalDebt.toLocaleString()}</p>
                       </div>
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Paid</p>
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
+                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Total Paid</p>
                         <p className="text-lg font-bold text-green-600">${totalPaid.toLocaleString()}</p>
                       </div>
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Remaining</p>
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderRadius:"10px"}}>
+                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Remaining</p>
                         <p className="text-lg font-bold text-orange-600">${totalOwed.toLocaleString()}</p>
                       </div>
                     </div>
                     {totalDebt > 0 && (
                       <div>
                         <div className="flex justify-between mb-1">
-                          <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Overall Progress</span>
+                          <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Overall Progress</span>
                           <span className="text-xs font-semibold">{Math.round(overallPct)}%</span>
                         </div>
                         <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
@@ -57905,12 +57907,12 @@ function MuzzApp() {
                 </div>
 
                 {/* Personal Debts */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Personal Debts</h2>
-                        <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                        <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Personal Debts</h2>
+                        <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
                   </div>
@@ -57927,10 +57929,10 @@ function MuzzApp() {
                       };
                       const startFresh = () => addDebt('personal');
                       return (
-                        <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample debts</div>
-                          <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track personal debts — see what you owe and what you've paid off.</div>
-                          <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Total borrowed minus what's paid. Watch the bar shrink as you knock them down.</div>
+                        <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                          <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample debts</div>
+                          <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track personal debts — see what you owe and what you've paid off.</div>
+                          <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Total borrowed minus what's paid. Watch the bar shrink as you knock them down.</div>
                           <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
                             {samples.map((s, i) => {
                               const remaining = s.total - s.paid;
@@ -57938,20 +57940,20 @@ function MuzzApp() {
                               return (
                                 <div key={i}>
                                   <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                    <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                    <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
                                     <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
                                   </div>
                                   <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"10px",overflow:"hidden"}}>
                                     <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
                                   </div>
-                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0.3px"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
+                                  <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
                                 </div>
                               );
                             })}
                           </div>
                           <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                           </div>
                         </div>
                       );
@@ -57959,7 +57961,7 @@ function MuzzApp() {
                     {personalDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('personal')}
-                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                     >
                       + Add Personal Debt
                     </button>
@@ -57967,12 +57969,12 @@ function MuzzApp() {
                 </div>
 
                 {/* Business Debts */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"}}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Business Debts</h2>
-                        <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                        <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Business Debts</h2>
+                        <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
                   </div>
@@ -57988,10 +57990,10 @@ function MuzzApp() {
                       };
                       const startFresh = () => addDebt('business');
                       return (
-                        <div style={{border:"1px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.9)",borderRadius:"14px",padding:"14px",background:"rgba(168,85,247,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.8}}>Preview · business debts</div>
-                          <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track debts owed by the business — equipment finance, lines of credit.</div>
-                          <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Keep separate from personal debt to track business cashflow accurately.</div>
+                        <div style={{border:"1px solid rgba(168,85,247,0.4)",borderRadius:"20px",padding:"14px",background:"rgba(168,85,247,0.05)"}}>
+                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.8}}>Preview · business debts</div>
+                          <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track debts owed by the business — equipment finance, lines of credit.</div>
+                          <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Keep separate from personal debt to track business cashflow accurately.</div>
                           <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
                             {samples.map((s, i) => {
                               const remaining = s.total - s.paid;
@@ -57999,20 +58001,20 @@ function MuzzApp() {
                               return (
                                 <div key={i}>
                                   <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                    <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                    <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
                                     <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
                                   </div>
                                   <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"10px",overflow:"hidden"}}>
                                     <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
                                   </div>
-                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0.3px"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
+                                  <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
                                 </div>
                               );
                             })}
                           </div>
                           <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(168,85,247,0.18)",border:"1px solid rgba(168,85,247,0.7)",borderRadius:"12px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(168,85,247,0.18)",border:"1px solid rgba(168,85,247,0.7)",borderRadius:"20px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                           </div>
                         </div>
                       );
@@ -58020,7 +58022,7 @@ function MuzzApp() {
                     {businessDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('business')}
-                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                     >
                       + Add Business Debt
                     </button>
@@ -58042,33 +58044,33 @@ function MuzzApp() {
             const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",padding:"14px 16px"}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"12px"}}>Debt payoff calculator</h2>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 16px"}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"12px"}}>Debt payoff calculator</h2>
                   <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
-                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>SNOWBALL (SMALLEST FIRST)</button>
-                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>AVALANCHE (HIGHEST RATE)</button>
+                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(235,235,245,0.2)",borderRadius:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>SNOWBALL (SMALLEST FIRST)</button>
+                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(235,235,245,0.2)",borderRadius:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>AVALANCHE (HIGHEST RATE)</button>
                   </div>
-                  <div style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",padding:"12px 14px",marginBottom:"12px"}}>
-                    <p style={{fontSize:"11px",color:"rgba(148,163,184,0.85)",fontFamily:SANS_FONT,lineHeight:1.6}}>{debtCalcMethod === 'snowball' ? 'Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : 'Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
+                  <div style={{background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",padding:"12px 14px",marginBottom:"12px"}}>
+                    <p style={{fontSize:"11px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,lineHeight:1.6}}>{debtCalcMethod === 'snowball' ? 'Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : 'Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
                   </div>
                   {sortedDebts.length === 0 && (
                     <div className="text-center py-8">
-                      <p style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>No active debts found. Add debts in the Debts tab and they'll appear here!</p>
-                      <button onClick={() => setBillsSubTab('debts')} style={{marginTop:"12px",padding:"6px 12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"10px",color:"rgba(59,130,246,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>Go to Debts</button>
+                      <p style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>No active debts found. Add debts in the Debts tab and they'll appear here!</p>
+                      <button onClick={() => setBillsSubTab('debts')} style={{marginTop:"12px",padding:"6px 12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"10px",color:"rgba(59,130,246,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>Go to Debts</button>
                     </div>
                   )}
                   {sortedDebts.length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                       <div className="grid grid-cols-3 gap-4 mb-4">
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"10px"}}>
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px"}}>
                           <div className="text-2xl font-bold text-red-600">${totalDebtCalc.toLocaleString()}</div>
                           <div className="text-xs text-red-500">Total Remaining</div>
                         </div>
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"10px"}}>
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"10px"}}>
                           <div className="text-2xl font-bold text-blue-600">{sortedDebts.length}</div>
                           <div className="text-xs text-blue-500">Active Debts</div>
                         </div>
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"10px"}}>
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
                           <div className="text-2xl font-bold text-green-600">${totalMinPayments.toLocaleString()}</div>
                           <div className="text-xs text-green-500">Min Payments/mo</div>
                         </div>
@@ -58077,11 +58079,11 @@ function MuzzApp() {
                       {sortedDebts.map((debt, i) => {
                         const remaining = Math.max((parseFloat(debt.total) || 0) - (parseFloat(debt.paid) || 0), 0);
                         return (
-                          <div key={debt.id || i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px"}}>
+                          <div key={debt.id || i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                             <div style={{width:"28px",height:"28px",background:"rgba(59,130,246,0.15)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",color:"rgba(59,130,246,0.95)",fontFamily:SANS_FONT,fontWeight:600,fontSize:"11px"}}>{i + 1}</div>
                             <div className="flex-1">
                               <div className="font-medium text-white">{debt.name}</div>
-                              <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
+                              <div className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
                             </div>
                             <div className="text-right">
                               <div className="font-bold text-gray-800">${remaining.toLocaleString()}</div>
@@ -58105,21 +58107,21 @@ function MuzzApp() {
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>MUZZ.ONL</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>FEEDBACK & SUPPORT</div>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
+            <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>MUZZ.ONL</div>
+            <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Feedback & Support</div>
           </div>
         </div>
         <div className="max-w-lg mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {/* Contact */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid #00c8ff",padding:"16px 20px"}}>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"12px"}}>Get in touch</div>
-            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"12px",textDecoration:"none",marginBottom:"10px"}}>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"16px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"12px"}}>Get in touch</div>
+            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"20px",textDecoration:"none",marginBottom:"10px"}}>
               <Mail style={{width:"18px",height:"18px",color:"rgba(249,115,22,0.8)",flexShrink:0}} />
               <div>
-                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500}}>Email us</div>
+                <div style={{fontSize:"12px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500}}>Email us</div>
                 <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:SANS_FONT}}>Muzz.onl@outlook.com</div>
               </div>
             </a>
@@ -58129,27 +58131,27 @@ function MuzzApp() {
                 {label:'BUG REPORT',subject:'Muzz Bug Report'},
                 {label:'SUPPORT',subject:'Muzz Support Request'},
               ].map((t,i) => (
-                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 8px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",textDecoration:"none"}}>
-                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>{t.label}</span>
+                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 8px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",textDecoration:"none"}}>
+                  <span style={{fontSize:"9px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>{t.label}</span>
                 </a>
               ))}
             </div>
           </div>
           {/* Instagram */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"14px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(225,48,108,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"12px"}}>Stay updated</div>
-            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"12px",textDecoration:"none"}}>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"20px",padding:"16px 20px",backgroundSize:"20px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"12px"}}>Stay updated</div>
+            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"20px",textDecoration:"none"}}>
               <div style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(225,48,108,0.9)",boxShadow:"0 0 6px rgba(225,48,108,0.9)",flexShrink:0}}/>
               <div>
-                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INSTAGRAM @MUZZ.ONL</div>
+                <div style={{fontSize:"12px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>INSTAGRAM @MUZZ.ONL</div>
                 <div style={{fontSize:"10px",color:"rgba(225,48,108,0.7)",fontFamily:SANS_FONT}}>instagram.com/muzz.onl</div>
               </div>
             </a>
           </div>
           {/* FAQ */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid rgba(251,191,36,0.6)",overflow:"hidden"}}>
-            <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-              <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>FAQ</span>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+              <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:SANS_FONT,letterSpacing:"0"}}>FAQ</span>
             </div>
             {[
               {q:"What plans are available?",a:"Muzz Elite at $4.99/month unlocks the full Muzz personal finance and life management system."},
@@ -58157,11 +58159,11 @@ function MuzzApp() {
               {q:"How do I cancel?",a:"Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period."},
               {q:"Can I use Muzz on my phone?",a:"Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl."},
             ].map((faq,i,arr) => (
-              <details key={i} style={{borderBottom:i<arr.length-1?"1px solid rgba(0,200,255,0.15)":"none"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",listStyle:"none",display:"flex",gap:"8px",alignItems:"center"}}>
+              <details key={i} style={{borderBottom:i<arr.length-1?"0.5px solid rgba(255,255,255,0.14)":"none"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",listStyle:"none",display:"flex",gap:"8px",alignItems:"center"}}>
                   <span style={{color:"rgba(251,191,36,0.5)"}}>?</span> {faq.q}
                 </summary>
-                <div style={{padding:"0 16px 12px 28px",fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,lineHeight:"1.6"}}>{faq.a}</div>
+                <div style={{padding:"0 16px 12px 28px",fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,lineHeight:"1.6"}}>{faq.a}</div>
               </details>
             ))}
           </div>
@@ -58176,9 +58178,9 @@ function MuzzApp() {
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-3xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
               <svg width="40" height="50" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -58186,9 +58188,9 @@ function MuzzApp() {
                 <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>{isResearch?'MUZZ RESEARCH':isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0.5px"}}>{isResearch?"FULL ACCESS + RESEARCH OS":isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>{isResearch?'Muzz Research':isElite?'Muzz Elite':'Choose your plan'}</div>
+                <div style={{fontSize:"11px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"4px",letterSpacing:"0"}}>{isResearch?"FULL ACCESS + RESEARCH OS":isElite?"FULL MUZZ ACCESS":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
               </div>
             </div>
           </div>
@@ -58201,59 +58203,59 @@ function MuzzApp() {
             <div style={{display:"grid",gap:"12px",gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))'}}>
 
               {/* Muzz Elite Card */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isElite ? "rgba(245,158,11,0.4)" : "rgba(245,158,11,0.2)"}`,borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"14px",padding:"16px 18px",position:"relative",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{...LIQUID_GLASS,border:`0.5px solid ${isElite ? "rgba(245,158,11,0.4)" : "rgba(245,158,11,0.2)"}`,borderRadius:"20px",padding:"16px 18px",position:"relative",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
                 {isElite && (
-                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:SANS_FONT,fontSize:"8px",letterSpacing:"0.3px",borderRadius:"10px",fontWeight:600}}>Current</div>
+                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:SANS_FONT,fontSize:"8px",letterSpacing:"0",borderRadius:"10px",fontWeight:600}}>Current</div>
                 )}
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Tier 01</div>
-                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"8px"}}>MUZZ ELITE</div>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Tier 01</div>
+                  <div style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"8px"}}>MUZZ ELITE</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
-                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>$4.99</span>
-                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
+                    <span style={{fontSize:"28px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>$4.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"6px"}}>Personal finance & life management</div>
+                  <div style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"6px"}}>Personal finance & life management</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
                   {['Bills & Debt Management','Assets Management','Investment Management','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT}}>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
                   ))}
                 </div>
                 {!isElite && (
                   <button onClick={() => handleUpgrade('elite')}
-                    style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
+                    style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>
                     SUBSCRIBE — $4.99/MONTH
                   </button>
                 )}
                 {isElite && (
-                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"10px",color:"rgba(245,158,11,0.7)",fontFamily:SANS_FONT,fontSize:"10px",textAlign:"center",letterSpacing:"0.3px",fontWeight:600}}>● ACTIVE PLAN</div>
+                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"10px",color:"rgba(245,158,11,0.7)",fontFamily:SANS_FONT,fontSize:"10px",textAlign:"center",letterSpacing:"0",fontWeight:600}}>● ACTIVE PLAN</div>
                 )}
               </div>
 
 
               {/* Muzz Research Card */}
-              <div style={{position:"relative",background:"rgba(5,12,24,0.85)",border:"1px solid rgba(245,158,11,0.6)",borderLeft:"2px solid rgba(245,158,11,0.95)",borderRadius:"14px",padding:"20px",display:"flex",flexDirection:"column",gap:"14px",boxShadow:"0 0 24px rgba(245,158,11,0.12)"}}>
-                <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.14)",color:"rgba(245,158,11,0.95)",fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"1px",fontWeight:700,borderRadius:"3px",border:"0.5px solid rgba(245,158,11,0.5)"}}>MOST POPULAR</div>
+              <div style={{position:"relative",...LIQUID_GLASS,border:"1px solid rgba(245,158,11,0.6)",borderRadius:"20px",padding:"20px",display:"flex",flexDirection:"column",gap:"14px",boxShadow:"0 0 24px rgba(245,158,11,0.12)"}}>
+                <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.14)",color:"rgba(245,158,11,0.95)",fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:700,borderRadius:"10px",border:"0.5px solid rgba(245,158,11,0.5)"}}>MOST POPULAR</div>
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Tier 02</div>
-                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"8px"}}>MUZZ RESEARCH</div>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Tier 02</div>
+                  <div style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"8px"}}>MUZZ RESEARCH</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
-                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>$9.99</span>
-                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
+                    <span style={{fontSize:"28px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>$9.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>/MONTH</span>
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"6px"}}>Everything in Elite + the full Research OS workspace</div>
+                  <div style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"6px"}}>Everything in Elite + the full Research OS workspace</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
                   {['Everything in Muzz Elite','Research OS — Analyst Desk','Company Coverage Library','Holdings Research Files','Live Prices & Global Markets','Holdings Constellation Map','Investing Guide — Buffett & Munger'].map((f, i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT}}>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
                   ))}
                 </div>
                 <button onClick={() => handleUpgrade('research')}
-                  style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.16)",border:"0.5px solid rgba(245,158,11,0.8)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.5px",fontWeight:700,cursor:"pointer"}}>
+                  style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.16)",border:"0.5px solid rgba(245,158,11,0.8)",borderRadius:"10px",color:"rgba(245,158,11,0.95)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",fontWeight:700,cursor:"pointer"}}>
                   SUBSCRIBE — $9.99/MONTH
                 </button>
               </div>
@@ -58263,7 +58265,7 @@ function MuzzApp() {
 
           {/* Legal text for iOS */}
           {!isElite && isNative && (
-            <div style={{textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>
+            <div style={{textAlign:"center",fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",lineHeight:1.6}}>
               <p>Auto-renewable subscription · charged to Apple ID at confirmation</p>
               <p>Renews unless cancelled 24h before the period ends</p>
             </div>
@@ -58272,23 +58274,23 @@ function MuzzApp() {
           {/* Restore Purchases - iOS only */}
           {isNative && !isElite && (
             <div style={{textAlign:"center"}}>
-              <button onClick={handleRestorePurchases} style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"0.5px solid rgba(245,158,11,0.3)",padding:"6px 14px",borderRadius:"10px",cursor:"pointer"}}>
+              <button onClick={handleRestorePurchases} style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"0.5px solid rgba(245,158,11,0.3)",padding:"6px 14px",borderRadius:"10px",cursor:"pointer"}}>
                 RESTORE PREVIOUS PURCHASE
               </button>
             </div>
           )}
 
           {/* Feature Comparison */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",overflow:"hidden"}}>
-            <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Feature matrix</span>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+              <span style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>Feature matrix</span>
             </div>
             <div>
-              <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(0,200,255,0.04)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                <span style={{flex:1,fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Feature</span>
-                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Free</span>
-                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(0,200,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ELITE</span>
-                <span style={{width:"62px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>RESEARCH</span>
+              <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(10,132,255,0.04)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                <span style={{flex:1,fontSize:"9px",color:"rgba(10,132,255,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Feature</span>
+                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Free</span>
+                <span style={{width:"48px",textAlign:"center",fontSize:"9px",color:"rgba(10,132,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0"}}>ELITE</span>
+                <span style={{width:"62px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.9)",fontFamily:SANS_FONT,letterSpacing:"0"}}>RESEARCH</span>
               </div>
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, research: true },
@@ -58307,12 +58309,12 @@ function MuzzApp() {
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
                   ? <span style={{color:color,fontWeight:600}}>●</span>
-                  : <span style={{color:"rgba(148,163,184,0.2)"}}>—</span>;
+                  : <span style={{color:"rgba(235,235,245,0.2)"}}>—</span>;
                 return (
-                  <div key={i} style={{display:"flex",alignItems:"center",padding:"9px 16px",borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
-                    <span style={{flex:1,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT}}>{row.feature}</span>
-                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
-                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.elite, "rgba(0,200,255,0.85)")}</span>
+                  <div key={i} style={{display:"flex",alignItems:"center",padding:"9px 16px",borderBottom:i<arr.length-1?"0.5px solid rgba(255,255,255,0.14)":"none"}}>
+                    <span style={{flex:1,fontSize:"11px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{row.feature}</span>
+                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.free, "rgba(235,235,245,0.7)")}</span>
+                    <span style={{width:"48px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.elite, "rgba(10,132,255,0.85)")}</span>
                     <span style={{width:"62px",textAlign:"center",fontSize:"12px",fontFamily:SANS_FONT}}>{renderCell(row.research, "rgba(245,158,11,0.95)")}</span>
                   </div>
                 );
@@ -58322,13 +58324,13 @@ function MuzzApp() {
 
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"14px",padding:"14px 18px"}}>
-              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500,marginBottom:"10px"}}>Subscription</div>
+            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 18px"}}>
+              <div style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500,marginBottom:"10px"}}>Subscription</div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                 <div>
-                  <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE</span></div>
+                  <div style={{fontSize:"11px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"0"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE</span></div>
                   {subscriptionInfo.currentPeriodEnd && (
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,marginTop:"4px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginTop:"4px"}}>
                       {subscriptionInfo.cancelAtPeriodEnd
                         ? `CANCELS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
                         : `RENEWS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
@@ -58337,9 +58339,9 @@ function MuzzApp() {
                   )}
                 </div>
                 {subscriptionInfo.cancelAtPeriodEnd ? (
-                  <button onClick={handleReactivateSubscription} style={{padding:"8px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"10px",color:"rgba(34,197,94,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>Reactivate</button>
+                  <button onClick={handleReactivateSubscription} style={{padding:"8px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"10px",color:"rgba(34,197,94,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>Reactivate</button>
                 ) : (
-                  <button onClick={handleCancelSubscription} style={{padding:"8px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer"}}>Cancel</button>
+                  <button onClick={handleCancelSubscription} style={{padding:"8px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",cursor:"pointer"}}>Cancel</button>
                 )}
               </div>
             </div>
@@ -58347,35 +58349,35 @@ function MuzzApp() {
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"14px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Subscription</div>
-              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE (APPLE)</span></div>
-              <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,lineHeight:1.6}}>To manage or cancel: iPhone Settings → Apple ID → Subscriptions</div>
+            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>Subscription</div>
+              <div style={{fontSize:"11px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"0"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE (APPLE)</span></div>
+              <div style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,lineHeight:1.6}}>To manage or cancel: iPhone Settings → Apple ID → Subscriptions</div>
               <button onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"rgba(0,200,255,0.85)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
+                style={{width:"100%",padding:"10px",background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.85)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>
                 MANAGE APPLE SUBSCRIPTION
               </button>
             </div>
           )}
 
           {/* Display Name */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
-            <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>Display name</div>
-            <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>Shows on dashboard greeting — e.g. <span style={{color:"#00c8ff"}}>"G'day, Muzz"</span></div>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 18px",display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>Display name</div>
+            <div style={{fontSize:"11px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",lineHeight:1.6}}>Shows on dashboard greeting — e.g. <span style={{color:"#0A84FF"}}>"G'day, Muzz"</span></div>
             <input
               value={eliteName}
               onChange={e => setEliteName(e.target.value)}
               placeholder="Enter your name..."
-              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px",padding:"9px 12px",outline:"none",letterSpacing:"0.5px"}}
+              style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",padding:"9px 12px",outline:"none",letterSpacing:"0"}}
             />
-            {eliteName && <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>● SAVED — G'DAY, {eliteName.toUpperCase()}</div>}
+            {eliteName && <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>● SAVED — G'DAY, {eliteName.toUpperCase()}</div>}
           </div>
 
           {/* Giving Back */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.25)",borderLeft:"2px solid rgba(255,200,0,0.6)",borderRadius:"14px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(255,200,0,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,200,0,0.25)",borderRadius:"20px",overflow:"hidden",backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px 18px",borderBottom:"0.5px solid rgba(255,200,0,0.15)"}}>
-              <div style={{fontSize:"10px",color:"rgba(255,200,0,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500,marginBottom:"6px"}}>Giving back</div>
-              <div style={{fontSize:"11px",color:"rgba(255,200,100,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>$2 of every Elite subscription goes to charity</div>
+              <div style={{fontSize:"10px",color:"rgba(255,200,0,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500,marginBottom:"6px"}}>Giving back</div>
+              <div style={{fontSize:"11px",color:"rgba(255,200,100,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>$2 of every Elite subscription goes to charity</div>
             </div>
             <div>
               {[
@@ -58385,23 +58387,23 @@ function MuzzApp() {
                 <div key={i} style={{padding:"12px 18px",display:"flex",alignItems:"center",gap:"12px",borderBottom:i<arr.length-1?"0.5px solid rgba(255,255,255,0.04)":"none"}}>
                   <div style={{width:"6px",height:"6px",borderRadius:"50%",background:c.color,boxShadow:`0 0 6px ${c.color}`,flexShrink:0}}/>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>{c.name}</div>
-                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"2px"}}>$1 PER SUBSCRIPTION</div>
+                    <div style={{fontSize:"11px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>{c.name}</div>
+                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>$1 PER SUBSCRIPTION</div>
                   </div>
-                  <a href={c.url} target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(255,200,0,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,textDecoration:"none",border:"0.5px solid rgba(255,200,0,0.3)",padding:"4px 10px",borderRadius:"10px"}}>VISIT →</a>
+                  <a href={c.url} target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(255,200,0,0.8)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,textDecoration:"none",border:"0.5px solid rgba(255,200,0,0.3)",padding:"4px 10px",borderRadius:"10px"}}>VISIT →</a>
                 </div>
               ))}
             </div>
             <div style={{padding:"10px 18px",borderTop:"0.5px solid rgba(255,200,0,0.1)",textAlign:"center"}}>
-              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",lineHeight:1.6}}>Every Elite member helps fund research into endometriosis and brain cancer.</div>
+              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",lineHeight:1.6}}>Every Elite member helps fund research into endometriosis and brain cancer.</div>
             </div>
           </div>
 
           {/* Legal Links */}
           <div style={{display:"flex",justifyContent:"center",gap:"16px",paddingTop:"4px"}}>
-            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textDecoration:"none"}}>Privacy Policy</a>
-            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:SANS_FONT}}>·</span>
-            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",textDecoration:"none"}}>Terms of Use</a>
+            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",textDecoration:"none"}}>Privacy Policy</a>
+            <span style={{fontSize:"9px",color:"rgba(235,235,245,0.3)",fontFamily:SANS_FONT}}>·</span>
+            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",textDecoration:"none"}}>Terms of Use</a>
           </div>
         </div>
       </div>
@@ -58458,22 +58460,22 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Assets</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Total value</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500}}>${totalAssets.toLocaleString()}</div>
+                <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total value</div>
+                <div style={{fontSize:"24px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:500}}>${totalAssets.toLocaleString()}</div>
               </div>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'assetMap',label:'ASSET MAP'},{id:'knowledge',label:'GUIDE'}].map(tab => (
-                <button key={tab.id} onClick={() => tab.view ? setActiveView(tab.id) : setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"12px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+              {[{id:'assets',label:'Assets'},{id:'goals',label:'Goals'},{id:'assetMap',label:'Asset map'},{id:'knowledge',label:'Guide'}].map(tab => (
+                <button key={tab.id} onClick={() => tab.view ? setActiveView(tab.id) : setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:assetsSubTab===tab.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -58485,15 +58487,15 @@ function MuzzApp() {
           {assetsSubTab === 'assets' && (
             <>
               {/* Assets Input */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Assets{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Assets{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Property, super, cash, vehicles, etc.</p>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Assets</h2>
+                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Property, super, cash, vehicles, etc.</p>
                 </div>
 
             {/* Assets Cards */}
@@ -58514,32 +58516,32 @@ function MuzzApp() {
                 const startFresh = () => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]);
                 const catEmoji = { cash:'💵', super:'🏦', vehicle:'🚗', shares:'📈', property:'🏠' };
                 return (
-                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample assets</div>
-                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your total net worth — everything you own.</div>
-                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Cash, super, vehicles, shares, property. The pie chart breaks down where your money lives.</div>
+                  <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample assets</div>
+                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your total net worth — everything you own.</div>
+                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Cash, super, vehicles, shares, property. The pie chart breaks down where your money lives.</div>
                     <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
                       {samples.map((s, i) => {
                         const pct = (s.value / sampleTotal) * 100;
                         return (
-                          <div key={i} style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"10px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px"}}>
+                          <div key={i} style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px"}}>
                             <div style={{fontSize:"14px"}}>{catEmoji[s.category]}</div>
-                            <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                            <div style={{color:"#00c8ff",textAlign:"right"}}>${s.value.toLocaleString()}</div>
-                            <div style={{color:"rgba(148,163,184,0.6)",textAlign:"right",fontSize:"10px"}}>{pct.toFixed(0)}%</div>
+                            <div style={{color:"rgba(235,235,245,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                            <div style={{color:"#0A84FF",textAlign:"right"}}>${s.value.toLocaleString()}</div>
+                            <div style={{color:"rgba(235,235,245,0.6)",textAlign:"right",fontSize:"10px"}}>{pct.toFixed(0)}%</div>
                           </div>
                         );
                       })}
-                      <div style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",borderTop:"1px solid rgba(0,200,255,0.28)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
+                      <div style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",borderTop:"0.5px solid rgba(255,255,255,0.14)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
                         <div></div>
-                        <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"0.3px"}}>Net worth</div>
-                        <div style={{color:"#00c8ff",textAlign:"right"}}>${sampleTotal.toLocaleString()}</div>
+                        <div style={{color:"rgba(235,235,245,0.95)",letterSpacing:"0"}}>Net worth</div>
+                        <div style={{color:"#0A84FF",textAlign:"right"}}>${sampleTotal.toLocaleString()}</div>
                         <div></div>
                       </div>
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -58549,32 +58551,32 @@ function MuzzApp() {
                 const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
                 const val = parseFloat(asset?.value) || 0;
                 return (
-                  <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.05)"):"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
+                  <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.05)"):"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
                     {/* Compact row */}
                     <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                       <div style={{width:"28px",height:"28px",borderRadius:"8px",background:"rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",flexShrink:0}}>{cat?.emoji || '💼'}</div>
                       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{asset?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed asset</span>}</div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{asset?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed asset</span>}</div>
+                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
                           {cat?.name || 'No type'}{asset?.ownedFor ? ` · ${asset.ownedFor}` : ''}
                         </div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
                         {val > 0 && (
                           <div style={{textAlign:"right"}}>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${val.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#0A84FF",fontWeight:600}}>${val.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                           </div>
                         )}
-                        <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
+                        <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
                       </div>
                     </button>
 
                     {/* Expanded edit panel */}
                     {isEditing && (
-                      <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(0,200,255,0.28)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                      <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Asset name</div>
+                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Asset name</div>
                           <input
                             type="text"
                             value={asset?.name || ''}
@@ -58586,7 +58588,7 @@ function MuzzApp() {
                           />
                         </div>
                         <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Type</div>
+                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Type</div>
                           <select
                             value={asset?.category || ''}
                             onFocus={scrollInputIntoView}
@@ -58600,7 +58602,7 @@ function MuzzApp() {
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>VALUE $</div>
+                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>VALUE $</div>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -58613,7 +58615,7 @@ function MuzzApp() {
                             />
                           </div>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Owned for</div>
+                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Owned for</div>
                             <input
                               type="text"
                               value={asset?.ownedFor || ''}
@@ -58626,17 +58628,17 @@ function MuzzApp() {
                           </div>
                         </div>
                         <button onClick={() => { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); }}
-                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
+                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
-            <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
+            <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(10,132,255,0.08)"}`}}>
               <button
                 onClick={() => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); }}
-                style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
               >
                 + Add Asset
               </button>
@@ -58646,22 +58648,22 @@ function MuzzApp() {
 
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Breakdown by type</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Breakdown by type</span>
+                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Breakdown by Type</h2>
-                <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Click column headers to sort</p>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Breakdown by Type</h2>
+                <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Click column headers to sort</p>
               </div>
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                    <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                       <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
@@ -58670,7 +58672,7 @@ function MuzzApp() {
                         Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
@@ -58679,7 +58681,7 @@ function MuzzApp() {
                         Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
@@ -58712,18 +58714,18 @@ function MuzzApp() {
                         return assetsSortDir === 'asc' ? comparison : -comparison;
                       })
                       .map((cat, idx) => (
-                        <tr key={idx} style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${cat.total.toLocaleString()}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${cat.total.toLocaleString()}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       ))}
                   </tbody>
                   <tfoot>
                     <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
+                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -58734,7 +58736,7 @@ function MuzzApp() {
 
           {/* Asset Constellation — radial branch graph, collapsible */}
           {filledAssets.length > 0 && (() => {
-            const accent = '#00c8ff';
+            const accent = '#0A84FF';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
             const sortedAssetsRaw = [...filledAssets].sort((a,b) => b.value - a.value);
             const totalNW = sortedAssetsRaw.reduce((s,a) => s + a.value, 0);
@@ -58761,10 +58763,10 @@ function MuzzApp() {
               return { ...a, angle, x, y, px, py, bx, by, catName: cat?.name || 'Other' };
             });
             return (
-              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"14px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{rootName} constellation</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <details style={{...LIQUID_GLASS,border:`0.5px solid ${accent}25`,borderRadius:"20px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{rootName} constellation</span>
+                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   {isWide ? (
@@ -58803,14 +58805,14 @@ function MuzzApp() {
 
                     {/* Root node — user's name in centre */}
                     <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"14px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
                         <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                         <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                        <span style={{fontSize:isWide?"18px":"15px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.5px"}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
                       </div>
                     </div>
 
@@ -58819,21 +58821,21 @@ function MuzzApp() {
                       const widthPct = (a.value / maxVal) * 100;
                       return (
                         <div key={a.id || idx} style={{position:"absolute",left:a.x,top:a.y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${accent}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
                             <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                             <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
                             <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
                             <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                               <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                                 <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
                               </div>
                               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(148,163,184,0.55)"}}>{a.catName}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
                                 <span style={{fontFamily:SANS_FONT,fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
                               </div>
                               <div style={{paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:`${accent}99`,letterSpacing:"0",fontWeight:600}}>
                                   {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
                                 </span>
                               </div>
@@ -58850,14 +58852,14 @@ function MuzzApp() {
                       <div style={{position:"relative",maxWidth:"100%"}}>
                         {/* Root node — top centre */}
                         <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
-                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"14px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
                             <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
                             <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                            <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                            <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                            <span style={{fontSize:"8px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
                           </div>
                         </div>
 
@@ -58871,21 +58873,21 @@ function MuzzApp() {
                               <div key={a.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
                                 <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
                                 <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
-                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${accent}`:undefined,borderRight:left?undefined:`2px solid ${accent}`,borderRadius:"12px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${accent}`:undefined,borderRight:left?undefined:`2px solid ${accent}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
                                   <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
                                   <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
                                   <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                                     <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                                       <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
                                     </div>
                                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{a.catName}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
                                       <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
                                     </div>
                                     <div style={{paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:`${accent}99`,letterSpacing:"0",fontWeight:600}}>
                                         {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
                                       </span>
                                     </div>
@@ -58902,15 +58904,15 @@ function MuzzApp() {
 
                   {/* Detail list below */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"8px"}}>Asset details</div>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Asset details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {nodes.map((a, idx) => (
                         <div key={a.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"10px"}}>
                           <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                            <span style={{color:"#e0eaff",fontWeight:600}}>{a.name}</span>
+                            <span style={{color:"#FFFFFF",fontWeight:600}}>{a.name}</span>
                             <span style={{color:accent,fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
                           </div>
-                          <div style={{display:"flex",justifyContent:"space-between",color:"rgba(148,163,184,0.55)",fontSize:"9px"}}>
+                          <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"9px"}}>
                             <span>{a.catName}{a.ownedFor?` · ${a.ownedFor}`:''}</span>
                             <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of NW</span>
                           </div>
@@ -58925,18 +58927,18 @@ function MuzzApp() {
 
           {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>Assets breakdown</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Assets breakdown</span>
+                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
               </summary>
               <div style={{}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Assets Breakdown</h2>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Assets Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
-              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                 <div className="relative">
                   <svg width="220" height="220" viewBox="0 0 220 220">
                     {(() => {
@@ -58969,11 +58971,11 @@ function MuzzApp() {
                               />
                             );
                           })}
-                          <circle cx="110" cy="110" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
-                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:SANS_FONT}}>
+                          <circle cx="110" cy="110" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
+                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
                             {filledAssets.length}
                           </text>
-                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
+                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>
                             assets
                           </text>
                         </>
@@ -58987,10 +58989,10 @@ function MuzzApp() {
                     const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16', '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'];
                     
                     return sortedAssets.map((asset, idx) => (
-                      <div key={idx} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",fontFamily:SANS_FONT,color:"rgba(224,234,255,0.85)"}}>
+                      <div key={idx} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.85)"}}>
                         <div style={{width:"10px",height:"10px",borderRadius:"50%",backgroundColor:colors[idx % colors.length],flexShrink:0}} />
-                        <span style={{color:"rgba(148,163,184,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{asset.name}</span>
-                        <span style={{color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
+                        <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{asset.name}</span>
+                        <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
                       </div>
                     ));
                   })()}
@@ -59000,32 +59002,32 @@ function MuzzApp() {
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Asset</th>
-                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Type</th>
-                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Value</th>
-                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>% of Total</th>
+                    <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Asset</th>
+                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Type</th>
+                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Value</th>
+                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>% of Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[...filledAssets].sort((a, b) => a.value - b.value).map((asset, idx) => {
                       const cat = assetCategories.find(c => c.id === asset.category) || { emoji: '', name: 'Select Type' };
                       return (
-                        <tr key={idx} style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{asset.name}</td>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${asset.value.toLocaleString()}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>{asset.name}</td>
+                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${asset.value.toLocaleString()}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       );
                     })}
                   </tbody>
                   <tfoot>
                     <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}></td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
+                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total</td>
+                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}></td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -59039,10 +59041,10 @@ function MuzzApp() {
           {assetsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Small Goals</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Short-term savings targets</p>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Small Goals</h2>
+                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {smallGoals.map((goal, index) => {
@@ -59050,7 +59052,7 @@ function MuzzApp() {
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -59064,7 +59066,7 @@ function MuzzApp() {
                               });
                             }}
                             placeholder="Holiday fund"
-                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setSmallGoals(prev => prev.filter((_, i) => i !== index))}
@@ -59074,8 +59076,8 @@ function MuzzApp() {
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -59088,12 +59090,12 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -59106,7 +59108,7 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -59130,7 +59132,7 @@ function MuzzApp() {
                   })}
                   <button
                     onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -59138,10 +59140,10 @@ function MuzzApp() {
               </div>
 
               {/* Big Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Big Goals</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Long-term wealth targets</p>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Big Goals</h2>
+                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Long-term wealth targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {bigGoals.map((goal, index) => {
@@ -59149,7 +59151,7 @@ function MuzzApp() {
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -59163,7 +59165,7 @@ function MuzzApp() {
                               });
                             }}
                             placeholder="House deposit"
-                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBigGoals(prev => prev.filter((_, i) => i !== index))}
@@ -59173,8 +59175,8 @@ function MuzzApp() {
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -59187,12 +59189,12 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
+                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
+                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -59205,11 +59207,11 @@ function MuzzApp() {
                                 });
                               }}
                               placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
-                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#00c8ff",fontWeight:600}}>
+                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#0A84FF",fontWeight:600}}>
                               {progress.toFixed(0)}%
                             </span>
                           )}
@@ -59229,7 +59231,7 @@ function MuzzApp() {
                   })}
                   <button
                     onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -59241,7 +59243,7 @@ function MuzzApp() {
           {assetsSubTab === 'knowledge' && (
             <>
               {/* Muzz's Knowledge Header */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"14px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"20px",padding:"16px 20px",backgroundSize:"20px 20px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
                     <h2 className="text-2xl font-bold">Muzz's Knowledge Corner</h2>
@@ -59251,21 +59253,21 @@ function MuzzApp() {
               </div>
 
               {/* The 3 Asset Categories */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>📚 The 3 Asset Categories (Buffett's Framework)</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"4px"}}>Warren Buffett explains that all investments fall into one of three buckets</p>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>📚 The 3 Asset Categories (Buffett's Framework)</h2>
+                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"4px"}}>Warren Buffett explains that all investments fall into one of three buckets</p>
                 </div>
                 <div className="p-6 space-y-6">
                   
                   {/* Category 1 */}
-                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"12px",padding:"14px 16px"}}>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">💵</span>
                       <h3 className="text-lg font-bold text-red-800">Category 1: Currency-Based Investments</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Cash, bonds, money-market funds, T-bills, mortgages, bank deposits</p>
-                    <div style={{background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.25)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"10px",padding:"12px 14px"}}>
+                    <div style={{background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
                       <p className="text-red-700 font-semibold mb-2">️ Buffett's View: "These are the most dangerous long-term assets"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Even though they feel "safe," they silently destroy purchasing power</li>
@@ -59280,13 +59282,13 @@ function MuzzApp() {
                   </div>
 
                   {/* Category 2 */}
-                  <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.3)",borderLeft:"2px solid rgba(234,179,8,0.6)",borderRadius:"12px",padding:"14px 16px"}}>
+                  <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">🪙</span>
                       <h3 className="text-lg font-bold text-yellow-800">Category 2: Non-Productive Assets</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Gold, crypto, collectibles, tulips, etc.</p>
-                    <div style={{background:"rgba(234,179,8,0.04)",border:"0.5px solid rgba(234,179,8,0.25)",borderLeft:"2px solid rgba(234,179,8,0.6)",borderRadius:"10px",padding:"12px 14px"}}>
+                    <div style={{background:"rgba(234,179,8,0.04)",border:"0.5px solid rgba(234,179,8,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
                       <p className="text-yellow-700 font-semibold mb-2">️ Buffett's View: "These assets will never produce anything"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Their value is based solely on someone else paying more later</li>
@@ -59298,13 +59300,13 @@ function MuzzApp() {
                         <div className="grid md:grid-cols-2 gap-3 text-sm">
                           <div style={{padding:"8px 10px",background:"rgba(234,179,8,0.08)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"10px"}}>
                             <p className="font-bold">PILE A: All the gold in the world</p>
-                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>170,000 metric tons worth $9.6T</p>
-                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces NOTHING forever</p>
+                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>170,000 metric tons worth $9.6T</p>
+                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces NOTHING forever</p>
                           </div>
                           <div style={{padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
                             <p className="font-bold">PILE B: What $9.6T could buy</p>
-                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>All U.S. farmland + 16 Exxon Mobils + $1T cash</p>
-                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces trillions in value</p>
+                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>All U.S. farmland + 16 Exxon Mobils + $1T cash</p>
+                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces trillions in value</p>
                           </div>
                         </div>
                         <p className="text-sm italic text-yellow-800 mt-2">"Can you imagine an investor choosing pile A over pile B?" — Buffett</p>
@@ -59313,13 +59315,13 @@ function MuzzApp() {
                   </div>
 
                   {/* Category 3 */}
-                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"12px",padding:"14px 16px"}}>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">🏭</span>
                       <h3 className="text-lg font-bold text-green-800">Category 3: Productive Assets ⭐ BUFFETT'S PICK</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Businesses, farms, real estate</p>
-                    <div style={{background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.25)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"10px",padding:"12px 14px"}}>
+                    <div style={{background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
                       <p className="text-green-700 font-semibold mb-2">Buffett's Strong Preference: "The ONLY category Berkshire overwhelmingly prefers"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Generate cash & produce goods</li>
@@ -59339,7 +59341,7 @@ function MuzzApp() {
                   </div>
 
                   {/* Summary Table */}
-                  <div style={{background:"rgba(0,200,255,0.03)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",padding:"14px 16px"}}>
+                  <div style={{background:"rgba(10,132,255,0.03)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 16px"}}>
                     <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Buffett's Final Verdict</h3>
                     <div style={{overflowX:"auto"}}>
                       <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
@@ -59351,12 +59353,12 @@ function MuzzApp() {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(239,68,68,0.06)"}}>
+                          <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(239,68,68,0.06)"}}>
                             <td className="py-2 px-3 font-medium">1. Currency-based</td>
                             <td className="py-2 px-3 text-gray-600">Cash, bonds, bills</td>
                             <td className="py-2 px-3 text-red-700">Safest-feeling, but long-term wealth destroyers</td>
                           </tr>
-                          <tr style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(234,179,8,0.06)"}}>
+                          <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(234,179,8,0.06)"}}>
                             <td className="py-2 px-3 font-medium">2. Non-productive</td>
                             <td className="py-2 px-3 text-gray-600">Gold, crypto, collectibles</td>
                             <td className="py-2 px-3 text-yellow-700">Speculative, require new buyers, produce nothing</td>
@@ -59369,7 +59371,7 @@ function MuzzApp() {
                         </tbody>
                       </table>
                     </div>
-                    <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"10px"}}>
+                    <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
                       <p className="text-green-800 font-semibold italic">"Over any extended period of time, this category will be the runaway winner. More important, it will be by far the safest." — Warren Buffett</p>
                     </div>
                   </div>
@@ -59385,18 +59387,18 @@ function MuzzApp() {
             <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {padding:"12px 16px"}}>
               <div style={{marginBottom:"10px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexShrink:0}}>
                 {assetMapExpanded && (
-                  <span style={{fontSize:"12px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.2px",fontWeight:600}}>ASSET MAP · FULLSCREEN</span>
+                  <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>ASSET MAP · FULLSCREEN</span>
                 )}
                 <button
                   onClick={() => setAssetMapExpanded(v => !v)}
-                  style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(0,200,255,0.15)",border:"0.5px solid rgba(0,200,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,marginLeft:"auto"}}
+                  style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(10,132,255,0.15)",border:"0.5px solid rgba(10,132,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,marginLeft:"auto"}}
                 >
                   {assetMapExpanded ? '⊟ COLLAPSE MAP' : '⊞ EXPAND MAP'}
                 </button>
               </div>
               {!assetMapExpanded && (
-                <div style={{marginBottom:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.045)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",fontSize:"13px",color:"rgba(226,232,240,0.65)",fontFamily:SANS_FONT,lineHeight:1.55}}>
-                  A visual map of how your wealth fits together — you at the centre, with branches out to properties, super, cash, shares and anything else you own. <span style={{color:"rgba(0,200,255,0.85)"}}>Add nodes and connect them</span> to see your whole position as one picture, and expand the map for the full view.
+                <div style={{marginBottom:"10px",padding:"12px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",fontSize:"13px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.55}}>
+                  A visual map of how your wealth fits together — you at the centre, with branches out to properties, super, cash, shares and anything else you own. <span style={{color:"rgba(10,132,255,0.85)"}}>Add nodes and connect them</span> to see your whole position as one picture, and expand the map for the full view.
                 </div>
               )}
               <div style={assetMapExpanded ? {flex:1,minHeight:0} : {}}>
@@ -59870,17 +59872,17 @@ function MuzzApp() {
 
         {/* HEADER — only shown when NOT in research mode */}
         {!researchMode && (
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px",flexWrap:"wrap",gap:"12px"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>INVESTMENTS</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Investments</div>
               </div>
               <button
                 onClick={() => { if (isResearch) { setInvestmentsSubTab('researchHome'); setResearchMode(true); } else { setActiveView('upgrade'); } }}
-                style={{position:"relative",textAlign:"right",cursor:"pointer",fontFamily:"monospace",padding:"12px 18px",background:"linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 100%)",border:"1px solid rgba(245,158,11,0.55)",borderRadius:"6px",boxShadow:"0 0 22px rgba(245,158,11,0.18)",transition:"all 0.2s ease"}}
+                style={{position:"relative",textAlign:"right",cursor:"pointer",fontFamily:SANS_FONT,padding:"12px 18px",background:"linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 100%)",border:"1px solid rgba(245,158,11,0.55)",borderRadius:"10px",boxShadow:"0 0 22px rgba(245,158,11,0.18)",transition:"all 0.2s ease"}}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 34px rgba(245,158,11,0.38)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.95)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.18)"; e.currentTarget.style.borderColor = "rgba(245,158,11,0.55)"; e.currentTarget.style.transform = "translateY(0)"; }}
               >
@@ -59888,20 +59890,20 @@ function MuzzApp() {
                 <div style={{position:"absolute",top:"5px",right:"5px",width:"9px",height:"9px",borderTop:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
                 <div style={{position:"absolute",bottom:"5px",left:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderLeft:"1px solid rgba(245,158,11,0.8)"}}/>
                 <div style={{position:"absolute",bottom:"5px",right:"5px",width:"9px",height:"9px",borderBottom:"1px solid rgba(245,158,11,0.8)",borderRight:"1px solid rgba(245,158,11,0.8)"}}/>
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.65)",letterSpacing:"2px",marginBottom:"5px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px",fontWeight:600,whiteSpace:"nowrap"}}>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.65)",letterSpacing:"0",marginBottom:"5px",display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"6px",fontWeight:600,whiteSpace:"nowrap"}}>
                   <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 5px rgba(34,197,94,0.95)"}}/>
                   PREMIUM RESEARCH WORKSPACE
                 </div>
-                <div style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"2.5px",fontWeight:700,textShadow:"0 0 14px rgba(245,158,11,0.35)"}}>RESEARCH OS →</div>
+                <div style={{fontSize:"20px",color:"#f59e0b",letterSpacing:"0",fontWeight:700,textShadow:"0 0 14px rgba(245,158,11,0.35)"}}>RESEARCH OS →</div>
               </button>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
-                {id:'portfolio',label:'CURRENT PORTFOLIO'},
+                {id:'portfolio',label:'Current portfolio'},
               ].map(tab => {
                 const isActive = investmentsSubTab === tab.id;
                 return (
-                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:isActive?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:isActive?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
                 );
@@ -60273,8 +60275,8 @@ function MuzzApp() {
                 const todayQuote = quotes[quoteIndex];
                 return (
                   <div style={{padding:"2px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"13px",color:"rgba(226,232,240,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
-                    <div style={{fontSize:"11px",color:"rgba(226,232,240,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
+                    <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
+                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
                   </div>
                 );
               })()}
@@ -60285,7 +60287,7 @@ function MuzzApp() {
             const isResearchMapTab = false;
             // Each tab forces its own mode — current portfolio = current, future portfolio = future.
             const effectiveMode = investmentsSubTab === 'futurePortfolio' ? 'future' : 'current';
-            const accent = '#00c8ff';
+            const accent = '#0A84FF';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
 
             // Quick stats for header card
@@ -60320,7 +60322,7 @@ function MuzzApp() {
             };
 
             const modeMeta = {
-              current: { label: 'CURRENT PORTFOLIO', count: currentList.length, accent: '#00c8ff' },
+              current: { label: 'CURRENT PORTFOLIO', count: currentList.length, accent: '#0A84FF' },
               future:  { label: 'FUTURE / WATCHLIST', count: futureList.length, accent: '#3b82f6' },
               research:{ label: 'RESEARCH', count: researchList.length, accent: '#a855f7' },
             };
@@ -60430,15 +60432,15 @@ function MuzzApp() {
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Mode switcher — hidden; each sub-tab determines its own mode */}
                 {false && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
-                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Graph mode</div>
+                <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"10px 14px"}}>
+                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",fontWeight:600}}>Graph mode</div>
                   <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
                     {['current','future'].map(m => {
                       const meta = modeMeta[m];
                       const active = constellationMode === m;
                       return (
                         <button key={m} onClick={() => setConstellationMode(m)}
-                          style={{padding:"7px 14px",background:active?`${meta.accent}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${active?meta.accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?meta.accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600,boxShadow:active?`0 0 12px ${meta.accent}30`:"none"}}>
+                          style={{padding:"7px 14px",background:active?`${meta.accent}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${active?meta.accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?meta.accent:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",cursor:"pointer",fontWeight:600,boxShadow:active?`0 0 12px ${meta.accent}30`:"none"}}>
                           {meta.label} · {meta.count}
                         </button>
                       );
@@ -60449,15 +60451,15 @@ function MuzzApp() {
 
                 {/* Portfolio summary — only in current mode */}
                 {effectiveMode==='current' && currentList.length > 0 && (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"14px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio totals · {displayCurrency}</div>
+                      <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio totals · {displayCurrency}</div>
                       <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Display:</span>
+                        <span style={{fontSize:"9px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Display:</span>
                         <select
                           value={displayCurrency}
                           onChange={(e) => setDisplayCurrency(e.target.value)}
-                          style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"10px",fontWeight:600,letterSpacing:"0.3px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
+                          style={{background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"10px",fontWeight:600,letterSpacing:"0",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
                         >
                           {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
                             <option key={c} value={c}>{c}</option>
@@ -60467,24 +60469,24 @@ function MuzzApp() {
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"10px"}}>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>VALUE</div>
-                        <div style={{fontSize:"18px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                        <div style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>VALUE</div>
+                        <div style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Invested</div>
-                        <div style={{fontSize:"18px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                        <div style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Invested</div>
+                        <div style={{fontSize:"18px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Return</div>
+                        <div style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Return</div>
                         <div style={{fontSize:"18px",color:totalPortReturn>=0?"#22c55e":"#ef4444",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{totalPortReturn>=0?'+':''}{displaySym}{Math.abs(totalPortReturn).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                       </div>
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>%</div>
+                        <div style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>%</div>
                         <div style={{fontSize:"18px",color:totalPortReturnPct>=0?"#22c55e":"#ef4444",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</div>
                       </div>
                     </div>
                     {fxLastUpdated && (
-                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
+                      <div style={{fontSize:"8px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
                     )}
                   </div>
                 )}
@@ -60493,15 +60495,15 @@ function MuzzApp() {
             <>
 
               {/* Stocks Input */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Stocks & ETFs{stocks.length>0?` · ${stocks.length}`:''}</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+              <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Stocks & ETFs{stocks.length>0?` · ${stocks.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                 </summary>
                 <div style={{}}>
-                <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Stocks & ETFs</h2>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
+                <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Stocks & ETFs</h2>
+                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
                 {/* Stocks Cards */}
@@ -60521,31 +60523,31 @@ function MuzzApp() {
                     };
                     const startFresh = () => setStocks([{ id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }]);
                     return (
-                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>Preview · sample portfolio</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your stock & ETF holdings — see gains, losses, and total portfolio value.</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Enter what you invested, the current value, and the app calculates returns + breaks down by stock and industry.</div>
+                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample portfolio</div>
+                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your stock & ETF holdings — see gains, losses, and total portfolio value.</div>
+                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Enter what you invested, the current value, and the app calculates returns + breaks down by stock and industry.</div>
                         <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
                           {samples.map((s, i) => {
                             const g = s.currentValue - s.invested;
                             const gp = (g / s.invested) * 100;
                             return (
-                              <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"10px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                                <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                                <div style={{color:"rgba(148,163,184,0.7)",textAlign:"right",fontSize:"10px"}}>${s.currentValue.toLocaleString()}</div>
+                              <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px"}}>
+                                <div style={{color:"rgba(235,235,245,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                                <div style={{color:"rgba(235,235,245,0.7)",textAlign:"right",fontSize:"10px"}}>${s.currentValue.toLocaleString()}</div>
                                 <div style={{color:g>=0?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)",textAlign:"right",fontWeight:600,fontSize:"10px"}}>{g>=0?'+':''}{gp.toFixed(1)}%</div>
                               </div>
                             );
                           })}
-                          <div style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",borderTop:"1px solid rgba(0,200,255,0.28)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
-                            <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"0.3px"}}>TOTAL</div>
-                            <div style={{color:"#00c8ff",textAlign:"right"}}>${totalVal.toLocaleString()}</div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",borderTop:"0.5px solid rgba(255,255,255,0.14)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
+                            <div style={{color:"rgba(235,235,245,0.95)",letterSpacing:"0"}}>TOTAL</div>
+                            <div style={{color:"#0A84FF",textAlign:"right"}}>${totalVal.toLocaleString()}</div>
                             <div style={{color:totalVal>=totalInv?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)",textAlign:"right"}}>{totalVal>=totalInv?'+':''}{(((totalVal-totalInv)/totalInv)*100).toFixed(1)}%</div>
                           </div>
                         </div>
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
                     );
@@ -60565,53 +60567,53 @@ function MuzzApp() {
                     const stockCurrency = (tickerKey && livePrices[tickerKey]?.currency) || stock?.currency || 'USD';
                     const sym = currencySymbol(stockCurrency);
                     return (
-                      <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.06)"):"rgba(5,12,24,0.6)",border:`1px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(0,200,255,0.2)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
+                      <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.08)":"rgba(10,132,255,0.06)"):"rgba(28,28,30,0.5)",border:`1px solid ${researchMode?"rgba(245,158,11,0.25)":"rgba(10,132,255,0.2)"}`,borderRadius:"20px",overflow:"hidden",transition:"all 0.15s"}}>
                         {/* Compact row */}
                         <button onClick={() => setEditingStockIdx(isEditing ? null : index)}
                           style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",boxShadow:researchMode?"0 0 6px rgba(245,158,11,0.6)":"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(245,158,11,0.95)":"#0A84FF",boxShadow:researchMode?"0 0 6px rgba(245,158,11,0.6)":"0 0 6px rgba(10,132,255,0.5)",flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stock?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed stock</span>}</div>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stock?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed stock</span>}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
                               {stock?.industry || 'No industry'}{stock?.heldFor ? ` · ${stock.heldFor}` : ''}{sharesNum > 0 ? ` · ${sharesNum} sh` : ''}{stock?.invested > 0 ? ` · ${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : ''}
                             </div>
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
                             {cur > 0 && (
                               <div style={{textAlign:"right"}}>
-                                <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#00c8ff",fontWeight:600}}>{sym}{cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                                <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.5)",fontWeight:500,letterSpacing:"0.5px"}}>{stockCurrency}</div>
+                                <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#0A84FF",fontWeight:600}}>{sym}{cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                                <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.5)",fontWeight:500,letterSpacing:"0"}}>{stockCurrency}</div>
                                 {livePrice > 0 && sharesNum > 0 && (
                                   <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:dailyChange >= 0 ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)",fontWeight:600}}>{dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%</div>
                                 )}
                               </div>
                             )}
-                            <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
+                            <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
                           </div>
                         </button>
 
                         {/* Expanded edit panel */}
                         {isEditing && (
-                          <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(0,200,255,0.28)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Ticker / name</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Ticker / name</div>
                               <input
                                 type="text"
                                 value={stock?.name || ''}
                                 onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'name', e.target.value.toUpperCase())}
                                 placeholder="e.g. HSY, AAPL, BRK"
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,letterSpacing:"0.3px",padding:"8px 10px",outline:"none",textTransform:"uppercase"}}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,letterSpacing:"0",padding:"8px 10px",outline:"none"}}
                               />
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>{stock?.manualMode ? 'Manual mode — enter invested and current value directly' : 'Auto mode — uses live price × shares. ASX tickers auto-resolve (REH → REH.AX). For others, add suffix (.L, .TO, etc.).'}</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>{stock?.manualMode ? 'Manual mode — enter invested and current value directly' : 'Auto mode — uses live price × shares. ASX tickers auto-resolve (REH → REH.AX). For others, add suffix (.L, .TO, etc.).'}</div>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Industry</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Industry</div>
                               <select
                                 value={stock?.industry || ''}
                                 onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'industry', e.target.value)}
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
                                 {industries.map(ind => (
                                   <option key={ind.id} value={ind.id}>{ind.name}</option>
                                 ))}
@@ -60619,14 +60621,14 @@ function MuzzApp() {
                             </div>
 
                             {/* Mode toggle: AUTO ⇄ MANUAL */}
-                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px"}}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                               <div>
-                                <div style={{fontSize:"10px",color:"rgba(224,234,255,0.8)",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px"}}>{stock?.manualMode ? 'MANUAL VALUES' : 'AUTO (LIVE PRICE)'}</div>
-                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,marginTop:"2px"}}>{stock?.manualMode ? 'You enter invested and current value' : 'App calculates from shares × live price'}</div>
+                                <div style={{fontSize:"10px",color:"rgba(235,235,245,0.8)",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>{stock?.manualMode ? 'MANUAL VALUES' : 'AUTO (LIVE PRICE)'}</div>
+                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px"}}>{stock?.manualMode ? 'You enter invested and current value' : 'App calculates from shares × live price'}</div>
                               </div>
                               <button
                                 onClick={() => updateStock(index, 'manualMode', !stock?.manualMode)}
-                                style={{padding:"6px 12px",background:stock?.manualMode ? "rgba(168,85,247,0.15)" : "rgba(0,200,255,0.12)",border:`1px solid ${stock?.manualMode ? "rgba(168,85,247,0.5)" : "rgba(0,200,255,0.4)"}`,borderRadius:"10px",color:stock?.manualMode ? "rgba(168,85,247,0.95)" : "rgba(0,200,255,0.9)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}
+                                style={{padding:"6px 12px",background:stock?.manualMode ? "rgba(168,85,247,0.15)" : "rgba(10,132,255,0.12)",border:`1px solid ${stock?.manualMode ? "rgba(168,85,247,0.5)" : "rgba(10,132,255,0.4)"}`,borderRadius:"10px",color:stock?.manualMode ? "rgba(168,85,247,0.95)" : "rgba(10,132,255,0.9)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}
                               >
                                 {stock?.manualMode ? '→ SWITCH TO AUTO' : '→ SWITCH TO MANUAL'}
                               </button>
@@ -60637,7 +60639,7 @@ function MuzzApp() {
                                 {/* MANUAL MODE: direct invested + current value inputs */}
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>INVESTED $</div>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>INVESTED $</div>
                                     <input
                                       type="text"
                                       inputMode="decimal"
@@ -60645,11 +60647,11 @@ function MuzzApp() {
                                       onFocus={scrollInputIntoView}
                                       onChange={(e) => updateStock(index, 'invested', e.target.value)}
                                       placeholder="0"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
                                     />
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>CURRENT VALUE $</div>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>CURRENT VALUE $</div>
                                     <input
                                       type="text"
                                       inputMode="decimal"
@@ -60657,12 +60659,12 @@ function MuzzApp() {
                                       onFocus={scrollInputIntoView}
                                       onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
                                       placeholder="0"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
                                     />
                                   </div>
                                 </div>
                                 <div>
-                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Gain / loss</div>
+                                  <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Gain / loss</div>
                                   <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`1px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                     {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}$${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
                                   </div>
@@ -60673,7 +60675,7 @@ function MuzzApp() {
                                 {/* AUTO MODE: shares + avgCost inputs, computed values */}
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Shares owned</div>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Shares owned</div>
                                     <input
                                       type="text"
                                       inputMode="decimal"
@@ -60681,11 +60683,11 @@ function MuzzApp() {
                                       onFocus={scrollInputIntoView}
                                       onChange={(e) => updateStock(index, 'shares', e.target.value)}
                                       placeholder="0"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
                                     />
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>AVG COST / SHARE $</div>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>AVG COST / SHARE $</div>
                                     <input
                                       type="text"
                                       inputMode="decimal"
@@ -60693,34 +60695,34 @@ function MuzzApp() {
                                       onFocus={scrollInputIntoView}
                                       onChange={(e) => updateStock(index, 'avgCost', e.target.value)}
                                       placeholder="0.00"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
                                     />
                                   </div>
                                 </div>
                                 {/* Auto-computed values: read-only */}
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>INVESTED (AUTO)</div>
-                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",color:stock?.invested > 0 ? "#e0eaff" : "rgba(148,163,184,0.5)"}}>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>INVESTED (AUTO)</div>
+                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",color:stock?.invested > 0 ? "#FFFFFF" : "rgba(235,235,245,0.5)"}}>
                                       {stock?.invested > 0 ? `${sym}${stock.invested.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
                                     </div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Live price {stockCurrency && livePrice > 0 ? `· ${stockCurrency}` : ''}</div>
-                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",color:livePrice > 0 ? "#e0eaff" : "rgba(148,163,184,0.5)"}}>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Live price {stockCurrency && livePrice > 0 ? `· ${stockCurrency}` : ''}</div>
+                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",color:livePrice > 0 ? "#FFFFFF" : "rgba(235,235,245,0.5)"}}>
                                       {livePrice > 0 ? `${sym}${livePrice.toFixed(2)}` : (tickerKey ? 'Hit refresh →' : '—')}
                                     </div>
                                   </div>
                                 </div>
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>CURRENT VALUE (AUTO)</div>
-                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",color:cur > 0 ? "#00c8ff" : "rgba(148,163,184,0.5)"}}>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>CURRENT VALUE (AUTO)</div>
+                                    <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",color:cur > 0 ? "#0A84FF" : "rgba(235,235,245,0.5)"}}>
                                       {cur > 0 ? `${sym}${cur.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
                                     </div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Gain / loss</div>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Gain / loss</div>
                                     <div style={{padding:"8px 10px",borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`1px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                       {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}${sym}${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
                                     </div>
@@ -60729,27 +60731,27 @@ function MuzzApp() {
                               </>
                             )}
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>Held for</div>
+                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Held for</div>
                               <input
                                 type="text"
                                 value={stock?.heldFor || ''}
                                 onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
                                 placeholder="e.g. 2y 3m"
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
                               />
                             </div>
                             <button onClick={() => { setStocks(prev => prev.filter((_, i) => i !== index)); setEditingStockIdx(null); }}
-                              style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
+                              style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
                           </div>
                         )}
                       </div>
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:`1px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
+                <div style={{padding:"12px 16px",borderTop:`1px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(10,132,255,0.08)"}`}}>
                   <button
                     onClick={() => { setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', shares: 0, sharesStr: '', avgCost: 0, avgCostStr: '', industry: '', dateAdded: new Date().toISOString() }]); setEditingStockIdx(stocks.length); }}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
                   >
                     + Add Stock
                   </button>
@@ -60759,10 +60761,10 @@ function MuzzApp() {
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by name</span>
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by name</span>
+                    <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
                   <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -60810,9 +60812,9 @@ function MuzzApp() {
                             );
                           });
                         })()}
-                        <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
-                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{filledStocks.length} stocks</text>
-                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:SANS_FONT}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
+                        <circle cx="125" cy="125" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
+                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{filledStocks.length} stocks</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
@@ -60834,7 +60836,7 @@ function MuzzApp() {
                                 className="w-3 h-3 rounded-full flex-shrink-0" 
                                 style={{ backgroundColor: colors[i % colors.length] }}
                               />
-                              <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{stock.name}</span>
+                              <span className="text-sm" style={{color:"rgba(235,235,245,0.9)"}}>{stock.name}</span>
                               <span className="text-sm font-medium">{pct.toFixed(1)}%</span>
                             </div>
                           );
@@ -60848,10 +60850,10 @@ function MuzzApp() {
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by industry · chart</span>
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by industry · chart</span>
+                    <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
                   <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -60897,9 +60899,9 @@ function MuzzApp() {
                             );
                           });
                         })()}
-                        <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
-                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Total</text>
-                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:SANS_FONT}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
+                        <circle cx="125" cy="125" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
+                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
@@ -60917,7 +60919,7 @@ function MuzzApp() {
                               className="w-3 h-3 rounded-full flex-shrink-0" 
                               style={{ backgroundColor: colors[i % colors.length] }}
                             />
-                            <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{ind.name}</span>
+                            <span className="text-sm" style={{color:"rgba(235,235,245,0.9)"}}>{ind.name}</span>
                             <span className="text-sm font-medium">{((ind.total / totalStocksValueFx) * 100).toFixed(1)}%</span>
                           </div>
                         ));
@@ -60930,22 +60932,22 @@ function MuzzApp() {
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"14px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Portfolio by industry · table</span>
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by industry · table</span>
+                    <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
                   </summary>
                   <div style={{}}>
-                  <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>Portfolio by Industry</h2>
-                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px"}}>Click column headers to sort</p>
+                  <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
+                    <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Portfolio by Industry</h2>
+                    <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Click column headers to sort</p>
                   </div>
                   <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
                       <thead>
-                        <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                        <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'industry') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('industry'); setCurrentSortDir('asc'); }
@@ -60954,7 +60956,7 @@ function MuzzApp() {
                             Industry {currentSortBy === 'industry' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"center",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'holdings') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('holdings'); setCurrentSortDir('asc'); }
@@ -60963,7 +60965,7 @@ function MuzzApp() {
                             Holdings {currentSortBy === 'holdings' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'value') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('value'); setCurrentSortDir('asc'); }
@@ -60972,7 +60974,7 @@ function MuzzApp() {
                             Value {currentSortBy === 'value' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"0.3px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'percent') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('percent'); setCurrentSortDir('asc'); }
@@ -61001,7 +61003,7 @@ function MuzzApp() {
                           }
                           return currentSortDir === 'asc' ? comparison : -comparison;
                         }).map(ind => (
-                          <tr key={ind.name} style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                          <tr key={ind.name} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                             <td className="py-3 px-4 font-medium">{ind.name}</td>
                             <td className="py-3 px-4 text-center text-gray-600">{ind.stocks.length}</td>
                             <td className="py-3 px-4 text-right">{displaySym}{ind.total.toLocaleString(undefined, { maximumFractionDigits: 0 })} {displayCurrency}</td>
@@ -75347,13 +75349,13 @@ function MuzzApp() {
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:`1px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:`${accent}1a`,border:`1px solid ${accent}55`,borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
-            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
+            <div style={{fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
-              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0.3px",margin:0}}>GYM</h1>
+              <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"2px"}}>Weekly steps</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>{weekStepsTotal.toLocaleString()}</div>
+                <div style={{fontSize:"11px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,marginBottom:"2px"}}>Weekly steps</div>
+                <div style={{fontSize:"24px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>{weekStepsTotal.toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -75368,7 +75370,7 @@ function MuzzApp() {
             ].map(tab => {
               const active = (gymWorkoutTab||'steps') === tab.id;
               return (
-                <button key={tab.id} onClick={() => setGymWorkoutTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                <button key={tab.id} onClick={() => setGymWorkoutTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:active?accent:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               );
@@ -75379,31 +75381,31 @@ function MuzzApp() {
           {(gymWorkoutTab||'steps') === 'steps' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {/* Goal */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"14px",display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
+              <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"14px",display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
                 <div style={{flex:1,minWidth:"180px"}}>
-                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Daily step goal</div>
+                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Daily step goal</div>
                   <div style={{fontSize:"10px",color:"rgba(160,175,195,0.75)",fontFamily:SANS_FONT,marginTop:"2px"}}>10,000 is the classic target. Adjust to your fitness level.</div>
                 </div>
-                <input type="number" value={stepsGoal} onChange={e=>setStepsGoal(e.target.value)} className="slick-input accent-orange" style={{width:"120px",padding:"8px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}`,color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"right"}}/>
+                <input type="number" value={stepsGoal} onChange={e=>setStepsGoal(e.target.value)} className="slick-input accent-orange" style={{width:"120px",padding:"8px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}`,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"right"}}/>
               </div>
 
               {/* 7-day bar chart */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,marginBottom:"4px"}}>7-DAY VISUAL</div>
-                <div style={{fontSize:"10px",color:"rgba(160,175,195,0.75)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginBottom:"14px"}}>Bar height = steps. Green bar = goal hit.</div>
+              <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,marginBottom:"4px"}}>7-DAY VISUAL</div>
+                <div style={{fontSize:"10px",color:"rgba(160,175,195,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"14px"}}>Bar height = steps. Green bar = goal hit.</div>
                 <div style={{display:"flex",gap:"4px",alignItems:"flex-end",height:"140px",borderBottom:`1px solid ${accent}20`,paddingBottom:"4px"}}>
                   {weekDays.map(day => {
                     const steps = dailySteps[day.date]||0;
                     const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal;
                     const pct = Math.min(100, (steps/maxSteps)*100);
                     const hit = steps >= stepsGoal;
-                    const color = steps === 0 ? "rgba(148,163,184,0.2)" : hit ? "rgba(34,197,94,0.85)" : accent;
+                    const color = steps === 0 ? "rgba(235,235,245,0.2)" : hit ? "rgba(34,197,94,0.85)" : accent;
                     return (
                       <div key={day.date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
                         <div style={{flex:1,width:"100%",display:"flex",alignItems:"flex-end",position:"relative"}}>
                           <div style={{width:"100%",height:`${pct}%`,background:color,borderRadius:"2px 2px 0 0",boxShadow:steps?`0 0 8px ${color}`:"none",transition:"height 0.3s"}}/>
                           {steps > 0 && (
-                            <div style={{position:"absolute",bottom:"100%",left:"50%",transform:"translateX(-50%)",fontSize:"8px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,marginBottom:"2px",whiteSpace:"nowrap"}}>{steps>=1000?(steps/1000).toFixed(1)+'k':steps}</div>
+                            <div style={{position:"absolute",bottom:"100%",left:"50%",transform:"translateX(-50%)",fontSize:"8px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,marginBottom:"2px",whiteSpace:"nowrap"}}>{steps>=1000?(steps/1000).toFixed(1)+'k':steps}</div>
                           )}
                         </div>
                       </div>
@@ -75413,16 +75415,16 @@ function MuzzApp() {
                 <div style={{display:"flex",gap:"4px",marginTop:"4px"}}>
                   {weekDays.map(day => (
                     <div key={day.date} style={{flex:1,textAlign:"center"}}>
-                      <div style={{fontSize:"9px",color:day.isToday?accent:"rgba(148,163,184,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:day.isToday?600:400}}>{day.dayShort.toUpperCase()}</div>
+                      <div style={{fontSize:"9px",color:day.isToday?accent:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:day.isToday?600:400}}>{day.dayShort.toUpperCase()}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Daily entry */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"14px"}}>
+              <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"14px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",marginBottom:"10px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>Log steps</div>
+                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Log steps</div>
                   <button onClick={() => {
                     if (!window.confirm("Clear all step entries for this week? This can't be undone.")) return;
                     setDailySteps(prev => {
@@ -75430,18 +75432,18 @@ function MuzzApp() {
                       weekDays.forEach(d => { delete next[d.date]; });
                       return next;
                     });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear week</button>
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear week</button>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {weekDays.map(day => {
                     const steps = dailySteps[day.date]||0;
                     const hit = steps >= stepsGoal;
                     return (
-                      <div key={day.date} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`1px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"12px"}}>
-                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:steps===0?"rgba(148,163,184,0.3)":hit?"rgba(34,197,94,0.9)":accent,boxShadow:steps?`0 0 6px ${hit?"rgba(34,197,94,0.9)":accent}`:"none"}}/>
-                        <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"0.3px",minWidth:"50px"}}>{day.dayShort.toUpperCase()}</span>
-                        {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>Today</span>}
-                        <input type="number" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}30`,color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",textAlign:"right"}}/>
+                      <div key={day.date} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`1px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"20px"}}>
+                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:steps===0?"rgba(235,235,245,0.3)":hit?"rgba(34,197,94,0.9)":accent,boxShadow:steps?`0 0 6px ${hit?"rgba(34,197,94,0.9)":accent}`:"none"}}/>
+                        <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:day.isToday?accent:"rgba(235,235,245,0.85)",fontWeight:600,letterSpacing:"0",minWidth:"50px"}}>{day.dayShort.toUpperCase()}</span>
+                        {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:SANS_FONT,letterSpacing:"0"}}>Today</span>}
+                        <input type="number" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}30`,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",textAlign:"right"}}/>
                         <span style={{fontSize:"10px",color:"rgba(160,175,195,0.75)",fontFamily:SANS_FONT,minWidth:"40px"}}>steps</span>
                       </div>
                     );
@@ -75459,16 +75461,16 @@ function MuzzApp() {
                 {[1,2,3,4].map(w => {
                   const active = currentWeek === w;
                   return (
-                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"12px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"12px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
+                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"12px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`1px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"20px",color:active?accent:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>
                       WEEK {w}
                     </button>
                   );
                 })}
               </div>
 
-              <div style={{background:"rgba(5,12,24,0.85)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"20px"}}>
+              <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"20px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>WEEK {currentWeek} · WORKOUT PLAN</div>
+                  <div style={{fontSize:"13px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>WEEK {currentWeek} · WORKOUT PLAN</div>
                   <button onClick={() => {
                     if (!window.confirm("Clear ALL exercises across all 4 weeks? This can't be undone.")) return;
                     setWorkoutPlan(prev => {
@@ -75476,9 +75478,9 @@ function MuzzApp() {
                       next.weeks = {}; // wipe all weeks
                       return next;
                     });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear month</button>
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Clear month</button>
                 </div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginBottom:"18px"}}>Log exercises per day. Track sets, reps, weight, drop sets and sets to failure.</div>
+                <div style={{fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"18px"}}>Log exercises per day. Track sets, reps, weight, drop sets and sets to failure.</div>
 
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(dayKey => {
@@ -75489,20 +75491,20 @@ function MuzzApp() {
                     const hasContent = exerciseList.length > 0 || legacyText || d.name;
 
                     return (
-                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`1px solid ${done?"rgba(34,197,94,0.4)":hasContent?accent+"30":"rgba(255,255,255,0.06)"}`,borderRadius:"14px",padding:"16px"}}>
+                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`1px solid ${done?"rgba(34,197,94,0.4)":hasContent?accent+"30":"rgba(255,255,255,0.06)"}`,borderRadius:"20px",padding:"16px"}}>
                         {/* Day header */}
                         <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom: hasContent ? "14px" : "0"}}>
-                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"22px",height:"22px",borderRadius:"12px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
-                          <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:done?"rgba(34,197,94,0.9)":"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"0.3px",minWidth:"44px"}}>{dayKey.toUpperCase()}</span>
-                          <input type="text" placeholder="Day name (e.g. Push, Legs, Cardio, Rest)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.4)",border:`1px solid ${accent}30`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600}}/>
+                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"22px",height:"22px",borderRadius:"20px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
+                          <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:done?"rgba(34,197,94,0.9)":"rgba(235,235,245,0.95)",fontWeight:600,letterSpacing:"0",minWidth:"44px"}}>{dayKey.toUpperCase()}</span>
+                          <input type="text" placeholder="Day name (e.g. Push, Legs, Cardio, Rest)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.4)",border:`1px solid ${accent}30`,borderRadius:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600}}/>
                         </div>
 
                         {/* Legacy text field — show with migrate prompt if old data exists */}
                         {legacyText && (
-                          <div style={{marginBottom:"12px",padding:"10px 12px",background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"12px"}}>
-                            <div style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",fontWeight:600}}>Legacy entry</div>
-                            <div style={{fontSize:"12px",color:"rgba(224,234,255,0.75)",fontFamily:SANS_FONT,marginBottom:"8px"}}>{legacyText}</div>
-                            <button onClick={()=>updateWorkout(dayKey,'exercises',[])} style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"1px solid rgba(251,191,36,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600}}>Clear & use new format</button>
+                          <div style={{marginBottom:"12px",padding:"10px 12px",background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"20px"}}>
+                            <div style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",fontWeight:600}}>Legacy entry</div>
+                            <div style={{fontSize:"12px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,marginBottom:"8px"}}>{legacyText}</div>
+                            <button onClick={()=>updateWorkout(dayKey,'exercises',[])} style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"1px solid rgba(251,191,36,0.4)",borderRadius:"10px",padding:"6px 10px",cursor:"pointer",fontWeight:600}}>Clear & use new format</button>
                           </div>
                         )}
 
@@ -75510,48 +75512,48 @@ function MuzzApp() {
                         {exerciseList.length > 0 && (
                           <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px"}}>
                             {exerciseList.map((ex, idx) => (
-                              <div key={ex.id} style={{background:"rgba(0,0,0,0.4)",border:`1px solid ${accent}25`,borderRadius:"14px",padding:"12px"}}>
+                              <div key={ex.id} style={{background:"rgba(0,0,0,0.4)",border:`1px solid ${accent}25`,borderRadius:"20px",padding:"12px"}}>
                                 {/* Row 1: index + name + delete */}
                                 <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"10px"}}>
-                                  <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:`${accent}99`,letterSpacing:"0.3px",fontWeight:600,minWidth:"22px"}}>{String(idx+1).padStart(2,'0')}</span>
-                                  <input type="text" placeholder="Exercise (e.g. Bench Press)" value={ex.name||''} onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600}}/>
-                                  <button onClick={()=>removeExercise(dayKey,ex.id)} style={{width:"30px",height:"30px",borderRadius:"12px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}} title="Remove">×</button>
+                                  <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:`${accent}99`,letterSpacing:"0",fontWeight:600,minWidth:"22px"}}>{String(idx+1).padStart(2,'0')}</span>
+                                  <input type="text" placeholder="Exercise (e.g. Bench Press)" value={ex.name||''} onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600}}/>
+                                  <button onClick={()=>removeExercise(dayKey,ex.id)} style={{width:"30px",height:"30px",borderRadius:"20px",background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}} title="Remove">×</button>
                                 </div>
 
                                 {/* Row 2: sets / reps / weight */}
                                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",fontWeight:600}}>Sets</div>
-                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.sets||''} onChange={e=>updateExercise(dayKey,ex.id,'sets',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",fontWeight:600}}>Sets</div>
+                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.sets||''} onChange={e=>updateExercise(dayKey,ex.id,'sets',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",fontWeight:600}}>Reps</div>
-                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.reps||''} onChange={e=>updateExercise(dayKey,ex.id,'reps',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",fontWeight:600}}>Reps</div>
+                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.reps||''} onChange={e=>updateExercise(dayKey,ex.id,'reps',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px",fontWeight:600}}>Weight (kg)</div>
-                                    <input type="number" inputMode="decimal" placeholder="0" value={ex.weight||''} onChange={e=>updateExercise(dayKey,ex.id,'weight',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                    <div style={{fontSize:"9px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",fontWeight:600}}>Weight (kg)</div>
+                                    <input type="number" inputMode="decimal" placeholder="0" value={ex.weight||''} onChange={e=>updateExercise(dayKey,ex.id,'weight',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
                                   </div>
                                 </div>
 
                                 {/* Row 3: drop set + failure toggles */}
                                 <div style={{display:"flex",gap:"8px"}}>
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet)} style={{flex:1,padding:"10px 12px",background:ex.dropSet?`${accent}22`:"rgba(0,0,0,0.3)",border:`1px solid ${ex.dropSet?accent:"rgba(255,255,255,0.1)"}`,borderRadius:"12px",color:ex.dropSet?accent:"rgba(224,234,255,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
-                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.dropSet?accent:"rgba(148,163,184,0.3)",boxShadow:ex.dropSet?`0 0 6px ${accent}`:"none"}}/>
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet)} style={{flex:1,padding:"10px 12px",background:ex.dropSet?`${accent}22`:"rgba(0,0,0,0.3)",border:`1px solid ${ex.dropSet?accent:"rgba(255,255,255,0.1)"}`,borderRadius:"20px",color:ex.dropSet?accent:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.dropSet?accent:"rgba(235,235,245,0.3)",boxShadow:ex.dropSet?`0 0 6px ${accent}`:"none"}}/>
                                     DROP SET
                                   </button>
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure)} style={{flex:1,padding:"10px 12px",background:ex.toFailure?"rgba(239,68,68,0.18)":"rgba(0,0,0,0.3)",border:`1px solid ${ex.toFailure?"rgba(239,68,68,0.7)":"rgba(255,255,255,0.1)"}`,borderRadius:"12px",color:ex.toFailure?"rgba(239,68,68,0.95)":"rgba(224,234,255,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
-                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.toFailure?"rgba(239,68,68,0.9)":"rgba(148,163,184,0.3)",boxShadow:ex.toFailure?"0 0 6px rgba(239,68,68,0.9)":"none"}}/>
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure)} style={{flex:1,padding:"10px 12px",background:ex.toFailure?"rgba(239,68,68,0.18)":"rgba(0,0,0,0.3)",border:`1px solid ${ex.toFailure?"rgba(239,68,68,0.7)":"rgba(255,255,255,0.1)"}`,borderRadius:"20px",color:ex.toFailure?"rgba(239,68,68,0.95)":"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.toFailure?"rgba(239,68,68,0.9)":"rgba(235,235,245,0.3)",boxShadow:ex.toFailure?"0 0 6px rgba(239,68,68,0.9)":"none"}}/>
                                     TO FAILURE
                                   </button>
                                 </div>
 
                                 {/* Optional notes per exercise */}
                                 {(ex.notes !== undefined && ex.notes !== '') && (
-                                  <input type="text" placeholder="Notes (form cues, RPE, etc.)" value={ex.notes||''} onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value)} className="slick-input accent-orange" style={{marginTop:"10px",width:"100%",padding:"8px 10px",background:"rgba(0,0,0,0.3)",border:`1px solid ${accent}20`,borderRadius:"10px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT,fontSize:"11px"}}/>
+                                  <input type="text" placeholder="Notes (form cues, RPE, etc.)" value={ex.notes||''} onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value)} className="slick-input accent-orange" style={{marginTop:"10px",width:"100%",padding:"8px 10px",background:"rgba(0,0,0,0.3)",border:`1px solid ${accent}20`,borderRadius:"10px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,fontSize:"11px"}}/>
                                 )}
                                 {ex.notes === undefined || ex.notes === '' ? (
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{marginTop:"8px",fontSize:"10px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"none",cursor:"pointer",padding:"4px 0"}}>+ Add notes</button>
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{marginTop:"8px",fontSize:"10px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"none",cursor:"pointer",padding:"4px 0"}}>+ Add notes</button>
                                 ) : null}
                               </div>
                             ))}
@@ -75559,7 +75561,7 @@ function MuzzApp() {
                         )}
 
                         {/* Add exercise button */}
-                        <button onClick={()=>addExercise(dayKey)} style={{width:"100%",padding:"12px",background:"rgba(0,0,0,0.3)",border:`1px dashed ${accent}50`,borderRadius:"12px",color:accent,fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>
+                        <button onClick={()=>addExercise(dayKey)} style={{width:"100%",padding:"12px",background:"rgba(0,0,0,0.3)",border:`1px dashed ${accent}50`,borderRadius:"20px",color:accent,fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>
                           + ADD EXERCISE
                         </button>
                       </div>
@@ -75603,15 +75605,15 @@ function MuzzApp() {
         <Sidebar /><SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={()=>setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px",marginBottom:"16px"}}>TIMETABLE</div>
+            <button onClick={()=>setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
+            
+            <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15,marginBottom:"16px"}}>Timetable</div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'week',label:'WEEK VIEW'},{id:'list',label:'LIST'},{id:'add',label:'+ ADD BLOCK'}].map(t => (
                 <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
-                  style={{padding:"6px 14px",background:ttTab===t.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${ttTab===t.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:ttTab===t.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                  style={{padding:"6px 14px",background:ttTab===t.id?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${ttTab===t.id?"rgba(10,132,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"10px",color:ttTab===t.id?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {t.label}
                 </button>
               ))}
@@ -75632,17 +75634,17 @@ function MuzzApp() {
               return h > max.h ? {day:d, h} : max;
             }, {day:'—', h:0});
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
                 {[
-                  {label:"BLOCKS",value:totalBlocks,sub:"SCHEDULED",color:"rgba(0,200,255,0.9)"},
+                  {label:"BLOCKS",value:totalBlocks,sub:"SCHEDULED",color:"rgba(10,132,255,0.9)"},
                   {label:"WEEK HOURS",value:totalHours.toFixed(1),sub:"COMMITTED",color:"rgba(34,197,94,0.9)"},
                   {label:"TODAY",value:todayBlocks.length,sub:`${todayHours.toFixed(1)}H`,color:"rgba(251,146,60,0.9)"},
                   {label:"BUSIEST",value:busiestDay.day,sub:busiestDay.h>0?`${busiestDay.h.toFixed(1)}H`:'—',color:"rgba(251,191,36,0.9)"},
                 ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"1px solid rgba(0,200,255,0.15)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>{kpi.label}</div>
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(255,255,255,0.14)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(10,132,255,0.35)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>{kpi.label}</div>
                     <div style={{fontSize:"20px",color:kpi.color,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginTop:"3px"}}>{kpi.sub}</div>
+                    <div style={{fontSize:"7px",color:"rgba(10,132,255,0.25)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"3px"}}>{kpi.sub}</div>
                   </div>
                 ))}
               </div>
@@ -75651,17 +75653,17 @@ function MuzzApp() {
 
           {/* WEEK GRID */}
           {ttTab==='week' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"14px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>WEEK GRID</span>
+            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                <span style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>WEEK GRID</span>
               </div>
               <div style={{overflowX:"auto"}}>
                 <div style={{minWidth:'600px'}}>
                   {/* Header */}
-                  <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'1px solid rgba(0,200,255,0.15)'}}>
+                  <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'0.5px solid rgba(255,255,255,0.14)'}}>
                     <div/>
                     {days.map(d=>(
-                      <div key={d} style={{padding:'8px',textAlign:'center',fontSize:'10px',fontFamily:SANS_FONT,fontWeight:600,letterSpacing:'0.3px',color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',background:d===today?'rgba(0,200,255,0.05)':'transparent',borderLeft:d===today?'1px solid rgba(0,200,255,0.28)':'none',borderRight:d===today?'1px solid rgba(0,200,255,0.28)':'none'}}>
+                      <div key={d} style={{padding:'8px',textAlign:'center',fontSize:'10px',fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0",color:d===today?'#0A84FF':'rgba(235,235,245,0.6)',background:d===today?'rgba(10,132,255,0.05)':'transparent',borderLeft:d===today?'0.5px solid rgba(255,255,255,0.14)':'none',borderRight:d===today?'0.5px solid rgba(255,255,255,0.14)':'none'}}>
                         {d.toUpperCase()}
                       </div>
                     ))}
@@ -75671,16 +75673,16 @@ function MuzzApp() {
                     {/* Time labels column */}
                     <div style={{width:'52px',flexShrink:0}}>
                       {hours.map(h=>(
-                        <div key={h} style={{height:'60px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'1px solid rgba(0,200,255,0.15)',color:'rgba(148,163,184,0.4)',fontSize:'9px',fontFamily:SANS_FONT}}>
+                        <div key={h} style={{height:'60px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'0.5px solid rgba(255,255,255,0.14)',color:'rgba(235,235,245,0.4)',fontSize:'9px',fontFamily:SANS_FONT}}>
                           {fmt12(h)}
                         </div>
                       ))}
                     </div>
                     {/* Day columns */}
                     {days.map(d=>(
-                      <div key={d} style={{flex:1,position:'relative',background:d===today?'rgba(0,200,255,0.02)':'transparent'}}>
+                      <div key={d} style={{flex:1,position:'relative',background:d===today?'rgba(10,132,255,0.02)':'transparent'}}>
                         {hours.map(h=>(
-                          <div key={h} style={{height:'60px',borderTop:'1px solid rgba(0,200,255,0.15)',borderLeft:'0.5px solid rgba(0,200,255,0.04)'}}/>
+                          <div key={h} style={{height:'60px',borderTop:'0.5px solid rgba(255,255,255,0.14)',borderLeft:'0.5px solid rgba(255,255,255,0.14)'}}/>
                         ))}
                         {timetableBlocks.filter(b=>b.day===d).map(block=>{
                           const ROW_H = 60;
@@ -75704,7 +75706,7 @@ function MuzzApp() {
                                 zIndex:2,
                                 overflow:'hidden'
                               }}>
-                              <div style={{fontSize:'10px',fontWeight:500,color:'#e0eaff',fontFamily:SANS_FONT,letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{block.title}</div>
+                              <div style={{fontSize:'10px',fontWeight:500,color:'#FFFFFF',fontFamily:SANS_FONT,letterSpacing:"0",whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{block.title}</div>
                               {block.location && <div style={{fontSize:'9px',color:hexToRgba(block.color,0.7),fontFamily:SANS_FONT,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginTop:'1px'}}>{block.location}</div>}
                             </div>
                           );
@@ -75734,25 +75736,25 @@ function MuzzApp() {
                 };
                 const startFresh = () => setTtTab('add');
                 return (
-                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"14px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE WEEK</div>
-                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Plan your week — uni, work, gym, study, personal.</div>
-                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Block out your time visually. Each type gets its own color across the week grid.</div>
+                  <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · SAMPLE WEEK</div>
+                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Plan your week — uni, work, gym, study, personal.</div>
+                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Block out your time visually. Each type gets its own color across the week grid.</div>
                     <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
                       {samples.map((s, i) => (
-                        <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"1px solid rgba(0,200,255,0.15)",borderRadius:"10px"}}>
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                           <div style={{width:"4px",height:"24px",borderRadius:"10px",background:s.color,boxShadow:`0 0 4px ${s.color}99`,flexShrink:0}} />
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.title}</div>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.5px",marginTop:"2px"}}>{s.day} · {fmt12(s.startHour)}–{fmt12(s.endHour)}{s.location?` · ${s.location}`:''}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.title}</div>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.55)",letterSpacing:"0",marginTop:"2px"}}>{s.day} · {fmt12(s.startHour)}–{fmt12(s.endHour)}{s.location?` · ${s.location}`:''}</div>
                           </div>
-                          <span style={{fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"0.3px",padding:"2px 6px",borderRadius:"10px",background:hexToRgba(s.color,0.15),border:`0.5px solid ${hexToRgba(s.color,0.4)}`,color:s.color,flexShrink:0}}>{s.type.toUpperCase()}</span>
+                          <span style={{fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"0",padding:"2px 6px",borderRadius:"10px",background:hexToRgba(s.color,0.15),border:`0.5px solid ${hexToRgba(s.color,0.4)}`,color:s.color,flexShrink:0}}>{s.type.toUpperCase()}</span>
                         </div>
                       ))}
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                     </div>
                   </div>
                 );
@@ -75763,25 +75765,25 @@ function MuzzApp() {
                 const dayHours = dayBlocks.reduce((s,b) => s + (b.endHour - b.startHour), 0);
                 const isTodayDay = d === today;
                 return (
-                  <div key={d} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isTodayDay?"rgba(0,200,255,0.3)":"rgba(0,200,255,0.12)"}`,borderLeft:`2px solid ${isTodayDay?"rgba(0,200,255,0.7)":"rgba(0,200,255,0.4)"}`,borderRadius:"14px",overflow:"hidden"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div key={d} style={{...LIQUID_GLASS,border:`0.5px solid ${isTodayDay?"rgba(10,132,255,0.3)":"rgba(10,132,255,0.12)"}`,borderLeft:`2px solid ${isTodayDay?"rgba(10,132,255,0.7)":"rgba(10,132,255,0.4)"}`,borderRadius:"20px",overflow:"hidden"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                       <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                        <span style={{fontSize:"11px",color:isTodayDay?"#00c8ff":"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600}}>{d.toUpperCase()}</span>
-                        {isTodayDay && <span style={{fontSize:"8px",color:"rgba(0,200,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",padding:"2px 6px",borderRadius:"10px"}}>TODAY</span>}
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:SANS_FONT,border:"1px solid rgba(0,200,255,0.28)",padding:"1px 5px",borderRadius:"10px"}}>{dayBlocks.length}</span>
+                        <span style={{fontSize:"11px",color:isTodayDay?"#0A84FF":"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{d.toUpperCase()}</span>
+                        {isTodayDay && <span style={{fontSize:"8px",color:"rgba(10,132,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",padding:"2px 6px",borderRadius:"10px"}}>TODAY</span>}
+                        <span style={{fontSize:"9px",color:"rgba(10,132,255,0.5)",fontFamily:SANS_FONT,border:"0.5px solid rgba(255,255,255,0.14)",padding:"1px 5px",borderRadius:"10px"}}>{dayBlocks.length}</span>
                       </div>
-                      <span style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{dayHours.toFixed(1)}H</span>
+                      <span style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{dayHours.toFixed(1)}H</span>
                     </div>
                     <div>
                       {dayBlocks.map((b,idx)=>(
-                        <div key={b.id} style={{padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",borderBottom:idx<dayBlocks.length-1?"0.5px solid rgba(0,200,255,0.04)":"none"}}>
+                        <div key={b.id} style={{padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",borderBottom:idx<dayBlocks.length-1?"0.5px solid rgba(255,255,255,0.14)":"none"}}>
                           <div style={{width:"4px",height:"32px",borderRadius:"10px",background:b.color,boxShadow:`0 0 6px ${hexToRgba(b.color,0.6)}`,flexShrink:0}} />
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{b.title}</div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"2px"}}>{fmt12(b.startHour)} – {fmt12(b.endHour)}{b.location?` · ${b.location}`:''}</div>
+                            <div style={{fontSize:"12px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{b.title}</div>
+                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{fmt12(b.startHour)} – {fmt12(b.endHour)}{b.location?` · ${b.location}`:''}</div>
                           </div>
-                          <span style={{fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500,padding:"3px 7px",borderRadius:"10px",background:hexToRgba(b.color,0.1),border:`0.5px solid ${hexToRgba(b.color,0.3)}`,color:b.color}}>{b.type.toUpperCase()}</span>
-                          <button onClick={()=>{setTtEditingId(b.id);setTtTab('add');}} style={{fontSize:"9px",color:"rgba(0,200,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0.3px",background:"none",border:"1px solid rgba(0,200,255,0.28)",padding:"3px 7px",borderRadius:"10px",cursor:"pointer"}}>EDIT</button>
+                          <span style={{fontSize:"8px",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500,padding:"3px 7px",borderRadius:"10px",background:hexToRgba(b.color,0.1),border:`0.5px solid ${hexToRgba(b.color,0.3)}`,color:b.color}}>{b.type.toUpperCase()}</span>
+                          <button onClick={()=>{setTtEditingId(b.id);setTtTab('add');}} style={{fontSize:"9px",color:"rgba(10,132,255,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",background:"none",border:"0.5px solid rgba(255,255,255,0.14)",padding:"3px 7px",borderRadius:"10px",cursor:"pointer"}}>EDIT</button>
                           <button onClick={()=>setTimetableBlocks(prev=>prev.filter(x=>x.id!==b.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px",padding:0}}>×</button>
                         </div>
                       ))}
@@ -75794,57 +75796,57 @@ function MuzzApp() {
 
           {/* ADD / EDIT FORM */}
           {ttTab==='add' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderLeft:"2px solid rgba(0,200,255,0.7)",borderRadius:"14px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:500}}>{ttEditingId?'EDIT BLOCK':'NEW BLOCK'}</span>
+            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                <span style={{fontSize:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>{ttEditingId?'EDIT BLOCK':'NEW BLOCK'}</span>
               </div>
               <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                 <div>
-                  <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>TITLE</div>
+                  <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>TITLE</div>
                   <input value={formBlock.title} onChange={e=>setForm({title:e.target.value})} placeholder="e.g. COMP1234, Gym, Work shift..."
-                    style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}} />
+                    style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                   <div>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>DAY</div>
+                    <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>DAY</div>
                     <select value={formBlock.day} onChange={e=>setForm({day:e.target.value})}
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:"dark"}}>
+                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:"dark"}}>
                       {days.map(d=><option key={d} value={d} style={{background:'#020c1b'}}>{d}</option>)}
                     </select>
                   </div>
                   <div>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>TYPE</div>
+                    <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>TYPE</div>
                     <select value={formBlock.type} onChange={e=>setForm({type:e.target.value})}
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",textTransform:"uppercase",colorScheme:"dark"}}>
-                      {types.map(t=><option key={t} value={t} style={{background:'#020c1b',textTransform:"uppercase"}}>{t.toUpperCase()}</option>)}
+                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:"dark"}}>
+                      {types.map(t=><option key={t} value={t} style={{background:'#020c1b'}}>{t.toUpperCase()}</option>)}
                     </select>
                   </div>
                   <div>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>START</div>
+                    <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>START</div>
                     <select value={formBlock.startHour} onChange={e=>setForm({startHour:parseFloat(e.target.value)})}
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:'dark'}}>
+                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:'dark'}}>
                       {Array.from({length:96},(_,i)=>i*0.25).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                     </select>
                   </div>
                   <div>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>END</div>
+                    <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>END</div>
                     <select value={formBlock.endHour} onChange={e=>setForm({endHour:parseFloat(e.target.value)})}
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:'dark'}}>
+                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"7px 8px",outline:"none",colorScheme:'dark'}}>
                       {Array.from({length:96},(_,i)=>i*0.25).filter(h=>h>formBlock.startHour).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>LOCATION</div>
+                  <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>LOCATION</div>
                   <input value={formBlock.location} onChange={e=>setForm({location:e.target.value})} placeholder="Optional"
-                    style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"10px",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}} />
+                    style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                 </div>
                 <div>
-                  <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px"}}>COLOUR</div>
+                  <div style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px"}}>COLOUR</div>
                   <div style={{display:"flex",gap:"6px",flexWrap:"wrap",alignItems:"center"}}>
                     {presets.map(c=>(
                       <button key={c} onClick={()=>setForm({color:c})}
-                        style={{width:"26px",height:"26px",borderRadius:"10px",background:c,border:formBlock.color===c?'0.5px solid #e0eaff':'0.5px solid rgba(255,255,255,0.1)',boxShadow:formBlock.color===c?`0 0 8px ${c}`:'none',cursor:"pointer"}} />
+                        style={{width:"26px",height:"26px",borderRadius:"10px",background:c,border:formBlock.color===c?'0.5px solid #FFFFFF':'0.5px solid rgba(255,255,255,0.1)',boxShadow:formBlock.color===c?`0 0 8px ${c}`:'none',cursor:"pointer"}} />
                     ))}
                     <input type="color" value={formBlock.color} onChange={e=>setForm({color:e.target.value})}
                       style={{width:"26px",height:"26px",borderRadius:"10px",cursor:"pointer",border:"0.5px solid rgba(255,255,255,0.1)",padding:0,background:"transparent"}} />
@@ -75852,15 +75854,15 @@ function MuzzApp() {
                 </div>
                 <div style={{display:"flex",gap:"8px",paddingTop:"4px"}}>
                   <button onClick={saveBlock}
-                    style={{flex:1,padding:"10px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"10px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",fontWeight:600,cursor:"pointer"}}>
+                    style={{flex:1,padding:"10px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>
                     {ttEditingId?'SAVE CHANGES':'ADD BLOCK'}
                   </button>
                   {ttEditingId && (
                     <button onClick={()=>{setTimetableBlocks(prev=>prev.filter(b=>b.id!==ttEditingId));setTtEditingId(null);setTtTab('list');}}
-                      style={{padding:"10px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer"}}>DELETE</button>
+                      style={{padding:"10px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",cursor:"pointer"}}>DELETE</button>
                   )}
                   <button onClick={()=>{setTtEditingId(null);setTtTab('week');}}
-                    style={{padding:"10px 14px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"10px",color:"rgba(148,163,184,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0.3px",cursor:"pointer"}}>CANCEL</button>
+                    style={{padding:"10px 14px",background:"transparent",border:"0.5px solid rgba(235,235,245,0.2)",borderRadius:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",cursor:"pointer"}}>CANCEL</button>
                 </div>
               </div>
             </div>
@@ -75947,17 +75949,17 @@ function MuzzApp() {
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"1px solid rgba(0,200,255,0.28)",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",fontWeight:600,background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.35)",borderRadius:"999px",padding:"8px 16px",cursor:"pointer",marginBottom:"14px"}}>← Dashboard</button>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"4px"}}>HABIT INTELLIGENCE</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.3px"}}>HABIT TRACKER</div>
+                
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Habit Tracker</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>ACTIVE</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:SANS_FONT,fontWeight:500}}>{habits.length}</div>
+                
+                <div style={{fontSize:"24px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:500}}>{habits.length}</div>
               </div>
             </div>
           </div>
@@ -75966,7 +75968,7 @@ function MuzzApp() {
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
             onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }])}
-            style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"1px dashed rgba(0,200,255,0.35)",borderRadius:"14px",color:"rgba(0,200,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer"}}
+            style={{width:"100%",padding:"12px",background:"rgba(10,132,255,0.06)",border:"1px dashed rgba(10,132,255,0.35)",borderRadius:"20px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
           >
             + ADD NEW HABIT
           </button>
@@ -75988,11 +75990,11 @@ function MuzzApp() {
               setHabits([{ id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }]);
             };
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"14px",borderLeft:"2px solid #00c8ff",overflow:"hidden"}}>
-                <div style={{padding:"14px 16px 8px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                  <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:SANS_FONT,letterSpacing:"0.3px",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR DATA</div>
-                  <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0.5px",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
-                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <div style={{padding:"14px 16px 8px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                  <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR DATA</div>
+                  <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
+                  <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
                 </div>
 
                 {/* Sample habit previews */}
@@ -76002,13 +76004,13 @@ function MuzzApp() {
                     return (
                       <div key={i} style={{opacity:0.85}}>
                         <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
-                          <div style={{width:"24px",height:"24px",borderRadius:"12px",background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.28)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
-                          <div style={{flex:1,fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:SANS_FONT}}>{s.name}</div>
-                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.65)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{doneCount}/31</div>
+                          <div style={{width:"24px",height:"24px",borderRadius:"20px",background:"rgba(10,132,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
+                          <div style={{flex:1,fontSize:"12px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{s.name}</div>
+                          <div style={{fontSize:"10px",color:"rgba(10,132,255,0.65)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{doneCount}/31</div>
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(31, 1fr)":"repeat(31, 1fr)",gap:"2px"}}>
                           {s.pattern.map((c, di) => (
-                            <div key={di} style={{aspectRatio:"1",borderRadius:"10px",background:c?"#00c8ff":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(0,200,255,0.5)":"none"}} />
+                            <div key={di} style={{aspectRatio:"1",borderRadius:"10px",background:c?"#0A84FF":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(10,132,255,0.5)":"none"}} />
                           ))}
                         </div>
                       </div>
@@ -76017,9 +76019,9 @@ function MuzzApp() {
                 </div>
 
                 {/* CTAs */}
-                <div style={{padding:"12px 16px 14px",borderTop:"1px solid rgba(0,200,255,0.15)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"12px",color:"#00c8ff",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
-                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"12px",color:"rgba(224,234,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0.3px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(255,255,255,0.14)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
+                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                 </div>
               </div>
             );
@@ -76032,36 +76034,36 @@ function MuzzApp() {
             const streak = getStreak(habit.id);
             const bestStreak = getBestStreak(habit.id);
             const streakAtRisk = streak > 0 && !completedToday;
-            const cardBorderColor = completedToday ? "rgba(0,200,255,0.4)" : streakAtRisk ? "rgba(251,191,36,0.4)" : "rgba(0,200,255,0.15)";
-            const cardAccentColor = completedToday ? "#00c8ff" : streakAtRisk ? "rgba(251,191,36,0.8)" : "rgba(0,200,255,0.3)";
+            const cardBorderColor = completedToday ? "rgba(10,132,255,0.4)" : streakAtRisk ? "rgba(251,191,36,0.4)" : "rgba(10,132,255,0.15)";
+            const cardAccentColor = completedToday ? "#0A84FF" : streakAtRisk ? "rgba(251,191,36,0.8)" : "rgba(10,132,255,0.3)";
 
             return (
-              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${cardBorderColor}`,borderRadius:"14px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",boxShadow:completedToday?"0 0 12px rgba(0,200,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
+              <div key={habit.id} style={{...LIQUID_GLASS,border:`0.5px solid ${cardBorderColor}`,borderRadius:"20px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",boxShadow:completedToday?"0 0 12px rgba(10,132,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
 
                 {/* Streak at risk warning */}
                 {streakAtRisk && (
                   <div style={{padding:"5px 16px",background:"rgba(251,191,36,0.06)",borderBottom:"0.5px solid rgba(251,191,36,0.2)",display:"flex",alignItems:"center",gap:"6px"}}>
                     <span style={{fontSize:"10px"}}>⚠️</span>
-                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>STREAK AT RISK — {streak} DAY STREAK</span>
+                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:SANS_FONT,letterSpacing:"0"}}>STREAK AT RISK — {streak} DAY STREAK</span>
                   </div>
                 )}
-                <div style={{padding:"18px 20px",borderBottom:"1px solid rgba(0,200,255,0.15)",display:"flex",alignItems:"center",gap:"14px"}}>
+                <div style={{padding:"18px 20px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",display:"flex",alignItems:"center",gap:"14px"}}>
                   <input
                     type="text"
                     value={habit.icon}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.28)",borderRadius:"12px",flexShrink:0,outline:"none"}}
+                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",flexShrink:0,outline:"none"}}
                   />
                   <input
                     type="text"
                     value={habit.name}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
                     placeholder="Habit name..."
-                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:SANS_FONT,fontSize:"16px",letterSpacing:"0.5px",fontWeight:500}}
+                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",letterSpacing:"0",fontWeight:500}}
                   />
                   <button
                     onClick={() => toggleHabit(habit.id, today)}
-                    style={{width:"52px",height:"52px",borderRadius:"14px",fontSize:"22px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(0,200,255,0.4)":"none",transition:"all 0.15s"}}
+                    style={{width:"52px",height:"52px",borderRadius:"20px",fontSize:"22px",background:completedToday?"#0A84FF":"rgba(10,132,255,0.08)",border:`0.5px solid ${completedToday?"#0A84FF":"rgba(10,132,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(10,132,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(10,132,255,0.4)":"none",transition:"all 0.15s"}}
                   >
                     {completedToday ? '✓' : '○'}
                   </button>
@@ -76073,9 +76075,9 @@ function MuzzApp() {
 
                 {/* Stats row */}
                 {/* Completion rate bar */}
-                <div style={{padding:"10px 20px",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                <div style={{padding:"10px 20px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                   <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
-                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}} />
+                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#0A84FF":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}} />
                   </div>
                 </div>
 
@@ -76089,12 +76091,12 @@ function MuzzApp() {
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"14px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                          style={{aspectRatio:"1",borderRadius:"20px",cursor:"pointer",background:done?"#0A84FF":isToday?"rgba(10,132,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(10,132,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(10,132,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
                         />
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0.5px",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
+                  <div style={{fontSize:"10px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
                 </div>
               </div>
             );
