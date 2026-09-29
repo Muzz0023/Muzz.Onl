@@ -75913,6 +75913,14 @@ function MuzzApp() {
       habits.reduce((sum, h) => sum + last31.filter(d => habitLog[`${h.id}:${d}`]).length, 0) / (habits.length * 31) * 100
     ) : 0;
 
+    const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
+    const addHabit = () => {
+      const id = Date.now().toString();
+      setHabits(prev => [...prev, { id, name: '', icon: '⭐', createdAt: today }]);
+      setTimeout(() => { const el = document.getElementById(`habit-name-${id}`); if (el) el.focus(); }, 50);
+    };
+    const secondary = "rgba(235,235,245,0.6)";
+
     return (
       <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar />
@@ -75922,76 +75930,46 @@ function MuzzApp() {
         <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
               <div>
-                
-                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Habit Tracker</div>
+                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Habits</div>
+                {habits.length > 0 && (
+                  <div style={{fontSize:"15px",color:secondary,fontFamily:SANS_FONT,marginTop:"2px"}}>{completedTodayCount} of {habits.length} done today</div>
+                )}
               </div>
-              <div style={{textAlign:"right"}}>
-                
-                <div style={{fontSize:"24px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:500}}>{habits.length}</div>
-              </div>
+              <button aria-label="New habit" onClick={addHabit}
+                style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"40px",height:"40px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"#0A84FF",fontSize:"24px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-          <button
-            onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }])}
-            style={{width:"100%",padding:"12px",background:"rgba(10,132,255,0.06)",border:"1px dashed rgba(10,132,255,0.35)",borderRadius:"20px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
-          >
-            + ADD NEW HABIT
-          </button>
+        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {habits.length === 0 && (() => {
-            // Sample preview — what habit tracking LOOKS LIKE when you're using it
             const samples = [
-              { icon: '💧', name: 'Drink 2L water',     pattern: [1,1,0,1,1,1,0, 1,1,1,1,0,1,1, 0,1,1,1,1,1,1, 1,1,1,0,1,1,1, 1,1,1] },
-              { icon: '🏃', name: 'Exercise 30min',     pattern: [1,0,1,0,1,0,0, 1,0,1,0,1,1,0, 1,0,1,1,0,1,0, 1,1,0,1,1,0,1, 0,1,0] },
-              { icon: '📚', name: 'Read before bed',    pattern: [1,1,1,1,0,1,1, 1,1,0,1,1,1,1, 1,1,1,1,1,0,1, 1,1,1,1,1,1,0, 1,1,1] },
+              { icon: '💧', name: 'Drink 2L water' },
+              { icon: '🏃', name: 'Exercise 30min' },
+              { icon: '📚', name: 'Read before bed' },
             ];
             const useTemplate = () => {
               const baseId = Date.now();
-              const newHabits = samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, icon: s.icon, createdAt: today }));
-              setHabits(newHabits);
-              // Logs start clean — the grid fills as the user actually completes days.
-            };
-            const startFresh = () => {
-              setHabits([{ id: Date.now().toString(), name: '', icon: '⭐', createdAt: today }]);
+              setHabits(samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, icon: s.icon, createdAt: today })));
             };
             return (
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"14px 16px 8px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                  <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>PREVIEW · NOT YOUR DATA</div>
-                  <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
-                  <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
+              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"18px"}}>
+                <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Build habits that stick</div>
+                <div style={{fontSize:"15px",color:secondary,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>Tick a habit off each day to build a streak. Here are three to start with:</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"10px",margin:"16px 0 18px"}}>
+                  {samples.map((s, i) => (
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"12px"}}>
+                      <span style={{fontSize:"22px",width:"28px",textAlign:"center"}}>{s.icon}</span>
+                      <span style={{fontSize:"17px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{s.name}</span>
+                    </div>
+                  ))}
                 </div>
-
-                {/* Sample habit previews */}
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
-                  {samples.map((s, i) => {
-                    const doneCount = s.pattern.filter(Boolean).length;
-                    return (
-                      <div key={i} style={{opacity:0.85}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
-                          <div style={{width:"24px",height:"24px",borderRadius:"20px",background:"rgba(10,132,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
-                          <div style={{flex:1,fontSize:"12px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{s.name}</div>
-                          <div style={{fontSize:"10px",color:"rgba(10,132,255,0.65)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{doneCount}/31</div>
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(31, 1fr)":"repeat(31, 1fr)",gap:"2px"}}>
-                          {s.pattern.map((c, di) => (
-                            <div key={di} style={{aspectRatio:"1",borderRadius:"10px",background:c?"#0A84FF":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(10,132,255,0.5)":"none"}} />
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* CTAs */}
-                <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(255,255,255,0.14)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START WITH THESE 3 HABITS</button>
-                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                  <button onClick={useTemplate} style={{flex:1,padding:"13px",background:"#0A84FF",border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
+                  <button onClick={addHabit} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
                 </div>
               </div>
             );
@@ -76004,56 +75982,55 @@ function MuzzApp() {
             const streak = getStreak(habit.id);
             const bestStreak = getBestStreak(habit.id);
             const streakAtRisk = streak > 0 && !completedToday;
-            const cardBorderColor = completedToday ? "rgba(10,132,255,0.4)" : streakAtRisk ? "rgba(251,191,36,0.4)" : "rgba(10,132,255,0.15)";
-            const cardAccentColor = completedToday ? "#0A84FF" : streakAtRisk ? "rgba(251,191,36,0.8)" : "rgba(10,132,255,0.3)";
 
             return (
-              <div key={habit.id} style={{...LIQUID_GLASS,border:`0.5px solid ${cardBorderColor}`,borderRadius:"20px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",boxShadow:completedToday?"0 0 12px rgba(10,132,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
+              <div key={habit.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
 
-                {/* Streak at risk warning */}
-                {streakAtRisk && (
-                  <div style={{padding:"5px 16px",background:"rgba(251,191,36,0.06)",borderBottom:"0.5px solid rgba(251,191,36,0.2)",display:"flex",alignItems:"center",gap:"6px"}}>
-                    <span style={{fontSize:"10px"}}>⚠️</span>
-                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:SANS_FONT,letterSpacing:"0"}}>STREAK AT RISK — {streak} DAY STREAK</span>
-                  </div>
-                )}
-                <div style={{padding:"18px 20px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",display:"flex",alignItems:"center",gap:"14px"}}>
+                {/* Emoji, name (wraps), done circle */}
+                <div style={{padding:"16px 16px 12px",display:"flex",alignItems:"flex-start",gap:"12px"}}>
                   <input
                     type="text"
+                    aria-label="Habit emoji"
                     value={habit.icon}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(10,132,255,0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",flexShrink:0,outline:"none"}}
+                    style={{width:"34px",height:"34px",padding:0,textAlign:"center",fontSize:"26px",lineHeight:"34px",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",flexShrink:0}}
                   />
-                  <input
-                    type="text"
-                    value={habit.name}
-                    onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
-                    placeholder="Habit name..."
-                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",letterSpacing:"0",fontWeight:500}}
-                  />
+                  <div style={{flex:1,minWidth:0,paddingTop:"4px"}}>
+                    <textarea
+                      id={`habit-name-${habit.id}`}
+                      rows={1}
+                      value={habit.name}
+                      ref={growText}
+                      onInput={(e) => growText(e.target)}
+                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                      onFocus={scrollInputIntoView}
+                      placeholder="New habit"
+                      style={{display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
+                    />
+                    <div style={{fontSize:"13px",fontFamily:SANS_FONT,marginTop:"3px",color:streakAtRisk?"#FF9F0A":secondary}}>
+                      {streakAtRisk
+                        ? `Do it today to keep your ${streak}-day streak`
+                        : streak > 0
+                          ? `${streak}-day streak${bestStreak > streak ? `, best ${bestStreak}` : ''}`
+                          : bestStreak > 0 ? `Best streak ${bestStreak} days` : 'No streak yet'}
+                    </div>
+                  </div>
                   <button
+                    aria-label={completedToday ? 'Mark not done today' : 'Mark done today'}
                     onClick={() => toggleHabit(habit.id, today)}
-                    style={{width:"52px",height:"52px",borderRadius:"20px",fontSize:"22px",background:completedToday?"#0A84FF":"rgba(10,132,255,0.08)",border:`0.5px solid ${completedToday?"#0A84FF":"rgba(10,132,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(10,132,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(10,132,255,0.4)":"none",transition:"all 0.15s"}}
-                  >
-                    {completedToday ? '✓' : '○'}
-                  </button>
+                    style={{width:"34px",height:"34px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:completedToday?"#0A84FF":"transparent",border:completedToday?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"17px",fontWeight:700,transition:"background 0.2s"}}
+                  >{completedToday ? '✓' : ''}</button>
                   <button
-                    onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
-                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"20px",flexShrink:0,padding:"4px 8px"}}
+                    aria-label="Delete habit"
+                    onClick={() => { if (!habit.name || window.confirm(`Delete "${habit.name}"?`)) setHabits(prev => prev.filter(h => h.id !== habit.id)); }}
+                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.25)",fontSize:"18px",flexShrink:0,padding:"6px 2px",lineHeight:1}}
                   >×</button>
                 </div>
 
-                {/* Stats row */}
-                {/* Completion rate bar */}
-                <div style={{padding:"10px 20px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                  <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
-                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#0A84FF":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}} />
-                  </div>
-                </div>
-
-                {/* Heatmap */}
-                <div style={{padding:"14px 20px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(36px, 1fr))":"repeat(auto-fill, minmax(48px, 1fr))",gap:isWide?"6px":"7px"}}>
+                {/* Last 31 days */}
+                <div style={{padding:"4px 16px 16px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(26px, 1fr))":"repeat(auto-fill, minmax(30px, 1fr))",gap:"6px"}}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
@@ -76061,12 +76038,16 @@ function MuzzApp() {
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"20px",cursor:"pointer",background:done?"#0A84FF":isToday?"rgba(10,132,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(10,132,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(10,132,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                          title={date}
+                          style={{aspectRatio:"1",borderRadius:"50%",cursor:"pointer",background:done?"#0A84FF":"rgba(255,255,255,0.08)",border:isToday&&!done?"1.5px solid rgba(10,132,255,0.8)":"none",boxSizing:"border-box",transition:"background 0.15s",userSelect:"none"}}
                         />
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:"8px",marginTop:"10px",fontSize:"13px",color:secondary,fontFamily:SANS_FONT}}>
+                    <span>Last 31 days</span>
+                    <span>{totalDone} of 31 ({completionRate}%)</span>
+                  </div>
                 </div>
               </div>
             );
