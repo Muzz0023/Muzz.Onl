@@ -277,6 +277,9 @@ const StarryBackground = ({ children }) => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
 
+        /* iOS 26/27 switch: pill knob turns to glass while pressed */
+        .mz-switch:active .mz-knob { transform: scale(1.18, 1.25); background: rgba(255,255,255,0.28) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 1px rgba(255,255,255,0.25), 0 3px 10px rgba(0,0,0,0.3) !important; backdrop-filter: blur(3px) saturate(180%); -webkit-backdrop-filter: blur(3px) saturate(180%); }
+
         /* Muzz pages: equal-width digits so totals and prices don't jiggle */
         .mz-num, .mz-num input, .mz-num select, .mz-num button { font-variant-numeric: tabular-nums; }
 
@@ -54857,9 +54860,9 @@ function MuzzApp() {
     const datePill = {background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark",outline:"none",WebkitAppearance:"none",appearance:"none"};
     const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
     const Switch = ({ on, onToggle, label }) => (
-      <button role="switch" aria-checked={on} aria-label={label} onClick={onToggle}
-        style={{position:"relative",width:"51px",height:"31px",borderRadius:"999px",border:"none",padding:0,cursor:"pointer",flexShrink:0,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.2s"}}>
-        <span style={{position:"absolute",top:"2px",left:on?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.3)",transition:"left 0.2s"}} />
+      <button role="switch" aria-checked={on} aria-label={label} onClick={onToggle} className="mz-switch"
+        style={{position:"relative",width:"63px",height:"28px",borderRadius:"999px",border:"none",padding:0,cursor:"pointer",flexShrink:0,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",WebkitTapHighlightColor:"transparent"}}>
+        <span className="mz-knob" style={{position:"absolute",top:"2px",left:on?"24px":"2px",width:"37px",height:"24px",borderRadius:"999px",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.32s cubic-bezier(0.34,1.4,0.64,1), transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease"}} />
       </button>
     );
     const relReminder = (diff) => {
