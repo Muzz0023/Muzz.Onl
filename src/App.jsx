@@ -53996,18 +53996,20 @@ function MuzzApp() {
               ))}
             </div>
 
+            {FREE_FOR_EVERYONE && (
+              <>
+                <div style={groupLabel}>Name</div>
+                <div style={{...glass,overflow:"hidden"}}>
+                  <input value={eliteName} onChange={e => setEliteName(e.target.value)} placeholder="Your name" onFocus={scrollInputIntoView}
+                    style={{display:"block",width:"100%",boxSizing:"border-box",minHeight:"50px",padding:"0 16px",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.4px"}} />
+                </div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Shown in your greeting at the top.</div>
+              </>
+            )}
+
             <div style={groupLabel}>Account</div>
             <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
-              {FREE_FOR_EVERYONE ? (
-                <label style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",cursor:"text",boxSizing:"border-box"}}>
-                  <Star size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />
-                  <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"50px",paddingRight:"16px",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}>
-                    <span style={{fontSize:"17px",color:txt.primary,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>Your name</span>
-                    <input value={eliteName} onChange={e => setEliteName(e.target.value)} placeholder="Add" onFocus={scrollInputIntoView}
-                      style={{flex:1,minWidth:0,textAlign:"right",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",padding:0,color:txt.secondary,fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.4px"}} />
-                  </span>
-                </label>
-              ) : (
+              {!FREE_FOR_EVERYONE && (
                 <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
               )}
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
