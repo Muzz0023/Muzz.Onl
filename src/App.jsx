@@ -55790,7 +55790,7 @@ function MuzzApp() {
 
   // VARIED VIEW
   if (activeView === 'varied') {
-    if (!isElite) return <LockedFeature featureName="Bills & Debts" setActiveView={setActiveView} />;
+    if (!isElite) return <LockedFeature featureName="Bills" setActiveView={setActiveView} />;
     const updateSubscription = (index, field, value) => {
       setSubscriptions(prev => {
         const updated = [...prev];
@@ -55977,7 +55977,77 @@ function MuzzApp() {
 
     // Legacy alias kept so existing variable references downstream keep working
     const isPersonal = activeBucket?.id === 'bucket_personal';
-    const bucketAccent = activeBucket?.color || '#0A84FF';
+    const bucketAccent = '#0A84FF';
+
+    // ── Apple-style tokens for Bills (one blue accent, like Assets) ──
+    const sec = "rgba(235,235,245,0.6)";
+    const ter = "rgba(235,235,245,0.3)";
+    const sep = "0.5px solid rgba(255,255,255,0.12)";
+    const BLUE = "#0A84FF", RED = "#FF453A", ORANGE = "#FF9F0A";
+    const card = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"};
+    const groupLabel = {fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT};
+    const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
+    const bare = {background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.2px"};
+    const bareArea = {...bare,display:"block",width:"100%",resize:"none",overflow:"hidden",lineHeight:"1.35",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
+    const pill = {background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark",outline:"none"};
+    const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
+    const formRow = {display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"44px"};
+    const formLabel = {fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",flexShrink:0};
+    const addRowBtn = {display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"};
+    const roundPlus = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:BLUE,fontWeight:400,lineHeight:1,cursor:"pointer",padding:0};
+    const money = (n, dp = 0) => `$${(Number(n)||0).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp})}`;
+    const dueText = (days) => days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `In ${days} days`;
+    const dueColor = (days) => days === 0 ? RED : days <= 3 ? ORANGE : days <= 7 ? BLUE : sec;
+    const allMonthly = (buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + monthlyEquivalent(x), 0), 0);
+    const bucketSwitcher = buckets.length > 1 ? (
+      <Segmented value={activeBucket?.id} onChange={setActiveBucketId} onDoubleClick={renameBucket} options={buckets.map(b => ({ id: b.id, label: b.name }))} />
+    ) : null;
+
+    // one savings goal (Small and Big goals)
+    const goalCard = (goal, index, setList, placeholder) => {
+      const target = goal?.target || 0;
+      const current = goal?.current || 0;
+      const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
+      const done = target > 0 && progress >= 100;
+      const set = (changes) => setList(prev => { const u = [...prev]; u[index] = { ...u[index], ...changes }; return u; });
+      const moneyTile = (label, str, onChange) => (
+        <label style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",padding:"8px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.08)",cursor:"text"}}>
+          <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>{label}</span>
+          <span style={{display:"flex",alignItems:"baseline",gap:"2px"}}>
+            <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>$</span>
+            <input type="text" inputMode="decimal" placeholder="0" value={str||''} onChange={onChange} onFocus={scrollInputIntoView}
+              style={{...bare,width:"100%",minWidth:0,fontSize:"20px",fontWeight:600}} />
+          </span>
+        </label>
+      );
+      return (
+        <div key={index} style={{borderTop:index>0?sep:"none",padding:"14px 16px"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
+            <textarea rows={1} placeholder={placeholder} value={goal?.name||''} ref={growText} onInput={(e)=>growText(e.target)}
+              onChange={(e)=>set({name:e.target.value})} onFocus={scrollInputIntoView}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+              style={{...bareArea,fontWeight:600}} />
+            <button aria-label="Delete goal" onClick={() => { if (!goal?.name || window.confirm(`Delete "${goal.name}"?`)) setList(prev => prev.filter((_, i) => i !== index)); }}
+              style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
+          </div>
+          <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
+            {moneyTile('Target', goal?.targetStr, (e)=>set({target: parseFloat(e.target.value) || 0, targetStr: e.target.value}))}
+            {moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
+          </div>
+          {target > 0 && (
+            <div style={{marginTop:"12px"}}>
+              <div style={{height:"6px",background:"rgba(255,255,255,0.1)",borderRadius:"999px",overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${progress}%`,borderRadius:"999px",background:BLUE,transition:"width 0.3s"}} />
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontSize:"13px",fontFamily:SANS_FONT}}>
+                <span style={{color:done?BLUE:sec,fontWeight:done?600:400}}>{done ? 'Reached 🎉' : `${progress.toFixed(0)}% saved`}</span>
+                <span style={{color:sec}}>{done ? money(current) : `${money(Math.max(target-current,0))} to go`}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
 
     return (
       <div className="min-h-screen bg-transparent mz-num">
@@ -55987,805 +56057,385 @@ function MuzzApp() {
         {/* HEADER */}
         <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:BLUE,fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",marginBottom:"16px"}}>
               <div>
-                
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Bills</div>
+                <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>{money(allMonthly)} a month{buckets.length > 1 ? ' across all sections' : ''}</div>
               </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Monthly total · all</div>
-                <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:SANS_FONT,fontWeight:500}}>${(buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0).toLocaleString()}</div>
-                {activeBucket && totalMonthly !== (buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0) && (
-                  <div style={{fontSize:"9px",color:`${bucketAccent}aa`,fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{activeBucket.name}: ${totalMonthly.toLocaleString()}</div>
-                )}
-              </div>
+              {billsSubTab === 'bills' && activeBucket && (
+                <button aria-label="New bill" onClick={() => { addBillToBucket(activeBucket.id); setEditingBillIdx((activeBucket.bills||[]).length); }}
+                  style={{...roundPlus,width:"40px",height:"40px",fontSize:"24px"}}>+</button>
+              )}
             </div>
-            {/* Main tabs */}
-            <Segmented value={billsSubTab} onChange={setBillsSubTab} options={[{id:'bills',label:'Bills'},{id:'forecast',label:'Forecast'},{id:'calendar',label:'Calendar'},{id:'goals',label:'Goals'},{id:'debts',label:'Debts'}]} />
+            <Segmented value={billsSubTab === 'debts' ? 'bills' : billsSubTab} onChange={setBillsSubTab} options={[{id:'bills',label:'Bills'},{id:'forecast',label:'Forecast'},{id:'calendar',label:'Calendar'},{id:'goals',label:'Goals'}]} />
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-          {billsSubTab === 'bills' && (
+          {(billsSubTab === 'bills' || billsSubTab === 'debts') && (
             <>
-          {/* Bucket Bar — tap to switch, double-tap to rename, × to delete (when active) */}
-          <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
-            {buckets.map(b => {
-              const isActive = b.id === activeBucketId;
-              return (
-                <div key={b.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
-                  <button
-                    onClick={() => setActiveBucketId(b.id)}
-                    onDoubleClick={() => renameBucket(b.id)}
-                    style={{padding:"8px 16px",background:isActive?`${b.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${b.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
-                    title="Tap to open · Double-tap to rename"
-                  >
-                    {(b.name||'').toUpperCase()}
-                    {(b.bills||[]).filter(x=>x&&x.monthly>0).length > 0 && (
-                      <span style={{fontSize:"9px",opacity:0.7}}>· {(b.bills||[]).filter(x=>x&&x.monthly>0).length}</span>
-                    )}
-                  </button>
-                  {isActive && (
-                    <button onClick={() => deleteBucket(b.id)} style={{padding:"8px 10px",background:`${b.color}26`,border:`1px solid ${b.color}99`,borderLeft:`1px solid ${b.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:700,cursor:"pointer",lineHeight:1}} title="Delete this section">×</button>
-                  )}
+              {/* Sections (Personal, Home, Business…) */}
+              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                <div style={{flex:1,minWidth:0}}>
+                  {bucketSwitcher || (activeBucket && <div style={{...groupLabel,fontSize:"15px"}}>{activeBucket.name}</div>)}
                 </div>
-              );
-            })}
-            <button onClick={addBucket} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(235,235,245,0.4)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
-          </div>
-
-          {!activeBucket && (
-            <div style={{padding:"40px 20px",textAlign:"center",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.5)",fontSize:"11px",letterSpacing:"0"}}>
-              No sections yet. Tap + ADD to create your first bills section.
-            </div>
-          )}
-
-          {activeBucket && (<>
-          {/* Income Input — collapsible */}
-          <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-            <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-              <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.incomeLabel || 'Monthly income'} — {activeBucket.name}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-            </summary>
-            <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
-              <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                <span className="text-xl text-gray-400">$</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  value={activeBucket.incomeStr || ''}
-                  onChange={(e) => handleSalaryChange(e.target.value)}
-                  placeholder="0"
-                  className="text-xl font-semibold w-32 px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-500"
-                />
-                <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>/month</span>
-              </div>
-            </div>
-          </details>
-
-          {/* Bills vs Income — collapsible */}
-          {filledSubs.length > 0 && salaryNum > 0 && (
-            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Bills vs income</span>
-                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-              </summary>
-              <div style={{...LIQUID_GLASS,overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Bills vs Income</h2>
-              </div>
-              <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                  <thead>
-                    <tr style={{background:"rgba(10,132,255,0.03)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                      <th className="text-left py-3 px-4 font-semibold">Category</th>
-                      <th className="text-right py-3 px-3 font-semibold">Daily</th>
-                      <th className="text-right py-3 px-3 font-semibold">Weekly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Monthly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Quarterly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Half-Year</th>
-                      <th className="text-right py-3 px-3 font-semibold">Annually</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-3 px-4 font-medium text-green-700">Income</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700 font-semibold">${calcCost(salaryNum, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-green-700">${calcCost(salaryNum, 'annually')}</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-3 px-4 font-medium text-red-600">Bills</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600 font-semibold">${calcCost(totalMonthly, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'annually')}</td>
-                    </tr>
-                    <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(34,197,94,0.06)"}}>
-                      <td className="py-3 px-4 font-semibold text-green-800">Left Over</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'daily')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-bold">${calcCost(salaryNum - totalMonthly, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'annually')}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <button aria-label="New section" onClick={addBucket} style={{...roundPlus,width:"36px",height:"36px",fontSize:"22px"}}>+</button>
               </div>
 
-              {/* Percentage Breakdown */}
-              <div style={{padding:"14px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(10,132,255,0.03)"}}>
-                <h3 className="font-semibold mb-4">% of Income</h3>
-                <div className="flex flex-col md:flex-row gap-6 items-center">
-                  <div className="flex gap-8">
-                    <div style={{textAlign:"center"}}>
-                      <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
-                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Bills</p>
-                    </div>
-                    <div style={{textAlign:"center"}}>
-                      <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
-                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Savings</p>
-                    </div>
-                  </div>
-                  <div className="flex-1 w-full md:w-auto">
-                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                      <div 
-                        style={{height:"100%",background:"rgba(239,68,68,0.7)",borderRadius:"10px",transition:"width 0.3s"}}
-                        style={{ width: `${Math.min(parseFloat(calcPercentage(totalMonthly, salaryNum)), 100)}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between mt-1 text-xs text-gray-400">
-                      <span>0%</span>
-                      <span>50%</span>
-                      <span>100%</span>
-                    </div>
-                  </div>
+              {!activeBucket && (
+                <div style={{padding:"30px 16px",textAlign:"center",fontFamily:SANS_FONT,color:sec,fontSize:"15px"}}>
+                  No sections yet. Tap + to create your first one.
                 </div>
-              </div>
-              </div>
-            </details>
-          )}
+              )}
 
-          {/* Bills List - active bucket — collapsible */}
-          <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-            <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
-              <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name} bills{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-            </summary>
-            <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-            <div style={{padding:"12px"}}>
-              {currentSubs.length === 0 && (() => {
-                // Sample bills tailored to bucket type
-                const isBusinessBucket = activeBucket.id === 'bucket_business';
-                const isHomeBucket = activeBucket.id === 'bucket_home';
-                const samples = isBusinessBucket ? [
-                  { name: 'Office rent',         monthly: 1800, dueDate: '1st'  },
-                  { name: 'Software licenses',   monthly: 250,  dueDate: '15th' },
-                  { name: 'Accountant',          monthly: 350,  dueDate: '20th' },
-                  { name: 'Phone & internet',    monthly: 120,  dueDate: '7th'  },
-                  { name: 'Insurance',           monthly: 200,  dueDate: '28th' },
-                ] : isHomeBucket ? [
-                  { name: 'Rent / Mortgage',     monthly: 2400, dueDate: '1st'  },
-                  { name: 'Electricity',         monthly: 180,  dueDate: '14th' },
-                  { name: 'Internet',            monthly: 80,   dueDate: '23rd' },
-                  { name: 'Water',               monthly: 60,   dueDate: '10th' },
-                  { name: 'Council rates',       monthly: 150,  dueDate: '20th' },
-                ] : [
-                  { name: 'Netflix',             monthly: 18,   dueDate: '12th' },
-                  { name: 'Spotify',             monthly: 13,   dueDate: '5th'  },
-                  { name: 'Gym',                 monthly: 65,   dueDate: '1st'  },
-                  { name: 'Phone',               monthly: 55,   dueDate: '20th' },
-                  { name: 'Car insurance',       monthly: 120,  dueDate: '15th' },
-                ];
-                const sampleTotal = samples.reduce((s, x) => s + x.monthly, 0);
-                const useTemplate = () => {
-                  const newBills = samples.map(s => ({ id: Date.now() + Math.random(), name: s.name, monthly: s.monthly, monthlyStr: String(s.monthly), dueDate: s.dueDate, dateAdded: new Date().toISOString() }));
-                  updateBucketBills(activeBucket.id, newBills);
-                };
-                const startFresh = () => addBillToBucket(activeBucket.id);
-                return (
-                  <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"20px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
-                    <div style={{padding:"12px 14px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
-                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · not your data</div>
-                      <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
-                      <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
-                    </div>
-                    <div style={{padding:"10px 14px"}}>
-                      {samples.map((s, i) => (
-                        <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"6px 0",borderBottom:i<samples.length-1?"0.5px solid rgba(255,255,255,0.04)":"none",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",opacity:0.85}}>
-                          <div style={{color:"rgba(235,235,245,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                          <div style={{color:bucketAccent,textAlign:"right"}}>${s.monthly}/mo</div>
-                          <div style={{color:"rgba(235,235,245,0.55)",textAlign:"right",fontSize:"10px"}}>{s.dueDate}</div>
+              {activeBucket && (<>
+                {/* Income and what's left */}
+                <div style={card}>
+                  <label style={{...formRow,padding:"0 16px",cursor:"text",borderBottom:(salaryNum>0&&filledSubs.length>0)?sep:"none"}}>
+                    <span style={formLabel}>{activeBucket.incomeLabel && activeBucket.incomeLabel !== 'Income' ? activeBucket.incomeLabel : 'Monthly income'}</span>
+                    <span style={{display:"flex",alignItems:"baseline",gap:"2px",minWidth:0}}>
+                      <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>$</span>
+                      <input type="text" inputMode="decimal" value={activeBucket.incomeStr || ''} placeholder="0" onFocus={scrollInputIntoView}
+                        onChange={(e) => handleSalaryChange(e.target.value)} style={{...bare,width:"130px",textAlign:"right"}} />
+                    </span>
+                  </label>
+                  {salaryNum > 0 && filledSubs.length > 0 && (() => {
+                    const left = salaryNum - totalMonthly;
+                    const pct = Math.min((totalMonthly / salaryNum) * 100, 100);
+                    return (
+                      <>
+                        <div style={{...formRow,padding:"0 16px",borderBottom:sep}}>
+                          <span style={formLabel}>Bills</span>
+                          <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>{money(totalMonthly)}</span>
                         </div>
-                      ))}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:"1px solid rgba(255,255,255,0.07)",marginTop:"4px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600}}>
-                        <div style={{color:"rgba(235,235,245,0.95)"}}>Total</div>
-                        <div style={{color:bucketAccent,textAlign:"right"}}>${sampleTotal}/mo</div>
-                        <div></div>
-                      </div>
-                    </div>
-                    <div style={{padding:"10px 14px 12px",borderTop:"1px solid rgba(255,255,255,0.07)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${bucketAccent}26`,border:`1px solid ${bucketAccent}99`,borderRadius:"20px",color:bucketAccent,fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                    </div>
-                  </div>
-                );
-              })()}
-              <div style={{overflowX:'auto'}}>
-              <div style={{display:"flex",flexDirection:"column",gap:"0"}}>
-
-                {/* SUMMARY PANEL — only show if there are bills */}
-                {filledSubs.length > 0 && (() => {
-                  const annualTotal = totalMonthly * 12;
-                  // Find next due bill across all bills
-                  let nextDue = null;
-                  filledSubs.forEach(s => {
-                    const nd = computeNextDue(s);
-                    if (nd && (!nextDue || nd.daysAway < nextDue.daysAway)) {
-                      nextDue = { sub: s, ...nd };
-                    }
-                  });
-                  return (
-                    <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${bucketAccent}`,borderRadius:"20px",padding:"16px 18px",marginBottom:"6px"}}>
-                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px"}}>
-                        <span style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name} overview</span>
-                        <span style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{filledSubs.length} BILL{filledSubs.length!==1?'S':''}</span>
-                      </div>
-                      <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"14px"}}>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Monthly</div>
-                          <div style={{fontSize:"22px",color:bucketAccent,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${totalMonthly.toFixed(0)}</div>
+                        <div style={{...formRow,padding:"0 16px"}}>
+                          <span style={formLabel}>Left over</span>
+                          <span style={{fontSize:"17px",color:left>=0?BLUE:RED,fontFamily:SANS_FONT,fontWeight:600}}>{left < 0 ? '−' : ''}{money(Math.abs(left))}</span>
                         </div>
-                        <div>
-                          
-                          <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${annualTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                        </div>
-                        {nextDue && (
-                          <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Next due</div>
-                            <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
-                              <span style={{fontSize:"14px",color:"#FFFFFF",fontWeight:500}}>{nextDue.sub.name||'Bill'}</span>
-                              <span style={{fontSize:"11px",color:nextDue.daysAway<=3?"#ef4444":nextDue.daysAway<=7?"#f59e0b":"rgba(235,235,245,0.7)",marginLeft:"8px"}}>
-                                {nextDue.daysAway===0?'TODAY':nextDue.daysAway===1?'TMRW':`IN ${nextDue.daysAway}D`}
-                              </span>
-                            </div>
+                        <div style={{padding:"4px 16px 14px"}}>
+                          <div style={{height:"6px",background:"rgba(255,255,255,0.1)",borderRadius:"999px",overflow:"hidden"}}>
+                            <div style={{height:"100%",width:`${pct}%`,borderRadius:"999px",background:pct>80?RED:pct>50?ORANGE:BLUE,transition:"width 0.3s"}} />
                           </div>
-                        )}
+                          <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"6px"}}>Bills take {((totalMonthly / salaryNum) * 100).toFixed(0)}% of your income.</div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+
+                {/* Empty section: examples */}
+                {currentSubs.length === 0 && (() => {
+                  const isBusinessBucket = activeBucket.id === 'bucket_business';
+                  const isHomeBucket = activeBucket.id === 'bucket_home';
+                  const samples = isBusinessBucket ? [
+                    { name: 'Office rent',       monthly: 1800, dueDate: '1'  },
+                    { name: 'Software licences', monthly: 250,  dueDate: '15' },
+                    { name: 'Accountant',        monthly: 350,  dueDate: '20' },
+                    { name: 'Phone & internet',  monthly: 120,  dueDate: '7'  },
+                    { name: 'Insurance',         monthly: 200,  dueDate: '28' },
+                  ] : isHomeBucket ? [
+                    { name: 'Rent / mortgage',   monthly: 2400, dueDate: '1'  },
+                    { name: 'Electricity',       monthly: 180,  dueDate: '14' },
+                    { name: 'Internet',          monthly: 80,   dueDate: '23' },
+                    { name: 'Water',             monthly: 60,   dueDate: '10' },
+                    { name: 'Council rates',     monthly: 150,  dueDate: '20' },
+                  ] : [
+                    { name: 'Netflix',           monthly: 18,   dueDate: '12' },
+                    { name: 'Spotify',           monthly: 13,   dueDate: '5'  },
+                    { name: 'Gym',               monthly: 65,   dueDate: '1'  },
+                    { name: 'Phone',             monthly: 55,   dueDate: '20' },
+                    { name: 'Car insurance',     monthly: 120,  dueDate: '15' },
+                  ];
+                  const useTemplate = () => updateBucketBills(activeBucket.id, samples.map(s => ({ id: Date.now() + Math.random(), name: s.name, monthly: s.monthly, monthlyStr: String(s.monthly), dueDate: s.dueDate, freq: 'monthly', dateAdded: new Date().toISOString() })));
+                  return (
+                    <div style={{...card,padding:"18px"}}>
+                      <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Track your {activeBucket.name.toLowerCase()} bills</div>
+                      <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>Add what each bill costs and when it's due, and see where your {isBusinessBucket ? 'revenue' : 'income'} goes. For example:</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"10px",margin:"16px 0 18px"}}>
+                        {samples.map((s, i) => (
+                          <div key={i} style={{display:"flex",justifyContent:"space-between",gap:"12px",fontFamily:SANS_FONT}}>
+                            <span style={{fontSize:"17px",color:"rgba(235,235,245,0.85)",letterSpacing:"-0.2px"}}>{s.name}</span>
+                            <span style={{fontSize:"15px",color:sec}}>{money(s.monthly)} a month</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                        <button onClick={useTemplate} style={{flex:1,padding:"13px",background:BLUE,border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
+                        <button onClick={() => { addBillToBucket(activeBucket.id); setEditingBillIdx(0); }} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
                       </div>
                     </div>
                   );
                 })()}
 
-                {currentSubs.map((sub, origIndex) => ({ sub, origIndex, nd: computeNextDue(sub) }))
-                  .sort((a, b) => {
-                    // Bills with dates first (ascending by days away), then bills with no date
-                    if (a.nd && !b.nd) return -1;
-                    if (!a.nd && b.nd) return 1;
-                    if (a.nd && b.nd) return a.nd.daysAway - b.nd.daysAway;
-                    return 0;
-                  })
-                  .map(({ sub, origIndex: index, nd }) => {
-                  const isEditing = editingBillIdx === index;
-                  const freq = sub?.freq || 'monthly';
-                  const monthlyEq = monthlyEquivalent(sub);
-                  const daysAway = nd ? nd.daysAway : null;
-                  const isSoon = daysAway !== null && daysAway <= 7;
-                  const isToday = daysAway === 0;
-                  const dueDay = nd ? nd.date.getDate() : null;
-                  return (
-                    <div key={sub?.id || index} style={{background:isEditing?`${bucketAccent}0d`:"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
-                      {/* Compact row */}
-                      <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent,flexShrink:0}}/>
-                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                            {sub?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed bill</span>}
-                          </div>
-                          <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
-                            {FREQ_LABEL[freq]}{nd ? ` · Due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
-                            {freq !== 'monthly' && sub?.monthly > 0 && (
-                              <span style={{color:`${bucketAccent}aa`,marginLeft:"6px"}}>· ${monthlyEq.toFixed(2)}/mo equiv</span>
-                            )}
-                          </div>
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                          {sub?.monthly > 0 && (
-                            <div style={{textAlign:"right"}}>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:bucketAccent,fontWeight:600}}>${parseFloat(sub.monthly).toFixed(2)}</div>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.5)",letterSpacing:"0"}}>{FREQ_SHORT[freq]}</div>
-                            </div>
-                          )}
-                          {daysAway !== null && (
-                            <span style={{fontSize:"9px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",padding:"3px 7px",border:`0.5px solid ${isToday?"rgba(239,68,68,0.4)":isSoon?"rgba(245,158,11,0.4)":"rgba(235,235,245,0.2)"}`,borderRadius:"10px",fontWeight:600}}>
-                              {isToday?'TODAY':daysAway===1?'TMRW':`${daysAway}D`}
-                            </span>
-                          )}
-                          <span style={{fontSize:"14px",color:`${bucketAccent}80`,fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
-                        </div>
-                      </button>
-
-                      {/* Expanded edit panel */}
-                      {isEditing && (
-                        <div style={{padding:"14px 16px 16px",borderTop:"1px solid rgba(255,255,255,0.07)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Bill name</div>
-                            <input
-                              type="text"
-                              value={sub?.name || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
-                              placeholder="e.g. Electricity, Netflix, Rent"
-                              className="slick-input"
-                              style={{fontFamily:SANS_FONT,fontSize:"13px"}}
-                            />
-                          </div>
-                          <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr 1fr",gap:"12px"}}>
-                            <div>
-                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>COST $</div>
-                              <input
-                                type="text"
-                                inputMode="decimal"
-                                value={sub?.monthlyStr ?? sub?.monthly ?? ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)}
-                                placeholder="0.00"
-                                className="slick-input"
-                                style={{fontFamily:SANS_FONT}}
-                              />
-                            </div>
-                            <div>
-                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Frequency</div>
-                              <select
-                                value={freq}
-                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
-                                className="slick-select"
-                                style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
-                                <option value="weekly">Weekly</option>
-                                <option value="fortnightly">Fortnightly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="quarterly">Quarterly</option>
-                                <option value="halfyear">Every 6 months</option>
-                                <option value="annual">Annually</option>
-                              </select>
-                            </div>
-                            {freq === 'monthly' && (
-                              <div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Due day</div>
-                                <input
-                                  type="text"
-                                  value={sub?.dueDate || ''}
-                                  onFocus={scrollInputIntoView}
-                                  onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
-                                  placeholder="e.g. 23"
-                                  className="slick-input"
-                                  style={{fontFamily:SANS_FONT}}
-                                />
-                              </div>
-                            )}
-                            {(freq === 'weekly' || freq === 'fortnightly') && (
-                              <div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Day of week</div>
-                                <select
-                                  value={sub?.weekday ?? ''}
-                                  onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)}
-                                  className="slick-select"
-                                  style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
-                                  <option value="">— pick day —</option>
-                                  {WEEKDAYS.map((d, i) => <option key={i} value={i}>{d}</option>)}
-                                </select>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* FORTNIGHTLY anchor date — which "Friday" is the first */}
-                          {freq === 'fortnightly' && sub?.weekday !== undefined && sub?.weekday !== '' && (
-                            <div>
-                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>FIRST OCCURRENCE (which {WEEKDAYS[parseInt(sub.weekday)]} starts the cycle)</div>
-                              <input
-                                type="date"
-                                value={sub?.fortnightAnchor || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'fortnightAnchor', e.target.value)}
-                                className="slick-input"
-                                style={{fontFamily:SANS_FONT,colorScheme:"dark"}}
-                              />
-                              <div style={{fontSize:"9px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,marginTop:"4px"}}>
-                                Pick any {WEEKDAYS[parseInt(sub.weekday)]} — the bill will recur every 2 weeks from there.
-                              </div>
-                            </div>
-                          )}
-
-                          {/* MULTI-DATE picker for quarterly/halfyear/annual */}
-                          {(freq === 'quarterly' || freq === 'halfyear' || freq === 'annual') && (() => {
-                            const required = freq === 'quarterly' ? 4 : freq === 'halfyear' ? 2 : 1;
-                            const existing = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
-                            // Pad to required length so user always sees the slots
-                            const slots = [...existing];
-                            while (slots.length < required) slots.push('');
-                            const trimmed = slots.slice(0, required);
-                            return (
-                              <div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px"}}>
-                                  DUE DATES · {required} per year (DD-MM)
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${required}, 1fr)`:"repeat(2, 1fr)",gap:"8px"}}>
-                                  {trimmed.map((val, i) => (
-                                    <input key={i}
-                                      type="text"
-                                      value={val}
-                                      onFocus={scrollInputIntoView}
-                                      onChange={(e) => {
-                                        const newDates = [...trimmed];
-                                        newDates[i] = e.target.value;
-                                        updateBillInBucket(activeBucket.id, index, 'dueDates', newDates);
-                                      }}
-                                      placeholder={i===0?"01-04":i===1?"01-07":i===2?"01-10":"01-01"}
-                                      className="slick-input"
-                                      style={{fontFamily:SANS_FONT}}
-                                    />
-                                  ))}
-                                </div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,marginTop:"6px",letterSpacing:"0"}}>
-                                  Enter as day-month (e.g. 01-04 for April 1st). Bill will recur on these dates each year.
-                                </div>
-                              </div>
-                            );
-                          })()}
-                          {freq !== 'monthly' && sub?.monthly > 0 && (
-                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,padding:"8px 10px",background:`${bucketAccent}10`,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
-                              ≈ ${monthlyEq.toFixed(2)}/mo · ${(monthlyEq*12).toFixed(0)}/yr equivalent
-                            </div>
-                          )}
-                          <button onClick={() => { removeBillFromBucket(activeBucket.id, index); setEditingBillIdx(null); }}
-                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
-                        </div>
-                      )}
+                {/* Bill list — soonest due first */}
+                {currentSubs.length > 0 && (
+                  <div>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",margin:"4px 4px 8px"}}>
+                      <span style={groupLabel}>{activeBucket.name} bills</span>
+                      <span style={{display:"flex",gap:"16px"}}>
+                        <button onClick={() => renameBucket(activeBucket.id)} style={{...textBtn(BLUE),fontSize:"15px"}}>Rename</button>
+                        <button onClick={() => deleteBucket(activeBucket.id)} style={{...textBtn(RED),fontSize:"15px"}}>Delete</button>
+                      </span>
                     </div>
-                  );
-                })}
-              </div>
-              </div>{/* end scroll */}
-              <button
-                onClick={() => addBillToBucket(activeBucket.id)}
-                style={{width:"100%",marginTop:"16px",padding:"12px",border:`2px dashed ${bucketAccent}55`,borderRadius:"20px",background:"transparent",color:`${bucketAccent}cc`,fontFamily:SANS_FONT,fontSize:"12px",cursor:"pointer",letterSpacing:"0"}}
-              >
-                + Add {activeBucket.name} Bill
-              </button>
-            </div>
-            </div>
-          </details>
-
-          {/* Breakdown Table — collapsible */}
-          {filledSubs.length > 0 && (
-            <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
-                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Cost breakdown</span>
-                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-              </summary>
-              <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"1px solid rgba(255,255,255,0.07)",borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Cost Breakdown</h2>
-              </div>
-              
-              {/* Pie Chart */}
-              {salaryNum > 0 && (
-                <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8 border-b">
-                  <div className="relative">
-                    <svg width="220" height="220" viewBox="0 0 220 220">
-                      {(() => {
-                        const annualOf = (s) => parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0;
-                        const sortedSubs = [...filledSubs].map(s => ({ ...s, _annual: annualOf(s) })).sort((a, b) => b._annual - a._annual);
-                        const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16'];
-                        let cumulative = 0;
-                        const totalAnnualBills = sortedSubs.reduce((t, s) => t + s._annual, 0);
-                        const annualIncome = salaryNum * 12;
-                        const total = Math.max(annualIncome, totalAnnualBills) || 1;
-                        const remaining = Math.max(0, annualIncome - totalAnnualBills);
-                        
+                    <div style={card}>
+                      {currentSubs.map((sub, origIndex) => ({ sub, origIndex, nd: computeNextDue(sub) }))
+                        .sort((a, b) => {
+                          if (a.nd && !b.nd) return -1;
+                          if (!a.nd && b.nd) return 1;
+                          if (a.nd && b.nd) return a.nd.daysAway - b.nd.daysAway;
+                          return 0;
+                        })
+                        .map(({ sub, origIndex: index, nd }, row) => {
+                        const isEditing = editingBillIdx === index;
+                        const freq = sub?.freq || 'monthly';
+                        const monthlyEq = monthlyEquivalent(sub);
+                        const daysAway = nd ? nd.daysAway : null;
+                        const sub1 = [FREQ_LABEL[freq], nd ? `due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''].filter(Boolean).join(', ');
                         return (
-                          <>
-                            {sortedSubs.map((sub, idx) => {
-                              const percent = (sub._annual / total) * 100;
-                              const startAngle = (cumulative / 100) * 360;
-                              cumulative += percent;
-                              const endAngle = (cumulative / 100) * 360;
-                              
-                              const startRad = (startAngle - 90) * Math.PI / 180;
-                              const endRad = (endAngle - 90) * Math.PI / 180;
-                              const largeArc = percent > 50 ? 1 : 0;
-                              
-                              const x1 = 110 + 80 * Math.cos(startRad);
-                              const y1 = 110 + 80 * Math.sin(startRad);
-                              const x2 = 110 + 80 * Math.cos(endRad);
-                              const y2 = 110 + 80 * Math.sin(endRad);
-                              
-                              return (
-                                <path
-                                  key={idx}
-                                  d={`M 110 110 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                                  fill={colors[idx % colors.length]}
-                                />
-                              );
-                            })}
-                            {remaining > 0 && (() => {
-                              const percent = (remaining / total) * 100;
-                              const startAngle = (cumulative / 100) * 360;
-                              const endAngle = 360;
-                              
-                              const startRad = (startAngle - 90) * Math.PI / 180;
-                              const endRad = (endAngle - 90) * Math.PI / 180;
-                              const largeArc = percent > 50 ? 1 : 0;
-                              
-                              const x1 = 110 + 80 * Math.cos(startRad);
-                              const y1 = 110 + 80 * Math.sin(startRad);
-                              const x2 = 110 + 80 * Math.cos(endRad);
-                              const y2 = 110 + 80 * Math.sin(endRad);
-                              
-                              return (
-                                <path
-                                  d={`M 110 110 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                                  fill="#E5E7EB"
-                                />
-                              );
-                            })()}
-                            <circle cx="110" cy="110" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
-                            <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
-                              {salaryNum > 0 ? ((filledSubs.reduce((t, s) => t + (parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0), 0) / (salaryNum * 12)) * 100).toFixed(0) : 0}%
-                            </text>
-                            <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>
-                              of annual income
-                            </text>
-                          </>
+                          <div key={sub?.id || index} style={{borderTop:row>0?sep:"none",background:isEditing?"rgba(255,255,255,0.04)":"transparent"}}>
+                            <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
+                              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                              <div style={{flex:1,minWidth:0}}>
+                                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:sub?.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{sub?.name || 'New bill'}</div>
+                                <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>{sub1}</div>
+                              </div>
+                              <div style={{textAlign:"right",flexShrink:0}}>
+                                {sub?.monthly > 0 && <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:"#FFFFFF",fontWeight:600}}>{money(sub.monthly, 2)}</div>}
+                                {daysAway !== null && <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:dueColor(daysAway),marginTop:"2px"}}>{dueText(daysAway)}</div>}
+                              </div>
+                              <ChevronRight size={18} color={ter} strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px",transform:isEditing?"rotate(90deg)":"none",transition:"transform 0.2s"}} />
+                            </button>
+
+                            {isEditing && (
+                              <div style={{padding:"4px 16px 14px",display:"flex",flexDirection:"column"}}>
+                                <textarea rows={1} autoFocus={!sub?.name} value={sub?.name || ''} placeholder="Name, e.g. Electricity, Netflix, Rent"
+                                  ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
+                                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                                  onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
+                                  style={{...bareArea,padding:"10px 0",borderBottom:sep}} />
+                                <label style={{...formRow,borderBottom:sep,cursor:"text"}}>
+                                  <span style={formLabel}>Cost</span>
+                                  <span style={{display:"flex",alignItems:"baseline",gap:"2px",minWidth:0}}>
+                                    <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>$</span>
+                                    <input type="text" inputMode="decimal" value={sub?.monthlyStr ?? sub?.monthly ?? ''} placeholder="0.00" onFocus={scrollInputIntoView}
+                                      onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)} style={{...bare,width:"120px",textAlign:"right"}} />
+                                  </span>
+                                </label>
+                                <div style={{...formRow,borderBottom:sep}}>
+                                  <span style={formLabel}>Repeats</span>
+                                  <select value={freq} onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)} style={pill}>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="fortnightly">Fortnightly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="halfyear">Every 6 months</option>
+                                    <option value="annual">Yearly</option>
+                                  </select>
+                                </div>
+                                {freq === 'monthly' && (
+                                  <label style={{...formRow,borderBottom:sep,cursor:"text"}}>
+                                    <span style={formLabel}>Due day</span>
+                                    <input type="text" inputMode="numeric" value={sub?.dueDate || ''} placeholder="e.g. 23" onFocus={scrollInputIntoView}
+                                      onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)} style={{...bare,width:"120px",textAlign:"right"}} />
+                                  </label>
+                                )}
+                                {(freq === 'weekly' || freq === 'fortnightly') && (
+                                  <div style={{...formRow,borderBottom:sep}}>
+                                    <span style={formLabel}>Day</span>
+                                    <select value={sub?.weekday ?? ''} onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)} style={pill}>
+                                      <option value="">Pick a day</option>
+                                      {WEEKDAYS.map((d, i) => <option key={i} value={i}>{d}</option>)}
+                                    </select>
+                                  </div>
+                                )}
+                                {freq === 'fortnightly' && sub?.weekday !== undefined && sub?.weekday !== '' && (
+                                  <div style={{borderBottom:sep,paddingBottom:"10px"}}>
+                                    <div style={formRow}>
+                                      <span style={formLabel}>Starts on</span>
+                                      <input type="date" value={sub?.fortnightAnchor || ''} onFocus={scrollInputIntoView}
+                                        onChange={(e) => updateBillInBucket(activeBucket.id, index, 'fortnightAnchor', e.target.value)} style={pill} />
+                                    </div>
+                                    <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,lineHeight:1.4}}>Pick any {WEEKDAYS[parseInt(sub.weekday)]} it's paid on. It repeats every 2 weeks from there.</div>
+                                  </div>
+                                )}
+                                {(freq === 'quarterly' || freq === 'halfyear' || freq === 'annual') && (() => {
+                                  const required = freq === 'quarterly' ? 4 : freq === 'halfyear' ? 2 : 1;
+                                  const existing = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
+                                  const slots = [...existing];
+                                  while (slots.length < required) slots.push('');
+                                  const trimmed = slots.slice(0, required);
+                                  return (
+                                    <div style={{borderBottom:sep,padding:"10px 0"}}>
+                                      <div style={{...formLabel,marginBottom:"8px"}}>{required === 1 ? 'Due date' : 'Due dates'}</div>
+                                      <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${required}, 1fr)`:"repeat(2, 1fr)",gap:"8px"}}>
+                                        {trimmed.map((val, i) => (
+                                          <input key={i} type="text" value={val} onFocus={scrollInputIntoView}
+                                            onChange={(e) => { const nd2 = [...trimmed]; nd2[i] = e.target.value; updateBillInBucket(activeBucket.id, index, 'dueDates', nd2); }}
+                                            placeholder={i===0?"01-04":i===1?"01-07":i===2?"01-10":"01-01"}
+                                            style={{...pill,textAlign:"center",width:"100%",boxSizing:"border-box"}} />
+                                        ))}
+                                      </div>
+                                      <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"8px",lineHeight:1.4}}>Day-month, e.g. 01-04 for 1 April. Repeats on these dates every year.</div>
+                                    </div>
+                                  );
+                                })()}
+                                {freq !== 'monthly' && sub?.monthly > 0 && (
+                                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,paddingTop:"10px"}}>About {money(monthlyEq)} a month, {money(monthlyEq*12)} a year.</div>
+                                )}
+                                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"14px"}}>
+                                  <button onClick={() => { if (!sub?.name || window.confirm(`Delete "${sub.name}"?`)) { removeBillFromBucket(activeBucket.id, index); setEditingBillIdx(null); } }} style={textBtn(RED)}>Delete</button>
+                                  <button onClick={() => setEditingBillIdx(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         );
-                      })()}
-                    </svg>
+                      })}
+                      <button onClick={() => { addBillToBucket(activeBucket.id); setEditingBillIdx(currentSubs.length); }} style={{...addRowBtn,borderTop:sep}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add bill</button>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
-                    {(() => {
-                      const annualOf = (s) => parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0;
-                      const sortedSubs = [...filledSubs].map(s => ({ ...s, _annual: annualOf(s) })).sort((a, b) => b._annual - a._annual);
-                      const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16'];
-                      const annualIncome = salaryNum * 12;
-                      const totalAnnualBills = sortedSubs.reduce((t, s) => t + s._annual, 0);
-                      const remaining = Math.max(0, annualIncome - totalAnnualBills);
-                      
-                      return (
-                        <>
-                          {sortedSubs.map((sub, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-sm">
-                              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{sub.name}</span>
-                              <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>(${Math.round(sub._annual).toLocaleString()}/yr · {((sub._annual / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
+                )}
+
+                {/* Every period — income, bills, left over */}
+                {filledSubs.length > 0 && salaryNum > 0 && (
+                  <details style={card}>
+                    <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                      <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Weekly, monthly, yearly</span>
+                      <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
+                    </summary>
+                    <div style={{overflowX:"auto",paddingBottom:"6px"}}>
+                      <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"15px",borderCollapse:"collapse"}}>
+                        <thead>
+                          <tr style={{borderBottom:sep}}>
+                            {['', 'Weekly', 'Monthly', 'Yearly'].map((h, i) => (
+                              <th key={i} style={{textAlign:i===0?"left":"right",padding:"8px 16px",fontSize:"13px",color:sec,fontWeight:600}}>{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { label:'Income', v: salaryNum, color:"#FFFFFF" },
+                            { label:'Bills', v: totalMonthly, color:"#FFFFFF" },
+                            { label:'Left over', v: salaryNum - totalMonthly, color: salaryNum - totalMonthly >= 0 ? BLUE : RED, bold:true },
+                          ].map(r => (
+                            <tr key={r.label} style={{borderBottom:r.bold?"none":"0.5px solid rgba(255,255,255,0.08)"}}>
+                              <td style={{padding:"11px 16px",color:"#FFFFFF",fontWeight:r.bold?600:400}}>{r.label}</td>
+                              {['weekly','monthly','annually'].map(p => (
+                                <td key={p} style={{padding:"11px 16px",textAlign:"right",color:r.color,fontWeight:r.bold?600:400,whiteSpace:"nowrap"}}>${calcCost(r.v, p)}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </details>
+                )}
+
+                {/* Cost breakdown — pie and per-bill costs */}
+                {filledSubs.length > 0 && (() => {
+                  const annualOf = (s) => parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0;
+                  const sortedSubs = [...filledSubs].map(s => ({ ...s, _annual: annualOf(s) })).sort((a, b) => b._annual - a._annual);
+                  const colors = ['#0A84FF', '#5E5CE6', '#BF5AF2', '#FF375F', '#FF9F0A', '#FFD60A', '#64D2FF', '#30D158', '#AC8E68', '#FF453A'];
+                  const totalAnnualBills = sortedSubs.reduce((t, s) => t + s._annual, 0);
+                  const annualIncome = salaryNum * 12;
+                  const pieTotal = (salaryNum > 0 ? Math.max(annualIncome, totalAnnualBills) : totalAnnualBills) || 1;
+                  const remaining = salaryNum > 0 ? Math.max(0, annualIncome - totalAnnualBills) : 0;
+                  const slices = [...sortedSubs.map((s, i) => ({ v: s._annual, c: colors[i % colors.length] })), ...(remaining > 0 ? [{ v: remaining, c: "rgba(255,255,255,0.14)" }] : [])];
+                  let cum = 0;
+                  const arc = (v) => {
+                    const pct = (v / pieTotal) * 100;
+                    const a0 = (cum / 100) * 360; cum += pct; const a1 = Math.min((cum / 100) * 360, 359.999);
+                    const r0 = (a0 - 90) * Math.PI / 180, r1 = (a1 - 90) * Math.PI / 180;
+                    return `M 110 110 L ${110 + 80 * Math.cos(r0)} ${110 + 80 * Math.sin(r0)} A 80 80 0 ${pct > 50 ? 1 : 0} 1 ${110 + 80 * Math.cos(r1)} ${110 + 80 * Math.sin(r1)} Z`;
+                  };
+                  const sortKey = ['name','due','weekly','monthly','annually'].includes(billsSortBy) ? billsSortBy : 'monthly';
+                  const setSort = (k, dflt) => { if (sortKey === k) setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setBillsSortBy(k); setBillsSortDir(dflt); } };
+                  const rows = [...filledSubs].sort((a, b) => {
+                    let c = 0;
+                    if (sortKey === 'name') c = (a.name || '').localeCompare(b.name || '');
+                    else if (sortKey === 'due') { const da = computeNextDue(a), db = computeNextDue(b); c = (da ? da.daysAway : 999) - (db ? db.daysAway : 999); }
+                    else c = monthlyEquivalent(a) - monthlyEquivalent(b);
+                    return billsSortDir === 'asc' ? c : -c;
+                  });
+                  const th = (label, k, dflt, align) => (
+                    <th onClick={() => setSort(k, dflt)} style={{textAlign:align,padding:"8px 16px",fontSize:"13px",color:sortKey===k?"#FFFFFF":sec,fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"}}>
+                      {label}{sortKey === k ? (billsSortDir === 'asc' ? ' ↑' : ' ↓') : ''}
+                    </th>
+                  );
+                  return (
+                    <details style={card}>
+                      <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                        <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Cost breakdown</span>
+                        <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
+                      </summary>
+                      <div style={{padding:"6px 16px 16px",display:"flex",flexDirection:isWide?"row":"column",alignItems:"center",gap:"20px",borderBottom:sep}}>
+                        <svg width="200" height="200" viewBox="0 0 220 220" style={{flexShrink:0}}>
+                          {slices.map((s, i) => <path key={i} d={arc(s.v)} fill={s.c} />)}
+                          <circle cx="110" cy="110" r="52" fill="#1C1C1E" />
+                          <text x="110" y="112" textAnchor="middle" style={{fontSize:"24px",fontWeight:700,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
+                            {salaryNum > 0 ? `${((totalAnnualBills / annualIncome) * 100).toFixed(0)}%` : money(totalAnnualBills)}
+                          </text>
+                          <text x="110" y="132" textAnchor="middle" style={{fontSize:"13px",fill:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>{salaryNum > 0 ? 'of income' : 'a year'}</text>
+                        </svg>
+                        <div style={{display:"flex",flexDirection:"column",gap:"8px",width:"100%",maxHeight:"220px",overflowY:"auto"}}>
+                          {sortedSubs.map((s, i) => (
+                            <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",fontFamily:SANS_FONT,fontSize:"15px"}}>
+                              <span style={{width:"10px",height:"10px",borderRadius:"50%",background:colors[i % colors.length],flexShrink:0}} />
+                              <span style={{flex:1,minWidth:0,color:"#FFFFFF"}}>{s.name}</span>
+                              <span style={{color:sec,whiteSpace:"nowrap"}}>{money(s._annual)} a year</span>
                             </div>
                           ))}
                           {remaining > 0 && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(10,132,255,0.2)"}} />
-                              <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>Remaining</span>
-                              <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((remaining / (salaryNum * 12)) * 100).toFixed(1)}%)</span>
+                            <div style={{display:"flex",alignItems:"center",gap:"10px",fontFamily:SANS_FONT,fontSize:"15px"}}>
+                              <span style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(255,255,255,0.3)",flexShrink:0}} />
+                              <span style={{flex:1,color:"#FFFFFF"}}>Left over</span>
+                              <span style={{color:sec,whiteSpace:"nowrap"}}>{money(remaining)} a year</span>
                             </div>
                           )}
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
-              )}
-
-              {/* Total Bills to Total Income Bar — annual, frequency-normalised */}
-              {salaryNum > 0 && (() => {
-                const cbAnnualBills = filledSubs.reduce((t, s) => t + (parseFloat(calcCost(s.monthly, 'annually', s.freq || 'monthly')) || 0), 0);
-                const cbAnnualIncome = salaryNum * 12;
-                const cbRatio = cbAnnualIncome > 0 ? cbAnnualBills / cbAnnualIncome : 0;
-                return (
-                <div className="px-6 py-4 border-b">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Bills to Total Income · annually</span>
-                    <span className="text-sm font-bold text-indigo-600">
-                      ${Math.round(cbAnnualBills).toLocaleString()} / ${cbAnnualIncome.toLocaleString()} ({(cbRatio * 100).toFixed(1)}%)
-                    </span>
-                  </div>
-                  <div style={{height:"12px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                    <div 
-                      style={{ 
-                        height:"100%",
-                        borderRadius:"10px",
-                        transition:"all 0.3s",
-                        background: cbRatio > 0.8 ? "rgba(239,68,68,0.7)" : cbRatio > 0.5 ? "rgba(234,179,8,0.7)" : "rgba(34,197,94,0.7)",
-                        width: `${Math.min(cbRatio * 100, 100)}%`
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>$0</span>
-                    <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>${cbAnnualIncome.toLocaleString()}/yr</span>
-                  </div>
-                </div>
-                );
-              })()}
-
-              <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                  <thead>
-                    <tr style={{background:"rgba(10,132,255,0.03)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                      <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'name') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('name'); setBillsSortDir('asc'); }
-                        }}
-                      >
-                        Subscription {billsSortBy === 'name' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"center",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'due') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('due'); setBillsSortDir('asc'); }
-                        }}
-                      >
-                        Due {billsSortBy === 'due' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'daily') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('daily'); setBillsSortDir('desc'); }
-                        }}
-                      >
-                        Daily {billsSortBy === 'daily' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'weekly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('weekly'); setBillsSortDir('desc'); }
-                        }}
-                      >
-                        Weekly {billsSortBy === 'weekly' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'monthly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('monthly'); setBillsSortDir('asc'); }
-                        }}
-                      >
-                        Monthly {billsSortBy === 'monthly' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'quarterly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('quarterly'); setBillsSortDir('desc'); }
-                        }}
-                      >
-                        Quarterly {billsSortBy === 'quarterly' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'halfyear') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('halfyear'); setBillsSortDir('desc'); }
-                        }}
-                      >
-                        Half-Year {billsSortBy === 'halfyear' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (billsSortBy === 'annually') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setBillsSortBy('annually'); setBillsSortDir('desc'); }
-                        }}
-                      >
-                        Annually {billsSortBy === 'annually' && (billsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...filledSubs].sort((a, b) => {
-                      let comparison = 0;
-                      switch (billsSortBy) {
-                        case 'name':
-                          comparison = (a.name || '').localeCompare(b.name || '');
-                          break;
-                        case 'due':
-                          const parseDay = (str) => {
-                            if (!str) return 32;
-                            const num = parseInt(str.replace(/\D/g, ''));
-                            return isNaN(num) ? 32 : num;
-                          };
-                          comparison = parseDay(a.dueDate) - parseDay(b.dueDate);
-                          break;
-                        case 'daily':
-                        case 'weekly':
-                        case 'monthly':
-                        case 'quarterly':
-                        case 'halfyear':
-                        case 'annually':
-                          comparison = (parseFloat(calcCost(a.monthly, 'monthly', a.freq || 'monthly')) || 0) - (parseFloat(calcCost(b.monthly, 'monthly', b.freq || 'monthly')) || 0);
-                          break;
-                        default:
-                          comparison = 0;
-                      }
-                      return billsSortDir === 'asc' ? comparison : -comparison;
-                    }).map((sub, idx) => (
-                      <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                        <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>
-                          {sub.name}
-                        </td>
-                        <td className="py-3 px-3 text-center text-gray-500">
-                          {(() => {
-                            const nd = computeNextDue(sub);
-                            if (nd) return nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'});
-                            return sub.dueDate || '-';
-                          })()}
-                        </td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'daily', sub.freq||'monthly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'weekly', sub.freq||'monthly')}</td>
-                        <td className="py-3 px-3 text-right font-semibold">${calcCost(sub.monthly, 'monthly', sub.freq||'monthly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'quarterly', sub.freq||'monthly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'halfyear', sub.freq||'monthly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'annually', sub.freq||'monthly')}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total Bills</td>
-                      <td className="py-3 px-3"></td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'daily')}</td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'weekly')}</td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'monthly')}</td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'quarterly')}</td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'halfyear')}</td>
-                      <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'annually')}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              </div>
-            </details>
-          )}
-
-          {/* Muzz Advice Categories Info - Personal Only */}
-          {isPersonal && filledSubs.length === 0 && (
-            <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-              <div style={{padding:"14px 16px"}}>
-                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Muzz can help you save on</div>
-                <p style={{fontSize:"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",gap:"6px"}}>
-                  {[
-                    'STREAMING SERVICES',
-                    'GROCERIES & FOOD',
-                    'GYM MEMBERSHIPS',
-                    'PHONE & INTERNET',
-                    'INSURANCE',
-                    'SUBSCRIPTION AUDITS',
-                  ].map((label,i) => (
-                    <div key={i} style={{padding:"6px 10px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"9px",letterSpacing:"0"}}>
-                      {label}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
+                        </div>
+                      </div>
+                      <div style={{overflowX:"auto",paddingBottom:"6px"}}>
+                        <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"15px",borderCollapse:"collapse"}}>
+                          <thead>
+                            <tr style={{borderBottom:sep}}>
+                              {th('Bill','name','asc','left')}{th('Due','due','asc','left')}{th('Weekly','weekly','desc','right')}{th('Monthly','monthly','desc','right')}{th('Yearly','annually','desc','right')}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {rows.map((s, i) => {
+                              const nd = computeNextDue(s);
+                              return (
+                                <tr key={i} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
+                                  <td style={{padding:"11px 16px",color:"#FFFFFF"}}>{s.name}</td>
+                                  <td style={{padding:"11px 16px",color:sec,whiteSpace:"nowrap"}}>{nd ? nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : (s.dueDate || '–')}</td>
+                                  <td style={{padding:"11px 16px",textAlign:"right",color:sec,whiteSpace:"nowrap"}}>${calcCost(s.monthly, 'weekly', s.freq||'monthly')}</td>
+                                  <td style={{padding:"11px 16px",textAlign:"right",color:"#FFFFFF",whiteSpace:"nowrap"}}>${calcCost(s.monthly, 'monthly', s.freq||'monthly')}</td>
+                                  <td style={{padding:"11px 16px",textAlign:"right",color:sec,whiteSpace:"nowrap"}}>${calcCost(s.monthly, 'annually', s.freq||'monthly')}</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                          <tfoot>
+                            <tr style={{borderTop:"0.5px solid rgba(255,255,255,0.2)",fontWeight:600,color:"#FFFFFF"}}>
+                              <td style={{padding:"11px 16px"}}>Total</td>
+                              <td />
+                              <td style={{padding:"11px 16px",textAlign:"right",whiteSpace:"nowrap"}}>${calcCost(totalMonthly, 'weekly')}</td>
+                              <td style={{padding:"11px 16px",textAlign:"right",whiteSpace:"nowrap"}}>${calcCost(totalMonthly, 'monthly')}</td>
+                              <td style={{padding:"11px 16px",textAlign:"right",whiteSpace:"nowrap"}}>${calcCost(totalMonthly, 'annually')}</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </details>
+                  );
+                })()}
           {/* Branch Graph — Radial constellation layout, collapsible */}
           {activeBucket && (activeBucket.bills || []).some(x => x?.name && x.monthly > 0) && (() => {
             const bucket = activeBucket;
             const bills = (bucket.bills || []).filter(x => x?.name && x.monthly > 0);
-            const accent = bucket.color || '#0A84FF';
+            const accent = '#0A84FF';
             const sortedBills = [...bills].map(s => ({ s, nd: computeNextDue(s), mEq: monthlyEquivalent(s) }))
               .sort((a,b) => b.mEq - a.mEq);
             const bucketTotal = sortedBills.reduce((sum, {mEq}) => sum + mEq, 0);
@@ -56819,12 +56469,12 @@ function MuzzApp() {
             });
 
             return (
-              <details style={{...LIQUID_GLASS,border:`0.5px solid ${accent}25`,borderRadius:"20px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{bucket.name} constellation</span>
-                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Constellation</span>
+                  <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />
                 </summary>
-                <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+                <div style={{padding:"8px 12px 20px"}}>
                   {isWide ? (
                   /* DESKTOP — Radial canvas */
                   <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
@@ -56869,15 +56519,10 @@ function MuzzApp() {
 
                     {/* Bucket node — centre */}
                     <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
-                        {/* Corner ticks */}
-                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
-                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:isWide?"10px":"9px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} BILL{N!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:isWide?"150px":"120px",position:"relative"}}>
+                        <span style={{fontSize:isWide?"12px":"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name}</span>
+                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:isWide?"13px":"12px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                        <span style={{fontSize:isWide?"11px":"10px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} bill{N!==1?'s':''}, ${(bucketTotal*12).toFixed(0)} a year</span>
                       </div>
                     </div>
 
@@ -56887,28 +56532,25 @@ function MuzzApp() {
                       const widthPct = (mEq / maxBillEq) * 100;
                       const isToday = nd && nd.daysAway === 0;
                       const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
-                      const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
+                      const dotColor = isToday ? '#FF453A' : isSoon ? '#FF9F0A' : accent;
                       return (
                         <div key={s.id || idx} style={{position:"absolute",left:x,top:y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${dotColor}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-                            {/* Corner ticks */}
-                            <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
-                            <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden",minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
                             {/* Bar showing relative size */}
-                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(10,132,255,0.12)",pointerEvents:"none"}}/>
                             <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                               <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,flexShrink:0}}/>
+                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"13px":"12px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
                               </div>
                               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"7px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"13px":"13px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
                               </div>
                               {nd && (
                                 <div style={{paddingLeft:"10px"}}>
-                                  <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.4)",letterSpacing:"0",fontWeight:600}}>
-                                    {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
+                                  <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.4)",letterSpacing:"0",fontWeight:600}}>
+                                    {nd.daysAway===0?'Today':nd.daysAway===1?'Tomorrow':`In ${nd.daysAway} days`}
                                   </span>
                                 </div>
                               )}
@@ -56926,14 +56568,10 @@ function MuzzApp() {
                       <div style={{position:"relative",maxWidth:"100%"}}>
                         {/* Bucket node — top centre */}
                         <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
-                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
-                            <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
-                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                            <span style={{fontSize:"8px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{billsForSpine.length} BILL{billsForSpine.length!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:"160px",position:"relative"}}>
+                            <span style={{fontSize:"12px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name}</span>
+                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                            <span style={{fontSize:"11px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{billsForSpine.length} bill{billsForSpine.length!==1?'s':''}, ${(bucketTotal*12).toFixed(0)} a year</span>
                           </div>
                         </div>
 
@@ -56945,29 +56583,27 @@ function MuzzApp() {
                             const widthPct = (mEq / maxBillEq) * 100;
                             const isToday = nd && nd.daysAway === 0;
                             const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
-                            const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
+                            const dotColor = isToday ? '#FF453A' : isSoon ? '#FF9F0A' : accent;
                             const left = idx % 2 === 0;
                             return (
                               <div key={s.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
                                 <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
-                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
-                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
-                                  <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
-                                  <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
-                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent}}/>
+                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden"}}>
+                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(10,132,255,0.12)",pointerEvents:"none"}}/>
                                   <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                                     <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
+                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,flexShrink:0}}/>
                                       <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
                                     </div>
                                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"11px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
                                     </div>
                                     {nd && (
                                       <div style={{paddingLeft:"10px"}}>
-                                        <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.45)",letterSpacing:"0",fontWeight:600}}>
-                                          {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
+                                        <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.45)",letterSpacing:"0",fontWeight:600}}>
+                                          {nd.daysAway===0?'Today':nd.daysAway===1?'Tomorrow':`In ${nd.daysAway} days`}
                                         </span>
                                       </div>
                                     )}
@@ -56984,25 +56620,25 @@ function MuzzApp() {
 
                   {/* Detail list below — full bill data, since absolute-positioned cards can't expand cleanly */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Bill details</div>
+                    <div style={{fontSize:"12px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Bill details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {sortedBills.map(({s, nd, mEq}, idx) => {
                         const freq = s.freq || 'monthly';
                         const isToday = nd && nd.daysAway === 0;
                         const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
                         return (
-                          <div key={s.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"10px"}}>
+                          <div key={s.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"13px"}}>
                             <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
                               <span style={{color:"#FFFFFF",fontWeight:600}}>{s.name}</span>
                               <span style={{color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(2)}{FREQ_SHORT[freq]}</span>
                             </div>
-                            <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"9px"}}>
-                              <span>{FREQ_LABEL[freq]}{freq !== 'monthly' ? ` · $${mEq.toFixed(2)}/mo` : ''}</span>
-                              <span>${(mEq*12).toFixed(0)}/yr · {bucketTotal>0?((mEq/bucketTotal)*100).toFixed(1):'0'}%</span>
+                            <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"12px"}}>
+                              <span>{FREQ_LABEL[freq]}{freq !== 'monthly' ? `, about $${mEq.toFixed(2)} a month` : ''}</span>
+                              <span>${(mEq*12).toFixed(0)} a year, {bucketTotal>0?((mEq/bucketTotal)*100).toFixed(1):'0'}%</span>
                             </div>
                             {nd && (
-                              <div style={{color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(235,235,245,0.45)",fontSize:"9px",marginTop:"2px"}}>
-                                Next: {nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})} · {nd.daysAway===0?'TODAY':nd.daysAway===1?'TMRW':`${nd.daysAway}D away`}
+                              <div style={{color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.45)",fontSize:"12px",marginTop:"2px"}}>
+                                Next due {nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}, {nd.daysAway===0?'today':nd.daysAway===1?'tomorrow':`in ${nd.daysAway} days`}
                               </div>
                             )}
                           </div>
@@ -57014,8 +56650,7 @@ function MuzzApp() {
               </details>
             );
           })()}
-
-          </>)}{/* end activeBucket wrapper */}
+              </>)}
             </>
           )}
 
@@ -57024,11 +56659,11 @@ function MuzzApp() {
             // Active bucket only — use the same bucket selector as BILLS
             if (!activeBucket) {
               return (
-                <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>NO BUCKET SELECTED · Switch to BILLS tab to set one up</div>
+                <div style={{padding:"40px",textAlign:"center",fontSize:"13px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>No section yet. Set one up in the Bills tab.</div>
               );
             }
             const forecastBills = (activeBucket.bills||[]).filter(x => x?.name && x.monthly > 0);
-            const forecastAccent = activeBucket.color || '#0A84FF';
+            const forecastAccent = '#0A84FF';
             // Calculate expected monthly outflow for each of the next 12 months
             const now = new Date();
             now.setHours(0,0,0,0);
@@ -57090,28 +56725,18 @@ function MuzzApp() {
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                {/* Bucket switcher — mirrors the BILLS tab */}
-                <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
-                  {buckets.map(b => {
-                    const isActive = b.id === activeBucketId;
-                    const c = b.color || '#0A84FF';
-                    return (
-                      <button key={b.id} onClick={() => setActiveBucketId(b.id)}
-                        style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:isActive?c:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
-                        {b.name.toUpperCase()}
-                      </button>
-                    );
-                  })}
-                </div>
+                {/* Sections */}
 
-                <div style={{...LIQUID_GLASS,border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"20px",padding:"16px 18px"}}>
+                {bucketSwitcher}
+
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"16px 18px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",gap:"8px",flexWrap:"wrap"}}>
-                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name.toUpperCase()} · 12-MONTH PROJECTION</span>
-                    <span style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{forecastBills.length} BILL{forecastBills.length!==1?'S':''}</span>
+                    <span style={{fontSize:"13px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{activeBucket.name}, next 12 months</span>
+                    <span style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{forecastBills.length} bill{forecastBills.length!==1?'s':''}</span>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px",marginBottom:"20px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Next 12 months</div>
+                      <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Next 12 months</div>
                       <div style={{fontSize:"22px",color:`${forecastAccent}`,fontFamily:SANS_FONT,fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                     </div>
                     <div>
@@ -57119,9 +56744,9 @@ function MuzzApp() {
                       <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,lineHeight:1}}>${avgPerMonth.toFixed(0)}</div>
                     </div>
                     <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                      <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Highest month</div>
+                      <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Highest month</div>
                       <div style={{fontFamily:SANS_FONT,lineHeight:1.2}}>
-                        <span style={{fontSize:"18px",color:"#f59e0b",fontWeight:600}}>${maxTotal.toFixed(0)}</span>
+                        <span style={{fontSize:"18px",color:"#FF9F0A",fontWeight:600}}>${maxTotal.toFixed(0)}</span>
                         <span style={{fontSize:"11px",color:"rgba(235,235,245,0.5)",marginLeft:"8px"}}>{months.find(m => m.total === maxTotal)?.label}</span>
                       </div>
                     </div>
@@ -57136,9 +56761,9 @@ function MuzzApp() {
                       const isCurrent = i === 0;
                       return (
                         <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative",minWidth:"36px"}}>
-                          <div style={{fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"#f59e0b":isCurrent?`${forecastAccent}`:"rgba(235,235,245,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
+                          <div style={{fontSize:"12px",fontFamily:SANS_FONT,color:isMax?"#FF9F0A":isCurrent?`${forecastAccent}`:"rgba(235,235,245,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
                           <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?`linear-gradient(180deg, ${forecastAccent}f2, ${forecastAccent}59)`:`linear-gradient(180deg, ${forecastAccent}80, ${forecastAccent}26)`,border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?`${forecastAccent}cc`:`${forecastAccent}4d`}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?`0 0 12px ${forecastAccent}40`:"none"}}/>
-                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:SANS_FONT,color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(235,235,245,0.55)",textAlign:"center",letterSpacing:"0"}}>{m.label}</div>
+                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"12px",fontFamily:SANS_FONT,color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(235,235,245,0.55)",textAlign:"center",letterSpacing:"0"}}>{m.label}</div>
                         </div>
                       );
                     })}
@@ -57147,9 +56772,9 @@ function MuzzApp() {
                 </div>
 
                 {/* Per-month breakdown */}
-                <div style={{...LIQUID_GLASS,border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"20px"}}>
+                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px"}}>
                   <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${forecastAccent}15`}}>
-                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Month-by-month breakdown</span>
+                    <span style={{fontSize:"13px",color:`${forecastAccent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Month-by-month breakdown</span>
                   </div>
                   {months.map((m, i) => {
                     const items = Object.entries(m.breakdown).sort((a,b) => b[1] - a[1]);
@@ -57161,7 +56786,7 @@ function MuzzApp() {
                         </summary>
                         <div style={{padding:"4px 14px 12px"}}>
                           {items.length === 0 ? (
-                            <div style={{fontSize:"10px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT}}>No bills due this month</div>
+                            <div style={{fontSize:"13px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT}}>No bills due this month</div>
                           ) : items.map(([name, amt], j) => (
                             <div key={j} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:j<items.length-1?"0.5px solid rgba(235,235,245,0.05)":"none"}}>
                               <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>{name}</span>
@@ -57179,23 +56804,13 @@ function MuzzApp() {
 
           {billsSubTab === 'calendar' && (
             <>
-              {/* Bucket switcher — mirrors the BILLS tab */}
-              <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
-                {buckets.map(b => {
-                  const isActive = b.id === activeBucketId;
-                  const c = b.color || '#0A84FF';
-                  return (
-                    <button key={b.id} onClick={() => setActiveBucketId(b.id)}
-                      style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"20px",color:isActive?c:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
-                      {b.name.toUpperCase()}
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Sections */}
+
+              {bucketSwitcher}
 
               {/* Calendar View - Mobile Optimized */}
               <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)",borderLeft:`2px solid ${activeBucket?.color || '#0A84FF'}`}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>{activeBucket?.name || 'Bills'} Calendar</h2>
@@ -57224,7 +56839,7 @@ function MuzzApp() {
                   {/* Day headers - abbreviated for mobile */}
                   <div className="grid grid-cols-7 gap-1 mb-2">
                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                      <div key={i} className="text-center text-xs font-semibold text-gray-500 py-1">
+                      <div key={i} className="text-center text-xs font-semibold py-1" style={{color:"rgba(235,235,245,0.6)"}}>
                         {day}
                       </div>
                     ))}
@@ -57292,9 +56907,9 @@ function MuzzApp() {
                             ''
                           } hover:border-orange-400 transition-all`}
                         >
-                          <span className={`text-sm font-semibold ${isToday ? 'text-orange-600' : 'text-gray-700'}`}>{day}</span>
+                          <span className="text-sm font-semibold" style={{color:isToday?"#0A84FF":"#FFFFFF"}}>{day}</span>
                           {totalForDay > 0 && (
-                            <span className="text-[10px] font-bold text-red-500">${totalForDay}</span>
+                            <span className="text-[10px] font-semibold" style={{color:"rgba(235,235,245,0.7)"}}>${totalForDay}</span>
                           )}
                         </button>
                       );
@@ -57328,7 +56943,7 @@ function MuzzApp() {
                         onFocus={scrollInputIntoView}
                       />
                       <div style={{display:"flex",alignItems:"center",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",overflow:"hidden"}}>
-                        <span className="pl-3 text-gray-400">$</span>
+                        <span className="pl-3" style={{color:"rgba(235,235,245,0.6)"}}>$</span>
                         <input
                           type="number"
                           placeholder="0.00"
@@ -57351,7 +56966,7 @@ function MuzzApp() {
                             document.getElementById('newBillAmount').value = '';
                           }
                         }}
-                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"10px",color:"rgba(251,146,60,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
+                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"10px",color:"rgba(251,146,60,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Bill
                       </button>
@@ -57403,20 +57018,20 @@ function MuzzApp() {
                             <span className="text-sm text-white font-medium">{s.name}</span>
                             <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.8)'}}>🔁 {freqLabel}</span>
                           </div>
-                          <span className="text-sm font-bold" style={{color:'#ef4444'}}>-${s.monthly}</span>
+                          <span className="text-sm font-bold" style={{color:'#FF453A'}}>-${s.monthly}</span>
                         </div>
                       );
                     })}
                     {(calendarBills[selectedCalendarDate] || []).length > 0 && (
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                        <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
+                        <h3 className="text-sm font-semibold" style={{color:"rgba(235,235,245,0.6)"}}>Bills on this day</h3>
                         {(calendarBills[selectedCalendarDate] || []).map((bill, idx) => (
                           <div key={idx} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 12px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
                             <div className="flex-1 min-w-0">
                               <div className="font-medium truncate">{bill.name}</div>
                             </div>
                             <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                              <span className="font-bold text-red-600">${parseFloat(bill.amount || 0).toFixed(2)}</span>
+                              <span className="font-semibold" style={{color:"#FFFFFF"}}>${parseFloat(bill.amount || 0).toFixed(2)}</span>
                               <button
                                 onClick={() => {
                                   setCalendarBills(prev => {
@@ -57443,682 +57058,27 @@ function MuzzApp() {
 
           {billsSubTab === 'goals' && (
             <>
-              {/* Small Goals */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Small Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Short-term savings targets</p>
+              <div>
+                <div style={{...groupLabel,margin:"4px 4px 8px"}}>Small goals</div>
+                <div style={card}>
+                  {billSmallGoals.map((goal, index) => goalCard(goal, index, setBillSmallGoals, 'Goal, e.g. emergency fund'))}
+                  <button onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
+                    style={{...addRowBtn,borderTop:billSmallGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add small goal</button>
                 </div>
-                <div className="p-4 space-y-4">
-                  {billSmallGoals.length === 0 && (() => {
-                    const samples = [
-                      { name: 'Emergency fund',      target: 5000, current: 1800 },
-                      { name: 'New laptop',          target: 2500, current: 600  },
-                      { name: 'Weekend Sydney trip', target: 1200, current: 400  },
-                    ];
-                    const useTemplate = () => {
-                      setBillSmallGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
-                    };
-                    const startFresh = () => setBillSmallGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
-                    return (
-                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Short-term savings goals — under $10k, achievable in months.</div>
-                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Set a target, track your progress. The bar fills as you save.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => {
-                            const pct = Math.min((s.current / s.target) * 100, 100);
-                            return (
-                              <div key={i}>
-                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                  <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
-                                  <span style={{color:"#0A84FF"}}>${s.current.toLocaleString()} / ${s.target.toLocaleString()}</span>
-                                </div>
-                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"10px",overflow:"hidden"}}>
-                                  <div style={{height:"100%",width:`${pct}%`,background:"#0A84FF",boxShadow:"0 0 6px rgba(10,132,255,0.5)"}} />
-                                </div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}%</div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {billSmallGoals.map((goal, index) => {
-                    const target = goal?.target || 0;
-                    const current = goal?.current || 0;
-                    const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
-                    return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                          <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
-                          <input
-                            type="text"
-                            value={goal?.name || ''}
-                            onChange={(e) => {
-                              setBillSmallGoals(prev => {
-                                const updated = [...prev];
-                                updated[index] = { ...updated[index], name: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            placeholder="Emergency fund"
-                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          />
-                          <button
-                            onClick={() => setBillSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                          </button>
-                        </div>
-                        <div className="flex items-center gap-4 pl-6">
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.targetStr || ''}
-                              onChange={(e) => {
-                                setBillSmallGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], target: parseFloat(e.target.value) || 0, targetStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.currentStr || ''}
-                              onChange={(e) => {
-                                setBillSmallGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], current: parseFloat(e.target.value) || 0, currentStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          {target > 0 && (
-                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
-                              {progress.toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
-                        {target > 0 && (
-                          <div className="pl-6">
-                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                              <div 
-                                style={{height:"100%",borderRadius:"10px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <button
-                    onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Small Goal
-                  </button>
-                </div>
+                <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Short-term savings targets, reachable in months.</div>
               </div>
 
-              {/* Big Goals */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Big Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Long-term financial targets</p>
+              <div style={{marginTop:"10px"}}>
+                <div style={{...groupLabel,margin:"4px 4px 8px"}}>Big goals</div>
+                <div style={card}>
+                  {billBigGoals.map((goal, index) => goalCard(goal, index, setBillBigGoals, 'Goal, e.g. house deposit'))}
+                  <button onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
+                    style={{...addRowBtn,borderTop:billBigGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add big goal</button>
                 </div>
-                <div className="p-4 space-y-4">
-                  {billBigGoals.length === 0 && (() => {
-                    const samples = [
-                      { name: 'House deposit',     target: 80000,  current: 22000 },
-                      { name: 'Pay off car loan',  target: 25000,  current: 9000  },
-                      { name: 'Retire by 50',      target: 500000, current: 45000 },
-                    ];
-                    const useTemplate = () => {
-                      setBillBigGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
-                    };
-                    const startFresh = () => setBillBigGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
-                    return (
-                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample goals</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Long-term targets — house deposit, debt freedom, retirement.</div>
-                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Years-long milestones. Track the slow climb.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => {
-                            const pct = Math.min((s.current / s.target) * 100, 100);
-                            return (
-                              <div key={i}>
-                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                  <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
-                                  <span style={{color:"#0A84FF"}}>${(s.current/1000).toFixed(1)}k / ${(s.target/1000).toFixed(0)}k</span>
-                                </div>
-                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"10px",overflow:"hidden"}}>
-                                  <div style={{height:"100%",width:`${pct}%`,background:"#0A84FF",boxShadow:"0 0 6px rgba(10,132,255,0.5)"}} />
-                                </div>
-                                <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}%</div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {billBigGoals.map((goal, index) => {
-                    const target = goal?.target || 0;
-                    const current = goal?.current || 0;
-                    const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
-                    return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                          <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
-                          <input
-                            type="text"
-                            value={goal?.name || ''}
-                            onChange={(e) => {
-                              setBillBigGoals(prev => {
-                                const updated = [...prev];
-                                updated[index] = { ...updated[index], name: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            placeholder="House deposit"
-                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          />
-                          <button
-                            onClick={() => setBillBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                          </button>
-                        </div>
-                        <div className="flex items-center gap-4 pl-6">
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.targetStr || ''}
-                              onChange={(e) => {
-                                setBillBigGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], target: parseFloat(e.target.value) || 0, targetStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.currentStr || ''}
-                              onChange={(e) => {
-                                setBillBigGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], current: parseFloat(e.target.value) || 0, currentStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{width:"96px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          {target > 0 && (
-                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
-                              {progress.toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
-                        {target > 0 && (
-                          <div className="pl-6">
-                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                              <div 
-                                style={{height:"100%",borderRadius:"10px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <button
-                    onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Big Goal
-                  </button>
-                </div>
+                <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Long-term targets that take a year or more.</div>
               </div>
             </>
           )}
-
-          {/* Debts Tab */}
-          {billsSubTab === 'debts' && (() => {
-            const personalDebts = debts.filter(d => d.type === 'personal');
-            const businessDebts = debts.filter(d => d.type === 'business');
-            const totalOwed = debts.reduce((sum, d) => sum + ((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0)), 0);
-            const totalDebt = debts.reduce((sum, d) => sum + (parseFloat(d.total) || 0), 0);
-            const totalPaid = debts.reduce((sum, d) => sum + (parseFloat(d.paid) || 0), 0);
-            const overallPct = totalDebt > 0 ? Math.min((totalPaid / totalDebt) * 100, 100) : 0;
-
-            const addDebt = (type) => {
-              setDebts(prev => [...prev, {
-                id: Date.now(),
-                type,
-                name: '',
-                total: 0,
-                totalStr: '',
-                paid: 0,
-                paidStr: '',
-                minPayment: '',
-                minInterval: 'month',
-                startDate: '',
-                dueDate: '',
-                notes: ''
-              }]);
-            };
-
-            const updateDebt = (id, updates) => {
-              setDebts(prev => prev.map(d => d.id === id ? { ...d, ...updates } : d));
-            };
-
-            const deleteDebt = (id) => {
-              setDebts(prev => prev.filter(d => d.id !== id));
-            };
-
-            const renderDebtCard = (debt) => {
-              const total = parseFloat(debt.total) || 0;
-              const paid = parseFloat(debt.paid) || 0;
-              const remaining = Math.max(total - paid, 0);
-              const pct = total > 0 ? Math.min((paid / total) * 100, 100) : 0;
-
-              return (
-                <div key={debt.id} style={{padding:"14px 16px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {/* Row 1: Name + Delete */}
-                  <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                    <input
-                      type="text"
-                      value={debt.name}
-                      onChange={(e) => updateDebt(debt.id, { name: e.target.value })}
-                      placeholder="e.g. Car Loan, Credit Card, HECS..."
-                      style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:500,padding:"7px 10px",outline:"none"}}
-                    />
-                    <button onClick={() => deleteDebt(debt.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}><Trash2 style={{width:"16px",height:"16px"}} /></button>
-                  </div>
-
-                  {/* Row 2: Total + Paid */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Total Owed</label>
-                      <div className="flex items-center gap-1">
-                        <span className="text-gray-400 text-sm">$</span>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={debt.totalStr || ''}
-                          onChange={(e) => updateDebt(debt.id, { total: parseFloat(e.target.value) || 0, totalStr: e.target.value })}
-                          placeholder="25000"
-                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Amount Paid</label>
-                      <div className="flex items-center gap-1">
-                        <span className="text-gray-400 text-sm">$</span>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={debt.paidStr || ''}
-                          onChange={(e) => updateDebt(debt.id, { paid: parseFloat(e.target.value) || 0, paidStr: e.target.value })}
-                          placeholder="5000"
-                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Row 3: Progress Bar */}
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>{Math.round(pct)}% paid off</span>
-                      <span className="text-xs font-semibold text-red-500">${remaining.toLocaleString()} remaining</span>
-                    </div>
-                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                      <div
-                        style={{height:"100%",borderRadius:"10px",transition:"width 0.5s",background:pct >= 100 ? "rgba(34,197,94,0.7)" : pct >= 50 ? "rgba(234,179,8,0.7)" : "rgba(239,68,68,0.7)"}}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 4: Min Payment + Interval */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Min. Payment</label>
-                      <div className="flex items-center gap-1">
-                        <span className="text-gray-400 text-sm">$</span>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={debt.minPayment || ''}
-                          onChange={(e) => updateDebt(debt.id, { minPayment: e.target.value })}
-                          placeholder="500"
-                          style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Per</label>
-                      <select
-                        value={debt.minInterval || 'month'}
-                        onChange={(e) => updateDebt(debt.id, { minInterval: e.target.value })}
-                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                      >
-                        <option value="week">Week</option>
-                        <option value="fortnight">Fortnight</option>
-                        <option value="month">Month</option>
-                        <option value="quarter">Quarter</option>
-                        <option value="year">Year</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Row 5: Start Date + Due Date */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Start Date</label>
-                      <input
-                        type="date"
-                        value={debt.startDate || ''}
-                        onChange={(e) => updateDebt(debt.id, { startDate: e.target.value })}
-                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                      />
-                    </div>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Due Date</label>
-                      <input
-                        type="date"
-                        value={debt.dueDate || ''}
-                        onChange={(e) => updateDebt(debt.id, { dueDate: e.target.value })}
-                        style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 6: Notes */}
-                  <div>
-                    <label style={{fontSize:"8px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Notes</label>
-                    <input
-                      type="text"
-                      value={debt.notes || ''}
-                      onChange={(e) => updateDebt(debt.id, { notes: e.target.value })}
-                      placeholder="Extra info..."
-                      style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                    />
-                  </div>
-                </div>
-              );
-            };
-
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                {/* Overview Card */}
-                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                  <div style={{padding:"14px 16px"}}>
-                    <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
-                    <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Total Debt</p>
-                        <p className="text-lg font-bold text-red-600">${totalDebt.toLocaleString()}</p>
-                      </div>
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Total Paid</p>
-                        <p className="text-lg font-bold text-green-600">${totalPaid.toLocaleString()}</p>
-                      </div>
-                      <div style={{textAlign:"center",padding:"10px",background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderRadius:"10px"}}>
-                        <p className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Remaining</p>
-                        <p className="text-lg font-bold text-orange-600">${totalOwed.toLocaleString()}</p>
-                      </div>
-                    </div>
-                    {totalDebt > 0 && (
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Overall Progress</span>
-                          <span className="text-xs font-semibold">{Math.round(overallPct)}%</span>
-                        </div>
-                        <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                          <div
-                            style={{height:"100%",borderRadius:"10px",transition:"width 0.5s",background:overallPct >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
-                            style={{ width: `${overallPct}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Personal Debts */}
-                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Personal Debts</h2>
-                        <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 space-y-4">
-                    {personalDebts.length === 0 && (() => {
-                      const samples = [
-                        { name: 'Credit card',         total: 4500,  paid: 1200 },
-                        { name: 'Car loan',            total: 18000, paid: 6500 },
-                        { name: 'Afterpay balance',    total: 800,   paid: 200  },
-                      ];
-                      const useTemplate = () => {
-                        const baseId = Date.now();
-                        setDebts(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, type: 'personal', name: s.name, total: s.total, totalStr: String(s.total), paid: s.paid, paidStr: String(s.paid) }))]);
-                      };
-                      const startFresh = () => addDebt('personal');
-                      return (
-                        <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample debts</div>
-                          <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track personal debts — see what you owe and what you've paid off.</div>
-                          <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Total borrowed minus what's paid. Watch the bar shrink as you knock them down.</div>
-                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
-                            {samples.map((s, i) => {
-                              const remaining = s.total - s.paid;
-                              const pct = Math.min((s.paid / s.total) * 100, 100);
-                              return (
-                                <div key={i}>
-                                  <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                    <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
-                                    <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
-                                  </div>
-                                  <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"10px",overflow:"hidden"}}>
-                                    <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
-                                  </div>
-                                  <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    {personalDebts.map(renderDebtCard)}
-                    <button
-                      onClick={() => addDebt('personal')}
-                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                    >
-                      + Add Personal Debt
-                    </button>
-                  </div>
-                </div>
-
-                {/* Business Debts */}
-                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"}}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Business Debts</h2>
-                        <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 space-y-4">
-                    {businessDebts.length === 0 && (() => {
-                      const samples = [
-                        { name: 'Equipment finance',    total: 35000, paid: 12000 },
-                        { name: 'Business line of credit', total: 15000, paid: 5500 },
-                      ];
-                      const useTemplate = () => {
-                        const baseId = Date.now();
-                        setDebts(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, type: 'business', name: s.name, total: s.total, totalStr: String(s.total), paid: s.paid, paidStr: String(s.paid) }))]);
-                      };
-                      const startFresh = () => addDebt('business');
-                      return (
-                        <div style={{border:"1px solid rgba(168,85,247,0.4)",borderRadius:"20px",padding:"14px",background:"rgba(168,85,247,0.05)"}}>
-                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.8}}>Preview · business debts</div>
-                          <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track debts owed by the business — equipment finance, lines of credit.</div>
-                          <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Keep separate from personal debt to track business cashflow accurately.</div>
-                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
-                            {samples.map((s, i) => {
-                              const remaining = s.total - s.paid;
-                              const pct = Math.min((s.paid / s.total) * 100, 100);
-                              return (
-                                <div key={i}>
-                                  <div style={{display:"flex",justifyContent:"space-between",fontFamily:SANS_FONT,fontSize:"11px",marginBottom:"4px"}}>
-                                    <span style={{color:"rgba(235,235,245,0.85)"}}>{s.name}</span>
-                                    <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
-                                  </div>
-                                  <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"10px",overflow:"hidden"}}>
-                                    <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
-                                  </div>
-                                  <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"2px",letterSpacing:"0"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(168,85,247,0.18)",border:"1px solid rgba(168,85,247,0.7)",borderRadius:"20px",color:"rgba(168,85,247,0.95)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    {businessDebts.map(renderDebtCard)}
-                    <button
-                      onClick={() => addDebt('business')}
-                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                    >
-                      + Add Business Debt
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Debt Payoff Calculator — shown at the bottom of the DEBTS tab */}
-          {billsSubTab === 'debts' && (() => {
-            const sortedDebts = [...debts].filter(d => d.name && ((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0)) > 0).sort((a, b) => {
-              const balA = (parseFloat(a.total) || 0) - (parseFloat(a.paid) || 0);
-              const balB = (parseFloat(b.total) || 0) - (parseFloat(b.paid) || 0);
-              if (debtCalcMethod === 'snowball') return balA - balB;
-              return (parseFloat(b.rate) || 0) - (parseFloat(a.rate) || 0);
-            });
-            const totalDebtCalc = sortedDebts.reduce((sum, d) => sum + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0);
-            const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 16px"}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",marginBottom:"12px"}}>Debt payoff calculator</h2>
-                  <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
-                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(235,235,245,0.2)",borderRadius:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>SNOWBALL (SMALLEST FIRST)</button>
-                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(235,235,245,0.2)",borderRadius:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>AVALANCHE (HIGHEST RATE)</button>
-                  </div>
-                  <div style={{background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",padding:"12px 14px",marginBottom:"12px"}}>
-                    <p style={{fontSize:"11px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,lineHeight:1.6}}>{debtCalcMethod === 'snowball' ? 'Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : 'Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
-                  </div>
-                  {sortedDebts.length === 0 && (
-                    <div className="text-center py-8">
-                      <p style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>No active debts found. Add debts in the Debts tab and they'll appear here!</p>
-                      <button onClick={() => setBillsSubTab('debts')} style={{marginTop:"12px",padding:"6px 12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"10px",color:"rgba(59,130,246,0.95)",fontFamily:SANS_FONT,fontSize:"10px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}>Go to Debts</button>
-                    </div>
-                  )}
-                  {sortedDebts.length > 0 && (
-                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                      <div className="grid grid-cols-3 gap-4 mb-4">
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"10px"}}>
-                          <div className="text-2xl font-bold text-red-600">${totalDebtCalc.toLocaleString()}</div>
-                          <div className="text-xs text-red-500">Total Remaining</div>
-                        </div>
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"10px"}}>
-                          <div className="text-2xl font-bold text-blue-600">{sortedDebts.length}</div>
-                          <div className="text-xs text-blue-500">Active Debts</div>
-                        </div>
-                        <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
-                          <div className="text-2xl font-bold text-green-600">${totalMinPayments.toLocaleString()}</div>
-                          <div className="text-xs text-green-500">Min Payments/mo</div>
-                        </div>
-                      </div>
-                      <h3 className="font-semibold text-white">Pay-off Order ({debtCalcMethod === 'snowball' ? 'Smallest → Largest' : 'Highest Rate → Lowest'})</h3>
-                      {sortedDebts.map((debt, i) => {
-                        const remaining = Math.max((parseFloat(debt.total) || 0) - (parseFloat(debt.paid) || 0), 0);
-                        return (
-                          <div key={debt.id || i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
-                            <div style={{width:"28px",height:"28px",background:"rgba(59,130,246,0.15)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",color:"rgba(59,130,246,0.95)",fontFamily:SANS_FONT,fontWeight:600,fontSize:"11px"}}>{i + 1}</div>
-                            <div className="flex-1">
-                              <div className="font-medium text-white">{debt.name}</div>
-                              <div className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
-                            </div>
-                            <div className="text-right">
-                              <div className="font-bold text-gray-800">${remaining.toLocaleString()}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
         </div>
       </div>
     );
@@ -58239,7 +57199,7 @@ function MuzzApp() {
                   <div style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"6px"}}>Personal finance & life management</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Bills & Debt Management','Assets Management','Investment Management','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
+                  {['Bills Management','Assets Management','Investment Management','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -58317,7 +57277,7 @@ function MuzzApp() {
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, research: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true, research: true },
-                { feature: 'Bills & Debt Management', free: false, elite: true, research: true },
+                { feature: 'Bills Management', free: false, elite: true, research: true },
                 { feature: 'Assets Management', free: false, elite: true, research: true },
                 { feature: 'Investment Management', free: false, elite: true, research: true },
                 { feature: 'Gym & Steps Tracker', free: false, elite: true, research: true },
