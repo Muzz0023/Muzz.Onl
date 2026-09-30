@@ -52458,12 +52458,18 @@ function MuzzApp() {
   ];
 
   // Calculate totals for dashboard
-  const totalMonthly = subscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
+  // Dashboard money figures come from the Bills page: the Personal section (or the first section).
+  // Weekly/quarterly/yearly bills are converted to their real monthly amount, same as on Bills.
+  const DASH_FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
+  const dashBucket = (billBuckets || []).find(b => b.id === 'bucket_personal') || (billBuckets || [])[0] || null;
+  const dashBills = dashBucket ? (dashBucket.bills || []) : subscriptions;
+  const totalMonthly = dashBills.filter(s => s && parseFloat(s.monthly) > 0)
+    .reduce((sum, s) => sum + (parseFloat(s.monthly) || 0) * (DASH_FREQ_MULT[s.freq || 'monthly'] || 1), 0);
   const totalMonthlyBusiness = businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
   const totalStocks = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
   const netWorth = totalAssets;
-  const salaryNum = parseFloat(monthlySalary) || 0;
+  const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
 
   // Daily quote
@@ -53861,7 +53867,7 @@ function MuzzApp() {
         return nextDate;
       };
 
-      return subscriptions
+      return dashBills
         .filter(s => s && s.name && (parseFloat(s.monthly) || 0) > 0)
         .map(s => {
           const next = computeNext(s);
