@@ -1103,6 +1103,10 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const VIP_EMAILS = ['muzz.onl@outlook.com', 'greg@jameselec.com.au'];
 
+// Subscriptions are paused while MW Associates winds down: everyone gets the full app,
+// and the upgrade/Elite screens are hidden. Set to false to bring the paid tiers back.
+const FREE_FOR_EVERYONE = true;
+
 // Elite limits
 const FREE_AI_LIMIT = 10;
 const ELITE_AI_LIMIT = 30;
@@ -51115,8 +51119,8 @@ function MuzzApp() {
   const isVIP = VIP_EMAILS.includes(userEmail);
   const [stripeElite, setStripeElite] = useState(false);
   const [stripeResearch, setStripeResearch] = useState(false);
-  const isResearch = isVIP || stripeResearch;
-  const isElite = isVIP || stripeElite || stripeResearch;
+  const isResearch = FREE_FOR_EVERYONE || isVIP || stripeResearch;
+  const isElite = FREE_FOR_EVERYONE || isVIP || stripeElite || stripeResearch;
   const [eliteName, setEliteName] = useState('');
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -52450,7 +52454,7 @@ function MuzzApp() {
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
-    { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
+    ...(FREE_FOR_EVERYONE ? [] : [{ id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award }]),
   ];
 
   // Calculate totals for dashboard
@@ -52872,7 +52876,7 @@ function MuzzApp() {
       { section: 'CUSTOM',   id:'custom1',       label: customCategories?.[0]?.name || 'Custom 1' },
       { section: 'CUSTOM',   id:'custom2',       label: customCategories?.[1]?.name || 'Custom 2', elite:true },
       { section: 'CUSTOM',   id:'custom3',       label: customCategories?.[2]?.name || 'Custom 3', elite:true },
-      { section: 'ACCOUNT',  id:'upgrade',       label: isElite ? 'Elite Status' : 'Upgrade' },
+      ...(FREE_FOR_EVERYONE ? [] : [{ section: 'ACCOUNT',  id:'upgrade',       label: isElite ? 'Elite Status' : 'Upgrade' }]),
       { section: 'ACCOUNT',  id:'feedback',      label:'Feedback'                     },
       { section: 'SETTINGS', id:'export',        label:'Export Data'                  },
       { section: 'SETTINGS', id:'import',        label:'Import Data'                  },
@@ -53940,7 +53944,7 @@ function MuzzApp() {
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
                   <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
-                  {isElite && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0.5px rgba(0,0,0,0.45)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
+                  {isElite && !FREE_FOR_EVERYONE && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0.5px rgba(0,0,0,0.45)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
             </div>
@@ -53994,7 +53998,18 @@ function MuzzApp() {
 
             <div style={groupLabel}>Account</div>
             <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
-              <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
+              {FREE_FOR_EVERYONE ? (
+                <label style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",cursor:"text",boxSizing:"border-box"}}>
+                  <Star size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />
+                  <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"50px",paddingRight:"16px",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}>
+                    <span style={{fontSize:"17px",color:txt.primary,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>Your name</span>
+                    <input value={eliteName} onChange={e => setEliteName(e.target.value)} placeholder="Add" onFocus={scrollInputIntoView}
+                      style={{flex:1,minWidth:0,textAlign:"right",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",padding:0,color:txt.secondary,fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.4px"}} />
+                  </span>
+                </label>
+              ) : (
+                <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
+              )}
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
               <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
