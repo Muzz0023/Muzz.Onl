@@ -161,6 +161,20 @@ const RevenueCat = {
 const SANS_FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 // Liquid Glass material (matches the dashboard): blurred, specular top edge, darkened outer edge
 const LIQUID_GLASS = { background:"rgba(28,28,30,0.5)", backdropFilter:"blur(30px) saturate(180%)", WebkitBackdropFilter:"blur(30px) saturate(180%)", boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)" };
+
+// Light haptic tap on Muzz pages, like tapping controls on iPhone.
+// Uses the Capacitor Haptics plugin when the app runs natively; silently skipped on the web.
+if (typeof document !== 'undefined' && !window.__mzHaptics) {
+  window.__mzHaptics = true;
+  document.addEventListener('pointerdown', (e) => {
+    try {
+      const el = e.target && e.target.closest && e.target.closest('button, [role="tab"], [role="switch"], summary');
+      if (!el || !el.closest('.mz-num')) return;
+      const H = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+      if (H && H.impact) H.impact({ style: el.getAttribute('role') === 'switch' ? 'MEDIUM' : 'LIGHT' });
+    } catch (err) {}
+  }, { passive: true });
+}
 // iOS-style segmented control: one glass capsule, highlight slides to the selected segment.
 // Up to 5 options share the width; more than that and the control scrolls sideways.
 const Segmented = ({ options, value, onChange, onDoubleClick }) => {
@@ -169,8 +183,8 @@ const Segmented = ({ options, value, onChange, onDoubleClick }) => {
   const scrolls = options.length > 5;
   return (
     <div style={{borderRadius:"999px",background:"rgba(118,118,128,0.22)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.08)",maxWidth:scrolls?"100%":"560px",overflowX:scrolls?"auto":"visible",scrollbarWidth:"none"}}>
-      <div role="tablist" style={{position:"relative",display:"flex",padding:"3px",minWidth:scrolls?`${options.length * 92}px`:undefined}}>
-        <span aria-hidden="true" style={{position:"absolute",top:"3px",bottom:"3px",left:`calc(3px + (100% - 6px) * ${idx * w / 100})`,width:`calc((100% - 6px) * ${w / 100})`,borderRadius:"999px",background:"rgba(255,255,255,0.2)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.3)",transition:"left 0.28s cubic-bezier(0.4,0,0.2,1)"}} />
+      <div role="tablist" className="mz-seg" style={{position:"relative",display:"flex",padding:"3px",minWidth:scrolls?`${options.length * 92}px`:undefined}}>
+        <span aria-hidden="true" style={{position:"absolute",top:"3px",bottom:"3px",left:`calc(3px + (100% - 6px) * ${idx * w / 100})`,width:`calc((100% - 6px) * ${w / 100})`,borderRadius:"999px",background:"rgba(255,255,255,0.2)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.3)",transition:"left 0.42s cubic-bezier(0.34,1.35,0.64,1), transform 0.2s ease"}} className="mz-seg-thumb" />
         {options.map(o => {
           const on = o.id === value;
           return (
@@ -279,6 +293,35 @@ const StarryBackground = ({ children }) => {
 
         /* iOS 26/27 switch: pill knob turns to glass while pressed */
         .mz-switch:active .mz-knob { transform: scale(1.18, 1.25); background: rgba(255,255,255,0.28) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 1px rgba(255,255,255,0.25), 0 3px 10px rgba(0,0,0,0.3) !important; backdrop-filter: blur(3px) saturate(180%); -webkit-backdrop-filter: blur(3px) saturate(180%); }
+
+        /* ── iPhone-style touch feedback (Muzz pages only) ── */
+        .mz-num button, .mz-num summary, .mz-num label, .mz-num [role="button"] {
+          -webkit-tap-highlight-color: transparent;
+          transition: transform 0.35s cubic-bezier(0.34,1.4,0.64,1), opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        /* buttons, pills, circles: quick squish, springs back when released */
+        .mz-num button:active:not([role="tab"]):not([role="switch"]), .mz-num [role="button"]:active {
+          transform: scale(0.94); opacity: 0.75;
+          transition: transform 0.1s ease-out, opacity 0.1s ease-out !important;
+        }
+        /* full-width list rows highlight like iOS table rows instead of shrinking */
+        .mz-num button[style*="width: 100%"]:active, .mz-num summary:active, .mz-num label:active {
+          transform: none; opacity: 1; background-color: rgba(255,255,255,0.08) !important;
+          transition: background-color 0.05s !important;
+        }
+        /* segmented control: text dims and the glass thumb squishes while you hold */
+        .mz-num [role="tab"]:active { opacity: 0.6; }
+        .mz-seg:active .mz-seg-thumb { transform: scale(0.94, 0.88); }
+        /* pages rise in when opened, like an iOS push */
+        .mz-num { animation: mzPageIn 0.38s cubic-bezier(0.2,0.8,0.2,1) both; }
+        @keyframes mzPageIn { from { opacity: 0; transform: translateY(14px) scale(0.99); } to { opacity: 1; transform: none; } }
+        /* opening a collapsible fades its contents in */
+        .mz-num details[open] > *:not(summary) { animation: mzFadeIn 0.28s ease both; }
+        @keyframes mzFadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+          .mz-num, .mz-num details[open] > *:not(summary) { animation: none !important; }
+          .mz-num button:active, .mz-seg:active .mz-seg-thumb { transform: none !important; }
+        }
 
         /* Collapsible Apple-style rows: hide the native marker, rotate the chevron when open */
         summary.mz-disclosure::-webkit-details-marker { display: none; }
