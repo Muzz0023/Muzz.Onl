@@ -280,6 +280,11 @@ const StarryBackground = ({ children }) => {
         /* iOS 26/27 switch: pill knob turns to glass while pressed */
         .mz-switch:active .mz-knob { transform: scale(1.18, 1.25); background: rgba(255,255,255,0.28) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 1px rgba(255,255,255,0.25), 0 3px 10px rgba(0,0,0,0.3) !important; backdrop-filter: blur(3px) saturate(180%); -webkit-backdrop-filter: blur(3px) saturate(180%); }
 
+        /* Collapsible Apple-style rows: hide the native marker, rotate the chevron when open */
+        summary.mz-disclosure::-webkit-details-marker { display: none; }
+        .mz-chev { transition: transform 0.2s ease; }
+        details[open] > summary .mz-chev { transform: rotate(90deg); }
+
         /* Muzz pages: equal-width digits so totals and prices don't jiggle */
         .mz-num, .mz-num input, .mz-num select, .mz-num button { font-variant-numeric: tabular-nums; }
 
@@ -58471,6 +58476,69 @@ function MuzzApp() {
     const filledAssets = assets.filter(a => a && a.value > 0);
     const totalAssets = filledAssets.reduce((sum, a) => sum + a.value, 0);
 
+    // ── Apple-style tokens for Assets ──
+    const sec = "rgba(235,235,245,0.6)";
+    const ter = "rgba(235,235,245,0.3)";
+    const sep = "0.5px solid rgba(255,255,255,0.12)";
+    const BLUE = "#0A84FF", GREEN = "#30D158", RED = "#FF453A";
+    const card = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"};
+    const groupLabel = {fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,margin:"4px 4px 8px"};
+    const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
+    const bare = {background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.2px"};
+    const bareArea = {...bare,display:"block",width:"100%",resize:"none",overflow:"hidden",lineHeight:"1.35",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
+    const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
+    const formRow = {display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"44px"};
+    const formLabel = {fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",flexShrink:0};
+    const addRowBtn = {display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"};
+    const addAsset = () => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); };
+    const money = (n) => `$${(Number(n)||0).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+
+    // one savings goal card (used by Small and Big goals)
+    const goalCard = (goal, index, setList, placeholder) => {
+      const target = goal?.target || 0;
+      const current = goal?.current || 0;
+      const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
+      const done = target > 0 && progress >= 100;
+      const set = (changes) => setList(prev => { const u = [...prev]; u[index] = { ...u[index], ...changes }; return u; });
+      const moneyTile = (label, str, onChange) => (
+        <label style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",padding:"8px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.08)",cursor:"text"}}>
+          <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>{label}</span>
+          <span style={{display:"flex",alignItems:"baseline",gap:"2px"}}>
+            <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>$</span>
+            <input type="text" inputMode="decimal" placeholder="0" value={str||''} onChange={onChange} onFocus={scrollInputIntoView}
+              style={{...bare,width:"100%",minWidth:0,fontSize:"20px",fontWeight:600}} />
+          </span>
+        </label>
+      );
+      return (
+        <div key={index} style={{borderTop:index>0?sep:"none",padding:"14px 16px"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
+            <textarea rows={1} placeholder={placeholder} value={goal?.name||''} ref={growText} onInput={(e)=>growText(e.target)}
+              onChange={(e)=>set({name:e.target.value})} onFocus={scrollInputIntoView}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+              style={{...bareArea,fontWeight:600}} />
+            <button aria-label="Delete goal" onClick={() => { if (!goal?.name || window.confirm(`Delete "${goal.name}"?`)) setList(prev => prev.filter((_, i) => i !== index)); }}
+              style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
+          </div>
+          <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
+            {moneyTile('Target', goal?.targetStr, (e)=>set({target: parseFloat(e.target.value) || 0, targetStr: e.target.value}))}
+            {moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
+          </div>
+          {target > 0 && (
+            <div style={{marginTop:"12px"}}>
+              <div style={{height:"6px",background:"rgba(255,255,255,0.1)",borderRadius:"999px",overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${progress}%`,borderRadius:"999px",background:done?GREEN:BLUE,transition:"width 0.3s"}} />
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontSize:"13px",fontFamily:SANS_FONT}}>
+                <span style={{color:done?GREEN:sec,fontWeight:done?600:400}}>{done ? 'Reached 🎉' : `${progress.toFixed(0)}% saved`}</span>
+                <span style={{color:sec}}>{done ? money(current) : `${money(Math.max(target-current,0))} to go`}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
     return (
       <div className="min-h-screen bg-transparent mz-num">
         <Sidebar />
@@ -58479,16 +58547,18 @@ function MuzzApp() {
         {/* HEADER */}
         <div style={{padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:BLUE,fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",marginBottom:"16px"}}>
               <div>
-                
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Assets</div>
+                <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
+                  {money(totalAssets)} total{filledAssets.length > 0 ? `, ${filledAssets.length} ${filledAssets.length === 1 ? 'asset' : 'assets'}` : ''}
+                </div>
               </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total value</div>
-                <div style={{fontSize:"24px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:500}}>${totalAssets.toLocaleString()}</div>
-              </div>
+              {assetsSubTab === 'assets' && (
+                <button aria-label="New asset" onClick={addAsset}
+                  style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"40px",height:"40px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:BLUE,fontSize:"24px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
+              )}
             </div>
             <Segmented value={assetsSubTab} onChange={setAssetsSubTab} options={[{id:'assets',label:'Assets'},{id:'goals',label:'Goals'},{id:'assetMap',label:'Asset map'},{id:'knowledge',label:'Guide'}]} />
           </div>
@@ -58497,20 +58567,7 @@ function MuzzApp() {
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {assetsSubTab === 'assets' && (
             <>
-              {/* Assets Input */}
-              <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Assets{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
-                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
-                </summary>
-                <div style={{}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Assets</h2>
-                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Property, super, cash, vehicles, etc.</p>
-                </div>
-
-            {/* Assets Cards */}
-            <div style={{padding:"0 0 6px",display:"flex",flexDirection:"column",gap:"0"}}>
+              {/* Empty state */}
               {assets.length === 0 && (() => {
                 const samples = [
                   { name: 'Bank — savings',       category: 'cash',    value: 18500  },
@@ -58519,162 +58576,108 @@ function MuzzApp() {
                   { name: 'Investment portfolio', category: 'shares',  value: 25500  },
                   { name: 'Investment property',  category: 'property',value: 620000 },
                 ];
-                const sampleTotal = samples.reduce((s, x) => s + x.value, 0);
                 const useTemplate = () => {
                   const baseId = Date.now();
                   setAssets(samples.map((s, i) => ({ id: baseId + i, name: s.name, category: s.category, value: s.value, valueStr: String(s.value), dateAdded: new Date().toISOString() })));
                 };
-                const startFresh = () => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]);
                 const catEmoji = { cash:'💵', super:'🏦', vehicle:'🚗', shares:'📈', property:'🏠' };
                 return (
-                  <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                    <div style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · sample assets</div>
-                    <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track your total net worth — everything you own.</div>
-                    <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Cash, super, vehicles, shares, property. The pie chart breaks down where your money lives.</div>
-                    <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
-                      {samples.map((s, i) => {
-                        const pct = (s.value / sampleTotal) * 100;
-                        return (
-                          <div key={i} style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                            <div style={{fontSize:"14px"}}>{catEmoji[s.category]}</div>
-                            <div style={{color:"rgba(235,235,245,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                            <div style={{color:"#0A84FF",textAlign:"right"}}>${s.value.toLocaleString()}</div>
-                            <div style={{color:"rgba(235,235,245,0.6)",textAlign:"right",fontSize:"10px"}}>{pct.toFixed(0)}%</div>
-                          </div>
-                        );
-                      })}
-                      <div style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",borderTop:"0.5px solid rgba(255,255,255,0.14)",marginTop:"2px",alignItems:"center",fontFamily:SANS_FONT,fontSize:"11px",fontWeight:600}}>
-                        <div></div>
-                        <div style={{color:"rgba(235,235,245,0.95)",letterSpacing:"0"}}>Net worth</div>
-                        <div style={{color:"#0A84FF",textAlign:"right"}}>${sampleTotal.toLocaleString()}</div>
-                        <div></div>
-                      </div>
+                  <div style={{...card,padding:"18px"}}>
+                    <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Track everything you own</div>
+                    <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>Cash, super, vehicles, shares and property, all adding up to your net worth. For example:</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"10px",margin:"16px 0 18px"}}>
+                      {samples.map((s, i) => (
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",fontFamily:SANS_FONT}}>
+                          <span style={{fontSize:"20px",width:"26px",textAlign:"center"}}>{catEmoji[s.category]}</span>
+                          <span style={{flex:1,fontSize:"17px",color:"rgba(235,235,245,0.85)",letterSpacing:"-0.2px"}}>{s.name}</span>
+                          <span style={{fontSize:"15px",color:sec}}>{money(s.value)}</span>
+                        </div>
+                      ))}
                     </div>
                     <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"20px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"20px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      <button onClick={useTemplate} style={{flex:1,padding:"13px",background:BLUE,border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
+                      <button onClick={addAsset} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
                     </div>
                   </div>
                 );
               })()}
-              {assets.map((asset, index) => {
-                const isEditing = editingAssetIdx === index;
-                const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
-                const val = parseFloat(asset?.value) || 0;
-                return (
-                  <div key={index} style={{background:isEditing?(researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.05)"):"transparent",borderTop:"1px solid rgba(255,255,255,0.06)",overflow:"hidden",transition:"all 0.15s"}}>
-                    {/* Compact row */}
-                    <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
-                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"28px",height:"28px",borderRadius:"8px",background:"rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",flexShrink:0}}>{cat?.emoji || '💼'}</div>
-                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{asset?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed asset</span>}</div>
-                        <div style={{fontFamily:SANS_FONT,fontSize:"10px",color:"rgba(235,235,245,0.55)"}}>
-                          {cat?.name || 'No type'}{asset?.ownedFor ? ` · ${asset.ownedFor}` : ''}
-                        </div>
-                      </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {val > 0 && (
-                          <div style={{textAlign:"right"}}>
-                            <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#0A84FF",fontWeight:600}}>${val.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+
+              {/* Asset list */}
+              {assets.length > 0 && (
+                <div style={card}>
+                  {assets.map((asset, index) => {
+                    const isEditing = editingAssetIdx === index;
+                    const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
+                    const val = parseFloat(asset?.value) || 0;
+                    const typeName = asset?.category ? (cat?.name || '') : '';
+                    const subParts = [typeName, asset?.ownedFor ? `owned ${asset.ownedFor}` : ''].filter(Boolean);
+                    return (
+                      <div key={index} style={{borderTop:index>0?sep:"none",background:isEditing?"rgba(255,255,255,0.04)":"transparent"}}>
+                        <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
+                          style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                          <span style={{fontSize:"22px",width:"28px",textAlign:"center",lineHeight:"1.2",flexShrink:0}}>{cat?.emoji || '💼'}</span>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:asset?.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{asset?.name || 'New asset'}</div>
+                            {subParts.length > 0 && <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>{subParts.join(', ')}</div>}
+                          </div>
+                          {val > 0 && <span style={{fontFamily:SANS_FONT,fontSize:"17px",color:"#FFFFFF",fontWeight:600,flexShrink:0,marginTop:"1px"}}>{money(val)}</span>}
+                          <ChevronRight size={18} color={ter} strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px",transform:isEditing?"rotate(90deg)":"none",transition:"transform 0.2s"}} />
+                        </button>
+
+                        {isEditing && (
+                          <div style={{padding:"4px 16px 14px",display:"flex",flexDirection:"column",gap:"6px"}}>
+                            <textarea rows={1} autoFocus={!asset?.name} value={asset?.name || ''} placeholder="Name, e.g. House, Tesla, Super"
+                              ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
+                              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                              onChange={(e) => updateAsset(index, 'name', e.target.value)}
+                              style={{...bareArea,padding:"10px 0",borderBottom:sep}} />
+                            <div style={{...formRow,borderBottom:sep}}>
+                              <span style={formLabel}>Type</span>
+                              <select value={asset?.category || ''} onFocus={scrollInputIntoView} onChange={(e) => updateAsset(index, 'category', e.target.value)}
+                                style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark",outline:"none",maxWidth:"60%"}}>
+                                {assetCategories.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                              </select>
+                            </div>
+                            <label style={{...formRow,borderBottom:sep,cursor:"text"}}>
+                              <span style={formLabel}>Value</span>
+                              <span style={{display:"flex",alignItems:"baseline",gap:"2px",justifyContent:"flex-end",minWidth:0}}>
+                                <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>$</span>
+                                <input type="text" inputMode="decimal" value={asset?.valueStr || ''} placeholder="0" onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateAsset(index, 'value', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
+                              </span>
+                            </label>
+                            <label style={{...formRow,cursor:"text"}}>
+                              <span style={formLabel}>Owned for</span>
+                              <input type="text" value={asset?.ownedFor || ''} placeholder="e.g. 1y 5m" onFocus={scrollInputIntoView}
+                                onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
+                            </label>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"8px"}}>
+                              <button onClick={() => { if (!asset?.name || window.confirm(`Delete "${asset.name}"?`)) { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); } }} style={textBtn(RED)}>Delete</button>
+                              <button onClick={() => setEditingAssetIdx(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
+                            </div>
                           </div>
                         )}
-                        <span style={{fontSize:"14px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
                       </div>
-                    </button>
-
-                    {/* Expanded edit panel */}
-                    {isEditing && (
-                      <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Asset name</div>
-                          <input
-                            type="text"
-                            value={asset?.name || ''}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateAsset(index, 'name', e.target.value)}
-                            placeholder="e.g. House, Tesla, Super, Bitcoin"
-                            className="slick-input"
-                            style={{fontFamily:SANS_FONT,fontSize:"13px"}}
-                          />
-                        </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Type</div>
-                          <select
-                            value={asset?.category || ''}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateAsset(index, 'category', e.target.value)}
-                            className="slick-select"
-                            style={{fontFamily:SANS_FONT,colorScheme:"dark"}}>
-                            {assetCategories.map(c => (
-                              <option key={c.id} value={c.id}>{c.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>VALUE $</div>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={asset?.valueStr || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateAsset(index, 'value', e.target.value)}
-                              placeholder="0"
-                              className="slick-input"
-                              style={{fontFamily:SANS_FONT}}
-                            />
-                          </div>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Owned for</div>
-                            <input
-                              type="text"
-                              value={asset?.ownedFor || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
-                              placeholder="e.g. 1y 5m"
-                              className="slick-input"
-                              style={{fontFamily:SANS_FONT}}
-                            />
-                          </div>
-                        </div>
-                        <button onClick={() => { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); }}
-                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(10,132,255,0.08)"}`}}>
-              <button
-                onClick={() => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); }}
-                style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-              >
-                + Add Asset
-              </button>
-            </div>
-            </div>
-          </details>
-
+                    );
+                  })}
+                  <button onClick={addAsset} style={{...addRowBtn,borderTop:sep}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add asset</button>
+                </div>
+              )}
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Breakdown by type</span>
-                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Breakdown by type</span>
+                <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />
               </summary>
               <div style={{}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Breakdown by Type</h2>
-                <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Click column headers to sort</p>
-              </div>
+              <div style={{padding:"0 16px 8px",fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>Tap a column heading to sort</div>
               <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
+                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"15px",borderCollapse:"collapse"}}>
                   <thead>
-                    <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+                    <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.12)"}}>
                       <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",letterSpacing:"0",fontWeight:600,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
@@ -58683,7 +58686,7 @@ function MuzzApp() {
                         Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",letterSpacing:"0",fontWeight:600,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
@@ -58692,7 +58695,7 @@ function MuzzApp() {
                         Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(10,132,255,0.6)",letterSpacing:"0",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",letterSpacing:"0",fontWeight:600,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
@@ -58725,18 +58728,18 @@ function MuzzApp() {
                         return assetsSortDir === 'asc' ? comparison : -comparison;
                       })
                       .map((cat, idx) => (
-                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${cat.total.toLocaleString()}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
+                          <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${cat.total.toLocaleString()}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       ))}
                   </tbody>
                   <tfoot>
-                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${totalAssets.toLocaleString()}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>100%</td>
+                    <tr style={{borderTop:"0.5px solid rgba(255,255,255,0.2)",fontFamily:SANS_FONT,fontWeight:600,color:"#FFFFFF"}}>
+                      <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>Total</td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -58748,7 +58751,7 @@ function MuzzApp() {
           {/* Asset Constellation — radial branch graph, collapsible */}
           {filledAssets.length > 0 && (() => {
             const accent = '#0A84FF';
-            const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
+            const rootName = (eliteName && eliteName.trim()) ? eliteName.trim() : 'You';
             const sortedAssetsRaw = [...filledAssets].sort((a,b) => b.value - a.value);
             const totalNW = sortedAssetsRaw.reduce((s,a) => s + a.value, 0);
             const maxVal = Math.max(...sortedAssetsRaw.map(a => a.value), 1);
@@ -58774,12 +58777,12 @@ function MuzzApp() {
               return { ...a, angle, x, y, px, py, bx, by, catName: cat?.name || 'Other' };
             });
             return (
-              <details style={{...LIQUID_GLASS,border:`0.5px solid ${accent}25`,borderRadius:"20px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{rootName} constellation</span>
-                  <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Asset constellation</span>
+                  <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />
                 </summary>
-                <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+                <div style={{padding:"8px 12px 20px"}}>
                   {isWide ? (
                   /* DESKTOP — Radial canvas */
                   <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
@@ -58816,14 +58819,10 @@ function MuzzApp() {
 
                     {/* Root node — user's name in centre */}
                     <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
-                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:isWide?"150px":"120px",position:"relative"}}>
+                        <span style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                        <span style={{fontSize:isWide?"22px":"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"0"}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                        <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} asset{N!==1?'s':''}</span>
                       </div>
                     </div>
 
@@ -58832,22 +58831,20 @@ function MuzzApp() {
                       const widthPct = (a.value / maxVal) * 100;
                       return (
                         <div key={a.id || idx} style={{position:"absolute",left:a.x,top:a.y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-                            <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
-                            <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
-                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden",minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(10,132,255,0.12)",pointerEvents:"none"}}/>
                             <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                               <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"10px":"9px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,flexShrink:0}}/>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
                               </div>
                               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
+                                <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
                               </div>
                               <div style={{paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"7px",color:`${accent}99`,letterSpacing:"0",fontWeight:600}}>
-                                  {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
+                                <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)",letterSpacing:"0",fontWeight:600}}>
+                                  {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of total
                                 </span>
                               </div>
                             </div>
@@ -58863,14 +58860,10 @@ function MuzzApp() {
                       <div style={{position:"relative",maxWidth:"100%"}}>
                         {/* Root node — top centre */}
                         <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
-                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"20px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
-                            <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                            <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                            <span style={{fontSize:"8px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:"160px",position:"relative"}}>
+                            <span style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                            <span style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                            <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} asset{N!==1?'s':''}</span>
                           </div>
                         </div>
 
@@ -58883,23 +58876,21 @@ function MuzzApp() {
                             return (
                               <div key={a.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
                                 <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
-                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
-                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${accent}`:undefined,borderRight:left?undefined:`2px solid ${accent}`,borderRadius:"20px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
-                                  <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
-                                  <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
-                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent}}/>
+                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden"}}>
+                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(10,132,255,0.12)",pointerEvents:"none"}}/>
                                   <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
                                     <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,flexShrink:0}}/>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
                                     </div>
                                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"9px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)"}}>{a.catName}</span>
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
                                     </div>
                                     <div style={{paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"8px",color:`${accent}99`,letterSpacing:"0",fontWeight:600}}>
-                                        {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
+                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)",letterSpacing:"0",fontWeight:600}}>
+                                        {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of total
                                       </span>
                                     </div>
                                   </div>
@@ -58914,18 +58905,18 @@ function MuzzApp() {
                   )}
 
                   {/* Detail list below */}
-                  <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Asset details</div>
+                  <div style={{marginTop:"20px",borderTop:"0.5px solid rgba(255,255,255,0.12)",paddingTop:"14px"}}>
+                    <div style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginBottom:"8px"}}>Details</div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
                       {nodes.map((a, idx) => (
-                        <div key={a.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"10px"}}>
+                        <div key={a.id || idx} style={{padding:"10px 12px",background:"rgba(255,255,255,0.06)",borderRadius:"14px",fontFamily:SANS_FONT,fontSize:"15px"}}>
                           <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
                             <span style={{color:"#FFFFFF",fontWeight:600}}>{a.name}</span>
-                            <span style={{color:accent,fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                            <span style={{color:"#FFFFFF",fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
                           </div>
-                          <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"9px"}}>
-                            <span>{a.catName}{a.ownedFor?` · ${a.ownedFor}`:''}</span>
-                            <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of NW</span>
+                          <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"13px"}}>
+                            <span>{a.catName}{a.ownedFor?`, owned ${a.ownedFor}`:''}</span>
+                            <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of total</span>
                           </div>
                         </div>
                       ))}
@@ -58939,17 +58930,14 @@ function MuzzApp() {
           {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Assets breakdown</span>
-                <span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>⌄</span>
+              <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Assets breakdown</span>
+                <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />
               </summary>
               <div style={{}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Assets Breakdown</h2>
-              </div>
               
               {/* Pie Chart */}
-              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
+              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px",borderBottom:"0.5px solid rgba(255,255,255,0.12)"}}>
                 <div className="relative">
                   <svg width="220" height="220" viewBox="0 0 220 220">
                     {(() => {
@@ -58982,11 +58970,11 @@ function MuzzApp() {
                               />
                             );
                           })}
-                          <circle cx="110" cy="110" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
-                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
+                          <circle cx="110" cy="110" r="52" fill="#1C1C1E" />
+                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"24px",fontWeight:700,fill:"#FFFFFF",fontFamily:SANS_FONT}}>
                             {filledAssets.length}
                           </text>
-                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>
+                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"13px",fill:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>
                             assets
                           </text>
                         </>
@@ -59000,10 +58988,10 @@ function MuzzApp() {
                     const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16', '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'];
                     
                     return sortedAssets.map((asset, idx) => (
-                      <div key={idx} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.85)"}}>
+                      <div key={idx} style={{display:"flex",alignItems:"center",gap:"10px",fontSize:"15px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.85)"}}>
                         <div style={{width:"10px",height:"10px",borderRadius:"50%",backgroundColor:colors[idx % colors.length],flexShrink:0}} />
-                        <span style={{color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"11px",lineHeight:"1.6"}}>{asset.name}</span>
-                        <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"10px"}}>({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
+                        <span style={{color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",lineHeight:"1.5"}}>{asset.name}</span>
+                        <span style={{color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"15px"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</span>
                       </div>
                     ));
                   })()}
@@ -59011,34 +58999,34 @@ function MuzzApp() {
               </div>
 
               <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
+                <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"15px",borderCollapse:"collapse"}}>
                   <thead>
-                    <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Asset</th>
-                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Type</th>
-                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>Value</th>
-                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>% of Total</th>
+                    <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.12)"}}>
+                      <th style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Asset</th>
+                      <th style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Type</th>
+                      <th style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Value</th>
+                      <th style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>% of Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[...filledAssets].sort((a, b) => a.value - b.value).map((asset, idx) => {
                       const cat = assetCategories.find(c => c.id === asset.category) || { emoji: '', name: 'Select Type' };
                       return (
-                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:600}}>{asset.name}</td>
-                          <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${asset.value.toLocaleString()}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
+                          <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>{asset.name}</td>
+                          <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${asset.value.toLocaleString()}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       );
                     })}
                   </tbody>
                   <tfoot>
-                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>Total</td>
-                      <td style={{padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}></td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>${totalAssets.toLocaleString()}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.85)"}}>100%</td>
+                    <tr style={{borderTop:"0.5px solid rgba(255,255,255,0.2)",fontFamily:SANS_FONT,fontWeight:600,color:"#FFFFFF"}}>
+                      <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>Total</td>
+                      <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}></td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -59051,365 +59039,165 @@ function MuzzApp() {
 
           {assetsSubTab === 'goals' && (
             <>
-              {/* Small Goals */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Small Goals</h2>
-                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Short-term savings targets</p>
+              <div>
+                <div style={groupLabel}>Small goals</div>
+                <div style={card}>
+                  {smallGoals.map((goal, index) => goalCard(goal, index, setSmallGoals, 'Goal, e.g. holiday fund'))}
+                  <button onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
+                    style={{...addRowBtn,borderTop:smallGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add small goal</button>
                 </div>
-                <div className="p-4 space-y-4">
-                  {smallGoals.map((goal, index) => {
-                    const target = goal?.target || 0;
-                    const current = goal?.current || 0;
-                    const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
-                    return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                        <div className="flex items-center gap-3">
-                          <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
-                          <input
-                            type="text"
-                            value={goal?.name || ''}
-                            onChange={(e) => {
-                              setSmallGoals(prev => {
-                                const updated = [...prev];
-                                updated[index] = { ...updated[index], name: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            placeholder="Holiday fund"
-                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          />
-                          <button
-                            onClick={() => setSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                          </button>
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.targetStr || ''}
-                              onChange={(e) => {
-                                setSmallGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], target: parseFloat(e.target.value) || 0, targetStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.currentStr || ''}
-                              onChange={(e) => {
-                                setSmallGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], current: parseFloat(e.target.value) || 0, currentStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          {target > 0 && (
-                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
-                              {progress.toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
-                        {target > 0 && (
-                          <div className="pl-6">
-                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                              <div 
-                                style={{height:"100%",borderRadius:"10px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <button
-                    onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Small Goal
-                  </button>
-                </div>
+                <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Short-term savings targets.</div>
               </div>
 
-              {/* Big Goals */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Big Goals</h2>
-                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Long-term wealth targets</p>
+              <div style={{marginTop:"10px"}}>
+                <div style={groupLabel}>Big goals</div>
+                <div style={card}>
+                  {bigGoals.map((goal, index) => goalCard(goal, index, setBigGoals, 'Goal, e.g. house deposit'))}
+                  <button onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
+                    style={{...addRowBtn,borderTop:bigGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add big goal</button>
                 </div>
-                <div className="p-4 space-y-4">
-                  {bigGoals.map((goal, index) => {
-                    const target = goal?.target || 0;
-                    const current = goal?.current || 0;
-                    const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
-                    return (
-                      <div key={index} style={{padding:"12px 14px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                        <div className="flex items-center gap-3">
-                          <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
-                          <input
-                            type="text"
-                            value={goal?.name || ''}
-                            onChange={(e) => {
-                              setBigGoals(prev => {
-                                const updated = [...prev];
-                                updated[index] = { ...updated[index], name: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            placeholder="House deposit"
-                            style={{flex:1,background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          />
-                          <button
-                            onClick={() => setBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                          </button>
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Target:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.targetStr || ''}
-                              onChange={(e) => {
-                                setBigGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], target: parseFloat(e.target.value) || 0, targetStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
-                            <span className="text-xs" style={{color:"rgba(235,235,245,0.8)"}}>Saved:</span>
-                            <span style={{color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontSize:"10px"}}>$</span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={goal?.currentStr || ''}
-                              onChange={(e) => {
-                                setBigGoals(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], current: parseFloat(e.target.value) || 0, currentStr: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="0"
-                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                          {target > 0 && (
-                            <span style={{gridColumn:"1 / -1",fontFamily:SANS_FONT,fontSize:"11px",color:progress>=100?"#22c55e":"#0A84FF",fontWeight:600}}>
-                              {progress.toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
-                        {target > 0 && (
-                          <div className="pl-6">
-                            <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"10px",overflow:"hidden"}}>
-                              <div 
-                                style={{height:"100%",borderRadius:"10px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <button
-                    onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"10px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Big Goal
-                  </button>
-                </div>
+                <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Long-term wealth targets.</div>
               </div>
             </>
           )}
 
-          {assetsSubTab === 'knowledge' && (
-            <>
-              {/* Muzz's Knowledge Header */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"20px",padding:"16px 20px",backgroundSize:"20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <div>
-                    <h2 className="text-2xl font-bold">Muzz's Knowledge Corner</h2>
-                    <p style={{color:"rgba(245,158,11,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Wisdom from the legends to help you build wealth</p>
-                  </div>
+          {assetsSubTab === 'knowledge' && (() => {
+            const cats = [
+              {
+                n: 1, emoji: '💵', title: 'Currency-based', color: RED,
+                examples: 'Cash, bonds, money-market funds, bank deposits, mortgages',
+                verdict: 'Feel safe, but lose value over time',
+                points: [
+                  'Inflation quietly eats their purchasing power',
+                  'Interest rarely keeps up once tax is taken out',
+                  'The US dollar lost 86% of its value from 1965 to 2011',
+                ],
+                quote: 'In truth they are among the most dangerous of assets.',
+              },
+              {
+                n: 2, emoji: '🪙', title: 'Non-productive', color: "#FF9F0A",
+                examples: 'Gold, crypto, collectibles',
+                verdict: "Produce nothing; you're betting someone pays more later",
+                points: [
+                  'Value depends entirely on the next buyer',
+                  'Prices are driven by fear and hype',
+                  'Need an ever-growing pool of buyers',
+                ],
+                piles: true,
+              },
+              {
+                n: 3, emoji: '🏭', title: 'Productive', color: GREEN, pick: true,
+                examples: 'Businesses, farms, real estate',
+                verdict: "Buffett's clear preference",
+                points: [
+                  'Generate cash and produce goods',
+                  'Grow their output over time',
+                  'Keep up with inflation, since prices rise with costs',
+                  'The best ones need little new capital',
+                  'Compound earnings for their owners',
+                ],
+                quote: 'These commercial “cows” will live for centuries and give ever greater quantities of “milk” to boot.',
+                examplesLine: "Coca-Cola, See's Candies, farms, real estate, Berkshire's businesses",
+              },
+            ];
+            return (
+              <>
+                <div style={{padding:"0 4px"}}>
+                  <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.3px"}}>Buffett's three kinds of assets</div>
+                  <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>From Warren Buffett's 2011 letter to Berkshire shareholders. Every investment falls into one of three buckets.</div>
                 </div>
-              </div>
 
-              {/* The 3 Asset Categories */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>📚 The 3 Asset Categories (Buffett's Framework)</h2>
-                  <p style={{fontSize:"10px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"4px"}}>Warren Buffett explains that all investments fall into one of three buckets</p>
-                </div>
-                <div className="p-6 space-y-6">
-                  
-                  {/* Category 1 */}
-                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
-                      <span className="text-2xl">💵</span>
-                      <h3 className="text-lg font-bold text-red-800">Category 1: Currency-Based Investments</h3>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Cash, bonds, money-market funds, T-bills, mortgages, bank deposits</p>
-                    <div style={{background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
-                      <p className="text-red-700 font-semibold mb-2">️ Buffett's View: "These are the most dangerous long-term assets"</p>
-                      <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• Even though they feel "safe," they silently destroy purchasing power</li>
-                        <li>• Governments control currency → inflation is inevitable</li>
-                        <li>• Interest payments rarely keep up after taxes</li>
-                        <li>• Since 1965: The USD has lost 86% of its value</li>
-                      </ul>
-                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"10px"}}>
-                        <p className="text-sm italic text-red-800">"The implicit inflation tax was more than triple the explicit income tax." — Buffett</p>
+                {cats.map(c => (
+                  <div key={c.n} style={{...card,padding:"16px"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
+                      <span style={{fontSize:"28px",lineHeight:1.1}}>{c.emoji}</span>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
+                          <span style={{fontSize:"20px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.3px"}}>{c.n}. {c.title}</span>
+                          {c.pick && <span style={{fontSize:"12px",fontWeight:600,color:GREEN,border:`0.5px solid ${GREEN}`,borderRadius:"999px",padding:"1px 8px",fontFamily:SANS_FONT}}>Buffett's pick</span>}
+                        </div>
+                        <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>{c.examples}</div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Category 2 */}
-                  <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
-                      <span className="text-2xl">🪙</span>
-                      <h3 className="text-lg font-bold text-yellow-800">Category 2: Non-Productive Assets</h3>
+                    <div style={{fontSize:"15px",color:c.color,fontFamily:SANS_FONT,fontWeight:600,marginTop:"14px"}}>{c.verdict}</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"8px",marginTop:"10px"}}>
+                      {c.points.map((p, i) => (
+                        <div key={i} style={{display:"flex",gap:"10px",fontSize:"15px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,lineHeight:1.45}}>
+                          <span style={{width:"6px",height:"6px",borderRadius:"50%",background:c.color,flexShrink:0,marginTop:"8px"}} />
+                          <span>{p}</span>
+                        </div>
+                      ))}
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">Gold, crypto, collectibles, tulips, etc.</p>
-                    <div style={{background:"rgba(234,179,8,0.04)",border:"0.5px solid rgba(234,179,8,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
-                      <p className="text-yellow-700 font-semibold mb-2">️ Buffett's View: "These assets will never produce anything"</p>
-                      <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• Their value is based solely on someone else paying more later</li>
-                        <li>• Driven by fear, bandwagon psychology, and hope</li>
-                        <li>• Require an expanding pool of buyers</li>
-                      </ul>
-                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.2)",borderRadius:"10px"}}>
-                        <p className="text-sm font-semibold text-yellow-800 mb-2">Buffett's "Pile A vs Pile B" comparison:</p>
-                        <div className="grid md:grid-cols-2 gap-3 text-sm">
-                          <div style={{padding:"8px 10px",background:"rgba(234,179,8,0.08)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"10px"}}>
-                            <p className="font-bold">PILE A: All the gold in the world</p>
-                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>170,000 metric tons worth $9.6T</p>
-                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces NOTHING forever</p>
+
+                    {c.piles && (
+                      <div style={{marginTop:"14px"}}>
+                        <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,fontWeight:600,marginBottom:"8px"}}>Pile A vs pile B (2011 figures)</div>
+                        <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"8px"}}>
+                          <div style={{padding:"12px 14px",borderRadius:"14px",background:"rgba(255,255,255,0.06)"}}>
+                            <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>A: all the world's gold</div>
+                            <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"3px",lineHeight:1.4}}>About 170,000 tonnes, worth $9.6 trillion. Produces nothing, ever.</div>
                           </div>
-                          <div style={{padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
-                            <p className="font-bold">PILE B: What $9.6T could buy</p>
-                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>All U.S. farmland + 16 Exxon Mobils + $1T cash</p>
-                            <p style={{color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"11px"}}>Produces trillions in value</p>
+                          <div style={{padding:"12px 14px",borderRadius:"14px",background:"rgba(48,209,88,0.1)"}}>
+                            <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>B: what $9.6 trillion buys</div>
+                            <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"3px",lineHeight:1.4}}>All US cropland, 16 Exxon Mobils and $1 trillion spare. Produces value every year.</div>
                           </div>
                         </div>
-                        <p className="text-sm italic text-yellow-800 mt-2">"Can you imagine an investor choosing pile A over pile B?" — Buffett</p>
                       </div>
-                    </div>
-                  </div>
+                    )}
 
-                  {/* Category 3 */}
-                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"20px",padding:"14px 16px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
-                      <span className="text-2xl">🏭</span>
-                      <h3 className="text-lg font-bold text-green-800">Category 3: Productive Assets ⭐ BUFFETT'S PICK</h3>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Businesses, farms, real estate</p>
-                    <div style={{background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.25)",borderRadius:"10px",padding:"12px 14px"}}>
-                      <p className="text-green-700 font-semibold mb-2">Buffett's Strong Preference: "The ONLY category Berkshire overwhelmingly prefers"</p>
-                      <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• Generate cash & produce goods</li>
-                        <li>• Increase output over time</li>
-                        <li>• Respond well to inflation (prices rise with costs)</li>
-                        <li>• Require minimal new capital (the best businesses)</li>
-                        <li>• Compound earnings for owners</li>
-                      </ul>
-                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"10px"}}>
-                        <p className="text-sm font-semibold text-green-800 mb-2">Buffett's "Cows and Milk" Metaphor:</p>
-                        <p className="text-sm italic text-green-800">"Businesses are like cows. They will live for centuries and give ever-increasing quantities of milk. Your job is to own more cows, let them produce more milk, and let the milk compound."</p>
+                    {c.examplesLine && (
+                      <div style={{fontSize:"15px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,marginTop:"12px",lineHeight:1.45}}>
+                        <span style={{color:sec}}>Examples: </span>{c.examplesLine}
                       </div>
-                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
-                        <p className="text-sm text-green-800"><span className="font-bold">Examples:</span> Coca-Cola, See's Candy, farms, real estate, Berkshire's businesses</p>
+                    )}
+
+                    {c.quote && (
+                      <div style={{marginTop:"14px",paddingLeft:"12px",borderLeft:"2px solid rgba(255,255,255,0.18)"}}>
+                        <div style={{fontSize:"15px",color:"rgba(235,235,245,0.8)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.45}}>“{c.quote}”</div>
+                        <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"4px"}}>Warren Buffett</div>
                       </div>
-                    </div>
+                    )}
                   </div>
+                ))}
 
-                  {/* Summary Table */}
-                  <div style={{background:"rgba(10,132,255,0.03)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"14px 16px"}}>
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Buffett's Final Verdict</h3>
-                    <div style={{overflowX:"auto"}}>
-                      <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"11px"}}>
-                        <thead>
-                          <tr className="border-b">
-                            <th className="text-left py-2 px-3 font-semibold">Category</th>
-                            <th className="text-left py-2 px-3 font-semibold">Examples</th>
-                            <th className="text-left py-2 px-3 font-semibold">Buffett's View</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(239,68,68,0.06)"}}>
-                            <td className="py-2 px-3 font-medium">1. Currency-based</td>
-                            <td className="py-2 px-3 text-gray-600">Cash, bonds, bills</td>
-                            <td className="py-2 px-3 text-red-700">Safest-feeling, but long-term wealth destroyers</td>
-                          </tr>
-                          <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(234,179,8,0.06)"}}>
-                            <td className="py-2 px-3 font-medium">2. Non-productive</td>
-                            <td className="py-2 px-3 text-gray-600">Gold, crypto, collectibles</td>
-                            <td className="py-2 px-3 text-yellow-700">Speculative, require new buyers, produce nothing</td>
-                          </tr>
-                          <tr style={{background:"rgba(34,197,94,0.06)"}}>
-                            <td className="py-2 px-3 font-medium">3. Productive assets</td>
-                            <td className="py-2 px-3 text-gray-600">Businesses, farms, real estate</td>
-                            <td className="py-2 px-3 text-green-700 font-semibold">Only REAL wealth creators — by far the safest ✅</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"10px"}}>
-                      <p className="text-green-800 font-semibold italic">"Over any extended period of time, this category will be the runaway winner. More important, it will be by far the safest." — Warren Buffett</p>
-                    </div>
+                {/* Summary */}
+                <div>
+                  <div style={groupLabel}>In short</div>
+                  <div style={card}>
+                    {cats.map((c, i) => (
+                      <div key={c.n} style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",borderTop:i>0?sep:"none"}}>
+                        <span style={{fontSize:"20px",lineHeight:1.2}}>{c.emoji}</span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{c.title}</div>
+                          <div style={{fontSize:"15px",color:c.color,fontFamily:SANS_FONT,marginTop:"2px"}}>
+                            {c.n === 1 ? 'Wealth destroyers over the long run' : c.n === 2 ? 'Speculation that produces nothing' : 'Real wealth creators, and the safest'}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-
+                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0",lineHeight:1.45}}>Buffett's conclusion: over any extended period, productive assets will be the runaway winner, and by far the safest.</div>
                 </div>
-              </div>
-
-            </>
-          )}
+              </>
+            );
+          })()}
 
           {/* Asset Map — drag/drop wealth structure */}
           {assetsSubTab === 'assetMap' && (
-            <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {padding:"12px 16px"}}>
+            <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,0.96)",backdropFilter:"blur(8px)",padding:"16px",paddingTop:"max(16px, env(safe-area-inset-top))",display:"flex",flexDirection:"column"} : {}}>
               <div style={{marginBottom:"10px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexShrink:0}}>
                 {assetMapExpanded && (
-                  <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>ASSET MAP · FULLSCREEN</span>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>Asset map</span>
                 )}
-                <button
-                  onClick={() => setAssetMapExpanded(v => !v)}
-                  style={{fontSize:"10px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(10,132,255,0.15)",border:"0.5px solid rgba(10,132,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"10px",fontWeight:600,marginLeft:"auto"}}
-                >
-                  {assetMapExpanded ? '⊟ COLLAPSE MAP' : '⊞ EXPAND MAP'}
+                <button onClick={() => setAssetMapExpanded(v => !v)}
+                  style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.18)",fontSize:"15px",color:BLUE,fontFamily:SANS_FONT,padding:"7px 16px",cursor:"pointer",borderRadius:"999px",fontWeight:600,marginLeft:"auto"}}>
+                  {assetMapExpanded ? 'Done' : 'Full screen'}
                 </button>
               </div>
               {!assetMapExpanded && (
-                <div style={{marginBottom:"10px",padding:"12px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",fontSize:"13px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.55}}>
-                  A visual map of how your wealth fits together — you at the centre, with branches out to properties, super, cash, shares and anything else you own. <span style={{color:"rgba(10,132,255,0.85)"}}>Add nodes and connect them</span> to see your whole position as one picture, and expand the map for the full view.
+                <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,margin:"0 4px 12px"}}>
+                  A map of how your wealth fits together: you in the middle, with branches out to property, super, cash, shares and anything else you own. Add nodes and connect them, then go full screen for the whole picture.
                 </div>
               )}
               <div style={assetMapExpanded ? {flex:1,minHeight:0} : {}}>
