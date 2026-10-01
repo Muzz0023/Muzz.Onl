@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -54023,6 +54023,12 @@ function MuzzApp() {
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </ListRow>
+            </div>
+
+            <div style={groupLabel}>Legal</div>
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              <ListRow icon={Lock} label="Privacy policy" onClick={() => window.open('https://muzz.onl/privacy.html', '_blank', 'noopener')} />
+              <ListRow icon={FileText} label="Terms of use" onClick={() => window.open('https://muzz.onl/terms.html', '_blank', 'noopener')} last />
             </div>
 
             <div style={{...glass,overflow:"hidden"}}>
