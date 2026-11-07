@@ -50260,8 +50260,7 @@ function MuzzApp() {
                         return (
                           <div key={sub?.id || index} style={rowCard}>
                             <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
-                              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                              <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,color:"#FFFFFF",background:["linear-gradient(135deg,#0A84FF,#5E5CE6)","linear-gradient(135deg,#30D158,#0A84FF)","linear-gradient(135deg,#FF9F0A,#FF375F)","linear-gradient(135deg,#BF5AF2,#5E5CE6)","linear-gradient(135deg,#64D2FF,#0A84FF)","linear-gradient(135deg,#FF375F,#BF5AF2)"][String(sub?.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%6]}}>{(String(sub?.name||'').trim().charAt(0) || '$').toUpperCase()}</span>
+                              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                               <div style={{flex:1,minWidth:0}}>
                                 <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:sub?.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{sub?.name || 'New bill'}</div>
                                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>{sub1}</div>
