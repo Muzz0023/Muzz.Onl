@@ -50050,6 +50050,14 @@ function MuzzApp() {
     const formRow = {display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"44px"};
     const formLabel = {fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",flexShrink:0};
     const addRowBtn = {display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"};
+    const rowCard = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden"};
+    const rowList = {display:"flex",flexDirection:"column",gap:"8px"};
+    const newRow = (label, onClick) => (
+      <button onClick={onClick} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+        <span style={{width:"24px",height:"24px",borderRadius:"50%",background:"#0A84FF",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px",lineHeight:1,flexShrink:0}}>+</span>
+        <span style={{color:"#0A84FF",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{label}</span>
+      </button>
+    );
     const roundPlus = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:BLUE,fontWeight:400,lineHeight:1,cursor:"pointer",padding:0};
     const money = (n, dp = 0) => `$${(Number(n)||0).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp})}`;
     const dueText = (days) => days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `In ${days} days`;
@@ -50077,7 +50085,7 @@ function MuzzApp() {
         </label>
       );
       return (
-        <div key={index} style={{borderTop:index>0?sep:"none",padding:"14px 16px"}}>
+        <div key={index} style={{...rowCard,padding:"14px 16px"}}>
           <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
             <textarea rows={1} placeholder={placeholder} value={goal?.name||''} ref={growText} onInput={(e)=>growText(e.target)}
               onChange={(e)=>set({name:e.target.value})} onFocus={scrollInputIntoView}
@@ -50235,7 +50243,7 @@ function MuzzApp() {
                         <button onClick={() => deleteBucket(activeBucket.id)} style={{...textBtn(RED),fontSize:"15px"}}>Delete</button>
                       </span>
                     </div>
-                    <div style={card}>
+                    <div style={rowList}>
                       {currentSubs.map((sub, origIndex) => ({ sub, origIndex, nd: computeNextDue(sub) }))
                         .sort((a, b) => {
                           if (a.nd && !b.nd) return -1;
@@ -50250,9 +50258,10 @@ function MuzzApp() {
                         const daysAway = nd ? nd.daysAway : null;
                         const sub1 = [FREQ_LABEL[freq], nd ? `due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''].filter(Boolean).join(', ');
                         return (
-                          <div key={sub?.id || index} style={{borderTop:row>0?sep:"none",background:isEditing?"rgba(255,255,255,0.04)":"transparent"}}>
+                          <div key={sub?.id || index} style={rowCard}>
                             <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
-                              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                              <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,color:"#FFFFFF",background:["linear-gradient(135deg,#0A84FF,#5E5CE6)","linear-gradient(135deg,#30D158,#0A84FF)","linear-gradient(135deg,#FF9F0A,#FF375F)","linear-gradient(135deg,#BF5AF2,#5E5CE6)","linear-gradient(135deg,#64D2FF,#0A84FF)","linear-gradient(135deg,#FF375F,#BF5AF2)"][String(sub?.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%6]}}>{(String(sub?.name||'').trim().charAt(0) || '$').toUpperCase()}</span>
                               <div style={{flex:1,minWidth:0}}>
                                 <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:sub?.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{sub?.name || 'New bill'}</div>
                                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>{sub1}</div>
@@ -50349,7 +50358,7 @@ function MuzzApp() {
                           </div>
                         );
                       })}
-                      <button onClick={() => { addBillToBucket(activeBucket.id); setEditingBillIdx(currentSubs.length); }} style={{...addRowBtn,borderTop:sep}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add bill</button>
+                      {newRow('New bill', () => { addBillToBucket(activeBucket.id); setEditingBillIdx(currentSubs.length); })}
                     </div>
                   </div>
                 )}
@@ -51116,20 +51125,18 @@ function MuzzApp() {
             <>
               <div>
                 <div style={{...groupLabel,margin:"4px 4px 8px"}}>Small goals</div>
-                <div style={card}>
+                <div style={rowList}>
                   {billSmallGoals.map((goal, index) => goalCard(goal, index, setBillSmallGoals, 'Goal, e.g. emergency fund'))}
-                  <button onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{...addRowBtn,borderTop:billSmallGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add small goal</button>
+                  {newRow('New goal', () => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]))}
                 </div>
                 <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Short-term savings targets, reachable in months.</div>
               </div>
 
               <div style={{marginTop:"10px"}}>
                 <div style={{...groupLabel,margin:"4px 4px 8px"}}>Big goals</div>
-                <div style={card}>
+                <div style={rowList}>
                   {billBigGoals.map((goal, index) => goalCard(goal, index, setBillBigGoals, 'Goal, e.g. house deposit'))}
-                  <button onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{...addRowBtn,borderTop:billBigGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add big goal</button>
+                  {newRow('New goal', () => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]))}
                 </div>
                 <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Long-term targets that take a year or more.</div>
               </div>
@@ -51506,6 +51513,14 @@ function MuzzApp() {
     const formRow = {display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",minHeight:"44px"};
     const formLabel = {fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",flexShrink:0};
     const addRowBtn = {display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"};
+    const rowCard = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden"};
+    const rowList = {display:"flex",flexDirection:"column",gap:"8px"};
+    const newRow = (label, onClick) => (
+      <button onClick={onClick} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+        <span style={{width:"24px",height:"24px",borderRadius:"50%",background:"#0A84FF",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px",lineHeight:1,flexShrink:0}}>+</span>
+        <span style={{color:"#0A84FF",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{label}</span>
+      </button>
+    );
     const addAsset = () => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); };
     const money = (n) => `$${(Number(n)||0).toLocaleString(undefined,{maximumFractionDigits:0})}`;
 
@@ -51527,7 +51542,7 @@ function MuzzApp() {
         </label>
       );
       return (
-        <div key={index} style={{borderTop:index>0?sep:"none",padding:"14px 16px"}}>
+        <div key={index} style={{...rowCard,padding:"14px 16px"}}>
           <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
             <textarea rows={1} placeholder={placeholder} value={goal?.name||''} ref={growText} onInput={(e)=>growText(e.target)}
               onChange={(e)=>set({name:e.target.value})} onFocus={scrollInputIntoView}
@@ -51620,7 +51635,7 @@ function MuzzApp() {
 
               {/* Asset list */}
               {assets.length > 0 && (
-                <div style={card}>
+                <div style={rowList}>
                   {assets.map((asset, index) => {
                     const isEditing = editingAssetIdx === index;
                     const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
@@ -51628,10 +51643,10 @@ function MuzzApp() {
                     const typeName = asset?.category ? (cat?.name || '') : '';
                     const subParts = [typeName, asset?.ownedFor ? `owned ${asset.ownedFor}` : ''].filter(Boolean);
                     return (
-                      <div key={index} style={{borderTop:index>0?sep:"none",background:isEditing?"rgba(255,255,255,0.04)":"transparent"}}>
+                      <div key={index} style={rowCard}>
                         <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
-                          style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                          <span style={{fontSize:"22px",width:"28px",textAlign:"center",lineHeight:"1.2",flexShrink:0}}>{cat?.emoji || '💼'}</span>
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                          <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"20px",lineHeight:1,background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)"}}>{cat?.emoji || '💼'}</span>
                           <div style={{flex:1,minWidth:0}}>
                             <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:asset?.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{asset?.name || 'New asset'}</div>
                             {subParts.length > 0 && <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>{subParts.join(', ')}</div>}
@@ -51676,7 +51691,7 @@ function MuzzApp() {
                       </div>
                     );
                   })}
-                  <button onClick={addAsset} style={{...addRowBtn,borderTop:sep}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add asset</button>
+                  {newRow('New asset', addAsset)}
                 </div>
               )}
           {/* Type Breakdown — collapsible */}
@@ -52057,20 +52072,18 @@ function MuzzApp() {
             <>
               <div>
                 <div style={groupLabel}>Small goals</div>
-                <div style={card}>
+                <div style={rowList}>
                   {smallGoals.map((goal, index) => goalCard(goal, index, setSmallGoals, 'Goal, e.g. holiday fund'))}
-                  <button onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{...addRowBtn,borderTop:smallGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add small goal</button>
+                  {newRow('New goal', () => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]))}
                 </div>
                 <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Short-term savings targets.</div>
               </div>
 
               <div style={{marginTop:"10px"}}>
                 <div style={groupLabel}>Big goals</div>
-                <div style={card}>
+                <div style={rowList}>
                   {bigGoals.map((goal, index) => goalCard(goal, index, setBigGoals, 'Goal, e.g. house deposit'))}
-                  <button onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{...addRowBtn,borderTop:bigGoals.length>0?sep:"none"}}><span style={{fontSize:"20px",lineHeight:1}}>+</span> Add big goal</button>
+                  {newRow('New goal', () => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]))}
                 </div>
                 <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"8px 4px 0"}}>Long-term wealth targets.</div>
               </div>
