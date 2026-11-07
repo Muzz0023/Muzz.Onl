@@ -11493,6 +11493,10 @@ const UMG_BREAKDOWN = {
 
 // === RESEARCH LOG — the library's visible heartbeat. Append newest entries FIRST. ===
 const RESEARCH_LOG = [
+  { date: '07 NOV 2026', type: 'COVERAGE', text: 'Coverage library refocused \u2014 36 companies, 34 built, AXP & BRK.B still locked' },
+  { date: '07 NOV 2026', type: 'COVERAGE', text: 'FOX, NWS, ORCL, CBA, ASX, TASE, WOW, COL & PXA retired from coverage' },
+  { date: '07 NOV 2026', type: 'COVERAGE', text: 'Tier 1 deep-dives live: GOOG, AAPL, V, MA, MCO, KO, PEP, HSY, COST, WM, CNI, REH & UMG' },
+  { date: '07 NOV 2026', type: 'DESK',     text: 'Holdings simplified \u2014 live prices now sit inside Holdings; Performance tab retired' },
   { date: '17 AUG 2026', type: 'RESEARCH', text: 'Q3 2026 13Fs — every current top 10 updated · Seth Klarman (Baupost) joins the tracked seven' },
   { date: '17 AUG 2026', type: 'RESEARCH', text: 'Full portfolio histories added — up to 20 years of year-end 13Fs per investor' },
   { date: '16 AUG 2026', type: 'LIVE DATA', text: 'Market Caps board complete — 25 industries, top 10 companies each, superinvestor links wired' },
@@ -47153,6 +47157,26 @@ function MuzzApp() {
     });
   }, [livePrices, stocks.length]);
 
+  // One-time merge: the old separate "Live prices" tracker now lives inside Holdings.
+  // Any tracked ticker not already held is added as an auto-priced holding, then the old list is emptied.
+  useEffect(() => {
+    if (!dataLoaded || !Array.isArray(trackedStocks) || trackedStocks.length === 0) return;
+    setStocks(prev => {
+      const list = Array.isArray(prev) ? prev : [];
+      const have = new Set(list.map(x => String(x?.name || '').trim().toUpperCase()).filter(Boolean));
+      const add = trackedStocks
+        .filter(t => t && t.ticker && String(t.ticker).trim() && !have.has(String(t.ticker).trim().toUpperCase()))
+        .map((t, i) => {
+          const sh = parseFloat(t.shares) || 0;
+          const ac = parseFloat(t.avgCost) || 0;
+          const inv = sh * ac;
+          return { id: Date.now() + i, name: String(t.ticker).trim().toUpperCase(), shares: sh, sharesStr: t.shares ? String(t.shares) : '', avgCost: ac, avgCostStr: t.avgCost ? String(t.avgCost) : '', invested: inv, investedStr: inv ? String(inv) : '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() };
+        });
+      return add.length ? [...list, ...add] : list;
+    });
+    setTrackedStocks([]);
+  }, [dataLoaded, trackedStocks]);
+
   // One-time migration: stocks with old-style data (invested > 0, currentValue > 0, no shares) → manualMode.
   // Stops their values being wiped by auto-compute.
   useEffect(() => {
@@ -47176,8 +47200,9 @@ function MuzzApp() {
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymSubTab, setGymSubTab] = useState('sleep');
-  const [gymWorkoutTab, setGymWorkoutTab] = useState('steps');
+  const [gymWorkoutTab, setGymWorkoutTab] = useState('log');
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
+  const [gymDate, setGymDate] = useState(null); // selected day in the gym log (YYYY-MM-DD)
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
   const [timesheetData, setTimesheetData] = useState({
@@ -47333,62 +47358,6 @@ function MuzzApp() {
     };
   }, [mapExpanded]);
   const [selectedStock, setSelectedStock] = useState(null);
-  const [perfTicker, setPerfTicker] = useState('');
-  const [perfData, setPerfData] = useState(null);
-  const [perfLoading, setPerfLoading] = useState(false);
-  const [perfSaved, setPerfSaved] = useState([]); // saved performance lookups: {ticker, industry}
-  const [perfError, setPerfError] = useState('');
-
-  const fetchPerformance = async (tOverride) => {
-    const ticker = (typeof tOverride === 'string' ? tOverride : perfTicker).trim().toUpperCase();
-    if (!ticker) return;
-    setPerfLoading(true);
-    setPerfError('');
-    setPerfData(null);
-    try {
-      const r = await fetch(`https://muzz.onl/api/stock?ticker=${ticker}`);
-      if (!r.ok) throw new Error('not found');
-      const json = await r.json();
-      const chart = json?.chart?.result?.[0];
-      if (!chart) throw new Error('no data');
-      const timestamps = chart.timestamp || [];
-      const rawCloses = chart.indicators?.quote?.[0]?.close || [];
-      const closes = rawCloses.map((v, i) => ({ t: timestamps[i], v })).filter(x => x.v != null);
-      if (!closes.length) throw new Error('no closes');
-      const now = Date.now() / 1000;
-      const currentPrice = closes[closes.length - 1].v;
-      const priceNDaysAgo = (days) => {
-        const target = now - days * 86400;
-        for (let i = closes.length - 1; i >= 0; i--) {
-          if (closes[i].t <= target) return closes[i].v;
-        }
-        return closes[0].v;
-      };
-      const calcChange = (old) => old ? ((currentPrice - old) / old * 100) : null;
-      // Save this lookup (deduped), grouped by coverage industry where known
-      setPerfSaved(prev => {
-        if ((prev || []).some(p => p.ticker === ticker)) return prev;
-        const covMatch = (COVERAGE_DATA || []).find(cc => cc.ticker === normTicker(ticker));
-        return [...(prev || []), { ticker, industry: covMatch ? covMatch.industry : 'Other' }];
-      });
-      setPerfData({
-        ticker,
-        currentPrice,
-        results: {
-          '1d':  { change: calcChange(priceNDaysAgo(1)) },
-          '5d':  { change: calcChange(priceNDaysAgo(5)) },
-          '1mo': { change: calcChange(priceNDaysAgo(30)) },
-          '3mo': { change: calcChange(priceNDaysAgo(90)) },
-          '6mo': { change: calcChange(priceNDaysAgo(180)) },
-          '1y':  { change: calcChange(priceNDaysAgo(365)) },
-          '5y':  { change: calcChange(closes[0].v) },
-        }
-      });
-    } catch(e) {
-      setPerfError('Could not fetch data. Check the ticker and try again.');
-    }
-    setPerfLoading(false);
-  };
   const [holdingsResearch, setHoldingsResearch] = useState([]);
   const [billSmallGoals, setBillSmallGoals] = useState([]);
   const [billBigGoals, setBillBigGoals] = useState([]);
@@ -47547,7 +47516,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,perfSaved,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
 
 
@@ -47570,7 +47539,6 @@ function MuzzApp() {
     if(d.bigGoals) setBigGoals(d.bigGoals);
     if(d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
     if(d.futureStocks) setFutureStocks(d.futureStocks);
-    if(d.perfSaved) setPerfSaved(d.perfSaved);
     if(d.futureResearch) setFutureResearch(d.futureResearch);
     if(d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
     if(d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
@@ -47639,7 +47607,6 @@ function MuzzApp() {
       bigGoals: d.bigGoals||[],
       holdingsResearch: d.holdingsResearch||[],
       futureStocks: d.futureStocks||[],
-      perfSaved: d.perfSaved||[],
       futureResearch: d.futureResearch||[],
       futureResearchColumns: d.futureResearchColumns||[],
       investmentSmallGoals: d.investmentSmallGoals||[],
@@ -47929,7 +47896,6 @@ function MuzzApp() {
           if (d.bigGoals) setBigGoals(d.bigGoals);
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
-          if (d.perfSaved) setPerfSaved(d.perfSaved);
           if (d.futureResearch) setFutureResearch(d.futureResearch);
           if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
           if (d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
@@ -48059,7 +48025,6 @@ function MuzzApp() {
           bigGoals,
           holdingsResearch,
           futureStocks,
-          perfSaved,
           futureResearch,
           futureResearchColumns,
           investmentSmallGoals,
@@ -48123,7 +48088,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, perfSaved, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -49233,10 +49198,10 @@ function MuzzApp() {
             const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
 
             return (
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px"}}>
+              <div>
 
                 {/* Header */}
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <div style={{padding:"2px 4px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                   <span style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{headerLabel}</span>
                   <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
                     <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
@@ -49262,7 +49227,7 @@ function MuzzApp() {
                 </div>
 
                 {/* Items */}
-                <div style={{padding:"10px 16px",minHeight: items.length === 0 ? "auto" : "55vh",display:"flex",flexDirection:"column",gap:"2px"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
                   {items.length === 0 && (() => {
                     // Tailored sample tasks per built-in tab
                     const samplesByTab = {
@@ -49296,7 +49261,7 @@ function MuzzApp() {
                       save(newItems);
                     };
                     return (
-                      <div style={{padding:"6px 2px",marginBottom:"8px"}}>
+                      <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",padding:"16px"}}>
                         <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginBottom:"6px"}}>Example list</div>
                         <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
                         <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
@@ -49318,7 +49283,7 @@ function MuzzApp() {
 
                   {/* Unchecked */}
                   {unchecked.map(item => (
-                    <div key={item.id} style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"6px 0"}}>
+                    <div key={item.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 12px 12px 14px"}}>
                       <button onClick={() => updateItem(item.id, {checked: true})} aria-label="Mark done"
                         style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid rgba(235,235,245,0.35)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
                       </button>
@@ -49340,7 +49305,7 @@ function MuzzApp() {
 
                   {/* Add button — hidden in empty state since template offers START FRESH */}
                   {items.length > 0 && (
-                  <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",padding:"6px 0",background:"none",border:"none",cursor:"pointer",marginTop:"4px"}}>
+                  <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"transparent",border:"0.5px dashed rgba(255,255,255,0.2)",borderRadius:"22px",cursor:"pointer",textAlign:"left"}}>
                     <div style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
                       <span style={{color:accentColor,fontSize:"14px",lineHeight:1}}>+</span>
                     </div>
@@ -49350,7 +49315,7 @@ function MuzzApp() {
 
                   {/* Completed section — collapsible */}
                   {checked.length > 0 && (
-                    <div style={{marginTop:"16px",borderTop:`0.5px solid rgba(255,255,255,0.05)`,paddingTop:"12px"}}>
+                    <div style={{marginTop:"12px"}}>
                       <button
                         onClick={() => {
                           const el = document.getElementById(`completed-${tasksSubTab}`);
@@ -49362,7 +49327,7 @@ function MuzzApp() {
                       </button>
                       <div id={`completed-${tasksSubTab}`}>
                         {checked.map(item => (
-                          <div key={item.id} style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"6px 0"}}>
+                          <div key={item.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 12px 12px 14px",marginBottom:"8px",opacity:0.7}}>
                             <button onClick={() => updateItem(item.id, {checked: false})} aria-label="Mark not done"
                               style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
                               ✓
@@ -49564,9 +49529,9 @@ function MuzzApp() {
     // Portfolio sparkline (synthesize from net worth shape if no per-stock history)
     const portfolioSeries = nwSeries.map(v => v * (totalStocks / Math.max(netWorth,1)));
 
-    // Top intraday stock mover (across tracked stocks)
+    // Top intraday stock mover (across holdings)
     const topMover = (() => {
-      const tickers = trackedStocks.filter(s => s.ticker).map(s => s.ticker.toUpperCase());
+      const tickers = Array.from(new Set(stocks.filter(s => s && s.name && String(s.name).trim()).map(s => String(s.name).trim().toUpperCase())));
       let best = null;
       tickers.forEach(t => {
         const p = livePrices[t];
@@ -52575,7 +52540,7 @@ function MuzzApp() {
         {/* HEADER — Investments with Research built in */}
         {(() => {
           const INVEST_GROUPS = [
-            { id:'portfolio', label:'Portfolio', tabs:[ {id:'portfolio',label:'Holdings'}, {id:'livePrices',label:'Live prices'}, {id:'performance',label:'Performance'} ] },
+            { id:'portfolio', label:'Portfolio', tabs:[ {id:'portfolio',label:'Holdings'} ] },
             { id:'research',  label:'Research',  tabs:[ {id:'researchHome',label:'Overview'}, {id:'research',label:'Notes'}, {id:'researchMap',label:'Map'}, {id:'futurePortfolio',label:'Watchlist'}, {id:'coverage',label:'Coverage'} ] },
             { id:'markets',   label:'Markets',   tabs:[ {id:'marketCaps',label:'Market caps'}, {id:'allAssets',label:'Top 30'}, {id:'sp500',label:'S&P 500'}, {id:'superinvestors',label:'Superinvestors'} ] },
             { id:'learn',     label:'Learn',     tabs:[ {id:'knowledge',label:'Guide'}, {id:'accounting',label:'Accounting'} ] },
@@ -52596,9 +52561,11 @@ function MuzzApp() {
                 </div>
                 <Segmented value={group.id} onChange={(gid) => { const g = INVEST_GROUPS.find(x => x.id === gid); if (g) setInvestmentsSubTab(g.tabs[0].id); }}
                   options={INVEST_GROUPS.map(g => ({ id: g.id, label: g.label }))} />
+                {group.tabs.length > 1 && (
                 <div style={{marginTop:"10px"}}>
                   <Segmented value={selected} onChange={setInvestmentsSubTab} options={group.tabs} />
                 </div>
+                )}
               </div>
             </div>
           );
@@ -53181,6 +53148,41 @@ function MuzzApp() {
 
           {investmentsSubTab === 'portfolio' && (
             <>
+
+              {/* Live prices — merged into Holdings (was a separate tab) */}
+              {(() => {
+                const holdingTickers = Array.from(new Set(stocks.filter(x => x && !x.manualMode && x.name && String(x.name).trim()).map(x => String(x.name).trim().toUpperCase())));
+                const pricedCount = holdingTickers.filter(t => livePrices[t]?.c > 0).length;
+                const refreshPrices = async () => {
+                  if (holdingTickers.length === 0) return;
+                  setPricesLoading(true);
+                  try {
+                    const response = await fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers: holdingTickers}) });
+                    if (!response.ok) throw new Error('API error');
+                    const data = await response.json();
+                    if (data.prices) { setLivePrices(prev => ({...prev, ...data.prices})); setPricesLastUpdated(new Date().toLocaleTimeString()); }
+                  } catch (err) { console.error('Failed to fetch prices:', err); }
+                  setPricesLoading(false);
+                };
+                if (holdingTickers.length === 0) return null;
+                return (
+                  <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                    <div style={{minWidth:0}}>
+                      <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,display:"flex",alignItems:"center",gap:"8px"}}>
+                        <span style={{width:"8px",height:"8px",borderRadius:"50%",background:pricedCount>0?"#30D158":"rgba(235,235,245,0.3)",flexShrink:0}} />
+                        Live prices
+                      </div>
+                      <div style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginTop:"2px"}}>
+                        {pricedCount} of {holdingTickers.length} holdings priced{pricesLastUpdated ? ` · updated ${pricesLastUpdated}` : ''} · up to 15 min delayed
+                      </div>
+                    </div>
+                    <button onClick={refreshPrices} disabled={pricesLoading}
+                      style={{flexShrink:0,padding:"8px 16px",borderRadius:"999px",border:"none",background:"rgba(10,132,255,0.18)",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:600,cursor:pricesLoading?"default":"pointer",opacity:pricesLoading?0.6:1}}>
+                      {pricesLoading ? 'Updating…' : 'Refresh'}
+                    </button>
+                  </div>
+                );
+              })()}
 
               {/* Stocks Input */}
               <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(10,132,255,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
@@ -65221,8 +65223,6 @@ function MuzzApp() {
                 { id:'coverage',        glyph:'◇', label:'Coverage',          desc:'Company library' },
               ]},
               { title:'Live Data', items:[
-                { id:'livePrices',      glyph:'⊕', label:'Live Prices',       desc:'Investment returns' },
-                { id:'performance',     glyph:'↗', label:'Performance',       desc:'Returns over time' },
                 { id:'marketCaps',      glyph:'▤', label:'Market Caps',       desc:'Top companies by industry' },
                 { id:'allAssets',       glyph:'◈', label:'All Assets',        desc:'Top 30 by market cap' },
               ]},
@@ -65342,271 +65342,6 @@ function MuzzApp() {
               </div>
             );
           })()}
-
-          {investmentsSubTab === 'livePrices' && (
-            <>
-              {/* Live Stock Prices */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"12px",overflow:"hidden",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div>
-                      <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0",display:"flex",alignItems:"center",gap:"8px"}}>// Live Stock Prices</h2>
-                      <p style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"4px"}}>Track stocks worldwide with real-time prices & profit/loss</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {pricesLastUpdated && (
-                        <span style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>Updated: {pricesLastUpdated}</span>
-                      )}
-                    <button
-                      onClick={async () => {
-                        const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
-                        if (tickers.length === 0) return;
-                        setPricesLoading(true);
-                        try {
-                          const response = await fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) });
-                          if (!response.ok) throw new Error('API error');
-                          const data = await response.json();
-                          if (data.prices) { setLivePrices(data.prices); setPricesLastUpdated(new Date().toLocaleTimeString()); }
-                        } catch (err) { console.error('Failed to fetch prices:', err); }
-                        setPricesLoading(false);
-                      }}
-                      disabled={pricesLoading || trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').length === 0}
-                      style={{padding:"6px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",color:"rgba(10,132,255,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                    >
-                      {pricesLoading ? 'LOADING...' : 'REFRESH PRICES'}
-                    </button>
-                  </div>
-                </div>
-                </div>
-                <div style={{padding:"14px 16px"}}>
-                  {trackedStocks.length === 0 ? (
-                    <div style={{padding:"32px 16px",textAlign:"center"}}><div style={{fontSize:"13px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px"}}>No Stocks Tracked Yet</div><div style={{fontSize:"12px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Add A US Stock Below, Then Hit Refresh Prices</div></div>
-                  ) : (
-                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                      {/* Summary Banner */}
-                      {Object.keys(livePrices).length > 0 && (() => {
-                        let totalInvested = 0;
-                        let totalCurrent = 0;
-                        trackedStocks.forEach(s => {
-                          const ticker = s.ticker?.toUpperCase() || '';
-                          const price = (ticker && livePrices[ticker]?.c) || 0;
-                          const shares = parseFloat(s.shares) || 0;
-                          const avg = parseFloat(s.avgCost) || 0;
-                          if (price > 0 && shares > 0) {
-                            totalInvested += avg * shares;
-                            totalCurrent += price * shares;
-                          }
-                        });
-                        const totalPL = totalCurrent - totalInvested;
-                        const totalPLPct = totalInvested > 0 ? ((totalPL / totalInvested) * 100) : 0;
-                        return totalInvested > 0 ? (
-                          <div style={{padding:"12px 16px",borderRadius:"12px",border:`0.5px solid ${totalPL >= 0 ? "rgba(10,132,255,0.3)" : "rgba(255,69,58,0.3)"}`,marginBottom:"10px",...LIQUID_GLASS}}>
-                            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",textAlign:"center"}}>
-                              <div>
-                                <div style={{fontSize:"11px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total Cost</div>
-                                <div style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                              </div>
-                              <div>
-                                <div style={{fontSize:"11px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Market Value</div>
-                                <div style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                              </div>
-                              <div>
-                                <div style={{fontSize:"11px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total P/L</div>
-                                <div style={{fontSize:"16px",fontFamily:SANS_FONT,fontWeight:600,color:totalPL >= 0 ? "rgba(10,132,255,0.9)" : "rgba(255,69,58,0.9)"}}>
-                                  {totalPL >= 0 ? '+' : ''}${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                  <span className="text-xs sm:text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ) : null;
-                      })()}
-
-                      {/* Stock Cards */}
-                      {trackedStocks.map((stock) => {
-                        const isEditing = editingTrackedStockId === stock.id;
-                        const ticker = stock.ticker?.toUpperCase() || '';
-                        const priceData = ticker ? livePrices[ticker] : null;
-                        const currentPrice = priceData?.c || 0;
-                        const shares = parseFloat(stock.shares) || 0;
-                        const avgCost = parseFloat(stock.avgCost) || 0;
-                        const costBasis = shares * avgCost;
-                        const marketValue = shares * currentPrice;
-                        const pl = marketValue - costBasis;
-                        const plPercent = costBasis > 0 ? ((pl / costBasis) * 100) : 0;
-                        const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
-
-                        return (
-                          <div key={stock.id} style={{background:isEditing?(researchMode?"rgba(10,132,255,0.08)":"rgba(10,132,255,0.06)"):"rgba(28,28,30,0.5)",border:`0.5px solid ${researchMode?"rgba(10,132,255,0.25)":"rgba(10,132,255,0.2)"}`,borderRadius:"12px",overflow:"hidden",transition:"all 0.15s"}}>
-                            {/* Compact row */}
-                            <button onClick={() => setEditingTrackedStockId(isEditing ? null : stock.id)}
-                              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:researchMode?"rgba(10,132,255,0.95)":"#0A84FF",boxShadow:researchMode?"0 0 6px rgba(10,132,255,0.6)":"0 0 6px rgba(10,132,255,0.5)",flexShrink:0}}/>
-                              <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                                <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:600,letterSpacing:"0",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
-                                  <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{ticker || <span style={{color:"rgba(235,235,245,0.4)",fontWeight:500,letterSpacing:"0"}}>Unset ticker</span>}</span>
-                                  {ticker && (() => {
-                                    const covered = !!findCoverageEntry(ticker);
-                                    return (
-                                      <span
-                                        title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
-                                        onClick={(e) => { e.stopPropagation(); openTickerInCoverage(ticker); }}
-                                        style={{
-                                          fontSize:"12px", padding:"2px 6px",
-                                          background: covered ? "rgba(10,132,255,0.12)" : "rgba(235,235,245,0.08)",
-                                          border: `0.5px solid ${covered ? "rgba(10,132,255,0.5)" : "rgba(235,235,245,0.3)"}`,
-                                          borderRadius:"2px",
-                                          color: covered ? "rgba(10,132,255,0.95)" : "rgba(235,235,245,0.65)",
-                                          letterSpacing:"0", fontWeight:600, flexShrink:0, cursor:"pointer",
-                                        }}
-                                      >
-                                        {covered ? '◆ COVERED' : '○ NOT COVERED'}
-                                      </span>
-                                    );
-                                  })()}
-                                </div>
-                                <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.55)"}}>
-                                  {shares > 0 ? `${shares} share${shares!==1?'s':''}` : 'No shares'}{avgCost > 0 ? ` @ $${avgCost.toFixed(2)}` : ''}{currentPrice > 0 ? ` · ${dailyChange >= 0 ? '▲' : '▼'} ${Math.abs(dailyChange).toFixed(2)}%` : ''}
-                                </div>
-                              </div>
-                              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                                {currentPrice > 0 && (
-                                  <div style={{textAlign:"right"}}>
-                                    <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#0A84FF",fontWeight:600}}>${currentPrice.toFixed(2)}</div>
-                                    {costBasis > 0 && (
-                                      <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:pl >= 0 ? "rgba(10,132,255,0.9)" : "rgba(255,69,58,0.9)",fontWeight:600}}>{pl >= 0 ? '+' : ''}{plPercent.toFixed(1)}%</div>
-                                    )}
-                                  </div>
-                                )}
-                                <span style={{fontSize:"14px",color:researchMode?"rgba(10,132,255,0.7)":"rgba(10,132,255,0.55)",fontFamily:SANS_FONT}}>{isEditing?'⌄':'›'}</span>
-                              </div>
-                            </button>
-
-                            {/* Expanded edit panel */}
-                            {isEditing && (
-                              <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(255,255,255,0.14)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                                <div>
-                                  <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>TICKER (US STOCKS)</div>
-                                  <input
-                                    type="text"
-                                    value={stock.ticker}
-                                    onFocus={scrollInputIntoView}
-                                    onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
-                                    placeholder="AAPL"
-                                    style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,letterSpacing:"0",padding:"8px 10px",outline:"none"}}
-                                  />
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                                  <div>
-                                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Shares</div>
-                                    <input
-                                      type="text"
-                                      inputMode="decimal"
-                                      value={stock.shares}
-                                      onFocus={scrollInputIntoView}
-                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
-                                      placeholder="0"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                                    />
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Avg Cost $</div>
-                                    <input
-                                      type="text"
-                                      inputMode="decimal"
-                                      value={stock.avgCost}
-                                      onFocus={scrollInputIntoView}
-                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
-                                      placeholder="0.00"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                                    />
-                                  </div>
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                                  <div>
-                                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Live Price</div>
-                                    {currentPrice > 0 ? (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",fontFamily:SANS_FONT,fontSize:"12px",color:"#FFFFFF"}}>
-                                        <div style={{fontWeight:700}}>${currentPrice.toFixed(2)}</div>
-                                        <div style={{fontSize:"13px",fontWeight:600,color:dailyChange >= 0 ? "rgba(10,132,255,0.9)" : "rgba(255,69,58,0.9)"}}>
-                                          {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.5)"}}>—</div>
-                                    )}
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Profit / Loss</div>
-                                    {currentPrice > 0 && costBasis > 0 ? (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,background:pl >= 0 ? "rgba(10,132,255,0.08)" : "rgba(255,69,58,0.08)",border:`0.5px solid ${pl >= 0 ? "rgba(10,132,255,0.3)" : "rgba(255,69,58,0.3)"}`,color:pl >= 0 ? "rgba(10,132,255,0.9)" : "rgba(255,69,58,0.9)"}}>
-                                        <div style={{fontWeight:700}}>{pl >= 0 ? '+' : ''}${pl.toFixed(2)}</div>
-                                        <div style={{fontSize:"13px"}}>{plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%</div>
-                                      </div>
-                                    ) : (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.5)"}}>—</div>
-                                    )}
-                                  </div>
-                                </div>
-                                <button onClick={() => { setTrackedStocks(prev => prev.filter(s => s.id !== stock.id)); setEditingTrackedStockId(null); }}
-                                  style={{alignSelf:"flex-end",fontSize:"13px",color:"rgba(255,69,58,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(255,69,58,0.06)",border:"0.5px solid rgba(255,69,58,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>Delete</button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Add Tracked Stock Button */}
-                  <div style={{marginTop:"12px"}}>
-                    <button
-                      onClick={() => { const id = Date.now(); setTrackedStocks(prev => [...prev, { id, ticker: '', shares: '', avgCost: '' }]); setEditingTrackedStockId(id); }}
-                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(10,132,255,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(10,132,255,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(10,132,255,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"11px",letterSpacing:"0",cursor:"pointer"}}
-                    >
-                      + Add Tracked Stock
-                    </button>
-                  </div>
-
-                  {/* Popular Tickers */}
-                  <div className="mt-4 pt-4 border-t">
-                    <p className="text-xs text-gray-400 font-medium mb-2">Quick Add Popular Tickers:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { ticker: 'SPY', name: 'S&P 500' },
-                        { ticker: 'QQQ', name: 'Nasdaq' },
-                        { ticker: 'DIA', name: 'Dow Jones' },
-                        { ticker: 'VOO', name: 'Vanguard S&P' },
-                        { ticker: 'AAPL', name: 'Apple' },
-                        { ticker: 'MSFT', name: 'Microsoft' },
-                        { ticker: 'GOOGL', name: 'Google' },
-                        { ticker: 'AMZN', name: 'Amazon' },
-                        { ticker: 'TSLA', name: 'Tesla' },
-                        { ticker: 'NVDA', name: 'Nvidia' },
-                        { ticker: 'META', name: 'Meta' },
-                        { ticker: 'BRK.B', name: 'Berkshire' }
-                      ].map((s, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            if (!trackedStocks.find(t => t.ticker?.toUpperCase() === s.ticker)) {
-                              setTrackedStocks(prev => [...prev, { id: Date.now() + i, ticker: s.ticker, shares: '', avgCost: '' }]);
-                            }
-                          }}
-                          style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",color:"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
-                        >
-                          <span className="font-bold text-green-600">{s.ticker}</span>
-                          <span className="text-gray-400">{s.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] text-gray-400 mt-3">Prices from Yahoo Finance • May be up to 15 min delayed • Global coverage: US, ASX (.AX), LSE (.L), TSX (.TO), etc.</p>
-                </div>
-              </div>
-            </>
-          )}
 
           {/* FUTURE PORTFOLIO TAB */}
 
@@ -67101,110 +66836,6 @@ function MuzzApp() {
             </>
           )}
 
-          {investmentsSubTab === 'performance' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"12px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px",backgroundSize:"20px 20px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(10,132,255,0.6)'}}>Company Performance</div>
-                <div className="flex gap-3">
-                  <input
-                    value={perfTicker}
-                    onChange={e => setPerfTicker(e.target.value.toUpperCase())}
-                    onKeyDown={e => e.key === 'Enter' && fetchPerformance()}
-                    placeholder="e.g. AAPL, GOOG, BRK-B"
-                    className="flex-1 px-4 py-3 rounded-xl bg-transparent text-white font-bold text-lg focus:outline-none"
-                    style={{background:'rgba(10,132,255,0.05)',border:'0.5px solid rgba(255,255,255,0.14)'}}
-                  />
-                  <button onClick={fetchPerformance} disabled={perfLoading || !perfTicker.trim()}
-                    className="px-5 py-3 rounded-xl font-bold text-white flex-shrink-0"
-                    style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(10,132,255,0.9),rgba(180,110,10,0.9))' : 'rgba(255,255,255,0.06)'}}>
-                    {perfLoading ? '⏳' : '→ Go'}
-                  </button>
-                </div>
-                {perfError && <div className="text-sm" style={{color:'rgba(255,69,58,0.8)'}}>{perfError}</div>}
-              </div>
-              {/* SAVED LOOKUPS — grouped by industry, tap to re-run */}
-              {(perfSaved || []).length > 0 && (
-                <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"14px",padding:"14px 16px"}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(10,132,255,0.6)',letterSpacing:"0",marginBottom:'10px'}}>Saved Lookups</div>
-                  {Object.entries((perfSaved || []).reduce((m, p) => { const k = p.industry || 'Other'; (m[k] = m[k] || []).push(p); return m; }, {})).sort((a, b) => a[0].localeCompare(b[0])).map(([ind, rows]) => (
-                    <div key={ind} style={{marginBottom:'10px'}}>
-                      <div style={{fontSize:"11px",color:'rgba(235,235,245,0.6)',fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,textTransform:'uppercase',marginBottom:'6px'}}>{ind} · {rows.length}</div>
-                      <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
-                        {rows.map(p => (
-                          <span key={p.ticker} style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'4px 8px 4px 10px',background: perfData && perfData.ticker === p.ticker ? 'rgba(10,132,255,0.16)' : 'rgba(10,132,255,0.05)',border:`1px solid ${perfData && perfData.ticker === p.ticker ? 'rgba(10,132,255,0.7)' : 'rgba(10,132,255,0.2)'}`,borderRadius:"12px"}}>
-                            <button onClick={() => { setPerfTicker(p.ticker); fetchPerformance(p.ticker); }}
-                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:'11px',color:'#0A84FF',fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"0"}}>{p.ticker}</button>
-                            <button onClick={() => setPerfSaved(prev => (prev || []).filter(x => x.ticker !== p.ticker))}
-                              style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:"13px",color:'rgba(235,235,245,0.5)',lineHeight:1}}>✕</button>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {perfData && (
-                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                  <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"12px",padding:"14px 16px",backgroundSize:"20px 20px"}}>
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-2xl font-black tracking-widest" style={{color:'#0A84FF'}}>{perfData.ticker}</div>
-                      <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
-                    </div>
-                    <div className="text-xs" style={{color:'rgba(235,235,245,0.5)'}}>Current Price (USD)</div>
-                  </div>
-                  <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"12px",overflow:"hidden",backgroundSize:"20px 20px"}}>
-                    <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(10,132,255,0.05)',borderBottom:'0.5px solid rgba(255,255,255,0.14)',color:'rgba(10,132,255,0.5)'}}>
-                      <div>Period</div><div style={{textAlign:"center"}}>Change</div><div className="text-right">Return</div>
-                    </div>
-                    {[
-                      {key:'1d', label:'1 Day'},
-                      {key:'5d', label:'1 Week'},
-                      {key:'1mo', label:'1 Month'},
-                      {key:'3mo', label:'3 Months'},
-                      {key:'6mo', label:'6 Months'},
-                      {key:'1y', label:'1 Year'},
-                      {key:'5y', label:'5 Years'},
-                    ].map(({key, label}) => {
-                      const change = perfData.results[key]?.change;
-                      const isPos = change > 0;
-                      const isNeg = change < 0;
-                      const color = isPos ? '#0A84FF' : isNeg ? '#FF453A' : 'rgba(235,235,245,0.5)';
-                      return (
-                        <div key={key} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 1fr 1fr',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                          <div className="text-white text-sm font-medium">{label}</div>
-                          <div style={{textAlign:"center"}}>
-                            <span className="text-sm font-bold" style={{color}}>
-                              {change != null ? `${isPos?'+':''}${change.toFixed(2)}%` : '—'}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-xs px-2 py-1 rounded-lg" style={{
-                              background: isPos ? 'rgba(10,132,255,0.1)' : isNeg ? 'rgba(255,69,58,0.1)' : 'rgba(255,255,255,0.05)',
-                              color, border: `1px solid ${isPos ? 'rgba(10,132,255,0.2)' : isNeg ? 'rgba(255,69,58,0.2)' : 'rgba(255,255,255,0.1)'}`
-                            }}>
-                              {isPos ? '↑ Up' : isNeg ? '↓ Down' : '— Flat'}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div style={{padding:"12px 14px",background:"rgba(10,132,255,0.05)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"3px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",textAlign:"center"}}>
-                    💡 Yahoo Finance data · USD · Not financial advice
-                  </div>
-                </div>
-              )}
-              {!perfData && !perfLoading && (
-                <div style={{padding:"32px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"12px",textAlign:"center"}}>
-                  
-                  <div className="text-white font-bold mb-1">Search any stock</div>
-                  <div className="text-sm" style={{color:'rgba(235,235,245,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
-                </div>
-              )}
-            </div>
-          )}
-
 
           {investmentsSubTab === 'accounting' && (
             <>
@@ -67991,64 +67622,78 @@ function MuzzApp() {
     const goalDays = weekDays.filter(d => (dailySteps[d.date]||0) >= stepsGoal).length;
     const bestDay = weekDays.reduce((best,d) => (dailySteps[d.date]||0) > (dailySteps[best?.date]||0) ? d : best, null);
 
-    // Workout plan state — 4 weeks × 7 days
-    const currentWeek = workoutSubWeek || 1;
-    const setCurrentWeek = (w) => setWorkoutSubWeek(w);
-    const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
-    const updateWorkout = (dayKey, field, value) => {
-      setWorkoutPlan(prev => {
-        const next = {...(prev||{weeks:{},stepsGoal:10000})};
-        next.weeks = {...(next.weeks||{})};
-        next.weeks[currentWeek] = {...(next.weeks[currentWeek]||{})};
-        next.weeks[currentWeek][dayKey] = {...(next.weeks[currentWeek][dayKey]||{}), [field]: value};
-        return next;
-      });
+    // ── Workout log — one entry per date: workoutPlan.log[YYYY-MM-DD] = { muscles:{Shoulders:3}, exercises:[...] }
+    // Basic mode logs sets per muscle group; Advanced logs individual exercises. Mode is remembered.
+    const MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Glutes','Abs','Forearms','Cardio'];
+    const gymLog = (workoutPlan && workoutPlan.log) || {};
+    const gymMode = workoutPlan?.mode === 'advanced' ? 'advanced' : 'basic';
+    const setGymMode = (m) => setWorkoutPlan(prev => ({...(prev||{weeks:{},stepsGoal:10000}), mode: m}));
+    const parseISO = (iso) => { const [y,m,d] = String(iso).split('-').map(Number); return new Date(y, (m||1)-1, d||1); };
+    const selDate = gymDate || today;
+    const selEntry = gymLog[selDate] || {};
+    const selMuscles = selEntry.muscles || {};
+    const exerciseList = Array.isArray(selEntry.exercises) ? selEntry.exercises : [];
+    const entryHasData = (e) => !!e && ((e.muscles && Object.values(e.muscles).some(v => v > 0)) || (Array.isArray(e.exercises) && e.exercises.length > 0));
+    const entrySets = (e) => {
+      if (!e) return 0;
+      const m = Object.values(e.muscles || {}).reduce((a, v) => a + (v || 0), 0);
+      const x = (Array.isArray(e.exercises) ? e.exercises : []).reduce((a, ex) => a + (parseInt(ex.sets) || 0), 0);
+      return m + x;
     };
+    // Functional update of one date's entry; empty entries are pruned
+    const updateEntry = (date, fn) => setWorkoutPlan(prev => {
+      const base = {...(prev||{weeks:{},stepsGoal:10000})};
+      const log = {...(base.log||{})};
+      const nextEntry = fn(log[date] || {});
+      if (entryHasData(nextEntry)) log[date] = nextEntry; else delete log[date];
+      base.log = log;
+      return base;
+    });
+    const bumpMuscle = (muscle, delta) => updateEntry(selDate, cur => {
+      const mu = {...(cur.muscles||{})};
+      const v = Math.max(0, (mu[muscle]||0) + delta);
+      if (v > 0) mu[muscle] = v; else delete mu[muscle];
+      return {...cur, muscles: mu};
+    });
+    const setExercises = (fn) => updateEntry(selDate, cur => ({...cur, exercises: fn(Array.isArray(cur.exercises) ? cur.exercises : [])}));
 
-    // Exercise helpers — operate on workoutPlan.weeks[w][dayKey].exercises array
-    const addExercise = (dayKey) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      const newRow = { id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false };
-      updateWorkout(dayKey, 'exercises', [...list, newRow]);
-    };
-    const updateExercise = (dayKey, exId, field, value) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      const updated = list.map(e => e.id === exId ? {...e, [field]: value} : e);
-      updateWorkout(dayKey, 'exercises', updated);
-    };
-    const removeExercise = (dayKey, exId) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
+    // Week strip for the selected date
+    const selD = parseISO(selDate);
+    const logMonday = new Date(selD); logMonday.setDate(selD.getDate() - ((selD.getDay() + 6) % 7));
+    const logWeek = Array.from({length:7}, (_, i) => { const d = new Date(logMonday); d.setDate(logMonday.getDate() + i); return { date: localISODate(d), letter: d.toLocaleDateString('en-AU',{weekday:'short'}).charAt(0), num: d.getDate() }; });
+    const shiftWeek = (n) => { const d = new Date(selD); d.setDate(selD.getDate() + n * 7); setGymDate(localISODate(d)); };
+    const weekIsCurrent = logWeek.some(d => d.date === today);
+    const weekSessions = logWeek.filter(d => entryHasData(gymLog[d.date])).length;
+    const weekMuscleTotals = {};
+    logWeek.forEach(d => { const mu = gymLog[d.date]?.muscles || {}; Object.entries(mu).forEach(([k, v]) => { weekMuscleTotals[k] = (weekMuscleTotals[k]||0) + (v||0); }); });
+    const weekExercises = logWeek.reduce((a, d) => a + ((gymLog[d.date]?.exercises || []).length), 0);
+    const thisWeekSessions = weekDays.filter(d => entryHasData(gymLog[d.date])).length;
+    // Most recent earlier session with exercises — for "Repeat last workout"
+    const lastAdvanced = Object.keys(gymLog).filter(k => k < selDate && Array.isArray(gymLog[k].exercises) && gymLog[k].exercises.length > 0).sort().pop();
+
+    // Exercise helpers (Advanced)
+    const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
+    const addExercise = () => setExercises(list => [...list, newExRow()]);
+    const updateExercise = (exId, field, value) => setExercises(list => list.map(e => e.id === exId ? {...e, [field]: value} : e));
+    const removeExercise = (exId) => setExercises(list => {
       const idx = list.findIndex(e => e.id === exId);
-      if (idx === -1) return;
+      if (idx === -1) return list;
       const removed = list[idx];
       let next = list.filter(e => e.id !== exId);
       // If the removed exercise ended a superset, the one before it no longer links forward
-      if (idx > 0 && (!removed.supersetWithNext || idx === list.length - 1)) {
-        next = next.map((e, i) => i === idx - 1 ? {...e, supersetWithNext: false} : e);
-      }
-      updateWorkout(dayKey, 'exercises', next);
-    };
-    // Superset helpers — an exercise with supersetWithNext:true is paired with the one below it
-    const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
-    const addSuperset = (dayKey) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      updateWorkout(dayKey, 'exercises', [...list, newExRow({ supersetWithNext: true }), newExRow()]);
-    };
-    const toggleSuperset = (dayKey, exId) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
+      if (idx > 0 && (!removed.supersetWithNext || idx === list.length - 1)) next = next.map((e, i) => i === idx - 1 ? {...e, supersetWithNext: false} : e);
+      return next;
+    });
+    const addSuperset = () => setExercises(list => [...list, newExRow({ supersetWithNext: true }), newExRow()]);
+    const toggleSuperset = (exId) => setExercises(list => {
       const idx = list.findIndex(e => e.id === exId);
-      if (idx === -1) return;
+      if (idx === -1) return list;
       const turningOn = !list[idx].supersetWithNext;
       let next = list.map((e, i) => i === idx ? {...e, supersetWithNext: turningOn} : e);
-      // Linking the last exercise needs a partner — add a blank one underneath
       if (turningOn && idx === list.length - 1) next = [...next, newExRow()];
-      updateWorkout(dayKey, 'exercises', next);
-    };
+      return next;
+    });
+    const repeatWorkout = (fromDate) => setExercises(() => (gymLog[fromDate]?.exercises || []).map(e => ({...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)})));
     // Group consecutive linked exercises: [[ex], [exA, exB], ...]
     const groupSupersets = (list) => {
       const groups = [];
@@ -68074,6 +67719,7 @@ function MuzzApp() {
     const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
     const fullDay = { Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday', Sun:'Sunday' };
     const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()];
+    const gymTabNow = gymWorkoutTab === 'steps' ? 'steps' : 'log';
     const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal || 1;
     const goalPct = Math.min(100, (stepsGoal / maxSteps) * 100);
     const fmtK = (n) => n >= 1000 ? `${(n/1000).toFixed(n >= 10000 ? 0 : 1)}k` : `${n}`;
@@ -68102,16 +67748,16 @@ function MuzzApp() {
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:BLUE,fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
             <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
-              {weekStepsTotal.toLocaleString()} steps this week{goalDays > 0 ? `, goal hit ${goalDays} ${goalDays === 1 ? 'day' : 'days'}` : ''}
+              {thisWeekSessions} {thisWeekSessions === 1 ? 'workout' : 'workouts'} this week · {weekStepsTotal.toLocaleString()} steps
             </div>
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-          <Segmented value={gymWorkoutTab||'steps'} onChange={setGymWorkoutTab} options={[{id:'steps',label:'Steps'},{id:'plan',label:'4-week plan'}]} />
+          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'Workouts'},{id:'steps',label:'Steps'}]} />
 
           {/* ─── STEPS ─── */}
-          {(gymWorkoutTab||'steps') === 'steps' && (
+          {gymTabNow === 'steps' && (
             <>
               {/* This week chart */}
               <div style={{...card,padding:"16px 16px 12px"}}>
@@ -68187,108 +67833,175 @@ function MuzzApp() {
           )}
 
           {/* ─── 4-WEEK PLAN ─── */}
-          {gymWorkoutTab === 'plan' && (
+          {/* ─── WORKOUTS (date-based log, Basic / Advanced) ─── */}
+          {gymTabNow === 'log' && (() => {
+            const selLabel = selDate === today ? 'Today' : parseISO(selDate).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'});
+            const muscleTotal = Object.values(selMuscles).reduce((a, v) => a + (v||0), 0);
+            const stepBtn = (label, onClick, disabled) => (
+              <button onClick={onClick} disabled={disabled} aria-label={label === '+' ? 'Add set' : 'Remove set'}
+                style={{width:"34px",height:"34px",borderRadius:"50%",border:"none",background:disabled?"rgba(255,255,255,0.05)":"rgba(255,255,255,0.12)",color:disabled?ter:"#FFFFFF",fontSize:"20px",fontWeight:500,lineHeight:1,cursor:disabled?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0}}>{label}</button>
+            );
+            return (
             <>
-              <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: `Week ${w}` }))} />
-
-              {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(dayKey => {
-                const d = workoutWeek[dayKey] || {};
-                const done = !!d.done;
-                const exerciseList = Array.isArray(d.exercises) ? d.exercises : [];
-                const legacyText = (typeof d.exercises === 'string') ? d.exercises : '';
-                const isToday = dayKey === todayKey;
-                const exGroups = groupSupersets(exerciseList);
-                const ssGroups = exGroups.filter(g => g.length > 1);
-
-                return (
-                  <div key={dayKey} style={card}>
-                    {/* Day header: done circle, day, workout name */}
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"14px 16px"}}>
-                      <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>updateWorkout(dayKey,'done',!done)}
-                        style={{width:"28px",height:"28px",marginTop:"2px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"15px",fontWeight:700,transition:"background 0.2s"}}>{done ? '✓' : ''}</button>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
-                        <textarea rows={1} placeholder="Push, legs, cardio, rest…" value={d.name||''} ref={growText} onInput={(e)=>growText(e.target)}
-                          onChange={e=>updateWorkout(dayKey,'name',e.target.value)} onFocus={scrollInputIntoView}
-                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                          style={{...bareArea,fontSize:"20px",fontWeight:700,marginTop:"1px"}} />
-                      </div>
-                    </div>
-
-                    {legacyText && (
-                      <div style={{margin:"0 16px 12px",padding:"10px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.06)"}}>
-                        <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginBottom:"4px"}}>Old note</div>
-                        <div style={{fontSize:"15px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,whiteSpace:"pre-wrap"}}>{legacyText}</div>
-                        <button onClick={()=>updateWorkout(dayKey,'exercises',[])} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"6px"}}>Clear old note</button>
-                      </div>
+              {/* Week strip */}
+              <div style={{...card,padding:"12px 12px 14px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"0 4px 10px"}}>
+                  <button onClick={() => shiftWeek(-1)} aria-label="Previous week" style={{...textBtn(BLUE),fontSize:"22px",padding:"0 6px"}}>‹</button>
+                  <div style={{textAlign:"center"}}>
+                    <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{weekIsCurrent ? 'This week' : `Week of ${parseISO(logWeek[0].date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}`}</div>
+                    <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"1px"}}>{weekSessions} {weekSessions === 1 ? 'workout' : 'workouts'}</div>
+                  </div>
+                  <button onClick={() => shiftWeek(1)} aria-label="Next week" style={{...textBtn(BLUE),fontSize:"22px",padding:"0 6px"}}>›</button>
+                </div>
+                <div style={{display:"flex",gap:"6px"}}>
+                  {logWeek.map(d => {
+                    const sel = d.date === selDate;
+                    const trained = entryHasData(gymLog[d.date]);
+                    const isTodayD = d.date === today;
+                    return (
+                      <button key={d.date} onClick={() => setGymDate(d.date)}
+                        style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",padding:"8px 0",borderRadius:"14px",border:"none",cursor:"pointer",background:sel?"rgba(10,132,255,0.22)":"transparent"}}>
+                        <span style={{fontSize:"12px",color:sel?"#FFFFFF":sec,fontFamily:SANS_FONT,fontWeight:600}}>{d.letter}</span>
+                        <span style={{width:"30px",height:"30px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"15px",fontFamily:SANS_FONT,fontWeight:isTodayD?700:500,color:trained?"#FFFFFF":(isTodayD?BLUE:"rgba(235,235,245,0.85)"),background:trained?GREEN:"transparent"}}>{d.num}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {(Object.keys(weekMuscleTotals).length > 0 || weekExercises > 0) && (
+                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"12px",padding:"0 4px"}}>
+                    {MUSCLES.filter(m => weekMuscleTotals[m]).map(m => (
+                      <span key={m} style={{padding:"4px 10px",borderRadius:"999px",background:"rgba(255,255,255,0.08)",fontSize:"13px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{m} <b style={{color:"#FFFFFF"}}>{weekMuscleTotals[m]}</b></span>
+                    ))}
+                    {weekExercises > 0 && (
+                      <span style={{padding:"4px 10px",borderRadius:"999px",background:"rgba(191,90,242,0.14)",fontSize:"13px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>Exercises <b style={{color:"#FFFFFF"}}>{weekExercises}</b></span>
                     )}
+                  </div>
+                )}
+              </div>
 
-                    {/* Exercises — linked exercises render together as a superset */}
-                    {exGroups.map(group => {
-                      const isSet = group.length > 1;
-                      const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
-                      const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
-                      const renderEx = (ex, gi) => (
-                      <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:sep,padding:"12px 16px 14px"}}>
-                        <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                          {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
-                          <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
-                            onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
-                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                            style={{...bareArea,fontWeight:600}} />
-                          <button aria-label="Remove exercise" onClick={()=>removeExercise(dayKey,ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
-                        </div>
-                        <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
-                          {numField('Sets', ex.sets, e=>updateExercise(dayKey,ex.id,'sets',e.target.value))}
-                          {numField('Reps', ex.reps, e=>updateExercise(dayKey,ex.id,'reps',e.target.value))}
-                          {numField('kg', ex.weight, e=>updateExercise(dayKey,ex.id,'weight',e.target.value), "decimal")}
-                        </div>
-                        <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
-                          {chip('Drop set', !!ex.dropSet, ()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet), BLUE)}
-                          {chip('To failure', !!ex.toFailure, ()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure), RED)}
-                          {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(dayKey,ex.id), PURPLE)}
-                        </div>
-                        {(ex.notes !== undefined && ex.notes !== '') ? (
-                          <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
-                            onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
-                            style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
-                        ) : (
-                          <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
-                        )}
-                      </div>
-                      );
-                      if (!isSet) return renderEx(group[0], 0);
+              {/* Day title + mode */}
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"12px",margin:"4px 4px 0"}}>
+                <div>
+                  <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.3px"}}>{selLabel}</div>
+                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"1px"}}>{entrySets(selEntry) > 0 ? `${entrySets(selEntry)} sets logged` : 'Nothing logged yet'}</div>
+                </div>
+                {selDate !== today && <button onClick={() => setGymDate(null)} style={{...textBtn(BLUE),fontSize:"15px"}}>Today</button>}
+              </div>
+              <Segmented value={gymMode} onChange={setGymMode} options={[{id:'basic',label:'Basic'},{id:'advanced',label:'Advanced'}]} />
+
+              {/* BASIC — sets per muscle group */}
+              {gymMode === 'basic' && (
+                <>
+                  <div style={card}>
+                    {MUSCLES.map((m, i) => {
+                      const n = selMuscles[m] || 0;
                       return (
-                        <div key={'ss_' + group[0].id} style={{borderTop:sep,padding:"10px 12px 12px"}}>
-                          <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
-                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
-                              <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
-                              <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
-                            </div>
-                            {group.map((ex, gi) => renderEx(ex, gi))}
-                          </div>
+                        <div key={m} style={{display:"flex",alignItems:"center",gap:"12px",minHeight:"54px",padding:"0 12px 0 16px",borderBottom:i<MUSCLES.length-1?sep:"none"}}>
+                          <span style={{flex:1,fontSize:"17px",fontFamily:SANS_FONT,color:n?"#FFFFFF":"rgba(235,235,245,0.85)",fontWeight:n?600:400,letterSpacing:"-0.2px"}}>{m}</span>
+                          {stepBtn('−', () => bumpMuscle(m, -1), n === 0)}
+                          <span style={{minWidth:"28px",textAlign:"center",fontSize:"20px",fontWeight:700,fontFamily:SANS_FONT,color:n?GREEN:ter}}>{n}</span>
+                          {stepBtn('+', () => bumpMuscle(m, 1), false)}
                         </div>
                       );
                     })}
+                  </div>
+                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"-6px 4px 0"}}>
+                    Tap + once per set. {exerciseList.length > 0 ? `This day also has ${exerciseList.length} ${exerciseList.length === 1 ? 'exercise' : 'exercises'} in Advanced.` : 'Switch to Advanced to log exercises, reps and weight.'}
+                  </div>
+                  {muscleTotal > 0 && (
+                    <button onClick={() => updateEntry(selDate, cur => ({...cur, muscles: {}}))} style={{...textBtn(RED),alignSelf:"center",marginTop:"4px",fontSize:"15px"}}>Clear sets for this day</button>
+                  )}
+                </>
+              )}
 
+              {/* ADVANCED — individual exercises */}
+              {gymMode === 'advanced' && (
+                <>
+                  {exerciseList.length === 0 && lastAdvanced && (
+                    <button onClick={() => repeatWorkout(lastAdvanced)}
+                      style={{...card,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"14px 16px",cursor:"pointer",textAlign:"left",color:"#FFFFFF",fontFamily:SANS_FONT}}>
+                      <span>
+                        <span style={{display:"block",fontSize:"17px",fontWeight:600}}>Repeat last workout</span>
+                        <span style={{display:"block",fontSize:"13px",color:sec,marginTop:"2px"}}>{parseISO(lastAdvanced).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {gymLog[lastAdvanced].exercises.length} exercises</span>
+                      </span>
+                      <span style={{color:BLUE,fontSize:"17px"}}>Copy</span>
+                    </button>
+                  )}
+                  <div style={card}>
+                    {exerciseList.length === 0 && (
+                      <div style={{padding:"18px 16px",fontSize:"15px",color:sec,fontFamily:SANS_FONT,textAlign:"center"}}>No exercises yet. Add one below.</div>
+                    )}
+                    {(() => {
+                      const exGroups = groupSupersets(exerciseList);
+                      const ssGroups = exGroups.filter(g => g.length > 1);
+                      return exGroups.map((group, groupIdx) => {
+                        const isSet = group.length > 1;
+                        const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
+                        const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
+                        const firstRow = groupIdx === 0;
+                        const renderEx = (ex, gi) => (
+                          <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:firstRow?"none":sep,padding:"12px 16px 14px"}}>
+                            <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                              {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
+                              <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
+                                onChange={e=>updateExercise(ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
+                                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                                style={{...bareArea,fontWeight:600}} />
+                              <button aria-label="Remove exercise" onClick={()=>removeExercise(ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
+                            </div>
+                            <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
+                              {numField('Sets', ex.sets, e=>updateExercise(ex.id,'sets',e.target.value))}
+                              {numField('Reps', ex.reps, e=>updateExercise(ex.id,'reps',e.target.value))}
+                              {numField('kg', ex.weight, e=>updateExercise(ex.id,'weight',e.target.value), "decimal")}
+                            </div>
+                            <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
+                              {chip('Drop set', !!ex.dropSet, ()=>updateExercise(ex.id,'dropSet',!ex.dropSet), BLUE)}
+                              {chip('To failure', !!ex.toFailure, ()=>updateExercise(ex.id,'toFailure',!ex.toFailure), RED)}
+                              {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(ex.id), PURPLE)}
+                            </div>
+                            {(ex.notes !== undefined && ex.notes !== '') ? (
+                              <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
+                                onChange={e=>updateExercise(ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
+                                style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
+                            ) : (
+                              <button onClick={()=>updateExercise(ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
+                            )}
+                          </div>
+                        );
+                        if (!isSet) return renderEx(group[0], 0);
+                        return (
+                          <div key={'ss_' + group[0].id} style={{borderTop:firstRow?"none":sep,padding:"10px 12px 12px"}}>
+                            <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
+                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
+                                <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
+                                <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
+                              </div>
+                              {group.map((ex, gi) => renderEx(ex, gi))}
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
                     <div style={{display:"flex",borderTop:sep}}>
-                      <button onClick={()=>addExercise(dayKey)} style={{flex:1,display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"}}>
+                      <button onClick={addExercise} style={{flex:1,display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"}}>
                         <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add exercise
                       </button>
-                      <button onClick={()=>addSuperset(dayKey)} style={{display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",borderLeft:sep,cursor:"pointer",color:PURPLE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left",whiteSpace:"nowrap"}}>
+                      <button onClick={addSuperset} style={{display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",borderLeft:sep,cursor:"pointer",color:PURPLE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left",whiteSpace:"nowrap"}}>
                         <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add superset
                       </button>
                     </div>
                   </div>
-                );
-              })}
-
-              <button onClick={() => {
-                if (!window.confirm("Clear ALL exercises across all 4 weeks? This can't be undone.")) return;
-                setWorkoutPlan(prev => { const next = {...(prev||{weeks:{},stepsGoal:10000})}; next.weeks = {}; return next; });
-              }} style={{...textBtn(RED),alignSelf:"center",marginTop:"6px"}}>Clear all 4 weeks</button>
+                  {muscleTotal > 0 && (
+                    <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"-6px 4px 0"}}>This day also has {muscleTotal} sets logged in Basic.</div>
+                  )}
+                  {exerciseList.length > 0 && (
+                    <button onClick={() => { if (window.confirm('Clear all exercises for this day?')) setExercises(() => []); }} style={{...textBtn(RED),alignSelf:"center",marginTop:"4px",fontSize:"15px"}}>Clear exercises for this day</button>
+                  )}
+                </>
+              )}
             </>
-          )}
+            );
+          })()}
         </div>
       </div>
     );
