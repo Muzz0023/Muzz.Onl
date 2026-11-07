@@ -67930,7 +67930,7 @@ function MuzzApp() {
                   <div key={dayKey} style={{...card,borderRadius:"16px",opacity:rest?0.6:1}}>
                     {rest ? (
                       <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
-                        <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"7px",alignSelf:"flex-end",marginBottom:"6px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"11px",alignSelf:"flex-start",marginTop:"4px"}}>z</span></span>
+                        <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"11px",alignSelf:"flex-end",marginBottom:"4px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"7px",alignSelf:"flex-start",marginTop:"6px"}}>z</span></span>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
                           <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
