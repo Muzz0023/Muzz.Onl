@@ -53536,9 +53536,9 @@ function MuzzApp() {
                       <svg width="250" height="250" viewBox="0 0 250 250">
                         {(() => {
                           const colors = [
-                            '#0A84FF', '#8B5CF6', '#EC4899', '#0A84FF', '#0A84FF',
-                            '#6366F1', '#FF453A', '#0A84FF', '#F97316', '#84CC16',
-                            '#06B6D4', '#0A84FF', '#F43F5E', '#0A84FF', '#EAB308'
+                            '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                            '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                            '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                           ];
                           const sortedStocks = [...filledStocks].sort((a, b) => convertToDisplay(b.currentValue, b.currency || 'USD') - convertToDisplay(a.currentValue, a.currency || 'USD'));
                           let cumulativePercent = 0;
@@ -53585,9 +53585,9 @@ function MuzzApp() {
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 max-h-48 overflow-y-auto">
                       {(() => {
                         const colors = [
-                          '#0A84FF', '#8B5CF6', '#EC4899', '#0A84FF', '#0A84FF',
-                          '#6366F1', '#FF453A', '#0A84FF', '#F97316', '#84CC16',
-                          '#06B6D4', '#0A84FF', '#F43F5E', '#0A84FF', '#EAB308'
+                          '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                          '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                          '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                         ];
                         const sortedStocks = [...filledStocks].sort((a, b) => convertToDisplay(b.currentValue, b.currency || 'USD') - convertToDisplay(a.currentValue, a.currency || 'USD'));
                         return sortedStocks.map((stock, i) => {
@@ -53625,9 +53625,9 @@ function MuzzApp() {
                       <svg width="250" height="250" viewBox="0 0 250 250">
                         {(() => {
                           const colors = [
-                            '#0A84FF', '#0A84FF', '#8B5CF6', '#0A84FF', '#FF453A',
-                            '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1',
-                            '#0A84FF', '#0A84FF', '#0A84FF', '#0EA5E9', '#D946EF'
+                            '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                            '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                            '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                           ];
                           let cumulativePercent = 0;
                           return stocksByIndustry.map((ind, i) => {
@@ -53672,9 +53672,9 @@ function MuzzApp() {
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                       {(() => {
                         const colors = [
-                          '#0A84FF', '#0A84FF', '#8B5CF6', '#0A84FF', '#FF453A',
-                          '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1',
-                          '#0A84FF', '#0A84FF', '#0A84FF', '#0EA5E9', '#D946EF'
+                          '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                          '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                          '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                         ];
                         return stocksByIndustry.map((ind, i) => (
                           <div key={ind.name} className="flex items-center gap-2">
@@ -66356,9 +66356,9 @@ function MuzzApp() {
                           <svg width="250" height="250" viewBox="0 0 250 250">
                             {(() => {
                               const colors = [
-                                '#FF453A', '#F97316', '#0A84FF', '#EAB308', '#84CC16',
-                                '#0A84FF', '#0A84FF', '#06B6D4', '#0EA5E9', '#0A84FF',
-                                '#6366F1', '#8B5CF6', '#0A84FF', '#D946EF', '#EC4899'
+                                '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                                '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                                '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                               ];
                               let cumulativePercent = 0;
                               return declinedByIndustry.map((ind, i) => {
@@ -66403,9 +66403,9 @@ function MuzzApp() {
                         <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                           {(() => {
                             const colors = [
-                              '#FF453A', '#F97316', '#0A84FF', '#EAB308', '#84CC16',
-                              '#0A84FF', '#0A84FF', '#06B6D4', '#0EA5E9', '#0A84FF',
-                              '#6366F1', '#8B5CF6', '#0A84FF', '#D946EF', '#EC4899'
+                              '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
+                              '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
+                              '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
                             ];
                             return declinedByIndustry.map((ind, i) => (
                               <div key={ind.name} className="flex items-center gap-2">
