@@ -48846,8 +48846,8 @@ function MuzzApp() {
     };
 
     // KPI calculations
-    const overdueCount = reminders.filter(r => !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) < 0).length;
-    const thisWeekCount = reminders.filter(r => !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) >= 0 && getReminderDiff(r.date) <= 7).length;
+    const overdueCount = reminders.filter(r => !r.done && !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) < 0).length;
+    const thisWeekCount = reminders.filter(r => !r.done && !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) >= 0 && getReminderDiff(r.date) <= 7).length;
     const upcomingBdays = birthdays.filter(b => { const d = getBdayDiff(b.date); return d !== null && d <= 30; }).length;
     const pinnedCount = reminders.filter(r => r.permanent).length;
 
@@ -48855,7 +48855,21 @@ function MuzzApp() {
     const sec = "rgba(235,235,245,0.6)";
     const sep = "0.5px solid rgba(255,255,255,0.12)";
     const card = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"};
-    const groupLabel = {fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,margin:"8px 4px 8px"};
+    const groupLabel = {fontSize:"15px",fontWeight:600,color:sec,fontFamily:SANS_FONT,margin:"10px 2px 8px"};
+    const rowCard = {...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden"};
+    const rowList = {display:"flex",flexDirection:"column",gap:"8px"};
+    const tick = (on, onClick, label) => (
+      <button onClick={onClick} aria-label={label}
+        style={{width:"24px",height:"24px",marginTop:"1px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?"#0A84FF":"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
+        {on ? '✓' : ''}
+      </button>
+    );
+    const newRow = (label, onClick) => (
+      <button onClick={onClick} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+        <span style={{width:"24px",height:"24px",borderRadius:"50%",background:"#0A84FF",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px",lineHeight:1,flexShrink:0}}>+</span>
+        <span style={{color:"#0A84FF",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{label}</span>
+      </button>
+    );
     const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
     const bareText = {display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
     const datePill = {background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark",outline:"none",WebkitAppearance:"none",appearance:"none"};
@@ -48881,8 +48895,9 @@ function MuzzApp() {
       if (diff <= 7) return { text: `In ${diff} days`, color: "#0A84FF" };
       return { text: `In ${diff} days`, color: sec };
     };
-    const pinned = sortedReminders.filter(r => r.permanent);
-    const dated = sortedReminders.filter(r => !r.permanent);
+    const pinned = sortedReminders.filter(r => r.permanent && !r.done);
+    const dated = sortedReminders.filter(r => !r.permanent && !r.done);
+    const doneReminders = sortedReminders.filter(r => r.done);
     const headerSub = remindersSubTab === 'reminders'
       ? (overdueCount > 0 ? `${overdueCount} overdue, ${thisWeekCount} this week` : thisWeekCount > 0 ? `${thisWeekCount} this week` : reminders.length > 0 ? 'Nothing due this week' : '')
       : (birthdays.length > 0 ? (upcomingBdays > 0 ? `${upcomingBdays} in the next 30 days` : 'None in the next 30 days') : '');
@@ -48893,12 +48908,14 @@ function MuzzApp() {
       const isEditing = editingReminderId === reminder.id;
       const update = (changes) => setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, ...changes} : r));
       return (
-        <div key={reminder.id} style={{borderBottom:last?"none":sep}}>
+        <div key={reminder.id} style={{...rowCard,opacity:reminder.done?0.6:1}}>
           {!isEditing ? (
+            <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px"}}>
+            {tick(!!reminder.done, () => update({done: !reminder.done}), reminder.done ? 'Mark not done' : 'Mark done')}
             <button onClick={() => setEditingReminderId(reminder.id)}
-              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+              style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"12px",padding:0,background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",textDecoration:reminder.done?"line-through":"none",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
                 {!reminder.permanent && (
                   <div style={{fontFamily:SANS_FONT,fontSize:"15px",marginTop:"2px",color:rel?rel.color:sec}}>
                     {reminder.date ? `${new Date(reminder.date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${rel ? `, ${rel.text.charAt(0).toLowerCase()}${rel.text.slice(1)}` : ''}` : 'No date'}
@@ -48907,8 +48924,9 @@ function MuzzApp() {
               </div>
               <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px"}} />
             </button>
+            </div>
           ) : (
-            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px",background:"rgba(255,255,255,0.04)"}}>
+            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
               <textarea rows={1} autoFocus={!reminder.title} value={reminder.title} placeholder="New reminder"
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                 onChange={(e) => update({title: e.target.value})} style={bareText} />
@@ -48938,21 +48956,21 @@ function MuzzApp() {
       const isEditing = editingBdayId === bday.id;
       const update = (changes) => setBirthdays(prev => prev.map(b => b.id === bday.id ? {...b, ...changes} : b));
       return (
-        <div key={bday.id} style={{borderBottom:last?"none":sep}}>
+        <div key={bday.id} style={{...rowCard,border:diff===0?"0.5px solid rgba(10,132,255,0.6)":rowCard.border}}>
           {!isEditing ? (
             <button onClick={() => setEditingBdayId(bday.id)}
-              style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+              <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,color:"#FFFFFF",background:bday.category==='family'?"linear-gradient(135deg,#FF375F,#BF5AF2)":"linear-gradient(135deg,#0A84FF,#5E5CE6)"}}>{(bday.name||'?').trim().charAt(0).toUpperCase() || '?'}</span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || 'New birthday'}</div>
                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>
                   {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}{bday.category === 'family' ? ', family' : ''}
                 </div>
               </div>
-              {rel && <span style={{fontFamily:SANS_FONT,fontSize:"15px",color:rel.color,flexShrink:0,marginTop:"1px"}}>{rel.text}</span>}
-              <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px"}} />
+              {rel && <span style={{fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,color:rel.color === sec ? "rgba(235,235,245,0.75)" : "#FFFFFF",background:rel.color === sec ? "rgba(255,255,255,0.08)" : "rgba(10,132,255,0.35)",padding:"4px 10px",borderRadius:"999px",flexShrink:0}}>{rel.text}</span>}
             </button>
           ) : (
-            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px",background:"rgba(255,255,255,0.04)"}}>
+            <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
               <textarea rows={1} autoFocus={!bday.name} value={bday.name} placeholder="Name"
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
@@ -49039,13 +49057,23 @@ function MuzzApp() {
               {pinned.length > 0 && (
                 <div>
                   <div style={groupLabel}>Pinned</div>
-                  <div style={card}>{pinned.map((r, i) => renderReminderRow(r, i === pinned.length - 1))}</div>
+                  <div style={rowList}>{pinned.map((r, i) => renderReminderRow(r, i === pinned.length - 1))}</div>
                 </div>
               )}
               {dated.length > 0 && (
-                <div style={{marginTop:pinned.length > 0 ? "12px" : 0}}>
+                <div style={{marginTop:pinned.length > 0 ? "6px" : 0}}>
                   {pinned.length > 0 && <div style={groupLabel}>Upcoming</div>}
-                  <div style={card}>{dated.map((r, i) => renderReminderRow(r, i === dated.length - 1))}</div>
+                  <div style={rowList}>{dated.map((r, i) => renderReminderRow(r, i === dated.length - 1))}</div>
+                </div>
+              )}
+              {sortedReminders.length > 0 && newRow('New reminder', addReminder)}
+              {doneReminders.length > 0 && (
+                <div style={{marginTop:"6px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <div style={groupLabel}>Completed</div>
+                    <button onClick={() => setReminders(prev => prev.filter(r => !r.done))} style={{...textBtn("#0A84FF"),fontSize:"15px"}}>Clear</button>
+                  </div>
+                  <div style={rowList}>{doneReminders.map((r, i) => renderReminderRow(r, i === doneReminders.length - 1))}</div>
                 </div>
               )}
             </>
@@ -49073,8 +49101,9 @@ function MuzzApp() {
               })()}
 
               {sortedBirthdays.length > 0 && (
-                <div style={card}>{sortedBirthdays.map((b, i) => renderBirthdayRow(b, i === sortedBirthdays.length - 1))}</div>
+                <div style={rowList}>{sortedBirthdays.map((b, i) => renderBirthdayRow(b, i === sortedBirthdays.length - 1))}</div>
               )}
+              {sortedBirthdays.length > 0 && newRow('New birthday', addBirthday)}
             </>
           )}
         </div>
@@ -49333,6 +49362,25 @@ function MuzzApp() {
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
     const weekTaskItems = (() => { try { const i = JSON.parse(weeklyNote || '[]'); return Array.isArray(i) ? i.filter(t => t && String(t.text || '').trim()) : []; } catch { return []; } })();
     const weekTasksDone = weekTaskItems.filter(t => t.checked).length;
+    // Next birthday for the dashboard tile
+    const nextBday = (() => {
+      const t0 = new Date(); t0.setHours(0,0,0,0);
+      let best = null;
+      (birthdays || []).forEach(b => {
+        if (!b || !b.date) return;
+        const str = String(b.date).trim();
+        let m, day, month;
+        if ((m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) { month = +m[2]; day = +m[3]; }
+        else if ((m = str.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/))) { day = +m[1]; month = +m[2]; }
+        else return;
+        if (!(month >= 1 && month <= 12 && day >= 1 && day <= 31)) return;
+        let next = new Date(t0.getFullYear(), month - 1, day);
+        if (next < t0) next = new Date(t0.getFullYear() + 1, month - 1, day);
+        const diff = Math.round((next - t0) / 86400000);
+        if (!best || diff < best.diff) best = { name: b.name || 'Birthday', next, diff };
+      });
+      return best;
+    })();
 
     // Auto-fetch stock prices on dashboard load (from trackedStocks AND stocks holdings)
     const todayPriceKey = localISODate();
@@ -49681,14 +49729,17 @@ function MuzzApp() {
               { label:"Investments (AUD)", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
               { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
               { label:"Tasks this week", value:`${weekTasksDone}/${weekTaskItems.length}`, view:"tasks", onOpen:() => setTasksSubTab('weekly') },
-              { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, view:"assets" },
+              nextBday
+                ? { label:"Next birthday", value: nextBday.name, sub: `${nextBday.next.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · ${nextBday.diff === 0 ? 'today 🎉' : nextBday.diff === 1 ? 'tomorrow' : `in ${nextBday.diff} days`}`, view:"reminders", onOpen:() => setRemindersSubTab('birthdays') }
+                : { label:"Next birthday", value:"Add one", sub:"No birthdays yet", view:"reminders", onOpen:() => setRemindersSubTab('birthdays') },
             ].map(card => (
               <button key={card.label} onClick={() => { if (card.onOpen) card.onOpen(); setActiveView(card.view); }}
                 style={{...glass,padding:"14px 16px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",position:"relative"}}
                 onMouseEnter={onIn} onMouseLeave={onOut}>
                 <ChevronRight size={16} color={txt.tertiary} strokeWidth={2.5} style={{position:"absolute",top:"14px",right:"12px"}} />
                 <div style={{fontSize:"13px",color:txt.secondary,fontWeight:500}}>{card.label}</div>
-                <div style={{fontSize:"24px",color:txt.primary,fontWeight:700,letterSpacing:"-0.5px",marginTop:"8px",lineHeight:1.1}}>{card.value}</div>
+                <div style={{fontSize:"24px",color:txt.primary,fontWeight:700,letterSpacing:"-0.5px",marginTop:"8px",lineHeight:1.1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{card.value}</div>
+                {card.sub && <div style={{fontSize:"13px",color:txt.secondary,marginTop:"4px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{card.sub}</div>}
               </button>
             ))}
           </div>
