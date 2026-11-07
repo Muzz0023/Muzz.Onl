@@ -48864,6 +48864,32 @@ function MuzzApp() {
         {on ? '✓' : ''}
       </button>
     );
+    // Contact-style photo: crop to a centred square and shrink to 192px JPEG (~10–20 KB) before saving
+    const pickBdayPhoto = (file, onDone) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 192;
+          const side = Math.min(img.width, img.height);
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
+          try { onDone(canvas.toDataURL('image/jpeg', 0.8)); } catch (e) { console.error('Photo resize failed', e); }
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    };
+    const bdayAvatar = (bday, px) => (
+      <span style={{width:px,height:px,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",fontFamily:SANS_FONT,fontSize:Math.round(parseInt(px)*0.45)+"px",fontWeight:600,color:"#FFFFFF",background:bday.photo?"#000":(bday.category==='family'?"linear-gradient(135deg,#FF375F,#BF5AF2)":"linear-gradient(135deg,#0A84FF,#5E5CE6)")}}>
+        {bday.photo
+          ? <img src={bday.photo} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
+          : ((bday.name||'?').trim().charAt(0).toUpperCase() || '?')}
+      </span>
+    );
     const newRow = (label, onClick) => (
       <button onClick={onClick} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
         <span style={{width:"24px",height:"24px",borderRadius:"50%",background:"#0A84FF",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px",lineHeight:1,flexShrink:0}}>+</span>
@@ -48960,7 +48986,7 @@ function MuzzApp() {
           {!isEditing ? (
             <button onClick={() => setEditingBdayId(bday.id)}
               style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-              <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,color:"#FFFFFF",background:bday.category==='family'?"linear-gradient(135deg,#FF375F,#BF5AF2)":"linear-gradient(135deg,#0A84FF,#5E5CE6)"}}>{(bday.name||'?').trim().charAt(0).toUpperCase() || '?'}</span>
+              {bdayAvatar(bday, "42px")}
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || 'New birthday'}</div>
                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>
@@ -48971,6 +48997,21 @@ function MuzzApp() {
             </button>
           ) : (
             <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px",paddingTop:"4px"}}>
+                <label style={{cursor:"pointer",display:"block"}} aria-label={bday.photo ? 'Change photo' : 'Add photo'}>
+                  {bdayAvatar(bday, "88px")}
+                  <input type="file" accept="image/*" style={{display:"none"}}
+                    onChange={(e) => { const f = e.target.files && e.target.files[0]; pickBdayPhoto(f, (url) => update({photo: url})); e.target.value = ''; }} />
+                </label>
+                <div style={{display:"flex",gap:"18px"}}>
+                  <label style={{...textBtn("#0A84FF"),fontSize:"15px"}}>
+                    {bday.photo ? 'Change photo' : 'Add photo'}
+                    <input type="file" accept="image/*" style={{display:"none"}}
+                      onChange={(e) => { const f = e.target.files && e.target.files[0]; pickBdayPhoto(f, (url) => update({photo: url})); e.target.value = ''; }} />
+                  </label>
+                  {bday.photo && <button onClick={() => update({photo: ''})} style={{...textBtn("#FF453A"),fontSize:"15px"}}>Remove</button>}
+                </div>
+              </div>
               <textarea rows={1} autoFocus={!bday.name} value={bday.name} placeholder="Name"
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
