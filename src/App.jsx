@@ -48176,7 +48176,6 @@ function MuzzApp() {
   // Sidebar navigation items
   const navItems = [
     { id: "home", label: "Dashboard", icon: Home },
-    { id: "habits", label: "Habits", icon: Flame },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "gymworkout", label: "Gym", icon: Dumbbell, eliteOnly: true },
@@ -48509,7 +48508,6 @@ function MuzzApp() {
       { id:"diet", label:"DIET", icon:"◊", elite:true },
       { id:"gymworkout", label:"GYM", icon:"⊕", elite:true },
       { id:"tasks", label:"TASK", icon:"☰" },
-      { id:"habits", label:"HBIT", icon:"◍" },
       { id:"timetable", label:"TMTB", icon:"⊞", elite:true },
       { id:"reminders", label:"RMDR", icon:"◐" },
     ];
@@ -48593,7 +48591,7 @@ function MuzzApp() {
   const Sidebar = () => {
     // Glyph map for muzz items
     const muzzGlyphs = {
-      home:'◆', habits:'◍', tasks:'☰', countdowns:'◓', reminders:'◐',
+      home:'◆', tasks:'☰', countdowns:'◓', reminders:'◐',
       gym:'❤', gymworkout:'⊕', work:'⊢', diet:'◊', timetable:'⊞',
       varied:'$', assets:'▣', investments:'⌗',
       custom1:'◇', custom2:'◇', custom3:'◇',
@@ -48602,7 +48600,6 @@ function MuzzApp() {
     };
     const menuItems = [
       { section: 'LIFE',     id:'home',          label:'Dashboard'                    },
-      { section: 'LIFE',     id:'habits',        label:'Habits'                       },
       { section: 'LIFE',     id:'tasks',         label:'Tasks'                        },
       { section: 'LIFE',     id:'reminders',     label:'Reminders'                    },
       { section: 'HEALTH',   id:'gymworkout',    label:'Gym',             elite:true  },
@@ -68308,216 +68305,6 @@ function MuzzApp() {
 
 
   // ============================================
-  if (activeView === 'habits') {
-    const today = localISODate();
-
-    const toggleHabit = (habitId, date) => {
-      const key = `${habitId}:${date}`;
-      setHabitLog(prev => {
-        const updated = { ...prev };
-        if (updated[key]) delete updated[key];
-        else updated[key] = true;
-        return updated;
-      });
-    };
-
-    const getStreak = (habitId) => {
-      let streak = 0;
-      let d = new Date();
-      while (true) {
-        const dateStr = localISODate(d);
-        if (habitLog[`${habitId}:${dateStr}`]) { streak++; d.setDate(d.getDate() - 1); }
-        else break;
-      }
-      return streak;
-    };
-
-    const getBestStreak = (habitId) => {
-      let best = 0, current = 0;
-      const d = new Date();
-      for (let i = 365; i >= 0; i--) {
-        const dd = new Date(d); dd.setDate(d.getDate() - i);
-        const dateStr = localISODate(dd);
-        if (habitLog[`${habitId}:${dateStr}`]) { current++; best = Math.max(best, current); }
-        else current = 0;
-      }
-      return best;
-    };
-
-    const getLast31Days = () => {
-      const days = [];
-      for (let i = 30; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        days.push(localISODate(d));
-      }
-      return days;
-    };
-
-    const getLast7Days = () => {
-      const days = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        days.push(localISODate(d));
-      }
-      return days;
-    };
-
-    const last31 = getLast31Days();
-    const last7 = getLast7Days();
-    const dayLabels = ['M','T','W','T','F','S','S'];
-
-    // KPI calculations
-    const completedTodayCount = habits.filter(h => !!habitLog[`${h.id}:${today}`]).length;
-    const todayRate = habits.length > 0 ? Math.round((completedTodayCount / habits.length) * 100) : 0;
-    const bestStreakOverall = habits.length > 0 ? Math.max(...habits.map(h => getStreak(h.id))) : 0;
-    const overall31Rate = habits.length > 0 ? Math.round(
-      habits.reduce((sum, h) => sum + last31.filter(d => habitLog[`${h.id}:${d}`]).length, 0) / (habits.length * 31) * 100
-    ) : 0;
-
-    const growText = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
-    const addHabit = () => {
-      const id = Date.now().toString();
-      setHabits(prev => [...prev, { id, name: '', icon: '⭐', createdAt: today }]);
-      setTimeout(() => { const el = document.getElementById(`habit-name-${id}`); if (el) el.focus(); }, 50);
-    };
-    const secondary = "rgba(235,235,245,0.6)";
-
-    return (
-      <div className="min-h-screen bg-transparent pb-24 mz-num">
-        <Sidebar />
-        <SaveIndicator />
-
-        {/* HEADER */}
-        <div style={{padding:"56px 24px 16px"}}>
-          <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"#0A84FF",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-              <div>
-                <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Habits</div>
-                {habits.length > 0 && (
-                  <div style={{fontSize:"15px",color:secondary,fontFamily:SANS_FONT,marginTop:"2px"}}>{completedTodayCount} of {habits.length} done today</div>
-                )}
-              </div>
-              <button aria-label="New habit" onClick={addHabit}
-                style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"40px",height:"40px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"#0A84FF",fontSize:"24px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-
-          {habits.length === 0 && (() => {
-            const samples = [
-              { icon: '💧', name: 'Drink 2L water' },
-              { icon: '🏃', name: 'Exercise 30min' },
-              { icon: '📚', name: 'Read before bed' },
-            ];
-            const useTemplate = () => {
-              const baseId = Date.now();
-              setHabits(samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, icon: s.icon, createdAt: today })));
-            };
-            return (
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"18px"}}>
-                <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Build habits that stick</div>
-                <div style={{fontSize:"15px",color:secondary,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>Tick a habit off each day to build a streak. Here are three to start with:</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"10px",margin:"16px 0 18px"}}>
-                  {samples.map((s, i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"12px"}}>
-                      <span style={{fontSize:"22px",width:"28px",textAlign:"center"}}>{s.icon}</span>
-                      <span style={{fontSize:"17px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{s.name}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                  <button onClick={useTemplate} style={{flex:1,padding:"13px",background:"#0A84FF",border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
-                  <button onClick={addHabit} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
-                </div>
-              </div>
-            );
-          })()}
-
-          {habits.map(habit => {
-            const completedToday = !!habitLog[`${habit.id}:${today}`];
-            const totalDone = last31.filter(d => habitLog[`${habit.id}:${d}`]).length;
-            const completionRate = Math.round((totalDone / 31) * 100);
-            const streak = getStreak(habit.id);
-            const bestStreak = getBestStreak(habit.id);
-            const streakAtRisk = streak > 0 && !completedToday;
-
-            return (
-              <div key={habit.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
-
-                {/* Emoji, name (wraps), done circle */}
-                <div style={{padding:"16px 16px 12px",display:"flex",alignItems:"flex-start",gap:"12px"}}>
-                  <input
-                    type="text"
-                    aria-label="Habit emoji"
-                    value={habit.icon}
-                    onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                    style={{width:"34px",height:"34px",padding:0,textAlign:"center",fontSize:"26px",lineHeight:"34px",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",flexShrink:0}}
-                  />
-                  <div style={{flex:1,minWidth:0,paddingTop:"4px"}}>
-                    <textarea
-                      id={`habit-name-${habit.id}`}
-                      rows={1}
-                      value={habit.name}
-                      ref={growText}
-                      onInput={(e) => growText(e.target)}
-                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
-                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                      onFocus={scrollInputIntoView}
-                      placeholder="New habit"
-                      style={{display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
-                    />
-                    <div style={{fontSize:"13px",fontFamily:SANS_FONT,marginTop:"3px",color:streakAtRisk?"#FF9F0A":secondary}}>
-                      {streakAtRisk
-                        ? `Do it today to keep your ${streak}-day streak`
-                        : streak > 0
-                          ? `${streak}-day streak${bestStreak > streak ? `, best ${bestStreak}` : ''}`
-                          : bestStreak > 0 ? `Best streak ${bestStreak} days` : 'No streak yet'}
-                    </div>
-                  </div>
-                  <button
-                    aria-label={completedToday ? 'Mark not done today' : 'Mark done today'}
-                    onClick={() => toggleHabit(habit.id, today)}
-                    style={{width:"34px",height:"34px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:completedToday?"#0A84FF":"transparent",border:completedToday?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"17px",fontWeight:700,transition:"background 0.2s"}}
-                  >{completedToday ? '✓' : ''}</button>
-                  <button
-                    aria-label="Delete habit"
-                    onClick={() => { if (!habit.name || window.confirm(`Delete "${habit.name}"?`)) setHabits(prev => prev.filter(h => h.id !== habit.id)); }}
-                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.25)",fontSize:"18px",flexShrink:0,padding:"6px 2px",lineHeight:1}}
-                  >×</button>
-                </div>
-
-                {/* Last 31 days */}
-                <div style={{padding:"4px 16px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(38px, 1fr))":"repeat(7, 1fr)",gap:isWide?"8px":"7px",maxWidth:isWide?"none":"420px"}}>
-                    {last31.map(date => {
-                      const done = !!habitLog[`${habit.id}:${date}`];
-                      const isToday = date === today;
-                      return (
-                        <div
-                          key={date}
-                          onClick={() => toggleHabit(habit.id, date)}
-                          title={date}
-                          style={{aspectRatio:"1",borderRadius:"50%",cursor:"pointer",background:done?"#0A84FF":"rgba(255,255,255,0.08)",border:isToday&&!done?"1.5px solid rgba(10,132,255,0.8)":"none",boxSizing:"border-box",transition:"background 0.15s",userSelect:"none"}}
-                        />
-                      );
-                    })}
-                  </div>
-                  <div style={{display:"flex",justifyContent:"space-between",gap:"8px",marginTop:"10px",fontSize:"13px",color:secondary,fontFamily:SANS_FONT}}>
-                    <span>Last 31 days</span>
-                    <span>{totalDone} of 31 ({completionRate}%)</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
   // ============================================
   // EXPORT VIEW
   if (activeView === 'export') {
