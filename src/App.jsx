@@ -49218,13 +49218,6 @@ function MuzzApp() {
               <div style={{marginTop:"8px"}}>
                 <style>{`.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
 
-                {/* List title — Reminders style */}
-                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"12px",marginBottom:"6px"}}>
-                  <div style={{minWidth:0}}>
-                    <div style={{fontSize:"28px",fontWeight:700,color:accentColor,fontFamily:SANS_FONT,letterSpacing:"-0.4px",lineHeight:1.15,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{headerLabel}</div>
-                  </div>
-                  <div style={{fontSize:"28px",fontWeight:700,color:accentColor,fontFamily:SANS_FONT,flexShrink:0,lineHeight:1.15}}>{unchecked.length}</div>
-                </div>
                 {(activeCustom || checked.length > 0) && (
                   <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
                     {checked.length > 0 && (
@@ -49327,6 +49320,8 @@ function MuzzApp() {
     const dayOfYear = Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
+    const weekTaskItems = (() => { try { const i = JSON.parse(weeklyNote || '[]'); return Array.isArray(i) ? i.filter(t => t && String(t.text || '').trim()) : []; } catch { return []; } })();
+    const weekTasksDone = weekTaskItems.filter(t => t.checked).length;
 
     // Auto-fetch stock prices on dashboard load (from trackedStocks AND stocks holdings)
     const todayPriceKey = localISODate();
@@ -49674,10 +49669,10 @@ function MuzzApp() {
             {[
               { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
               { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
-              { label:"Tasks today", value:`${completedDailyTasks}/${dailyTasks.length}`, view:"tasks" },
+              { label:"Tasks this week", value:`${weekTasksDone}/${weekTaskItems.length}`, view:"tasks", onOpen:() => setTasksSubTab('weekly') },
               { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, view:"assets" },
             ].map(card => (
-              <button key={card.label} onClick={() => setActiveView(card.view)}
+              <button key={card.label} onClick={() => { if (card.onOpen) card.onOpen(); setActiveView(card.view); }}
                 style={{...glass,padding:"14px 16px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",position:"relative"}}
                 onMouseEnter={onIn} onMouseLeave={onOut}>
                 <ChevronRight size={16} color={txt.tertiary} strokeWidth={2.5} style={{position:"absolute",top:"14px",right:"12px"}} />
