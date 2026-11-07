@@ -49678,7 +49678,7 @@ function MuzzApp() {
           {/* SUMMARY GRID — four tappable cards */}
           <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
             {[
-              { label:"Investments", value:`A$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
+              { label:"Investments (AUD)", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
               { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
               { label:"Tasks this week", value:`${weekTasksDone}/${weekTaskItems.length}`, view:"tasks", onOpen:() => setTasksSubTab('weekly') },
               { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, view:"assets" },
@@ -67649,7 +67649,10 @@ function MuzzApp() {
     const setExercises = (dayKey, fn) => updateDay(dayKey, cur => ({...cur, exercises: fn(Array.isArray(cur.exercises) ? cur.exercises : [])}));
     const weekMuscleTotals = {};
     DAY_KEYS.forEach(k => { Object.entries(parseNoteMuscles(noteTextFor(workoutWeek[k]))).forEach(([m, v]) => { weekMuscleTotals[m] = (weekMuscleTotals[m]||0) + v; }); });
-    const thisWeekSessions = DAY_KEYS.filter(k => dayHasData(workoutWeek[k]) || workoutWeek[k]?.done).length;
+    // Rest day: toggled on the card, or the day's note just says "rest"
+    const isRestDay = (d) => !!d && (d.rest === true || /^\s*rest( day)?\s*$/i.test(noteTextFor(d)));
+    const thisWeekSessions = DAY_KEYS.filter(k => !isRestDay(workoutWeek[k]) && (dayHasData(workoutWeek[k]) || workoutWeek[k]?.done)).length;
+    const thisWeekRest = DAY_KEYS.filter(k => isRestDay(workoutWeek[k])).length;
 
     // Exercise helpers
     const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
@@ -67726,7 +67729,7 @@ function MuzzApp() {
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:BLUE,fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
             <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
-              Week {currentWeek}: {thisWeekSessions} of 7 days trained · {weekStepsTotal.toLocaleString()} steps this week
+              Week {currentWeek}: {thisWeekSessions} trained{thisWeekRest > 0 ? ` · ${thisWeekRest} rest` : ''} · {weekStepsTotal.toLocaleString()} steps this week
             </div>
           </div>
         </div>
@@ -67828,28 +67831,35 @@ function MuzzApp() {
                 const done = !!d.done;
                 const isToday = dayKey === todayKey;
                 const exerciseList = dayExercises(d);
-                const dayMuscles = parseNoteMuscles(noteTextFor(d));
+                const rest = isRestDay(d);
                 const exGroups = groupSupersets(exerciseList);
                 const ssGroups = exGroups.filter(g => g.length > 1);
                 return (
-                  <div key={dayKey} style={card}>
+                  <div key={dayKey} style={{...card,opacity:rest?0.6:1}}>
+                    {rest ? (
+                      <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"14px 16px"}}>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                          <div style={{fontSize:"18px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",fontWeight:600,marginTop:"2px"}}>Rest day</div>
+                        </div>
+                        <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note}))}
+                          style={{padding:"6px 14px",borderRadius:"999px",border:"none",background:"rgba(255,255,255,0.14)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0}}>Rest ✓</button>
+                      </div>
+                    ) : (<>
                     {/* Day header + what you trained */}
                     <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"14px 16px 12px"}}>
                       <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>updateDay(dayKey, cur => ({...cur, done: !cur.done}))}
                         style={{width:"28px",height:"28px",marginTop:"2px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"15px",fontWeight:700,transition:"background 0.2s"}}>{done ? '✓' : ''}</button>
                       <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                          <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: true, done: false}))}
+                            style={{padding:"4px 12px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.06)",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:500,cursor:"pointer",flexShrink:0}}>Rest day</button>
+                        </div>
                         <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
                           ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
                           onChange={e => setDayNote(dayKey, e.target.value)}
                           style={{...bareArea,fontSize:"18px",fontWeight:600,marginTop:"2px"}} />
-                        {Object.keys(dayMuscles).length > 0 && (
-                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"8px"}}>
-                            {MUSCLES.filter(m => dayMuscles[m]).map(m => (
-                              <span key={m} style={{padding:"3px 10px",borderRadius:"999px",background:"rgba(48,209,88,0.16)",fontSize:"13px",color:GREEN,fontFamily:SANS_FONT,fontWeight:600}}>{dayMuscles[m]} {m}</span>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     </div>
 
@@ -67911,6 +67921,7 @@ function MuzzApp() {
                         </button>
                       )}
                     </div>
+                    </>)}
                   </div>
                 );
               })}
