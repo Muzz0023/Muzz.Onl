@@ -67906,7 +67906,6 @@ function MuzzApp() {
           )}
 
           {/* ─── 4-WEEK PLAN ─── */}
-          {/* ─── 4-WEEK PLAN ─── */}
           {gymTabNow === 'log' && (
             <>
               <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: `Week ${w}` }))} />
@@ -67918,6 +67917,7 @@ function MuzzApp() {
                 </div>
               )}
 
+              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
               {DAY_KEYS.map(dayKey => {
                 const d = workoutWeek[dayKey] || {};
                 const done = !!d.done;
@@ -67927,31 +67927,32 @@ function MuzzApp() {
                 const exGroups = groupSupersets(exerciseList);
                 const ssGroups = exGroups.filter(g => g.length > 1);
                 return (
-                  <div key={dayKey} style={{...card,opacity:rest?0.6:1}}>
+                  <div key={dayKey} style={{...card,borderRadius:"16px",opacity:rest?0.6:1}}>
                     {rest ? (
-                      <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"14px 16px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
+                        <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"12px",fontWeight:700,fontFamily:SANS_FONT}}>z</span>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
-                          <div style={{fontSize:"18px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",fontWeight:600,marginTop:"2px"}}>Rest day</div>
+                          <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
                         </div>
                         <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note}))}
-                          style={{padding:"6px 14px",borderRadius:"999px",border:"none",background:"rgba(255,255,255,0.14)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0}}>Rest ✓</button>
+                          style={{...textBtn(BLUE),fontSize:"15px",flexShrink:0}}>Undo</button>
                       </div>
                     ) : (<>
                     {/* Day header + what you trained */}
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"14px 16px 12px"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px 10px"}}>
                       <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>updateDay(dayKey, cur => ({...cur, done: !cur.done}))}
-                        style={{width:"28px",height:"28px",marginTop:"2px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"15px",fontWeight:700,transition:"background 0.2s"}}>{done ? '✓' : ''}</button>
+                        style={{width:"24px",height:"24px",marginTop:"9px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"1.5px solid rgba(235,235,245,0.3)",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>{done ? '✓' : ''}</button>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
                           <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
                           <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: true, done: false}))}
-                            style={{padding:"4px 12px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.06)",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:500,cursor:"pointer",flexShrink:0}}>Rest day</button>
+                            style={{...textBtn("rgba(235,235,245,0.5)"),fontSize:"13px",flexShrink:0}}>Rest day</button>
                         </div>
                         <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
                           ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
                           onChange={e => setDayNote(dayKey, e.target.value)}
-                          style={{...bareArea,fontSize:"18px",fontWeight:600,marginTop:"2px"}} />
+                          style={{...bareArea,fontSize:"17px",marginTop:"1px"}} />
                       </div>
                     </div>
 
@@ -68003,20 +68004,17 @@ function MuzzApp() {
                       );
                     })}
 
-                    <div style={{display:"flex",borderTop:sep}}>
-                      <button onClick={()=>addExercise(dayKey)} style={{flex:1,display:"flex",alignItems:"center",gap:"8px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px",textAlign:"left"}}>
-                        <span style={{fontSize:"18px",lineHeight:1}}>+</span> {exerciseList.length ? 'Add exercise' : 'Add exercise details'}
-                      </button>
+                    <div style={{display:"flex",gap:"18px",padding:exerciseList.length ? "10px 14px 12px 50px" : "0 14px 12px 50px",borderTop:exerciseList.length ? sep : "none"}}>
+                      <button onClick={()=>addExercise(dayKey)} style={{...textBtn(BLUE),fontSize:"15px"}}>+ {exerciseList.length ? 'Exercise' : 'Exercise details'}</button>
                       {exerciseList.length > 0 && (
-                        <button onClick={()=>addSuperset(dayKey)} style={{display:"flex",alignItems:"center",gap:"8px",padding:"12px 16px",background:"none",border:"none",borderLeft:sep,cursor:"pointer",color:PURPLE,fontFamily:SANS_FONT,fontSize:"15px",textAlign:"left",whiteSpace:"nowrap"}}>
-                          <span style={{fontSize:"18px",lineHeight:1}}>+</span> Superset
-                        </button>
+                        <button onClick={()=>addSuperset(dayKey)} style={{...textBtn(PURPLE),fontSize:"15px"}}>+ Superset</button>
                       )}
                     </div>
                     </>)}
                   </div>
                 );
               })}
+              </div>
 
               <button onClick={() => {
                 if (!window.confirm(`Clear everything in Week ${currentWeek}? This can't be undone.`)) return;
