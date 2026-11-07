@@ -48198,7 +48198,18 @@ function MuzzApp() {
     .reduce((sum, s) => sum + (parseFloat(s.monthly) || 0) * (DASH_FREQ_MULT[s.freq || 'monthly'] || 1), 0);
   const totalMonthlyBusiness = businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
-  const totalStocks = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
+  // Always in AUD — each holding is converted from its own currency (live feed, saved, or USD)
+  const toAUD = (amount, fromCurrency) => {
+    const v = convertToDisplay(amount, fromCurrency);
+    if (displayCurrency === 'AUD') return v;
+    const r = fxRates && fxRates.AUD;
+    return r ? v * r : v;
+  };
+  const totalStocks = stocks.reduce((sum, s) => {
+    const t = s && s.name ? String(s.name).trim().toUpperCase() : '';
+    const cur = (t && livePrices[t]?.currency) || (s && s.currency) || 'USD';
+    return sum + toAUD(parseFloat(s && s.currentValue) || 0, cur);
+  }, 0);
   const netWorth = totalAssets;
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
@@ -49667,7 +49678,7 @@ function MuzzApp() {
           {/* SUMMARY GRID — four tappable cards */}
           <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
             {[
-              { label:"Investments", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
+              { label:"Investments", value:`A$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
               { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
               { label:"Tasks this week", value:`${weekTasksDone}/${weekTaskItems.length}`, view:"tasks", onOpen:() => setTasksSubTab('weekly') },
               { label:"Assets", value:`$${Math.round(totalAssets).toLocaleString()}`, view:"assets" },
@@ -67580,17 +67591,21 @@ function MuzzApp() {
     const goalDays = weekDays.filter(d => (dailySteps[d.date]||0) >= stepsGoal).length;
     const bestDay = weekDays.reduce((best,d) => (dailySteps[d.date]||0) > (dailySteps[best?.date]||0) ? d : best, null);
 
-    // ── Workout log — one entry per date: workoutPlan.log[YYYY-MM-DD] = { muscles:{Shoulders:3}, exercises:[...] }
-    // Basic mode logs sets per muscle group; Advanced logs individual exercises. Mode is remembered.
+    // ── 4-week plan — workoutPlan.weeks[1..4][Mon..Sun] = { note:'3 shoulders, 2 bis', exercises:[...], done }
     const MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Glutes','Abs','Forearms','Cardio'];
-    const gymLog = (workoutPlan && workoutPlan.log) || {};
-    const gymMode = workoutPlan?.mode === 'advanced' ? 'advanced' : 'basic';
-    const setGymMode = (m) => setWorkoutPlan(prev => ({...(prev||{weeks:{},stepsGoal:10000}), mode: m}));
-    const parseISO = (iso) => { const [y,m,d] = String(iso).split('-').map(Number); return new Date(y, (m||1)-1, d||1); };
-    const selDate = gymDate || today;
-    const selEntry = gymLog[selDate] || {};
-    const selMuscles = selEntry.muscles || {};
-    const exerciseList = Array.isArray(selEntry.exercises) ? selEntry.exercises : [];
+    const DAY_KEYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const currentWeek = workoutSubWeek || 1;
+    const setCurrentWeek = (w) => setWorkoutSubWeek(w);
+    const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
+    const updateDay = (dayKey, fn) => setWorkoutPlan(prev => {
+      const base = {...(prev||{weeks:{},stepsGoal:10000})};
+      const weeks = {...(base.weeks||{})};
+      const wk = {...(weeks[currentWeek]||{})};
+      wk[dayKey] = fn(wk[dayKey] || {});
+      weeks[currentWeek] = wk;
+      base.weeks = weeks;
+      return base;
+    });
     // Free-text day note, e.g. "3 shoulders, 2 biceps, 2 tris" → { Shoulders:3, Biceps:2, Triceps:2 }
     const muscleFor = (w) => {
       w = w.toLowerCase();
@@ -67603,86 +67618,53 @@ function MuzzApp() {
       if (/^(glute|butt|hip)/.test(w)) return 'Glutes';
       if (/^(ab|core)/.test(w)) return 'Abs';
       if (/^(forearm|grip)/.test(w)) return 'Forearms';
-      if (/^(cardio|run|bike|row)/.test(w)) return 'Cardio';
+      if (/^(cardio|run|bike)/.test(w)) return 'Cardio';
       return null;
     };
     const parseNoteMuscles = (note) => {
       const out = {};
       const re = /(\d+)\s*(?:x\s*)?(?:sets?\s*(?:of\s*)?)?([a-zA-Z]+)/g;
-      let m;
       const WORDS = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
       const text = String(note || '').replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b/gi, w => String(WORDS[w.toLowerCase()]));
+      let m;
       while ((m = re.exec(text)) !== null) {
         const k = muscleFor(m[2]);
         if (k) out[k] = (out[k] || 0) + (parseInt(m[1]) || 0);
       }
       return out;
     };
-    const entryMuscles = (e) => {
-      const out = {...((e && e.muscles) || {})};
-      Object.entries(parseNoteMuscles(e && e.note)).forEach(([k, v]) => { out[k] = (out[k] || 0) + v; });
-      return out;
+    // Text shown in a day's box — older days saved a workout name / text note, shown here as text
+    const noteTextFor = (d) => {
+      if (!d) return '';
+      if (typeof d.note === 'string') return d.note;
+      return [d.name || '', typeof d.exercises === 'string' ? d.exercises : ''].filter(Boolean).join('\n');
     };
-    // Text shown in the day box — older entries saved as counts are shown as text
-    const noteTextFor = (e) => {
-      if (!e) return '';
-      if (typeof e.note === 'string') return e.note;
-      return MUSCLES.filter(m => e.muscles && e.muscles[m]).map(m => `${e.muscles[m]} ${m.toLowerCase()}`).join(', ');
-    };
-    const entryHasData = (e) => !!e && ((e.muscles && Object.values(e.muscles).some(v => v > 0)) || (typeof e.note === 'string' && e.note !== '') || (Array.isArray(e.exercises) && e.exercises.length > 0));
-    const entrySets = (e) => {
-      if (!e) return 0;
-      const m = Object.values(entryMuscles(e)).reduce((a, v) => a + (v || 0), 0);
-      const x = (Array.isArray(e.exercises) ? e.exercises : []).reduce((a, ex) => a + (parseInt(ex.sets) || 0), 0);
-      return m + x;
-    };
-    // Functional update of one date's entry; empty entries are pruned
-    const updateEntry = (date, fn) => setWorkoutPlan(prev => {
-      const base = {...(prev||{weeks:{},stepsGoal:10000})};
-      const log = {...(base.log||{})};
-      const nextEntry = fn(log[date] || {});
-      if (entryHasData(nextEntry)) log[date] = nextEntry; else delete log[date];
-      base.log = log;
-      return base;
+    const dayExercises = (d) => (d && Array.isArray(d.exercises)) ? d.exercises : [];
+    const dayHasData = (d) => !!d && (noteTextFor(d).trim() !== '' || dayExercises(d).length > 0);
+    const setDayNote = (dayKey, val) => updateDay(dayKey, cur => {
+      const next = {...cur, note: val, name: ''};
+      if (typeof next.exercises === 'string') next.exercises = [];
+      return next;
     });
-    const bumpMuscle = (muscle, delta) => updateEntry(selDate, cur => {
-      const mu = {...(cur.muscles||{})};
-      const v = Math.max(0, (mu[muscle]||0) + delta);
-      if (v > 0) mu[muscle] = v; else delete mu[muscle];
-      return {...cur, muscles: mu};
-    });
-    const setDayNote = (val) => updateEntry(selDate, cur => ({...cur, note: val, muscles: {}}));
-    const setExercises = (fn) => updateEntry(selDate, cur => ({...cur, exercises: fn(Array.isArray(cur.exercises) ? cur.exercises : [])}));
-
-    // Week strip for the selected date
-    const selD = parseISO(selDate);
-    const logMonday = new Date(selD); logMonday.setDate(selD.getDate() - ((selD.getDay() + 6) % 7));
-    const logWeek = Array.from({length:7}, (_, i) => { const d = new Date(logMonday); d.setDate(logMonday.getDate() + i); return { date: localISODate(d), letter: d.toLocaleDateString('en-AU',{weekday:'short'}).charAt(0), num: d.getDate() }; });
-    const shiftWeek = (n) => { const d = new Date(selD); d.setDate(selD.getDate() + n * 7); setGymDate(localISODate(d)); };
-    const weekIsCurrent = logWeek.some(d => d.date === today);
-    const weekSessions = logWeek.filter(d => entryHasData(gymLog[d.date])).length;
+    const setExercises = (dayKey, fn) => updateDay(dayKey, cur => ({...cur, exercises: fn(Array.isArray(cur.exercises) ? cur.exercises : [])}));
     const weekMuscleTotals = {};
-    logWeek.forEach(d => { const mu = entryMuscles(gymLog[d.date]); Object.entries(mu).forEach(([k, v]) => { weekMuscleTotals[k] = (weekMuscleTotals[k]||0) + (v||0); }); });
-    const weekExercises = logWeek.reduce((a, d) => a + ((gymLog[d.date]?.exercises || []).length), 0);
-    const thisWeekSessions = weekDays.filter(d => entryHasData(gymLog[d.date])).length;
-    // Most recent earlier session with exercises — for "Repeat last workout"
-    const lastAdvanced = Object.keys(gymLog).filter(k => k < selDate && Array.isArray(gymLog[k].exercises) && gymLog[k].exercises.length > 0).sort().pop();
+    DAY_KEYS.forEach(k => { Object.entries(parseNoteMuscles(noteTextFor(workoutWeek[k]))).forEach(([m, v]) => { weekMuscleTotals[m] = (weekMuscleTotals[m]||0) + v; }); });
+    const thisWeekSessions = DAY_KEYS.filter(k => dayHasData(workoutWeek[k]) || workoutWeek[k]?.done).length;
 
-    // Exercise helpers (Advanced)
+    // Exercise helpers
     const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
-    const addExercise = () => setExercises(list => [...list, newExRow()]);
-    const updateExercise = (exId, field, value) => setExercises(list => list.map(e => e.id === exId ? {...e, [field]: value} : e));
-    const removeExercise = (exId) => setExercises(list => {
+    const addExercise = (dayKey) => setExercises(dayKey, list => [...list, newExRow()]);
+    const updateExercise = (dayKey, exId, field, value) => setExercises(dayKey, list => list.map(e => e.id === exId ? {...e, [field]: value} : e));
+    const removeExercise = (dayKey, exId) => setExercises(dayKey, list => {
       const idx = list.findIndex(e => e.id === exId);
       if (idx === -1) return list;
       const removed = list[idx];
       let next = list.filter(e => e.id !== exId);
-      // If the removed exercise ended a superset, the one before it no longer links forward
       if (idx > 0 && (!removed.supersetWithNext || idx === list.length - 1)) next = next.map((e, i) => i === idx - 1 ? {...e, supersetWithNext: false} : e);
       return next;
     });
-    const addSuperset = () => setExercises(list => [...list, newExRow({ supersetWithNext: true }), newExRow()]);
-    const toggleSuperset = (exId) => setExercises(list => {
+    const addSuperset = (dayKey) => setExercises(dayKey, list => [...list, newExRow({ supersetWithNext: true }), newExRow()]);
+    const toggleSuperset = (dayKey, exId) => setExercises(dayKey, list => {
       const idx = list.findIndex(e => e.id === exId);
       if (idx === -1) return list;
       const turningOn = !list[idx].supersetWithNext;
@@ -67690,7 +67672,6 @@ function MuzzApp() {
       if (turningOn && idx === list.length - 1) next = [...next, newExRow()];
       return next;
     });
-    const repeatWorkout = (fromDate) => setExercises(() => (gymLog[fromDate]?.exercises || []).map(e => ({...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7)})));
     // Group consecutive linked exercises: [[ex], [exA, exB], ...]
     const groupSupersets = (list) => {
       const groups = [];
@@ -67745,13 +67726,13 @@ function MuzzApp() {
             <button onClick={() => setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:BLUE,fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
             <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
-              {thisWeekSessions} {thisWeekSessions === 1 ? 'workout' : 'workouts'} this week · {weekStepsTotal.toLocaleString()} steps
+              Week {currentWeek}: {thisWeekSessions} of 7 days trained · {weekStepsTotal.toLocaleString()} steps this week
             </div>
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'Workouts'},{id:'steps',label:'Steps'}]} />
+          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'4-week plan'},{id:'steps',label:'Steps'}]} />
 
           {/* ─── STEPS ─── */}
           {gymTabNow === 'steps' && (
@@ -67830,169 +67811,116 @@ function MuzzApp() {
           )}
 
           {/* ─── 4-WEEK PLAN ─── */}
-          {/* ─── WORKOUTS (date-based log, Basic / Advanced) ─── */}
-          {gymTabNow === 'log' && (() => {
-            const selLabel = selDate === today ? 'Today' : parseISO(selDate).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'});
-            const muscleTotal = Object.values(selMuscles).reduce((a, v) => a + (v||0), 0);
-            const stepBtn = (label, onClick, disabled) => (
-              <button onClick={onClick} disabled={disabled} aria-label={label === '+' ? 'Add set' : 'Remove set'}
-                style={{width:"34px",height:"34px",borderRadius:"50%",border:"none",background:disabled?"rgba(255,255,255,0.05)":"rgba(255,255,255,0.12)",color:disabled?ter:"#FFFFFF",fontSize:"20px",fontWeight:500,lineHeight:1,cursor:disabled?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0}}>{label}</button>
-            );
-            return (
+          {/* ─── 4-WEEK PLAN ─── */}
+          {gymTabNow === 'log' && (
             <>
-              {/* Week strip */}
-              <div style={{...card,padding:"12px 12px 14px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"0 4px 10px"}}>
-                  <button onClick={() => shiftWeek(-1)} aria-label="Previous week" style={{...textBtn(BLUE),fontSize:"22px",padding:"0 6px"}}>‹</button>
-                  <div style={{textAlign:"center"}}>
-                    <div style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{weekIsCurrent ? 'This week' : `Week of ${parseISO(logWeek[0].date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}`}</div>
-                    <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"1px"}}>{weekSessions} {weekSessions === 1 ? 'workout' : 'workouts'}</div>
-                  </div>
-                  <button onClick={() => shiftWeek(1)} aria-label="Next week" style={{...textBtn(BLUE),fontSize:"22px",padding:"0 6px"}}>›</button>
+              <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: `Week ${w}` }))} />
+              {Object.keys(weekMuscleTotals).length > 0 && (
+                <div style={{display:"flex",flexWrap:"wrap",gap:"6px",margin:"0 2px"}}>
+                  {MUSCLES.filter(m => weekMuscleTotals[m]).map(m => (
+                    <span key={m} style={{padding:"4px 10px",borderRadius:"999px",background:"rgba(255,255,255,0.08)",fontSize:"13px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{m} <b style={{color:"#FFFFFF"}}>{weekMuscleTotals[m]}</b></span>
+                  ))}
                 </div>
-                <div style={{display:"flex",gap:"6px"}}>
-                  {logWeek.map(d => {
-                    const sel = d.date === selDate;
-                    const trained = entryHasData(gymLog[d.date]);
-                    const isTodayD = d.date === today;
-                    return (
-                      <button key={d.date} onClick={() => setGymDate(d.date)}
-                        style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",padding:"8px 0",borderRadius:"14px",border:"none",cursor:"pointer",background:sel?"rgba(10,132,255,0.22)":"transparent"}}>
-                        <span style={{fontSize:"12px",color:sel?"#FFFFFF":sec,fontFamily:SANS_FONT,fontWeight:600}}>{d.letter}</span>
-                        <span style={{width:"30px",height:"30px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"15px",fontFamily:SANS_FONT,fontWeight:isTodayD?700:500,color:trained?"#FFFFFF":(isTodayD?BLUE:"rgba(235,235,245,0.85)"),background:trained?GREEN:"transparent"}}>{d.num}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {(Object.keys(weekMuscleTotals).length > 0 || weekExercises > 0) && (
-                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"12px",padding:"0 4px"}}>
-                    {MUSCLES.filter(m => weekMuscleTotals[m]).map(m => (
-                      <span key={m} style={{padding:"4px 10px",borderRadius:"999px",background:"rgba(255,255,255,0.08)",fontSize:"13px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>{m} <b style={{color:"#FFFFFF"}}>{weekMuscleTotals[m]}</b></span>
-                    ))}
-                    {weekExercises > 0 && (
-                      <span style={{padding:"4px 10px",borderRadius:"999px",background:"rgba(191,90,242,0.14)",fontSize:"13px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT}}>Exercises <b style={{color:"#FFFFFF"}}>{weekExercises}</b></span>
-                    )}
-                  </div>
-                )}
-              </div>
+              )}
 
-              {/* Day title */}
-              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"12px",margin:"4px 4px 0"}}>
-                <div>
-                  <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.3px"}}>{selLabel}</div>
-                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"1px"}}>{entrySets(selEntry) > 0 ? `${entrySets(selEntry)} sets logged` : 'Nothing logged yet'}</div>
-                </div>
-                {selDate !== today && <button onClick={() => setGymDate(null)} style={{...textBtn(BLUE),fontSize:"15px"}}>Today</button>}
-              </div>
-
-              {/* What you trained — just type it */}
-              <div style={{...card,padding:"14px 16px"}}>
-                <textarea rows={2} placeholder={"What did you train?\ne.g. 3 shoulders, 2 biceps, 2 triceps"} value={noteTextFor(selEntry)}
-                  ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
-                  onChange={e => setDayNote(e.target.value)}
-                  style={{...bareArea,minHeight:"48px"}} />
-                {Object.keys(entryMuscles(selEntry)).length > 0 && (
-                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"10px"}}>
-                    {MUSCLES.filter(m => entryMuscles(selEntry)[m]).map(m => (
-                      <span key={m} style={{padding:"3px 10px",borderRadius:"999px",background:"rgba(48,209,88,0.16)",fontSize:"13px",color:GREEN,fontFamily:SANS_FONT,fontWeight:600}}>{entryMuscles(selEntry)[m]} {m}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Detailed exercises — optional, opened from here */}
-              {(gymMode === 'advanced' || exerciseList.length > 0) ? (
-                <>
-                  {exerciseList.length === 0 && lastAdvanced && (
-                    <button onClick={() => repeatWorkout(lastAdvanced)}
-                      style={{...card,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"14px 16px",cursor:"pointer",textAlign:"left",color:"#FFFFFF",fontFamily:SANS_FONT}}>
-                      <span>
-                        <span style={{display:"block",fontSize:"17px",fontWeight:600}}>Repeat last workout</span>
-                        <span style={{display:"block",fontSize:"13px",color:sec,marginTop:"2px"}}>{parseISO(lastAdvanced).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {gymLog[lastAdvanced].exercises.length} exercises</span>
-                      </span>
-                      <span style={{color:BLUE,fontSize:"17px"}}>Copy</span>
-                    </button>
-                  )}
-                  <div style={card}>
-                    {exerciseList.length === 0 && (
-                      <div style={{padding:"18px 16px",fontSize:"15px",color:sec,fontFamily:SANS_FONT,textAlign:"center"}}>No exercises yet. Add one below.</div>
-                    )}
-                    {(() => {
-                      const exGroups = groupSupersets(exerciseList);
-                      const ssGroups = exGroups.filter(g => g.length > 1);
-                      return exGroups.map((group, groupIdx) => {
-                        const isSet = group.length > 1;
-                        const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
-                        const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
-                        const firstRow = groupIdx === 0;
-                        const renderEx = (ex, gi) => (
-                          <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:firstRow?"none":sep,padding:"12px 16px 14px"}}>
-                            <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                              {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
-                              <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
-                                onChange={e=>updateExercise(ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
-                                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                                style={{...bareArea,fontWeight:600}} />
-                              <button aria-label="Remove exercise" onClick={()=>removeExercise(ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
-                            </div>
-                            <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
-                              {numField('Sets', ex.sets, e=>updateExercise(ex.id,'sets',e.target.value))}
-                              {numField('Reps', ex.reps, e=>updateExercise(ex.id,'reps',e.target.value))}
-                              {numField('kg', ex.weight, e=>updateExercise(ex.id,'weight',e.target.value), "decimal")}
-                            </div>
-                            <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
-                              {chip('Drop set', !!ex.dropSet, ()=>updateExercise(ex.id,'dropSet',!ex.dropSet), BLUE)}
-                              {chip('To failure', !!ex.toFailure, ()=>updateExercise(ex.id,'toFailure',!ex.toFailure), RED)}
-                              {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(ex.id), PURPLE)}
-                            </div>
-                            {(ex.notes !== undefined && ex.notes !== '') ? (
-                              <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
-                                onChange={e=>updateExercise(ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
-                                style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
-                            ) : (
-                              <button onClick={()=>updateExercise(ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
-                            )}
+              {DAY_KEYS.map(dayKey => {
+                const d = workoutWeek[dayKey] || {};
+                const done = !!d.done;
+                const isToday = dayKey === todayKey;
+                const exerciseList = dayExercises(d);
+                const dayMuscles = parseNoteMuscles(noteTextFor(d));
+                const exGroups = groupSupersets(exerciseList);
+                const ssGroups = exGroups.filter(g => g.length > 1);
+                return (
+                  <div key={dayKey} style={card}>
+                    {/* Day header + what you trained */}
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"14px 16px 12px"}}>
+                      <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>updateDay(dayKey, cur => ({...cur, done: !cur.done}))}
+                        style={{width:"28px",height:"28px",marginTop:"2px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"2px solid rgba(235,235,245,0.35)",color:"#FFFFFF",fontSize:"15px",fontWeight:700,transition:"background 0.2s"}}>{done ? '✓' : ''}</button>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                        <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
+                          ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
+                          onChange={e => setDayNote(dayKey, e.target.value)}
+                          style={{...bareArea,fontSize:"18px",fontWeight:600,marginTop:"2px"}} />
+                        {Object.keys(dayMuscles).length > 0 && (
+                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"8px"}}>
+                            {MUSCLES.filter(m => dayMuscles[m]).map(m => (
+                              <span key={m} style={{padding:"3px 10px",borderRadius:"999px",background:"rgba(48,209,88,0.16)",fontSize:"13px",color:GREEN,fontFamily:SANS_FONT,fontWeight:600}}>{dayMuscles[m]} {m}</span>
+                            ))}
                           </div>
-                        );
-                        if (!isSet) return renderEx(group[0], 0);
-                        return (
-                          <div key={'ss_' + group[0].id} style={{borderTop:firstRow?"none":sep,padding:"10px 12px 12px"}}>
-                            <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
-                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
-                                <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
-                                <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
-                              </div>
-                              {group.map((ex, gi) => renderEx(ex, gi))}
-                            </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Detailed exercises (optional) */}
+                    {exGroups.map(group => {
+                      const isSet = group.length > 1;
+                      const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
+                      const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
+                      const renderEx = (ex, gi) => (
+                        <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:sep,padding:"12px 16px 14px"}}>
+                          <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                            {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
+                            <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
+                              onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
+                              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                              style={{...bareArea,fontWeight:600}} />
+                            <button aria-label="Remove exercise" onClick={()=>removeExercise(dayKey,ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
                           </div>
-                        );
-                      });
-                    })()}
+                          <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
+                            {numField('Sets', ex.sets, e=>updateExercise(dayKey,ex.id,'sets',e.target.value))}
+                            {numField('Reps', ex.reps, e=>updateExercise(dayKey,ex.id,'reps',e.target.value))}
+                            {numField('kg', ex.weight, e=>updateExercise(dayKey,ex.id,'weight',e.target.value), "decimal")}
+                          </div>
+                          <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
+                            {chip('Drop set', !!ex.dropSet, ()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet), BLUE)}
+                            {chip('To failure', !!ex.toFailure, ()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure), RED)}
+                            {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(dayKey,ex.id), PURPLE)}
+                          </div>
+                          {(ex.notes !== undefined && ex.notes !== '') ? (
+                            <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
+                              onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
+                              style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
+                          ) : (
+                            <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
+                          )}
+                        </div>
+                      );
+                      if (!isSet) return renderEx(group[0], 0);
+                      return (
+                        <div key={'ss_' + group[0].id} style={{borderTop:sep,padding:"10px 12px 12px"}}>
+                          <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
+                              <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
+                              <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
+                            </div>
+                            {group.map((ex, gi) => renderEx(ex, gi))}
+                          </div>
+                        </div>
+                      );
+                    })}
+
                     <div style={{display:"flex",borderTop:sep}}>
-                      <button onClick={addExercise} style={{flex:1,display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left"}}>
-                        <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add exercise
+                      <button onClick={()=>addExercise(dayKey)} style={{flex:1,display:"flex",alignItems:"center",gap:"8px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px",textAlign:"left"}}>
+                        <span style={{fontSize:"18px",lineHeight:1}}>+</span> {exerciseList.length ? 'Add exercise' : 'Add exercise details'}
                       </button>
-                      <button onClick={addSuperset} style={{display:"flex",alignItems:"center",gap:"8px",padding:"13px 16px",background:"none",border:"none",borderLeft:sep,cursor:"pointer",color:PURPLE,fontFamily:SANS_FONT,fontSize:"17px",textAlign:"left",whiteSpace:"nowrap"}}>
-                        <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add superset
-                      </button>
+                      {exerciseList.length > 0 && (
+                        <button onClick={()=>addSuperset(dayKey)} style={{display:"flex",alignItems:"center",gap:"8px",padding:"12px 16px",background:"none",border:"none",borderLeft:sep,cursor:"pointer",color:PURPLE,fontFamily:SANS_FONT,fontSize:"15px",textAlign:"left",whiteSpace:"nowrap"}}>
+                          <span style={{fontSize:"18px",lineHeight:1}}>+</span> Superset
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {exerciseList.length === 0 && (
-                    <button onClick={() => setGymMode('basic')} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"2px",fontSize:"15px"}}>Hide detailed exercises</button>
-                  )}
-                  {exerciseList.length > 0 && (
-                    <button onClick={() => { if (window.confirm('Clear all exercises for this day?')) setExercises(() => []); }} style={{...textBtn(RED),alignSelf:"center",marginTop:"4px",fontSize:"15px"}}>Clear exercises for this day</button>
-                  )}
-                </>
-              ) : (
-                <button onClick={() => { setGymMode('advanced'); if (lastAdvanced === undefined) addExercise(); }}
-                  style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",padding:"13px 16px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.06)",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px"}}>
-                  <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add detailed exercises
-                </button>
-              )}
+                );
+              })}
+
+              <button onClick={() => {
+                if (!window.confirm(`Clear everything in Week ${currentWeek}? This can't be undone.`)) return;
+                setWorkoutPlan(prev => { const next = {...(prev||{weeks:{},stepsGoal:10000})}; next.weeks = {...(next.weeks||{})}; delete next.weeks[currentWeek]; return next; });
+              }} style={{...textBtn(RED),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Clear Week {currentWeek}</button>
             </>
-            );
-          })()}
+          )}
         </div>
       </div>
     );
