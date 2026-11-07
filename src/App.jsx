@@ -47203,6 +47203,7 @@ function MuzzApp() {
   const [gymWorkoutTab, setGymWorkoutTab] = useState('log');
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [gymDate, setGymDate] = useState(null); // selected day in the gym log (YYYY-MM-DD)
+  const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
   const [timesheetData, setTimesheetData] = useState({
@@ -49192,151 +49193,116 @@ function MuzzApp() {
 
             const unchecked = items.filter(i => !i.checked);
             const checked = items.filter(i => i.checked);
-            const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
+            const showDone = tasksShowDone[tasksSubTab] !== false;
+            const hair = "0.5px solid rgba(84,84,88,0.65)";
+            const growTa = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
+            const taStyle = {display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
+            const linkBtn = (color) => ({fontSize:"15px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0});
+            const circle = (on, onClick, label) => (
+              <button onClick={onClick} aria-label={label}
+                style={{width:"24px",height:"24px",marginTop:"1px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?accentColor:"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
+                {on ? '✓' : ''}
+              </button>
+            );
+            const samplesByTab = {
+              daily:   ['Drink water — 2L', 'Morning workout', 'Reply to important emails', 'Plan tomorrow'],
+              weekly:  ['Grocery shop', 'Wash car', 'Call parents', 'Review week goals'],
+              general: ['Renew car rego', 'Get tax records sorted', 'Backup phone photos', 'Book dentist appointment'],
+            };
+            const useExamples = () => {
+              const baseId = Date.now();
+              save((samplesByTab[tasksSubTab] || samplesByTab.general).map((text, i) => ({ id: baseId + i, text, checked: false, priority: null })));
+            };
 
             return (
-              <div>
+              <div style={{marginTop:"8px"}}>
+                <style>{`.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
 
-                {/* Header */}
-                <div style={{padding:"2px 4px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                  <span style={{fontSize:"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{headerLabel}</span>
-                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"10px"}}>
-                    <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"10px",transition:"width 0.3s"}} />
+                {/* List title — Reminders style */}
+                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"12px",marginBottom:"6px"}}>
+                  <div style={{minWidth:0}}>
+                    <div style={{fontSize:"28px",fontWeight:700,color:accentColor,fontFamily:SANS_FONT,letterSpacing:"-0.4px",lineHeight:1.15,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{headerLabel}</div>
                   </div>
-                  <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,flexShrink:0}}>{unchecked.length} left</span>
-                  {activeCustom && (
-                    <>
-                      <button onClick={() => {
-                        const newName = window.prompt('Rename list:', activeCustom.name);
-                        if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, name: newName.trim()} : l));
-                      }} style={{fontSize:"15px",color:"#0A84FF",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Rename</button>
-                      <button onClick={() => {
-                        if (window.confirm(`Delete "${activeCustom.name}" and all its tasks?`)) {
-                          setCustomTaskLists(prev => prev.filter(l => l.id !== activeCustom.id));
-                          setTasksSubTab('daily');
-                        }
-                      }} style={{fontSize:"15px",color:"#FF453A",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Delete</button>
-                    </>
-                  )}
-                  {checked.length > 0 && (
-                    <button onClick={clearCompleted} style={{fontSize:"15px",color:"#0A84FF",fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0}}>Clear done</button>
-                  )}
+                  <div style={{fontSize:"28px",fontWeight:700,color:accentColor,fontFamily:SANS_FONT,flexShrink:0,lineHeight:1.15}}>{unchecked.length}</div>
                 </div>
+                {(activeCustom || checked.length > 0) && (
+                  <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
+                    {checked.length > 0 && (
+                      <button onClick={() => setTasksShowDone(prev => ({...prev, [tasksSubTab]: !showDone}))} style={linkBtn(accentColor)}>{showDone ? 'Hide' : 'Show'} completed</button>
+                    )}
+                    {checked.length > 0 && <button onClick={clearCompleted} style={linkBtn("rgba(235,235,245,0.6)")}>Clear {checked.length} completed</button>}
+                    {activeCustom && (
+                      <>
+                        <button onClick={() => {
+                          const newName = window.prompt('Rename list:', activeCustom.name);
+                          if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, name: newName.trim()} : l));
+                        }} style={linkBtn("rgba(235,235,245,0.6)")}>Rename list</button>
+                        <button onClick={() => {
+                          if (window.confirm(`Delete "${activeCustom.name}" and all its tasks?`)) {
+                            setCustomTaskLists(prev => prev.filter(l => l.id !== activeCustom.id));
+                            setTasksSubTab('daily');
+                          }
+                        }} style={linkBtn("#FF453A")}>Delete list</button>
+                      </>
+                    )}
+                  </div>
+                )}
 
-                {/* Items */}
-                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-                  {items.length === 0 && (() => {
-                    // Tailored sample tasks per built-in tab
-                    const samplesByTab = {
-                      daily: [
-                        { text: 'Drink water — 2L', checked: true },
-                        { text: 'Morning workout', checked: true },
-                        { text: 'Reply to important emails', checked: false },
-                        { text: 'Plan tomorrow', checked: false },
-                      ],
-                      weekly: [
-                        { text: 'Grocery shop', checked: true },
-                        { text: 'Wash car', checked: false },
-                        { text: 'Call parents', checked: false },
-                        { text: 'Review week goals', checked: false },
-                      ],
-                      general: [
-                        { text: 'Renew car rego', checked: false },
-                        { text: 'Get tax records sorted', checked: false },
-                        { text: 'Backup phone photos', checked: false },
-                        { text: 'Book dentist appointment', checked: false },
-                      ],
-                    };
-                    const samples = samplesByTab[tasksSubTab] || samplesByTab.general;
-                    const subtitle = tasksSubTab === 'daily'   ? 'Things you want to do today.'
-                                   : tasksSubTab === 'weekly'  ? 'Things to handle this week.'
-                                   : tasksSubTab === 'general' ? 'One-off tasks that need doing eventually.'
-                                                               : `Add tasks for "${headerLabel}".`;
-                    const useTemplate = () => {
-                      const baseId = Date.now();
-                      const newItems = samples.map((s, i) => ({ id: baseId + i, text: s.text, checked: s.checked, priority: null }));
-                      save(newItems);
-                    };
-                    return (
-                      <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",padding:"16px"}}>
-                        <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginBottom:"6px"}}>Example list</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
-                        <div style={{fontSize:"11px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.85}}>
-                          {samples.map((s, i) => (
-                            <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
-                              <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${s.checked?accentColor:"rgba(235,235,245,0.3)"}`,background:s.checked?accentColor:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#0a0e1a",fontWeight:700}}>{s.checked?'✓':''}</div>
-                              <div style={{flex:1,fontSize:"14px",fontFamily:"system-ui",color:s.checked?"rgba(235,235,245,0.5)":"rgba(235,235,245,0.85)",textDecoration:s.checked?"line-through":"none"}}>{s.text}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"13px",background:"#0A84FF",border:"none",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:600}}>Use these</button>
-                          <button onClick={addItem} style={{flex:1,padding:"13px",background:"rgba(255,255,255,0.12)",border:"0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer",fontWeight:500}}>Start empty</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Unchecked */}
-                  {unchecked.map(item => (
-                    <div key={item.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 12px 12px 14px"}}>
-                      <button onClick={() => updateItem(item.id, {checked: true})} aria-label="Mark done"
-                        style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid rgba(235,235,245,0.35)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
-                      </button>
+                {/* Open tasks */}
+                {unchecked.map(item => (
+                  <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",paddingTop:"11px"}}>
+                    {circle(false, () => updateItem(item.id, {checked: true}), 'Mark done')}
+                    <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",paddingBottom:"11px",borderBottom:hair}}>
                       <textarea
                         id={`item-${item.id}`}
                         rows={1}
                         value={item.text}
-                        ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
-                        onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }}
+                        ref={growTa}
+                        onInput={(e) => growTa(e.target)}
                         onChange={(e) => updateItem(item.id, {text: e.target.value})}
                         onKeyDown={(e) => handleKeyDown(e, item)}
                         onFocus={scrollInputIntoView}
+                        onBlur={() => { if (!item.text.trim()) deleteItem(item.id); }}
                         placeholder="New task"
-                        style={{flex:1,minWidth:0,resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}
+                        style={{...taStyle,flex:1,minWidth:0}}
                       />
-                      <button onClick={() => deleteItem(item.id)} aria-label="Delete task" style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.25)",fontSize:"18px",padding:"2px 4px",flexShrink:0,lineHeight:1}}>×</button>
+                      <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
+                        style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
-                  ))}
+                  </div>
+                ))}
 
-                  {/* Add button — hidden in empty state since template offers START FRESH */}
-                  {items.length > 0 && (
-                  <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"transparent",border:"0.5px dashed rgba(255,255,255,0.2)",borderRadius:"22px",cursor:"pointer",textAlign:"left"}}>
-                    <div style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
-                      <span style={{color:accentColor,fontSize:"14px",lineHeight:1}}>+</span>
-                    </div>
-                    <span style={{color:"rgba(235,235,245,0.35)",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>New task</span>
-                  </button>
-                  )}
+                {/* New task row */}
+                <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"11px 0",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                  <span style={{width:"24px",height:"24px",borderRadius:"50%",background:accentColor,color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px",lineHeight:1,flexShrink:0}}>+</span>
+                  <span style={{color:accentColor,fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>New task</span>
+                </button>
 
-                  {/* Completed section — collapsible */}
-                  {checked.length > 0 && (
-                    <div style={{marginTop:"12px"}}>
-                      <button
-                        onClick={() => {
-                          const el = document.getElementById(`completed-${tasksSubTab}`);
-                          if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-                        }}
-                        style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
-                      >
-                        <span>Completed ({checked.length})</span>
-                      </button>
-                      <div id={`completed-${tasksSubTab}`}>
-                        {checked.map(item => (
-                          <div key={item.id} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"22px",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 12px 12px 14px",marginBottom:"8px",opacity:0.7}}>
-                            <button onClick={() => updateItem(item.id, {checked: false})} aria-label="Mark not done"
-                              style={{width:"22px",height:"22px",marginTop:"2px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
-                              ✓
-                            </button>
-                            <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.35)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.4",letterSpacing:"-0.2px",textDecoration:"line-through",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
-                            <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.15)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
-                          </div>
-                        ))}
+                {items.length === 0 && (
+                  <div style={{padding:"28px 0 8px",textAlign:"center"}}>
+                    <div style={{fontSize:"17px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>No tasks</div>
+                    {(samplesByTab[tasksSubTab]) && (
+                      <button onClick={useExamples} style={{...linkBtn(accentColor),marginTop:"8px"}}>Fill with an example list</button>
+                    )}
+                  </div>
+                )}
+
+                {/* Completed */}
+                {checked.length > 0 && showDone && (
+                  <div style={{marginTop:"18px"}}>
+                    <div style={{fontSize:"15px",fontWeight:600,color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginBottom:"2px"}}>Completed</div>
+                    {checked.map(item => (
+                      <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",paddingTop:"11px"}}>
+                        {circle(true, () => updateItem(item.id, {checked: false}), 'Mark not done')}
+                        <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",paddingBottom:"11px",borderBottom:hair}}>
+                          <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.45)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
+                          <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })()}
