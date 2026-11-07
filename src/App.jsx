@@ -49200,7 +49200,7 @@ function MuzzApp() {
             const linkBtn = (color) => ({fontSize:"15px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0});
             const circle = (on, onClick, label) => (
               <button onClick={onClick} aria-label={label}
-                style={{width:"24px",height:"24px",marginTop:"1px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?accentColor:"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
+                style={{width:"24px",height:"24px",marginTop:"10px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?accentColor:"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
                 {on ? '✓' : ''}
               </button>
             );
@@ -49216,7 +49216,7 @@ function MuzzApp() {
 
             return (
               <div style={{marginTop:"8px"}}>
-                <style>{`.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
+                <style>{`.mz-task-row textarea{-webkit-tap-highlight-color:transparent}.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
 
                 {(activeCustom || checked.length > 0) && (
                   <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
@@ -49243,9 +49243,9 @@ function MuzzApp() {
 
                 {/* Open tasks */}
                 {unchecked.map(item => (
-                  <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",paddingTop:"11px"}}>
+                  <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                     {circle(false, () => updateItem(item.id, {checked: true}), 'Mark done')}
-                    <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",paddingBottom:"11px",borderBottom:hair}}>
+                    <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px",borderRadius:"16px",background:"rgba(255,255,255,0.07)",border:"0.5px solid rgba(255,255,255,0.1)"}}>
                       <textarea
                         id={`item-${item.id}`}
                         rows={1}
@@ -49285,9 +49285,9 @@ function MuzzApp() {
                   <div style={{marginTop:"18px"}}>
                     <div style={{fontSize:"15px",fontWeight:600,color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginBottom:"2px"}}>Completed</div>
                     {checked.map(item => (
-                      <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",paddingTop:"11px"}}>
+                      <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                         {circle(true, () => updateItem(item.id, {checked: false}), 'Mark not done')}
-                        <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",paddingBottom:"11px",borderBottom:hair}}>
+                        <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px",borderRadius:"16px",background:"rgba(255,255,255,0.07)",border:"0.5px solid rgba(255,255,255,0.1)"}}>
                           <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.45)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
                           <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
                             style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
@@ -67591,10 +67591,48 @@ function MuzzApp() {
     const selEntry = gymLog[selDate] || {};
     const selMuscles = selEntry.muscles || {};
     const exerciseList = Array.isArray(selEntry.exercises) ? selEntry.exercises : [];
-    const entryHasData = (e) => !!e && ((e.muscles && Object.values(e.muscles).some(v => v > 0)) || (Array.isArray(e.exercises) && e.exercises.length > 0));
+    // Free-text day note, e.g. "3 shoulders, 2 biceps, 2 tris" → { Shoulders:3, Biceps:2, Triceps:2 }
+    const muscleFor = (w) => {
+      w = w.toLowerCase();
+      if (/^(shoulder|delt|ohp)/.test(w)) return 'Shoulders';
+      if (/^(tri)/.test(w)) return 'Triceps';
+      if (/^(bi|curl)/.test(w)) return 'Biceps';
+      if (/^(chest|pec|bench)/.test(w)) return 'Chest';
+      if (/^(back|lat|row|pull)/.test(w)) return 'Back';
+      if (/^(leg|quad|ham|calf|calv|squat)/.test(w)) return 'Legs';
+      if (/^(glute|butt|hip)/.test(w)) return 'Glutes';
+      if (/^(ab|core)/.test(w)) return 'Abs';
+      if (/^(forearm|grip)/.test(w)) return 'Forearms';
+      if (/^(cardio|run|bike|row)/.test(w)) return 'Cardio';
+      return null;
+    };
+    const parseNoteMuscles = (note) => {
+      const out = {};
+      const re = /(\d+)\s*(?:x\s*)?(?:sets?\s*(?:of\s*)?)?([a-zA-Z]+)/g;
+      let m;
+      const WORDS = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
+      const text = String(note || '').replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b/gi, w => String(WORDS[w.toLowerCase()]));
+      while ((m = re.exec(text)) !== null) {
+        const k = muscleFor(m[2]);
+        if (k) out[k] = (out[k] || 0) + (parseInt(m[1]) || 0);
+      }
+      return out;
+    };
+    const entryMuscles = (e) => {
+      const out = {...((e && e.muscles) || {})};
+      Object.entries(parseNoteMuscles(e && e.note)).forEach(([k, v]) => { out[k] = (out[k] || 0) + v; });
+      return out;
+    };
+    // Text shown in the day box — older entries saved as counts are shown as text
+    const noteTextFor = (e) => {
+      if (!e) return '';
+      if (typeof e.note === 'string') return e.note;
+      return MUSCLES.filter(m => e.muscles && e.muscles[m]).map(m => `${e.muscles[m]} ${m.toLowerCase()}`).join(', ');
+    };
+    const entryHasData = (e) => !!e && ((e.muscles && Object.values(e.muscles).some(v => v > 0)) || (typeof e.note === 'string' && e.note !== '') || (Array.isArray(e.exercises) && e.exercises.length > 0));
     const entrySets = (e) => {
       if (!e) return 0;
-      const m = Object.values(e.muscles || {}).reduce((a, v) => a + (v || 0), 0);
+      const m = Object.values(entryMuscles(e)).reduce((a, v) => a + (v || 0), 0);
       const x = (Array.isArray(e.exercises) ? e.exercises : []).reduce((a, ex) => a + (parseInt(ex.sets) || 0), 0);
       return m + x;
     };
@@ -67613,6 +67651,7 @@ function MuzzApp() {
       if (v > 0) mu[muscle] = v; else delete mu[muscle];
       return {...cur, muscles: mu};
     });
+    const setDayNote = (val) => updateEntry(selDate, cur => ({...cur, note: val, muscles: {}}));
     const setExercises = (fn) => updateEntry(selDate, cur => ({...cur, exercises: fn(Array.isArray(cur.exercises) ? cur.exercises : [])}));
 
     // Week strip for the selected date
@@ -67623,7 +67662,7 @@ function MuzzApp() {
     const weekIsCurrent = logWeek.some(d => d.date === today);
     const weekSessions = logWeek.filter(d => entryHasData(gymLog[d.date])).length;
     const weekMuscleTotals = {};
-    logWeek.forEach(d => { const mu = gymLog[d.date]?.muscles || {}; Object.entries(mu).forEach(([k, v]) => { weekMuscleTotals[k] = (weekMuscleTotals[k]||0) + (v||0); }); });
+    logWeek.forEach(d => { const mu = entryMuscles(gymLog[d.date]); Object.entries(mu).forEach(([k, v]) => { weekMuscleTotals[k] = (weekMuscleTotals[k]||0) + (v||0); }); });
     const weekExercises = logWeek.reduce((a, d) => a + ((gymLog[d.date]?.exercises || []).length), 0);
     const thisWeekSessions = weekDays.filter(d => entryHasData(gymLog[d.date])).length;
     // Most recent earlier session with exercises — for "Repeat last workout"
@@ -67837,7 +67876,7 @@ function MuzzApp() {
                 )}
               </div>
 
-              {/* Day title + mode */}
+              {/* Day title */}
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"12px",margin:"4px 4px 0"}}>
                 <div>
                   <div style={{fontSize:"22px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.3px"}}>{selLabel}</div>
@@ -67845,35 +67884,24 @@ function MuzzApp() {
                 </div>
                 {selDate !== today && <button onClick={() => setGymDate(null)} style={{...textBtn(BLUE),fontSize:"15px"}}>Today</button>}
               </div>
-              <Segmented value={gymMode} onChange={setGymMode} options={[{id:'basic',label:'Basic'},{id:'advanced',label:'Advanced'}]} />
 
-              {/* BASIC — sets per muscle group */}
-              {gymMode === 'basic' && (
-                <>
-                  <div style={card}>
-                    {MUSCLES.map((m, i) => {
-                      const n = selMuscles[m] || 0;
-                      return (
-                        <div key={m} style={{display:"flex",alignItems:"center",gap:"12px",minHeight:"54px",padding:"0 12px 0 16px",borderBottom:i<MUSCLES.length-1?sep:"none"}}>
-                          <span style={{flex:1,fontSize:"17px",fontFamily:SANS_FONT,color:n?"#FFFFFF":"rgba(235,235,245,0.85)",fontWeight:n?600:400,letterSpacing:"-0.2px"}}>{m}</span>
-                          {stepBtn('−', () => bumpMuscle(m, -1), n === 0)}
-                          <span style={{minWidth:"28px",textAlign:"center",fontSize:"20px",fontWeight:700,fontFamily:SANS_FONT,color:n?GREEN:ter}}>{n}</span>
-                          {stepBtn('+', () => bumpMuscle(m, 1), false)}
-                        </div>
-                      );
-                    })}
+              {/* What you trained — just type it */}
+              <div style={{...card,padding:"14px 16px"}}>
+                <textarea rows={2} placeholder={"What did you train?\ne.g. 3 shoulders, 2 biceps, 2 triceps"} value={noteTextFor(selEntry)}
+                  ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
+                  onChange={e => setDayNote(e.target.value)}
+                  style={{...bareArea,minHeight:"48px"}} />
+                {Object.keys(entryMuscles(selEntry)).length > 0 && (
+                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"10px"}}>
+                    {MUSCLES.filter(m => entryMuscles(selEntry)[m]).map(m => (
+                      <span key={m} style={{padding:"3px 10px",borderRadius:"999px",background:"rgba(48,209,88,0.16)",fontSize:"13px",color:GREEN,fontFamily:SANS_FONT,fontWeight:600}}>{entryMuscles(selEntry)[m]} {m}</span>
+                    ))}
                   </div>
-                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"-6px 4px 0"}}>
-                    Tap + once per set. {exerciseList.length > 0 ? `This day also has ${exerciseList.length} ${exerciseList.length === 1 ? 'exercise' : 'exercises'} in Advanced.` : 'Switch to Advanced to log exercises, reps and weight.'}
-                  </div>
-                  {muscleTotal > 0 && (
-                    <button onClick={() => updateEntry(selDate, cur => ({...cur, muscles: {}}))} style={{...textBtn(RED),alignSelf:"center",marginTop:"4px",fontSize:"15px"}}>Clear sets for this day</button>
-                  )}
-                </>
-              )}
+                )}
+              </div>
 
-              {/* ADVANCED — individual exercises */}
-              {gymMode === 'advanced' && (
+              {/* Detailed exercises — optional, opened from here */}
+              {(gymMode === 'advanced' || exerciseList.length > 0) ? (
                 <>
                   {exerciseList.length === 0 && lastAdvanced && (
                     <button onClick={() => repeatWorkout(lastAdvanced)}
@@ -67949,13 +67977,18 @@ function MuzzApp() {
                       </button>
                     </div>
                   </div>
-                  {muscleTotal > 0 && (
-                    <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,margin:"-6px 4px 0"}}>This day also has {muscleTotal} sets logged in Basic.</div>
+                  {exerciseList.length === 0 && (
+                    <button onClick={() => setGymMode('basic')} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"2px",fontSize:"15px"}}>Hide detailed exercises</button>
                   )}
                   {exerciseList.length > 0 && (
                     <button onClick={() => { if (window.confirm('Clear all exercises for this day?')) setExercises(() => []); }} style={{...textBtn(RED),alignSelf:"center",marginTop:"4px",fontSize:"15px"}}>Clear exercises for this day</button>
                   )}
                 </>
+              ) : (
+                <button onClick={() => { setGymMode('advanced'); if (lastAdvanced === undefined) addExercise(); }}
+                  style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",padding:"13px 16px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.06)",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"17px"}}>
+                  <span style={{fontSize:"20px",lineHeight:1}}>+</span> Add detailed exercises
+                </button>
               )}
             </>
             );
