@@ -49256,7 +49256,7 @@ function MuzzApp() {
                 {unchecked.map(item => (
                   <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                     {circle(false, () => updateItem(item.id, {checked: true}), 'Mark done')}
-                    <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px",borderRadius:"16px",background:"rgba(255,255,255,0.07)",border:"0.5px solid rgba(255,255,255,0.1)"}}>
+                    <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",...LIQUID_GLASS,padding:"10px 10px 10px 14px",borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}}>
                       <textarea
                         id={`item-${item.id}`}
                         rows={1}
@@ -49298,7 +49298,7 @@ function MuzzApp() {
                     {checked.map(item => (
                       <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                         {circle(true, () => updateItem(item.id, {checked: false}), 'Mark not done')}
-                        <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px",borderRadius:"16px",background:"rgba(255,255,255,0.07)",border:"0.5px solid rgba(255,255,255,0.1)"}}>
+                        <div style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"8px",...LIQUID_GLASS,padding:"10px 10px 10px 14px",borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}}>
                           <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.45)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
                           <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
                             style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
