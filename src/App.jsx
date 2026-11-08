@@ -180,6 +180,49 @@ if (typeof document !== 'undefined' && !window.__mzHaptics) {
     } catch (err) {}
   }, { passive: true });
 }
+// "Deleted · Undo" bar, like Mail and Photos. Any screen can call mzUndo('Task deleted', restoreFn).
+const mzUndo = (label, undo) => { try { window.dispatchEvent(new CustomEvent('mz-undo', { detail: { label, undo } })); } catch (e) {} };
+// Remove matching items from a list state and offer Undo that puts them back where they were.
+const undoableRemove = (setList, match, label) => {
+  let removed = [], idxs = [];
+  setList(prev => {
+    removed = []; idxs = [];
+    const out = [];
+    (prev || []).forEach((x, i) => { if (match(x, i)) { removed.push(x); idxs.push(i); } else out.push(x); });
+    return out;
+  });
+  mzUndo(label, () => setList(prev => {
+    const n = [...(prev || [])];
+    idxs.forEach((ix, k) => { n.splice(Math.min(ix, n.length), 0, removed[k]); });
+    return n;
+  }));
+};
+const UndoToastHost = () => {
+  const [toast, setToast] = useState(null);
+  const timer = useRef(null);
+  useEffect(() => {
+    const on = (e) => {
+      clearTimeout(timer.current);
+      setToast({ ...e.detail, key: Date.now() });
+      timer.current = setTimeout(() => setToast(null), 5000);
+    };
+    window.addEventListener('mz-undo', on);
+    return () => { window.removeEventListener('mz-undo', on); clearTimeout(timer.current); };
+  }, []);
+  if (!toast || typeof document === 'undefined') return null;
+  return createPortal(
+    <div style={{ position: 'fixed', left: 0, right: 0, bottom: 'calc(100px + env(safe-area-inset-bottom))', display: 'flex', justifyContent: 'center', zIndex: 1200, pointerEvents: 'none', padding: '0 16px' }}>
+      <style>{`@keyframes mzToastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}`}</style>
+      <div key={toast.key} role="status" style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '18px', padding: '12px 12px 12px 18px', borderRadius: '14px', background: '#2C2C2E', border: '0.5px solid rgba(255,255,255,0.12)', boxShadow: '0 10px 30px rgba(0,0,0,0.45)', animation: 'mzToastIn 0.25s cubic-bezier(0.2,0.8,0.2,1) both', fontFamily: SANS_FONT }}>
+        <span style={{ fontSize: '15px', color: '#FFFFFF' }}>{toast.label}</span>
+        <button onClick={() => { clearTimeout(timer.current); const u = toast.undo; setToast(null); if (u) u(); }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0A84FF', fontFamily: SANS_FONT, fontSize: '15px', fontWeight: 600, padding: '4px 6px' }}>Undo</button>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
 // iOS-style row: swipe left to reveal Delete, press and hold (or right-click) for a quick-actions menu.
 // Vertical scrolling still works — the row only moves once the finger is clearly going sideways.
 // menu: [{ label, onSelect, destructive }]
@@ -479,6 +522,7 @@ const StarryBackground = ({ children }) => {
         .mz-seg:active .mz-seg-thumb { transform: scale(0.94, 0.88); }
         /* pages rise in when opened, like an iOS push */
         .mz-num { animation: mzPageIn 0.38s cubic-bezier(0.2,0.8,0.2,1) both; }
+        @keyframes mzTickPop { 0% { transform: scale(0.8); } 55% { transform: scale(1.14); } 100% { transform: scale(1); } }
         @keyframes mzPageIn { from { opacity: 0; transform: translateY(14px) scale(0.99); } to { opacity: 1; transform: none; } }
         /* opening a collapsible fades its contents in */
         .mz-num details[open] > *:not(summary) { animation: mzFadeIn 0.28s ease both; }
@@ -47229,8 +47273,8 @@ function MuzzApp() {
   const [gymWorkoutTab, setGymWorkoutTab] = useState('log');
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
-  const [sleepData, setSleepData] = useState({});
-  const [mentalHealthData, setMentalHealthData] = useState({});
+  const [completing, setCompleting] = useState({}); // items mid tick-off animation
+  const [taskDrag, setTaskDrag] = useState(null); // { list, id, order } while dragging a task
   const [timesheetData, setTimesheetData] = useState({
     jobs: [
       { id: 1, name: 'Job 1', hourlyRate: 0, hourlyRateStr: '', shifts: {} },
@@ -47515,7 +47559,7 @@ function MuzzApp() {
   const mapPinsRef = useRef(mapPins);
   useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
 
 
@@ -47570,8 +47614,6 @@ function MuzzApp() {
     if(d.waterIntake) setWaterIntake(d.waterIntake);
     if(d.dailySteps) setDailySteps(d.dailySteps);
     if(d.workoutPlan) setWorkoutPlan(d.workoutPlan);
-    if(d.sleepData) setSleepData(d.sleepData);
-    if(d.mentalHealthData) setMentalHealthData(d.mentalHealthData);
     if(d.timesheetData) setTimesheetData(d.timesheetData);
     if(d.customCategories) setCustomCategories(d.customCategories);
     if(d.eliteName) setEliteName(d.eliteName);
@@ -47635,8 +47677,6 @@ function MuzzApp() {
       waterIntake: d.waterIntake||{days:{},goal:3,goalStr:'3'},
       dailySteps: d.dailySteps||{},
       workoutPlan: d.workoutPlan||{weeks:{},stepsGoal:10000},
-      sleepData: d.sleepData||{},
-      mentalHealthData: d.mentalHealthData||{},
       timesheetData: d.timesheetData||{jobs:[{id:1,name:'Job 1',shifts:{},hourlyRate:0,hourlyRateStr:''}],activeJobId:1},
       customCategories: d.customCategories||[],
       eliteName: d.eliteName||'',
@@ -47922,8 +47962,6 @@ function MuzzApp() {
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
-          if (d.sleepData) setSleepData(d.sleepData);
-          if (d.mentalHealthData) setMentalHealthData(d.mentalHealthData);
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
@@ -48051,8 +48089,6 @@ function MuzzApp() {
           waterIntake,
           dailySteps,
           workoutPlan,
-          sleepData,
-          mentalHealthData,
           timesheetData,
           customCategories,
           eliteName,
@@ -48082,7 +48118,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -48613,7 +48649,7 @@ function MuzzApp() {
     const rowList = {display:"flex",flexDirection:"column",gap:"8px"};
     const tick = (on, onClick, label) => (
       <button onClick={onClick} aria-label={label}
-        style={{width:"24px",height:"24px",marginTop:"1px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?"#0A84FF":"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
+        style={{width:"24px",height:"24px",marginTop:"1px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?"#0A84FF":"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s",animation:on?"mzTickPop 0.32s cubic-bezier(0.2,0.8,0.2,1)":"none"}}>
         {on ? '✓' : ''}
       </button>
     );
@@ -48688,20 +48724,29 @@ function MuzzApp() {
       const update = (changes) => setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, ...changes} : r));
       return (
         <React.Fragment key={reminder.id}>
-        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}
+        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted')}
           menu={[
             { label: 'Edit', onSelect: () => setEditingReminderId(reminder.id) },
             { label: reminder.permanent ? 'Unpin' : 'Pin', onSelect: () => update({permanent: !reminder.permanent}) },
             { label: reminder.done ? 'Mark not done' : 'Mark done', onSelect: () => update({done: !reminder.done}) },
-            { label: 'Delete', destructive: true, onSelect: () => setReminders(prev => prev.filter(r => r.id !== reminder.id)) },
+            { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted') },
           ]}>
 
             <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px"}}>
-            {tick(!!reminder.done, () => update({done: !reminder.done}), reminder.done ? 'Mark not done' : 'Mark done')}
+            {tick(!!reminder.done || !!completing['r' + reminder.id], () => {
+              if (reminder.done) { update({done: false}); return; }
+              const key = 'r' + reminder.id;
+              if (completing[key]) return;
+              setCompleting(c => ({...c, [key]: true}));
+              setTimeout(() => {
+                setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, done: true} : r));
+                setCompleting(c => { const n = {...c}; delete n[key]; return n; });
+              }, 480);
+            }, reminder.done ? 'Mark not done' : 'Mark done')}
             <button onClick={() => setEditingReminderId(reminder.id)}
               style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"12px",padding:0,background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontFamily:SANS_FONT,fontSize:"17px",textDecoration:reminder.done?"line-through":"none",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",textDecoration:(reminder.done||completing['r'+reminder.id])?"line-through":"none",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
                 {!reminder.permanent && (
                   <div style={{fontFamily:SANS_FONT,fontSize:"15px",marginTop:"2px",color:rel?rel.color:sec}}>
                     {reminder.date ? `${new Date(reminder.date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${rel ? `, ${rel.text.charAt(0).toLowerCase()}${rel.text.slice(1)}` : ''}` : 'No date'}
@@ -48728,7 +48773,7 @@ function MuzzApp() {
                 </div>
               )}
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
-                <button onClick={() => { setReminders(prev => prev.filter(r => r.id !== reminder.id)); setEditingReminderId(null); }} style={textBtn("#FF453A")}>Delete</button>
+                <button onClick={() => { undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted'); setEditingReminderId(null); }} style={textBtn("#FF453A")}>Delete</button>
                 <button onClick={() => setEditingReminderId(null)} style={{...textBtn("#0A84FF"),fontWeight:600}}>Done</button>
               </div>
             </div>
@@ -48744,11 +48789,11 @@ function MuzzApp() {
       const update = (changes) => setBirthdays(prev => prev.map(b => b.id === bday.id ? {...b, ...changes} : b));
       return (
         <React.Fragment key={bday.id}>
-        <SwipeRow style={{...rowCard,border:diff===0?"0.5px solid rgba(10,132,255,0.6)":rowCard.border}} disabled={isEditing} onDelete={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}
+        <SwipeRow style={{...rowCard,border:diff===0?"0.5px solid rgba(10,132,255,0.6)":rowCard.border}} disabled={isEditing} onDelete={() => undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted')}
           menu={[
             { label: 'Edit', onSelect: () => setEditingBdayId(bday.id) },
             { label: bday.category === 'family' ? 'Move to Friends' : 'Move to Family', onSelect: () => update({category: bday.category === 'family' ? 'friend' : 'family'}) },
-            { label: 'Delete', destructive: true, onSelect: () => setBirthdays(prev => prev.filter(b => b.id !== bday.id)) },
+            { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted') },
           ]}>
 
             <button onClick={() => setEditingBdayId(bday.id)}
@@ -48790,7 +48835,7 @@ function MuzzApp() {
               </div>
               <Segmented value={bday.category||'friend'} onChange={(cat) => update({category: cat})} options={[{id:'friend',label:'Friend'},{id:'family',label:'Family'}]} />
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
-                <button onClick={() => { setBirthdays(prev => prev.filter(b => b.id !== bday.id)); setEditingBdayId(null); }} style={textBtn("#FF453A")}>Delete</button>
+                <button onClick={() => { undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted'); setEditingBdayId(null); }} style={textBtn("#FF453A")}>Delete</button>
                 <button onClick={() => setEditingBdayId(null)} style={{...textBtn("#0A84FF"),fontWeight:600}}>Done</button>
               </div>
             </div>
@@ -48881,7 +48926,7 @@ function MuzzApp() {
                 <div style={{marginTop:"6px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                     <div style={groupLabel}>Completed</div>
-                    <button onClick={() => setReminders(prev => prev.filter(r => !r.done))} style={{...textBtn("#0A84FF"),fontSize:"15px"}}>Clear</button>
+                    <button onClick={() => undoableRemove(setReminders, r => r.done, 'Completed reminders cleared')} style={{...textBtn("#0A84FF"),fontSize:"15px"}}>Clear</button>
                   </div>
                   <div style={rowList}>{doneReminders.map((r, i) => renderReminderRow(r, i === doneReminders.length - 1))}</div>
                 </div>
@@ -49022,7 +49067,68 @@ function MuzzApp() {
             };
             const updateItem = (id, changes) => save(items.map(i => i.id===id ? {...i,...changes} : i));
             const deleteItem = (id) => { if(items.length===1){ save([]); return; } save(items.filter(i=>i.id!==id)); };
-            const clearCompleted = () => save(items.filter(i => !i.checked));
+            // Update from the latest saved list (safe when several changes land close together)
+            const parseArr = (v) => { try { const a = JSON.parse(v || '[]'); return Array.isArray(a) ? a : []; } catch { return []; } };
+            const listId = isBuiltIn ? null : activeCustom.id;
+            const updateNote = (fn) => {
+              if (isBuiltIn) setNote(prev => JSON.stringify(fn(parseArr(prev))));
+              else setCustomTaskLists(prev => prev.map(l => l.id === listId ? {...l, note: JSON.stringify(fn(parseArr(l.note)))} : l));
+            };
+            // Delete with "Task deleted · Undo"
+            const deleteItemUndo = (id) => {
+              const idx = items.findIndex(i => i.id === id);
+              const it = items[idx];
+              deleteItem(id);
+              if (it && String(it.text || '').trim()) mzUndo('Task deleted', () => updateNote(list => list.some(x => x.id === id) ? list : [...list.slice(0, idx), it, ...list.slice(idx)]));
+            };
+            const clearCompleted = () => {
+              const snapshot = items;
+              save(items.filter(i => !i.checked));
+              mzUndo('Completed tasks cleared', () => updateNote(list => {
+                const have = new Set(list.map(x => x.id));
+                return [...list, ...snapshot.filter(x => x.checked && !have.has(x.id))];
+              }));
+            };
+            // Tick-off: circle fills and text strikes through, then the task slides to Completed
+            const completeItem = (id) => {
+              const key = 't' + id;
+              if (completing[key]) return;
+              setCompleting(c => ({...c, [key]: true}));
+              setTimeout(() => {
+                updateNote(list => list.map(i => i.id === id ? {...i, checked: true} : i));
+                setCompleting(c => { const n = {...c}; delete n[key]; return n; });
+              }, 480);
+            };
+            // Drag to reorder (grip on the right of each open task)
+            const dragActive = taskDrag && taskDrag.list === tasksSubTab;
+            const endDrag = () => {
+              const d = taskDrag;
+              setTaskDrag(null);
+              if (!d) return;
+              updateNote(list => {
+                const open = list.filter(i => !i.checked), done = list.filter(i => i.checked);
+                const byId = new Map(open.map(i => [String(i.id), i]));
+                const ordered = d.order.map(id => byId.get(id)).filter(Boolean);
+                const rest = open.filter(i => !d.order.includes(String(i.id)));
+                return [...ordered, ...rest, ...done];
+              });
+            };
+            const dragMove = (e) => {
+              if (!dragActive) return;
+              const el = document.elementFromPoint(e.clientX, e.clientY);
+              const row = el && el.closest && el.closest('[data-task-id]');
+              if (!row) return;
+              const overId = row.getAttribute('data-task-id');
+              if (overId === taskDrag.id) return;
+              setTaskDrag(d => {
+                if (!d) return d;
+                const from = d.order.indexOf(d.id), over = d.order.indexOf(overId);
+                if (from < 0 || over < 0) return d;
+                const o = d.order.filter(x => x !== d.id);
+                o.splice(o.indexOf(overId) + (from < over ? 1 : 0), 0, d.id);
+                return {...d, order: o};
+              });
+            };
 
             const handleKeyDown = (e, item) => {
               if (e.key === 'Enter') {
@@ -49051,7 +49157,7 @@ function MuzzApp() {
             const linkBtn = (color) => ({fontSize:"15px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0});
             const circle = (on, onClick, label) => (
               <button onClick={onClick} aria-label={label}
-                style={{width:"24px",height:"24px",marginTop:"10px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?accentColor:"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>
+                style={{width:"24px",height:"24px",marginTop:"10px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",border:on?"none":"1.5px solid rgba(235,235,245,0.3)",background:on?accentColor:"transparent",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s",animation:on?"mzTickPop 0.32s cubic-bezier(0.2,0.8,0.2,1)":"none"}}>
                 {on ? '✓' : ''}
               </button>
             );
@@ -49067,7 +49173,7 @@ function MuzzApp() {
 
             return (
               <div style={{marginTop:"8px"}}>
-                <style>{`.mz-task-row textarea{-webkit-tap-highlight-color:transparent}.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
+                <style>{`@keyframes mzTickPop{0%{transform:scale(0.8)}55%{transform:scale(1.14)}100%{transform:scale(1)}}.mz-task-row textarea{-webkit-tap-highlight-color:transparent}.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
 
                 {(activeCustom || checked.length > 0) && (
                   <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
@@ -49093,15 +49199,18 @@ function MuzzApp() {
                 )}
 
                 {/* Open tasks */}
-                {unchecked.map(item => (
-                  <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
-                    {circle(false, () => updateItem(item.id, {checked: true}), 'Mark done')}
-                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}
+                {(dragActive ? taskDrag.order.map(id => unchecked.find(i => String(i.id) === id)).filter(Boolean) : unchecked).map(item => {
+                  const ticking = !!completing['t' + item.id];
+                  const dragging = dragActive && taskDrag.id === String(item.id);
+                  return (
+                  <div key={item.id} data-task-id={String(item.id)} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px",transform:dragging?"scale(1.02)":"none",opacity:dragging?0.92:1,transition:"transform 0.15s ease, opacity 0.15s ease",position:"relative",zIndex:dragging?5:"auto"}}>
+                    {circle(ticking, () => completeItem(item.id), 'Mark done')}
+                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)",boxShadow:dragging?"0 10px 28px rgba(0,0,0,0.45)":LIQUID_GLASS.boxShadow}} disabled={dragActive} onDelete={() => deleteItemUndo(item.id)}
                       menu={[
                         { label: 'Edit', onSelect: () => { const el = document.getElementById(`item-${item.id}`); if (el) { el.focus(); const v = el.value.length; try { el.setSelectionRange(v, v); } catch (e) {} } } },
-                        { label: 'Mark done', onSelect: () => updateItem(item.id, {checked: true}) },
-                        { label: 'Move to top', onSelect: () => save([item, ...items.filter(i => i.id !== item.id)]) },
-                        { label: 'Delete', destructive: true, onSelect: () => deleteItem(item.id) },
+                        { label: 'Mark done', onSelect: () => completeItem(item.id) },
+                        { label: 'Move to top', onSelect: () => updateNote(list => { const it = list.find(i => i.id === item.id); return it ? [it, ...list.filter(i => i.id !== item.id)] : list; }) },
+                        { label: 'Delete', destructive: true, onSelect: () => deleteItemUndo(item.id) },
                       ]}>
                     <div style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px"}}>
                       <textarea
@@ -49115,14 +49224,23 @@ function MuzzApp() {
                         onFocus={scrollInputIntoView}
                         onBlur={() => { if (!item.text.trim()) deleteItem(item.id); }}
                         placeholder="New task"
-                        style={{...taStyle,flex:1,minWidth:0}}
+                        style={{...taStyle,flex:1,minWidth:0,textDecoration:ticking?"line-through":"none",color:ticking?"rgba(235,235,245,0.45)":taStyle.color,transition:"color 0.2s ease"}}
                       />
-                      <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
+                      <button className="mz-del" onClick={() => deleteItemUndo(item.id)} aria-label="Delete task"
                         style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
                     </SwipeRow>
+                    {unchecked.length > 1 && (
+                      <span aria-label="Drag to reorder" role="button"
+                        onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {} setTaskDrag({ list: tasksSubTab, id: String(item.id), order: unchecked.map(i => String(i.id)) }); }}
+                        onPointerMove={dragMove}
+                        onPointerUp={endDrag}
+                        onPointerCancel={endDrag}
+                        style={{alignSelf:"center",width:"28px",height:"36px",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,cursor:dragging?"grabbing":"grab",touchAction:"none",color:"rgba(235,235,245,0.3)",fontSize:"18px",userSelect:"none",WebkitUserSelect:"none"}}>≡</span>
+                    )}
                   </div>
-                ))}
+                  );
+                })}
 
                 {/* New task row */}
                 <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"11px 0",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
@@ -49146,14 +49264,14 @@ function MuzzApp() {
                     {checked.map(item => (
                       <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                         {circle(true, () => updateItem(item.id, {checked: false}), 'Mark not done')}
-                        <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}
+                        <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItemUndo(item.id)}
                           menu={[
                             { label: 'Mark not done', onSelect: () => updateItem(item.id, {checked: false}) },
-                            { label: 'Delete', destructive: true, onSelect: () => deleteItem(item.id) },
+                            { label: 'Delete', destructive: true, onSelect: () => deleteItemUndo(item.id) },
                           ]}>
                         <div style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px"}}>
                           <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.45)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
-                          <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
+                          <button className="mz-del" onClick={() => deleteItemUndo(item.id)} aria-label="Delete task"
                             style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.4)",fontSize:"20px",padding:"0 2px",flexShrink:0,lineHeight:1}}>×</button>
                         </div>
                         </SwipeRow>
@@ -49176,10 +49294,7 @@ function MuzzApp() {
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
     const today = localISODate();
-    const todaySleep = sleepData[today] || {};
-    const todayMood = mentalHealthData[today] || {};
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    const lastNightSleep = sleepData[localISODate(yesterday)] || {};
     const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split("T")[0];}); };
     const weekDays = getWeekDays();
     const dayOfYear = Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
@@ -49732,7 +49847,15 @@ function MuzzApp() {
     };
     const removeBillFromBucket = (bucketId, idx) => {
       const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
-      updateBucketBills(bucketId, (b.bills||[]).filter((_, i) => i !== idx));
+      const before = b.bills || [];
+      const removed = before[idx];
+      updateBucketBills(bucketId, before.filter((_, i) => i !== idx));
+      if (removed && removed.name) mzUndo('Bill deleted', () => setBillBuckets(prev => (prev||[]).map(x => {
+        if (x.id !== bucketId) return x;
+        const n = [...(x.bills || [])];
+        n.splice(Math.min(idx, n.length), 0, removed);
+        return {...x, bills: n};
+      })));
     };
     const updateBucketIncome = (bucketId, value) => {
       updateBucket(bucketId, { incomeStr: value });
@@ -51431,10 +51554,10 @@ function MuzzApp() {
                     const subParts = [typeName, asset?.ownedFor ? `owned ${asset.ownedFor}` : ''].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
-                      <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => setAssets(prev => prev.filter((_, i) => i !== index))}
+                      <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted')}
                         menu={[
                           { label: 'Edit', onSelect: () => setEditingAssetIdx(index) },
-                          { label: 'Delete', destructive: true, onSelect: () => setAssets(prev => prev.filter((_, i) => i !== index)) },
+                          { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted') },
                         ]}>
                         <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
                           style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
@@ -51476,7 +51599,7 @@ function MuzzApp() {
                                 onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
                             </label>
                             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"8px"}}>
-                              <button onClick={() => { if (!asset?.name || window.confirm(`Delete "${asset.name}"?`)) { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); } }} style={textBtn(RED)}>Delete</button>
+                              <button onClick={() => { if (!asset?.name || window.confirm(`Delete "${asset.name}"?`)) { undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted'); setEditingAssetIdx(null); } }} style={textBtn(RED)}>Delete</button>
                               <button onClick={() => setEditingAssetIdx(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
                             </div>
                           </div>
@@ -67150,6 +67273,7 @@ export default function App() {
   return (
     <AuthProvider>
       <AppContent />
+      <UndoToastHost />
     </AuthProvider>
   );
 }
