@@ -193,6 +193,7 @@ const MZ_THEMES = [
   { id: 'yellow',   label: 'Yellow',   hex: '#FFD60A', rgb: '255,214,10' },
   { id: 'orange',   label: 'Orange',   hex: '#FF9F0A', rgb: '255,159,10' },
   { id: 'red',      label: 'Red',      hex: '#FF453A', rgb: '255,69,58' },
+  { id: 'brown',    label: 'Brown',    hex: '#AC8E68', rgb: '172,142,104' },
   { id: 'graphite', label: 'Graphite', hex: '#98989D', rgb: '152,152,157' },
 ];
 const applyMzTheme = (id) => {
@@ -202,11 +203,14 @@ const applyMzTheme = (id) => {
   root.setProperty('--mz-accent', t.hex);
   root.setProperty('--mz-accent-rgb', t.rgb);
   // Box tint: plain dark glass for Blue (the original look), a soft colour wash for the others
-  if (t.id === 'blue') root.setProperty('--mz-glass', 'rgba(28,28,30,0.5)');
-  else {
+  if (t.id === 'blue') {
+    root.setProperty('--mz-glass', 'rgba(28,28,30,0.5)');
+    root.setProperty('--mz-glass-hover', 'rgba(44,44,46,0.7)');
+  } else {
     const [r, g, b] = t.rgb.split(',').map(Number);
-    const mix = (base, c) => Math.round(base * 0.74 + c * 0.26);
-    root.setProperty('--mz-glass', `rgba(${mix(28, r)},${mix(28, g)},${mix(30, b)},0.5)`);
+    const mix = (base, c, w) => Math.round(base * (1 - w) + c * w);
+    root.setProperty('--mz-glass', `rgba(${mix(28, r, 0.26)},${mix(28, g, 0.26)},${mix(30, b, 0.26)},0.5)`);
+    root.setProperty('--mz-glass-hover', `rgba(${mix(44, r, 0.3)},${mix(44, g, 0.3)},${mix(46, b, 0.3)},0.7)`);
   }
 };
 // Apply the saved colour straight away so the app opens in it
@@ -47313,6 +47317,7 @@ function MuzzApp() {
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
   const [appTheme, setAppTheme] = useState(() => { try { return localStorage.getItem('mz_theme') || 'blue'; } catch (e) { return 'blue'; } });
   useEffect(() => { applyMzTheme(appTheme); try { localStorage.setItem('mz_theme', appTheme); } catch (e) {} }, [appTheme]);
+  const themeHex = (MZ_THEMES.find(t => t.id === appTheme) || MZ_THEMES[0]).hex;
   const [taskDrag, setTaskDrag] = useState(null); // { list, id, order } while dragging a task
   const [timesheetData, setTimesheetData] = useState({
     jobs: [
@@ -49641,8 +49646,8 @@ function MuzzApp() {
 
     // Apple-style material over the starfield: translucent, blurred, hairline edge
     // Liquid Glass (iOS 26/27): heavier diffusion, bright specular top edge, darkened outer edge for separation
-    const glass = {background:"rgba(28,28,30,0.5)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"24px",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)"};
-    const glassHover = "rgba(44,44,46,0.7)";
+    const glass = {background:"var(--mz-glass, rgba(28,28,30,0.5))",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"24px",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -0.5px 0 rgba(255,255,255,0.05), 0 0 0 0.5px rgba(0,0,0,0.45), 0 10px 30px rgba(0,0,0,0.28)"};
+    const glassHover = "var(--mz-glass-hover, rgba(44,44,46,0.7))";
     const txt = { primary:"#FFFFFF", secondary:"rgba(235,235,245,0.6)", tertiary:"rgba(235,235,245,0.3)" };
     const groupLabel = {fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600,margin:"0 4px 10px"};
     const sectionItems = navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite));
@@ -49703,7 +49708,7 @@ function MuzzApp() {
               )}
             </div>
             <div style={{marginTop:"16px"}}>
-              <Sparkline data={nwSeries} w={isWide?640:300} h={48} color="#0A84FF" fillOpacity={0.14} />
+              <Sparkline data={nwSeries} w={isWide?640:300} h={48} color={themeHex} fillOpacity={0.14} />
             </div>
           </div>
 
@@ -51126,7 +51131,7 @@ function MuzzApp() {
             const label = {flex:1,minWidth:0,fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px",color:"#FFFFFF"};
             const detail = {fontSize:"15px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.6)",flexShrink:0};
             const chev = <ChevronRight size={16} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0}} />;
-            const ic = (Icon) => <Icon size={20} color="#0A84FF" strokeWidth={1.9} style={{flexShrink:0}} />;
+            const ic = (Icon) => <Icon size={20} color={themeHex} strokeWidth={1.9} style={{flexShrink:0}} />;
             const mail = (subject) => `mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(subject)}`;
             const faqs = [
               {q:"Is Muzz free?",a:"Yes. Every feature in Muzz is free to use right now."},
@@ -64425,7 +64430,7 @@ function MuzzApp() {
                       </div>
                     );
                   })() : (
-                    <div style={{background:'rgba(28,28,30,0.5)',border:`0.5px dashed ${amberGlow}`,borderRadius:"16px",padding:'40px 24px',textAlign:'center'}}>
+                    <div style={{background:'var(--mz-glass, rgba(28,28,30,0.5))',border:`0.5px dashed ${amberGlow}`,borderRadius:"16px",padding:'40px 24px',textAlign:'center'}}>
                       <div style={{fontSize:'12px',color:amberDim,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,marginBottom:'8px'}}>Full Breakdown Coming</div>
                       <div style={{fontSize:'12px',color:'rgba(235,235,245,0.6)',fontFamily:SANS_FONT,lineHeight:1.6,maxWidth:'460px',margin:'0 auto'}}>This is where the deep analysis lives — business overview, brand/moat, segment data, income statement, balance sheet, cash flow, owner earnings, thesis &amp; risks. We build {selected.ticker} out next.</div>
                     </div>
@@ -64465,7 +64470,7 @@ function MuzzApp() {
                     };
                     return (
                     <button key={c.ticker} onClick={handleClick}
-                      style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(28,28,30,0.5)' : 'rgba(28,28,30,0.85)',border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
+                      style={{width:'100%',textAlign:'left',background: isLocked ? 'var(--mz-glass, rgba(28,28,30,0.5))' : 'rgba(28,28,30,0.85)',border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
                       {isLocked && (
                         <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background: c.progress === 'research' ? 'rgba(var(--mz-accent-rgb,10,132,255),0.14)' : 'rgba(235,235,245,0.08)',border: c.progress === 'research' ? `0.5px solid ${amber}` : '0.5px solid rgba(235,235,245,0.3)',borderRadius:'8px',padding:'3px 8px',fontSize:"12px",color: c.progress === 'research' ? amber : 'rgba(235,235,245,0.7)',fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:700}}>{c.progress === 'research' ? '\u25cf IN RESEARCH' : '🔒 QUEUED'}</span>
                       )}
@@ -64693,7 +64698,7 @@ function MuzzApp() {
                       };
                       return (
                       <button key={c.ticker} onClick={handleClick}
-                        style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(28,28,30,0.5)' : 'rgba(28,28,30,0.85)',border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
+                        style={{width:'100%',textAlign:'left',background: isLocked ? 'var(--mz-glass, rgba(28,28,30,0.5))' : 'rgba(28,28,30,0.85)',border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
                         {isLocked && (
                           <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background: c.progress === 'research' ? 'rgba(var(--mz-accent-rgb,10,132,255),0.14)' : 'rgba(235,235,245,0.08)',border: c.progress === 'research' ? `0.5px solid ${amber}` : '0.5px solid rgba(235,235,245,0.3)',borderRadius:'8px',padding:'3px 8px',fontSize:"12px",color: c.progress === 'research' ? amber : 'rgba(235,235,245,0.7)',fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:700}}>{c.progress === 'research' ? '\u25cf IN RESEARCH' : '🔒 QUEUED'}</span>
                         )}
@@ -65126,7 +65131,7 @@ function MuzzApp() {
                         style={{textAlign:"left",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",padding:"13px 14px",cursor:"pointer",fontFamily:SANS_FONT,transition:"all 0.15s",display:"flex",alignItems:"center",gap:"11px"}}
                         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(var(--mz-accent-rgb,10,132,255),0.07)"; e.currentTarget.style.borderColor = "rgba(var(--mz-accent-rgb,10,132,255),0.6)"; }}
                         onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.45)"; e.currentTarget.style.borderColor = rGlow; }}>
-                        <span style={{width:"32px",height:"32px",borderRadius:"9px",background:"rgba(var(--mz-accent-rgb,10,132,255),0.16)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{s.icon ? <s.icon size={18} color="#0A84FF" strokeWidth={2} /> : null}</span>
+                        <span style={{width:"32px",height:"32px",borderRadius:"9px",background:"rgba(var(--mz-accent-rgb,10,132,255),0.16)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{s.icon ? <s.icon size={18} color={themeHex} strokeWidth={2} /> : null}</span>
                         <span style={{flex:1,minWidth:0}}>
                           <div style={{fontSize:"12px",color:"#FFFFFF",fontWeight:700,letterSpacing:"0"}}>{s.label}</div>
                           <div style={{fontSize:"12px",color:"rgba(235,235,245,0.6)",letterSpacing:"0",marginTop:"3px"}}>{s.desc}</div>
