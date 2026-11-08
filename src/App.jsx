@@ -49093,15 +49093,15 @@ function MuzzApp() {
             if (isBuiltIn) {
               noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
               setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
-              accentColor = tasksSubTab === 'daily' ? 'var(--mz-accent,#0A84FF)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
-              borderColor = tasksSubTab === 'daily' ? 'rgba(10,132,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
+              accentColor = 'var(--mz-accent,#0A84FF)'; // every list follows the app colour (Appearance)
+              borderColor = 'rgba(var(--mz-accent-rgb,10,132,255),0.2)';
               headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}) : tasksSubTab === 'weekly' ? 'This week' : 'General';
             } else {
               // Custom list — stored as JSON inside the list's `note` field
               noteVal = activeCustom.note || '';
               setNote = (val) => setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, note: val} : l));
-              accentColor = activeCustom.color || '#0A84FF';
-              borderColor = `${activeCustom.color || '#0A84FF'}33`;
+              accentColor = 'var(--mz-accent,#0A84FF)';
+              borderColor = 'rgba(var(--mz-accent-rgb,10,132,255),0.2)';
               headerLabel = activeCustom.name || 'Custom';
             }
 
@@ -49202,7 +49202,7 @@ function MuzzApp() {
             const showDone = tasksShowDone[tasksSubTab] !== false;
             const hair = "0.5px solid rgba(84,84,88,0.65)";
             const growTa = (el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } };
-            const taStyle = {display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
+            const taStyle = {display:"block",width:"100%",resize:"none",overflow:"hidden",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,padding:0,margin:0,minHeight:"23px",color:"#FFFFFF",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"};
             const linkBtn = (color) => ({fontSize:"15px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer",flexShrink:0});
             const circle = (on, onClick, label) => (
               <button onClick={onClick} aria-label={label}
