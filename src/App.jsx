@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -216,6 +216,53 @@ const applyMzTheme = (id) => {
 // Apply the saved colour straight away so the app opens in it
 try { if (typeof window !== 'undefined') applyMzTheme(localStorage.getItem('mz_theme') || 'blue'); } catch (e) {}
 
+// Pick a date out of typed text, e.g. "Dentist Friday 3pm", "Rego 14 March", "Call mum tomorrow".
+// Returns { date: 'YYYY-MM-DD', rest: text with the date words removed } or null. Times are left in the text.
+const mzParseDate = (text, now = new Date()) => {
+  if (!text) return null;
+  const base = new Date(now); base.setHours(0, 0, 0, 0);
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const plus = (n) => { const d = new Date(base); d.setDate(d.getDate() + n); return d; };
+  const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  const DAYS = ['sun','mon','tue','wed','thu','fri','sat'];
+  const rules = [
+    { re: /\b(?:on\s+)?(?:today|tonight)\b/i, fn: () => base },
+    { re: /\b(?:on\s+)?(?:tomorrow|tmrw|tmr)\b/i, fn: () => plus(1) },
+    { re: /\bnext\s+week\b/i, fn: () => plus(((8 - base.getDay()) % 7) || 7) },
+    { re: /\b(?:this\s+)?weekend\b/i, fn: () => plus((6 - base.getDay() + 7) % 7) },
+    { re: /\bin\s+(\d{1,3})\s+(day|days|week|weeks)\b/i, fn: (m) => plus(parseInt(m[1]) * (/week/i.test(m[2]) ? 7 : 1)) },
+    { re: /\b(?:on\s+)?(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)(?:\s+(\d{4}))?\b/i,
+      fn: (m) => { const mo = MONTHS.indexOf(m[2].slice(0, 3).toLowerCase()); let d = new Date(m[3] ? +m[3] : base.getFullYear(), mo, +m[1]); if (!m[3] && d < base) d = new Date(base.getFullYear() + 1, mo, +m[1]); return d.getMonth() === mo ? d : null; } },
+    { re: /\b(?:on\s+)?(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s+(\d{4}))?\b/i,
+      fn: (m) => { const mo = MONTHS.indexOf(m[1].slice(0, 3).toLowerCase()); let d = new Date(m[3] ? +m[3] : base.getFullYear(), mo, +m[2]); if (!m[3] && d < base) d = new Date(base.getFullYear() + 1, mo, +m[2]); return d.getMonth() === mo ? d : null; } },
+    { re: /\b(?:on\s+)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/, fn: (m) => { const mo = +m[2] - 1; if (mo < 0 || mo > 11) return null; let y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(); let d = new Date(y, mo, +m[1]); if (!m[3] && d < base) d = new Date(y + 1, mo, +m[1]); return d.getMonth() === mo ? d : null; } },
+    // Full day names only, so "sun cream" or "sat exam" don't get a date
+    { re: /\b(?:on\s+|this\s+|next\s+)?(sunday|monday|tuesday|tues|wednesday|thursday|thurs|friday|saturday)\b/i,
+      fn: (m) => { const want = DAYS.indexOf(m[1].slice(0, 3).toLowerCase()); let n = (want - base.getDay() + 7) % 7; if (n === 0) n = 7; return plus(n); } },
+  ];
+  for (const r of rules) {
+    const m = text.match(r.re);
+    if (!m) continue;
+    const d = r.fn(m);
+    if (!d || isNaN(d)) continue;
+    const rest = (text.slice(0, m.index) + ' ' + text.slice(m.index + m[0].length)).replace(/\s{2,}/g, ' ').replace(/\s+([,.!?])/g, '$1').replace(/\b(by|on|due)\s*$/i, '').trim();
+    return { date: iso(d), rest: rest || text.trim() };
+  }
+  return null;
+};
+
+// Apple-style empty screen: soft icon, a title and one line
+const MzEmpty = ({ icon: Icon, title, body, action, onAction }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '36px 24px 24px', gap: '8px' }}>
+    <span style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(var(--mz-accent-rgb,10,132,255),0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '6px' }}>
+      {Icon ? <Icon size={30} color="var(--mz-accent,#0A84FF)" strokeWidth={1.8} style={{ color: 'var(--mz-accent,#0A84FF)', stroke: 'currentColor' }} /> : null}
+    </span>
+    <div style={{ fontSize: '20px', fontWeight: 600, color: '#FFFFFF', fontFamily: SANS_FONT, letterSpacing: '-0.3px' }}>{title}</div>
+    {body && <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)', fontFamily: SANS_FONT, maxWidth: '280px', lineHeight: 1.4 }}>{body}</div>}
+    {action && <button onClick={onAction} style={{ marginTop: '8px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--mz-accent,#0A84FF)', fontFamily: SANS_FONT, fontSize: '15px', fontWeight: 600 }}>{action}</button>}
+  </div>
+);
+
 // "Deleted · Undo" bar, like Mail and Photos. Any screen can call mzUndo('Task deleted', restoreFn).
 const mzUndo = (label, undo) => { try { window.dispatchEvent(new CustomEvent('mz-undo', { detail: { label, undo } })); } catch (e) {} };
 // Remove matching items from a list state and offer Undo that puts them back where they were.
@@ -262,7 +309,7 @@ const UndoToastHost = () => {
 // iOS-style row: swipe left to reveal Delete, press and hold (or right-click) for a quick-actions menu.
 // Vertical scrolling still works — the row only moves once the finger is clearly going sideways.
 // menu: [{ label, onSelect, destructive }]
-const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu }) => {
+const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu, onComplete }) => {
   const ACTION = 88;
   const [dx, setDx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -301,7 +348,7 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu 
       if (s.lock === 'x') setDragging(true);
     }
     if (s.lock !== 'x') return;
-    setDx(Math.min(0, Math.max(-ACTION * 1.4, s.base + mx)));
+    setDx(Math.min(onComplete ? ACTION * 1.3 : 0, Math.max(-ACTION * 1.4, s.base + mx)));
   };
   const onEnd = () => {
     clearTimeout(pressTimer.current);
@@ -309,9 +356,12 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu 
     start.current = null;
     setDragging(false);
     if (!s || s.lock !== 'x') return;
+    // Swipe right far enough = complete (springs back); swipe left = reveal Delete
+    if (dx > ACTION * 0.6 && onComplete) { setDx(0); onComplete(); return; }
     setDx(d => (d < -ACTION / 2 ? -ACTION : 0));
   };
   const open = dx < 0;
+  const leading = dx > 0;
   const closeMenu = () => setMenuAt(null);
   let menuEl = null;
   if (menuAt && typeof document !== 'undefined') {
@@ -344,13 +394,16 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu 
           {label}
         </button>
       )}
+      {leading && (
+        <div aria-hidden="true" style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${dx}px`, background: dx > ACTION * 0.6 ? '#30D158' : 'rgba(48,209,88,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', paddingLeft: '18px', overflow: 'hidden', color: '#FFFFFF', fontSize: '20px', fontWeight: 700, transition: 'background 0.15s' }}>✓</div>
+      )}
       <div onTouchStart={onStart} onTouchMove={onMove} onTouchEnd={onEnd} onTouchCancel={onEnd}
         onContextMenu={menu && menu.length && !disabled ? (e) => { if (e.target && e.target.tagName === 'TEXTAREA' && document.activeElement === e.target) return; e.preventDefault(); openMenu(e.clientX, e.clientY); } : undefined}
         onClickCapture={(e) => {
           if (longFired.current) { longFired.current = false; e.stopPropagation(); e.preventDefault(); return; }
           if (open) { e.stopPropagation(); e.preventDefault(); setDx(0); }
         }}
-        style={{ position: 'relative', transform: open ? `translateX(${dx}px)` : 'none', transition: dragging ? 'none' : 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)', WebkitTouchCallout: 'none' }}>
+        style={{ position: 'relative', transform: (open || leading) ? `translateX(${dx}px)` : 'none', transition: dragging ? 'none' : 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)', WebkitTouchCallout: 'none' }}>
         {children}
       </div>
       {menuEl}
@@ -47315,6 +47368,57 @@ function MuzzApp() {
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
+  const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
+  // Swipe in from the left edge to go back to the Dashboard (like iOS back gesture)
+  useEffect(() => {
+    if (activeView === 'home') return;
+    let st = null;
+    const page = () => document.querySelector('.min-h-screen.mz-num');
+    const reset = (el) => { if (!el) return; el.style.transition = ''; el.style.transform = ''; el.style.boxShadow = ''; };
+    const onStart = (e) => {
+      const t = e.touches[0];
+      if (!t || t.clientX > 22 || document.body.style.overflow === 'hidden') return;
+      st = { x: t.clientX, y: t.clientY, lock: null, dx: 0 };
+    };
+    const onMove = (e) => {
+      if (!st) return;
+      const t = e.touches[0]; const mx = t.clientX - st.x, my = t.clientY - st.y;
+      if (!st.lock) { if (Math.abs(mx) < 8 && Math.abs(my) < 8) return; st.lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y'; }
+      if (st.lock !== 'x') { st = null; return; }
+      if (e.cancelable) e.preventDefault();
+      st.dx = Math.max(0, mx);
+      const el = page(); if (!el) return;
+      el.style.transition = 'none';
+      el.style.transform = `translateX(${st.dx}px)`;
+      el.style.boxShadow = '-8px 0 24px rgba(0,0,0,0.45)';
+    };
+    const onEnd = () => {
+      if (!st) return;
+      const el = page(); const dx = st.dx; st = null;
+      if (!el) return;
+      const w = window.innerWidth || 390;
+      if (dx > Math.min(120, w * 0.3)) {
+        el.style.transition = 'transform 0.2s ease-out';
+        el.style.transform = `translateX(${w}px)`;
+        setTimeout(() => { setActiveView('home'); requestAnimationFrame(() => { reset(page()); window.scrollTo(0, 0); }); }, 190);
+      } else {
+        el.style.transition = 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)';
+        el.style.transform = 'translateX(0)';
+        setTimeout(() => reset(el), 260);
+      }
+    };
+    document.addEventListener('touchstart', onStart, { passive: true });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+    document.addEventListener('touchcancel', onEnd);
+    return () => {
+      document.removeEventListener('touchstart', onStart);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onEnd);
+      document.removeEventListener('touchcancel', onEnd);
+      reset(page());
+    };
+  }, [activeView]);
   const [appTheme, setAppTheme] = useState(() => { try { return localStorage.getItem('mz_theme') || 'blue'; } catch (e) { return 'blue'; } });
   useEffect(() => { applyMzTheme(appTheme); try { localStorage.setItem('mz_theme', appTheme); } catch (e) {} }, [appTheme]);
   const themeHex = (MZ_THEMES.find(t => t.id === appTheme) || MZ_THEMES[0]).hex;
@@ -48759,9 +48863,28 @@ function MuzzApp() {
       if (diff <= 7) return { text: `In ${diff} days`, color: "var(--mz-accent,#0A84FF)" };
       return { text: `In ${diff} days`, color: sec };
     };
-    const pinned = sortedReminders.filter(r => r.permanent && !r.done);
-    const dated = sortedReminders.filter(r => !r.permanent && !r.done);
-    const doneReminders = sortedReminders.filter(r => r.done);
+    // Smart lists (like the Reminders app home screen)
+    const allPinned = sortedReminders.filter(r => r.permanent && !r.done);
+    const allDated = sortedReminders.filter(r => !r.permanent && !r.done);
+    const allDone = sortedReminders.filter(r => r.done);
+    const todayList = allDated.filter(r => { const d = getReminderDiff(r.date); return d !== null && d <= 0; });
+    const upcomingList = allDated.filter(r => { const d = getReminderDiff(r.date); return d === null || d > 0; });
+    const rf = reminderFilter;
+    const pinned = rf === 'all' || rf === 'pinned' ? allPinned : [];
+    const dated = rf === 'all' ? allDated : rf === 'today' ? todayList : rf === 'upcoming' ? upcomingList : [];
+    const doneReminders = rf === 'all' || rf === 'completed' ? allDone : [];
+    const smartCards = [
+      { id: 'today',     label: 'Today',     count: todayList.length,    icon: Calendar,    color: 'var(--mz-accent,#0A84FF)' },
+      { id: 'upcoming',  label: 'Upcoming',  count: upcomingList.length, icon: Clock,       color: '#FF453A' },
+      { id: 'pinned',    label: 'Pinned',    count: allPinned.length,    icon: Pin,         color: '#FF9F0A' },
+      { id: 'completed', label: 'Completed', count: allDone.length,      icon: CheckCircle, color: '#8E8E93' },
+    ];
+    const filterEmpty = {
+      today:     { title: 'Nothing due today', body: "You're all caught up." },
+      upcoming:  { title: 'Nothing coming up', body: 'Reminders with a future date show here.' },
+      pinned:    { title: 'No pinned reminders', body: 'Pin ones you always want to see.' },
+      completed: { title: 'Nothing completed yet', body: 'Ticked-off reminders show here.' },
+    }[rf];
     const headerSub = remindersSubTab === 'reminders'
       ? (overdueCount > 0 ? `${overdueCount} overdue, ${thisWeekCount} this week` : thisWeekCount > 0 ? `${thisWeekCount} this week` : reminders.length > 0 ? 'Nothing due this week' : '')
       : (birthdays.length > 0 ? (upcomingBdays > 0 ? `${upcomingBdays} in the next 30 days` : 'None in the next 30 days') : '');
@@ -48771,27 +48894,28 @@ function MuzzApp() {
       const rel = reminder.permanent ? null : relReminder(diff);
       const isEditing = editingReminderId === reminder.id;
       const update = (changes) => setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, ...changes} : r));
+      // Tick-off: fill the circle, strike through, then move to Completed
+      const completeReminder = () => {
+        const key = 'r' + reminder.id;
+        if (completing[key] || reminder.done) return;
+        setCompleting(c => ({...c, [key]: true}));
+        setTimeout(() => {
+          setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, done: true} : r));
+          setCompleting(c => { const n = {...c}; delete n[key]; return n; });
+        }, 480);
+      };
       return (
         <React.Fragment key={reminder.id}>
-        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted')}
+        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted')} onComplete={reminder.done ? undefined : completeReminder}
           menu={[
             { label: 'Edit', onSelect: () => setEditingReminderId(reminder.id) },
             { label: reminder.permanent ? 'Unpin' : 'Pin', onSelect: () => update({permanent: !reminder.permanent}) },
-            { label: reminder.done ? 'Mark not done' : 'Mark done', onSelect: () => update({done: !reminder.done}) },
+            { label: reminder.done ? 'Mark not done' : 'Mark done', onSelect: () => (reminder.done ? update({done: false}) : completeReminder()) },
             { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted') },
           ]}>
 
             <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px"}}>
-            {tick(!!reminder.done || !!completing['r' + reminder.id], () => {
-              if (reminder.done) { update({done: false}); return; }
-              const key = 'r' + reminder.id;
-              if (completing[key]) return;
-              setCompleting(c => ({...c, [key]: true}));
-              setTimeout(() => {
-                setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, done: true} : r));
-                setCompleting(c => { const n = {...c}; delete n[key]; return n; });
-              }, 480);
-            }, reminder.done ? 'Mark not done' : 'Mark done')}
+            {tick(!!reminder.done || !!completing['r' + reminder.id], () => { if (reminder.done) { update({done: false}); return; } completeReminder(); }, reminder.done ? 'Mark not done' : 'Mark done')}
             <button onClick={() => setEditingReminderId(reminder.id)}
               style={{flex:1,minWidth:0,display:"flex",alignItems:"flex-start",gap:"12px",padding:0,background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
               <div style={{flex:1,minWidth:0}}>
@@ -48810,7 +48934,18 @@ function MuzzApp() {
             <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
               <textarea rows={1} autoFocus={!reminder.title} value={reminder.title} placeholder="New reminder"
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
-                onChange={(e) => update({title: e.target.value})} style={bareText} />
+                onChange={(e) => update({title: e.target.value})}
+                onBlur={() => {
+                  // "Dentist Friday 3pm" → title "Dentist 3pm", date set to Friday (with Undo)
+                  const found = mzParseDate(reminder.title);
+                  if (!found || found.date === reminder.date) return;
+                  const before = { title: reminder.title, date: reminder.date || '', permanent: !!reminder.permanent };
+                  update({ title: found.rest, date: found.date, permanent: false });
+                  const nice = new Date(found.date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+                  mzUndo(`Date set: ${nice}`, () => update(before));
+                }}
+                style={bareText} />
+              <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"-8px"}}>Tip: type a date like "Friday" or "14 March" and it's set for you.</div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                 <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Pinned</span>
                 <Switch on={!!reminder.permanent} label="Pinned" onToggle={() => update({permanent: !reminder.permanent})} />
@@ -48821,6 +48956,27 @@ function MuzzApp() {
                   <input type="date" value={reminder.date||''} onFocus={scrollInputIntoView} onChange={(e) => update({date: e.target.value})} style={datePill} />
                 </div>
               )}
+              {!reminder.permanent && (() => {
+                const t0 = new Date(); t0.setHours(0,0,0,0);
+                const at = (n) => { const d = new Date(t0); d.setDate(d.getDate() + n); return localISODate(d); };
+                const chips = [
+                  { label: 'Today', date: at(0) },
+                  { label: 'Tomorrow', date: at(1) },
+                  { label: 'This weekend', date: at((6 - t0.getDay() + 7) % 7) },
+                  { label: 'Next week', date: at(((8 - t0.getDay()) % 7) || 7) },
+                ];
+                return (
+                  <div style={{display:"flex",gap:"8px",flexWrap:"wrap",marginTop:"-4px"}}>
+                    {chips.map(c => {
+                      const on = reminder.date === c.date;
+                      return (
+                        <button key={c.label} onClick={() => update({date: c.date})}
+                          style={{padding:"7px 13px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,border:on?"none":"0.5px solid rgba(255,255,255,0.16)",background:on?"var(--mz-accent,#0A84FF)":"rgba(255,255,255,0.08)",color:"#FFFFFF"}}>{c.label}</button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
                 <button onClick={() => { undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted'); setEditingReminderId(null); }} style={textBtn("#FF453A")}>Delete</button>
                 <button onClick={() => setEditingReminderId(null)} style={{...textBtn("var(--mz-accent,#0A84FF)"),fontWeight:600}}>Done</button>
@@ -48939,6 +49095,33 @@ function MuzzApp() {
           {/* REMINDERS TAB */}
           {remindersSubTab === 'reminders' && (
             <>
+              {sortedReminders.length > 0 && (
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"6px"}}>
+                  {smartCards.map(c => {
+                    const on = rf === c.id;
+                    const Icon = c.icon;
+                    return (
+                      <button key={c.id} onClick={() => setReminderFilter(on ? 'all' : c.id)} aria-pressed={on}
+                        style={{...rowCard,display:"flex",flexDirection:"column",alignItems:"stretch",gap:"8px",padding:"12px 14px",cursor:"pointer",textAlign:"left",border:on?"1.5px solid var(--mz-accent,#0A84FF)":rowCard.border}}>
+                        <span style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                          <span style={{width:"30px",height:"30px",borderRadius:"50%",background:c.color,display:"flex",alignItems:"center",justifyContent:"center"}}><Icon size={16} color="#FFFFFF" strokeWidth={2.4} /></span>
+                          <span style={{fontSize:"24px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{c.count}</span>
+                        </span>
+                        <span style={{fontSize:"15px",fontWeight:600,color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT}}>{c.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {rf !== 'all' && sortedReminders.length > 0 && (
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",margin:"4px 2px 0"}}>
+                  <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{smartCards.find(c => c.id === rf).label}</span>
+                  <button onClick={() => setReminderFilter('all')} style={{...textBtn("var(--mz-accent,#0A84FF)"),fontSize:"15px"}}>Show all</button>
+                </div>
+              )}
+              {rf !== 'all' && sortedReminders.length > 0 && pinned.length === 0 && dated.length === 0 && doneReminders.length === 0 && filterEmpty && (
+                <MzEmpty icon={smartCards.find(c => c.id === rf).icon} title={filterEmpty.title} body={filterEmpty.body} />
+              )}
               {sortedReminders.length === 0 && (() => {
                 const base = new Date();
                 const inDays = (n) => { const d = new Date(base); d.setDate(d.getDate()+n); return localISODate(d); };
@@ -49254,7 +49437,7 @@ function MuzzApp() {
                   return (
                   <div key={item.id} data-task-id={String(item.id)} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px",transform:dragging?"scale(1.02)":"none",opacity:dragging?0.92:1,transition:"transform 0.15s ease, opacity 0.15s ease",position:"relative",zIndex:dragging?5:"auto"}}>
                     {circle(ticking, () => completeItem(item.id), 'Mark done')}
-                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)",boxShadow:dragging?"0 10px 28px rgba(0,0,0,0.45)":LIQUID_GLASS.boxShadow}} disabled={dragActive} onDelete={() => deleteItemUndo(item.id)}
+                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)",boxShadow:dragging?"0 10px 28px rgba(0,0,0,0.45)":LIQUID_GLASS.boxShadow}} disabled={dragActive} onDelete={() => deleteItemUndo(item.id)} onComplete={() => completeItem(item.id)}
                       menu={[
                         { label: 'Edit', onSelect: () => { const el = document.getElementById(`item-${item.id}`); if (el) { el.focus(); const v = el.value.length; try { el.setSelectionRange(v, v); } catch (e) {} } } },
                         { label: 'Mark done', onSelect: () => completeItem(item.id) },
@@ -49298,12 +49481,12 @@ function MuzzApp() {
                 </button>
 
                 {items.length === 0 && (
-                  <div style={{padding:"28px 0 8px",textAlign:"center"}}>
-                    <div style={{fontSize:"17px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>No tasks</div>
-                    {(samplesByTab[tasksSubTab]) && (
-                      <button onClick={useExamples} style={{...linkBtn(accentColor),marginTop:"8px"}}>Fill with an example list</button>
-                    )}
-                  </div>
+                  <MzEmpty icon={ListChecks} title="No tasks yet"
+                    body={tasksSubTab === 'daily' ? 'Add what you want to get done today.' : tasksSubTab === 'weekly' ? 'Add what you want to get done this week.' : 'Add anything you need to remember to do.'}
+                    action={samplesByTab[tasksSubTab] ? 'Fill with an example list' : null} onAction={useExamples} />
+                )}
+                {items.length > 0 && unchecked.length === 0 && (
+                  <MzEmpty icon={CheckCircle} title="All done" body="Everything on this list is ticked off. Nice work." />
                 )}
 
                 {/* Completed */}
