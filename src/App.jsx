@@ -180,18 +180,35 @@ if (typeof document !== 'undefined' && !window.__mzHaptics) {
     } catch (err) {}
   }, { passive: true });
 }
-// iOS-style swipe-to-delete row: drag left to reveal a red Delete button, tap it to delete.
+// iOS-style row: swipe left to reveal Delete, press and hold (or right-click) for a quick-actions menu.
 // Vertical scrolling still works — the row only moves once the finger is clearly going sideways.
-const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete' }) => {
+// menu: [{ label, onSelect, destructive }]
+const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete', menu }) => {
   const ACTION = 88;
   const [dx, setDx] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const [menuAt, setMenuAt] = useState(null); // { x, y } where the menu opens
   const start = useRef(null);
+  const pressTimer = useRef(null);
+  const longFired = useRef(false);
   useEffect(() => { if (disabled && dx !== 0) setDx(0); }, [disabled]);
+  useEffect(() => () => clearTimeout(pressTimer.current), []);
+  const openMenu = (x, y) => {
+    if (!menu || !menu.length) return;
+    longFired.current = true;
+    setDx(0);
+    setMenuAt({ x, y });
+    try { const H = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics; if (H && H.impact) H.impact({ style: 'MEDIUM' }); } catch (e) {}
+  };
   const onStart = (e) => {
     if (disabled) return;
     const t = e.touches[0];
     start.current = { x: t.clientX, y: t.clientY, base: dx, lock: null };
+    longFired.current = false;
+    clearTimeout(pressTimer.current);
+    const target = e.target;
+    const editing = target && target.tagName === 'TEXTAREA' && document.activeElement === target;
+    if (menu && menu.length && !editing) pressTimer.current = setTimeout(() => { if (start.current && start.current.lock === null) openMenu(t.clientX, t.clientY); }, 480);
   };
   const onMove = (e) => {
     const s = start.current;
@@ -200,6 +217,7 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete' }) => 
     const mx = t.clientX - s.x, my = t.clientY - s.y;
     if (s.lock === null) {
       if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+      clearTimeout(pressTimer.current);
       s.lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
       if (s.lock === 'x') setDragging(true);
     }
@@ -207,6 +225,7 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete' }) => 
     setDx(Math.min(0, Math.max(-ACTION * 1.4, s.base + mx)));
   };
   const onEnd = () => {
+    clearTimeout(pressTimer.current);
     const s = start.current;
     start.current = null;
     setDragging(false);
@@ -214,6 +233,30 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete' }) => 
     setDx(d => (d < -ACTION / 2 ? -ACTION : 0));
   };
   const open = dx < 0;
+  const closeMenu = () => setMenuAt(null);
+  let menuEl = null;
+  if (menuAt && typeof document !== 'undefined') {
+    const W = 240, itemH = 46;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const h = menu.length * itemH;
+    const left = Math.max(12, Math.min(vw - W - 12, menuAt.x - W / 2));
+    const top = Math.max(12, Math.min(vh - h - 24, menuAt.y + 12));
+    menuEl = createPortal(
+      <div className="mz-num" style={{ position: 'fixed', inset: 0, zIndex: 1100 }} onContextMenu={(e) => { e.preventDefault(); closeMenu(); }}>
+        <style>{`@keyframes mzMenuIn{from{transform:scale(0.92)}to{transform:none}}`}</style>
+        <div onClick={closeMenu} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }} />
+        <div role="menu" style={{ position: 'absolute', left, top, width: W, borderRadius: '14px', overflow: 'hidden', background: '#2C2C2E', border: '0.5px solid rgba(255,255,255,0.12)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)', transformOrigin: 'top center', animation: 'mzMenuIn 0.18s cubic-bezier(0.2,0.8,0.2,1) both', isolation: 'isolate' }}>
+          {menu.map((m, i) => (
+            <button key={m.label} role="menuitem" onClick={() => { closeMenu(); m.onSelect && m.onSelect(); }}
+              style={{ display: 'flex', alignItems: 'center', width: '100%', height: itemH, padding: '0 16px', background: 'transparent', border: 'none', borderTop: i ? '0.5px solid rgba(255,255,255,0.1)' : 'none', cursor: 'pointer', textAlign: 'left', fontFamily: SANS_FONT, fontSize: '17px', letterSpacing: '-0.2px', color: m.destructive ? '#FF453A' : '#FFFFFF' }}>
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </div>,
+      document.body
+    );
+  }
   return (
     <div style={{ position: 'relative', overflow: 'hidden', ...style }}>
       {open && (
@@ -223,10 +266,15 @@ const SwipeRow = ({ onDelete, children, style, disabled, label = 'Delete' }) => 
         </button>
       )}
       <div onTouchStart={onStart} onTouchMove={onMove} onTouchEnd={onEnd} onTouchCancel={onEnd}
-        onClickCapture={(e) => { if (open) { e.stopPropagation(); e.preventDefault(); setDx(0); } }}
-        style={{ position: 'relative', transform: open ? `translateX(${dx}px)` : 'none', transition: dragging ? 'none' : 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)' }}>
+        onContextMenu={menu && menu.length && !disabled ? (e) => { if (e.target && e.target.tagName === 'TEXTAREA' && document.activeElement === e.target) return; e.preventDefault(); openMenu(e.clientX, e.clientY); } : undefined}
+        onClickCapture={(e) => {
+          if (longFired.current) { longFired.current = false; e.stopPropagation(); e.preventDefault(); return; }
+          if (open) { e.stopPropagation(); e.preventDefault(); setDx(0); }
+        }}
+        style={{ position: 'relative', transform: open ? `translateX(${dx}px)` : 'none', transition: dragging ? 'none' : 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)', WebkitTouchCallout: 'none' }}>
         {children}
       </div>
+      {menuEl}
     </div>
   );
 };
@@ -1180,28 +1228,10 @@ const StarryBackground = ({ children }) => {
 // ============================================
 // MOBILE KEYBOARD HELPER
 // ============================================
-const scrollInputIntoView = (e) => {
-  // Longer delay for iOS keyboard to fully open
-  setTimeout(() => {
-    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 400);
-  // Second scroll to catch late keyboard resize
-  setTimeout(() => {
-    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 800);
-};
 
 // Auto-resize textarea to show full content
-const autoResizeTextarea = (e) => {
-  e.target.style.height = 'auto';
-  e.target.style.height = e.target.scrollHeight + 'px';
-};
 
 // Combined handler for textarea focus
-const handleTextareaFocus = (e) => {
-  scrollInputIntoView(e);
-  autoResizeTextarea(e);
-};
 
 // ============================================
 // API HELPER FOR NATIVE APP SUPPORT
@@ -1681,25 +1711,6 @@ const investmentQuotes = [
 ];
 
 // Helper function to calculate how long you've held something
-const getHoldingDuration = (dateAdded) => {
-  if (!dateAdded) return null;
-  const start = new Date(dateAdded);
-  const now = new Date();
-  const diffMs = now - start;
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
-  if (days < 1) return "Today";
-  if (days === 1) return "1 day";
-  if (days < 30) return `${days} days`;
-  if (days < 365) {
-    const months = Math.floor(days / 30);
-    return months === 1 ? "1 month" : `${months} months`;
-  }
-  const years = Math.floor(days / 365);
-  const remainingMonths = Math.floor((days % 365) / 30);
-  if (remainingMonths === 0) return years === 1 ? "1 year" : `${years} years`;
-  return `${years}y ${remainingMonths}m`;
-};
 
 // Floating Chat Component — DISABLED (chat feature removed to save API tokens)
 
@@ -1711,49 +1722,6 @@ const getHoldingDuration = (dateAdded) => {
 // Usage: <ExpandToggle>{(expanded) => <Component bigMode={expanded} />}</ExpandToggle>
 // The child function receives the expanded boolean so the component can adjust its size.
 // ============================================
-function ExpandToggle({ children, accent = '#00c8ff' }) {
-  const [expanded, setExpanded] = React.useState(false);
-  return (
-    <div style={{ position: 'relative' }}>
-      <button
-        onClick={() => setExpanded(v => !v)}
-        title={expanded ? 'Collapse' : 'Expand'}
-        style={{
-          position: 'absolute',
-          top: '8px',
-          right: '8px',
-          zIndex: 5,
-          background: `rgba(5,12,24,0.85)`,
-          border: `0.5px solid ${accent}50`,
-          borderRadius: '3px',
-          color: accent,
-          fontFamily: 'monospace',
-          fontSize: '10px',
-          letterSpacing: '1px',
-          fontWeight: 600,
-          padding: '5px 9px',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '5px',
-        }}
-      >
-        {expanded ? (
-          <>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v4a1 1 0 0 1-1 1H3"/><path d="M21 8h-4a1 1 0 0 1-1-1V3"/><path d="M3 16h4a1 1 0 0 1 1 1v4"/><path d="M16 21v-4a1 1 0 0 1 1-1h4"/></svg>
-            COLLAPSE
-          </>
-        ) : (
-          <>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7V4a1 1 0 0 1 1-1h3"/><path d="M21 7V4a1 1 0 0 0-1-1h-3"/><path d="M3 17v3a1 1 0 0 0 1 1h3"/><path d="M21 17v3a1 1 0 0 1-1 1h-3"/></svg>
-            EXPAND
-          </>
-        )}
-      </button>
-      {typeof children === 'function' ? children(expanded) : children}
-    </div>
-  );
-}
 
 
 // ============================================
@@ -46910,7 +46878,6 @@ function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showHealthModal, setShowHealthModal] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -46934,7 +46901,6 @@ function MuzzApp() {
   // (setter exists for back-compat with views that import it)
 
   // Object Inspector — selected entity for right-panel deep dive
-  const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
   // Right-click context menu
   const [ctxMenu, setCtxMenu] = useState(null); // { x, y, entity }
   useEffect(() => {
@@ -46947,37 +46913,25 @@ function MuzzApp() {
 
   // Boot sequence — terminal-style intro on first dashboard mount
   // Boot splash disabled — defaults to done so it never renders
-  const [bootDone, setBootDone] = useState(true);
 
   // Time Scrubber — null means "live", otherwise an ISO date string
   const [scrubberDate, setScrubberDate] = useState(null);
 
   // Saved Views — tab strip; first entry is implicit "LIVE"
   const [savedViews, setSavedViews] = useState([]);
-  const [activeViewTab, setActiveViewTab] = useState('live'); // 'live' | <view.id>
 
   // Audit Log — entity change history. Shape: { entity_id: [{ ts, field, from, to }, ...] }
   const [auditLog, setAuditLog] = useState({});
   // (audit log watchers added after subscriptions+assets are declared)
-  const sidebarScrollRef = useRef(null);
-  const [homeInput, setHomeInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
-  const [feedbackType, setFeedbackType] = useState('feedback');
-  const [feedbackMsg, setFeedbackMsg] = useState('');
-  const [feedbackSent, setFeedbackSent] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
   const [businessSubscriptions, setBusinessSubscriptions] = useState([]);
-  const [billsType, setBillsType] = useState('personal'); // legacy — kept for backward compat
   // User-configurable bill buckets. Each bucket has its own income + bills.
   // Seeded on first load from legacy subscriptions / businessSubscriptions / monthlySalary.
   const [billBuckets, setBillBuckets] = useState(null); // null = not yet hydrated; [] = empty
   const [activeBucketId, setActiveBucketId] = useState(null);
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [funnyGreetings, setFunnyGreetings] = useState(false);
-  const [dashFunnyGreeting] = useState(() => loginGreetings[Math.floor(Math.random() * loginGreetings.length)]);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [isChatExpanded, setIsChatExpanded] = useState(true);
 
   // Scroll input into view when keyboard opens (for mobile)
   const scrollInputIntoView = (e) => {
@@ -46992,12 +46946,6 @@ function MuzzApp() {
     return map[code] || (code ? `${code} ` : '$');
   };
   // Format a price value with its currency symbol
-  const fmtPrice = (val, code, opts = {}) => {
-    const sym = currencySymbol(code);
-    const n = Number(val) || 0;
-    const formatted = n.toLocaleString(undefined, { minimumFractionDigits: opts.dp ?? 2, maximumFractionDigits: opts.dp ?? 2 });
-    return `${sym}${formatted}`;
-  };
 
   // Auth & Elite status (must be before AI limits)
   const { user: authUser, signOut } = useAuth();
@@ -47014,28 +46962,6 @@ function MuzzApp() {
 
   // AI Daily Message Limit
   const AI_DAILY_LIMIT = isElite ? ELITE_AI_LIMIT : FREE_AI_LIMIT;
-  const getAiUsage = () => {
-    try {
-      const stored = localStorage.getItem('muzz_ai_usage');
-      if (stored) {
-        const { count, date } = JSON.parse(stored);
-        const today = localISODate();
-        if (date === today) return count;
-      }
-    } catch (e) {}
-    return 0;
-  };
-  const incrementAiUsage = () => {
-    const today = localISODate();
-    const current = getAiUsage();
-    localStorage.setItem('muzz_ai_usage', JSON.stringify({ count: current + 1, date: today }));
-  };
-  const isAiLimitReached = () => isVIP ? false : getAiUsage() >= AI_DAILY_LIMIT;
-  const getAiRemaining = () => isVIP ? '∞' : Math.max(AI_DAILY_LIMIT - getAiUsage(), 0);
-  const [isChatHidden, setIsChatHidden] = useState(true);
-  const [isChatOpen, setIsChatOpen] = useState(false); // New floating chat state
-  const [isMuzzEnabled, setIsMuzzEnabled] = useState(true);
-  const [chatSize, setChatSize] = useState('normal');
   const [chatPosition, setChatPosition] = useState({ x: 20, y: 400 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -47125,14 +47051,6 @@ function MuzzApp() {
   const [economicsColumns, setEconomicsColumns] = useState([]);
   const [researchColumns, setResearchColumns] = useState([]);
   const [risksColumns, setRisksColumns] = useState([]);
-  const [newResearchCol, setNewResearchCol] = useState('');
-  const [newEconomicsCol, setNewEconomicsCol] = useState('');
-  const [newRisksCol, setNewRisksCol] = useState('');
-  const [showResearchColInput, setShowResearchColInput] = useState(false);
-  const [showEconomicsColInput, setShowEconomicsColInput] = useState(false);
-  const [showRisksColInput, setShowRisksColInput] = useState(false);
-  const [researchSortBy, setResearchSortBy] = useState('ticker'); // ticker, industry, tollBooth, growth, status
-  const [researchSortDir, setResearchSortDir] = useState('asc'); // asc, desc
   const [futureSortBy, setFutureSortBy] = useState('ticker');
   const [futureSortDir, setFutureSortDir] = useState('asc');
   const [currentSortBy, setCurrentSortBy] = useState('name');
@@ -47145,9 +47063,6 @@ function MuzzApp() {
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
-  const [newBillDate, setNewBillDate] = useState('');
-  const [newBillName, setNewBillName] = useState('');
-  const [newBillAmount, setNewBillAmount] = useState('');
   const [tasks, setTasks] = useState([]);
   const [tasksSubTab, setTasksSubTab] = useState('daily');
   // If a user had tasksSubTab persisted as 'pomodoro' (now removed), bump back to daily
@@ -47190,7 +47105,6 @@ function MuzzApp() {
   const [reminders, setReminders] = useState([]);
   const [groceries, setGroceries] = useState([]);
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
-  const [activeShoppingList, setActiveShoppingList] = useState(null);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
   const [workoutPlan, setWorkoutPlan] = useState({
@@ -47202,9 +47116,6 @@ function MuzzApp() {
       4: { name: '', setsInfo: '', exercises: [] }
     }
   });
-  const [dietSubTab, setDietSubTab] = useState('water');
-  const [activeShoppingListId, setActiveShoppingListId] = useState('default');
-  const [expandedDietPlan, setExpandedDietPlan] = useState(null);
   const [trackedStocks, setTrackedStocks] = useState([]);
   const [livePrices, setLivePrices] = useState({});
   const [pricesLoading, setPricesLoading] = useState(false);
@@ -47314,12 +47225,9 @@ function MuzzApp() {
     });
   }, [stocks.length]);
   const [customDiets, setCustomDiets] = useState([]);
-  const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
-  const [gymSubTab, setGymSubTab] = useState('sleep');
   const [gymWorkoutTab, setGymWorkoutTab] = useState('log');
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
-  const [gymDate, setGymDate] = useState(null); // selected day in the gym log (YYYY-MM-DD)
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
@@ -47329,11 +47237,9 @@ function MuzzApp() {
     ],
     activeJobId: 1
   });
-  const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
-  const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
   // Always open sections/pages from the top — prevents landing mid-scroll after navigating
   useEffect(() => { try { window.scrollTo(0, 0); } catch(e) {} }, [activeView, investmentsSubTab]);
   const [openTooltipKey, setOpenTooltipKey] = useState(null); // Tracks which inline explainer is currently open (one at a time)
@@ -47441,7 +47347,6 @@ function MuzzApp() {
     }
   };
 
-  const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
@@ -47475,7 +47380,6 @@ function MuzzApp() {
       window.removeEventListener('keydown', onKey);
     };
   }, [mapExpanded]);
-  const [selectedStock, setSelectedStock] = useState(null);
   const [holdingsResearch, setHoldingsResearch] = useState([]);
   const [billSmallGoals, setBillSmallGoals] = useState([]);
   const [billBigGoals, setBillBigGoals] = useState([]);
@@ -47488,15 +47392,6 @@ function MuzzApp() {
     { id: 'custom2', name: 'Custom 2', icon: '📁', color: 'teal', subTabs: [{ id: 'default', name: 'Main', sections: [] }], activeSubTab: 'default' },
     { id: 'custom3', name: 'Custom 3', icon: '📁', color: 'rose', subTabs: [{ id: 'default', name: 'Main', sections: [] }], activeSubTab: 'default' },
   ]);
-  const [draggedSection, setDraggedSection] = useState(null);
-  const [showTemplates, setShowTemplates] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [activeFilter, setActiveFilter] = useState(null);
-  const [savingFeedback, setSavingFeedback] = useState(false);
-  const [customCalMonth, setCustomCalMonth] = useState(new Date().getMonth());
-  const [customCalYear, setCustomCalYear] = useState(new Date().getFullYear());
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showAddSection, setShowAddSection] = useState(false);
 
   // ===== NEW FEATURES STATE =====
   // Habit Tracker
@@ -47513,16 +47408,11 @@ function MuzzApp() {
   const [pomodoroSessions, setPomodoroSessions] = useState(0);
 
   // Debt Payoff Calculator
-  const [debtCalcMethod, setDebtCalcMethod] = useState('snowball'); // snowball | avalanche
 
   // Compound Interest Calculator
-  const [compoundCalc, setCompoundCalc] = useState({ principal: '', monthlyAdd: '', rate: '7', years: '10' });
-  const [journalDate, setJournalDate] = useState(() => localISODate());
 
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
-  const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
-  const [blFilter, setBlFilter] = useState('all');
   const [remindersSubTab, setRemindersSubTab] = useState('reminders');
   const [editingReminderId, setEditingReminderId] = useState(null);
   const [editingBdayId, setEditingBdayId] = useState(null);
@@ -47536,11 +47426,7 @@ function MuzzApp() {
   const [detailChart, setDetailChart] = useState(null); // raw Yahoo chart data
   const [detailChartRange, setDetailChartRange] = useState('1mo'); // 1d 5d 1mo 3mo 6mo 1y 5y max
   const [detailChartLoading, setDetailChartLoading] = useState(false);
-  const [editingResearchIdx, setEditingResearchIdx] = useState(null);
   const [editingFutureResearchIdx, setEditingFutureResearchIdx] = useState(null);
-  const [editingTrackedStockId, setEditingTrackedStockId] = useState(null);
-  const [editingShiftDate, setEditingShiftDate] = useState(null);
-  const [editingJobName, setEditingJobName] = useState(false);
 
   // Fetch fundamentals + news when a stock detail view opens
   useEffect(() => {
@@ -47624,16 +47510,11 @@ function MuzzApp() {
       window.removeEventListener('keydown', onKey);
     };
   }, [assetMapExpanded]);
-  const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
-  const [editingPinId, setEditingPinId] = useState(null);
   const [netWorthHistory, setNetWorthHistory] = useState([]);
-  const worldMapRef = useRef(null);
   const mapPinsRef = useRef(mapPins);
   useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [editingPin, setEditingPin] = useState(null);
   const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
 
@@ -47781,12 +47662,7 @@ function MuzzApp() {
       setActiveView('home');
     });
   }catch(err){alert('Invalid file — make sure it\'s a muzz-backup.json');} }; r.readAsText(file); };
-  const [openSections, setOpenSections] = useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
-  const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
-  const [dashTab, setDashTab] = useState('overview');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
-  const [gymTab, setGymTab] = useState('steps');
-  const [clientsSubTab, setClientsSubTab] = useState('clients'); // 'clients' | 'contacts'
 
 
 
@@ -48243,12 +48119,6 @@ function MuzzApp() {
   // Send message to Muzz AI
 
   // Chat drag handlers
-  const handleMouseDown = (e) => {
-    if (e.target.closest('.chat-header')) {
-      setIsDragging(true);
-      setDragOffset({ x: e.clientX - chatPosition.x, y: e.clientY - chatPosition.y });
-    }
-  };
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -48269,27 +48139,9 @@ function MuzzApp() {
   }, [isDragging, dragOffset]);
 
   // Props for MuzzChat component
-  const muzzChatProps = {
-    muzzPersonality,
-    isMuzzEnabled,
-    isChatHidden,
-    setIsChatHidden,
-    chatSize,
-    setChatSize,
-    chatPosition,
-    isChatExpanded,
-    setIsChatExpanded,
-    chatMessages,
-    setChatMessages,
-    handleMouseDown,
-    subscriptions,
-    monthlySalary
-  };
 
   // Free features: home, tasks, reminders, diet, custom1
   // Elite features: gym, bills, assets, investments, custom2, custom3
-  const freeFeatures = ['home', 'tasks', 'reminders', 'diet', 'custom1', 'upgrade', 'feedback'];
-  const isFeatureLocked = (id) => !isElite && !freeFeatures.includes(id);
 
   // Sidebar navigation items
   const navItems = [
@@ -48333,16 +48185,8 @@ function MuzzApp() {
 
   // Daily quote
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-  const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
 
   // Financial context for Muzz chat
-  const financialContext = `User's financial snapshot:
-- Monthly Salary: $${salaryNum.toLocaleString()}
-- Total Monthly Bills: $${totalMonthly.toFixed(0)}
-- Net Worth: $${netWorth.toLocaleString()}
-- Total Assets: $${totalAssets.toLocaleString()}
-- Portfolio Value: $${totalStocks.toLocaleString()}
-- Savings Rate: ${savingsRate.toFixed(1)}%`;
 
   // Achievements check
   useEffect(() => {
@@ -48357,7 +48201,6 @@ function MuzzApp() {
   }, [netWorth, savingsRate, currentStreak, stocks]);
 
   // Lock body scroll when sidebar is open
-  const scrollPosRef = useRef(0);
   const viewScrollRef = useRef({});
   useEffect(() => {
     const viewEl = document.getElementById('muzz-view-scroll');
@@ -48376,47 +48219,6 @@ function MuzzApp() {
   // ============================================
   // BootSequence — terminal-style boot intro on first dashboard load
   // ============================================
-  const BootSequence = ({ onDone }) => {
-    const lines = [
-      "[INIT] muzz.onl bootstrap initiated",
-      "[OK]   loading user_data from supabase",
-      "[OK]   entitlements verified",
-      "[OK]   livePrices stream attached",
-      "[OK]   netWorthHistory hydrated",
-      "[OK]   eventLog channel open",
-      "[READY] handing off to operator",
-    ];
-    const [shown, setShown] = useState(0);
-    useEffect(() => {
-      if (shown >= lines.length) return;
-      const t = setTimeout(() => setShown(s => s+1), 220);
-      return () => clearTimeout(t);
-    }, [shown]);
-    return (
-      <div style={{position:"fixed",inset:0,zIndex:400,background:"#020a14",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(12px)"}}>
-        <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(0,200,255,0.05) 1px, transparent 1px)",backgroundSize:"24px 24px",pointerEvents:"none"}} />
-        <div style={{position:"relative",width:"100%",maxWidth:"540px",padding:"24px 28px",border:"0.5px solid rgba(0,200,255,0.3)",background:"rgba(5,12,24,0.92)",borderRadius:"4px",boxShadow:"0 0 60px rgba(0,200,255,0.15)"}}>
-          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"4px"}}>// MUZZ.ONL · BOOT_v2026.05.06</div>
-          <div style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"10px"}}>LIFE INTELLIGENCE SYSTEM</div>
-          {lines.slice(0, shown).map((l,i) => {
-            const isOk = l.startsWith("[OK]");
-            const isInit = l.startsWith("[INIT]");
-            const isReady = l.startsWith("[READY]");
-            const c = isReady ? "#00c8ff" : isOk ? "rgba(34,197,94,0.85)" : "rgba(0,200,255,0.7)";
-            return (
-              <div key={i} className="boot-line" style={{fontSize:"12px",color:c,fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"4px",animationDelay:`${i*20}ms`}}>
-                {l}
-              </div>
-            );
-          })}
-          {shown < lines.length && <div style={{fontSize:"12px",color:"#00c8ff",fontFamily:"monospace",animation:"blink 1s infinite",marginTop:"4px"}}>▊</div>}
-          {shown >= lines.length && (
-            <button onClick={onDone} style={{marginTop:"12px",fontSize:"10px",color:"#00c8ff",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"6px 14px",fontFamily:"monospace",letterSpacing:"2px",cursor:"pointer"}}>ENTER →</button>
-          )}
-        </div>
-      </div>
-    );
-  };
 
   // ============================================
   // RollingValue — animates when value changes (digit-roll style)
@@ -48444,184 +48246,18 @@ function MuzzApp() {
   // ============================================
   // MarqueeStrip — scrolling market ticker at bottom of dashboard
   // ============================================
-  const MarqueeStrip = ({ items }) => {
-    if (!items || items.length === 0) return null;
-    const doubled = [...items, ...items, ...items]; // ensure seamless scroll
-    return (
-      <div style={{position:"relative",overflow:"hidden",borderTop:"1px solid rgba(255,255,255,0.08)",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(3,8,18,0.7)",height:"26px",display:"flex",alignItems:"center"}}>
-        <div style={{position:"absolute",left:0,top:0,bottom:0,width:"60px",background:"linear-gradient(90deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
-        <div style={{position:"absolute",right:0,top:0,bottom:0,width:"60px",background:"linear-gradient(270deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
-        <div style={{display:"flex",animation:"ticker 60s linear infinite",whiteSpace:"nowrap",gap:"32px",paddingLeft:"60px"}}>
-          {doubled.map((item, i) => {
-            const c = item.delta == null ? "rgba(148,163,184,0.5)" : item.delta >= 0 ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)";
-            return (
-              <div key={i} style={{display:"inline-flex",alignItems:"center",gap:"8px",fontFamily:SANS_FONT,fontSize:"10.5px",letterSpacing:"0.3px"}}>
-                <span style={{color:"rgba(226,232,240,0.7)",fontWeight:500}}>{item.label}</span>
-                <span style={{color:"#e0eaff"}}>{item.value}</span>
-                {item.delta != null && <span style={{color:c}}>{item.delta >= 0 ? "▲" : "▼"} {Math.abs(item.delta).toFixed(2)}%</span>}
-                <span style={{color:"rgba(0,200,255,0.2)"}}>·</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
 
   // ============================================
   // ContextMenu — right-click menu for entities
   // ============================================
-  const ContextMenu = ({ x, y, entity, actions }) => {
-    return (
-      <div style={{position:"fixed",left:Math.min(x,window.innerWidth-200),top:Math.min(y,window.innerHeight-200),zIndex:500,minWidth:"180px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"12px",boxShadow:"0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(0,200,255,0.1)",overflow:"hidden"}}>
-        <div style={{padding:"6px 10px",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.05)"}}>
-          <div style={{fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>{entity.type}</div>
-          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
-        </div>
-        {actions.map((a,i) => (
-          <button key={i} onClick={(e) => { e.stopPropagation(); a.onClick(); }} style={{display:"block",width:"100%",textAlign:"left",padding:"7px 12px",background:"transparent",border:"none",borderBottom:i<actions.length-1?"0.5px solid rgba(0,200,255,0.04)":"none",fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:SANS_FONT,letterSpacing:"0.5px",cursor:"pointer"}}
-            onMouseEnter={(e) => e.currentTarget.style.background="rgba(0,200,255,0.06)"}
-            onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-            <span style={{color:"rgba(226,232,240,0.55)",fontSize:"10px",marginRight:"6px"}}>{a.icon || "›"}</span>
-            {a.label}
-          </button>
-        ))}
-      </div>
-    );
-  };
 
   // ============================================
   // ObjectInspector — right-side context panel for selected entity
   // ============================================
-  const ObjectInspector = ({ entity, onClose, deps }) => {
-    if (!entity) return null;
-    const { livePrices, subscriptions, assets, trackedStocks, stocks: heldStocks, setActiveView } = deps;
-
-    const sectionLabel = (txt) => (
-      <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:SANS_FONT,letterSpacing:"0.3px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>{txt}</div>
-    );
-    const kvRow = (k, v, color) => (
-      <div style={{display:"grid",gridTemplateColumns:"110px 1fr",gap:"8px",padding:"5px 14px",fontFamily:SANS_FONT,fontSize:"11px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
-        <span style={{color:"rgba(226,232,240,0.55)",letterSpacing:"0.5px"}}>{k}</span>
-        <span style={{color:color||"#e0eaff",letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis"}}>{v}</span>
-      </div>
-    );
-
-    let content = null;
-    if (entity.type === "STOCK") {
-      const tracked = trackedStocks.find(s => s.ticker?.toUpperCase() === entity.id);
-      const held = heldStocks.find(s => s.ticker?.toUpperCase() === entity.id);
-      const p = livePrices[entity.id];
-      const dailyDelta = p?.c && p?.pc && p.pc > 0 ? ((p.c - p.pc)/p.pc*100) : null;
-      const shares = parseFloat(held?.shares || tracked?.shares) || 0;
-      const avgCost = parseFloat(held?.avgCost || tracked?.avgCost) || 0;
-      const positionValue = shares * (p?.c || 0);
-      const pl = shares > 0 && p?.c && avgCost > 0 ? ((p.c - avgCost) / avgCost * 100) : null;
-      content = (
-        <>
-          {sectionLabel("PRICE")}
-          {kvRow("LAST", p?.c ? `$${p.c.toFixed(2)}` : "—")}
-          {kvRow("PREV CLOSE", p?.pc ? `$${p.pc.toFixed(2)}` : "—")}
-          {kvRow("DAILY Δ", dailyDelta!=null ? `${dailyDelta>=0?"+":""}${dailyDelta.toFixed(2)}%` : "—", dailyDelta==null?null:dailyDelta>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)")}
-          {sectionLabel("POSITION")}
-          {kvRow("SHARES", shares > 0 ? shares.toString() : "—")}
-          {kvRow("AVG COST", avgCost > 0 ? `$${avgCost.toFixed(2)}` : "—")}
-          {kvRow("VALUE", positionValue > 0 ? `$${positionValue.toLocaleString(undefined,{maximumFractionDigits:2})}` : "—")}
-          {kvRow("P/L", pl!=null ? `${pl>=0?"+":""}${pl.toFixed(2)}%` : "—", pl==null?null:pl>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)")}
-        </>
-      );
-    } else if (entity.type === "BILL") {
-      const bill = subscriptions.find(s => s.name === entity.id);
-      if (!bill) return null;
-      const day = parseInt(bill.dueDate?.toString().replace(/[^0-9]/g,'')) || null;
-      let daysUntil = null;
-      if (day) {
-        const now = new Date();
-        let next = new Date(now.getFullYear(), now.getMonth(), day);
-        if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
-        daysUntil = Math.ceil((next - now)/86400000);
-      }
-      const annual = (bill.monthly || 0) * 12;
-      content = (
-        <>
-          {sectionLabel("BILL")}
-          {kvRow("MONTHLY", `$${(bill.monthly||0).toFixed(2)}`)}
-          {kvRow("ANNUAL", `$${annual.toFixed(2)}`)}
-          {kvRow("DUE DAY", bill.dueDate || "—")}
-          {kvRow("DAYS UNTIL", daysUntil!=null ? `${daysUntil}d` : "—", daysUntil!=null && daysUntil<=3 ? "rgba(239,68,68,0.9)" : daysUntil<=7 ? "rgba(251,191,36,0.9)" : null)}
-        </>
-      );
-    } else if (entity.type === "ASSET") {
-      const asset = assets.find(a => a.name === entity.id);
-      if (!asset) return null;
-      const v = parseFloat(asset.value) || 0;
-      content = (
-        <>
-          {sectionLabel("ASSET")}
-          {kvRow("VALUE", `$${v.toLocaleString()}`)}
-          {kvRow("CATEGORY", asset.category || "—")}
-        </>
-      );
-    } else {
-      content = <div style={{padding:"14px",fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:SANS_FONT}}>NO DATA</div>;
-    }
-
-    const typeColor = entity.type === "STOCK" ? "rgba(168,85,247,0.9)" : entity.type === "BILL" ? "rgba(239,68,68,0.85)" : "rgba(34,197,94,0.85)";
-
-    return (
-      <div style={{height:"100%",display:"flex",flexDirection:"column",background:"rgba(5,12,24,0.92)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.025) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
-        {/* Header */}
-        <div style={{padding:"10px 14px",borderBottom:"1px solid rgba(255,255,255,0.08)",borderLeft:`2px solid ${typeColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{minWidth:0}}>
-            <div style={{fontSize:"9px",color:typeColor,fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>OBJECT_INSPECTOR · {entity.type}</div>
-            <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:SANS_FONT,letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
-          </div>
-          <button onClick={onClose} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(226,232,240,0.7)",fontFamily:SANS_FONT,fontSize:"10px",padding:"3px 8px",cursor:"pointer",borderRadius:"10px",letterSpacing:"0.3px",flexShrink:0}}>✕</button>
-        </div>
-        {/* Body */}
-        <div style={{flex:1,overflowY:"auto"}}>
-          {content}
-
-          {sectionLabel("RELATIONSHIPS")}
-          <div style={{padding:"8px 14px"}}>
-            {entity.type === "STOCK" && (
-              <button onClick={() => { setActiveView('investments'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Investments</button>
-            )}
-            {entity.type === "BILL" && (
-              <button onClick={() => { setActiveView('varied'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Bills</button>
-            )}
-            {entity.type === "ASSET" && (
-              <button onClick={() => { setActiveView('assets'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:SANS_FONT,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"10px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Assets</button>
-            )}
-          </div>
-        </div>
-        {/* Footer */}
-        <div style={{padding:"6px 14px",borderTop:"1px solid rgba(255,255,255,0.08)",fontSize:"9px",color:"rgba(226,232,240,0.55)",fontFamily:SANS_FONT,letterSpacing:"0.3px"}}>
-          ↗ ENTITY · INSPECTED
-        </div>
-      </div>
-    );
-  };
 
   // ============================================
   // SystemHealthRail — left-edge pulsing rail with health blocks
   // ============================================
-  const SystemHealthRail = ({ checks }) => {
-    return (
-      <div style={{position:"fixed",left:0,top:"32px",bottom:0,width:"4px",zIndex:30,display:"flex",flexDirection:"column",gap:"2px",padding:"4px 0",background:"rgba(3,8,18,0.6)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
-        {checks.map((c, i) => {
-          // Calm palette — cyan tones only, no red, no blinking
-          const color =
-            c.level === "OFFLINE" ? "rgba(148,163,184,0.25)" :
-            c.level === "WATCH"   ? "rgba(0,200,255,0.45)"   :
-                                    "rgba(0,200,255,0.85)";   // NOMINAL & CRITICAL → calm cyan
-          return (
-            <div key={i} title={c.label} style={{flex:1,background:color,minHeight:"12px"}} />
-          );
-        })}
-      </div>
-    );
-  };
 
   // ============================================
   // LeftRail — Bridge-style workspace nav (desktop only)
@@ -49052,7 +48688,13 @@ function MuzzApp() {
       const update = (changes) => setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, ...changes} : r));
       return (
         <React.Fragment key={reminder.id}>
-        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}>
+        <SwipeRow style={{...rowCard,opacity:reminder.done?0.6:1}} disabled={isEditing} onDelete={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}
+          menu={[
+            { label: 'Edit', onSelect: () => setEditingReminderId(reminder.id) },
+            { label: reminder.permanent ? 'Unpin' : 'Pin', onSelect: () => update({permanent: !reminder.permanent}) },
+            { label: reminder.done ? 'Mark not done' : 'Mark done', onSelect: () => update({done: !reminder.done}) },
+            { label: 'Delete', destructive: true, onSelect: () => setReminders(prev => prev.filter(r => r.id !== reminder.id)) },
+          ]}>
 
             <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px"}}>
             {tick(!!reminder.done, () => update({done: !reminder.done}), reminder.done ? 'Mark not done' : 'Mark done')}
@@ -49102,7 +48744,12 @@ function MuzzApp() {
       const update = (changes) => setBirthdays(prev => prev.map(b => b.id === bday.id ? {...b, ...changes} : b));
       return (
         <React.Fragment key={bday.id}>
-        <SwipeRow style={{...rowCard,border:diff===0?"0.5px solid rgba(10,132,255,0.6)":rowCard.border}} disabled={isEditing} onDelete={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}>
+        <SwipeRow style={{...rowCard,border:diff===0?"0.5px solid rgba(10,132,255,0.6)":rowCard.border}} disabled={isEditing} onDelete={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}
+          menu={[
+            { label: 'Edit', onSelect: () => setEditingBdayId(bday.id) },
+            { label: bday.category === 'family' ? 'Move to Friends' : 'Move to Family', onSelect: () => update({category: bday.category === 'family' ? 'friend' : 'family'}) },
+            { label: 'Delete', destructive: true, onSelect: () => setBirthdays(prev => prev.filter(b => b.id !== bday.id)) },
+          ]}>
 
             <button onClick={() => setEditingBdayId(bday.id)}
               style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
@@ -49449,7 +49096,13 @@ function MuzzApp() {
                 {unchecked.map(item => (
                   <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                     {circle(false, () => updateItem(item.id, {checked: true}), 'Mark done')}
-                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}>
+                    <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}
+                      menu={[
+                        { label: 'Edit', onSelect: () => { const el = document.getElementById(`item-${item.id}`); if (el) { el.focus(); const v = el.value.length; try { el.setSelectionRange(v, v); } catch (e) {} } } },
+                        { label: 'Mark done', onSelect: () => updateItem(item.id, {checked: true}) },
+                        { label: 'Move to top', onSelect: () => save([item, ...items.filter(i => i.id !== item.id)]) },
+                        { label: 'Delete', destructive: true, onSelect: () => deleteItem(item.id) },
+                      ]}>
                     <div style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px"}}>
                       <textarea
                         id={`item-${item.id}`}
@@ -49493,7 +49146,11 @@ function MuzzApp() {
                     {checked.map(item => (
                       <div key={item.id} className="mz-task-row" style={{display:"flex",alignItems:"flex-start",gap:"12px",marginTop:"8px"}}>
                         {circle(true, () => updateItem(item.id, {checked: false}), 'Mark not done')}
-                        <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}>
+                        <SwipeRow style={{flex:1,minWidth:0,...LIQUID_GLASS,borderRadius:"16px",border:"0.5px solid rgba(255,255,255,0.14)"}} onDelete={() => deleteItem(item.id)}
+                          menu={[
+                            { label: 'Mark not done', onSelect: () => updateItem(item.id, {checked: false}) },
+                            { label: 'Delete', destructive: true, onSelect: () => deleteItem(item.id) },
+                          ]}>
                         <div style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"10px 10px 10px 14px"}}>
                           <span style={{flex:1,minWidth:0,color:"rgba(235,235,245,0.45)",fontSize:"17px",fontFamily:SANS_FONT,lineHeight:"1.35",letterSpacing:"-0.2px",whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{item.text}</span>
                           <button className="mz-del" onClick={() => deleteItem(item.id)} aria-label="Delete task"
@@ -50387,7 +50044,11 @@ function MuzzApp() {
                         const sub1 = [FREQ_LABEL[freq], nd ? `due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''].filter(Boolean).join(', ');
                         return (
                           <React.Fragment key={sub?.id || index}>
-                          <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => removeBillFromBucket(activeBucket.id, index)}>
+                          <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => removeBillFromBucket(activeBucket.id, index)}
+                            menu={[
+                              { label: 'Edit', onSelect: () => setEditingBillIdx(index) },
+                              { label: 'Delete', destructive: true, onSelect: () => removeBillFromBucket(activeBucket.id, index) },
+                            ]}>
                             <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
                               style={{width:"100%",display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                               <div style={{flex:1,minWidth:0}}>
@@ -51770,7 +51431,11 @@ function MuzzApp() {
                     const subParts = [typeName, asset?.ownedFor ? `owned ${asset.ownedFor}` : ''].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
-                      <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => setAssets(prev => prev.filter((_, i) => i !== index))}>
+                      <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => setAssets(prev => prev.filter((_, i) => i !== index))}
+                        menu={[
+                          { label: 'Edit', onSelect: () => setEditingAssetIdx(index) },
+                          { label: 'Delete', destructive: true, onSelect: () => setAssets(prev => prev.filter((_, i) => i !== index)) },
+                        ]}>
                         <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
                           style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                           <span style={{width:"38px",height:"38px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"20px",lineHeight:1,background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)"}}>{cat?.emoji || '💼'}</span>
@@ -65320,592 +64985,6 @@ function MuzzApp() {
 
           {/* FUTURE PORTFOLIO TAB */}
 
-
-          {investmentsSubTab === 'economics' && (
-            <>
-              {/* Company Economics Table */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b flex justify-between items-start">
-                  <div>
-                    <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Company Economics</h2>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {showEconomicsColInput ? (
-                      <>
-                        <input
-                          type="text"
-                          value={newEconomicsCol}
-                          onChange={(e) => setNewEconomicsCol(e.target.value)}
-                          placeholder="Column name"
-                          className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                          autoFocus
-                        />
-                        <button
-                          onClick={() => {
-                            if (newEconomicsCol.trim()) {
-                              const colId = 'col_' + Date.now();
-                              setEconomicsColumns(prev => [...prev, { id: colId, name: newEconomicsCol.trim().toUpperCase() }]);
-                              setNewEconomicsCol('');
-                              setShowEconomicsColInput(false);
-                            }
-                          }}
-                          style={{padding:"6px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"rgba(10,132,255,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                        >
-                          Add
-                        </button>
-                        <button
-                          onClick={() => { setShowEconomicsColInput(false); setNewEconomicsCol(''); }}
-                          className="px-3 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-400"
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => setShowEconomicsColInput(true)}
-                        style={{padding:"6px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"rgba(10,132,255,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                      >
-                        + Add Column
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {companyEconomics.length === 0 && (() => {
-                    const samples = [
-                      { ticker: 'COST', metric: 'ROE 28%, ROIC 22%, debt/equity 0.4'  },
-                      { ticker: 'BRK.B',metric: 'Book value $400/share, $325B cash pile' },
-                      { ticker: 'AAPL', metric: 'Gross margin 45%, FCF $100B+ annual' },
-                    ];
-                    const useTemplate = () => setCompanyEconomics(samples);
-                    const startFresh = () => setCompanyEconomics(prev => [...prev, { ticker: '', metric: '' }]);
-                    return (
-                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                        <div style={{fontSize:"13px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · Economic Metrics</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track the underlying business economics of companies you follow.</div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>ROE, ROIC, margins, debt levels — the Buffett/Munger lens. Add custom columns to fit your framework.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => (
-                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px"}}>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,color:"#FFFFFF",marginBottom:"4px"}}>{s.ticker}</div>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.7)",lineHeight:1.5}}>{s.metric}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"16px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Use This Template</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"16px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Start Fresh</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {companyEconomics.map((company, index) => (
-                    <div key={index} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",padding:"12px"}}>
-                      {/* Row 1: Ticker + Delete */}
-                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                        <span style={{color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,fontSize:"13px",marginTop:"6px"}}>{index + 1}.</span>
-                        <input
-                          type="text"
-                          value={company?.ticker || ''}
-                          onChange={(e) => {
-                            setCompanyEconomics(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], ticker: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Ticker (e.g. AAPL)"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
-                        />
-                        <button
-                          onClick={() => setCompanyEconomics(prev => prev.filter((_, i) => i !== index))}
-                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,69,58,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                        </button>
-                      </div>
-                      
-                      {/* Row 2: Future Predictability */}
-                      <div style={{marginBottom:"10px"}}>
-                        <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Future Predictability</label>
-                        <textarea
-                          value={company?.economics || ''}
-                          onChange={(e) => {
-                            setCompanyEconomics(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], economics: e.target.value };
-                              return updated;
-                            });
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          placeholder="Notes on future predictability..."
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
-                          rows={2}
-                        />
-                      </div>
-                      
-                      {/* Custom Columns */}
-                      {economicsColumns.length > 0 && (
-                        <div className="space-y-3 pt-3 border-t">
-                          {economicsColumns.map(col => (
-                            <div key={col.id}>
-                              <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>{col.name}</label>
-                              <input
-                                type="text"
-                                value={company?.[col.id] || ''}
-                                onChange={(e) => {
-                                  setCompanyEconomics(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], [col.id]: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                placeholder="-"
-                                style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"6px 8px",outline:"none"}}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(10,132,255,0.12)":"rgba(10,132,255,0.08)"}`}}>
-                  <button
-                    onClick={() => setCompanyEconomics(prev => [...prev, {}])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(10,132,255,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(10,132,255,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"8px",color:researchMode?"rgba(10,132,255,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Company
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-
-          {investmentsSubTab === 'risks' && (
-            <>
-              {/* Biggest Risks Table */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b flex justify-between items-start">
-                  <div>
-                    <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Biggest Risks</h2>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {showRisksColInput ? (
-                      <>
-                        <input
-                          type="text"
-                          value={newRisksCol}
-                          onChange={(e) => setNewRisksCol(e.target.value)}
-                          placeholder="Column name"
-                          className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                          autoFocus
-                        />
-                        <button
-                          onClick={() => {
-                            if (newRisksCol.trim()) {
-                              const colId = 'col_' + Date.now();
-                              setRisksColumns(prev => [...prev, { id: colId, name: newRisksCol.trim().toUpperCase() }]);
-                              setNewRisksCol('');
-                              setShowRisksColInput(false);
-                            }
-                          }}
-                          style={{padding:"6px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"rgba(10,132,255,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                        >
-                          Add
-                        </button>
-                        <button
-                          onClick={() => { setShowRisksColInput(false); setNewRisksCol(''); }}
-                          className="px-3 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-400"
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => setShowRisksColInput(true)}
-                        style={{padding:"6px 12px",background:"rgba(10,132,255,0.1)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"rgba(10,132,255,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                      >
-                        + Add Column
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {biggestRisks.length === 0 && (() => {
-                    const samples = [
-                      { ticker: 'PLTR', risk: 'Moat erosion if open-source ontologies mature' },
-                      { ticker: 'TSLA', risk: 'Key-person dependency, Musk attention split'   },
-                      { ticker: 'META', risk: 'Regulatory action on data + advertising'      },
-                    ];
-                    const useTemplate = () => setBiggestRisks(samples);
-                    const startFresh = () => setBiggestRisks(prev => [...prev, { ticker: '', risk: '' }]);
-                    return (
-                      <div style={{border:"1px solid rgba(255,69,58,0.4)",borderRadius:"16px",padding:"14px",background:"rgba(255,69,58,0.05)"}}>
-                        <div style={{fontSize:"13px",color:"rgba(255,69,58,0.95)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.8}}>Preview · What Could Go Wrong</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>What could kill the thesis for each holding?</div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>The pre-mortem. Identify killer risks early. If one materialises, you already know to act.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => (
-                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,69,58,0.15)",borderRadius:"8px"}}>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,color:"#FFFFFF",marginBottom:"4px"}}>{s.ticker}</div>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.7)",lineHeight:1.5}}>{s.risk}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(255,69,58,0.18)",border:"1px solid rgba(255,69,58,0.7)",borderRadius:"16px",color:"rgba(255,69,58,0.95)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Use This Template</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"16px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Start Fresh</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {biggestRisks.map((risk, index) => (
-                    <div key={index} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",padding:"12px"}}>
-                      {/* Row 1: Ticker + Delete */}
-                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                        <span style={{color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,fontSize:"13px",marginTop:"6px"}}>{index + 1}.</span>
-                        <input
-                          type="text"
-                          value={risk?.ticker || ''}
-                          onChange={(e) => {
-                            setBiggestRisks(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], ticker: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Ticker (e.g. AAPL)"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
-                        />
-                        <button
-                          onClick={() => setBiggestRisks(prev => prev.filter((_, i) => i !== index))}
-                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,69,58,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                        </button>
-                      </div>
-                      
-                      {/* Row 2: Biggest Risk */}
-                      <div style={{marginBottom:"10px"}}>
-                        <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Biggest Risk</label>
-                        <textarea
-                          value={risk?.biggestRisk || ''}
-                          onChange={(e) => {
-                            setBiggestRisks(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], biggestRisk: e.target.value };
-                              return updated;
-                            });
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          placeholder="What's the biggest risk for this company?"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
-                          rows={2}
-                        />
-                      </div>
-                      
-                      {/* Custom Columns */}
-                      {risksColumns.length > 0 && (
-                        <div className="space-y-3 pt-3 border-t">
-                          {risksColumns.map(col => (
-                            <div key={col.id}>
-                              <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>{col.name}</label>
-                              <input
-                                type="text"
-                                value={risk?.[col.id] || ''}
-                                onChange={(e) => {
-                                  setBiggestRisks(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], [col.id]: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                placeholder="-"
-                                style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"6px 8px",outline:"none"}}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(10,132,255,0.12)":"rgba(10,132,255,0.08)"}`}}>
-                  <button
-                    onClick={() => setBiggestRisks(prev => [...prev, {}])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(10,132,255,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(10,132,255,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"8px",color:researchMode?"rgba(10,132,255,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Company
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-
-          {investmentsSubTab === 'declined' && (
-            <>
-              <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(10,132,255,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"16px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"12px",color:researchMode?"rgba(10,132,255,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>DECLINED COMPANIES{declinedCompanies.length>0?` · ${declinedCompanies.length}`:''}</span>
-                  <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
-                </summary>
-                <div style={{backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(10,132,255,0.15)":"rgba(10,132,255,0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Declined Companies</h2>
-                  <p style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Track companies you've passed on and why</p>
-                </div>
-
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {declinedCompanies.length === 0 && (() => {
-                    const samples = [
-                      { ticker: 'TSLA', industry: 'Automotive',     reason: 'P/E too high, no margin of safety. Reliance on Musk personality risk.' },
-                      { ticker: 'GME',  industry: 'Retail',         reason: 'Dying business model. Speculation, not investing.' },
-                      { ticker: 'AAL',  industry: 'Airlines',       reason: 'Cyclical, capital intensive, low ROIC, high debt.' },
-                    ];
-                    const useTemplate = () => setDeclinedCompanies(samples);
-                    const startFresh = () => setDeclinedCompanies(prev => [...prev, { ticker: '', industry: '', reason: '' }]);
-                    return (
-                      <div style={{border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:"14px",background:"rgba(10,132,255,0.05)"}}>
-                        <div style={{fontSize:"13px",color:"#0A84FF",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"6px",opacity:0.7}}>Preview · Why You Said No</div>
-                        <div style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,marginBottom:"4px"}}>Track companies you've passed on — and the reasons why.</div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.65)",fontFamily:SANS_FONT,lineHeight:1.5,marginBottom:"12px"}}>Build your "anti-portfolio". When the market shifts, look back and learn from past calls.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => (
-                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px"}}>
-                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"12px",fontWeight:600,color:"#FFFFFF"}}>{s.ticker}</span>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.6)",letterSpacing:"0"}}>{s.industry.toUpperCase()}</span>
-                              </div>
-                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.75)",lineHeight:1.5}}>{s.reason}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(10,132,255,0.18)",border:"1px solid rgba(10,132,255,0.7)",borderRadius:"16px",color:"#0A84FF",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Use This Template</button>
-                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"16px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer",fontWeight:600}}>Start Fresh</button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {declinedCompanies.map((company, index) => (
-                    <div key={index} style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",padding:"12px"}}>
-                      {/* Row 1: Ticker + Delete */}
-                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                        <span style={{color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,fontSize:"13px",marginTop:"6px"}}>{index + 1}.</span>
-                        <input
-                          type="text"
-                          value={company?.ticker || ''}
-                          onChange={(e) => {
-                            setDeclinedCompanies(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], ticker: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Ticker (e.g. TSLA)"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
-                        />
-                        <button
-                          onClick={() => {
-                            setDeclinedCompanies(prev => prev.filter((_, i) => i !== index));
-                          }}
-                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,69,58,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                        </button>
-                      </div>
-                      
-                      {/* Row 2: Industry */}
-                      <div style={{marginBottom:"10px"}}>
-                        <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Industry</label>
-                        <select
-                          value={company?.industry || ''}
-                          onChange={(e) => {
-                            setDeclinedCompanies(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], industry: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          style={{width:"100%",background:"rgba(10,132,255,0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"8px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"6px 8px",outline:"none"}}
-                        >
-                          {industries.map(ind => (
-                            <option key={ind.id} value={ind.id}>{ind.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      {/* Row 3: Reason */}
-                      <div>
-                        <label style={{fontSize:"12px",color:"rgba(10,132,255,0.4)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px",display:"block"}}>Reason for Decline</label>
-                        <textarea
-                          value={company?.reason || ''}
-                          onChange={(e) => {
-                            setDeclinedCompanies(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], reason: e.target.value };
-                              return updated;
-                            });
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          placeholder="Why did you pass on this company?"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
-                          rows={2}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(10,132,255,0.12)":"rgba(10,132,255,0.08)"}`}}>
-                  <button
-                    onClick={() => setDeclinedCompanies(prev => [...prev, { ticker: '', industry: '', reason: '' }])}
-                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(10,132,255,0.06)":"rgba(10,132,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(10,132,255,0.4)":"rgba(10,132,255,0.3)"}`,borderRadius:"8px",color:researchMode?"rgba(10,132,255,0.85)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,fontSize:"12px",letterSpacing:"0",cursor:"pointer"}}
-                  >
-                    + Add Company
-                  </button>
-                </div>
-                </div>
-              </details>
-
-              {/* Declined Pie Chart */}
-              {(() => {
-                const filledDeclined = declinedCompanies.filter(c => c && c.ticker && c.industry);
-                const declinedByIndustry = industries
-                  .filter(ind => ind.id)
-                  .map(ind => ({
-                    name: ind.name,
-                    count: filledDeclined.filter(c => c.industry === ind.id).length,
-                    companies: filledDeclined.filter(c => c.industry === ind.id)
-                  }))
-                  .filter(ind => ind.count > 0)
-                  .sort((a, b) => b.count - a.count);
-                const totalDeclined = filledDeclined.length;
-
-                if (declinedByIndustry.length === 0) return null;
-
-                return (
-                  <>
-                    <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(10,132,255,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"16px",overflow:"hidden"}}>
-                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <span style={{fontSize:"12px",color:researchMode?"rgba(10,132,255,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Declined by Industry</span>
-                        <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
-                      </summary>
-                      <div style={{backgroundSize:"20px 20px"}}>
-                      <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
-                        {/* Pie Chart */}
-                        <div className="relative">
-                          <svg width="250" height="250" viewBox="0 0 250 250">
-                            {(() => {
-                              const colors = [
-                                '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
-                                '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
-                                '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
-                              ];
-                              let cumulativePercent = 0;
-                              return declinedByIndustry.map((ind, i) => {
-                                const percent = (ind.count / totalDeclined) * 100;
-                                const startAngle = cumulativePercent * 3.6 * (Math.PI / 180);
-                                cumulativePercent += percent;
-                                const endAngle = cumulativePercent * 3.6 * (Math.PI / 180);
-                                const largeArcFlag = percent > 50 ? 1 : 0;
-                                const x1 = 125 + 100 * Math.sin(startAngle);
-                                const y1 = 125 - 100 * Math.cos(startAngle);
-                                const x2 = 125 + 100 * Math.sin(endAngle);
-                                const y2 = 125 - 100 * Math.cos(endAngle);
-                                
-                                if (percent === 100) {
-                                  return (
-                                    <circle
-                                      key={i}
-                                      cx="125"
-                                      cy="125"
-                                      r="100"
-                                      fill={colors[i % colors.length]}
-                                    />
-                                  );
-                                }
-                                
-                                return (
-                                  <path
-                                    key={i}
-                                    d={`M 125 125 L ${x1} ${y1} A 100 100 0 ${largeArcFlag} 1 ${x2} ${y2} Z`}
-                                    fill={colors[i % colors.length]}
-                                  />
-                                );
-                              });
-                            })()}
-                            <circle cx="125" cy="125" r="50" fill="rgba(28,28,30,0.5)" stroke="rgba(10,132,255,0.2)" strokeWidth="0.5" />
-                            <text x="125" y="120" textAnchor="middle" style={{fontSize:"12px",fill:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Total</text>
-                            <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{totalDeclined}</text>
-                          </svg>
-                        </div>
-                        
-                        {/* Legend */}
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                          {(() => {
-                            const colors = [
-                              '#0A84FF', '#FF9F0A', '#30D158', '#FF375F', '#BF5AF2',
-                              '#64D2FF', '#FFD60A', '#FF453A', '#5E5CE6', '#AC8E68',
-                              '#66D4CF', '#FF6482', '#A2845E', '#32ADE6', '#D946EF'
-                            ];
-                            return declinedByIndustry.map((ind, i) => (
-                              <div key={ind.name} className="flex items-center gap-2">
-                                <div 
-                                  className="w-3 h-3 rounded-full flex-shrink-0" 
-                                  style={{ backgroundColor: colors[i % colors.length] }}
-                                />
-                                <span className="text-sm" style={{color:"rgba(235,235,245,0.9)"}}>{ind.name}</span>
-                                <span className="text-sm font-medium">{((ind.count / totalDeclined) * 100).toFixed(1)}%</span>
-                              </div>
-                            ));
-                          })()}
-                        </div>
-                      </div>
-                      </div>
-                    </details>
-
-                    {/* Breakdown Table */}
-                    <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(10,132,255,0.3)":"rgba(10,132,255,0.25)"}`,borderRadius:"16px",overflow:"hidden"}}>
-                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <span style={{fontSize:"12px",color:researchMode?"rgba(10,132,255,0.95)":"rgba(10,132,255,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Declined Companies Breakdown</span>
-                        <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
-                      </summary>
-                      <div style={{backgroundSize:"20px 20px"}}>
-                      <div style={{overflowX:"auto"}}>
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr style={{background:"rgba(10,132,255,0.02)",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                              <th style={{textAlign:"left",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"12px",color:"#FFFFFF",fontWeight:600}}>Industry</th>
-                              <th className="text-center py-3 px-4 font-semibold">Companies</th>
-                              <th style={{textAlign:"right",padding:"10px 12px",fontFamily:SANS_FONT,fontSize:"12px",color:"#FFFFFF",fontWeight:600}}>% of Declined</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {declinedByIndustry.map(ind => (
-                              <tr key={ind.name} style={{borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                                <td className="py-3 px-4 font-medium">{ind.name}</td>
-                                <td className="py-3 px-4 text-center text-gray-600">{ind.count}</td>
-                                <td className="py-3 px-4 text-right text-gray-600">{((ind.count / totalDeclined) * 100).toFixed(1)}%</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                          <tfoot>
-                            <tr style={{background:"rgba(255,69,58,0.06)",borderTop:"0.5px solid rgba(255,69,58,0.3)",fontFamily:SANS_FONT,fontWeight:600,color:"rgba(255,69,58,0.95)"}}>
-                              <td className="py-3 px-4">Total Declined</td>
-                              <td className="py-3 px-4 text-center">{totalDeclined}</td>
-                              <td className="py-3 px-4 text-right">100%</td>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                      </div>
-                    </details>
-                  </>
-                );
-              })()}
-            </>
-          )}
 
           {(investmentsSubTab === 'knowledge' || investmentsSubTab === 'books') && (
             <>
