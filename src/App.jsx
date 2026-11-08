@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -49753,6 +49753,7 @@ function MuzzApp() {
               {!FREE_FOR_EVERYONE && (
                 <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
               )}
+              <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} />
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
               <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
