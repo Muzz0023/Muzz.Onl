@@ -65153,10 +65153,11 @@ function MuzzApp() {
                   </div>
                 </div>
 
-                {rdModuleGroups.map(grp => (
-                <div key={grp.title}>
+                {(() => {
+                  const renderGrp = (grp, paired) => (
+                <div key={grp.title} style={{minWidth:0}}>
                   <div style={{fontSize:"12px",color:rDim,letterSpacing:"0",fontWeight:600,margin:"4px 0 10px"}}>// {grp.title}</div>
-                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(215px, 1fr))",gap:"8px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:paired ? "1fr" : "repeat(auto-fill, minmax(215px, 1fr))",gap:"8px"}}>
                     {grp.items.map(s => (
                       <button key={s.id} onClick={() => setInvestmentsSubTab(s.id)}
                         style={{textAlign:"left",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"5px",padding:"13px 14px",cursor:"pointer",fontFamily:SANS_FONT,transition:"all 0.15s",display:"flex",alignItems:"center",gap:"11px"}}
@@ -65172,7 +65173,17 @@ function MuzzApp() {
                     ))}
                   </div>
                 </div>
-                ))}
+                  );
+                  return (
+                    <>
+                      {/* Core Research + Live Data side by side */}
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                        {rdModuleGroups.slice(0, 2).map(g => renderGrp(g, true))}
+                      </div>
+                      {rdModuleGroups.slice(2).map(g => renderGrp(g, false))}
+                    </>
+                  );
+                })()}
               </div>
             );
           })()}
