@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, ScanFace, Contact } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -216,6 +216,165 @@ const applyMzTheme = (id) => {
 // Apply the saved colour straight away so the app opens in it
 try { if (typeof window !== 'undefined') applyMzTheme(localStorage.getItem('mz_theme') || 'blue'); } catch (e) {}
 
+// ---------- iPhone links: share sheet, PDF, Face ID ----------
+// A native plugin by name, or null when running on the website.
+const mzPlugin = (name) => {
+  if (typeof window === 'undefined') return null;
+  const C = window.Capacitor;
+  if (!C || !C.isNativePlatform || !C.isNativePlatform()) return null;
+  try { return (C.Plugins && C.Plugins[name]) || (C.registerPlugin ? C.registerPlugin(name) : null); } catch (e) { return null; }
+};
+
+// Hand a file to the iPhone share sheet (Save to Files / iCloud Drive, AirDrop, Messages, Print).
+// On the website it uses the browser's share sheet if it has one, otherwise downloads the file.
+const mzShareFile = async ({ filename, data, mime, base64 = false, title }) => {
+  const Filesystem = mzPlugin('Filesystem'), Share = mzPlugin('Share');
+  if (Filesystem && Share) {
+    try {
+      const res = await Filesystem.writeFile({ path: filename, data, directory: 'CACHE', ...(base64 ? {} : { encoding: 'utf8' }) });
+      await Share.share({ title: title || filename, files: [res.uri], dialogTitle: title || filename });
+      return true;
+    } catch (e) {
+      if (/cancel/i.test(String((e && e.message) || e))) return false;
+      console.log('Native share failed, falling back', e);
+    }
+  }
+  const blob = base64 ? new Blob([Uint8Array.from(atob(data), c => c.charCodeAt(0))], { type: mime }) : new Blob([data], { type: mime });
+  try {
+    const file = new File([blob], filename, { type: mime });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: title || filename }); return true; }
+  } catch (e) { if (e && e.name === 'AbortError') return false; }
+  const u = URL.createObjectURL(blob); const a = document.createElement('a');
+  a.href = u; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 4000);
+  return true;
+};
+
+// PDF fonts only cover basic Latin, so swap smart punctuation and drop emoji.
+const mzPdfText = (v) => String(v == null ? '' : v)
+  .replace(/[‘’′]/g, "'").replace(/[“”″]/g, '"')
+  .replace(/[–—−]/g, '-').replace(/…/g, '...').replace(/•/g, '-')
+  .replace(/€/g, 'EUR ').replace(/→/g, '->').replace(/←/g, '<-').replace(/ /g, ' ')
+  .replace(/[^\x09\x0A\x20-\x7E¡-ÿ]/g, '');
+
+// Build a clean A4 PDF. blocks: [{ type: 'h' | 'p' | 'check', text, done }]. Returns base64.
+const mzMakePdf = async ({ title, subtitle, blocks }) => {
+  const { jsPDF } = await import('jspdf');
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 48, maxW = W - M * 2;
+  let y = M;
+  const need = (h) => { if (y + h > H - M - 10) { doc.addPage(); y = M; } };
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(22); doc.setTextColor(20, 20, 24);
+  for (const ln of doc.splitTextToSize(mzPdfText(title), maxW)) { need(28); doc.text(ln, M, y + 18); y += 28; }
+  if (subtitle) { doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(120, 120, 128); need(16); doc.text(mzPdfText(subtitle), M, y + 8); y += 18; }
+  y += 4; doc.setDrawColor(222, 222, 228); doc.setLineWidth(0.75); doc.line(M, y, W - M, y); y += 16;
+  for (const b of blocks || []) {
+    const text = mzPdfText(b.text);
+    if (!text.trim()) continue;
+    if (b.type === 'h') {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5); doc.setTextColor(20, 20, 24); y += 6;
+      for (const ln of doc.splitTextToSize(text, maxW)) { need(17); doc.text(ln, M, y + 12); y += 17; }
+      y += 2;
+    } else if (b.type === 'check') {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(12);
+      const lines = doc.splitTextToSize(text, maxW - 26);
+      need(lines.length * 17 + 8);
+      doc.setLineWidth(1); doc.setDrawColor(150, 150, 156);
+      if (b.done) { doc.setFillColor(150, 150, 156); doc.circle(M + 7, y + 8, 6.5, 'FD'); } else doc.circle(M + 7, y + 8, 6.5, 'S');
+      doc.setTextColor(b.done ? 150 : 28, b.done ? 150 : 28, b.done ? 156 : 32);
+      lines.forEach((ln, i) => {
+        doc.text(ln, M + 26, y + 12 + i * 17);
+        if (b.done) { doc.setLineWidth(0.8); doc.line(M + 26, y + 8 + i * 17, M + 26 + doc.getTextWidth(ln), y + 8 + i * 17); }
+      });
+      y += lines.length * 17 + 9;
+    } else {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(52, 52, 58);
+      for (const ln of doc.splitTextToSize(text, maxW)) { need(14); doc.text(ln, M, y + 10); y += 14; }
+      y += 4;
+    }
+  }
+  const made = 'Made with Muzz · ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(160, 160, 166);
+    doc.text(made, M, H - 26); doc.text(`${i} / ${pages}`, W - M, H - 26, { align: 'right' });
+  }
+  return doc.output('datauristring').split(',')[1];
+};
+
+// Turn what's on screen into PDF blocks: short title-like lines become headings.
+const mzBlocksFromElement = (el, skip = []) => {
+  // Leave out buttons and tabs (Back, Share, Overview, Moat...) and anything already in the PDF title
+  const drop = new Set(skip.filter(Boolean).map(t => String(t).trim()));
+  if (el) el.querySelectorAll('button, [role="tab"]').forEach(b => { const t = (b.innerText || '').trim(); if (t && t.length < 40) drop.add(t); });
+  const lines = String((el && el.innerText) || '').split('\n').map(t => t.trim()).filter(Boolean)
+    .filter(t => !drop.has(t) && !/^(← ?BACK|Share|Share PDF)$/i.test(t));
+  return lines.map((t, i) => {
+    const next = lines[i + 1] || '';
+    const head = t.length <= 44 && /[A-Za-z]{3}/.test(t) && !/[.,;:]$/.test(t) && (t === t.toUpperCase() || next.length > 70);
+    return { type: head ? 'h' : 'p', text: t };
+  });
+};
+
+// Shrink a contact photo to the same 192px square as photos picked in Muzz.
+const mzShrinkPhoto = (src) => new Promise((resolve) => {
+  if (!src) return resolve('');
+  const img = new Image();
+  img.onload = () => {
+    try {
+      const size = 192, side = Math.min(img.width, img.height);
+      const c = document.createElement('canvas'); c.width = size; c.height = size;
+      c.getContext('2d').drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
+      resolve(c.toDataURL('image/jpeg', 0.8));
+    } catch (e) { resolve(''); }
+  };
+  img.onerror = () => resolve('');
+  img.src = src.startsWith('data:') ? src : 'data:image/jpeg;base64,' + src;
+});
+
+// Face ID lock: the setting lives on this phone only.
+const MZ_LOCK_KEY = 'mz_faceid_lock';
+const mzLockEnabled = () => { try { return localStorage.getItem(MZ_LOCK_KEY) === '1'; } catch (e) { return false; } };
+const mzVerifyFaceId = async (reason) => {
+  const B = mzPlugin('NativeBiometric');
+  if (!B) return false;
+  try { await B.verifyIdentity({ reason: reason || 'Unlock Muzz', title: 'Unlock Muzz', useFallback: true }); return true; } catch (e) { return false; }
+};
+// Covers the app when it opens (and when you come back after 15+ seconds away) until Face ID passes.
+const MzLockHost = () => {
+  const [locked, setLocked] = useState(() => mzLockEnabled() && !!mzPlugin('NativeBiometric'));
+  const busy = useRef(false), hiddenAt = useRef(0);
+  const unlock = useCallback(async () => {
+    if (busy.current) return;
+    busy.current = true;
+    const ok = await mzVerifyFaceId('Unlock Muzz');
+    busy.current = false;
+    if (ok) setLocked(false);
+  }, []);
+  useEffect(() => { if (!locked) return; const t = setTimeout(unlock, 350); return () => clearTimeout(t); }, [locked, unlock]);
+  useEffect(() => {
+    const onVis = () => {
+      if (!mzLockEnabled() || !mzPlugin('NativeBiometric')) return;
+      if (document.visibilityState === 'hidden') { if (!busy.current) hiddenAt.current = Date.now(); }
+      else if (hiddenAt.current && Date.now() - hiddenAt.current > 15000) { hiddenAt.current = 0; setLocked(true); }
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+  if (!locked) return null;
+  return createPortal(
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'radial-gradient(ellipse at 50% 30%, #0b1426 0%, #000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '14px', padding: '24px', fontFamily: SANS_FONT }}>
+      <span style={{ width: '76px', height: '76px', borderRadius: '50%', background: 'rgba(var(--mz-accent-rgb,10,132,255),0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ScanFace size={38} strokeWidth={1.6} style={{ color: 'var(--mz-accent,#0A84FF)' }} />
+      </span>
+      <div style={{ fontSize: '22px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.3px' }}>Muzz is locked</div>
+      <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)' }}>Use Face ID to open Muzz.</div>
+      <button onClick={unlock} style={{ marginTop: '10px', padding: '13px 28px', borderRadius: '999px', border: 'none', cursor: 'pointer', background: 'var(--mz-accent,#0A84FF)', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '17px', fontWeight: 600 }}>Unlock with Face ID</button>
+    </div>,
+    document.body
+  );
+};
+
 // Pick a date out of typed text, e.g. "Dentist Friday 3pm", "Rego 14 March", "Call mum tomorrow".
 // Returns { date: 'YYYY-MM-DD', rest: text with the date words removed } or null. Times are left in the text.
 const mzParseDate = (text, now = new Date()) => {
@@ -298,8 +457,8 @@ const UndoToastHost = () => {
       <style>{`@keyframes mzToastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}`}</style>
       <div key={toast.key} role="status" style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '18px', padding: '12px 12px 12px 18px', borderRadius: '14px', background: '#2C2C2E', border: '0.5px solid rgba(255,255,255,0.12)', boxShadow: '0 10px 30px rgba(0,0,0,0.45)', animation: 'mzToastIn 0.25s cubic-bezier(0.2,0.8,0.2,1) both', fontFamily: SANS_FONT }}>
         <span style={{ fontSize: '15px', color: '#FFFFFF' }}>{toast.label}</span>
-        <button onClick={() => { clearTimeout(timer.current); const u = toast.undo; setToast(null); if (u) u(); }}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--mz-accent,#0A84FF)', fontFamily: SANS_FONT, fontSize: '15px', fontWeight: 600, padding: '4px 6px' }}>Undo</button>
+        {toast.undo && <button onClick={() => { clearTimeout(timer.current); const u = toast.undo; setToast(null); if (u) u(); }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--mz-accent,#0A84FF)', fontFamily: SANS_FONT, fontSize: '15px', fontWeight: 600, padding: '4px 6px' }}>Undo</button>}
       </div>
     </div>,
     document.body
@@ -1748,7 +1907,7 @@ function AuthScreen() {
             <div style={{marginBottom:'14px',position:'relative'}}>
               <label style={labelStyle}>EMAIL ADDRESS</label>
               <Mail style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
+              <input type="email" name="email" id="mz-email" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
             </div>
             <button onClick={handleResetPassword} disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'10px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'0.8px',cursor:'pointer',opacity:loading?0.5:1}}>
               {loading ? 'SENDING...' : 'SEND RESET LINK'}
@@ -1790,16 +1949,17 @@ function AuthScreen() {
 
           {error && <div style={{padding:'10px 14px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'10px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{error}</div>}
 
+          <form onSubmit={handleSubmit} autoComplete="on" noValidate={false}>
           <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'16px'}}>
             <div style={{position:'relative'}}>
               <label style={labelStyle}>EMAIL ADDRESS</label>
               <Mail style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
+              <input type="email" name="email" id="mz-email" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
             </div>
             <div style={{position:'relative'}}>
               <label style={labelStyle}>PASSWORD</label>
               <Lock style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
-              <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6}
+              <input type={showPassword ? 'text' : 'password'} name="password" id="mz-password" autoComplete={isLogin ? 'current-password' : 'new-password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6}
                 style={{...inputStyle, paddingRight:'38px'}}/>
               <button type="button" onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:'10px',bottom:'10px',background:'none',border:'none',cursor:'pointer',color:'rgba(0,200,255,0.4)',padding:0}}>
                 {showPassword ? <EyeOff style={{width:'16px',height:'16px'}}/> : <Eye style={{width:'16px',height:'16px'}}/>}
@@ -1807,9 +1967,10 @@ function AuthScreen() {
             </div>
           </div>
 
-          <button onClick={handleSubmit} disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'10px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'0.8px',cursor:'pointer',opacity:loading?0.5:1,marginBottom:'16px'}}>
+          <button type="submit" disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'10px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'0.8px',cursor:'pointer',opacity:loading?0.5:1,marginBottom:'16px'}}>
             {loading ? 'PLEASE WAIT...' : (isLogin ? 'SIGN IN →' : 'CREATE ACCOUNT →')}
           </button>
+          </form>
 
           <div style={{display:'flex',flexDirection:'column',gap:'10px',alignItems:'center'}}>
             {isLogin && (
@@ -47368,6 +47529,21 @@ function MuzzApp() {
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
+  // Face ID lock (this phone only)
+  const [faceIdAvail, setFaceIdAvail] = useState(false);
+  const [faceIdOn, setFaceIdOn] = useState(() => mzLockEnabled());
+  useEffect(() => {
+    const B = mzPlugin('NativeBiometric');
+    if (!B) return;
+    B.isAvailable({ useFallback: true }).then(r => setFaceIdAvail(!!(r && r.isAvailable))).catch(() => {});
+  }, []);
+  const toggleFaceId = async () => {
+    const next = !faceIdOn;
+    const ok = await mzVerifyFaceId(next ? 'Turn on Face ID lock' : 'Turn off Face ID lock');
+    if (!ok) return;
+    try { localStorage.setItem(MZ_LOCK_KEY, next ? '1' : '0'); } catch (e) {}
+    setFaceIdOn(next);
+  };
   const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
   // Swipe in from the left edge to go back to the Dashboard (like iOS back gesture)
   useEffect(() => {
@@ -47707,7 +47883,7 @@ function MuzzApp() {
   const mapPinsRef = useRef(mapPins);
   useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const day=new Date(); const stamp=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`; mzShareFile({ filename: `muzz-backup-${stamp}.json`, data: d, mime: 'application/json', title: 'Muzz backup' }); } catch(e) {} };
 
 
 
@@ -48725,6 +48901,36 @@ function MuzzApp() {
   // REMINDERS VIEW
   if (activeView === 'reminders') {
     const addBirthday = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'friend' }]); setEditingBdayId(id); };
+    // Pull birthdays (and photos) from the iPhone's Contacts, skipping names already in Muzz
+    const canImportContacts = !!mzPlugin('Contacts');
+    const importBirthdaysFromContacts = async () => {
+      const C = mzPlugin('Contacts');
+      if (!C) return;
+      try {
+        const perm = await C.requestPermissions();
+        if (perm && perm.contacts !== 'granted' && perm.contacts !== 'limited') {
+          window.alert('Muzz needs access to Contacts to import birthdays. You can allow it in Settings → Muzz → Contacts.');
+          return;
+        }
+        const res = await C.getContacts({ projection: { name: true, birthday: true, image: true } });
+        const have = new Set(birthdays.map(b => String(b.name || '').trim().toLowerCase()));
+        const baseId = Date.now();
+        const found = [];
+        for (const c of (res && res.contacts) || []) {
+          const bd = c.birthday;
+          const nm = String((c.name && (c.name.display || [c.name.given, c.name.family].filter(Boolean).join(' '))) || '').trim();
+          if (!bd || !bd.month || !bd.day || !nm || have.has(nm.toLowerCase())) continue;
+          have.add(nm.toLowerCase());
+          const y = bd.year && bd.year > 1900 ? bd.year : 2000;
+          found.push({ id: baseId + found.length, name: nm, date: `${y}-${String(bd.month).padStart(2, '0')}-${String(bd.day).padStart(2, '0')}`, category: 'friend', raw: c.image && c.image.base64String });
+        }
+        if (!found.length) { mzUndo('No new birthdays in Contacts', null); return; }
+        const added = await Promise.all(found.map(async ({ raw, ...b }) => ({ ...b, ...(raw ? { photo: await mzShrinkPhoto(raw) } : {}) })));
+        const ids = new Set(added.map(b => b.id));
+        setBirthdays(prev => [...prev, ...added]);
+        mzUndo(`Added ${added.length} birthday${added.length === 1 ? '' : 's'} from Contacts`, () => setBirthdays(prev => prev.filter(b => !ids.has(b.id))));
+      } catch (e) { console.error('Contacts import failed', e); window.alert("Couldn't read Contacts. Please try again."); }
+    };
     const addReminder = () => { const id = Date.now(); setReminders(prev => [...prev, { id, title: '', date: '', notes: '' }]); setEditingReminderId(id); };
 
     const today = new Date();
@@ -49191,6 +49397,12 @@ function MuzzApp() {
                 <div style={rowList}>{sortedBirthdays.map((b, i) => renderBirthdayRow(b, i === sortedBirthdays.length - 1))}</div>
               )}
               {sortedBirthdays.length > 0 && newRow('New birthday', addBirthday)}
+              {canImportContacts && (
+                <button onClick={importBirthdaysFromContacts} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                  <span style={{width:"24px",height:"24px",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--mz-accent,#0A84FF)"}}><Contact size={20} strokeWidth={2} /></span>
+                  <span style={{color:"var(--mz-accent,#0A84FF)",fontSize:"17px",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>Import from Contacts</span>
+                </button>
+              )}
             </>
           )}
         </div>
@@ -49398,6 +49610,17 @@ function MuzzApp() {
               weekly:  ['Grocery shop', 'Wash car', 'Call parents', 'Review week goals'],
               general: ['Renew car rego', 'Get tax records sorted', 'Backup phone photos', 'Book dentist appointment'],
             };
+            const listName = activeCustom ? activeCustom.name : ({ daily: 'Daily', weekly: 'Weekly', general: 'General' }[tasksSubTab] || 'Tasks');
+            const shareTasksPdf = async () => {
+              try {
+                const data = await mzMakePdf({
+                  title: `${listName} tasks`,
+                  subtitle: `${unchecked.length} to do · ${checked.length} done`,
+                  blocks: [...unchecked, ...checked].filter(i => (i.text || '').trim()).map(i => ({ type: 'check', text: i.text, done: !!i.checked })),
+                });
+                await mzShareFile({ filename: `${listName.replace(/[^\w-]+/g, '-')}-tasks.pdf`, data, base64: true, mime: 'application/pdf', title: `${listName} tasks` });
+              } catch (e) { console.error('PDF failed', e); window.alert("Couldn't make the PDF. Please try again."); }
+            };
             const useExamples = () => {
               const baseId = Date.now();
               save((samplesByTab[tasksSubTab] || samplesByTab.general).map((text, i) => ({ id: baseId + i, text, checked: false, priority: null })));
@@ -49407,8 +49630,9 @@ function MuzzApp() {
               <div style={{marginTop:"8px"}}>
                 <style>{`@keyframes mzTickPop{0%{transform:scale(0.8)}55%{transform:scale(1.14)}100%{transform:scale(1)}}.mz-task-row textarea{-webkit-tap-highlight-color:transparent}.mz-task-row .mz-del{opacity:0;transition:opacity .15s}.mz-task-row:focus-within .mz-del,.mz-task-row:hover .mz-del{opacity:1}`}</style>
 
-                {(activeCustom || checked.length > 0) && (
+                {(activeCustom || items.length > 0) && (
                   <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
+                    {items.length > 0 && <button onClick={shareTasksPdf} aria-label="Share list as PDF" style={{...linkBtn(accentColor),display:"inline-flex",alignItems:"center",gap:"5px"}}><ShareIcon size={15} strokeWidth={2} /> Share</button>}
                     {checked.length > 0 && (
                       <button onClick={() => setTasksShowDone(prev => ({...prev, [tasksSubTab]: !showDone}))} style={linkBtn(accentColor)}>{showDone ? 'Hide' : 'Show'} completed</button>
                     )}
@@ -49942,6 +50166,18 @@ function MuzzApp() {
                 <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
               )}
               <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} />
+              {faceIdAvail && (
+                <button onClick={toggleFaceId} role="switch" aria-checked={faceIdOn} aria-label="Face ID lock" onMouseEnter={onRowIn} onMouseLeave={onRowOut}
+                  style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,boxSizing:"border-box"}}>
+                  <ScanFace size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />
+                  <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}>
+                    <span style={{fontSize:"17px",color:txt.primary,letterSpacing:"-0.4px"}}>Face ID lock</span>
+                    <span style={{position:"relative",width:"51px",height:"31px",borderRadius:"999px",background:faceIdOn?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",flexShrink:0}}>
+                      <span style={{position:"absolute",top:"2px",left:faceIdOn?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.25s"}} />
+                    </span>
+                  </span>
+                </button>
+              )}
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
               <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
@@ -54481,11 +54717,24 @@ function MuzzApp() {
             // ---------- COMPANY BREAKDOWN VIEW ----------
             if (selected) {
               return (
-                <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                <div style={{display:'flex',flexDirection:'column',gap:'14px'}} id="mz-research-pdf">
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
                   <button onClick={() => setCoverageCompany(null)}
                     style={{alignSelf:'flex-start',fontSize:'12px',color:amber,fontFamily:SANS_FONT,letterSpacing:"0",background:'rgba(var(--mz-accent-rgb,10,132,255),0.10)',border:`0.5px solid ${amber}`,padding:'7px 14px',cursor:'pointer',borderRadius:'8px',fontWeight:600}}>
                     ← BACK
                   </button>
+                  <button aria-label="Share research as PDF" onClick={async () => {
+                      const el = document.getElementById('mz-research-pdf');
+                      const nm = selected.tickerDisplay || selected.ticker;
+                      try {
+                        const data = await mzMakePdf({ title: `${nm}${selected.name ? ' - ' + selected.name : ''}`, subtitle: `${selected.industry} · ${selected.country} · Muzz research`, blocks: mzBlocksFromElement(el, [`${selected.industry} · ${selected.country}`, selected.tickerDisplay, selected.ticker, selected.name]) });
+                        await mzShareFile({ filename: `${String(selected.ticker).replace(/[^\w-]+/g, '-')}-research.pdf`, data, base64: true, mime: 'application/pdf', title: `${nm} research` });
+                      } catch (e) { console.error('PDF failed', e); window.alert("Couldn't make the PDF. Please try again."); }
+                    }}
+                    style={{display:'inline-flex',alignItems:'center',gap:'6px',fontSize:'13px',color:'var(--mz-accent,#0A84FF)',fontFamily:SANS_FONT,fontWeight:600,background:'rgba(var(--mz-accent-rgb,10,132,255),0.10)',border:'none',padding:'7px 14px',cursor:'pointer',borderRadius:'999px'}}>
+                    <ShareIcon size={14} strokeWidth={2.2} /> Share PDF
+                  </button>
+                  </div>
                   {/* Header */}
                   <div style={{background:'rgba(28,28,30,0.85)',border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:'20px 24px',backgroundImage:'radial-gradient(rgba(var(--mz-accent-rgb,10,132,255),0.03) 1px,transparent 1px)',backgroundSize:'20px 20px'}}>
                     <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
@@ -67299,19 +67548,19 @@ function MuzzApp() {
               <div>
                 <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500,marginBottom:"6px"}}>DOWNLOAD BACKUP</div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6}}>
-                  Exports a <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file containing all your Muzz data. Keep it safe — use it to restore anytime.
+                  Saves a <span style={{color:"#00c8ff"}}>muzz-backup</span> file with all your Muzz data. On iPhone, tap Save to Files and pick iCloud Drive to keep it safe. Use Import to restore it anytime.
                 </div>
               </div>
               <button onClick={() => { doExport(); }}
                 style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
-                ↓ DOWNLOAD MUZZ-BACKUP.JSON
+                ↓ SAVE MUZZ BACKUP
               </button>
             </div>
           </div>
           <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.25)",borderLeft:"2px solid rgba(251,191,36,0.6)",borderRadius:"6px",padding:"12px 16px",backgroundImage:"radial-gradient(rgba(251,191,36,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div style={{fontSize:"9px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"4px"}}>// TIP</div>
             <div style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",lineHeight:1.5}}>
-              Export regularly. Store backups in iCloud, Google Drive, or email them to yourself.
+              Export regularly. Save to iCloud Drive, AirDrop it to your Mac, or email it to yourself.
             </div>
           </div>
         </div>
@@ -67451,7 +67700,7 @@ function NewPasswordForm() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input type={showPassword ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
+                  <input type={showPassword ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} name="new-password" autoComplete="new-password" placeholder="Enter new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -67461,7 +67710,7 @@ function NewPasswordForm() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
+                  <input type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} name="confirm-password" autoComplete="new-password" placeholder="Confirm new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
                 </div>
               </div>
               <button type="submit" disabled={loading} className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50">
@@ -67565,6 +67814,7 @@ export default function App() {
     <AuthProvider>
       <AppContent />
       <UndoToastHost />
+      <MzLockHost />
     </AuthProvider>
   );
 }
