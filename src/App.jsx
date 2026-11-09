@@ -316,6 +316,45 @@ const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocal
   );
 };
 
+// Swipe-through walkthrough card (like Apple's "What's New"): steps = [{ icon, title, body }]
+const MzTour = ({ steps, onClose }) => {
+  const [i, setI] = useState(0);
+  const touch = useRef(null);
+  const last = i === steps.length - 1;
+  const step = steps[i];
+  const go = (n) => setI(Math.max(0, Math.min(steps.length - 1, n)));
+  return (
+    <Sheet onClose={onClose}>
+      <div onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => { if (touch.current === null) return; const dx = e.changedTouches[0].clientX - touch.current; touch.current = null; if (dx < -40) go(i + 1); else if (dx > 40) go(i - 1); }}
+        style={{ padding: '8px 22px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '12px', fontFamily: SANS_FONT, minHeight: '330px' }}>
+        <div style={{ alignSelf: 'stretch', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(235,235,245,0.6)', fontFamily: SANS_FONT, fontSize: '15px', padding: 0 }}>Skip</button>
+        </div>
+        <span style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'rgba(var(--mz-accent-rgb,10,132,255),0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '34px', lineHeight: 1 }}>{step.icon}</span>
+        <div style={{ fontSize: '22px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.3px' }}>{step.title}</div>
+        <div style={{ fontSize: '16px', color: 'rgba(235,235,245,0.75)', lineHeight: 1.5, maxWidth: '340px', flex: 1 }}>{step.body}</div>
+        <div style={{ display: 'flex', gap: '7px', margin: '6px 0 4px' }}>
+          {steps.map((_, k) => (<button key={k} aria-label={`Step ${k + 1}`} onClick={() => go(k)} style={{ width: k === i ? '18px' : '7px', height: '7px', borderRadius: '999px', border: 'none', padding: 0, cursor: 'pointer', background: k === i ? 'var(--mz-accent,#0A84FF)' : 'rgba(255,255,255,0.25)', transition: 'width 0.2s' }} />))}
+        </div>
+        <div style={{ alignSelf: 'stretch', display: 'flex', gap: '10px' }}>
+          {i > 0 && <button onClick={() => go(i - 1)} style={{ flex: 1, padding: '13px', borderRadius: '999px', border: '0.5px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '17px', cursor: 'pointer' }}>Back</button>}
+          <button onClick={() => (last ? onClose() : go(i + 1))} style={{ flex: 2, padding: '13px', borderRadius: '999px', border: 'none', background: 'var(--mz-accent,#0A84FF)', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '17px', fontWeight: 600, cursor: 'pointer' }}>{last ? 'Got it' : 'Next'}</button>
+        </div>
+      </div>
+    </Sheet>
+  );
+};
+
+const MZ_ASSETS_TOUR = [
+  { icon: '💰', title: 'Track everything you own', body: 'Tap + to add an asset: bank accounts, super, shares, your car, property. Give it a type and a value, and Muzz adds them all up into your net worth.' },
+  { icon: '📅', title: 'Bought on → Owned for', body: 'Pick the date you bought something and Muzz works out how long you\'ve owned it, in years, months and days. Not needed for bank accounts? Turn off "Track how long owned".' },
+  { icon: '📈', title: 'Live prices from Investments', body: 'For Stocks, ETFs or Crypto, set "Value from" to All my holdings or a single holding like GOOG. The value then updates by itself with live prices, in AUD.' },
+  { icon: '🎯', title: 'Goals that fill themselves', body: 'In the Goals tab, set "Track from" to an asset or your net worth. E.g. link "Emergency fund" to your savings account, and the goal moves whenever that account changes.' },
+  { icon: '📊', title: 'Your history, month by month', body: 'Muzz saves your net worth and each asset\'s value every month. Tap History on the net worth card, or open an asset, to see it month by month and year by year.' },
+  { icon: '🔒', title: 'Your numbers stay yours', body: 'Muzz never connects to your bank, super or share accounts. You enter only what you want to track, and you can export or delete it anytime.' },
+];
+
 // ---------- iPhone links: share sheet, PDF, Face ID ----------
 // A native plugin by name, or null when running on the website.
 const mzPlugin = (name) => {
@@ -47401,6 +47440,12 @@ function MuzzApp() {
   const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
   const [assetsSheet, setAssetsSheet] = useState(null); // 'networth' | 'why' | null
   const [assetHistOpen, setAssetHistOpen] = useState(false);
+  const [assetsTourOpen, setAssetsTourOpen] = useState(false);
+  // Show the Assets walkthrough the first time someone opens Assets on this device
+  useEffect(() => {
+    if (activeView !== 'assets') return;
+    try { if (!localStorage.getItem('mz_tour_assets')) { localStorage.setItem('mz_tour_assets', '1'); setAssetsTourOpen(true); } } catch (e) {}
+  }, [activeView]);
   const [bigGoals, setBigGoals] = useState([]);
   const [investmentSmallGoals, setInvestmentSmallGoals] = useState([]);
   const [investmentBigGoals, setInvestmentBigGoals] = useState([]);
@@ -52108,6 +52153,8 @@ function MuzzApp() {
                 <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
                   {money(totalAssets)} total{filledAssets.length > 0 ? `, ${filledAssets.length} ${filledAssets.length === 1 ? 'asset' : 'assets'}` : ''}
                 </div>
+                <button onClick={() => setAssetsTourOpen(true)} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px"}}>How Assets works</button>
+                {assetsTourOpen && <MzTour steps={MZ_ASSETS_TOUR} onClose={() => setAssetsTourOpen(false)} />}
               </div>
               {assetsSubTab === 'assets' && (
                 <button aria-label="New asset" onClick={addAsset}
@@ -52375,7 +52422,7 @@ function MuzzApp() {
                       .map((cat, idx) => (
                         <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
                           <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${cat.total.toLocaleString()}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${Math.round(cat.total).toLocaleString()}</td>
                           <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       ))}
@@ -52383,7 +52430,7 @@ function MuzzApp() {
                   <tfoot>
                     <tr style={{borderTop:"0.5px solid rgba(255,255,255,0.2)",fontFamily:SANS_FONT,fontWeight:600,color:"#FFFFFF"}}>
                       <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>Total</td>
-                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${Math.round(totalAssets).toLocaleString()}</td>
                       <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>100%</td>
                     </tr>
                   </tfoot>
@@ -52660,7 +52707,7 @@ function MuzzApp() {
                         <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
                           <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>{asset.name}</td>
                           <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${asset.value.toLocaleString()}</td>
+                          <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.85)"}}>${Math.round(asset.value).toLocaleString()}</td>
                           <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"rgba(235,235,245,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       );
@@ -52670,7 +52717,7 @@ function MuzzApp() {
                     <tr style={{borderTop:"0.5px solid rgba(255,255,255,0.2)",fontFamily:SANS_FONT,fontWeight:600,color:"#FFFFFF"}}>
                       <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF",fontWeight:600}}>Total</td>
                       <td style={{padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}></td>
-                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>${Math.round(totalAssets).toLocaleString()}</td>
                       <td style={{padding:"11px 16px",textAlign:"right",fontFamily:SANS_FONT,fontSize:"15px",color:"#FFFFFF"}}>100%</td>
                     </tr>
                   </tfoot>
