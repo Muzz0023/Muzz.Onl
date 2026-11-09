@@ -48649,6 +48649,29 @@ function MuzzApp() {
     return sum + toAUD(parseFloat(s && s.currentValue) || 0, cur);
   }, 0);
   const netWorth = totalAssets;
+  // Assets linked to Investments: keep their value in step with live holdings (in AUD)
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const holdingAUD = (t) => {
+      const st = stocks.find(x => x && String(x.name || '').trim().toUpperCase() === t);
+      if (!st) return null;
+      const cur = (livePrices[t] && livePrices[t].currency) || st.currency || 'USD';
+      return toAUD(parseFloat(st.currentValue) || 0, cur);
+    };
+    setAssets(prev => {
+      let changed = false;
+      const next = prev.map(a => {
+        if (!a || !a.valueFrom) return a;
+        const v = a.valueFrom === 'holdings' ? totalStocks : holdingAUD(String(a.valueFrom).replace(/^holding:/, ''));
+        if (v === null || !isFinite(v)) return a;
+        const r = Math.round(v * 100) / 100;
+        if (Math.abs((parseFloat(a.value) || 0) - r) < 0.005) return a;
+        changed = true;
+        return { ...a, value: r, valueStr: String(r) };
+      });
+      return changed ? next : prev;
+    });
+  }, [assets, totalStocks, stocks, livePrices, fxRates, dataLoaded]);
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
 
@@ -52170,7 +52193,7 @@ function MuzzApp() {
                     const val = parseFloat(asset?.value) || 0;
                     const typeName = asset?.category ? (cat?.name || '') : '';
                     const ownedShort = mzOwnedFor(asset?.boughtOn, true);
-                    const subParts = [typeName, ownedShort ? `owned ${ownedShort}` : (asset?.ownedFor ? `owned ${asset.ownedFor}` : '')].filter(Boolean);
+                    const subParts = [typeName, asset?.valueFrom ? '🔗 Live from Investments' : '', ownedShort ? `owned ${ownedShort}` : (asset?.ownedFor ? `owned ${asset.ownedFor}` : '')].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
                       <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted')}
@@ -52204,6 +52227,26 @@ function MuzzApp() {
                                 {assetCategories.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
                               </select>
                             </div>
+                            {(['stocks','etfs','mutualfunds','crypto'].includes(asset?.category) || asset?.valueFrom) && (
+                              <div style={{...formRow,borderBottom:sep}}>
+                                <span style={formLabel}>Value from</span>
+                                <select value={asset?.valueFrom || ''} onFocus={scrollInputIntoView} onChange={(e) => updateAsset(index, 'valueFrom', e.target.value)}
+                                  style={{minWidth:0,maxWidth:"60%",background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 12px",colorScheme:"dark"}}>
+                                  <option value="">Typed in myself</option>
+                                  <option value="holdings">All my holdings (live)</option>
+                                  {stocks.filter(st => st && st.name).map(st => { const t = String(st.name).trim().toUpperCase(); return (<option key={t} value={`holding:${t}`}>{t} (live)</option>); })}
+                                </select>
+                              </div>
+                            )}
+                            {asset?.valueFrom ? (
+                              <div style={{...formRow,borderBottom:sep}}>
+                                <span style={formLabel}>Value</span>
+                                <span style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                                  <span style={{fontSize:"12px",fontWeight:600,color:"#30D158",background:"rgba(48,209,88,0.14)",borderRadius:"999px",padding:"3px 8px",fontFamily:SANS_FONT}}>● Live</span>
+                                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>{money(asset?.value)}</span>
+                                </span>
+                              </div>
+                            ) : (
                             <label style={{...formRow,borderBottom:sep,cursor:"text"}}>
                               <span style={formLabel}>Value</span>
                               <span style={{display:"flex",alignItems:"baseline",gap:"2px",justifyContent:"flex-end",minWidth:0}}>
@@ -52212,6 +52255,7 @@ function MuzzApp() {
                                   onChange={(e) => updateAsset(index, 'value', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
                               </span>
                             </label>
+                            )}
                             {(() => {
                               const noDateTypes = ['cash','super','lifeinsurance','loansowed'];
                               const trackOn = asset?.trackOwned === undefined ? !noDateTypes.includes(asset?.category) : !!asset.trackOwned;
