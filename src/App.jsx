@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, ScanFace, Contact } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, Contact } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -332,48 +332,6 @@ const mzShrinkPhoto = (src) => new Promise((resolve) => {
   img.src = src.startsWith('data:') ? src : 'data:image/jpeg;base64,' + src;
 });
 
-// Face ID lock: the setting lives on this phone only.
-const MZ_LOCK_KEY = 'mz_faceid_lock';
-const mzLockEnabled = () => { try { return localStorage.getItem(MZ_LOCK_KEY) === '1'; } catch (e) { return false; } };
-const mzVerifyFaceId = async (reason) => {
-  const B = mzPlugin('NativeBiometric');
-  if (!B) return false;
-  try { await B.verifyIdentity({ reason: reason || 'Unlock Muzz', title: 'Unlock Muzz', useFallback: true }); return true; } catch (e) { return false; }
-};
-// Covers the app when it opens (and when you come back after 15+ seconds away) until Face ID passes.
-const MzLockHost = () => {
-  const [locked, setLocked] = useState(() => mzLockEnabled() && !!mzPlugin('NativeBiometric'));
-  const busy = useRef(false), hiddenAt = useRef(0);
-  const unlock = useCallback(async () => {
-    if (busy.current) return;
-    busy.current = true;
-    const ok = await mzVerifyFaceId('Unlock Muzz');
-    busy.current = false;
-    if (ok) setLocked(false);
-  }, []);
-  useEffect(() => { if (!locked) return; const t = setTimeout(unlock, 350); return () => clearTimeout(t); }, [locked, unlock]);
-  useEffect(() => {
-    const onVis = () => {
-      if (!mzLockEnabled() || !mzPlugin('NativeBiometric')) return;
-      if (document.visibilityState === 'hidden') { if (!busy.current) hiddenAt.current = Date.now(); }
-      else if (hiddenAt.current && Date.now() - hiddenAt.current > 15000) { hiddenAt.current = 0; setLocked(true); }
-    };
-    document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
-  }, []);
-  if (!locked) return null;
-  return createPortal(
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'radial-gradient(ellipse at 50% 30%, #0b1426 0%, #000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '14px', padding: '24px', fontFamily: SANS_FONT }}>
-      <span style={{ width: '76px', height: '76px', borderRadius: '50%', background: 'rgba(var(--mz-accent-rgb,10,132,255),0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <ScanFace size={38} strokeWidth={1.6} style={{ color: 'var(--mz-accent,#0A84FF)' }} />
-      </span>
-      <div style={{ fontSize: '22px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.3px' }}>Muzz is locked</div>
-      <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)' }}>Use Face ID to open Muzz.</div>
-      <button onClick={unlock} style={{ marginTop: '10px', padding: '13px 28px', borderRadius: '999px', border: 'none', cursor: 'pointer', background: 'var(--mz-accent,#0A84FF)', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '17px', fontWeight: 600 }}>Unlock with Face ID</button>
-    </div>,
-    document.body
-  );
-};
 
 // Pick a date out of typed text, e.g. "Dentist Friday 3pm", "Rego 14 March", "Call mum tomorrow".
 // Returns { date: 'YYYY-MM-DD', rest: text with the date words removed } or null. Times are left in the text.
@@ -47529,21 +47487,6 @@ function MuzzApp() {
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
-  // Face ID lock (this phone only)
-  const [faceIdAvail, setFaceIdAvail] = useState(false);
-  const [faceIdOn, setFaceIdOn] = useState(() => mzLockEnabled());
-  useEffect(() => {
-    const B = mzPlugin('NativeBiometric');
-    if (!B) return;
-    B.isAvailable({ useFallback: true }).then(r => setFaceIdAvail(!!(r && r.isAvailable))).catch(() => {});
-  }, []);
-  const toggleFaceId = async () => {
-    const next = !faceIdOn;
-    const ok = await mzVerifyFaceId(next ? 'Turn on Face ID lock' : 'Turn off Face ID lock');
-    if (!ok) return;
-    try { localStorage.setItem(MZ_LOCK_KEY, next ? '1' : '0'); } catch (e) {}
-    setFaceIdOn(next);
-  };
   const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
   // Swipe in from the left edge to go back to the Dashboard (like iOS back gesture)
   useEffect(() => {
@@ -50166,18 +50109,6 @@ function MuzzApp() {
                 <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
               )}
               <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} />
-              {faceIdAvail && (
-                <button onClick={toggleFaceId} role="switch" aria-checked={faceIdOn} aria-label="Face ID lock" onMouseEnter={onRowIn} onMouseLeave={onRowOut}
-                  style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,boxSizing:"border-box"}}>
-                  <ScanFace size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />
-                  <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}>
-                    <span style={{fontSize:"17px",color:txt.primary,letterSpacing:"-0.4px"}}>Face ID lock</span>
-                    <span style={{position:"relative",width:"51px",height:"31px",borderRadius:"999px",background:faceIdOn?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",flexShrink:0}}>
-                      <span style={{position:"absolute",top:"2px",left:faceIdOn?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.25s"}} />
-                    </span>
-                  </span>
-                </button>
-              )}
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
               <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
@@ -67814,7 +67745,6 @@ export default function App() {
     <AuthProvider>
       <AppContent />
       <UndoToastHost />
-      <MzLockHost />
     </AuthProvider>
   );
 }
