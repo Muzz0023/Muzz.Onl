@@ -349,7 +349,7 @@ const MzTour = ({ steps, onClose }) => {
 const MZ_ASSETS_TOUR = [
   { icon: '💰', title: 'Track everything you own', body: 'Tap + to add an asset: bank accounts, super, shares, your car, property. Give it a type and a value, and Muzz adds them all up into your net worth.' },
   { icon: '📅', title: 'Bought on → Owned for', body: 'Pick the date you bought something and Muzz works out how long you\'ve owned it, in years, months and days. Not needed for bank accounts? Turn off "Track how long owned".' },
-  { icon: '📈', title: 'Live prices from Investments', body: 'For Stocks, ETFs or Crypto, set "Value from" to All my holdings or a single holding like GOOG. The value then updates by itself with live prices, in AUD.' },
+  { icon: '📈', title: 'Live prices from Investments', body: 'For Stocks, ETFs or index funds, set "Value from" to All my holdings or a single holding like GOOG. The value then updates by itself with live prices, in AUD.' },
   { icon: '🎯', title: 'Goals that fill themselves', body: 'In the Goals tab, set "Track from" to an asset or your net worth. E.g. link "Emergency fund" to your savings account, and the goal moves whenever that account changes.' },
   { icon: '📊', title: 'Your history, month by month', body: 'Muzz saves your net worth and each asset\'s value every month. Tap History on the net worth card, or open an asset, to see it month by month and year by year.' },
   { icon: '🔒', title: 'Your numbers stay yours', body: 'Muzz never connects to your bank, super or share accounts. You enter only what you want to track, and you can export or delete it anytime.' },
@@ -52276,7 +52276,7 @@ function MuzzApp() {
                                 {assetCategories.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
                               </select>
                             </div>
-                            {(['stocks','etfs','mutualfunds','crypto'].includes(asset?.category) || asset?.valueFrom) && (
+                            {(['stocks','etfs','mutualfunds'].includes(asset?.category) || asset?.valueFrom) && (
                               <div style={{...formRow,borderBottom:sep}}>
                                 <span style={formLabel}>Value from</span>
                                 <select value={asset?.valueFrom || ''} onFocus={scrollInputIntoView} onChange={(e) => updateAsset(index, 'valueFrom', e.target.value)}
