@@ -50235,7 +50235,7 @@ function MuzzApp() {
           <div style={{...glass,padding:"20px 20px 16px"}}>
             <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
             <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"4px"}}>
-              <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"46px":"40px",color:txt.primary,fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
+              <RollingValue value={Math.round(netWorth)} prefix="$" fmt={(v) => Math.round(v).toLocaleString()} style={{fontSize:isWide?"46px":"40px",color:txt.primary,fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
               {nwDelta7d !== null && (
                 <span style={{fontSize:"15px",fontWeight:600,fontFamily:SANS_FONT,color:nwDelta7d>=0?"#30D158":"#FF453A"}}>
                   {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% this week
@@ -52195,7 +52195,7 @@ function MuzzApp() {
                     const trackOn = asset?.trackOwned === undefined ? !['cash','super','lifeinsurance','loansowed'].includes(asset?.category) : !!asset.trackOwned;
                     const ownedShort = trackOn ? mzOwnedFor(asset?.boughtOn, true) : null;
                     const legacyOwned = trackOn && /[0-9]/.test(String(asset?.ownedFor || '')) ? asset.ownedFor : '';
-                    const subParts = [typeName, asset?.valueFrom ? '🔗 Live from Investments' : '', ownedShort ? `owned ${ownedShort}` : (legacyOwned ? `owned ${legacyOwned}` : '')].filter(Boolean);
+                    const subParts = [typeName, ownedShort ? `owned ${ownedShort}` : (legacyOwned ? `owned ${legacyOwned}` : '')].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
                       <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted')}
