@@ -52192,8 +52192,10 @@ function MuzzApp() {
                     const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
                     const val = parseFloat(asset?.value) || 0;
                     const typeName = asset?.category ? (cat?.name || '') : '';
-                    const ownedShort = mzOwnedFor(asset?.boughtOn, true);
-                    const subParts = [typeName, asset?.valueFrom ? '🔗 Live from Investments' : '', ownedShort ? `owned ${ownedShort}` : (asset?.ownedFor ? `owned ${asset.ownedFor}` : '')].filter(Boolean);
+                    const trackOn = asset?.trackOwned === undefined ? !['cash','super','lifeinsurance','loansowed'].includes(asset?.category) : !!asset.trackOwned;
+                    const ownedShort = trackOn ? mzOwnedFor(asset?.boughtOn, true) : null;
+                    const legacyOwned = trackOn && /[0-9]/.test(String(asset?.ownedFor || '')) ? asset.ownedFor : '';
+                    const subParts = [typeName, asset?.valueFrom ? '🔗 Live from Investments' : '', ownedShort ? `owned ${ownedShort}` : (legacyOwned ? `owned ${legacyOwned}` : '')].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
                       <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted')}
@@ -52558,7 +52560,7 @@ function MuzzApp() {
                             <span style={{color:"#FFFFFF",fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
                           </div>
                           <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"13px"}}>
-                            <span>{a.catName}{mzOwnedFor(a.boughtOn, true)?`, owned ${mzOwnedFor(a.boughtOn, true)}`:(a.ownedFor?`, owned ${a.ownedFor}`:'')}</span>
+                            <span>{a.catName}{(a.trackOwned === undefined ? !['cash','super','lifeinsurance','loansowed'].includes(a.category) : !!a.trackOwned) ? (mzOwnedFor(a.boughtOn, true)?`, owned ${mzOwnedFor(a.boughtOn, true)}`:(/[0-9]/.test(String(a.ownedFor||''))?`, owned ${a.ownedFor}`:'')) : ''}</span>
                             <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of total</span>
                           </div>
                         </div>
