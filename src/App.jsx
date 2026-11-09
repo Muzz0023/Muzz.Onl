@@ -273,6 +273,49 @@ const MzLineChart = ({ points, color = '#0A84FF', height = 120, money = (n) => `
   );
 };
 
+// Full history: chart plus Monthly / Yearly lists with the change each period
+const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocaleString()}`, emptyText }) => {
+  const [mode, setMode] = useState('monthly');
+  const pts = (points || []).filter(p => p && p.m && isFinite(p.v)).slice().sort((a, b) => a.m.localeCompare(b.m));
+  if (pts.length === 0) return <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)', fontFamily: SANS_FONT, lineHeight: 1.45 }}>{emptyText || 'No history yet. Muzz saves a value each month.'}</div>;
+  let rows;
+  if (mode === 'monthly') {
+    rows = pts.map((p, i) => ({ label: mzMonthLabel(p.m), v: p.v, prev: i > 0 ? pts[i - 1].v : null }));
+  } else {
+    const byYear = {};
+    pts.forEach(p => { const y = p.m.slice(0, 4); if (!byYear[y]) byYear[y] = { first: p.v }; byYear[y].last = p.v; });
+    const years = Object.keys(byYear).sort();
+    rows = years.map((y, i) => ({ label: y, v: byYear[y].last, prev: i > 0 ? byYear[years[i - 1]].last : (years.length === 1 || i === 0 ? byYear[y].first : null), sub: i === 0 ? 'since first record' : null }));
+  }
+  rows = rows.reverse();
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {pts.length >= 2 && <MzLineChart points={pts} color={color} height={120} money={money} />}
+      <Segmented value={mode} onChange={setMode} options={[{ id: 'monthly', label: 'Monthly' }, { id: 'yearly', label: 'Yearly' }]} />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {rows.map((r, i) => {
+          const diff = r.prev === null || r.prev === undefined ? null : r.v - r.prev;
+          const pct = diff !== null && r.prev ? (diff / Math.abs(r.prev)) * 100 : null;
+          return (
+            <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: '11px 2px', borderBottom: i < rows.length - 1 ? '0.5px solid rgba(255,255,255,0.1)' : 'none', fontFamily: SANS_FONT }}>
+              <span style={{ fontSize: '17px', color: '#FFFFFF' }}>{r.label}</span>
+              <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <span style={{ fontSize: '17px', color: '#FFFFFF', fontWeight: 600 }}>{money(r.v)}</span>
+                {diff !== null && diff !== 0 && (
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: diff > 0 ? '#30D158' : '#FF453A' }}>
+                    {diff > 0 ? '+' : '-'}{money(Math.abs(diff))}{pct !== null ? ` (${diff > 0 ? '+' : '-'}${Math.abs(pct).toFixed(1)}%)` : ''}{r.sub ? ` ${r.sub}` : ''}
+                  </span>
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ fontSize: '13px', color: 'rgba(235,235,245,0.45)', fontFamily: SANS_FONT, lineHeight: 1.4 }}>Muzz saves one value each month. A year shows its latest month.</div>
+    </div>
+  );
+};
+
 // ---------- iPhone links: share sheet, PDF, Face ID ----------
 // A native plugin by name, or null when running on the website.
 const mzPlugin = (name) => {
@@ -47356,6 +47399,8 @@ function MuzzApp() {
   });
   const [smallGoals, setSmallGoals] = useState([]);
   const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
+  const [assetsSheet, setAssetsSheet] = useState(null); // 'networth' | 'why' | null
+  const [assetHistOpen, setAssetHistOpen] = useState(false);
   const [bigGoals, setBigGoals] = useState([]);
   const [investmentSmallGoals, setInvestmentSmallGoals] = useState([]);
   const [investmentBigGoals, setInvestmentBigGoals] = useState([]);
@@ -47886,7 +47931,15 @@ function MuzzApp() {
     if (!dataLoaded || !assets || assets.length === 0) return;
     setAssets(prev => {
       let changed = false;
-      const next = prev.map(a => {
+      // Every asset needs its own id, or goal links mix them up
+      const seen = new Set(); let bump = 0;
+      const unique = prev.map(a => {
+        if (!a) return a;
+        const key = a.id === undefined || a.id === null ? null : String(a.id);
+        if (key === null || seen.has(key)) { changed = true; const id = Date.now() * 100 + (bump++); seen.add(String(id)); return { ...a, id }; }
+        seen.add(key); return a;
+      });
+      const next = unique.map(a => {
         if (!a || !(parseFloat(a.value) > 0)) return a;
         const h = mzRecordMonth(a.history, a.value);
         if (h === a.history) return a;
@@ -52086,8 +52139,11 @@ function MuzzApp() {
                 const first = hist[0];
                 const diff = first ? totalAssets - first.v : 0;
                 return (
-                  <div style={{...card,padding:"16px"}}>
-                    <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT}}>Net worth</div>
+                  <div role="button" tabIndex={0} onClick={() => setAssetsSheet('networth')} style={{...card,padding:"16px",cursor:"pointer"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <span style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT}}>Net worth</span>
+                      <span style={{display:"flex",alignItems:"center",gap:"2px",fontSize:"15px",color:BLUE,fontFamily:SANS_FONT}}>History <ChevronRight size={16} strokeWidth={2.25} style={{color:"var(--mz-accent,#0A84FF)"}} /></span>
+                    </div>
                     <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
                       <span style={{fontSize:"28px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{money(totalAssets)}</span>
                       {hist.length >= 2 && diff !== 0 && (
@@ -52134,7 +52190,7 @@ function MuzzApp() {
                         </button>
                       </SwipeRow>
 
-                        {isEditing && (<Sheet onClose={() => setEditingAssetIdx(null)}>
+                        {isEditing && (<Sheet onClose={() => { setEditingAssetIdx(null); setAssetHistOpen(false); }}>
                           <div style={{padding:"4px 16px 14px",display:"flex",flexDirection:"column",gap:"6px"}}>
                             <textarea rows={1} autoFocus={!asset?.name} value={asset?.name || ''} placeholder="Name, e.g. House, Tesla, Super"
                               ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
@@ -52156,6 +52212,20 @@ function MuzzApp() {
                                   onChange={(e) => updateAsset(index, 'value', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
                               </span>
                             </label>
+                            {(() => {
+                              const noDateTypes = ['cash','super','lifeinsurance','loansowed'];
+                              const trackOn = asset?.trackOwned === undefined ? !noDateTypes.includes(asset?.category) : !!asset.trackOwned;
+                              return (
+                                <div style={{...formRow,borderBottom:sep}}>
+                                  <span style={formLabel}>Track how long owned</span>
+                                  <button role="switch" aria-checked={trackOn} aria-label="Track how long owned" onClick={() => updateAsset(index, 'trackOwned', !trackOn)}
+                                    style={{position:"relative",width:"51px",height:"31px",borderRadius:"999px",border:"none",cursor:"pointer",background:trackOn?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",flexShrink:0,padding:0}}>
+                                    <span style={{position:"absolute",top:"2px",left:trackOn?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.25s"}} />
+                                  </button>
+                                </div>
+                              );
+                            })()}
+                            {(asset?.trackOwned === undefined ? !['cash','super','lifeinsurance','loansowed'].includes(asset?.category) : !!asset.trackOwned) && (<>
                             <div style={{...formRow,borderBottom:sep}}>
                               <span style={formLabel}>Bought on</span>
                               <input type="date" value={asset?.boughtOn || ''} max={localISODate(new Date())} onFocus={scrollInputIntoView}
@@ -52168,11 +52238,17 @@ function MuzzApp() {
                                 {mzOwnedFor(asset?.boughtOn) || (asset?.ownedFor ? asset.ownedFor : 'Add the date above')}
                               </span>
                             </div>
+                            </>)}
                             <div style={{padding:"10px 0 4px"}}>
                               <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,marginBottom:"8px"}}>Value over time</div>
-                              {(asset?.history || []).length >= 2
-                                ? <MzLineChart points={asset.history} color={themeHex} height={90} money={money} />
-                                : <div style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,lineHeight:1.4}}>Muzz saves this asset's value each month. Your chart will appear from next month.</div>}
+                              {(asset?.history || []).length >= 2 && !assetHistOpen && <MzLineChart points={asset.history} color={themeHex} height={90} money={money} />}
+                              {(asset?.history || []).length < 2 && !assetHistOpen && <div style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,lineHeight:1.4}}>Muzz saves this asset's value each month. Your chart will appear from next month.</div>}
+                              {(asset?.history || []).length > 0 && (
+                                <button onClick={() => setAssetHistOpen(o => !o)} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px",display:"inline-flex",alignItems:"center",gap:"2px"}}>
+                                  {assetHistOpen ? 'Hide history' : 'Month by month & year by year'} <ChevronRight size={16} strokeWidth={2.25} style={{color:"var(--mz-accent,#0A84FF)",transform:assetHistOpen?"rotate(90deg)":"none"}} />
+                                </button>
+                              )}
+                              {assetHistOpen && <div style={{marginTop:"12px"}}><MzHistoryView points={asset?.history} color={themeHex} money={money} /></div>}
                             </div>
                             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"8px"}}>
                               <button onClick={() => { if (!asset?.name || window.confirm(`Delete "${asset.name}"?`)) { undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted'); setEditingAssetIdx(null); } }} style={textBtn(RED)}>Delete</button>
@@ -52186,18 +52262,6 @@ function MuzzApp() {
                   {newRow('New asset', addAsset)}
                 </div>
               )}
-              {/* Why numbers are typed in, not linked */}
-              <details style={{...card}}>
-                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",gap:"12px"}}>
-                  <span style={{width:"30px",height:"30px",borderRadius:"50%",background:"rgba(var(--mz-accent-rgb,10,132,255),0.16)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Lock size={15} strokeWidth={2.2} style={{color:"var(--mz-accent,#0A84FF)"}} /></span>
-                  <span style={{flex:1,fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Why you enter your numbers yourself</span>
-                  <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
-                </summary>
-                <div style={{padding:"0 16px 16px",fontSize:"15px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,lineHeight:1.5,display:"flex",flexDirection:"column",gap:"8px"}}>
-                  <div>Muzz never connects to your bank, super or share accounts, and never asks for your logins.</div>
-                  <div>Live access would mean handing an app your most sensitive financial data, and we'd rather never hold it. You type in only what you choose to track, it stays in your account, and you can export or delete it anytime.</div>
-                </div>
-              </details>
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
@@ -52572,6 +52636,33 @@ function MuzzApp() {
             </>
           )}
 
+          {assetsSubTab === 'assets' && (
+            <button onClick={() => setAssetsSheet('why')} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"6px",margin:"14px auto 40px",padding:"8px 12px",position:"relative",zIndex:1,background:"none",border:"none",cursor:"pointer",color:sec,fontFamily:SANS_FONT,fontSize:"14px"}}>
+              <Lock size={13} strokeWidth={2.2} /> Why Muzz doesn't link your accounts
+            </button>
+          )}
+          {assetsSheet === 'why' && (
+            <Sheet onClose={() => setAssetsSheet(null)}>
+              <div style={{padding:"4px 20px 20px",display:"flex",flexDirection:"column",gap:"12px",fontFamily:SANS_FONT}}>
+                <span style={{width:"52px",height:"52px",borderRadius:"50%",background:"rgba(var(--mz-accent-rgb,10,132,255),0.16)",display:"flex",alignItems:"center",justifyContent:"center",alignSelf:"center"}}><Lock size={24} strokeWidth={2} style={{color:"var(--mz-accent,#0A84FF)"}} /></span>
+                <div style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",textAlign:"center"}}>Why you enter your numbers yourself</div>
+                <div style={{fontSize:"16px",color:"rgba(235,235,245,0.75)",lineHeight:1.5}}>Muzz never connects to your bank, super or share accounts, and never asks for your logins.</div>
+                <div style={{fontSize:"16px",color:"rgba(235,235,245,0.75)",lineHeight:1.5}}>Live access would mean handing an app your most sensitive financial data, and we'd rather never hold it. You type in only what you choose to track, it stays in your account, and you can export or delete it anytime.</div>
+                <button onClick={() => setAssetsSheet(null)} style={{...textBtn(BLUE),fontWeight:600,alignSelf:"center",marginTop:"4px"}}>Done</button>
+              </div>
+            </Sheet>
+          )}
+          {assetsSheet === 'networth' && (
+            <Sheet onClose={() => setAssetsSheet(null)}>
+              <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>Net worth history</span>
+                  <button onClick={() => setAssetsSheet(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
+                </div>
+                <MzHistoryView points={netWorthMonthly} color={themeHex} money={money} emptyText="Muzz saves your net worth each month. Your history starts this month." />
+              </div>
+            </Sheet>
+          )}
           {assetsSubTab === 'goals' && (
             <>
               <div>
