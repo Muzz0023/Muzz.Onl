@@ -216,6 +216,63 @@ const applyMzTheme = (id) => {
 // Apply the saved colour straight away so the app opens in it
 try { if (typeof window !== 'undefined') applyMzTheme(localStorage.getItem('mz_theme') || 'blue'); } catch (e) {}
 
+// ---------- Assets: how long owned, history charts ----------
+// "6 years, 10 months, 9 days" between a YYYY-MM-DD date and today (or null if no/future date)
+const mzOwnedFor = (iso, short = false) => {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+  const [y, m, d] = iso.split('-').map(Number);
+  const now = new Date(); const a = new Date(y, m - 1, d); const b = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (isNaN(a) || a > b) return null;
+  let yrs = b.getFullYear() - a.getFullYear(), mos = b.getMonth() - a.getMonth(), days = b.getDate() - a.getDate();
+  if (days < 0) { mos -= 1; days += new Date(b.getFullYear(), b.getMonth(), 0).getDate(); }
+  if (mos < 0) { yrs -= 1; mos += 12; }
+  if (short) {
+    const parts = [yrs ? `${yrs}y` : '', mos ? `${mos}m` : '', !yrs && days ? `${days}d` : ''].filter(Boolean);
+    return parts.length ? parts.join(' ') : 'today';
+  }
+  const w = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  const parts = [yrs ? w(yrs, 'year') : '', mos ? w(mos, 'month') : '', days ? w(days, 'day') : ''].filter(Boolean);
+  return parts.length ? parts.join(', ') : 'Bought today';
+};
+
+const mzMonthKey = (dt = new Date()) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
+const mzMonthLabel = (key) => { const [y, m] = String(key).split('-').map(Number); return `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][(m || 1) - 1]} ${y}`; };
+// Keep one point per month: overwrite this month's value, or add a new month
+const mzRecordMonth = (hist, value) => {
+  const list = Array.isArray(hist) ? hist : [];
+  const key = mzMonthKey(); const v = Math.round((Number(value) || 0) * 100) / 100;
+  const last = list[list.length - 1];
+  if (last && last.m === key) return last.v === v ? list : [...list.slice(0, -1), { m: key, v }];
+  return [...list, { m: key, v }];
+};
+
+// Small line chart for month-by-month values (net worth, one asset)
+const MzLineChart = ({ points, color = '#0A84FF', height = 120, money = (n) => `$${Math.round(n).toLocaleString()}` }) => {
+  const pts = (points || []).filter(p => p && isFinite(p.v));
+  if (pts.length < 2) return null;
+  const W = 320, H = height, padY = 10;
+  const vals = pts.map(p => p.v); let lo = Math.min(...vals), hi = Math.max(...vals);
+  if (hi === lo) { hi += 1; lo -= 1; }
+  const x = (i) => (i / (pts.length - 1)) * W;
+  const y = (v) => padY + (1 - (v - lo) / (hi - lo)) * (H - padY * 2);
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+  const area = `${line} L${W},${H} L0,${H} Z`;
+  const gid = 'mzg' + Math.random().toString(36).slice(2, 8);
+  return (
+    <div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: `${H}px`, display: 'block', overflow: 'visible' }} aria-hidden="true">
+        <defs><linearGradient id={gid} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity="0.35" /><stop offset="100%" stopColor={color} stopOpacity="0" /></linearGradient></defs>
+        <path d={area} fill={`url(#${gid})`} />
+        <path d={line} fill="none" stroke={color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', fontSize: '12px', color: 'rgba(235,235,245,0.6)', fontFamily: SANS_FONT }}>
+        <span>{mzMonthLabel(pts[0].m)} · {money(pts[0].v)}</span>
+        <span>{mzMonthLabel(pts[pts.length - 1].m)} · {money(pts[pts.length - 1].v)}</span>
+      </div>
+    </div>
+  );
+};
+
 // ---------- iPhone links: share sheet, PDF, Face ID ----------
 // A native plugin by name, or null when running on the website.
 const mzPlugin = (name) => {
@@ -47298,6 +47355,7 @@ function MuzzApp() {
     yearsToProject: '10'
   });
   const [smallGoals, setSmallGoals] = useState([]);
+  const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
   const [bigGoals, setBigGoals] = useState([]);
   const [investmentSmallGoals, setInvestmentSmallGoals] = useState([]);
   const [investmentBigGoals, setInvestmentBigGoals] = useState([]);
@@ -47823,10 +47881,56 @@ function MuzzApp() {
   }, [assetMapExpanded]);
   const [mapPins, setMapPins] = useState([]);
   const [netWorthHistory, setNetWorthHistory] = useState([]);
+  // Assets history: keep one value per month for each asset and for the total (net worth)
+  useEffect(() => {
+    if (!dataLoaded || !assets || assets.length === 0) return;
+    setAssets(prev => {
+      let changed = false;
+      const next = prev.map(a => {
+        if (!a || !(parseFloat(a.value) > 0)) return a;
+        const h = mzRecordMonth(a.history, a.value);
+        if (h === a.history) return a;
+        changed = true; return { ...a, history: h };
+      });
+      return changed ? next : prev;
+    });
+    const total = assets.reduce((sum, a) => sum + (parseFloat(a && a.value) || 0), 0);
+    if (total > 0) setNetWorthMonthly(prev => {
+      let base = prev;
+      // First time: build the monthly record from the older daily snapshots, so the chart starts with real history
+      if ((!prev || prev.length === 0) && Array.isArray(netWorthHistory) && netWorthHistory.length) {
+        const byMonth = {};
+        [...netWorthHistory].filter(p => p && p.date && p.value > 0).sort((a, b) => a.date.localeCompare(b.date)).forEach(p => { byMonth[p.date.slice(0, 7)] = p.value; });
+        base = Object.keys(byMonth).sort().map(m => ({ m, v: byMonth[m] }));
+      }
+      return mzRecordMonth(base, total);
+    });
+  }, [assets, dataLoaded]);
+  // Goals linked to an asset or to net worth update themselves when Assets change
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const total = (assets || []).reduce((sum, a) => sum + (parseFloat(a && a.value) || 0), 0);
+    const linkedValue = (g) => {
+      if (!g || !g.link) return null;
+      if (g.link === 'networth') return total;
+      const a = (assets || []).find(x => x && String(x.id) === String(g.link).replace(/^asset:/, ''));
+      return a ? (parseFloat(a.value) || 0) : null;
+    };
+    const sync = (prev) => {
+      let changed = false;
+      const next = prev.map(g => {
+        const v = linkedValue(g);
+        if (v === null || g.current === v) return g;
+        changed = true; return { ...g, current: v, currentStr: String(Math.round(v * 100) / 100) };
+      });
+      return changed ? next : prev;
+    };
+    setSmallGoals(sync); setBigGoals(sync); setBillSmallGoals(sync); setBillBigGoals(sync);
+  }, [assets, smallGoals, bigGoals, billSmallGoals, billBigGoals, dataLoaded]);
   const mapPinsRef = useRef(mapPins);
   useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const day=new Date(); const stamp=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`; mzShareFile({ filename: `muzz-backup-${stamp}.json`, data: d, mime: 'application/json', title: 'Muzz backup' }); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,netWorthMonthly,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const day=new Date(); const stamp=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`; mzShareFile({ filename: `muzz-backup-${stamp}.json`, data: d, mime: 'application/json', title: 'Muzz backup' }); } catch(e) {} };
 
 
 
@@ -47846,6 +47950,7 @@ function MuzzApp() {
     if(d.stocks) setStocks(d.stocks);
     if(d.investmentSettings) setInvestmentSettings(d.investmentSettings);
     if(d.smallGoals) setSmallGoals(d.smallGoals);
+    if(d.netWorthMonthly) setNetWorthMonthly(d.netWorthMonthly);
     if(d.bigGoals) setBigGoals(d.bigGoals);
     if(d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
     if(d.futureStocks) setFutureStocks(d.futureStocks);
@@ -47913,6 +48018,7 @@ function MuzzApp() {
       stocks: d.stocks||[],
       investmentSettings: d.investmentSettings||{yearsToProject:'10',expectedGrowthRate:'7',yearlyContribution:''},
       smallGoals: d.smallGoals||[],
+      netWorthMonthly: d.netWorthMonthly||[],
       bigGoals: d.bigGoals||[],
       holdingsResearch: d.holdingsResearch||[],
       futureStocks: d.futureStocks||[],
@@ -48196,6 +48302,8 @@ function MuzzApp() {
           if (d.stocks) setStocks(d.stocks);
           if (d.investmentSettings) setInvestmentSettings(d.investmentSettings);
           if (d.smallGoals) setSmallGoals(d.smallGoals);
+          if (d.netWorthMonthly) setNetWorthMonthly(d.netWorthMonthly);
+          if (Array.isArray(d.netWorthHistory)) setNetWorthHistory(d.netWorthHistory);
           if (d.bigGoals) setBigGoals(d.bigGoals);
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
@@ -48325,6 +48433,7 @@ function MuzzApp() {
           investmentSettings,
           smallGoals,
           bigGoals,
+          netWorthMonthly,
           holdingsResearch,
           futureStocks,
           futureResearch,
@@ -48389,7 +48498,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -50401,9 +50510,23 @@ function MuzzApp() {
             <button aria-label="Delete goal" onClick={() => { if (!goal?.name || window.confirm(`Delete "${goal.name}"?`)) setList(prev => prev.filter((_, i) => i !== index)); }}
               style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
           </div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginTop:"8px"}}>
+            <span style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,flexShrink:0}}>{goal?.link ? '🔗 Updates from' : 'Track from'}</span>
+            <select value={goal?.link || ''} onChange={(e) => set({ link: e.target.value })}
+              style={{minWidth:0,maxWidth:"62%",background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",padding:"5px 10px",colorScheme:"dark"}}>
+              <option value="">Typed in myself</option>
+              <option value="networth">Net worth (all assets)</option>
+              {assets.filter(a => a && a.name).map(a => (<option key={a.id} value={`asset:${a.id}`}>{a.name}</option>))}
+            </select>
+          </div>
           <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
             {moneyTile('Target', goal?.targetStr, (e)=>set({target: parseFloat(e.target.value) || 0, targetStr: e.target.value}))}
-            {moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
+            {goal?.link
+              ? (<div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",padding:"8px 12px",borderRadius:"14px",background:"rgba(var(--mz-accent-rgb,10,132,255),0.12)"}}>
+                  <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Saved (from Assets)</span>
+                  <span style={{fontSize:"20px",fontWeight:600,color:"#FFFFFF",fontFamily:SANS_FONT}}>{money(current)}</span>
+                </div>)
+              : moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
           </div>
           {target > 0 && (
             <div style={{marginTop:"12px"}}>
@@ -51860,9 +51983,23 @@ function MuzzApp() {
             <button aria-label="Delete goal" onClick={() => { if (!goal?.name || window.confirm(`Delete "${goal.name}"?`)) setList(prev => prev.filter((_, i) => i !== index)); }}
               style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
           </div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginTop:"8px"}}>
+            <span style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,flexShrink:0}}>{goal?.link ? '🔗 Updates from' : 'Track from'}</span>
+            <select value={goal?.link || ''} onChange={(e) => set({ link: e.target.value })}
+              style={{minWidth:0,maxWidth:"62%",background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",padding:"5px 10px",colorScheme:"dark"}}>
+              <option value="">Typed in myself</option>
+              <option value="networth">Net worth (all assets)</option>
+              {assets.filter(a => a && a.name).map(a => (<option key={a.id} value={`asset:${a.id}`}>{a.name}</option>))}
+            </select>
+          </div>
           <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
             {moneyTile('Target', goal?.targetStr, (e)=>set({target: parseFloat(e.target.value) || 0, targetStr: e.target.value}))}
-            {moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
+            {goal?.link
+              ? (<div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",padding:"8px 12px",borderRadius:"14px",background:"rgba(var(--mz-accent-rgb,10,132,255),0.12)"}}>
+                  <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Saved (from Assets)</span>
+                  <span style={{fontSize:"20px",fontWeight:600,color:"#FFFFFF",fontFamily:SANS_FONT}}>{money(current)}</span>
+                </div>)
+              : moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
           </div>
           {target > 0 && (
             <div style={{marginTop:"12px"}}>
@@ -51943,6 +52080,31 @@ function MuzzApp() {
                 );
               })()}
 
+              {/* Net worth over time */}
+              {assets.length > 0 && totalAssets > 0 && (() => {
+                const hist = netWorthMonthly || [];
+                const first = hist[0];
+                const diff = first ? totalAssets - first.v : 0;
+                return (
+                  <div style={{...card,padding:"16px"}}>
+                    <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT}}>Net worth</div>
+                    <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
+                      <span style={{fontSize:"28px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{money(totalAssets)}</span>
+                      {hist.length >= 2 && diff !== 0 && (
+                        <span style={{fontSize:"15px",fontWeight:600,color:diff>0?GREEN:RED,fontFamily:SANS_FONT}}>
+                          {diff>0?'+':'-'}{money(Math.abs(diff))} since {mzMonthLabel(first.m)}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{marginTop:"12px"}}>
+                      {hist.length >= 2
+                        ? <MzLineChart points={hist} color={themeHex} height={110} money={money} />
+                        : <div style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,lineHeight:1.4}}>Muzz saves your net worth each month. Your chart starts building from {mzMonthLabel(mzMonthKey())}.</div>}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Asset list */}
               {assets.length > 0 && (
                 <div style={rowList}>
@@ -51951,7 +52113,8 @@ function MuzzApp() {
                     const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
                     const val = parseFloat(asset?.value) || 0;
                     const typeName = asset?.category ? (cat?.name || '') : '';
-                    const subParts = [typeName, asset?.ownedFor ? `owned ${asset.ownedFor}` : ''].filter(Boolean);
+                    const ownedShort = mzOwnedFor(asset?.boughtOn, true);
+                    const subParts = [typeName, ownedShort ? `owned ${ownedShort}` : (asset?.ownedFor ? `owned ${asset.ownedFor}` : '')].filter(Boolean);
                     return (
                       <React.Fragment key={index}>
                       <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted')}
@@ -51993,11 +52156,24 @@ function MuzzApp() {
                                   onChange={(e) => updateAsset(index, 'value', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
                               </span>
                             </label>
-                            <label style={{...formRow,cursor:"text"}}>
+                            <div style={{...formRow,borderBottom:sep}}>
+                              <span style={formLabel}>Bought on</span>
+                              <input type="date" value={asset?.boughtOn || ''} max={localISODate(new Date())} onFocus={scrollInputIntoView}
+                                onChange={(e) => updateAsset(index, 'boughtOn', e.target.value)}
+                                style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 10px",colorScheme:"dark"}} />
+                            </div>
+                            <div style={{...formRow,borderBottom:sep}}>
                               <span style={formLabel}>Owned for</span>
-                              <input type="text" value={asset?.ownedFor || ''} placeholder="e.g. 1y 5m" onFocus={scrollInputIntoView}
-                                onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)} style={{...bare,width:"140px",textAlign:"right"}} />
-                            </label>
+                              <span style={{fontSize:"17px",color:mzOwnedFor(asset?.boughtOn)?"#FFFFFF":sec,fontFamily:SANS_FONT,textAlign:"right"}}>
+                                {mzOwnedFor(asset?.boughtOn) || (asset?.ownedFor ? asset.ownedFor : 'Add the date above')}
+                              </span>
+                            </div>
+                            <div style={{padding:"10px 0 4px"}}>
+                              <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,marginBottom:"8px"}}>Value over time</div>
+                              {(asset?.history || []).length >= 2
+                                ? <MzLineChart points={asset.history} color={themeHex} height={90} money={money} />
+                                : <div style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT,lineHeight:1.4}}>Muzz saves this asset's value each month. Your chart will appear from next month.</div>}
+                            </div>
                             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"8px"}}>
                               <button onClick={() => { if (!asset?.name || window.confirm(`Delete "${asset.name}"?`)) { undoableRemove(setAssets, (_, i) => i === index, 'Asset deleted'); setEditingAssetIdx(null); } }} style={textBtn(RED)}>Delete</button>
                               <button onClick={() => setEditingAssetIdx(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
@@ -52010,6 +52186,18 @@ function MuzzApp() {
                   {newRow('New asset', addAsset)}
                 </div>
               )}
+              {/* Why numbers are typed in, not linked */}
+              <details style={{...card}}>
+                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",gap:"12px"}}>
+                  <span style={{width:"30px",height:"30px",borderRadius:"50%",background:"rgba(var(--mz-accent-rgb,10,132,255),0.16)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Lock size={15} strokeWidth={2.2} style={{color:"var(--mz-accent,#0A84FF)"}} /></span>
+                  <span style={{flex:1,fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Why you enter your numbers yourself</span>
+                  <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
+                </summary>
+                <div style={{padding:"0 16px 16px",fontSize:"15px",color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT,lineHeight:1.5,display:"flex",flexDirection:"column",gap:"8px"}}>
+                  <div>Muzz never connects to your bank, super or share accounts, and never asks for your logins.</div>
+                  <div>Live access would mean handing an app your most sensitive financial data, and we'd rather never hold it. You type in only what you choose to track, it stays in your account, and you can export or delete it anytime.</div>
+                </div>
+              </details>
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
@@ -52262,7 +52450,7 @@ function MuzzApp() {
                             <span style={{color:"#FFFFFF",fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
                           </div>
                           <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"13px"}}>
-                            <span>{a.catName}{a.ownedFor?`, owned ${a.ownedFor}`:''}</span>
+                            <span>{a.catName}{mzOwnedFor(a.boughtOn, true)?`, owned ${mzOwnedFor(a.boughtOn, true)}`:(a.ownedFor?`, owned ${a.ownedFor}`:'')}</span>
                             <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of total</span>
                           </div>
                         </div>
