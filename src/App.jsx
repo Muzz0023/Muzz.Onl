@@ -47463,6 +47463,7 @@ function MuzzApp() {
   const [billsSortBy, setBillsSortBy] = useState('due');
   const [billsSortDir, setBillsSortDir] = useState('asc');
   const [assetsSortBy, setAssetsSortBy] = useState('value');
+  const [abSort, setAbSort] = useState({ by: 'value', dir: 'desc' }); // Assets breakdown table sort
   const [assetsSortDir, setAssetsSortDir] = useState('desc');
   const [billsSubTab, setBillsSubTab] = useState('bills');
   const [calendarBills, setCalendarBills] = useState({});
@@ -52691,17 +52692,24 @@ function MuzzApp() {
               </div>
 
               <div style={{overflowX:"auto"}}>
+                <div style={{padding:"10px 16px 4px",fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>Tap a column heading to sort</div>
                 <table style={{width:"100%",fontFamily:SANS_FONT,fontSize:"15px",borderCollapse:"collapse"}}>
                   <thead>
                     <tr style={{borderBottom:"0.5px solid rgba(255,255,255,0.12)"}}>
-                      <th style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Asset</th>
-                      <th style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Type</th>
-                      <th style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>Value</th>
-                      <th style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)",fontWeight:600}}>% of Total</th>
+                      <th onClick={() => setAbSort(s0 => s0.by === 'name' ? { by: 'name', dir: s0.dir === 'asc' ? 'desc' : 'asc' } : { by: 'name', dir: 'asc' })} style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:abSort.by === 'name' ? "#FFFFFF" : "rgba(235,235,245,0.6)",fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"}}>Asset{abSort.by === 'name' ? (abSort.dir === 'asc' ? ' ↑' : ' ↓') : ''}</th>
+                      <th onClick={() => setAbSort(s0 => s0.by === 'type' ? { by: 'type', dir: s0.dir === 'asc' ? 'desc' : 'asc' } : { by: 'type', dir: 'asc' })} style={{textAlign:"left",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:abSort.by === 'type' ? "#FFFFFF" : "rgba(235,235,245,0.6)",fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"}}>Type{abSort.by === 'type' ? (abSort.dir === 'asc' ? ' ↑' : ' ↓') : ''}</th>
+                      <th onClick={() => setAbSort(s0 => s0.by === 'value' ? { by: 'value', dir: s0.dir === 'asc' ? 'desc' : 'asc' } : { by: 'value', dir: 'desc' })} style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:abSort.by === 'value' ? "#FFFFFF" : "rgba(235,235,245,0.6)",fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"}}>Value{abSort.by === 'value' ? (abSort.dir === 'asc' ? ' ↑' : ' ↓') : ''}</th>
+                      <th onClick={() => setAbSort(s0 => s0.by === 'pct' ? { by: 'pct', dir: s0.dir === 'asc' ? 'desc' : 'asc' } : { by: 'pct', dir: 'desc' })} style={{textAlign:"right",padding:"11px 16px",fontFamily:SANS_FONT,fontSize:"13px",color:abSort.by === 'pct' ? "#FFFFFF" : "rgba(235,235,245,0.6)",fontWeight:600,cursor:"pointer",userSelect:"none",whiteSpace:"nowrap"}}>% of Total{abSort.by === 'pct' ? (abSort.dir === 'asc' ? ' ↑' : ' ↓') : ''}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {[...filledAssets].sort((a, b) => a.value - b.value).map((asset, idx) => {
+                    {[...filledAssets].sort((a, b) => {
+                      const typeName = (x) => (assetCategories.find(c => c.id === x.category) || { name: '' }).name;
+                      let r = abSort.by === 'name' ? String(a.name || '').localeCompare(String(b.name || ''))
+                        : abSort.by === 'type' ? typeName(a).localeCompare(typeName(b)) || (a.value - b.value)
+                        : a.value - b.value;
+                      return abSort.dir === 'asc' ? r : -r;
+                    }).map((asset, idx) => {
                       const cat = assetCategories.find(c => c.id === asset.category) || { emoji: '', name: 'Select Type' };
                       return (
                         <tr key={idx} style={{borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
