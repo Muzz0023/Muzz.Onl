@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, Contact } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, Contact, Flag, Inbox, CalendarDays, RefreshCw, Gift, History as HistoryIcon, Search as SearchIcon } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -215,6 +215,76 @@ const applyMzTheme = (id) => {
 };
 // Apply the saved colour straight away so the app opens in it
 try { if (typeof window !== 'undefined') applyMzTheme(localStorage.getItem('mz_theme') || 'blue'); } catch (e) {}
+
+// Everything ticked off, newest first, with counts and search
+const MzDoneLog = ({ log, initialKind = 'all', onClose }) => {
+  const [kind, setKind] = useState(initialKind);
+  const [q, setQ] = useState('');
+  const now = new Date();
+  const startWeek = new Date(now); startWeek.setHours(0, 0, 0, 0); startWeek.setDate(startWeek.getDate() - ((startWeek.getDay() + 6) % 7));
+  const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startYear = new Date(now.getFullYear(), 0, 1);
+  const items = (log || []).filter(e => e && (kind === 'all' || e.kind === kind));
+  const count = (from) => items.filter(e => new Date(e.at) >= from).length;
+  const shown = items.filter(e => !q.trim() || String(e.text || '').toLowerCase().includes(q.trim().toLowerCase())).slice().sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  const groups = [];
+  shown.forEach(e => {
+    const d = new Date(e.at);
+    const label = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: d.getFullYear() === now.getFullYear() ? undefined : 'numeric' });
+    if (!groups.length || groups[groups.length - 1].label !== label) groups.push({ label, items: [] });
+    groups[groups.length - 1].items.push(e);
+  });
+  const stat = (n, label) => (
+    <div style={{ flex: 1, minWidth: 0, padding: '10px 12px', borderRadius: '14px', background: 'rgba(255,255,255,0.08)', fontFamily: SANS_FONT }}>
+      <div style={{ fontSize: '24px', fontWeight: 700, color: '#FFFFFF' }}>{n}</div>
+      <div style={{ fontSize: '13px', color: 'rgba(235,235,245,0.6)' }}>{label}</div>
+    </div>
+  );
+  return (
+    <Sheet onClose={onClose}>
+      <div style={{ padding: '4px 16px 20px', display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: SANS_FONT }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: '20px', fontWeight: 700, color: '#FFFFFF' }}>Done history</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--mz-accent,#0A84FF)', fontFamily: SANS_FONT, fontSize: '17px', fontWeight: 600, padding: 0 }}>Done</button>
+        </div>
+        <Segmented value={kind} onChange={setKind} options={[{ id: 'all', label: 'All' }, { id: 'task', label: 'Tasks' }, { id: 'reminder', label: 'Reminders' }]} />
+        <div style={{ display: 'flex', gap: '8px' }}>{stat(count(startWeek), 'This week')}{stat(count(startMonth), 'This month')}{stat(count(startYear), 'This year')}</div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 12px', borderRadius: '12px', background: 'rgba(118,118,128,0.24)' }}>
+          <SearchIcon size={16} strokeWidth={2.2} style={{ color: 'rgba(235,235,245,0.6)', flexShrink: 0 }} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search everything done" style={{ flex: 1, minWidth: 0, background: 'transparent', border: 'none', outline: 'none', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '16px' }} />
+        </label>
+        {groups.length === 0 && <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)', padding: '12px 2px', lineHeight: 1.45 }}>{q ? 'Nothing matches that search.' : 'Nothing ticked off yet. Everything you complete from now on is saved here.'}</div>}
+        {groups.map(g => (
+          <div key={g.label}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(235,235,245,0.6)', margin: '6px 2px' }}>{g.label}</div>
+            {g.items.map(e => (
+              <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 2px', borderBottom: '0.5px solid rgba(255,255,255,0.08)' }}>
+                <CheckCircle size={18} strokeWidth={2.2} style={{ color: 'var(--mz-accent,#0A84FF)', flexShrink: 0 }} />
+                <span style={{ flex: 1, minWidth: 0, fontSize: '16px', color: '#FFFFFF', overflowWrap: 'anywhere' }}>{e.text}</span>
+                <span style={{ fontSize: '13px', color: 'rgba(235,235,245,0.5)', flexShrink: 0 }}>{e.kind === 'task' ? 'Task' : 'Reminder'} · {new Date(e.at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </Sheet>
+  );
+};
+
+const MZ_REMINDERS_TOUR = [
+  { icon: '🗂️', title: 'Your lists at a glance', body: 'The coloured cards sort your reminders for you: Today, Scheduled, All, Flagged, Renewals and Completed. Tap one to see just those, tap it again to see everything.' },
+  { icon: '📅', title: 'Dates in plain words', body: 'Type "Dentist Friday" or "Rego 14 March" and Muzz sets the date for you. Or tap Today, Tomorrow, This weekend or Next week.' },
+  { icon: '🚩', title: 'Flag what matters', body: 'Turn on Flag for anything important. Flagged reminders get their own card so they never get lost.' },
+  { icon: '🔁', title: 'Expiry & renewal dates', body: 'Turn on "Expiry / renewal" for things like rego, insurance or your licence. They show up in Today two weeks early, so you get a heads-up.' },
+  { icon: '👉', title: 'Swipe to finish', body: 'Swipe right to tick a reminder off, swipe left to delete, or press and hold for more options. Pin the ones you always want at the top.' },
+  { icon: '📜', title: 'Everything you\'ve done', body: 'Tap Done history to see everything you\'ve ticked off, with counts for this week, month and year, and a search.' },
+];
+const MZ_BDAYS_TOUR = [
+  { icon: '🎂', title: 'Birthdays & Dates', body: 'Keep everyone\'s birthday here, plus anniversaries and other dates you never want to forget, each with a countdown.' },
+  { icon: '📸', title: 'Faces, not just names', body: 'Add a photo from your camera or library, or tap Import from Contacts to bring in birthdays and photos in one go.' },
+  { icon: '🎁', title: 'Gift ideas', body: 'Open someone and jot gift ideas or notes, like "loves Lego, size M", so you\'re ready before the day.' },
+  { icon: '🗓️', title: 'Gift history', body: 'Log what you gave each year. Next time, you\'ll see what you gave before and never double up.' },
+];
 
 // ---------- Assets: how long owned, history charts ----------
 // "6 years, 10 months, 9 days" between a YYYY-MM-DD date and today (or null if no/future date)
@@ -47509,6 +47579,10 @@ function MuzzApp() {
   ]);
   const [birthdays, setBirthdays] = useState([]);
   const [reminders, setReminders] = useState([]);
+  const [doneLog, setDoneLog] = useState([]); // [{ id, kind: 'task' | 'reminder', text, at }]
+  const logDone = (kind, text) => setDoneLog(prev => [...prev, { id: Date.now() + Math.random(), kind, text: String(text || '').trim() || 'Untitled', at: new Date().toISOString() }]);
+  const [doneLogOpen, setDoneLogOpen] = useState(null); // null | 'all' | 'task' | 'reminder'
+  const [remTourOpen, setRemTourOpen] = useState(null); // null | 'reminders' | 'birthdays'
   const [groceries, setGroceries] = useState([]);
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
@@ -47874,6 +47948,11 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [remindersSubTab, setRemindersSubTab] = useState('reminders');
+  useEffect(() => {
+    if (activeView !== 'reminders') return;
+    const key = remindersSubTab === 'birthdays' ? 'mz_tour_birthdays' : 'mz_tour_reminders';
+    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); setRemTourOpen(remindersSubTab === 'birthdays' ? 'birthdays' : 'reminders'); } } catch (e) {}
+  }, [activeView, remindersSubTab]);
   const [editingReminderId, setEditingReminderId] = useState(null);
   const [editingBdayId, setEditingBdayId] = useState(null);
   const [editingBillIdx, setEditingBillIdx] = useState(null);
@@ -48029,7 +48108,7 @@ function MuzzApp() {
   const mapPinsRef = useRef(mapPins);
   useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,netWorthMonthly,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const day=new Date(); const stamp=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`; mzShareFile({ filename: `muzz-backup-${stamp}.json`, data: d, mime: 'application/json', title: 'Muzz backup' }); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,netWorthMonthly,doneLog,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,appTheme,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,savedViews,auditLog},null,2); const day=new Date(); const stamp=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`; mzShareFile({ filename: `muzz-backup-${stamp}.json`, data: d, mime: 'application/json', title: 'Muzz backup' }); } catch(e) {} };
 
 
 
@@ -48079,6 +48158,7 @@ function MuzzApp() {
     if(d.dailyRotation) setDailyRotation(d.dailyRotation);
     if(d.birthdays) setBirthdays(d.birthdays);
     if(d.reminders) setReminders(d.reminders);
+    if(d.doneLog) setDoneLog(d.doneLog);
     if(d.groceries) setGroceries(d.groceries);
     if(d.shoppingLists) setShoppingLists(d.shoppingLists);
     if(d.dailyMeals) setDailyMeals(d.dailyMeals);
@@ -48118,6 +48198,7 @@ function MuzzApp() {
       investmentSettings: d.investmentSettings||{yearsToProject:'10',expectedGrowthRate:'7',yearlyContribution:''},
       smallGoals: d.smallGoals||[],
       netWorthMonthly: d.netWorthMonthly||[],
+      doneLog: d.doneLog||[],
       bigGoals: d.bigGoals||[],
       holdingsResearch: d.holdingsResearch||[],
       futureStocks: d.futureStocks||[],
@@ -48432,6 +48513,7 @@ function MuzzApp() {
           if (d.dailyRotation) setDailyRotation(d.dailyRotation);
           if (d.birthdays) setBirthdays(d.birthdays);
           if (d.reminders) setReminders(d.reminders);
+          if (Array.isArray(d.doneLog)) setDoneLog(d.doneLog);
           if (d.groceries) setGroceries(d.groceries);
           if (d.shoppingLists) setShoppingLists(d.shoppingLists);
           if (d.dailyMeals) setDailyMeals(d.dailyMeals);
@@ -48533,6 +48615,7 @@ function MuzzApp() {
           smallGoals,
           bigGoals,
           netWorthMonthly,
+          doneLog,
           holdingsResearch,
           futureStocks,
           futureResearch,
@@ -48597,7 +48680,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -49075,6 +49158,7 @@ function MuzzApp() {
   // REMINDERS VIEW
   if (activeView === 'reminders') {
     const addBirthday = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'friend' }]); setEditingBdayId(id); };
+    const addImportantDate = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'family', type: 'anniversary' }]); setEditingBdayId(id); };
     // Pull birthdays (and photos) from the iPhone's Contacts, skipping names already in Muzz
     const canImportContacts = !!mzPlugin('Contacts');
     const importBirthdaysFromContacts = async () => {
@@ -49247,22 +49331,28 @@ function MuzzApp() {
     const allPinned = sortedReminders.filter(r => r.permanent && !r.done);
     const allDated = sortedReminders.filter(r => !r.permanent && !r.done);
     const allDone = sortedReminders.filter(r => r.done);
-    const todayList = allDated.filter(r => { const d = getReminderDiff(r.date); return d !== null && d <= 0; });
-    const upcomingList = allDated.filter(r => { const d = getReminderDiff(r.date); return d === null || d > 0; });
+    // Today = due or overdue, plus renewals coming up in the next 14 days (a heads-up)
+    const todayList = allDated.filter(r => { const d = getReminderDiff(r.date); return d !== null && (d <= 0 || (r.kind === 'renewal' && d <= 14)); });
+    const upcomingList = allDated.filter(r => { const d = getReminderDiff(r.date); return d !== null && d > 0; });
+    const openAll = [...allPinned, ...allDated];
     const rf = reminderFilter;
-    const pinned = rf === 'all' || rf === 'pinned' ? allPinned : [];
-    const dated = rf === 'all' ? allDated : rf === 'today' ? todayList : rf === 'upcoming' ? upcomingList : [];
+    const pick = (list) => rf === 'flagged' ? list.filter(r => r.flagged) : rf === 'renewals' ? list.filter(r => r.kind === 'renewal') : list;
+    const pinned = ['all', 'flagged', 'renewals'].includes(rf) ? pick(allPinned) : [];
+    const dated = rf === 'all' ? allDated : rf === 'today' ? todayList : rf === 'scheduled' ? upcomingList : ['flagged', 'renewals'].includes(rf) ? pick(allDated) : [];
     const doneReminders = rf === 'all' || rf === 'completed' ? allDone : [];
     const smartCards = [
-      { id: 'today',     label: 'Today',     count: todayList.length,    icon: Calendar,    color: 'var(--mz-accent,#0A84FF)' },
-      { id: 'upcoming',  label: 'Upcoming',  count: upcomingList.length, icon: Clock,       color: '#FF453A' },
-      { id: 'pinned',    label: 'Pinned',    count: allPinned.length,    icon: Pin,         color: '#FF9F0A' },
-      { id: 'completed', label: 'Completed', count: allDone.length,      icon: CheckCircle, color: '#8E8E93' },
+      { id: 'today',     label: 'Today',     count: todayList.length,                                  icon: CalendarDays, bg: 'linear-gradient(135deg,#6AB0F5 0%,#3B82F6 100%)' },
+      { id: 'scheduled', label: 'Scheduled', count: upcomingList.length,                               icon: Calendar,     bg: 'linear-gradient(135deg,#EE9A9A 0%,#D9534F 100%)' },
+      { id: 'all',       label: 'All',       count: openAll.length,                                    icon: Inbox,        bg: 'linear-gradient(135deg,#636368 0%,#3A3A3E 100%)' },
+      { id: 'flagged',   label: 'Flagged',   count: openAll.filter(r => r.flagged).length,             icon: Flag,         bg: 'linear-gradient(135deg,#F3C690 0%,#EE9A45 100%)' },
+      { id: 'renewals',  label: 'Renewals',  count: openAll.filter(r => r.kind === 'renewal').length,  icon: RefreshCw,    bg: 'linear-gradient(135deg,#C3A3F5 0%,#8B5CF6 100%)' },
+      { id: 'completed', label: 'Completed', count: allDone.length,                                    icon: CheckCircle,  bg: 'linear-gradient(135deg,#A9ADB4 0%,#73777F 100%)' },
     ];
     const filterEmpty = {
       today:     { title: 'Nothing due today', body: "You're all caught up." },
-      upcoming:  { title: 'Nothing coming up', body: 'Reminders with a future date show here.' },
-      pinned:    { title: 'No pinned reminders', body: 'Pin ones you always want to see.' },
+      scheduled: { title: 'Nothing scheduled', body: 'Reminders with a future date show here.' },
+      flagged:   { title: 'No flagged reminders', body: 'Turn on Flag for anything important.' },
+      renewals:  { title: 'No renewals yet', body: 'Turn on "Expiry / renewal" for rego, insurance or your licence.' },
       completed: { title: 'Nothing completed yet', body: 'Ticked-off reminders show here.' },
     }[rf];
     const headerSub = remindersSubTab === 'reminders'
@@ -49279,6 +49369,7 @@ function MuzzApp() {
         const key = 'r' + reminder.id;
         if (completing[key] || reminder.done) return;
         setCompleting(c => ({...c, [key]: true}));
+        logDone('reminder', reminder.title);
         setTimeout(() => {
           setReminders(prev => prev.map(r => r.id === reminder.id ? {...r, done: true} : r));
           setCompleting(c => { const n = {...c}; delete n[key]; return n; });
@@ -49290,6 +49381,7 @@ function MuzzApp() {
           menu={[
             { label: 'Edit', onSelect: () => setEditingReminderId(reminder.id) },
             { label: reminder.permanent ? 'Unpin' : 'Pin', onSelect: () => update({permanent: !reminder.permanent}) },
+            { label: reminder.flagged ? 'Unflag' : 'Flag', onSelect: () => update({flagged: !reminder.flagged}) },
             { label: reminder.done ? 'Mark not done' : 'Mark done', onSelect: () => (reminder.done ? update({done: false}) : completeReminder()) },
             { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setReminders, r => r.id === reminder.id, 'Reminder deleted') },
           ]}>
@@ -49302,10 +49394,12 @@ function MuzzApp() {
                 <div style={{fontFamily:SANS_FONT,fontSize:"17px",textDecoration:(reminder.done||completing['r'+reminder.id])?"line-through":"none",color:reminder.title?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{reminder.title || 'New reminder'}</div>
                 {!reminder.permanent && (
                   <div style={{fontFamily:SANS_FONT,fontSize:"15px",marginTop:"2px",color:rel?rel.color:sec}}>
+                    {reminder.kind === 'renewal' && <span style={{color:"#BF9BF7",fontWeight:600}}>↻ {diff !== null && diff > 0 && diff <= 14 ? 'Renews soon' : 'Renewal'} · </span>}
                     {reminder.date ? `${new Date(reminder.date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${rel ? `, ${rel.text.charAt(0).toLowerCase()}${rel.text.slice(1)}` : ''}` : 'No date'}
                   </div>
                 )}
               </div>
+              {reminder.flagged && <Flag size={16} strokeWidth={2.4} style={{color:"#FF9F0A",fill:"#FF9F0A",flexShrink:0,marginTop:"4px"}} />}
               <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} style={{flexShrink:0,marginTop:"3px"}} />
             </button>
             </div>
@@ -49330,6 +49424,15 @@ function MuzzApp() {
                 <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Pinned</span>
                 <Switch on={!!reminder.permanent} label="Pinned" onToggle={() => update({permanent: !reminder.permanent})} />
               </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,display:"inline-flex",alignItems:"center",gap:"8px"}}><Flag size={17} strokeWidth={2.2} style={{color:"#FF9F0A"}} /> Flag</span>
+                <Switch on={!!reminder.flagged} label="Flag" onToggle={() => update({flagged: !reminder.flagged})} />
+              </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,display:"inline-flex",alignItems:"center",gap:"8px"}}><RefreshCw size={17} strokeWidth={2.2} style={{color:"#BF9BF7"}} /> Expiry / renewal</span>
+                <Switch on={reminder.kind === 'renewal'} label="Expiry or renewal" onToggle={() => update({kind: reminder.kind === 'renewal' ? '' : 'renewal'})} />
+              </div>
+              {reminder.kind === 'renewal' && <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,marginTop:"-8px"}}>Shows in Today two weeks before the date, so you get a heads-up.</div>}
               {!reminder.permanent && (
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                   <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Date</span>
@@ -49385,9 +49488,13 @@ function MuzzApp() {
               style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
               {bdayAvatar(bday, "42px")}
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || 'New birthday'}</div>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || (bday.type === 'anniversary' ? 'New anniversary' : bday.type === 'other' ? 'New date' : 'New birthday')}</div>
                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>
-                  {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}{bday.category === 'family' ? ', family' : ''}
+                  {bday.type === 'anniversary' ? '💍 ' : bday.type === 'other' ? '⭐ ' : ''}
+                  {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}
+                  {(() => { if (!bday.type || bday.type === 'birthday' || !bday.date) return ''; const y = parseInt(String(bday.date).slice(0, 4)); const yrs = new Date().getFullYear() - y; return y > 1900 && y !== 2000 && yrs > 0 ? `, ${yrs} year${yrs === 1 ? '' : 's'}` : ''; })()}
+                  {bday.category === 'family' && (!bday.type || bday.type === 'birthday') ? ', family' : ''}
+                  {(bday.giftNotes || (bday.gifts || []).length) ? ' · 🎁' : ''}
                 </div>
               </div>
               {rel && <span style={{fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,color:rel.color === sec ? "rgba(235,235,245,0.75)" : "#FFFFFF",background:rel.color === sec ? "rgba(255,255,255,0.08)" : "rgba(var(--mz-accent-rgb,10,132,255),0.35)",padding:"4px 10px",borderRadius:"999px",flexShrink:0}}>{rel.text}</span>}
@@ -49410,15 +49517,49 @@ function MuzzApp() {
                   {bday.photo && <button onClick={() => update({photo: ''})} style={{...textBtn("#FF453A"),fontSize:"15px"}}>Remove</button>}
                 </div>
               </div>
-              <textarea rows={1} autoFocus={!bday.name} value={bday.name} placeholder="Name"
+              <Segmented value={bday.type || 'birthday'} onChange={(t) => update({type: t})} options={[{id:'birthday',label:'Birthday'},{id:'anniversary',label:'Anniversary'},{id:'other',label:'Other date'}]} />
+              <textarea rows={1} autoFocus={!bday.name} value={bday.name}
+                placeholder={bday.type === 'anniversary' ? "e.g. Mum & Dad's anniversary" : bday.type === 'other' ? 'e.g. Started my apprenticeship' : 'Name'}
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
                 onChange={(e) => update({name: e.target.value})} style={bareText} />
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Birthday</span>
+                <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>{bday.type === 'anniversary' ? 'Anniversary' : bday.type === 'other' ? 'Date' : 'Birthday'}</span>
                 <input type="date" value={bday.date||''} onFocus={scrollInputIntoView} onChange={(e) => update({date: e.target.value})} style={datePill} />
               </div>
               <Segmented value={bday.category||'friend'} onChange={(cat) => update({category: cat})} options={[{id:'friend',label:'Friend'},{id:'family',label:'Family'}]} />
+              <div>
+                <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,marginBottom:"6px",display:"flex",alignItems:"center",gap:"6px"}}><Gift size={14} strokeWidth={2.2} /> Gift ideas & notes</div>
+                <textarea rows={2} value={bday.giftNotes || ''} placeholder="e.g. Loves Lego, size M, no chocolate"
+                  ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
+                  onChange={(e) => update({giftNotes: e.target.value})}
+                  style={{...bareText,fontSize:"16px",background:"rgba(255,255,255,0.06)",borderRadius:"12px",padding:"10px 12px",width:"100%",boxSizing:"border-box"}} />
+              </div>
+              {(() => {
+                const gifts = (bday.gifts || []).slice().sort((a, b) => (b.year || 0) - (a.year || 0));
+                const thisYear = new Date().getFullYear();
+                const addGift = (text, year) => { const t = String(text || '').trim(); if (!t) return; update({ gifts: [...(bday.gifts || []), { id: Date.now(), year: parseInt(year) || thisYear, text: t }] }); };
+                return (
+                  <div>
+                    <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,marginBottom:"6px"}}>Gifts given</div>
+                    {gifts.map(g => (
+                      <div key={g.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 2px",borderBottom:"0.5px solid rgba(255,255,255,0.08)",fontFamily:SANS_FONT}}>
+                        <span style={{fontSize:"15px",fontWeight:600,color:"var(--mz-accent,#0A84FF)",width:"44px",flexShrink:0}}>{g.year}</span>
+                        <span style={{flex:1,minWidth:0,fontSize:"16px",color:"#FFFFFF",overflowWrap:"anywhere"}}>{g.text}</span>
+                        <button aria-label="Remove gift" onClick={() => update({ gifts: (bday.gifts || []).filter(x => x.id !== g.id) })} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.45)",fontSize:"18px",padding:"0 4px"}}>×</button>
+                      </div>
+                    ))}
+                    <form onSubmit={(e) => { e.preventDefault(); const f = e.target; addGift(f.gift.value, f.year.value); f.gift.value = ''; }}
+                      style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"8px"}}>
+                      <input name="year" type="number" inputMode="numeric" defaultValue={thisYear} onFocus={scrollInputIntoView}
+                        style={{width:"70px",background:"rgba(255,255,255,0.08)",border:"none",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"8px 10px"}} />
+                      <input name="gift" placeholder="What did you give?" onFocus={scrollInputIntoView}
+                        style={{flex:1,minWidth:0,background:"rgba(255,255,255,0.08)",border:"none",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"8px 10px"}} />
+                      <button type="submit" style={{...textBtn("var(--mz-accent,#0A84FF)"),fontWeight:600,fontSize:"15px"}}>Add</button>
+                    </form>
+                  </div>
+                );
+              })()}
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:"2px"}}>
                 <button onClick={() => { undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted'); setEditingBdayId(null); }} style={textBtn("#FF453A")}>Delete</button>
                 <button onClick={() => setEditingBdayId(null)} style={{...textBtn("var(--mz-accent,#0A84FF)"),fontWeight:600}}>Done</button>
@@ -49462,11 +49603,15 @@ function MuzzApp() {
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Reminders</div>
                 <CompactNavBar title="Reminders" onBack={() => setActiveView('home')} />
                 {headerSub && <div style={{fontSize:"15px",color:overdueCount>0&&remindersSubTab==='reminders'?"#FF453A":sec,fontFamily:SANS_FONT,marginTop:"2px"}}>{headerSub}</div>}
+                <button onClick={() => setRemTourOpen(remindersSubTab === 'birthdays' ? 'birthdays' : 'reminders')} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px"}}>
+                  {remindersSubTab === 'birthdays' ? 'How Birthdays & Dates works' : 'How Reminders works'}
+                </button>
+                {remTourOpen && <MzTour key={remTourOpen} steps={remTourOpen === 'birthdays' ? MZ_BDAYS_TOUR : MZ_REMINDERS_TOUR} onClose={() => setRemTourOpen(null)} />}
               </div>
               <button aria-label={remindersSubTab === 'reminders' ? 'New reminder' : 'New birthday'} onClick={remindersSubTab === 'reminders' ? addReminder : addBirthday}
                 style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",width:"40px",height:"40px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--mz-accent,#0A84FF)",fontSize:"24px",fontWeight:400,lineHeight:1,cursor:"pointer",padding:0}}>+</button>
             </div>
-            <Segmented value={remindersSubTab} onChange={setRemindersSubTab} options={[{id:'reminders',label:'Reminders'},{id:'birthdays',label:'Birthdays'}]} />
+            <Segmented value={remindersSubTab} onChange={setRemindersSubTab} options={[{id:'reminders',label:'Reminders'},{id:'birthdays',label:'Birthdays & Dates'}]} />
           </div>
         </div>
 
@@ -49478,21 +49623,27 @@ function MuzzApp() {
               {sortedReminders.length > 0 && (
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"6px"}}>
                   {smartCards.map(c => {
-                    const on = rf === c.id;
+                    const on = rf === c.id && c.id !== 'all';
                     const Icon = c.icon;
                     return (
-                      <button key={c.id} onClick={() => setReminderFilter(on ? 'all' : c.id)} aria-pressed={on}
-                        style={{...rowCard,display:"flex",flexDirection:"column",alignItems:"stretch",gap:"8px",padding:"12px 14px",cursor:"pointer",textAlign:"left",border:on?"1.5px solid var(--mz-accent,#0A84FF)":rowCard.border}}>
-                        <span style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                          <span style={{width:"30px",height:"30px",borderRadius:"50%",background:c.color,display:"flex",alignItems:"center",justifyContent:"center"}}><Icon size={16} color="#FFFFFF" strokeWidth={2.4} /></span>
-                          <span style={{fontSize:"24px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{c.count}</span>
+                      <button key={c.id} onClick={() => setReminderFilter(on || c.id === 'all' ? 'all' : c.id)} aria-pressed={on} aria-label={`${c.label} ${c.count}`}
+                        style={{display:"flex",flexDirection:"column",justifyContent:"space-between",gap:"14px",padding:"14px 16px",minHeight:"92px",borderRadius:"20px",border:on?"2px solid #FFFFFF":"2px solid transparent",background:c.bg,cursor:"pointer",textAlign:"left",boxShadow:"0 6px 18px rgba(0,0,0,0.25)",transform:on?"scale(0.98)":"none",transition:"transform 0.15s"}}>
+                        <span style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
+                          <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
+                          <span style={{fontSize:"30px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,lineHeight:1}}>{c.count}</span>
                         </span>
-                        <span style={{fontSize:"15px",fontWeight:600,color:"rgba(235,235,245,0.75)",fontFamily:SANS_FONT}}>{c.label}</span>
+                        <span style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px"}}>{c.label}</span>
                       </button>
                     );
                   })}
                 </div>
               )}
+              {sortedReminders.length > 0 && (
+                <div style={{display:"flex",justifyContent:"flex-end",margin:"-2px 2px 0"}}>
+                  <button onClick={() => setDoneLogOpen('reminder')} style={{...textBtn("var(--mz-accent,#0A84FF)"),fontSize:"15px",display:"inline-flex",alignItems:"center",gap:"5px"}}><HistoryIcon size={15} strokeWidth={2} /> Done history</button>
+                </div>
+              )}
+              {doneLogOpen && <MzDoneLog log={doneLog} initialKind={doneLogOpen} onClose={() => setDoneLogOpen(null)} />}
               {rf !== 'all' && sortedReminders.length > 0 && (
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",margin:"4px 2px 0"}}>
                   <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{smartCards.find(c => c.id === rf).label}</span>
@@ -49571,6 +49722,7 @@ function MuzzApp() {
                 <div style={rowList}>{sortedBirthdays.map((b, i) => renderBirthdayRow(b, i === sortedBirthdays.length - 1))}</div>
               )}
               {sortedBirthdays.length > 0 && newRow('New birthday', addBirthday)}
+              {newRow('New anniversary or date', addImportantDate)}
               {canImportContacts && (
                 <button onClick={importBirthdaysFromContacts} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                   <span style={{width:"24px",height:"24px",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--mz-accent,#0A84FF)"}}><Contact size={20} strokeWidth={2} /></span>
@@ -49711,6 +49863,8 @@ function MuzzApp() {
             const completeItem = (id) => {
               const key = 't' + id;
               if (completing[key]) return;
+              const doneItem = items.find(i => i.id === id);
+              if (doneItem) logDone('task', doneItem.text);
               setCompleting(c => ({...c, [key]: true}));
               setTimeout(() => {
                 updateNote(list => list.map(i => i.id === id ? {...i, checked: true} : i));
@@ -49806,6 +49960,8 @@ function MuzzApp() {
 
                 {(activeCustom || items.length > 0) && (
                   <div style={{display:"flex",gap:"18px",marginBottom:"6px",flexWrap:"wrap"}}>
+                    <button onClick={() => setDoneLogOpen('task')} aria-label="Done history" style={{...linkBtn(accentColor),display:"inline-flex",alignItems:"center",gap:"5px"}}><HistoryIcon size={15} strokeWidth={2} /> History</button>
+                    {doneLogOpen && <MzDoneLog log={doneLog} initialKind={doneLogOpen} onClose={() => setDoneLogOpen(null)} />}
                     {items.length > 0 && <button onClick={shareTasksPdf} aria-label="Share list as PDF" style={{...linkBtn(accentColor),display:"inline-flex",alignItems:"center",gap:"5px"}}><ShareIcon size={15} strokeWidth={2} /> Share</button>}
                     {checked.length > 0 && (
                       <button onClick={() => setTasksShowDone(prev => ({...prev, [tasksSubTab]: !showDone}))} style={linkBtn(accentColor)}>{showDone ? 'Hide' : 'Show'} completed</button>
