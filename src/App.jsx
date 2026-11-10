@@ -279,6 +279,20 @@ const MZ_REMINDERS_TOUR = [
   { icon: '👉', title: 'Swipe to finish', body: 'Swipe right to tick a reminder off, swipe left to delete, or press and hold for more options.' },
   { icon: '📜', title: 'Everything you\'ve done', body: 'Tap Done history to see everything you\'ve ticked off, with counts for this week, month and year, and a search.' },
 ];
+const MZ_TIMETABLE_TOUR = [
+  { icon: '🗓️', title: 'Your week at a glance', body: 'The Week view shows every block, Monday to Sunday. Today\'s column is highlighted, and the numbers up top add up your hours.' },
+  { icon: '➕', title: 'Add a block', body: 'Tap + Add block for work, TAFE, gym or anything else. Pick the day, start and end times, a colour and a location.' },
+  { icon: '⏰', title: 'Show only your hours', body: 'Use "Hours" above the grid to choose when your day starts and ends, like 5am to 9pm, so you\'re not scrolling past midnight.' },
+  { icon: '✏️', title: 'Change anything', body: 'Tap any block to edit or delete it. The List view shows everything as a simple list.' },
+];
+const MZ_BILLS_TOUR = [
+  { icon: '🧾', title: 'All your bills in one place', body: 'Add each bill with its amount and how often it\'s paid. Muzz works out what it costs you per month, per year and per pay.' },
+  { icon: '📂', title: 'Sections', body: 'Keep bills in sections like Personal, Home or Car. Each section can have its own income.' },
+  { icon: '📈', title: 'Bills & income over time', body: 'Muzz saves your monthly bills and income every month, so you can see things like "Bills up $40 a month since last year" or "Income up 22%".' },
+  { icon: '🎯', title: 'Goals', body: 'Set goals like an emergency fund. Link a goal to an asset and it fills itself as your savings grow.' },
+  { icon: '📅', title: 'Forecast & calendar', body: 'See what\'s coming up and when each bill is due, so nothing catches you out.' },
+];
+
 const MZ_DATES_TOUR = [
   { icon: '💍', title: 'Dates worth remembering', body: 'Anniversaries and other big days live here, each with a countdown to the next one.' },
   { icon: '⭐', title: 'Any kind of date', body: 'Pick Anniversary or Other date. Muzz shows how many years it\'s been, like "31 years".' },
@@ -48263,6 +48277,16 @@ function MuzzApp() {
     });
   }catch(err){alert('Invalid file — make sure it\'s a muzz-backup.json');} }; r.readAsText(file); };
   const [timetableBlocks, setTimetableBlocks] = useState([]);
+  const [timetableHours, setTimetableHours] = useState({ start: 6, end: 22 }); // hours shown on the week grid
+  const [ttTourOpen, setTtTourOpen] = useState(false);
+  const [billsTourOpen, setBillsTourOpen] = useState(false);
+  const [billsHistory, setBillsHistory] = useState([]); // [{ m: 'YYYY-MM', bills, income }] monthly bills and income
+  const [billsHistSheet, setBillsHistSheet] = useState(null); // null | 'bills' | 'income'
+  useEffect(() => {
+    const key = activeView === 'timetable' ? 'mz_tour_timetable' : activeView === 'varied' ? 'mz_tour_bills' : null;
+    if (!key) return;
+    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); if (activeView === 'timetable') setTtTourOpen(true); else setBillsTourOpen(true); } } catch (e) {}
+  }, [activeView]);
 
 
 
@@ -48530,6 +48554,8 @@ function MuzzApp() {
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
+          if (d.timetableHours && isFinite(d.timetableHours.start) && isFinite(d.timetableHours.end)) setTimetableHours(d.timetableHours);
+          if (Array.isArray(d.billsHistory)) setBillsHistory(d.billsHistory);
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
           if (d.journalEntries) setJournalEntries(d.journalEntries);
@@ -48660,6 +48686,8 @@ function MuzzApp() {
           customCategories,
           eliteName,
           timetableBlocks,
+          timetableHours,
+          billsHistory,
           habits,
           habitLog,
           journalEntries,
@@ -48685,7 +48713,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -48808,6 +48836,19 @@ function MuzzApp() {
   }, [assets, totalStocks, stocks, livePrices, fxRates, dataLoaded]);
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
+  const histBillsMonthly = totalMonthly, histIncomeMonthly = salaryNum; // used by the Bills page history tiles
+  // Bills & income history: one point per month (latest value seen that month)
+  useEffect(() => {
+    if (!dataLoaded || !(totalMonthly > 0 || salaryNum > 0)) return;
+    const key = mzMonthKey();
+    const b = Math.round(totalMonthly * 100) / 100, inc = Math.round(salaryNum * 100) / 100;
+    setBillsHistory(prev => {
+      const list = Array.isArray(prev) ? prev : [];
+      const last = list[list.length - 1];
+      if (last && last.m === key) return (last.bills === b && last.income === inc) ? list : [...list.slice(0, -1), { m: key, bills: b, income: inc }];
+      return [...list, { m: key, bills: b, income: inc }];
+    });
+  }, [totalMonthly, salaryNum, dataLoaded]);
 
   // Daily quote
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
@@ -50852,6 +50893,8 @@ function MuzzApp() {
                 <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Bills</div>
                 <CompactNavBar title="Bills" onBack={() => setActiveView('home')} />
                 <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>{money(allMonthly)} a month{buckets.length > 1 ? ' across all sections' : ''}</div>
+                <button onClick={() => setBillsTourOpen(true)} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px"}}>How Bills works</button>
+                {billsTourOpen && <MzTour steps={MZ_BILLS_TOUR} onClose={() => setBillsTourOpen(false)} />}
               </div>
               {billsSubTab === 'bills' && activeBucket && (
                 <button aria-label="New bill" onClick={() => { addBillToBucket(activeBucket.id); setEditingBillIdx((activeBucket.bills||[]).length); }}
@@ -50866,6 +50909,48 @@ function MuzzApp() {
 
           {(billsSubTab === 'bills' || billsSubTab === 'debts') && (
             <>
+              {/* Bills & income over time */}
+              {(histBillsMonthly > 0 || histIncomeMonthly > 0) && (() => {
+                const hist = (billsHistory || []).filter(p => p && p.m);
+                const cur = hist[hist.length - 1];
+                const [cy, cm] = mzMonthKey().split('-');
+                const base = hist.find(p => p.m === `${+cy - 1}-${cm}`) || (hist.length > 1 ? hist[0] : null);
+                const line = (field, curV, isPct) => {
+                  if (!base || !(base[field] > 0)) return null;
+                  const d = curV - base[field];
+                  if (Math.abs(d) < 0.5) return <span style={{color:sec}}>No change since {mzMonthLabel(base.m)}</span>;
+                  const up = d > 0;
+                  const good = field === 'income' ? up : !up;
+                  const txt = isPct ? `${Math.abs(d / base[field] * 100).toFixed(0)}%` : `${money(Math.abs(d))} a month`;
+                  return <span style={{color: good ? "#30D158" : "#FF453A"}}>{up ? 'Up' : 'Down'} {txt} since {mzMonthLabel(base.m)}</span>;
+                };
+                const tile = (id, label, value, change) => (
+                  <button onClick={() => setBillsHistSheet(id)} style={{flex:1,minWidth:0,textAlign:"left",padding:"14px 16px",borderRadius:"20px",border:"0.5px solid rgba(255,255,255,0.12)",background:"var(--mz-glass, rgba(28,28,30,0.55))",cursor:"pointer",fontFamily:SANS_FONT}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:"13px",fontWeight:600,color:sec}}>{label}<ChevronRight size={15} strokeWidth={2.25} style={{color:"rgba(235,235,245,0.35)"}} /></div>
+                    <div style={{fontSize:"22px",fontWeight:700,color:"#FFFFFF",marginTop:"2px"}}>{money(value)}<span style={{fontSize:"14px",fontWeight:500,color:sec}}> /mo</span></div>
+                    <div style={{fontSize:"13px",fontWeight:600,marginTop:"4px",lineHeight:1.3}}>{change || <span style={{color:sec,fontWeight:500}}>History starts {mzMonthLabel(hist[0] ? hist[0].m : mzMonthKey())}</span>}</div>
+                  </button>
+                );
+                return (
+                  <div style={{display:"flex",gap:"10px"}}>
+                    {tile('bills', 'Bills', histBillsMonthly, line('bills', histBillsMonthly, false))}
+                    {histIncomeMonthly > 0 && tile('income', 'Income', histIncomeMonthly, line('income', histIncomeMonthly, true))}
+                  </div>
+                );
+              })()}
+              {billsHistSheet && (
+                <Sheet onClose={() => setBillsHistSheet(null)}>
+                  <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{billsHistSheet === 'income' ? 'Income history' : 'Bills history'}</span>
+                      <button onClick={() => setBillsHistSheet(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
+                    </div>
+                    <Segmented value={billsHistSheet} onChange={setBillsHistSheet} options={[{id:'bills',label:'Bills'},{id:'income',label:'Income'}]} />
+                    <MzHistoryView key={billsHistSheet} points={(billsHistory || []).map(p => ({ m: p.m, v: billsHistSheet === 'income' ? p.income : p.bills })).filter(p => p.v > 0)} color={themeHex} money={money}
+                      emptyText="Muzz saves your monthly bills and income each month. Your history starts this month." />
+                  </div>
+                </Sheet>
+              )}
               {/* Sections (Personal, Home, Business…) */}
               <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                 <div style={{flex:1,minWidth:0}}>
@@ -67654,7 +67739,12 @@ function MuzzApp() {
   if (activeView === 'timetable') {
     if (!isElite) return <LockedFeature featureName="Timetable" setActiveView={setActiveView} />;
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const hours = Array.from({length:24},(_,i)=>i);
+    // Hours shown: the user's choice, widened if a block falls outside it
+    const blockMin = timetableBlocks.length ? Math.floor(Math.min(...timetableBlocks.map(b => b.startHour))) : 24;
+    const blockMax = timetableBlocks.length ? Math.ceil(Math.max(...timetableBlocks.map(b => b.endHour))) : 0;
+    const hStart = Math.max(0, Math.min(timetableHours.start, blockMin));
+    const hEnd = Math.min(24, Math.max(timetableHours.end, blockMax, hStart + 1));
+    const hours = Array.from({length: hEnd - hStart}, (_, i) => hStart + i);
     const fmt12 = (h) => { const hr=Math.floor(h); const min=Math.round((h-hr)*60); const period=hr<12?'am':'pm'; const displayHr=hr===0?12:hr>12?hr-12:hr; return min>0?`${displayHr}:${min.toString().padStart(2,'0')}${period}`:`${displayHr}${period}`; };
     const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
     const hexToRgba = (hex, a) => {
@@ -67683,8 +67773,10 @@ function MuzzApp() {
           <div className="max-w-5xl mx-auto">
             <button onClick={()=>setActiveView('home')} style={{display:"inline-flex",alignItems:"center",gap:"2px",fontSize:"17px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontWeight:400,background:"transparent",border:"none",padding:0,cursor:"pointer",marginBottom:"10px"}}>‹ Dashboard</button>
             
-            <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15,marginBottom:"16px"}}>Timetable</div>
+            <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",lineHeight:1.15}}>Timetable</div>
             <CompactNavBar title="Timetable" onBack={() => setActiveView('home')} />
+            <button onClick={() => setTtTourOpen(true)} style={{background:"none",border:"none",padding:0,margin:"4px 0 16px",cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px",display:"block"}}>How Timetable works</button>
+            {ttTourOpen && <MzTour steps={MZ_TIMETABLE_TOUR} onClose={() => setTtTourOpen(false)} />}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'week',label:'WEEK VIEW'},{id:'list',label:'LIST'},{id:'add',label:'+ ADD BLOCK'}].map(t => (
                 <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
@@ -67730,7 +67822,22 @@ function MuzzApp() {
           {ttTab==='week' && (
             <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(255,255,255,0.14)"}}>
-                <span style={{fontSize:"10px",color:"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>WEEK GRID</span>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"10px",color:"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:500}}>WEEK GRID</span>
+                  <span style={{display:"flex",alignItems:"center",gap:"6px",fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)"}}>
+                    Hours
+                    <select aria-label="Day starts" value={timetableHours.start} onChange={(e) => { const v = +e.target.value; setTimetableHours(h => ({ start: v, end: Math.max(h.end, v + 1) })); }}
+                      style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",padding:"4px 8px",colorScheme:"dark"}}>
+                      {Array.from({length:24},(_,h)=>h).map(h => <option key={h} value={h}>{fmt12(h)}</option>)}
+                    </select>
+                    to
+                    <select aria-label="Day ends" value={timetableHours.end} onChange={(e) => { const v = +e.target.value; setTimetableHours(h => ({ start: Math.min(h.start, v - 1), end: v })); }}
+                      style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",padding:"4px 8px",colorScheme:"dark"}}>
+                      {Array.from({length:24},(_,i)=>i+1).map(h => <option key={h} value={h}>{h === 24 ? '12am' : fmt12(h)}</option>)}
+                    </select>
+                  </span>
+                </div>
+                {(hStart < timetableHours.start || hEnd > timetableHours.end) && <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,marginTop:"6px"}}>Showing a bit more so every block fits.</div>}
               </div>
               <div style={{overflowX:"auto"}}>
                 <div style={{minWidth:'600px'}}>
@@ -67761,7 +67868,7 @@ function MuzzApp() {
                         ))}
                         {timetableBlocks.filter(b=>b.day===d).map(block=>{
                           const ROW_H = 60;
-                          const top = block.startHour * ROW_H + 1;
+                          const top = (block.startHour - hStart) * ROW_H + 1;
                           const height = Math.max((block.endHour - block.startHour) * ROW_H - 4, 20);
                           return (
                             <div key={block.id}
