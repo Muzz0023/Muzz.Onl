@@ -47773,6 +47773,26 @@ function MuzzApp() {
     return (((weeks % 4) + 4) % 4) + 1;
   };
   useEffect(() => { if (activeView === 'gymworkout') setWorkoutSubWeek(mzPlanWeekNow(workoutPlan && workoutPlan.anchor)); }, [activeView]);
+  // A workout written on today or an earlier day this week counts as trained (unless it was unticked or is a rest day)
+  useEffect(() => {
+    if (!dataLoaded || !workoutPlan) return;
+    const wk = (workoutPlan.weeks || {})[mzPlanWeekNow(workoutPlan.anchor)] || {};
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const todayIso = localISODate(now);
+    const keys = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const add = {};
+    keys.forEach((k, i) => {
+      const d0 = new Date(mon); d0.setDate(mon.getDate() + i); const iso = localISODate(d0);
+      if (iso > todayIso) return;
+      const day = wk[k]; if (!day) return;
+      const note = typeof day.note === 'string' ? day.note : [day.name || '', typeof day.exercises === 'string' ? day.exercises : ''].join(' ');
+      const hasEx = Array.isArray(day.exercises) && day.exercises.some(e => e && String(e.name || '').trim());
+      const isRest = day.rest === true || /^\s*rest( day)?\s*$/i.test(note);
+      if (!isRest && (note.trim() || hasEx) && (gymLog || {})[iso] === undefined) add[iso] = 'trained';
+    });
+    if (Object.keys(add).length) setGymLog(prev => ({ ...(prev || {}), ...add }));
+  }, [workoutPlan, dataLoaded, gymLog]);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
   const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
@@ -67592,7 +67612,7 @@ function MuzzApp() {
     const logGymDay = (dayKey, status) => {
       const date = dateForDay(dayKey);
       if (!date || date > today) return; // only today or earlier
-      setGymLog(prev => { const next = { ...(prev || {}) }; if (status) next[date] = status; else delete next[date]; return next; });
+      setGymLog(prev => ({ ...(prev || {}), [date]: status || 'skip' }));
     };
     // Quick add: tap a muscle to add one set to the day's note ("3 shoulders, 2 biceps")
     const bumpMuscle = (dayKey, muscle) => updateDay(dayKey, cur => {
@@ -67770,7 +67790,7 @@ function MuzzApp() {
             const maxN = Math.max(1, ...yearMonths.map(x => x.n));
             const yearTotal = yearMonths.reduce((a, b) => a + b.n, 0);
             const stat = (n, label) => (<div style={{flex:1,minWidth:0,padding:"10px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.08)",fontFamily:SANS_FONT}}><div style={{fontSize:"22px",fontWeight:700,color:"#FFFFFF"}}>{n}</div><div style={{fontSize:"12px",color:sec}}>{label}</div></div>);
-            const todayStatus = log[today];
+            const todayStatus = log[today] === 'skip' ? undefined : log[today];
             return (
               <>
                 {!todayStatus && (
@@ -67796,7 +67816,7 @@ function MuzzApp() {
                       const st = log[key(i + 1)]; const isT = key(i + 1) === today;
                       return (
                         <button key={i} aria-label={`${i + 1}: ${st || 'nothing logged'}`}
-                          onClick={() => { if (key(i + 1) > today) return; setGymLog(p => { const n = { ...(p || {}) }; const cur = n[key(i + 1)]; if (!cur) n[key(i + 1)] = 'trained'; else if (cur === 'trained') n[key(i + 1)] = 'rest'; else delete n[key(i + 1)]; return n; }); }}
+                          onClick={() => { if (key(i + 1) > today) return; setGymLog(p => { const n = { ...(p || {}) }; const cur = n[key(i + 1)]; if (!cur || cur === 'skip') n[key(i + 1)] = 'trained'; else if (cur === 'trained') n[key(i + 1)] = 'rest'; else n[key(i + 1)] = 'skip'; return n; }); }}
                           style={{aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:key(i + 1) > today ? "default" : "pointer",padding:0,
                             color:st === 'trained' ? "#FFFFFF" : key(i + 1) > today ? "rgba(235,235,245,0.25)" : "rgba(235,235,245,0.8)",
                             background:st === 'trained' ? "var(--mz-accent,#0A84FF)" : "transparent",
