@@ -897,7 +897,7 @@ const MZ_GYM_TOUR = [
   { icon: '😴', title: 'Rest days', body: 'Tap Rest day on any day and it shows as zzz on your calendar. Skipped a day you planned? Untick it.' },
   { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or a whole week to the week after, so your routine is set up in seconds.' },
   { icon: '📊', title: 'Overview', body: 'See each month as a calendar, your sessions, rest days and best week, your year at a glance, and history month by month and year by year. Tap any day to open it.' },
-  { icon: '👟', title: 'Steps', body: 'Keep track of this week\'s steps against your daily goal.' },
+  { icon: '❤️', title: 'Health', body: 'Link Apple Health and your steps, workout minutes and body weight fill in by themselves. Workouts from your Apple Watch also show on each day. No Apple Health? Type steps and weight in yourself.' },
 ];
 
 const MZ_DATES_TOUR = [
@@ -48242,6 +48242,69 @@ function MuzzApp() {
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
+  // Apple Health: pull steps (this week and last), workouts and body weight into Muzz
+  const syncHealth = async (ask) => {
+    const H = mzPlugin('Health');
+    if (!H) return false;
+    setHealthSync(s => ({ ...s, busy: true, err: '' }));
+    try {
+      if (H.isAvailable) { const av = await H.isAvailable(); if (av && av.available === false) throw new Error(av.reason || 'Apple Health is not available on this device'); }
+      const read = ['steps', 'weight', 'workouts'];
+      if (ask) await H.requestAuthorization({ read, write: [] });
+      const now = new Date();
+      const day0 = new Date(now); day0.setHours(0, 0, 0, 0);
+      const lastMon = new Date(day0); lastMon.setDate(day0.getDate() - ((day0.getDay() + 6) % 7) - 7);
+      // Steps, one total per day
+      const steps = {};
+      if (H.queryAggregated) {
+        const r = await H.queryAggregated({ dataType: 'steps', startDate: lastMon.toISOString(), endDate: now.toISOString(), bucket: 'day', aggregation: 'sum' });
+        ((r && r.samples) || []).forEach(x => { const k = localISODate(new Date(x.startDate)); steps[k] = (steps[k] || 0) + (Number(x.value) || 0); });
+      } else {
+        const r = await H.readSamples({ dataType: 'steps', startDate: lastMon.toISOString(), endDate: now.toISOString(), limit: 20000 });
+        ((r && r.samples) || []).forEach(x => { const k = localISODate(new Date(x.startDate)); steps[k] = (steps[k] || 0) + (Number(x.value) || 0); });
+      }
+      if (Object.keys(steps).length) setDailySteps(prev => { const next = { ...prev }; Object.keys(steps).forEach(k => { const v = Math.round(steps[k]); if (v > 0) next[k] = v; }); return next; });
+      // Workouts: the first link pulls a year, after that the last two weeks
+      if (H.queryWorkouts) {
+        const from = new Date(day0); if (ask || !Object.keys(healthWorkouts || {}).length) from.setFullYear(from.getFullYear() - 1); else from.setDate(from.getDate() - 14);
+        const byDay = {}; let anchor; let pages = 0;
+        do {
+          const r = await H.queryWorkouts({ startDate: from.toISOString(), endDate: now.toISOString(), limit: 200, ascending: true, ...(anchor ? { anchor } : {}) });
+          ((r && r.workouts) || []).forEach(w => {
+            const k = localISODate(new Date(w.startDate));
+            const min = Math.round((Number(w.duration) || 0) / 60);
+            if (!byDay[k]) byDay[k] = { min: 0, types: [] };
+            byDay[k].min += min;
+            const t = String(w.workoutType || 'workout').replace(/^traditional/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/high intensity interval training/, 'HIIT').trim();
+            if (!byDay[k].types.includes(t)) byDay[k].types.push(t);
+          });
+          anchor = r && r.anchor; pages++;
+        } while (anchor && pages < 10);
+        setHealthWorkouts(prev => {
+          const next = { ...prev };
+          const fromIso = localISODate(from);
+          Object.keys(next).forEach(k => { if (k >= fromIso && !byDay[k]) delete next[k]; });
+          return { ...next, ...byDay };
+        });
+      }
+      // Body weight: the last two years, one reading per day
+      const wr = await H.readSamples({ dataType: 'weight', startDate: new Date(now.getFullYear() - 2, now.getMonth(), now.getDate()).toISOString(), endDate: now.toISOString(), limit: 2000, ascending: true });
+      const wByDay = {};
+      ((wr && wr.samples) || []).forEach(x => { let kg = Number(x.value); if (!isFinite(kg) || kg <= 0) return; if (/lb|pound/i.test(x.unit || '')) kg = kg * 0.45359237; if (/^g$|gram$/i.test(x.unit || '')) kg = kg / 1000; wByDay[localISODate(new Date(x.startDate))] = Math.round(kg * 10) / 10; });
+      if (Object.keys(wByDay).length) setBodyWeight(prev => {
+        const m = {}; (prev || []).forEach(e => { if (e && e.date) m[e.date] = e; });
+        Object.keys(wByDay).forEach(k => { if (!m[k] || m[k].src !== 'manual') m[k] = { date: k, kg: wByDay[k], src: 'health' }; });
+        return Object.values(m).sort((a, b) => a.date.localeCompare(b.date));
+      });
+      try { localStorage.setItem('mz_health_linked', '1'); } catch (e) {}
+      setHealthLinked(true);
+      setHealthSync({ busy: false, at: new Date(), err: '' });
+      return true;
+    } catch (e) {
+      setHealthSync(s => ({ ...s, busy: false, err: (e && e.message) || 'Could not read Apple Health' }));
+      return false;
+    }
+  };
   // Steps: only this week and last week are kept (Apple Health holds the long-term history)
   useEffect(() => {
     if (!dataLoaded) return;
@@ -48250,10 +48313,22 @@ function MuzzApp() {
     const cutIso = localISODate(cut);
     setDailySteps(prev => { const keys = Object.keys(prev || {}); if (!keys.some(k => k < cutIso)) return prev; const next = {}; keys.forEach(k => { if (k >= cutIso) next[k] = prev[k]; }); return next; });
   }, [dataLoaded, dailySteps]);
+  const [healthWorkouts, setHealthWorkouts] = useState({}); // { 'YYYY-MM-DD': { min, types: [] } } from Apple Health
+  const [bodyWeight, setBodyWeight] = useState([]); // [{ date: 'YYYY-MM-DD', kg, src: 'health' | 'manual' }]
+  const [healthLinked, setHealthLinked] = useState(() => { try { return localStorage.getItem('mz_health_linked') === '1'; } catch (e) { return false; } });
+  const [healthSync, setHealthSync] = useState({ busy: false, at: null, err: '' });
+  const [weightInput, setWeightInput] = useState('');
   const [gymLog, setGymLog] = useState({}); // { 'YYYY-MM-DD': 'trained' | 'rest' | 'skip' } ticks / rest set by hand
   const [gymDays, setGymDays] = useState({}); // { 'YYYY-MM-DD': { note, exercises, rest } } each day's workout
   const [gymWeekOffset, setGymWeekOffset] = useState(0); // Week view: 0 = this week, -1 = last week…
   const [gymSheetDay, setGymSheetDay] = useState(null); // date opened from the calendar
+  useEffect(() => {
+    if (!dataLoaded || !healthLinked || activeView !== 'gymworkout') return;
+    syncHealth(false);
+    const onVis = () => { if (document.visibilityState === 'visible') syncHealth(false); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [dataLoaded, healthLinked, activeView]);
   const [gymChipDay, setGymChipDay] = useState(null); // which day's quick-add muscle buttons are open
   const [gymMonthOffset, setGymMonthOffset] = useState(0); // Overview: 0 = this month, -1 = last month…
   const [gymTourOpen, setGymTourOpen] = useState(false);
@@ -49230,6 +49305,8 @@ function MuzzApp() {
           if (d.dailyMeals) setDailyMeals(d.dailyMeals);
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
+          if (d.healthWorkouts) setHealthWorkouts(d.healthWorkouts);
+          if (Array.isArray(d.bodyWeight)) setBodyWeight(d.bodyWeight);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.gymLog && typeof d.gymLog === 'object') setGymLog(d.gymLog);
           if (d.gymDays && typeof d.gymDays === 'object') setGymDays(d.gymDays);
@@ -49365,6 +49442,8 @@ function MuzzApp() {
           dailyMeals,
           waterIntake,
           dailySteps,
+          healthWorkouts,
+          bodyWeight,
           workoutPlan,
           gymLog,
           gymDays,
@@ -49400,7 +49479,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, healthWorkouts, bodyWeight, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -68391,8 +68470,15 @@ function MuzzApp() {
                 const rest = st === 'rest';
                 const exGroups = groupSupersets(exerciseList);
                 const ssGroups = exGroups.filter(g => g.length > 1);
+                const hw = (healthWorkouts || {})[dDate];
                 return (
                   <div key={dayKey} style={{...card,borderRadius:"16px",opacity:rest?0.6:1}}>
+                    {hw && hw.min > 0 && (
+                      <div style={{display:"flex",alignItems:"center",gap:"6px",padding:"10px 14px 0",fontSize:"13px",fontFamily:SANS_FONT,color:GREEN}}>
+                        <span style={{fontWeight:600}}>{hw.min} min</span>
+                        <span style={{color:sec}}>· {(hw.types || []).slice(0, 2).join(', ') || 'workout'} · Apple Health</span>
+                      </div>
+                    )}
                     {rest ? (
                       <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
                         <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"11px",alignSelf:"flex-end",marginBottom:"4px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"7px",alignSelf:"flex-start",marginTop:"6px"}}>z</span></span>
@@ -68514,11 +68600,132 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'Week'},{id:'overview',label:'Overview'},{id:'steps',label:'Steps'}]} />
+          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'Week'},{id:'overview',label:'Overview'},{id:'steps',label:'Health'}]} />
 
           {/* ─── STEPS ─── */}
           {gymTabNow === 'steps' && (
             <>
+              {/* Apple Health link */}
+              {(() => {
+                const native = !!mzPlugin('Health');
+                return (
+                  <div style={{...card,padding:"14px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
+                    <span style={{width:"36px",height:"36px",borderRadius:"10px",background:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C1 8.4 3.1 5 6.5 5c2 0 3.3 1.1 4 2.2.3.5.9.5 1.2 0C12.4 6.1 13.7 5 15.7 5 19 5 21.1 8.4 21.6 11.7 19.5 16.4 12 21 12 21z" fill="#FF2D55"/></svg>
+                    </span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"17px",fontWeight:600,color:"#FFFFFF",fontFamily:SANS_FONT}}>Apple Health</div>
+                      <div style={{fontSize:"13px",color:healthSync.err?RED:sec,fontFamily:SANS_FONT,marginTop:"1px"}}>
+                        {!native ? 'Link it in the Muzz iPhone app to fill in steps, workouts and weight'
+                          : healthSync.err ? healthSync.err
+                          : healthSync.busy ? 'Updating…'
+                          : healthLinked ? `Steps, workouts and weight${healthSync.at ? ` · updated ${healthSync.at.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}` : ''}`
+                          : 'Fill in steps, workouts and weight automatically'}
+                      </div>
+                    </div>
+                    {native && (
+                      <button disabled={healthSync.busy} onClick={() => syncHealth(!healthLinked || !!healthSync.err)}
+                        style={{flexShrink:0,padding:"7px 14px",borderRadius:"999px",border:"none",background:healthLinked?"rgba(255,255,255,0.12)":BLUE,color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:600,cursor:"pointer",opacity:healthSync.busy?0.5:1}}>
+                        {healthLinked ? 'Refresh' : 'Link'}
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Workouts from Apple Health */}
+              {(() => {
+                const hw = healthWorkouts || {};
+                const keys = Object.keys(hw);
+                if (!keys.length) return null;
+                const weekMin = weekDays.reduce((t, d) => t + ((hw[d.date] && hw[d.date].min) || 0), 0);
+                const ym = today.slice(0, 7), yy = today.slice(0, 4);
+                const monthMin = keys.filter(k => k.startsWith(ym)).reduce((t, k) => t + (hw[k].min || 0), 0);
+                const yearMin = keys.filter(k => k.startsWith(yy)).reduce((t, k) => t + (hw[k].min || 0), 0);
+                const yearSessions = keys.filter(k => k.startsWith(yy) && hw[k].min > 0).length;
+                const maxM = Math.max(30, ...weekDays.map(d => (hw[d.date] && hw[d.date].min) || 0));
+                const hrs = (m) => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`;
+                return (
+                  <div style={{...card,padding:"16px 16px 12px"}}>
+                    <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"12px"}}>
+                      <div>
+                        <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT}}>Workout minutes this week</div>
+                        <div style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.6px",lineHeight:1.1,marginTop:"2px"}}>{weekMin}<span style={{fontSize:"17px",color:sec,fontWeight:500}}> min</span></div>
+                      </div>
+                    </div>
+                    <div style={{display:"flex",gap:"8px",alignItems:"flex-end",height:"90px",marginTop:"14px"}}>
+                      {weekDays.map(d => { const mm = (hw[d.date] && hw[d.date].min) || 0; return (
+                        <div key={d.date} style={{flex:1,height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end",alignItems:"center"}}>
+                          {mm > 0 && <div style={{fontSize:"11px",color:sec,fontFamily:SANS_FONT,marginBottom:"4px"}}>{mm}</div>}
+                          <div style={{width:"100%",maxWidth:"34px",height:mm>0?`max(${Math.min(100, mm / maxM * 100)}%, 8px)`:"6px",borderRadius:"999px",background:mm>0?GREEN:"rgba(255,255,255,0.1)"}} />
+                        </div>
+                      ); })}
+                    </div>
+                    <div style={{display:"flex",gap:"8px",marginTop:"8px"}}>
+                      {weekDays.map(d => <div key={d.date} style={{flex:1,textAlign:"center",fontSize:"13px",fontFamily:SANS_FONT,color:d.isToday?"#FFFFFF":sec,fontWeight:d.isToday?700:400}}>{d.dayShort.charAt(0)}</div>)}
+                    </div>
+                    <div style={{display:"flex",gap:"16px",marginTop:"12px",fontSize:"13px",color:sec,fontFamily:SANS_FONT,flexWrap:"wrap"}}>
+                      <span>This month <span style={{color:"#FFFFFF",fontWeight:600}}>{hrs(monthMin)}</span></span>
+                      <span>This year <span style={{color:"#FFFFFF",fontWeight:600}}>{hrs(yearMin)}</span> · {yearSessions} days</span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Body weight */}
+              {(() => {
+                const list = (bodyWeight || []).filter(e => e && e.date && e.kg > 0).slice().sort((a, b) => a.date.localeCompare(b.date));
+                const latest = list[list.length - 1];
+                const before = (days) => { if (!latest) return null; const d = new Date(latest.date + 'T00:00:00'); d.setDate(d.getDate() - days); const iso = localISODate(d); const c = list.filter(e => e.date <= iso); return c.length ? c[c.length - 1] : null; };
+                const m1 = before(30), y1 = before(365);
+                const diff = (e) => e ? Math.round((latest.kg - e.kg) * 10) / 10 : null;
+                const fmtD = (n) => n == null ? '—' : `${n > 0 ? '+' : ''}${n.toFixed(1)} kg`;
+                const yearAgo = new Date(); yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+                const pts = list.filter(e => e.date >= localISODate(yearAgo));
+                const W = 320, H = 90;
+                const lo = pts.length ? Math.min(...pts.map(p => p.kg)) - 0.5 : 0, hi = pts.length ? Math.max(...pts.map(p => p.kg)) + 0.5 : 1;
+                const t0 = pts.length ? new Date(pts[0].date).getTime() : 0, t1 = pts.length ? new Date(pts[pts.length - 1].date).getTime() : 1;
+                const X = (e) => t1 === t0 ? W / 2 : (new Date(e.date).getTime() - t0) / (t1 - t0) * W;
+                const Y = (v) => 6 + (1 - (v - lo) / ((hi - lo) || 1)) * (H - 12);
+                const addManual = () => {
+                  const kg = parseFloat(weightInput); if (!isFinite(kg) || kg <= 0 || kg > 400) return;
+                  setBodyWeight(prev => [...(prev || []).filter(e => e.date !== today), { date: today, kg: Math.round(kg * 10) / 10, src: 'manual' }].sort((a, b) => a.date.localeCompare(b.date)));
+                  setWeightInput('');
+                };
+                return (
+                  <div style={{...card,padding:"16px"}}>
+                    <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT}}>Body weight</div>
+                    {latest ? (
+                      <>
+                        <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
+                          <span style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.6px",lineHeight:1.1}}>{latest.kg.toFixed(1)}<span style={{fontSize:"17px",color:sec,fontWeight:500}}> kg</span></span>
+                          <span style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT}}>{shortDate(latest.date)}{latest.src === 'health' ? ' · Apple Health' : ''}</span>
+                        </div>
+                        <div style={{display:"flex",gap:"16px",marginTop:"6px",fontSize:"13px",color:sec,fontFamily:SANS_FONT,flexWrap:"wrap"}}>
+                          <span>30 days <span style={{color:"#FFFFFF",fontWeight:600}}>{fmtD(diff(m1))}</span></span>
+                          <span>1 year <span style={{color:"#FFFFFF",fontWeight:600}}>{fmtD(diff(y1))}</span></span>
+                        </div>
+                        {pts.length > 1 && (
+                          <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{width:"100%",height:`${H}px`,display:"block",marginTop:"12px"}} aria-hidden="true">
+                            <path d={pts.map((e, i) => `${i ? 'L' : 'M'}${X(e).toFixed(1)},${Y(e.kg).toFixed(1)}`).join(' ')} fill="none" stroke={BLUE} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                          </svg>
+                        )}
+                        {pts.length > 1 && <div style={{display:"flex",justifyContent:"space-between",fontSize:"12px",color:sec,fontFamily:SANS_FONT,marginTop:"4px"}}><span>{shortDate(pts[0].date)}</span><span>{shortDate(pts[pts.length - 1].date)}</span></div>}
+                      </>
+                    ) : (
+                      <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"4px"}}>No weight yet. Link Apple Health or add today's below.</div>
+                    )}
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginTop:"14px",paddingTop:"12px",borderTop:sep}}>
+                      <span style={{flex:1,fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Today</span>
+                      <input type="number" inputMode="decimal" step="0.1" placeholder="0.0" value={weightInput} onChange={e => setWeightInput(e.target.value)} onFocus={scrollInputIntoView}
+                        onKeyDown={e => { if (e.key === 'Enter') addManual(); }} style={{...bare,width:"80px",textAlign:"right"}} />
+                      <span style={{fontSize:"17px",color:sec,fontFamily:SANS_FONT}}>kg</span>
+                      <button onClick={addManual} style={{...textBtn(BLUE),fontWeight:600}}>Add</button>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* This week chart */}
               <div style={{...card,padding:"16px 16px 12px"}}>
                 <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"12px"}}>
@@ -68565,6 +68772,7 @@ function MuzzApp() {
                         <span style={{flex:1,fontSize:"17px",fontFamily:SANS_FONT,color:"#FFFFFF",letterSpacing:"-0.2px",fontWeight:day.isToday?600:400}}>
                           {day.isToday ? 'Today' : (fullDay[day.dayShort.slice(0,3)] || day.dayShort)}
                         </span>
+                        {healthLinked && steps > 0 && <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Health</span>}
                         <input type="number" inputMode="numeric" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} onFocus={scrollInputIntoView}
                           style={{...bare,width:"110px",textAlign:"right",color:steps?"#FFFFFF":sec}} />
                         <span style={{width:"18px",textAlign:"center",color:GREEN,fontSize:"15px",fontWeight:700}}>{hit ? '✓' : ''}</span>
