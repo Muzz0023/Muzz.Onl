@@ -67772,13 +67772,29 @@ function MuzzApp() {
           {/* ─── 4-WEEK PLAN ─── */}
           {gymTabNow === 'overview' && (() => {
             const log = gymLog || {};
+            // What the 4-week plan says for any date (the plan repeats every 4 weeks)
+            const planFor = (iso) => {
+              const d0 = new Date(iso + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+              const w = (((Math.round((mon - mondayFor(1)) / (7 * 86400000)) % 4) + 4) % 4) + 1;
+              return ((workoutPlan && workoutPlan.weeks && workoutPlan.weeks[w]) || {})[DAY_KEYS[(d0.getDay() + 6) % 7]];
+            };
+            // Status shown for a date: what was logged, otherwise the plan's rest days, and planned workouts ahead
+            const statusFor = (iso) => {
+              const l = log[iso];
+              if (l === 'trained' || l === 'rest') return l;
+              if (l === 'skip') return null;
+              const pd = planFor(iso);
+              if (pd && isRestDay(pd)) return 'rest';
+              if (iso > today && pd && dayHasData(pd)) return 'planned';
+              return null;
+            };
             const base = new Date(); base.setDate(1); base.setMonth(base.getMonth() + gymMonthOffset);
             const y = base.getFullYear(), mo = base.getMonth();
             const daysIn = new Date(y, mo + 1, 0).getDate();
             const lead = (new Date(y, mo, 1).getDay() + 6) % 7; // Monday first
             const key = (dd) => `${y}-${String(mo + 1).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
             const monthTrained = Array.from({length: daysIn}, (_, i) => log[key(i + 1)] === 'trained').filter(Boolean).length;
-            const monthRest = Array.from({length: daysIn}, (_, i) => log[key(i + 1)] === 'rest').filter(Boolean).length;
+            const monthRest = Array.from({length: daysIn}, (_, i) => key(i + 1) <= today && statusFor(key(i + 1)) === 'rest').filter(Boolean).length;
             // best week this month (Mon–Sun) and streak of weeks with 3+ sessions
             const weekCount = {};
             Object.keys(log).forEach(dt => { if (log[dt] !== 'trained') return; const d0 = new Date(dt + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); const k = localISODate(mon); weekCount[k] = (weekCount[k] || 0) + 1; });
@@ -67801,24 +67817,32 @@ function MuzzApp() {
                     <button aria-label="Next month" disabled={gymMonthOffset >= 0} onClick={() => setGymMonthOffset(o => Math.min(0, o + 1))} style={{...textBtn(gymMonthOffset >= 0 ? "rgba(235,235,245,0.25)" : BLUE),fontSize:"20px",padding:"0 6px"}}>›</button>
                   </div>
                   <div style={{display:"flex",gap:"8px"}}>{stat(monthTrained, 'Sessions')}{stat(monthRest, 'Rest days')}{stat(bestWeek, 'Best week')}</div>
-                  <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:"6px",textAlign:"center",fontFamily:SANS_FONT}}>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:"6px",textAlign:"center",fontFamily:SANS_FONT,width:"100%",maxWidth:"420px",margin:"0 auto"}}>
                     {['M','T','W','T','F','S','S'].map((d0, i) => <div key={'h' + i} style={{fontSize:"12px",color:sec,fontWeight:600}}>{d0}</div>)}
                     {Array.from({length: lead}, (_, i) => <div key={'b' + i} />)}
                     {Array.from({length: daysIn}, (_, i) => {
-                      const st = log[key(i + 1)]; const isT = key(i + 1) === today;
+                      const st = statusFor(key(i + 1)); const isT = key(i + 1) === today; const fut = key(i + 1) > today;
                       return (
                         <button key={i} aria-label={`${i + 1}: ${st || 'nothing logged'}`}
                           onClick={() => { if (key(i + 1) > today) return; setGymLog(p => { const n = { ...(p || {}) }; const cur = n[key(i + 1)]; if (!cur || cur === 'skip') n[key(i + 1)] = 'trained'; else if (cur === 'trained') n[key(i + 1)] = 'rest'; else n[key(i + 1)] = 'skip'; return n; }); }}
-                          style={{aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:key(i + 1) > today ? "default" : "pointer",padding:0,
-                            color:st === 'trained' ? "#FFFFFF" : key(i + 1) > today ? "rgba(235,235,245,0.25)" : "rgba(235,235,245,0.8)",
-                            background:st === 'trained' ? "var(--mz-accent,#0A84FF)" : "transparent",
-                            border:st === 'rest' ? "1.5px dashed rgba(235,235,245,0.4)" : isT ? "1.5px solid var(--mz-accent,#0A84FF)" : "1.5px solid transparent"}}>
-                          {i + 1}
+                          style={{aspectRatio:"1",borderRadius:"50%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:0,fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:fut ? "default" : "pointer",padding:0,lineHeight:1.05,
+                            opacity:fut && st ? 0.55 : 1,
+                            color:st === 'trained' ? "#FFFFFF" : st === 'rest' ? "rgba(235,235,245,0.9)" : fut ? "rgba(235,235,245,0.25)" : "rgba(235,235,245,0.8)",
+                            background:st === 'trained' ? "var(--mz-accent,#0A84FF)" : st === 'rest' ? "rgba(255,255,255,0.12)" : "transparent",
+                            border:st === 'rest' ? "2px dashed rgba(235,235,245,0.6)" : st === 'planned' ? "1.5px solid rgba(var(--mz-accent-rgb,10,132,255),0.6)" : isT ? "1.5px solid var(--mz-accent,#0A84FF)" : "1.5px solid transparent",
+                            boxShadow:isT && st ? "0 0 0 2px rgba(255,255,255,0.85)" : "none"}}>
+                          <span>{i + 1}</span>
+                          {st === 'rest' && <span style={{fontSize:"9px",fontWeight:700,letterSpacing:"0.5px",color:"rgba(235,235,245,0.75)"}}>zzz</span>}
                         </button>
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Filled = trained · dashed = rest day. These come from your 4-week plan; tap a past day to change it.</div>
+                  <div style={{display:"flex",justifyContent:"center",gap:"14px",flexWrap:"wrap",fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"5px"}}><span style={{width:"12px",height:"12px",borderRadius:"50%",background:"var(--mz-accent,#0A84FF)"}} /> Trained</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"5px"}}><span style={{width:"12px",height:"12px",borderRadius:"50%",background:"rgba(255,255,255,0.12)",border:"1.5px dashed rgba(235,235,245,0.6)",boxSizing:"border-box"}} /> Rest (zzz)</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"5px"}}><span style={{width:"12px",height:"12px",borderRadius:"50%",border:"1.5px solid rgba(var(--mz-accent-rgb,10,132,255),0.6)",boxSizing:"border-box"}} /> Planned</span>
+                  </div>
+                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT,textAlign:"center"}}>This fills in from your 4-week plan. Tap a past day to change it.</div>
                 </div>
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
