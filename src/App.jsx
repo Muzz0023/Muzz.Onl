@@ -293,6 +293,14 @@ const MZ_BILLS_TOUR = [
   { icon: '📅', title: 'Forecast & calendar', body: 'See what\'s coming up and when each bill is due, so nothing catches you out.' },
 ];
 
+const MZ_GYM_TOUR = [
+  { icon: '🏋️', title: 'Plan four weeks', body: 'Write what you trained each day, like "3 shoulders, 2 biceps". Muzz adds up your sets per muscle for the week.' },
+  { icon: '👆', title: 'Tap instead of typing', body: 'Tap Quick add under a day, then tap a muscle to add a set. Tap Shoulders three times and it writes "3 shoulders".' },
+  { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week into the next week, so your routine is set up in seconds.' },
+  { icon: '✅', title: 'Tick it off', body: 'Tick a day when you\'ve trained, or mark it as a rest day. Every tick is saved to your training history.' },
+  { icon: '📊', title: 'Your overview', body: 'The Overview tab shows each month as a calendar, sessions and rest days, your year at a glance, and history month by month and year by year.' },
+];
+
 const MZ_DATES_TOUR = [
   { icon: '💍', title: 'Dates worth remembering', body: 'Anniversaries and other big days live here, each with a countdown to the next one.' },
   { icon: '⭐', title: 'Any kind of date', body: 'Pick Anniversary or Other date. Muzz shows how many years it\'s been, like "31 years".' },
@@ -388,7 +396,7 @@ const MzLineChart = ({ points, color = '#0A84FF', height = 120, money = (n) => `
 };
 
 // Full history: chart plus Monthly / Yearly lists with the change each period
-const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocaleString()}`, emptyText }) => {
+const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocaleString()}`, emptyText, sumYears = false }) => {
   const [mode, setMode] = useState('monthly');
   const pts = (points || []).filter(p => p && p.m && isFinite(p.v)).slice().sort((a, b) => a.m.localeCompare(b.m));
   if (pts.length === 0) return <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)', fontFamily: SANS_FONT, lineHeight: 1.45 }}>{emptyText || 'No history yet. Muzz saves a value each month.'}</div>;
@@ -397,7 +405,8 @@ const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocal
     rows = pts.map((p, i) => ({ label: mzMonthLabel(p.m), v: p.v, prev: i > 0 ? pts[i - 1].v : null }));
   } else {
     const byYear = {};
-    pts.forEach(p => { const y = p.m.slice(0, 4); if (!byYear[y]) byYear[y] = { first: p.v }; byYear[y].last = p.v; });
+    pts.forEach(p => { const y = p.m.slice(0, 4); if (!byYear[y]) byYear[y] = { first: p.v, sum: 0 }; byYear[y].last = p.v; byYear[y].sum += p.v; });
+    if (sumYears) Object.values(byYear).forEach(o => { o.last = o.sum; o.first = null; });
     const years = Object.keys(byYear).sort();
     rows = years.map((y, i) => ({ label: y, v: byYear[y].last, prev: i > 0 ? byYear[years[i - 1]].last : (years.length === 1 || i === 0 ? byYear[y].first : null), sub: i === 0 ? 'since first record' : null }));
   }
@@ -425,7 +434,7 @@ const MzHistoryView = ({ points, color, money = (n) => `$${Math.round(n).toLocal
           );
         })}
       </div>
-      <div style={{ fontSize: '13px', color: 'rgba(235,235,245,0.45)', fontFamily: SANS_FONT, lineHeight: 1.4 }}>Muzz saves one value each month. A year shows its latest month.</div>
+      <div style={{ fontSize: '13px', color: 'rgba(235,235,245,0.45)', fontFamily: SANS_FONT, lineHeight: 1.4 }}>{sumYears ? 'A year shows the total of its months.' : 'Muzz saves one value each month. A year shows its latest month.'}</div>
     </div>
   );
 };
@@ -47631,6 +47640,10 @@ function MuzzApp() {
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
+  const [gymLog, setGymLog] = useState({}); // { 'YYYY-MM-DD': 'trained' | 'rest' } dated training history
+  const [gymChipDay, setGymChipDay] = useState(null); // which day's quick-add muscle buttons are open
+  const [gymMonthOffset, setGymMonthOffset] = useState(0); // Overview: 0 = this month, -1 = last month…
+  const [gymTourOpen, setGymTourOpen] = useState(false);
   const [workoutPlan, setWorkoutPlan] = useState({
     stepsGoal: 10000,
     weeks: {
@@ -48308,9 +48321,9 @@ function MuzzApp() {
   const [billsHistory, setBillsHistory] = useState([]); // [{ m: 'YYYY-MM', bills, income }] monthly bills and income
   const [billsHistSheet, setBillsHistSheet] = useState(null); // null | 'bills' | 'income'
   useEffect(() => {
-    const key = activeView === 'timetable' ? 'mz_tour_timetable' : activeView === 'varied' ? 'mz_tour_bills' : null;
+    const key = activeView === 'timetable' ? 'mz_tour_timetable' : activeView === 'varied' ? 'mz_tour_bills' : activeView === 'gymworkout' ? 'mz_tour_gym' : null;
     if (!key) return;
-    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); if (activeView === 'timetable') setTtTourOpen(true); else setBillsTourOpen(true); } } catch (e) {}
+    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); if (activeView === 'timetable') setTtTourOpen(true); else if (activeView === 'gymworkout') setGymTourOpen(true); else setBillsTourOpen(true); } } catch (e) {}
   }, [activeView]);
 
 
@@ -48574,6 +48587,7 @@ function MuzzApp() {
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
+          if (d.gymLog && typeof d.gymLog === 'object') setGymLog(d.gymLog);
           if (d.appTheme) setAppTheme(d.appTheme);
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
@@ -48706,6 +48720,7 @@ function MuzzApp() {
           waterIntake,
           dailySteps,
           workoutPlan,
+          gymLog,
           appTheme,
           timesheetData,
           customCategories,
@@ -48738,7 +48753,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -67552,7 +67567,52 @@ function MuzzApp() {
     const textBtn = (color) => ({fontSize:"17px",color,fontFamily:SANS_FONT,background:"none",border:"none",padding:0,cursor:"pointer"});
     const fullDay = { Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday', Sun:'Sunday' };
     const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()];
-    const gymTabNow = gymWorkoutTab === 'steps' ? 'steps' : 'log';
+    const gymTabNow = gymWorkoutTab === 'steps' ? 'steps' : gymWorkoutTab === 'overview' ? 'overview' : 'log';
+    // Dated history: a tick or rest day on the plan is saved against this calendar week's date
+    const dateForDay = (dayKey) => (weekDays[DAY_KEYS.indexOf(dayKey)] || {}).date;
+    const logGymDay = (dayKey, status) => {
+      const date = dateForDay(dayKey);
+      if (!date || date > today) return; // only today or earlier
+      setGymLog(prev => { const next = { ...(prev || {}) }; if (status) next[date] = status; else delete next[date]; return next; });
+    };
+    // Quick add: tap a muscle to add one set to the day's note ("3 shoulders, 2 biceps")
+    const bumpMuscle = (dayKey, muscle) => updateDay(dayKey, cur => {
+      const note = noteTextFor(cur);
+      let found = false;
+      const re = /(\d+)(\s*(?:x\s*)?(?:sets?\s*(?:of\s*)?)?)([a-zA-Z]+)/g;
+      const updated = note.replace(re, (all, n, mid, word) => {
+        if (found || muscleFor(word) !== muscle) return all;
+        found = true; return `${(parseInt(n) || 0) + 1}${mid}${word}`;
+      });
+      const next = found ? updated : (note.trim() ? `${note.trim().replace(/,\s*$/, '')}, 1 ${muscle.toLowerCase()}` : `1 ${muscle.toLowerCase()}`);
+      return { ...cur, note: next, name: '', rest: false, ...(typeof cur.exercises === 'string' ? { exercises: [] } : {}) };
+    });
+    // Copy a day to the next day (Sunday goes to Monday of the next week)
+    const copyDayForward = (dayKey) => {
+      const i = DAY_KEYS.indexOf(dayKey);
+      const toWeek = i === 6 ? (currentWeek % 4) + 1 : currentWeek;
+      const toKey = DAY_KEYS[(i + 1) % 7];
+      const before = workoutPlan;
+      setWorkoutPlan(prev => {
+        const base = { ...(prev || { weeks: {}, stepsGoal: 10000 }) }; const weeks = { ...(base.weeks || {}) };
+        const src = ((weeks[currentWeek] || {})[dayKey]) || {};
+        const copy = JSON.parse(JSON.stringify({ ...src, done: false }));
+        if (Array.isArray(copy.exercises)) copy.exercises = copy.exercises.map(e => ({ ...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) }));
+        weeks[toWeek] = { ...(weeks[toWeek] || {}), [toKey]: copy }; base.weeks = weeks; return base;
+      });
+      mzUndo(`Copied to ${fullDay[toKey]}${toWeek !== currentWeek ? ` (Week ${toWeek})` : ''}`, () => setWorkoutPlan(before));
+    };
+    const copyWeekForward = () => {
+      const toWeek = (currentWeek % 4) + 1;
+      const before = workoutPlan;
+      setWorkoutPlan(prev => {
+        const base = { ...(prev || { weeks: {}, stepsGoal: 10000 }) }; const weeks = { ...(base.weeks || {}) };
+        const src = JSON.parse(JSON.stringify(weeks[currentWeek] || {}));
+        DAY_KEYS.forEach(k => { if (src[k]) { src[k].done = false; if (Array.isArray(src[k].exercises)) src[k].exercises = src[k].exercises.map(e => ({ ...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) })); } });
+        weeks[toWeek] = src; base.weeks = weeks; return base;
+      });
+      mzUndo(`Week ${currentWeek} copied to Week ${toWeek}`, () => setWorkoutPlan(before));
+    };
     const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal || 1;
     const goalPct = Math.min(100, (stepsGoal / maxSteps) * 100);
     const fmtK = (n) => n >= 1000 ? `${(n/1000).toFixed(n >= 10000 ? 0 : 1)}k` : `${n}`;
@@ -67584,11 +67644,13 @@ function MuzzApp() {
             <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
               Week {currentWeek}: {thisWeekSessions} trained{thisWeekRest > 0 ? ` · ${thisWeekRest} rest` : ''} · {weekStepsTotal.toLocaleString()} steps this week
             </div>
+            <button onClick={() => setGymTourOpen(true)} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px"}}>How Gym works</button>
+            {gymTourOpen && <MzTour steps={MZ_GYM_TOUR} onClose={() => setGymTourOpen(false)} />}
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'4-week plan'},{id:'steps',label:'Steps'}]} />
+          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'4-week plan'},{id:'overview',label:'Overview'},{id:'steps',label:'Steps'}]} />
 
           {/* ─── STEPS ─── */}
           {gymTabNow === 'steps' && (
@@ -67667,6 +67729,90 @@ function MuzzApp() {
           )}
 
           {/* ─── 4-WEEK PLAN ─── */}
+          {gymTabNow === 'overview' && (() => {
+            const log = gymLog || {};
+            const base = new Date(); base.setDate(1); base.setMonth(base.getMonth() + gymMonthOffset);
+            const y = base.getFullYear(), mo = base.getMonth();
+            const daysIn = new Date(y, mo + 1, 0).getDate();
+            const lead = (new Date(y, mo, 1).getDay() + 6) % 7; // Monday first
+            const key = (dd) => `${y}-${String(mo + 1).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+            const monthTrained = Array.from({length: daysIn}, (_, i) => log[key(i + 1)] === 'trained').filter(Boolean).length;
+            const monthRest = Array.from({length: daysIn}, (_, i) => log[key(i + 1)] === 'rest').filter(Boolean).length;
+            // best week this month (Mon–Sun) and streak of weeks with 3+ sessions
+            const weekCount = {};
+            Object.keys(log).forEach(dt => { if (log[dt] !== 'trained') return; const d0 = new Date(dt + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); const k = localISODate(mon); weekCount[k] = (weekCount[k] || 0) + 1; });
+            const bestWeek = Math.max(0, ...Array.from({length: daysIn}, (_, i) => { const d0 = new Date(y, mo, i + 1); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); return weekCount[localISODate(mon)] || 0; }));
+            let streak = 0; { const mon = new Date(); mon.setHours(0,0,0,0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7)); if ((weekCount[localISODate(mon)] || 0) < 3) mon.setDate(mon.getDate() - 7); while ((weekCount[localISODate(mon)] || 0) >= 3) { streak++; mon.setDate(mon.getDate() - 7); } }
+            // year overview + month-by-month history
+            const byMonth = {};
+            Object.keys(log).forEach(dt => { if (log[dt] === 'trained') { const m = dt.slice(0, 7); byMonth[m] = (byMonth[m] || 0) + 1; } });
+            const histPts = Object.keys(byMonth).sort().map(m => ({ m, v: byMonth[m] }));
+            const yearMonths = Array.from({length: 12}, (_, i) => { const m = `${y}-${String(i + 1).padStart(2, '0')}`; return { m, label: ['J','F','M','A','M','J','J','A','S','O','N','D'][i], n: byMonth[m] || 0 }; });
+            const maxN = Math.max(1, ...yearMonths.map(x => x.n));
+            const yearTotal = yearMonths.reduce((a, b) => a + b.n, 0);
+            const stat = (n, label) => (<div style={{flex:1,minWidth:0,padding:"10px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.08)",fontFamily:SANS_FONT}}><div style={{fontSize:"22px",fontWeight:700,color:"#FFFFFF"}}>{n}</div><div style={{fontSize:"12px",color:sec}}>{label}</div></div>);
+            const todayStatus = log[today];
+            return (
+              <>
+                {!todayStatus && (
+                  <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+                    <span style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Trained today?</span>
+                    <span style={{display:"flex",gap:"8px"}}>
+                      <button onClick={() => setGymLog(p => ({ ...(p || {}), [today]: 'trained' }))} style={{padding:"8px 14px",borderRadius:"999px",border:"none",background:"var(--mz-accent,#0A84FF)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:600,cursor:"pointer"}}>Yes 💪</button>
+                      <button onClick={() => setGymLog(p => ({ ...(p || {}), [today]: 'rest' }))} style={{padding:"8px 14px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.1)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",cursor:"pointer"}}>Rest day</button>
+                    </span>
+                  </div>
+                )}
+                <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <button aria-label="Previous month" onClick={() => setGymMonthOffset(o => o - 1)} style={{...textBtn(BLUE),fontSize:"20px",padding:"0 6px"}}>‹</button>
+                    <span style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{base.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })}</span>
+                    <button aria-label="Next month" disabled={gymMonthOffset >= 0} onClick={() => setGymMonthOffset(o => Math.min(0, o + 1))} style={{...textBtn(gymMonthOffset >= 0 ? "rgba(235,235,245,0.25)" : BLUE),fontSize:"20px",padding:"0 6px"}}>›</button>
+                  </div>
+                  <div style={{display:"flex",gap:"8px"}}>{stat(monthTrained, 'Sessions')}{stat(monthRest, 'Rest days')}{stat(bestWeek, 'Best week')}</div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:"6px",textAlign:"center",fontFamily:SANS_FONT}}>
+                    {['M','T','W','T','F','S','S'].map((d0, i) => <div key={'h' + i} style={{fontSize:"12px",color:sec,fontWeight:600}}>{d0}</div>)}
+                    {Array.from({length: lead}, (_, i) => <div key={'b' + i} />)}
+                    {Array.from({length: daysIn}, (_, i) => {
+                      const st = log[key(i + 1)]; const isT = key(i + 1) === today;
+                      return (
+                        <button key={i} aria-label={`${i + 1}: ${st || 'nothing logged'}`}
+                          onClick={() => { if (key(i + 1) > today) return; setGymLog(p => { const n = { ...(p || {}) }; const cur = n[key(i + 1)]; if (!cur) n[key(i + 1)] = 'trained'; else if (cur === 'trained') n[key(i + 1)] = 'rest'; else delete n[key(i + 1)]; return n; }); }}
+                          style={{aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:key(i + 1) > today ? "default" : "pointer",padding:0,
+                            color:st === 'trained' ? "#FFFFFF" : key(i + 1) > today ? "rgba(235,235,245,0.25)" : "rgba(235,235,245,0.8)",
+                            background:st === 'trained' ? "var(--mz-accent,#0A84FF)" : "transparent",
+                            border:st === 'rest' ? "1.5px dashed rgba(235,235,245,0.4)" : isT ? "1.5px solid var(--mz-accent,#0A84FF)" : "1.5px solid transparent"}}>
+                          {i + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Filled = trained · dashed = rest day. Tap a past day to change it.</div>
+                </div>
+                <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{y} at a glance</span>
+                    <span style={{fontSize:"14px",color:sec,fontFamily:SANS_FONT}}>{yearTotal} sessions{streak > 0 ? ` · 🔥 ${streak} week streak` : ''}</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(12,1fr)",gap:"6px",alignItems:"end",height:"90px"}}>
+                    {yearMonths.map(x => (
+                      <div key={x.m} style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-end",height:"100%",gap:"4px"}}>
+                        <span style={{fontSize:"10px",color:sec,fontFamily:SANS_FONT}}>{x.n || ''}</span>
+                        <div style={{width:"100%",borderRadius:"6px",height:`${Math.max(4, (x.n / maxN) * 62)}px`,background:x.n ? "var(--mz-accent,#0A84FF)" : "rgba(255,255,255,0.08)",opacity:x.n ? 0.4 + 0.6 * (x.n / maxN) : 1}} />
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(12,1fr)",gap:"6px",textAlign:"center",fontSize:"11px",color:sec,fontFamily:SANS_FONT}}>{yearMonths.map((x, i) => <span key={i}>{x.label}</span>)}</div>
+                </div>
+                <div style={{...card,borderRadius:"16px",padding:"14px 16px"}}>
+                  <div style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,marginBottom:"10px"}}>Training history</div>
+                  <MzHistoryView points={histPts} color={themeHex} money={(n) => `${Math.round(n)} session${Math.round(n) === 1 ? '' : 's'}`}
+                    emptyText="Tick off a day in your plan, or answer 'Trained today?', and your history starts building month by month." sumYears />
+                </div>
+              </>
+            );
+          })()}
+
           {gymTabNow === 'log' && (
             <>
               <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: `Week ${w}` }))} />
@@ -67696,24 +67842,42 @@ function MuzzApp() {
                           <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
                           <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
                         </div>
-                        <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note}))}
+                        <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note})); logGymDay(dayKey, null); }}
                           style={{...textBtn(BLUE),fontSize:"15px",flexShrink:0}}>Undo</button>
                       </div>
                     ) : (<>
                     {/* Day header + what you trained */}
                     <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px 10px"}}>
-                      <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>updateDay(dayKey, cur => ({...cur, done: !cur.done}))}
+                      <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>{ updateDay(dayKey, cur => ({...cur, done: !cur.done})); logGymDay(dayKey, done ? null : 'trained'); }}
                         style={{width:"24px",height:"24px",marginTop:"9px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"1.5px solid rgba(235,235,245,0.3)",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>{done ? '✓' : ''}</button>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
                           <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
-                          <button onClick={() => updateDay(dayKey, cur => ({...cur, rest: true, done: false}))}
+                          <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: true, done: false})); logGymDay(dayKey, 'rest'); }}
                             style={{...textBtn("rgba(235,235,245,0.5)"),fontSize:"13px",flexShrink:0}}>Rest day</button>
                         </div>
                         <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
                           ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
                           onChange={e => setDayNote(dayKey, e.target.value)}
                           style={{...bareArea,fontSize:"17px",marginTop:"1px"}} />
+                        <div style={{display:"flex",gap:"16px",marginTop:"6px",flexWrap:"wrap"}}>
+                          <button onClick={() => setGymChipDay(c => c === `${currentWeek}-${dayKey}` ? null : `${currentWeek}-${dayKey}`)} style={{...textBtn(BLUE),fontSize:"14px"}}>{gymChipDay === `${currentWeek}-${dayKey}` ? 'Done adding' : '+ Quick add'}</button>
+                          {dayHasData(d) && <button onClick={() => copyDayForward(dayKey)} style={{...textBtn("rgba(235,235,245,0.6)"),fontSize:"14px"}}>Copy to {dayKey === 'Sun' ? 'next Mon' : DAY_KEYS[DAY_KEYS.indexOf(dayKey) + 1]}</button>}
+                        </div>
+                        {gymChipDay === `${currentWeek}-${dayKey}` && (
+                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"8px"}}>
+                            {MUSCLES.map(m => {
+                              const n = parseNoteMuscles(noteTextFor(d))[m] || 0;
+                              return (
+                                <button key={m} onClick={() => bumpMuscle(dayKey, m)}
+                                  style={{padding:"7px 12px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,color:"#FFFFFF",
+                                    border:n?"none":"0.5px solid rgba(255,255,255,0.16)",background:n?"rgba(var(--mz-accent-rgb,10,132,255),0.85)":"rgba(255,255,255,0.08)"}}>
+                                  {m}{n ? ` · ${n}` : ''}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -67777,6 +67941,7 @@ function MuzzApp() {
               })}
               </div>
 
+              <button onClick={copyWeekForward} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Copy Week {currentWeek} to Week {(currentWeek % 4) + 1}</button>
               <button onClick={() => {
                 if (!window.confirm(`Clear everything in Week ${currentWeek}? This can't be undone.`)) return;
                 setWorkoutPlan(prev => { const next = {...(prev||{weeks:{},stepsGoal:10000})}; next.weeks = {...(next.weeks||{})}; delete next.weeks[currentWeek]; return next; });
