@@ -297,7 +297,7 @@ const MZ_GYM_TOUR = [
   { icon: '🏋️', title: 'Plan four weeks', body: 'Write what you trained each day, like "3 shoulders, 2 biceps". Muzz adds up your sets per muscle for the week.' },
   { icon: '👆', title: 'Tap instead of typing', body: 'Tap Quick add under a day, then tap a muscle to add a set. Tap Shoulders three times and it writes "3 shoulders".' },
   { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week into the next week, so your routine is set up in seconds.' },
-  { icon: '✅', title: 'Tick it off', body: 'Tick a day when you\'ve trained, or mark it as a rest day. Every tick is saved to your training history.' },
+  { icon: '✅', title: 'Linked to the calendar', body: 'Week 1–4 repeat in order and follow the real dates, so each day shows its date. Ticking a day fills in your Overview calendar, and the other way round.' },
   { icon: '📊', title: 'Your overview', body: 'The Overview tab shows each month as a calendar, sessions and rest days, your year at a glance, and history month by month and year by year.' },
 ];
 
@@ -47765,6 +47765,14 @@ function MuzzApp() {
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymWorkoutTab, setGymWorkoutTab] = useState('log');
   const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
+  // The 4-week plan repeats; workoutPlan.anchor is a Monday that starts a Week 1
+  const mzPlanWeekNow = (anchor) => {
+    const now = new Date(); now.setHours(0, 0, 0, 0); const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const a = anchor ? new Date(anchor + 'T00:00:00') : mon;
+    const weeks = Math.round((mon - a) / (7 * 86400000));
+    return (((weeks % 4) + 4) % 4) + 1;
+  };
+  useEffect(() => { if (activeView === 'gymworkout') setWorkoutSubWeek(mzPlanWeekNow(workoutPlan && workoutPlan.anchor)); }, [activeView]);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
   const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
@@ -67462,6 +67470,17 @@ function MuzzApp() {
     const MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Glutes','Abs','Forearms','Cardio'];
     const DAY_KEYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const currentWeek = workoutSubWeek || 1;
+    const planWeekNow = mzPlanWeekNow(workoutPlan && workoutPlan.anchor);
+    const thisMonday = new Date(weekDays[0].date + 'T00:00:00');
+    const mondayFor = (w) => { const d0 = new Date(thisMonday); d0.setDate(d0.getDate() + (w - planWeekNow) * 7); return d0; };
+    const dateForDayW = (w, dayKey) => { const d0 = mondayFor(w); d0.setDate(d0.getDate() + DAY_KEYS.indexOf(dayKey)); return localISODate(d0); };
+    const shortDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    // "This week is Week N": move the anchor so the current calendar week becomes Week N
+    const setThisWeekIs = (n) => {
+      const a = new Date(thisMonday); a.setDate(a.getDate() - (n - 1) * 7);
+      setWorkoutPlan(prev => ({ ...(prev || { weeks: {}, stepsGoal: 10000 }), anchor: localISODate(a) }));
+      setWorkoutSubWeek(n);
+    };
     const setCurrentWeek = (w) => setWorkoutSubWeek(w);
     const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
     const updateDay = (dayKey, fn) => setWorkoutPlan(prev => {
@@ -67518,8 +67537,8 @@ function MuzzApp() {
     DAY_KEYS.forEach(k => { Object.entries(parseNoteMuscles(noteTextFor(workoutWeek[k]))).forEach(([m, v]) => { weekMuscleTotals[m] = (weekMuscleTotals[m]||0) + v; }); });
     // Rest day: toggled on the card, or the day's note just says "rest"
     const isRestDay = (d) => !!d && (d.rest === true || /^\s*rest( day)?\s*$/i.test(noteTextFor(d)));
-    const thisWeekSessions = DAY_KEYS.filter(k => !isRestDay(workoutWeek[k]) && (dayHasData(workoutWeek[k]) || workoutWeek[k]?.done)).length;
-    const thisWeekRest = DAY_KEYS.filter(k => isRestDay(workoutWeek[k])).length;
+    const thisWeekSessions = DAY_KEYS.filter(k => (gymLog || {})[dateForDayW(currentWeek, k)] === 'trained').length;
+    const thisWeekRest = DAY_KEYS.filter(k => (gymLog || {})[dateForDayW(currentWeek, k)] === 'rest' || isRestDay(workoutWeek[k])).length;
 
     // Exercise helpers
     const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
@@ -67569,7 +67588,7 @@ function MuzzApp() {
     const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()];
     const gymTabNow = gymWorkoutTab === 'steps' ? 'steps' : gymWorkoutTab === 'overview' ? 'overview' : 'log';
     // Dated history: a tick or rest day on the plan is saved against this calendar week's date
-    const dateForDay = (dayKey) => (weekDays[DAY_KEYS.indexOf(dayKey)] || {}).date;
+    const dateForDay = (dayKey) => dateForDayW(currentWeek, dayKey);
     const logGymDay = (dayKey, status) => {
       const date = dateForDay(dayKey);
       if (!date || date > today) return; // only today or earlier
@@ -67815,7 +67834,16 @@ function MuzzApp() {
 
           {gymTabNow === 'log' && (
             <>
-              <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: `Week ${w}` }))} />
+              <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: w === planWeekNow ? `Week ${w} •` : `Week ${w}` }))} />
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",margin:"-4px 2px 0",fontFamily:SANS_FONT,fontSize:"14px",color:sec}}>
+                <span>{shortDate(dateForDayW(currentWeek, 'Mon'))} – {shortDate(dateForDayW(currentWeek, 'Sun'))}{currentWeek === planWeekNow ? ' · this week' : currentWeek < planWeekNow ? ' · done' : ' · coming up'}</span>
+                <span style={{display:"flex",alignItems:"center",gap:"6px"}}>This week is
+                  <select aria-label="This week is" value={planWeekNow} onChange={(e) => setThisWeekIs(+e.target.value)}
+                    style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",padding:"4px 8px",colorScheme:"dark"}}>
+                    {[1,2,3,4].map(w => <option key={w} value={w}>Week {w}</option>)}
+                  </select>
+                </span>
+              </div>
               {Object.keys(weekMuscleTotals).length > 0 && (
                 <div style={{display:"flex",flexWrap:"wrap",gap:"6px",margin:"0 2px"}}>
                   {MUSCLES.filter(m => weekMuscleTotals[m]).map(m => (
@@ -67827,10 +67855,14 @@ function MuzzApp() {
               <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
               {DAY_KEYS.map(dayKey => {
                 const d = workoutWeek[dayKey] || {};
-                const done = !!d.done;
-                const isToday = dayKey === todayKey;
+                const dDate = dateForDayW(currentWeek, dayKey);
+                const logged = (gymLog || {})[dDate];
+                const done = logged === 'trained';
+                const isFuture = dDate > today;
+                const isToday = dDate === today;
+                const dayLabel = `${isToday ? 'Today, ' : ''}${fullDay[dayKey]} ${shortDate(dDate)}`;
                 const exerciseList = dayExercises(d);
-                const rest = isRestDay(d);
+                const rest = isRestDay(d) || logged === 'rest';
                 const exGroups = groupSupersets(exerciseList);
                 const ssGroups = exGroups.filter(g => g.length > 1);
                 return (
@@ -67839,7 +67871,7 @@ function MuzzApp() {
                       <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
                         <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"11px",alignSelf:"flex-end",marginBottom:"4px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"7px",alignSelf:"flex-start",marginTop:"6px"}}>z</span></span>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
                           <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
                         </div>
                         <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note})); logGymDay(dayKey, null); }}
@@ -67848,11 +67880,11 @@ function MuzzApp() {
                     ) : (<>
                     {/* Day header + what you trained */}
                     <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px 10px"}}>
-                      <button aria-label={done ? 'Mark not done' : 'Mark done'} onClick={()=>{ updateDay(dayKey, cur => ({...cur, done: !cur.done})); logGymDay(dayKey, done ? null : 'trained'); }}
+                      <button aria-label={done ? 'Mark not done' : 'Mark done'} disabled={isFuture} title={isFuture ? 'You can tick this on the day' : undefined} onClick={()=>{ if (!isFuture) logGymDay(dayKey, done ? null : 'trained'); }}
                         style={{width:"24px",height:"24px",marginTop:"9px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"1.5px solid rgba(235,235,245,0.3)",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>{done ? '✓' : ''}</button>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{isToday ? `Today, ${fullDay[dayKey]}` : fullDay[dayKey]}</div>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
                           <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: true, done: false})); logGymDay(dayKey, 'rest'); }}
                             style={{...textBtn("rgba(235,235,245,0.5)"),fontSize:"13px",flexShrink:0}}>Rest day</button>
                         </div>
