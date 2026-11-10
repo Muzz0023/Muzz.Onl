@@ -51543,11 +51543,17 @@ function MuzzApp() {
           {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
             <div style={groupLabel}>Sections</div>
-            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
-              {sectionItems.map((item, i) => (
-                <ListRow key={item.id} icon={item.icon} label={item.label} onClick={() => setActiveView(item.id)} last={i === sectionItems.length - 1}
-                  detail={sectionHint(item.id)} detailColor={item.id === 'investments' && portfolioToday !== null ? (portfolioToday >= 0 ? '#30D158' : '#FF453A') : (item.id === 'reminders' && remDueNow > 0 ? '#FF9F0A' : undefined)} />
-              ))}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(8,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:isWide?"14px":"12px 10px",marginBottom:"28px"}}>
+              {[...sectionItems, { id: 'appearance', label: 'Appearance', icon: Palette }].map(item => { const Ic = item.icon; return (
+                <button key={item.id} onClick={() => setActiveView(item.id)}
+                  style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"7px",background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:SANS_FONT,minWidth:0}}>
+                  <span onMouseEnter={onIn} onMouseLeave={onOut}
+                    style={{...glass,width:"100%",aspectRatio:"1 / 1",maxWidth:"84px",borderRadius:"22px",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s, transform 0.1s"}}>
+                    <Ic size={26} color={txt.primary} strokeWidth={1.75} />
+                  </span>
+                  <span style={{fontSize:"13px",color:txt.primary,fontWeight:500,letterSpacing:"-0.1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}}>{item.label}</span>
+                </button>
+              ); })}
             </div>
 
             {FREE_FOR_EVERYONE && (
@@ -51566,7 +51572,6 @@ function MuzzApp() {
               {!FREE_FOR_EVERYONE && (
                 <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
               )}
-              <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} />
               <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
               <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
               <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
