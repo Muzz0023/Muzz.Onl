@@ -293,6 +293,15 @@ const MZ_BILLS_TOUR = [
   { icon: '📅', title: 'Forecast & calendar', body: 'See what\'s coming up and when each bill is due, so nothing catches you out.' },
 ];
 
+const MZ_INVEST_TOUR = [
+  { icon: '📈', title: 'Holdings', body: 'Add the stocks and ETFs you own with the number of shares and what you paid. Prices update live, so your value and return are always current.' },
+  { icon: '💱', title: 'Any currency', body: 'Tap the currency next to Portfolio value to see everything in AUD, USD or another currency.' },
+  { icon: '🕰️', title: 'History', body: 'Tap History on the value card to see how your portfolio has grown month by month and year by year, and what you held each year.' },
+  { icon: '🥧', title: 'Breakdown', body: 'See how your money is split by company and by industry, so you know if you are leaning too hard on one thing.' },
+  { icon: '👀', title: 'Watchlist', body: 'Keep companies you are thinking about buying. Muzz remembers the price when you added them, so you can see how they have moved since.' },
+  { icon: '🔎', title: 'Research and Markets', body: 'Research has company coverage, guides and accounting basics. Markets shows the biggest companies, the S&P 500 and what the superinvestors hold.' },
+];
+
 const MZ_GYM_TOUR = [
   { icon: '🗓️', title: 'Your training week', body: 'The Week tab shows this week with real dates. Use ‹ › to look back at past weeks or plan ahead.' },
   { icon: '✍️', title: 'Just write it', body: 'Type what you trained on a day, like "3 shoulders, 2 biceps". As soon as you write it, that day counts as trained. No need to tick anything.' },
@@ -47556,10 +47565,8 @@ function MuzzApp() {
 
   const [futureStocks, setFutureStocks] = useState([]); // Future portfolio
   const [futureResearch, setFutureResearch] = useState([]); // Future research
-  const [investTrades, setInvestTrades] = useState([]); // [{ id, ticker, side: 'buy'|'sell', shares, price, date, currency }]
   const [investHistory, setInvestHistory] = useState([]); // [{ m: 'YYYY-MM', total, positions: { TICKER: shares } }]
-  const [tradeSheet, setTradeSheet] = useState(null); // null | { side, ticker, shares, price, date }
-  const [investHistOpen, setInvestHistOpen] = useState(null); // null | 'trades' | 'holdings'
+  const [investHistOpen, setInvestHistOpen] = useState(null); // null | 'holdings'
   const [futureResearchColumns, setFutureResearchColumns] = useState([]);
   const [investmentSettings, setInvestmentSettings] = useState({
     yearlyContribution: '',
@@ -47663,6 +47670,7 @@ function MuzzApp() {
   const [gymChipDay, setGymChipDay] = useState(null); // which day's quick-add muscle buttons are open
   const [gymMonthOffset, setGymMonthOffset] = useState(0); // Overview: 0 = this month, -1 = last month…
   const [gymTourOpen, setGymTourOpen] = useState(false);
+  const [invTourOpen, setInvTourOpen] = useState(false);
   const [workoutPlan, setWorkoutPlan] = useState({
     stepsGoal: 10000,
     weeks: {
@@ -48368,9 +48376,9 @@ function MuzzApp() {
   const [billsHistory, setBillsHistory] = useState([]); // [{ m: 'YYYY-MM', bills, income }] monthly bills and income
   const [billsHistSheet, setBillsHistSheet] = useState(null); // null | 'bills' | 'income'
   useEffect(() => {
-    const key = activeView === 'timetable' ? 'mz_tour_timetable' : activeView === 'varied' ? 'mz_tour_bills' : activeView === 'gymworkout' ? 'mz_tour_gym' : null;
+    const key = activeView === 'timetable' ? 'mz_tour_timetable' : activeView === 'varied' ? 'mz_tour_bills' : activeView === 'gymworkout' ? 'mz_tour_gym' : activeView === 'investments' ? 'mz_tour_investments' : null;
     if (!key) return;
-    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); if (activeView === 'timetable') setTtTourOpen(true); else if (activeView === 'gymworkout') setGymTourOpen(true); else setBillsTourOpen(true); } } catch (e) {}
+    try { if (!localStorage.getItem(key)) { localStorage.setItem(key, '1'); if (activeView === 'timetable') setTtTourOpen(true); else if (activeView === 'gymworkout') setGymTourOpen(true); else if (activeView === 'investments') setInvTourOpen(true); else setBillsTourOpen(true); } } catch (e) {}
   }, [activeView]);
 
 
@@ -48602,7 +48610,6 @@ function MuzzApp() {
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
           if (d.futureResearch) setFutureResearch(d.futureResearch);
-          if (Array.isArray(d.investTrades)) setInvestTrades(d.investTrades);
           if (Array.isArray(d.investHistory)) setInvestHistory(d.investHistory);
           if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
           if (d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
@@ -48739,7 +48746,6 @@ function MuzzApp() {
           holdingsResearch,
           futureStocks,
           futureResearch,
-          investTrades,
           investHistory,
           futureResearchColumns,
           investmentSmallGoals,
@@ -48806,7 +48812,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investTrades, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -51990,7 +51996,7 @@ function MuzzApp() {
                 </div>
               </div>
 
-              {/* Add/Edit Bill Modal for Selected Date */}
+              {/* Bills due on the selected date */}
               {selectedCalendarDate && (
                 <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
                   <div className="p-4 border-b flex items-center justify-between">
@@ -51998,53 +52004,14 @@ function MuzzApp() {
                       <h2 className="text-lg font-semibold">
                         {new Date(selectedCalendarDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
                       </h2>
-                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Add or manage bills</p>
+                      <p className="text-sm" style={{color:"rgba(235,235,245,0.8)"}}>Bills due this day</p>
                     </div>
                     <button onClick={() => setSelectedCalendarDate(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.6)",fontSize:"16px",fontFamily:SANS_FONT}}>×</button>
                   </div>
                   <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                    {/* Add new bill form */}
-                    <div style={{display:"flex",flexDirection:"column",gap:"6px",padding:"10px 12px",background:"rgba(var(--mz-accent-rgb,10,132,255),0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px"}}>
-                      <input
-                        type="text"
-                        placeholder="Bill name (e.g. Netflix)"
-                        className="w-full px-3 py-2 border-2 rounded-xl text-base focus:outline-none focus:border-orange-400"
-                        id="newBillName"
-                        onFocus={scrollInputIntoView}
-                      />
-                      <div style={{display:"flex",alignItems:"center",background:"rgba(var(--mz-accent-rgb,10,132,255),0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",overflow:"hidden"}}>
-                        <span className="pl-3" style={{color:"rgba(235,235,245,0.6)"}}>$</span>
-                        <input
-                          type="number"
-                          placeholder="0.00"
-                          className="flex-1 px-2 py-2 text-base focus:outline-none"
-                          id="newBillAmount"
-                          onFocus={scrollInputIntoView}
-                        />
-                      </div>
-                      <button
-                        onClick={() => {
-                          const name = document.getElementById('newBillName').value.trim();
-                          const amount = document.getElementById('newBillAmount').value;
-                          
-                          if (name) {
-                            setCalendarBills(prev => ({
-                              ...prev,
-                              [selectedCalendarDate]: [...(prev[selectedCalendarDate] || []), { name, amount: amount || '0' }]
-                            }));
-                            document.getElementById('newBillName').value = '';
-                            document.getElementById('newBillAmount').value = '';
-                          }
-                        }}
-                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"10px",color:"rgba(251,146,60,0.95)",fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",fontWeight:600,cursor:"pointer"}}
-                      >
-                        + Add Bill
-                      </button>
-                    </div>
-                    
                     {/* Bills for selected day */}
                     {/* Show recurring bills from all buckets for this date */}
-                    {selectedCalendarDate && (() => {
+                    {selectedCalendarDate && (() => { const dueList = (() => {
                       const selDate = new Date(selectedCalendarDate + 'T00:00:00');
                       const selDay = selDate.getDate();
                       const selMonth = selDate.getMonth() + 1;
@@ -52079,19 +52046,21 @@ function MuzzApp() {
                           return parseInt(m[1]) === selDay && parseInt(m[2]) === selMonth;
                         });
                       });
-                    })().map((s, i) => {
+                    })();
+                    if (!dueList.length && !(calendarBills[selectedCalendarDate] || []).length) return <div style={{fontSize:"15px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,padding:"6px 2px"}}>No bills due this day.</div>;
+                    return dueList.map((s, i) => {
                       const freq = s.freq || 'monthly';
                       const freqLabel = freq === 'weekly' ? 'Weekly' : freq === 'fortnightly' ? 'Fortnightly' : freq === 'monthly' ? 'Monthly' : freq === 'quarterly' ? 'Quarterly' : freq === 'halfyear' ? '6-Monthly' : 'Annual';
                       return (
-                        <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                        <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(255,255,255,0.06)',border:'0.5px solid rgba(255,255,255,0.12)'}}>
                           <div>
                             <span className="text-sm text-white font-medium">{s.name}</span>
-                            <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.8)'}}>🔁 {freqLabel}</span>
+                            <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(255,255,255,0.1)',color:'rgba(235,235,245,0.7)'}}>{freqLabel}</span>
                           </div>
-                          <span className="text-sm font-bold" style={{color:'#FF453A'}}>-${s.monthly}</span>
+                          <span className="text-sm font-bold" style={{color:'#FFFFFF'}}>${s.monthly}</span>
                         </div>
                       );
-                    })}
+                    }); })()}
                     {(calendarBills[selectedCalendarDate] || []).length > 0 && (
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <h3 className="text-sm font-semibold" style={{color:"rgba(235,235,245,0.6)"}}>Bills on this day</h3>
@@ -53758,10 +53727,10 @@ function MuzzApp() {
         {/* HEADER — Investments with Research built in */}
         {(() => {
           const INVEST_GROUPS = [
-            { id:'portfolio', label:'Portfolio', tabs:[ {id:'portfolio',label:'Holdings'} ] },
-            { id:'research',  label:'Research',  tabs:[ {id:'researchHome',label:'Overview'}, {id:'futurePortfolio',label:'Watchlist'}, {id:'coverage',label:'Coverage'} ] },
+            { id:'portfolio', label:'Holdings',  tabs:[ {id:'portfolio',label:'Holdings'} ] },
+            { id:'watchlist', label:'Watchlist', tabs:[ {id:'futurePortfolio',label:'Watchlist'} ] },
+            { id:'research',  label:'Research',  tabs:[ {id:'coverage',label:'Coverage'}, {id:'researchHome',label:'Overview'}, {id:'knowledge',label:'Guide'}, {id:'accounting',label:'Accounting'} ] },
             { id:'markets',   label:'Markets',   tabs:[ {id:'marketCaps',label:'Market caps'}, {id:'allAssets',label:'Top 30'}, {id:'sp500',label:'S&P 500'}, {id:'superinvestors',label:'Superinvestors'} ] },
-            { id:'learn',     label:'Learn',     tabs:[ {id:'knowledge',label:'Guide'}, {id:'accounting',label:'Accounting'} ] },
           ];
           const selected = investTabSelected === 'books' ? 'knowledge' : investTabSelected;
           const group = INVEST_GROUPS.find(g => g.tabs.some(t => t.id === selected)) || INVEST_GROUPS[0];
@@ -53777,6 +53746,8 @@ function MuzzApp() {
                   {totalStocksInvestedFx > 0 && (
                     <span style={{color:up?"var(--mz-accent,#0A84FF)":"#FF453A"}}>, {up ? 'up' : 'down'} {Math.abs(totalGainLossPercentFx).toFixed(1)}%</span>
                   )}
+                  <div><button onClick={() => setInvTourOpen(true)} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px"}}>How Investments works</button></div>
+                  {invTourOpen && <MzTour steps={MZ_INVEST_TOUR} onClose={() => setInvTourOpen(false)} />}
                 </div>
                 <Segmented value={group.id} onChange={(gid) => { const g = INVEST_GROUPS.find(x => x.id === gid); if (g) setInvestmentsSubTab(g.tabs[0].id); }}
                   options={INVEST_GROUPS.map(g => ({ id: g.id, label: g.label }))} />
@@ -53799,126 +53770,6 @@ function MuzzApp() {
             </div>
           )}
           {/* === RESEARCH CONSTELLATION — drill-down by industry === */}
-          {investmentsSubTab === 'portfolio' && (
-            <>
-              {/* Daily Investment Quote */}
-              {(() => {
-                const quotes = [
-                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
-                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
-                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
-                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
-                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
-                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
-                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
-                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
-                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
-                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
-                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
-                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
-                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
-                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Charlie Munger", quote: "Invert, always invert." },
-                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
-                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
-                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
-                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
-                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
-                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
-                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
-                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
-                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
-                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
-                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
-                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
-                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
-                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
-                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
-                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
-                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
-                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
-                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
-                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
-                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
-                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
-                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
-                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
-                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
-                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
-                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
-                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
-                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
-                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
-                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
-                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
-                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
-                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
-                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
-                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
-                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
-                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
-                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
-                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
-                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
-                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
-                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
-                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
-                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
-                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
-                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
-                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
-                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
-                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
-                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
-                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
-                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
-                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
-                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
-                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
-                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
-                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
-                ];
-                const startDate = new Date('2025-01-01');
-                const today = new Date();
-                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                const quoteIndex = daysDiff % quotes.length;
-                const todayQuote = quotes[quoteIndex];
-                return (
-                  <div style={{padding:"2px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
-                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
-                  </div>
-                );
-              })()}
-            </>
-          )}
 
           {(investmentsSubTab === 'portfolio' || investmentsSubTab === 'futurePortfolio') && (() => {
             const isResearchMapTab = false;
@@ -54086,127 +53937,33 @@ function MuzzApp() {
                 </div>
                 )}
 
-                {/* Portfolio summary — only in current mode */}
+                {/* Portfolio value */}
                 {effectiveMode==='current' && currentList.length > 0 && (
-                  <div style={{...LIQUID_GLASS,border:`1px solid ${accent}25`,borderRadius:"20px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"13px",color:`${accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio totals · {displayCurrency}</div>
-                      <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                        <span style={{fontSize:"12px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Display:</span>
-                        <select
-                          value={displayCurrency}
-                          onChange={(e) => setDisplayCurrency(e.target.value)}
-                          style={{background:"rgba(var(--mz-accent-rgb,10,132,255),0.06)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"13px",fontWeight:600,letterSpacing:"0",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
-                        >
-                          {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
-                            <option key={c} value={c}>{c}</option>
-                          ))}
-                        </select>
-                      </div>
+                  <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",padding:"16px 18px",display:"flex",flexDirection:"column",gap:"4px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+                      <span style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>Portfolio value</span>
+                      <select aria-label="Currency" value={displayCurrency} onChange={(e) => setDisplayCurrency(e.target.value)}
+                        style={{background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"999px",color:"rgba(235,235,245,0.85)",fontFamily:SANS_FONT,fontSize:"13px",padding:"4px 10px",colorScheme:"dark"}}>
+                        {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (<option key={c} value={c}>{c}</option>))}
+                      </select>
                     </div>
-                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"10px"}}>
-                      <div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Value</div>
-                        <div style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Invested</div>
-                        <div style={{fontSize:"18px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Return</div>
-                        <div style={{fontSize:"18px",color:totalPortReturn>=0?"var(--mz-accent,#0A84FF)":"#FF453A",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{totalPortReturn>=0?'+':''}{displaySym}{Math.abs(totalPortReturn).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>%</div>
-                        <div style={{fontSize:"18px",color:totalPortReturnPct>=0?"var(--mz-accent,#0A84FF)":"#FF453A",fontFamily:SANS_FONT,fontWeight:600,marginTop:"2px"}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</div>
-                      </div>
+                    <div style={{fontSize:"34px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.6px",lineHeight:1.1}}>{displaySym}{Math.round(totalPortValue).toLocaleString()}</div>
+                    <div style={{fontSize:"15px",fontFamily:SANS_FONT,fontWeight:600,color:totalPortReturn>=0?"#30D158":"#FF453A"}}>
+                      {totalPortReturn>=0?'+':'-'}{displaySym}{Math.abs(Math.round(totalPortReturn)).toLocaleString()} ({totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%)
+                      <span style={{color:"rgba(235,235,245,0.55)",fontWeight:400}}> · {displaySym}{Math.round(totalPortInvested).toLocaleString()} invested</span>
                     </div>
-                    {fxLastUpdated && (
-                      <div style={{fontSize:"12px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,letterSpacing:"0"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
-                    )}
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginTop:"8px",flexWrap:"wrap"}}>
+                      <button onClick={() => setInvestHistOpen('holdings')} style={{background:"none",border:"none",padding:0,cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px",display:"inline-flex",alignItems:"center",gap:"4px"}}>
+                        <HistoryIcon size={15} strokeWidth={2} /> History
+                      </button>
+                      {fxLastUpdated && <span style={{fontSize:"12px",color:"rgba(235,235,245,0.4)",fontFamily:SANS_FONT}}>Rates updated {new Date(fxLastUpdated * 1000).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>}
+                    </div>
                   </div>
                 )}
 
           {investmentsSubTab === 'portfolio' && (
             <>
-              {/* Log a trade + history */}
-              <div style={{display:"flex",gap:"10px"}}>
-                <button onClick={() => setTradeSheet({ side: 'buy', ticker: '', shares: '', price: '', date: localISODate() })}
-                  style={{flex:1,padding:"12px",borderRadius:"999px",border:"none",background:"var(--mz-accent,#0A84FF)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",fontWeight:600,cursor:"pointer"}}>Buy / Sell</button>
-                <button onClick={() => setInvestHistOpen('trades')}
-                  style={{flex:1,padding:"12px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.1)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",cursor:"pointer"}}>History</button>
-              </div>
-              {tradeSheet && (() => {
-                const ts = tradeSheet;
-                const set = (u) => setTradeSheet(prev => ({ ...prev, ...u }));
-                const T = String(ts.ticker || '').trim().toUpperCase();
-                const lp = livePrices[T] && livePrices[T].c;
-                const held = stocks.find(x => x && String(x.name || '').trim().toUpperCase() === T);
-                const heldShares = held ? (parseFloat(held.shares) || 0) : 0;
-                const n = parseFloat(ts.shares) || 0, p = parseFloat(ts.price) || 0;
-                const canSave = T && n > 0 && p > 0 && ts.date && (ts.side === 'buy' || n <= heldShares + 1e-9);
-                const save = () => {
-                  if (!canSave) return;
-                  const cur = (livePrices[T] && livePrices[T].currency) || (held && held.currency) || 'USD';
-                  setInvestTrades(prev => [...(prev || []), { id: Date.now(), ticker: T, side: ts.side, shares: n, price: p, date: ts.date, currency: cur }]);
-                  setStocks(prev => {
-                    const list = [...(prev || [])];
-                    const i = list.findIndex(x => x && String(x.name || '').trim().toUpperCase() === T);
-                    const live = lp > 0 ? lp : p;
-                    if (i === -1) {
-                      if (ts.side === 'sell') return list;
-                      list.push({ id: Date.now(), name: T, shares: n, sharesStr: String(n), avgCost: p, avgCostStr: String(p), invested: n * p, investedStr: String(n * p), currentValue: n * live, currentValueStr: (n * live).toFixed(2), currency: cur, industry: '' });
-                      return list;
-                    }
-                    const h = list[i]; const s0 = parseFloat(h.shares) || 0; const a0 = parseFloat(h.avgCost) || 0;
-                    const s1 = ts.side === 'buy' ? s0 + n : Math.max(0, s0 - n);
-                    const a1 = ts.side === 'buy' ? (s1 > 0 ? (s0 * a0 + n * p) / s1 : p) : a0;
-                    const a1r = Math.round(a1 * 10000) / 10000;
-                    list[i] = { ...h, shares: s1, sharesStr: String(s1), avgCost: a1r, avgCostStr: String(a1r), invested: s1 * a1r, investedStr: String(Math.round(s1 * a1r * 100) / 100), currentValue: s1 * live, currentValueStr: (s1 * live).toFixed(2) };
-                    return list;
-                  });
-                  mzUndo(`${ts.side === 'buy' ? 'Bought' : 'Sold'} ${n} ${T}`, null);
-                  setTradeSheet(null);
-                };
-                const field = (label, child) => (<div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"10px 0",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}><span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>{label}</span>{child}</div>);
-                const inp = { background:"rgba(255,255,255,0.08)", border:"none", borderRadius:"10px", color:"#FFFFFF", fontFamily:SANS_FONT, fontSize:"16px", padding:"8px 10px", width:"150px", textAlign:"right", colorScheme:"dark" };
-                return (
-                  <Sheet onClose={() => setTradeSheet(null)}>
-                    <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>Log a trade</span>
-                        <button onClick={() => setTradeSheet(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"16px"}}>Cancel</button>
-                      </div>
-                      <Segmented value={ts.side} onChange={(v) => set({ side: v })} options={[{ id: 'buy', label: 'Buy' }, { id: 'sell', label: 'Sell' }]} />
-                      <div>
-                        {field('Ticker', <>
-                          <input list="mz-held-tickers" value={ts.ticker} placeholder="e.g. GOOG" autoCapitalize="characters" onChange={(e) => set({ ticker: e.target.value.toUpperCase() })}
-                            onBlur={() => { if (!ts.price && lp > 0) set({ price: String(lp) }); }} style={inp} />
-                          <datalist id="mz-held-tickers">{stocks.filter(x => x && x.name).map(x => <option key={x.name} value={String(x.name).trim().toUpperCase()} />)}</datalist>
-                        </>)}
-                        {field('Shares', <input type="text" inputMode="decimal" value={ts.shares} placeholder="0" onChange={(e) => set({ shares: e.target.value })} style={inp} />)}
-                        {field('Price per share', <input type="text" inputMode="decimal" value={ts.price} placeholder={lp > 0 ? String(lp) : '0.00'} onFocus={() => { if (!ts.price && lp > 0) set({ price: String(lp) }); }} onChange={(e) => set({ price: e.target.value })} style={inp} />)}
-                        {field('Date', <input type="date" value={ts.date} max={localISODate()} onChange={(e) => set({ date: e.target.value })} style={inp} />)}
-                      </div>
-                      <div style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,lineHeight:1.45}}>
-                        {T && held ? `You hold ${heldShares} ${T}. ` : ''}
-                        {ts.side === 'sell' && T && n > heldShares ? `You can't sell more than you hold. ` : ''}
-                        {n > 0 && p > 0 ? `Total ${ts.side === 'buy' ? 'cost' : 'value'}: $${(n * p).toLocaleString(undefined, { maximumFractionDigits: 2 })}. ` : ''}
-                        This updates your holding and saves the trade to History.
-                      </div>
-                      <button onClick={save} disabled={!canSave}
-                        style={{padding:"13px",borderRadius:"999px",border:"none",background:canSave?"var(--mz-accent,#0A84FF)":"rgba(255,255,255,0.12)",color:canSave?"#FFFFFF":"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,cursor:canSave?"pointer":"default"}}>
-                        {ts.side === 'buy' ? 'Save buy' : 'Save sell'}
-                      </button>
-                    </div>
-                  </Sheet>
-                );
-              })()}
               {investHistOpen && (() => {
-                const trades = (investTrades || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || (b.id - a.id));
-                const byYear = {};
-                trades.forEach(t => { const y = String(t.date).slice(0, 4); (byYear[y] = byYear[y] || []).push(t); });
                 const hist = (investHistory || []).filter(h => h && h.m);
                 const yearEnd = {};
                 hist.forEach(h => { yearEnd[h.m.slice(0, 4)] = h; });
@@ -54215,24 +53972,9 @@ function MuzzApp() {
                   <Sheet onClose={() => setInvestHistOpen(null)}>
                     <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"12px",fontFamily:SANS_FONT}}>
                       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF"}}>Investment history</span>
+                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF"}}>Holdings history</span>
                         <button onClick={() => setInvestHistOpen(null)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600}}>Done</button>
                       </div>
-                      <Segmented value={investHistOpen} onChange={setInvestHistOpen} options={[{ id: 'trades', label: 'Buys & sells' }, { id: 'holdings', label: 'What I held' }]} />
-                      {investHistOpen === 'trades' && (trades.length === 0
-                        ? <div style={{fontSize:"15px",color:"rgba(235,235,245,0.6)",lineHeight:1.45}}>No trades yet. Tap Buy / Sell whenever you buy or sell, and every trade is saved here with its date and price.</div>
-                        : Object.keys(byYear).sort().reverse().map(y => (
-                          <div key={y}>
-                            <div style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.6)",margin:"4px 2px 6px"}}>{y} · {byYear[y].filter(t => t.side === 'buy').length} buys, {byYear[y].filter(t => t.side === 'sell').length} sells</div>
-                            {byYear[y].map(t => (
-                              <div key={t.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"9px 2px",borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
-                                <span style={{fontSize:"12px",fontWeight:700,padding:"3px 8px",borderRadius:"999px",color:"#FFFFFF",background:t.side === 'buy' ? "rgba(48,209,88,0.8)" : "rgba(255,69,58,0.8)",flexShrink:0}}>{t.side === 'buy' ? 'BUY' : 'SELL'}</span>
-                                <span style={{flex:1,minWidth:0,fontSize:"16px",color:"#FFFFFF"}}>{t.shares} {t.ticker} @ {fmt$(t.price)}</span>
-                                <span style={{fontSize:"13px",color:"rgba(235,235,245,0.55)",flexShrink:0}}>{new Date(t.date + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )))}
                       {investHistOpen === 'holdings' && (<>
                         <MzHistoryView points={hist.map(h => ({ m: h.m, v: h.total }))} color={themeHex} money={(v) => `$${Math.round(v).toLocaleString()}`}
                           emptyText="Muzz saves what you hold each month. Your history starts this month." />
@@ -54289,16 +54031,12 @@ function MuzzApp() {
               })()}
 
               {/* Stocks Input */}
-              <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Stocks & ETFs{stocks.length>0?` · ${stocks.length}`:''}</span>
-                  <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+              <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Stocks & ETFs{stocks.length>0?` · ${stocks.length}`:''}</span>
+                  <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                 </summary>
                 <div style={{}}>
-                <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.15)":"rgba(var(--mz-accent-rgb,10,132,255),0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Stocks & ETFs</h2>
-                  <p style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Individual stocks, ETFs, index funds</p>
-                </div>
 
                 {/* Stocks Cards */}
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
@@ -54555,10 +54293,10 @@ function MuzzApp() {
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by name</span>
-                    <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                  <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Breakdown by company</span>
+                    <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                   </summary>
                   <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -54644,10 +54382,10 @@ function MuzzApp() {
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by industry · chart</span>
-                    <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                  <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Breakdown by industry</span>
+                    <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                   </summary>
                   <div style={{}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -54726,16 +54464,12 @@ function MuzzApp() {
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{...LIQUID_GLASS,border:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"20px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio by industry · table</span>
-                    <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+                  <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Industry table</span>
+                    <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                   </summary>
                   <div style={{}}>
-                  <div style={{padding:"10px 16px",borderBottom:`1px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.15)":"rgba(var(--mz-accent-rgb,10,132,255),0.1)"}`}}>
-                    <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Portfolio by Industry</h2>
-                    <p style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Click column headers to sort</p>
-                  </div>
                   <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
                       <thead>
@@ -54821,25 +54555,136 @@ function MuzzApp() {
             </>
           )}
 
+          {investmentsSubTab === 'portfolio' && (
+            <>
+              {/* Daily Investment Quote */}
+              {(() => {
+                const quotes = [
+                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
+                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
+                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
+                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
+                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
+                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
+                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
+                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
+                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
+                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
+                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
+                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
+                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
+                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Charlie Munger", quote: "Invert, always invert." },
+                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
+                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
+                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
+                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
+                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
+                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
+                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
+                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
+                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
+                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
+                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
+                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
+                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
+                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
+                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
+                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
+                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
+                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
+                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
+                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
+                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
+                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
+                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
+                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
+                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
+                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
+                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
+                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
+                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
+                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
+                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
+                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
+                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
+                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
+                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
+                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
+                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
+                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
+                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
+                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
+                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
+                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
+                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
+                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
+                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
+                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
+                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
+                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
+                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
+                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
+                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
+                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
+                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
+                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
+                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
+                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
+                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
+                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
+                ];
+                const startDate = new Date('2025-01-01');
+                const today = new Date();
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                const quoteIndex = daysDiff % quotes.length;
+                const todayQuote = quotes[quoteIndex];
+                return (
+                  <div style={{padding:"2px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,fontStyle:"italic",lineHeight:1.6}}>“{todayQuote.quote}”</div>
+                    <div style={{fontSize:"12px",color:"rgba(235,235,245,0.35)",fontFamily:SANS_FONT,marginTop:"4px"}}>{todayQuote.author}</div>
+                  </div>
+                );
+              })()}
+            </>
+          )}
           {investmentsSubTab === 'futurePortfolio' && (
             <>
-              {/* Future Portfolio Header */}
-              <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",padding:"14px 20px",marginBottom:"12px",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"12px",color:"rgba(var(--mz-accent-rgb,10,132,255),0.9)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600,marginBottom:"6px"}}>Future Portfolio</div>
-                <p style={{fontSize:"12px",color:"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Plan your future investments with full research details</p>
-              </div>
 
               {/* Future Holdings Research - Same format as Current */}
-              <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>FUTURE HOLDINGS RESEARCH{futureResearch.length>0?` · ${futureResearch.length}`:''}</span>
-                  <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+              <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
+                <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Watchlist{futureResearch.length>0?` · ${futureResearch.length}`:''}</span>
+                  <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                 </summary>
                 <div style={{backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.15)":"rgba(var(--mz-accent-rgb,10,132,255),0.1)"}`}}>
-                  <h2 style={{fontSize:"14px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:500,letterSpacing:"0"}}>Future Holdings Research</h2>
-                  <p style={{fontSize:"13px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0"}}>Research stocks you're considering for your portfolio</p>
-                </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {futureResearch.length === 0 && (() => {
                     // === Generate from Core: pull Core-status holdings from Holdings Research into Future Portfolio
@@ -55215,10 +55060,10 @@ function MuzzApp() {
                 });
                 
                 return (
-                  <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                      <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Future Portfolio Summary</span>
-                      <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                  <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Future Portfolio Summary</span>
+                      <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                     </summary>
                     <div style={{backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.15)":"rgba(var(--mz-accent-rgb,10,132,255),0.1)"}`}}>
@@ -55331,10 +55176,10 @@ function MuzzApp() {
                 let currentAngle = 0;
                 
                 return (
-                  <details open style={{...LIQUID_GLASS,border:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.3)":"rgba(var(--mz-accent-rgb,10,132,255),0.25)"}`,borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                      <span style={{fontSize:"12px",color:researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.95)":"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Portfolio Company Weighting</span>
-                      <span style={{fontSize:"13px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT}}>tap to collapse</span>
+                  <details open style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"16px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.2px",fontWeight:600}}>Portfolio Company Weighting</span>
+                      <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.4)" strokeWidth={2.25} />
                     </summary>
                     <div style={{backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(var(--mz-accent-rgb,10,132,255),0.15)":"rgba(var(--mz-accent-rgb,10,132,255),0.1)"}`}}>
@@ -55457,7 +55302,7 @@ function MuzzApp() {
                 {/* The map itself — same component as Asset Map */}
                 <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {...LIQUID_GLASS,border:`1px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"14px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
-                    <span style={{fontSize:"12px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>{rootName} INVESTMENT MAP · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
+                    <span style={{fontSize:"12px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:SANS_FONT,letterSpacing:"0",fontWeight:600}}>Investment map · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                       <button
@@ -55482,7 +55327,7 @@ function MuzzApp() {
                     </div>
                   </div>
                   <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={effectiveMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[effectiveMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
+                    <AssetMapGraph key={effectiveMode} graph={currentGraph} setGraph={setCurrentGraph} title={`Investment map · ${modeMeta[effectiveMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
                       liveValueByLabel={(label) => {
                         // Map a node label (typically a ticker) back to the live $ value + currency.
                         // Returns { value, currency, symbol } so node display can tag with currency code.
@@ -55517,7 +55362,7 @@ function MuzzApp() {
                           Auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
                         </div>
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[effectiveMode].accent}26`, border: `1px solid ${modeMeta[effectiveMode].accent}b3`, borderRadius:"16px", color: modeMeta[effectiveMode].accent, fontFamily:SANS_FONT, fontSize: '11px', letterSpacing:"0", cursor: 'pointer', fontWeight: 600 }}>⚡ GENERATE MAP</button>
+                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[effectiveMode].accent}26`, border: `1px solid ${modeMeta[effectiveMode].accent}b3`, borderRadius:"16px", color: modeMeta[effectiveMode].accent, fontFamily:SANS_FONT, fontSize: '11px', letterSpacing:"0", cursor: 'pointer', fontWeight: 600 }}>Build map</button>
                         </div>
                       </>
                     )} />
@@ -55528,7 +55373,7 @@ function MuzzApp() {
                 <div style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"14px",padding:"12px 14px",fontSize:"13px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.7)",letterSpacing:"0",lineHeight:1.6}}>
                   <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"0",marginBottom:"6px"}}>How to use</div>
                   {(currentGraph.nodes || []).length === 0 ? (
-                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"var(--mz-accent,#0A84FF)"}}>Current</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Future</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Research</span>) has its own separate map.</>
+                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>Build map</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"var(--mz-accent,#0A84FF)"}}>Current</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Future</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Research</span>) has its own separate map.</>
                   ) : (
                     <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"var(--mz-accent,#0A84FF)"}}>Current</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Future</span> / <span style={{color:"var(--mz-accent,#0A84FF)"}}>Research</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:SANS_FONT,fontSize:"13px",letterSpacing:"0",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
                   )}
@@ -66364,7 +66209,7 @@ function MuzzApp() {
             ];
             const rdStats = [
               { key:'rd-holdings', label:'Holdings', value:(stocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'Positions Tracked', info:'Positions you currently own — synced live from the stocks in your Current Portfolio.' },
-              { key:'rd-watch', label:'Watchlist', value:(futureStocks||[]).filter(s=>s&&s.name&&String(s.name).trim()).length, sub:'Companies Watched', info:'Companies on your Future Portfolio watchlist.' },
+              { key:'rd-watch', label:'Watchlist', value:(futureResearch||[]).filter(s=>s&&s.ticker&&String(s.ticker).trim()).length, sub:'Companies Watched', info:'Companies on your Future Portfolio watchlist.' },
               { key:'rd-coverage', label:'Coverage', value:(COVERAGE_DATA||[]).length, sub:'Companies Analysed', info:'Companies fully analysed in the muzz coverage library — moats, financials, risks and thesis.' },
               { key:'rd-industries', label:'Industries', value:Object.keys((COVERAGE_DATA||[]).reduce((m,c)=>{ m[c.industry||'Other']=1; return m; },{})).length, sub:'Sectors Covered', info:'Distinct industries represented across the muzz coverage library.' },
             ];
