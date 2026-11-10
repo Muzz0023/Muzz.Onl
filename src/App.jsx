@@ -48290,7 +48290,7 @@ function MuzzApp() {
       // Body weight: the last two years, one reading per day
       const wr = await H.readSamples({ dataType: 'weight', startDate: new Date(now.getFullYear() - 2, now.getMonth(), now.getDate()).toISOString(), endDate: now.toISOString(), limit: 2000, ascending: true });
       const wByDay = {};
-      ((wr && wr.samples) || []).forEach(x => { let kg = Number(x.value); if (!isFinite(kg) || kg <= 0) return; if (/lb|pound/i.test(x.unit || '')) kg = kg * 0.45359237; if (/^g$|gram$/i.test(x.unit || '')) kg = kg / 1000; wByDay[localISODate(new Date(x.startDate))] = Math.round(kg * 10) / 10; });
+      ((wr && wr.samples) || []).forEach(x => { let kg = Number(x.value); if (!isFinite(kg) || kg <= 0) return; const u = String(x.unit || '').trim().toLowerCase(); if (/^(lb|lbs|pound|pounds)$/.test(u)) kg = kg * 0.45359237; else if (u === 'g' || u === 'gram' || u === 'grams') kg = kg / 1000; else if (u === 'st' || u === 'stone') kg = kg * 6.35029318; wByDay[localISODate(new Date(x.startDate))] = Math.round(kg * 10) / 10; });
       if (Object.keys(wByDay).length) setBodyWeight(prev => {
         const m = {}; (prev || []).forEach(e => { if (e && e.date) m[e.date] = e; });
         Object.keys(wByDay).forEach(k => { if (!m[k] || m[k].src !== 'manual') m[k] = { date: k, kg: wByDay[k], src: 'health' }; });
