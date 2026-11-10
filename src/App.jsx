@@ -298,7 +298,7 @@ const MZ_GYM_TOUR = [
   { icon: '👆', title: 'Tap instead of typing', body: 'Tap Quick add under a day, then tap a muscle to add a set. Tap Shoulders three times and it writes "3 shoulders".' },
   { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week into the next week, so your routine is set up in seconds.' },
   { icon: '✅', title: 'Linked to the calendar', body: 'Week 1–4 repeat in order and follow the real dates, so each day shows its date. Ticking a day fills in your Overview calendar, and the other way round.' },
-  { icon: '📊', title: 'Your overview', body: 'The Overview tab shows each month as a calendar, sessions and rest days, your year at a glance, and history month by month and year by year.' },
+  { icon: '📊', title: 'Your overview', body: 'Everything you write, tick or mark as rest in your plan shows up in Overview: a calendar for each month, sessions and rest days, your year at a glance, and history month by month and year by year.' },
 ];
 
 const MZ_DATES_TOUR = [
@@ -47773,7 +47773,7 @@ function MuzzApp() {
     return (((weeks % 4) + 4) % 4) + 1;
   };
   useEffect(() => { if (activeView === 'gymworkout') setWorkoutSubWeek(mzPlanWeekNow(workoutPlan && workoutPlan.anchor)); }, [activeView]);
-  // A workout written on today or an earlier day this week counts as trained (unless it was unticked or is a rest day)
+  // The plan feeds the Overview: a workout written on today or earlier counts as trained, a rest day as rest (unless changed by hand)
   useEffect(() => {
     if (!dataLoaded || !workoutPlan) return;
     const wk = (workoutPlan.weeks || {})[mzPlanWeekNow(workoutPlan.anchor)] || {};
@@ -47789,7 +47789,9 @@ function MuzzApp() {
       const note = typeof day.note === 'string' ? day.note : [day.name || '', typeof day.exercises === 'string' ? day.exercises : ''].join(' ');
       const hasEx = Array.isArray(day.exercises) && day.exercises.some(e => e && String(e.name || '').trim());
       const isRest = day.rest === true || /^\s*rest( day)?\s*$/i.test(note);
-      if (!isRest && (note.trim() || hasEx) && (gymLog || {})[iso] === undefined) add[iso] = 'trained';
+      if ((gymLog || {})[iso] !== undefined) return;
+      if (isRest) add[iso] = 'rest';
+      else if (note.trim() || hasEx) add[iso] = 'trained';
     });
     if (Object.keys(add).length) setGymLog(prev => ({ ...(prev || {}), ...add }));
   }, [workoutPlan, dataLoaded, gymLog]);
@@ -67790,18 +67792,8 @@ function MuzzApp() {
             const maxN = Math.max(1, ...yearMonths.map(x => x.n));
             const yearTotal = yearMonths.reduce((a, b) => a + b.n, 0);
             const stat = (n, label) => (<div style={{flex:1,minWidth:0,padding:"10px 12px",borderRadius:"14px",background:"rgba(255,255,255,0.08)",fontFamily:SANS_FONT}}><div style={{fontSize:"22px",fontWeight:700,color:"#FFFFFF"}}>{n}</div><div style={{fontSize:"12px",color:sec}}>{label}</div></div>);
-            const todayStatus = log[today] === 'skip' ? undefined : log[today];
             return (
               <>
-                {!todayStatus && (
-                  <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
-                    <span style={{fontSize:"16px",color:"#FFFFFF",fontFamily:SANS_FONT}}>Trained today?</span>
-                    <span style={{display:"flex",gap:"8px"}}>
-                      <button onClick={() => setGymLog(p => ({ ...(p || {}), [today]: 'trained' }))} style={{padding:"8px 14px",borderRadius:"999px",border:"none",background:"var(--mz-accent,#0A84FF)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",fontWeight:600,cursor:"pointer"}}>Yes 💪</button>
-                      <button onClick={() => setGymLog(p => ({ ...(p || {}), [today]: 'rest' }))} style={{padding:"8px 14px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.1)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",cursor:"pointer"}}>Rest day</button>
-                    </span>
-                  </div>
-                )}
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                     <button aria-label="Previous month" onClick={() => setGymMonthOffset(o => o - 1)} style={{...textBtn(BLUE),fontSize:"20px",padding:"0 6px"}}>‹</button>
@@ -67826,7 +67818,7 @@ function MuzzApp() {
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Filled = trained · dashed = rest day. Tap a past day to change it.</div>
+                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Filled = trained · dashed = rest day. These come from your 4-week plan; tap a past day to change it.</div>
                 </div>
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
@@ -67846,7 +67838,7 @@ function MuzzApp() {
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px"}}>
                   <div style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,marginBottom:"10px"}}>Training history</div>
                   <MzHistoryView points={histPts} color={themeHex} money={(n) => `${Math.round(n)} session${Math.round(n) === 1 ? '' : 's'}`}
-                    emptyText="Tick off a day in your plan, or answer 'Trained today?', and your history starts building month by month." sumYears />
+                    emptyText="Write or tick off a workout in your 4-week plan and your history starts building month by month." sumYears />
                 </div>
               </>
             );
