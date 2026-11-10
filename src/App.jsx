@@ -67509,7 +67509,12 @@ function MuzzApp() {
       setGymSheetDay(iso);
     };
     const workoutWeek = Object.fromEntries(DAY_KEYS.map(k => [k, (gymDays || {})[dateOf(k)] || {}]));
-    const updateDay = (dayKey, fn) => { const iso = dateOf(dayKey); setGymDays(prev => ({ ...(prev || {}), [iso]: fn((prev || {})[iso] || {}) })); };
+    const updateDay = (dayKey, fn) => {
+      const iso = dateOf(dayKey);
+      setGymDays(prev => ({ ...(prev || {}), [iso]: fn((prev || {})[iso] || {}) }));
+      // Writing on a day counts again even if it was unticked before
+      setGymLog(prev => { if (!prev || prev[iso] !== 'skip') return prev; const next = { ...prev }; delete next[iso]; return next; });
+    };
     // Free-text day note, e.g. "3 shoulders, 2 biceps, 2 tris" → { Shoulders:3, Biceps:2, Triceps:2 }
     const muscleFor = (w) => {
       w = w.toLowerCase();
