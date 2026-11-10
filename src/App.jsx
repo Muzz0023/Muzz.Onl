@@ -48910,6 +48910,15 @@ function MuzzApp() {
     return sum + toAUD(parseFloat(s && s.currentValue) || 0, cur);
   }, 0);
   const netWorth = totalAssets;
+  // Bought-on date for an asset linked to Investments: one holding's date, or the earliest for all holdings
+  const linkedBoughtOn = (vf) => {
+    if (!vf) return null;
+    const ok = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '');
+    if (vf === 'holdings') { const ds = stocks.filter(x => x && x.name && ok(x.boughtOn)).map(x => x.boughtOn).sort(); return ds[0] || null; }
+    const t = String(vf).replace(/^holding:/, '');
+    const st = stocks.find(x => x && String(x.name || '').trim().toUpperCase() === t);
+    return st && ok(st.boughtOn) ? st.boughtOn : null;
+  };
   // Assets linked to Investments: keep their value in step with live holdings (in AUD)
   useEffect(() => {
     if (!dataLoaded) return;
@@ -48926,13 +48935,32 @@ function MuzzApp() {
         const v = a.valueFrom === 'holdings' ? totalStocks : holdingAUD(String(a.valueFrom).replace(/^holding:/, ''));
         if (v === null || !isFinite(v)) return a;
         const r = Math.round(v * 100) / 100;
-        if (Math.abs((parseFloat(a.value) || 0) - r) < 0.005) return a;
+        const bo = linkedBoughtOn(a.valueFrom);
+        const sameVal = Math.abs((parseFloat(a.value) || 0) - r) < 0.005;
+        const sameDate = !bo || a.boughtOn === bo;
+        if (sameVal && sameDate) return a;
         changed = true;
-        return { ...a, value: r, valueStr: String(r) };
+        return { ...a, value: r, valueStr: String(r), ...(bo ? { boughtOn: bo } : {}) };
       });
       return changed ? next : prev;
     });
   }, [assets, totalStocks, stocks, livePrices, fxRates, dataLoaded]);
+  // A holding with no bought-on date picks it up from an asset linked to it
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const fromAssets = {};
+    (assets || []).forEach(a => { if (a && /^holding:/.test(String(a.valueFrom || '')) && /^\d{4}-\d{2}-\d{2}$/.test(a.boughtOn || '')) fromAssets[String(a.valueFrom).slice(8)] = a.boughtOn; });
+    if (!Object.keys(fromAssets).length) return;
+    setStocks(prev => {
+      let changed = false;
+      const next = prev.map(st => {
+        const t = st && st.name ? String(st.name).trim().toUpperCase() : '';
+        if (!t || !fromAssets[t] || st.boughtOn) return st;
+        changed = true; return { ...st, boughtOn: fromAssets[t] };
+      });
+      return changed ? next : prev;
+    });
+  }, [assets, dataLoaded]);
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
   const histBillsMonthly = totalMonthly, histIncomeMonthly = salaryNum; // used by the Bills page history tiles
@@ -52462,6 +52490,10 @@ function MuzzApp() {
         } else {
           updated[index] = { ...updated[index], [field]: value };
         }
+        if (field === 'boughtOn' && /^holding:/.test(String(updated[index].valueFrom || ''))) {
+          const t = String(updated[index].valueFrom).slice(8);
+          setStocks(sp => sp.map(st => st && String(st.name || '').trim().toUpperCase() === t ? { ...st, boughtOn: value } : st));
+        }
         return updated;
       });
     };
@@ -52739,9 +52771,13 @@ function MuzzApp() {
                             {(asset?.trackOwned === undefined ? !['cash','super','lifeinsurance','loansowed'].includes(asset?.category) : !!asset.trackOwned) && (<>
                             <div style={{...formRow,borderBottom:sep}}>
                               <span style={formLabel}>Bought on</span>
+                              {asset?.valueFrom === 'holdings' && linkedBoughtOn('holdings') ? (
+                                <span style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,textAlign:"right"}}>{mzShortDate(linkedBoughtOn('holdings'))} · first holding</span>
+                              ) : (
                               <input type="date" value={asset?.boughtOn || ''} max={localISODate(new Date())} onFocus={scrollInputIntoView}
                                 onChange={(e) => updateAsset(index, 'boughtOn', e.target.value)}
                                 style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 10px",colorScheme:"dark"}} />
+                              )}
                             </div>
                             <div style={{...formRow,borderBottom:sep}}>
                               <span style={formLabel}>Owned for</span>
@@ -54107,7 +54143,7 @@ function MuzzApp() {
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                             <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stock?.name || <span style={{color:"rgba(235,235,245,0.4)"}}>Unnamed stock</span>}</div>
                             <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.55)"}}>
-                              {stock?.industry || 'No industry'}{stock?.heldFor ? ` · ${stock.heldFor}` : ''}{sharesNum > 0 ? ` · ${sharesNum} sh` : ''}{stock?.invested > 0 ? ` · ${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : ''}
+                              {stock?.industry || 'No industry'}{(mzOwnedFor(stock?.boughtOn, true) || stock?.heldFor) ? ` · ${mzOwnedFor(stock?.boughtOn, true) || stock.heldFor}` : ''}{sharesNum > 0 ? ` · ${sharesNum} sh` : ''}{stock?.invested > 0 ? ` · ${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : ''}
                             </div>
                           </div>
                           <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
@@ -54263,14 +54299,15 @@ function MuzzApp() {
                               </>
                             )}
                             <div>
-                              <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Held for</div>
-                              <input
-                                type="text"
-                                value={stock?.heldFor || ''}
-                                onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
-                                placeholder="e.g. 2y 3m"
-                                style={{width:"100%",boxSizing:"border-box",background:"rgba(var(--mz-accent-rgb,10,132,255),0.04)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                              />
+                              <div style={{fontSize:"12px",color:"rgba(235,235,245,0.5)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"4px"}}>Bought on</div>
+                              <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
+                                <input type="date" value={stock?.boughtOn || ''} max={localISODate(new Date())}
+                                  onChange={(e) => updateStock(index, 'boughtOn', e.target.value)}
+                                  style={{background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"10px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"14px",padding:"7px 10px",colorScheme:"dark"}} />
+                                <span style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>
+                                  {mzOwnedFor(stock?.boughtOn) ? `Owned for ${mzOwnedFor(stock.boughtOn)}` : (stock?.heldFor ? `Held for ${stock.heldFor}` : 'Also shows on any asset linked to this holding')}
+                                </span>
+                              </div>
                             </div>
                             <button onClick={() => { setStocks(prev => prev.filter((_, i) => i !== index)); setEditingStockIdx(null); }}
                               style={{alignSelf:"flex-end",fontSize:"13px",color:"rgba(255,69,58,0.75)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(255,69,58,0.06)",border:"1px solid rgba(255,69,58,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>Delete</button>
