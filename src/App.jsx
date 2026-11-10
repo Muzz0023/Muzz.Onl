@@ -294,11 +294,11 @@ const MZ_BILLS_TOUR = [
 ];
 
 const MZ_GYM_TOUR = [
-  { icon: '🏋️', title: 'Plan four weeks', body: 'Write what you trained each day, like "3 shoulders, 2 biceps". Muzz adds up your sets per muscle for the week.' },
+  { icon: '🏋️', title: 'Every day, its own workout', body: 'In Week, write what you trained each day, like "3 shoulders, 2 biceps". Use ‹ › to move between weeks. Muzz adds up your sets per muscle.' },
   { icon: '👆', title: 'Tap instead of typing', body: 'Tap Quick add under a day, then tap a muscle to add a set. Tap Shoulders three times and it writes "3 shoulders".' },
-  { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week into the next week, so your routine is set up in seconds.' },
-  { icon: '✅', title: 'Linked to the calendar', body: 'Week 1–4 repeat in order and follow the real dates, so each day shows its date. Ticking a day fills in your Overview calendar, and the other way round.' },
-  { icon: '📊', title: 'Your overview', body: 'Everything you write, tick or mark as rest in your plan shows up in Overview: a calendar for each month, sessions and rest days, your year at a glance, and history month by month and year by year.' },
+  { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week to the week after, so your routine is set up in seconds.' },
+  { icon: '✅', title: 'Linked to the calendar', body: 'Anything you write on a day shows on the Overview calendar as trained, and rest days show as zzz. Tap any day on the calendar to open it.' },
+  { icon: '📊', title: 'Your overview', body: 'Overview shows a calendar for each month, sessions and rest days, your year at a glance, and history month by month and year by year. Nothing is ever wiped.' },
 ];
 
 const MZ_DATES_TOUR = [
@@ -47640,7 +47640,10 @@ function MuzzApp() {
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
-  const [gymLog, setGymLog] = useState({}); // { 'YYYY-MM-DD': 'trained' | 'rest' } dated training history
+  const [gymLog, setGymLog] = useState({}); // { 'YYYY-MM-DD': 'trained' | 'rest' | 'skip' } ticks / rest set by hand
+  const [gymDays, setGymDays] = useState({}); // { 'YYYY-MM-DD': { note, exercises, rest } } each day's workout
+  const [gymWeekOffset, setGymWeekOffset] = useState(0); // Week view: 0 = this week, -1 = last week…
+  const [gymSheetDay, setGymSheetDay] = useState(null); // date opened from the calendar
   const [gymChipDay, setGymChipDay] = useState(null); // which day's quick-add muscle buttons are open
   const [gymMonthOffset, setGymMonthOffset] = useState(0); // Overview: 0 = this month, -1 = last month…
   const [gymTourOpen, setGymTourOpen] = useState(false);
@@ -47772,33 +47775,27 @@ function MuzzApp() {
     const weeks = Math.round((mon - a) / (7 * 86400000));
     return (((weeks % 4) + 4) % 4) + 1;
   };
-  useEffect(() => { if (activeView === 'gymworkout') setWorkoutSubWeek(mzPlanWeekNow(workoutPlan && workoutPlan.anchor)); }, [activeView]);
-  // The plan feeds the Overview, and what it shows for past days is saved by date so clearing a week never wipes history:
-  // rest days from the last 4 weeks are saved as rest; a workout written this week (today or earlier) is saved as trained.
+  useEffect(() => { if (activeView === 'gymworkout') { setGymWeekOffset(0); setGymSheetDay(null); } }, [activeView]);
+  // One-time: put what was written in the old Week 1–4 plan onto the real dates of the current 4-week cycle
   useEffect(() => {
-    if (!dataLoaded || !workoutPlan) return;
+    if (!dataLoaded || !workoutPlan || workoutPlan.movedToDates) return;
     const weeks = workoutPlan.weeks || {};
     const now = new Date(); now.setHours(0, 0, 0, 0);
     const thisMon = new Date(now); thisMon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
     const nowWeek = mzPlanWeekNow(workoutPlan.anchor);
     const keys = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const add = {};
-    for (let back = 0; back < 28; back++) {
-      const d0 = new Date(now); d0.setDate(now.getDate() - back);
-      const iso = localISODate(d0);
-      if ((gymLog || {})[iso] !== undefined) continue;
-      const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
-      const wOff = Math.round((mon - thisMon) / (7 * 86400000));
-      const w = ((((nowWeek - 1 + wOff) % 4) + 4) % 4) + 1;
-      const day = (weeks[w] || {})[keys[(d0.getDay() + 6) % 7]]; if (!day) continue;
-      const note = typeof day.note === 'string' ? day.note : [day.name || '', typeof day.exercises === 'string' ? day.exercises : ''].join(' ');
-      const hasEx = Array.isArray(day.exercises) && day.exercises.some(e => e && String(e.name || '').trim());
-      const isRest = day.rest === true || /^\s*rest( day)?\s*$/i.test(note);
-      if (isRest) add[iso] = 'rest';
-      else if (wOff === 0 && (note.trim() || hasEx)) add[iso] = 'trained';
-    }
-    if (Object.keys(add).length) setGymLog(prev => ({ ...(prev || {}), ...add }));
-  }, [workoutPlan, dataLoaded, gymLog]);
+    [1, 2, 3, 4].forEach(w => keys.forEach((k, i) => {
+      const day = (weeks[w] || {})[k]; if (!day) return;
+      const note = typeof day.note === 'string' ? day.note : [day.name || '', typeof day.exercises === 'string' ? day.exercises : ''].filter(Boolean).join('\n');
+      const ex = Array.isArray(day.exercises) ? day.exercises : [];
+      if (!note.trim() && !ex.length && !day.rest) return;
+      const d0 = new Date(thisMon); d0.setDate(thisMon.getDate() + (w - nowWeek) * 7 + i);
+      add[localISODate(d0)] = { note, exercises: ex, ...(day.rest ? { rest: true } : {}) };
+    }));
+    setGymDays(prev => { const next = { ...(prev || {}) }; Object.keys(add).forEach(k => { if (!next[k]) next[k] = add[k]; }); return next; });
+    setWorkoutPlan(prev => ({ ...(prev || {}), movedToDates: true }));
+  }, [dataLoaded, workoutPlan]);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
   const [completing, setCompleting] = useState({}); // items mid tick-off animation
   const [reminderFilter, setReminderFilter] = useState('all'); // Reminders smart lists: all | today | upcoming | pinned | completed
@@ -48622,6 +48619,7 @@ function MuzzApp() {
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.gymLog && typeof d.gymLog === 'object') setGymLog(d.gymLog);
+          if (d.gymDays && typeof d.gymDays === 'object') setGymDays(d.gymDays);
           if (d.appTheme) setAppTheme(d.appTheme);
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
@@ -48755,6 +48753,7 @@ function MuzzApp() {
           dailySteps,
           workoutPlan,
           gymLog,
+          gymDays,
           appTheme,
           timesheetData,
           customCategories,
@@ -48787,7 +48786,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -67495,29 +67494,22 @@ function MuzzApp() {
     // ── 4-week plan — workoutPlan.weeks[1..4][Mon..Sun] = { note:'3 shoulders, 2 bis', exercises:[...], done }
     const MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Glutes','Abs','Forearms','Cardio'];
     const DAY_KEYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const currentWeek = workoutSubWeek || 1;
-    const planWeekNow = mzPlanWeekNow(workoutPlan && workoutPlan.anchor);
     const thisMonday = new Date(weekDays[0].date + 'T00:00:00');
-    const mondayFor = (w) => { const d0 = new Date(thisMonday); d0.setDate(d0.getDate() + (w - planWeekNow) * 7); return d0; };
-    const dateForDayW = (w, dayKey) => { const d0 = mondayFor(w); d0.setDate(d0.getDate() + DAY_KEYS.indexOf(dayKey)); return localISODate(d0); };
+    const shownMonday = new Date(thisMonday); shownMonday.setDate(shownMonday.getDate() + gymWeekOffset * 7);
+    const dateOf = (dayKey) => { const d0 = new Date(shownMonday); d0.setDate(d0.getDate() + DAY_KEYS.indexOf(dayKey)); return localISODate(d0); };
+    const dateForDayW = (_w, dayKey) => dateOf(dayKey);
+    const currentWeek = 1;
     const shortDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-    // "This week is Week N": move the anchor so the current calendar week becomes Week N
-    const setThisWeekIs = (n) => {
-      const a = new Date(thisMonday); a.setDate(a.getDate() - (n - 1) * 7);
-      setWorkoutPlan(prev => ({ ...(prev || { weeks: {}, stepsGoal: 10000 }), anchor: localISODate(a) }));
-      setWorkoutSubWeek(n);
+    const dayKeyOf = (iso) => DAY_KEYS[(new Date(iso + 'T00:00:00').getDay() + 6) % 7];
+    const weekName = gymWeekOffset === 0 ? 'This week' : gymWeekOffset === -1 ? 'Last week' : gymWeekOffset === 1 ? 'Next week' : `Week of ${shortDate(dateOf('Mon'))}`;
+    // Open a date from the calendar: jump the week view to that week and show that day
+    const openGymDate = (iso) => {
+      const d0 = new Date(iso + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+      setGymWeekOffset(Math.round((mon - thisMonday) / (7 * 86400000)));
+      setGymSheetDay(iso);
     };
-    const setCurrentWeek = (w) => setWorkoutSubWeek(w);
-    const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
-    const updateDay = (dayKey, fn) => setWorkoutPlan(prev => {
-      const base = {...(prev||{weeks:{},stepsGoal:10000})};
-      const weeks = {...(base.weeks||{})};
-      const wk = {...(weeks[currentWeek]||{})};
-      wk[dayKey] = fn(wk[dayKey] || {});
-      weeks[currentWeek] = wk;
-      base.weeks = weeks;
-      return base;
-    });
+    const workoutWeek = Object.fromEntries(DAY_KEYS.map(k => [k, (gymDays || {})[dateOf(k)] || {}]));
+    const updateDay = (dayKey, fn) => { const iso = dateOf(dayKey); setGymDays(prev => ({ ...(prev || {}), [iso]: fn((prev || {})[iso] || {}) })); };
     // Free-text day note, e.g. "3 shoulders, 2 biceps, 2 tris" → { Shoulders:3, Biceps:2, Triceps:2 }
     const muscleFor = (w) => {
       w = w.toLowerCase();
@@ -67563,8 +67555,17 @@ function MuzzApp() {
     DAY_KEYS.forEach(k => { Object.entries(parseNoteMuscles(noteTextFor(workoutWeek[k]))).forEach(([m, v]) => { weekMuscleTotals[m] = (weekMuscleTotals[m]||0) + v; }); });
     // Rest day: toggled on the card, or the day's note just says "rest"
     const isRestDay = (d) => !!d && (d.rest === true || /^\s*rest( day)?\s*$/i.test(noteTextFor(d)));
-    const thisWeekSessions = DAY_KEYS.filter(k => (gymLog || {})[dateForDayW(currentWeek, k)] === 'trained').length;
-    const thisWeekRest = DAY_KEYS.filter(k => (gymLog || {})[dateForDayW(currentWeek, k)] === 'rest' || isRestDay(workoutWeek[k])).length;
+    const gymStatus = (iso) => {
+      const l = (gymLog || {})[iso];
+      if (l === 'trained' || l === 'rest') return l;
+      const day = (gymDays || {})[iso];
+      if (day && isRestDay(day)) return 'rest';
+      if (l === 'skip') return null;
+      if (day && dayHasData(day)) return iso <= today ? 'trained' : 'planned';
+      return null;
+    };
+    const thisWeekSessions = DAY_KEYS.filter(k => gymStatus(dateOf(k)) === 'trained').length;
+    const thisWeekRest = DAY_KEYS.filter(k => gymStatus(dateOf(k)) === 'rest').length;
 
     // Exercise helpers
     const newExRow = (extra = {}) => ({ id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false, supersetWithNext:false, ...extra });
@@ -67618,7 +67619,7 @@ function MuzzApp() {
     const logGymDay = (dayKey, status) => {
       const date = dateForDay(dayKey);
       if (!date || date > today) return; // only today or earlier
-      setGymLog(prev => ({ ...(prev || {}), [date]: status || 'skip' }));
+      setGymLog(prev => { const next = { ...(prev || {}) }; if (status === undefined) delete next[date]; else next[date] = status || 'skip'; return next; });
     };
     // Quick add: tap a muscle to add one set to the day's note ("3 shoulders, 2 biceps")
     const bumpMuscle = (dayKey, muscle) => updateDay(dayKey, cur => {
@@ -67632,31 +67633,18 @@ function MuzzApp() {
       const next = found ? updated : (note.trim() ? `${note.trim().replace(/,\s*$/, '')}, 1 ${muscle.toLowerCase()}` : `1 ${muscle.toLowerCase()}`);
       return { ...cur, note: next, name: '', rest: false, ...(typeof cur.exercises === 'string' ? { exercises: [] } : {}) };
     });
-    // Copy a day to the next day (Sunday goes to Monday of the next week)
+    // Copy a day to the next day, or this week to next week (by real dates)
+    const freshCopy = (src) => { const c = JSON.parse(JSON.stringify(src || {})); delete c.done; if (Array.isArray(c.exercises)) c.exercises = c.exercises.map(e => ({ ...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) })); return c; };
+    const plusDays = (iso, n) => { const d0 = new Date(iso + 'T00:00:00'); d0.setDate(d0.getDate() + n); return localISODate(d0); };
     const copyDayForward = (dayKey) => {
-      const i = DAY_KEYS.indexOf(dayKey);
-      const toWeek = i === 6 ? (currentWeek % 4) + 1 : currentWeek;
-      const toKey = DAY_KEYS[(i + 1) % 7];
-      const before = workoutPlan;
-      setWorkoutPlan(prev => {
-        const base = { ...(prev || { weeks: {}, stepsGoal: 10000 }) }; const weeks = { ...(base.weeks || {}) };
-        const src = ((weeks[currentWeek] || {})[dayKey]) || {};
-        const copy = JSON.parse(JSON.stringify({ ...src, done: false }));
-        if (Array.isArray(copy.exercises)) copy.exercises = copy.exercises.map(e => ({ ...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) }));
-        weeks[toWeek] = { ...(weeks[toWeek] || {}), [toKey]: copy }; base.weeks = weeks; return base;
-      });
-      mzUndo(`Copied to ${fullDay[toKey]}${toWeek !== currentWeek ? ` (Week ${toWeek})` : ''}`, () => setWorkoutPlan(before));
+      const from = dateOf(dayKey), to = plusDays(from, 1); const before = gymDays;
+      setGymDays(prev => ({ ...(prev || {}), [to]: freshCopy((prev || {})[from]) }));
+      mzUndo(`Copied to ${new Date(to + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'short' })}`, () => setGymDays(before));
     };
     const copyWeekForward = () => {
-      const toWeek = (currentWeek % 4) + 1;
-      const before = workoutPlan;
-      setWorkoutPlan(prev => {
-        const base = { ...(prev || { weeks: {}, stepsGoal: 10000 }) }; const weeks = { ...(base.weeks || {}) };
-        const src = JSON.parse(JSON.stringify(weeks[currentWeek] || {}));
-        DAY_KEYS.forEach(k => { if (src[k]) { src[k].done = false; if (Array.isArray(src[k].exercises)) src[k].exercises = src[k].exercises.map(e => ({ ...e, id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) })); } });
-        weeks[toWeek] = src; base.weeks = weeks; return base;
-      });
-      mzUndo(`Week ${currentWeek} copied to Week ${toWeek}`, () => setWorkoutPlan(before));
+      const before = gymDays;
+      setGymDays(prev => { const next = { ...(prev || {}) }; DAY_KEYS.forEach(k => { const from = dateOf(k); if (next[from]) next[plusDays(from, 7)] = freshCopy(next[from]); }); return next; });
+      mzUndo(`${weekName} copied to the week after`, () => setGymDays(before));
     };
     const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal || 1;
     const goalPct = Math.min(100, (stepsGoal / maxSteps) * 100);
@@ -67678,6 +67666,124 @@ function MuzzApp() {
       </button>
     );
 
+    const renderDayCards = (keysToShow) => keysToShow.map(dayKey => {
+                const d = workoutWeek[dayKey] || {};
+                const dDate = dateOf(dayKey);
+                const st = gymStatus(dDate);
+                const done = st === 'trained';
+                const isFuture = dDate > today;
+                const isToday = dDate === today;
+                const dayLabel = `${isToday ? 'Today, ' : ''}${fullDay[dayKey]} ${shortDate(dDate)}`;
+                const exerciseList = dayExercises(d);
+                const rest = st === 'rest';
+                const exGroups = groupSupersets(exerciseList);
+                const ssGroups = exGroups.filter(g => g.length > 1);
+                return (
+                  <div key={dayKey} style={{...card,borderRadius:"16px",opacity:rest?0.6:1}}>
+                    {rest ? (
+                      <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
+                        <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"11px",alignSelf:"flex-end",marginBottom:"4px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"7px",alignSelf:"flex-start",marginTop:"6px"}}>z</span></span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
+                          <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
+                        </div>
+                        <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note})); logGymDay(dayKey, undefined); }}
+                          style={{...textBtn(BLUE),fontSize:"15px",flexShrink:0}}>Undo</button>
+                      </div>
+                    ) : (<>
+                    {/* Day header + what you trained */}
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px 10px"}}>
+                      <button aria-label={done ? 'Mark not done' : 'Mark done'} disabled={isFuture} title={isFuture ? 'You can tick this on the day' : undefined} onClick={()=>{ if (!isFuture) logGymDay(dayKey, done ? null : 'trained'); }}
+                        style={{width:"24px",height:"24px",marginTop:"9px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"1.5px solid rgba(235,235,245,0.3)",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>{done ? '✓' : ''}</button>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
+                          <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: true, done: false})); logGymDay(dayKey, 'rest'); }}
+                            style={{...textBtn("rgba(235,235,245,0.5)"),fontSize:"13px",flexShrink:0}}>Rest day</button>
+                        </div>
+                        <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
+                          ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
+                          onChange={e => setDayNote(dayKey, e.target.value)}
+                          style={{...bareArea,fontSize:"17px",marginTop:"1px"}} />
+                        <div style={{display:"flex",gap:"16px",marginTop:"6px",flexWrap:"wrap"}}>
+                          <button onClick={() => setGymChipDay(c => c === dDate ? null : dDate)} style={{...textBtn(BLUE),fontSize:"14px"}}>{gymChipDay === dDate ? 'Done adding' : '+ Quick add'}</button>
+                          {dayHasData(d) && <button onClick={() => copyDayForward(dayKey)} style={{...textBtn("rgba(235,235,245,0.6)"),fontSize:"14px"}}>Copy to {dayKey === 'Sun' ? 'next Mon' : DAY_KEYS[DAY_KEYS.indexOf(dayKey) + 1]}</button>}
+                        </div>
+                        {gymChipDay === dDate && (
+                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"8px"}}>
+                            {MUSCLES.map(m => {
+                              const n = parseNoteMuscles(noteTextFor(d))[m] || 0;
+                              return (
+                                <button key={m} onClick={() => bumpMuscle(dayKey, m)}
+                                  style={{padding:"7px 12px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,color:"#FFFFFF",
+                                    border:n?"none":"0.5px solid rgba(255,255,255,0.16)",background:n?"rgba(var(--mz-accent-rgb,10,132,255),0.85)":"rgba(255,255,255,0.08)"}}>
+                                  {m}{n ? ` · ${n}` : ''}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Detailed exercises (optional) */}
+                    {exGroups.map(group => {
+                      const isSet = group.length > 1;
+                      const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
+                      const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
+                      const renderEx = (ex, gi) => (
+                        <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:sep,padding:"12px 16px 14px"}}>
+                          <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                            {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
+                            <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
+                              onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
+                              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                              style={{...bareArea,fontWeight:600}} />
+                            <button aria-label="Remove exercise" onClick={()=>removeExercise(dayKey,ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
+                          </div>
+                          <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
+                            {numField('Sets', ex.sets, e=>updateExercise(dayKey,ex.id,'sets',e.target.value))}
+                            {numField('Reps', ex.reps, e=>updateExercise(dayKey,ex.id,'reps',e.target.value))}
+                            {numField('kg', ex.weight, e=>updateExercise(dayKey,ex.id,'weight',e.target.value), "decimal")}
+                          </div>
+                          <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
+                            {chip('Drop set', !!ex.dropSet, ()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet), BLUE)}
+                            {chip('To failure', !!ex.toFailure, ()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure), RED)}
+                            {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(dayKey,ex.id), PURPLE)}
+                          </div>
+                          {(ex.notes !== undefined && ex.notes !== '') ? (
+                            <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
+                              onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
+                              style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
+                          ) : (
+                            <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
+                          )}
+                        </div>
+                      );
+                      if (!isSet) return renderEx(group[0], 0);
+                      return (
+                        <div key={'ss_' + group[0].id} style={{borderTop:sep,padding:"10px 12px 12px"}}>
+                          <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
+                              <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
+                              <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
+                            </div>
+                            {group.map((ex, gi) => renderEx(ex, gi))}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    <div style={{display:"flex",gap:"18px",padding:exerciseList.length ? "10px 14px 12px 50px" : "0 14px 12px 50px",borderTop:exerciseList.length ? sep : "none"}}>
+                      <button onClick={()=>addExercise(dayKey)} style={{...textBtn(BLUE),fontSize:"15px"}}>+ {exerciseList.length ? 'Exercise' : 'Exercise details'}</button>
+                      {exerciseList.length > 0 && (
+                        <button onClick={()=>addSuperset(dayKey)} style={{...textBtn(PURPLE),fontSize:"15px"}}>+ Superset</button>
+                      )}
+                    </div>
+                    </>)}
+                  </div>
+                );
+              });
     return (
       <div className="min-h-screen bg-transparent pb-24 mz-num">
         <Sidebar /><SaveIndicator />
@@ -67687,7 +67793,7 @@ function MuzzApp() {
             <h1 style={{fontSize:"34px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-0.5px",margin:0,lineHeight:1.15}}>Gym</h1>
             <CompactNavBar title="Gym" onBack={() => setActiveView('home')} />
             <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,marginTop:"2px"}}>
-              Week {currentWeek}: {thisWeekSessions} trained{thisWeekRest > 0 ? ` · ${thisWeekRest} rest` : ''} · {weekStepsTotal.toLocaleString()} steps this week
+              {weekName}: {thisWeekSessions} trained{thisWeekRest > 0 ? ` · ${thisWeekRest} rest` : ''} · {weekStepsTotal.toLocaleString()} steps this week
             </div>
             <button onClick={() => setGymTourOpen(true)} style={{background:"none",border:"none",padding:0,marginTop:"4px",cursor:"pointer",color:BLUE,fontFamily:SANS_FONT,fontSize:"15px"}}>How Gym works</button>
             {gymTourOpen && <MzTour steps={MZ_GYM_TOUR} onClose={() => setGymTourOpen(false)} />}
@@ -67695,7 +67801,7 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'4-week plan'},{id:'overview',label:'Overview'},{id:'steps',label:'Steps'}]} />
+          <Segmented value={gymTabNow} onChange={setGymWorkoutTab} options={[{id:'log',label:'Week'},{id:'overview',label:'Overview'},{id:'steps',label:'Steps'}]} />
 
           {/* ─── STEPS ─── */}
           {gymTabNow === 'steps' && (
@@ -67776,37 +67882,23 @@ function MuzzApp() {
           {/* ─── 4-WEEK PLAN ─── */}
           {gymTabNow === 'overview' && (() => {
             const log = gymLog || {};
-            // What the 4-week plan says for any date (the plan repeats every 4 weeks)
-            const planFor = (iso) => {
-              const d0 = new Date(iso + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
-              const w = (((Math.round((mon - mondayFor(1)) / (7 * 86400000)) % 4) + 4) % 4) + 1;
-              return ((workoutPlan && workoutPlan.weeks && workoutPlan.weeks[w]) || {})[DAY_KEYS[(d0.getDay() + 6) % 7]];
-            };
-            // Status shown for a date: what was logged, otherwise the plan's rest days, and planned workouts ahead
-            const statusFor = (iso) => {
-              const l = log[iso];
-              if (l === 'trained' || l === 'rest') return l;
-              if (l === 'skip') return null;
-              const pd = planFor(iso);
-              if (pd && isRestDay(pd)) return 'rest';
-              if (iso > today && pd && dayHasData(pd)) return 'planned';
-              return null;
-            };
+            const statusFor = gymStatus;
+            const allDates = Array.from(new Set([...Object.keys(log), ...Object.keys(gymDays || {})])).filter(dt => dt <= today);
             const base = new Date(); base.setDate(1); base.setMonth(base.getMonth() + gymMonthOffset);
             const y = base.getFullYear(), mo = base.getMonth();
             const daysIn = new Date(y, mo + 1, 0).getDate();
             const lead = (new Date(y, mo, 1).getDay() + 6) % 7; // Monday first
             const key = (dd) => `${y}-${String(mo + 1).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
-            const monthTrained = Array.from({length: daysIn}, (_, i) => log[key(i + 1)] === 'trained').filter(Boolean).length;
+            const monthTrained = Array.from({length: daysIn}, (_, i) => statusFor(key(i + 1)) === 'trained').filter(Boolean).length;
             const monthRest = Array.from({length: daysIn}, (_, i) => key(i + 1) <= today && statusFor(key(i + 1)) === 'rest').filter(Boolean).length;
             // best week this month (Mon–Sun) and streak of weeks with 3+ sessions
             const weekCount = {};
-            Object.keys(log).forEach(dt => { if (log[dt] !== 'trained') return; const d0 = new Date(dt + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); const k = localISODate(mon); weekCount[k] = (weekCount[k] || 0) + 1; });
+            allDates.forEach(dt => { if (statusFor(dt) !== 'trained') return; const d0 = new Date(dt + 'T00:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); const k = localISODate(mon); weekCount[k] = (weekCount[k] || 0) + 1; });
             const bestWeek = Math.max(0, ...Array.from({length: daysIn}, (_, i) => { const d0 = new Date(y, mo, i + 1); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); return weekCount[localISODate(mon)] || 0; }));
             let streak = 0; { const mon = new Date(); mon.setHours(0,0,0,0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7)); if ((weekCount[localISODate(mon)] || 0) < 3) mon.setDate(mon.getDate() - 7); while ((weekCount[localISODate(mon)] || 0) >= 3) { streak++; mon.setDate(mon.getDate() - 7); } }
             // year overview + month-by-month history
             const byMonth = {};
-            Object.keys(log).forEach(dt => { if (log[dt] === 'trained') { const m = dt.slice(0, 7); byMonth[m] = (byMonth[m] || 0) + 1; } });
+            allDates.forEach(dt => { if (statusFor(dt) === 'trained') { const m = dt.slice(0, 7); byMonth[m] = (byMonth[m] || 0) + 1; } });
             const histPts = Object.keys(byMonth).sort().map(m => ({ m, v: byMonth[m] }));
             const yearMonths = Array.from({length: 12}, (_, i) => { const m = `${y}-${String(i + 1).padStart(2, '0')}`; return { m, label: ['J','F','M','A','M','J','J','A','S','O','N','D'][i], n: byMonth[m] || 0 }; });
             const maxN = Math.max(1, ...yearMonths.map(x => x.n));
@@ -67828,8 +67920,8 @@ function MuzzApp() {
                       const st = statusFor(key(i + 1)); const isT = key(i + 1) === today; const fut = key(i + 1) > today;
                       return (
                         <button key={i} aria-label={`${i + 1}: ${st || 'nothing logged'}`}
-                          onClick={() => { if (key(i + 1) > today) return; setGymLog(p => { const n = { ...(p || {}) }; const cur = n[key(i + 1)]; if (!cur || cur === 'skip') n[key(i + 1)] = 'trained'; else if (cur === 'trained') n[key(i + 1)] = 'rest'; else n[key(i + 1)] = 'skip'; return n; }); }}
-                          style={{aspectRatio:"1",borderRadius:"50%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:0,fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:fut ? "default" : "pointer",padding:0,lineHeight:1.05,
+                          onClick={() => openGymDate(key(i + 1))}
+                          style={{aspectRatio:"1",borderRadius:"50%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:0,fontSize:"14px",fontWeight:st === 'trained' ? 700 : 500,cursor:"pointer",padding:0,lineHeight:1.05,
                             opacity:fut && st ? 0.55 : 1,
                             color:st === 'trained' ? "#FFFFFF" : st === 'rest' ? "rgba(235,235,245,0.9)" : fut ? "rgba(235,235,245,0.25)" : "rgba(235,235,245,0.8)",
                             background:st === 'trained' ? "var(--mz-accent,#0A84FF)" : st === 'rest' ? "rgba(255,255,255,0.12)" : "transparent",
@@ -67846,7 +67938,7 @@ function MuzzApp() {
                     <span style={{display:"inline-flex",alignItems:"center",gap:"5px"}}><span style={{width:"12px",height:"12px",borderRadius:"50%",background:"rgba(255,255,255,0.12)",border:"1.5px dashed rgba(235,235,245,0.6)",boxSizing:"border-box"}} /> Rest (zzz)</span>
                     <span style={{display:"inline-flex",alignItems:"center",gap:"5px"}}><span style={{width:"12px",height:"12px",borderRadius:"50%",border:"1.5px solid rgba(var(--mz-accent-rgb,10,132,255),0.6)",boxSizing:"border-box"}} /> Planned</span>
                   </div>
-                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT,textAlign:"center"}}>This fills in from your 4-week plan. Tap a past day to change it.</div>
+                  <div style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT,textAlign:"center"}}>Tap any day to see or log that day's workout.</div>
                 </div>
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
@@ -67866,24 +67958,36 @@ function MuzzApp() {
                 <div style={{...card,borderRadius:"16px",padding:"14px 16px"}}>
                   <div style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,marginBottom:"10px"}}>Training history</div>
                   <MzHistoryView points={histPts} color={themeHex} money={(n) => `${Math.round(n)} session${Math.round(n) === 1 ? '' : 's'}`}
-                    emptyText="Write or tick off a workout in your 4-week plan and your history starts building month by month." sumYears />
+                    emptyText="Write a workout on any day and your history starts building month by month." sumYears />
                 </div>
               </>
             );
           })()}
 
+          {gymSheetDay && (
+            <Sheet onClose={() => setGymSheetDay(null)}>
+              <div style={{padding:"4px 12px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 4px"}}>
+                  <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>{new Date(gymSheetDay + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+                  <button onClick={() => setGymSheetDay(null)} style={{...textBtn(BLUE),fontWeight:600}}>Done</button>
+                </div>
+                {renderDayCards([dayKeyOf(gymSheetDay)])}
+                <button onClick={() => { setGymSheetDay(null); setGymWorkoutTab('log'); }} style={{...textBtn(BLUE),fontSize:"15px",alignSelf:"center"}}>Open this week</button>
+              </div>
+            </Sheet>
+          )}
+
           {gymTabNow === 'log' && (
             <>
-              <Segmented value={currentWeek} onChange={setCurrentWeek} options={[1,2,3,4].map(w => ({ id: w, label: w === planWeekNow ? `Week ${w} •` : `Week ${w}` }))} />
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",margin:"-4px 2px 0",fontFamily:SANS_FONT,fontSize:"14px",color:sec}}>
-                <span>{shortDate(dateForDayW(currentWeek, 'Mon'))} – {shortDate(dateForDayW(currentWeek, 'Sun'))}{currentWeek === planWeekNow ? ' · this week' : currentWeek < planWeekNow ? ' · done' : ' · coming up'}</span>
-                <span style={{display:"flex",alignItems:"center",gap:"6px"}}>This week is
-                  <select aria-label="This week is" value={planWeekNow} onChange={(e) => setThisWeekIs(+e.target.value)}
-                    style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"999px",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"13px",padding:"4px 8px",colorScheme:"dark"}}>
-                    {[1,2,3,4].map(w => <option key={w} value={w}>Week {w}</option>)}
-                  </select>
-                </span>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+                <button aria-label="Previous week" onClick={() => setGymWeekOffset(o => o - 1)} style={{...textBtn(BLUE),fontSize:"24px",padding:"0 10px"}}>‹</button>
+                <div style={{textAlign:"center",fontFamily:SANS_FONT}}>
+                  <div style={{fontSize:"18px",fontWeight:700,color:"#FFFFFF"}}>{weekName}</div>
+                  <div style={{fontSize:"13px",color:sec}}>{shortDate(dateOf('Mon'))} – {shortDate(dateOf('Sun'))}</div>
+                </div>
+                <button aria-label="Next week" onClick={() => setGymWeekOffset(o => o + 1)} style={{...textBtn(BLUE),fontSize:"24px",padding:"0 10px"}}>›</button>
               </div>
+              {gymWeekOffset !== 0 && <button onClick={() => setGymWeekOffset(0)} style={{...textBtn(BLUE),fontSize:"14px",alignSelf:"center",marginTop:"-6px"}}>Back to this week</button>}
               {Object.keys(weekMuscleTotals).length > 0 && (
                 <div style={{display:"flex",flexWrap:"wrap",gap:"6px",margin:"0 2px"}}>
                   {MUSCLES.filter(m => weekMuscleTotals[m]).map(m => (
@@ -67893,131 +67997,10 @@ function MuzzApp() {
               )}
 
               <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-              {DAY_KEYS.map(dayKey => {
-                const d = workoutWeek[dayKey] || {};
-                const dDate = dateForDayW(currentWeek, dayKey);
-                const logged = (gymLog || {})[dDate];
-                const done = logged === 'trained';
-                const isFuture = dDate > today;
-                const isToday = dDate === today;
-                const dayLabel = `${isToday ? 'Today, ' : ''}${fullDay[dayKey]} ${shortDate(dDate)}`;
-                const exerciseList = dayExercises(d);
-                const rest = isRestDay(d) || logged === 'rest';
-                const exGroups = groupSupersets(exerciseList);
-                const ssGroups = exGroups.filter(g => g.length > 1);
-                return (
-                  <div key={dayKey} style={{...card,borderRadius:"16px",opacity:rest?0.6:1}}>
-                    {rest ? (
-                      <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px"}}>
-                        <span style={{width:"24px",height:"24px",borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,0.14)",color:"rgba(235,235,245,0.8)",fontSize:"9px",fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px"}}><span style={{fontSize:"11px",alignSelf:"flex-end",marginBottom:"4px"}}>z</span><span style={{fontSize:"9px",alignSelf:"center"}}>z</span><span style={{fontSize:"7px",alignSelf:"flex-start",marginTop:"6px"}}>z</span></span>
-                        <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
-                          <div style={{fontSize:"17px",fontFamily:SANS_FONT,color:"rgba(235,235,245,0.75)",marginTop:"1px",letterSpacing:"-0.2px"}}>Rest day</div>
-                        </div>
-                        <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: false, note: /^\s*rest( day)?\s*$/i.test(noteTextFor(cur)) ? '' : cur.note})); logGymDay(dayKey, null); }}
-                          style={{...textBtn(BLUE),fontSize:"15px",flexShrink:0}}>Undo</button>
-                      </div>
-                    ) : (<>
-                    {/* Day header + what you trained */}
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px",padding:"12px 14px 10px"}}>
-                      <button aria-label={done ? 'Mark not done' : 'Mark done'} disabled={isFuture} title={isFuture ? 'You can tick this on the day' : undefined} onClick={()=>{ if (!isFuture) logGymDay(dayKey, done ? null : 'trained'); }}
-                        style={{width:"24px",height:"24px",marginTop:"9px",borderRadius:"50%",flexShrink:0,cursor:"pointer",padding:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?GREEN:"transparent",border:done?"none":"1.5px solid rgba(235,235,245,0.3)",color:"#FFFFFF",fontSize:"13px",fontWeight:700,transition:"background 0.15s"}}>{done ? '✓' : ''}</button>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                          <div style={{fontSize:"13px",fontFamily:SANS_FONT,color:isToday?BLUE:sec,fontWeight:600}}>{dayLabel}</div>
-                          <button onClick={() => { updateDay(dayKey, cur => ({...cur, rest: true, done: false})); logGymDay(dayKey, 'rest'); }}
-                            style={{...textBtn("rgba(235,235,245,0.5)"),fontSize:"13px",flexShrink:0}}>Rest day</button>
-                        </div>
-                        <textarea rows={1} placeholder="e.g. 3 shoulders, 2 biceps, 2 triceps" value={noteTextFor(d)}
-                          ref={growText} onInput={(e)=>growText(e.target)} onFocus={scrollInputIntoView}
-                          onChange={e => setDayNote(dayKey, e.target.value)}
-                          style={{...bareArea,fontSize:"17px",marginTop:"1px"}} />
-                        <div style={{display:"flex",gap:"16px",marginTop:"6px",flexWrap:"wrap"}}>
-                          <button onClick={() => setGymChipDay(c => c === `${currentWeek}-${dayKey}` ? null : `${currentWeek}-${dayKey}`)} style={{...textBtn(BLUE),fontSize:"14px"}}>{gymChipDay === `${currentWeek}-${dayKey}` ? 'Done adding' : '+ Quick add'}</button>
-                          {dayHasData(d) && <button onClick={() => copyDayForward(dayKey)} style={{...textBtn("rgba(235,235,245,0.6)"),fontSize:"14px"}}>Copy to {dayKey === 'Sun' ? 'next Mon' : DAY_KEYS[DAY_KEYS.indexOf(dayKey) + 1]}</button>}
-                        </div>
-                        {gymChipDay === `${currentWeek}-${dayKey}` && (
-                          <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginTop:"8px"}}>
-                            {MUSCLES.map(m => {
-                              const n = parseNoteMuscles(noteTextFor(d))[m] || 0;
-                              return (
-                                <button key={m} onClick={() => bumpMuscle(dayKey, m)}
-                                  style={{padding:"7px 12px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,color:"#FFFFFF",
-                                    border:n?"none":"0.5px solid rgba(255,255,255,0.16)",background:n?"rgba(var(--mz-accent-rgb,10,132,255),0.85)":"rgba(255,255,255,0.08)"}}>
-                                  {m}{n ? ` · ${n}` : ''}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Detailed exercises (optional) */}
-                    {exGroups.map(group => {
-                      const isSet = group.length > 1;
-                      const setLabel = group.length === 2 ? 'Superset' : group.length === 3 ? 'Tri-set' : 'Giant set';
-                      const setLetter = String.fromCharCode(65 + ssGroups.indexOf(group));
-                      const renderEx = (ex, gi) => (
-                        <div key={ex.id} style={isSet ? {padding:"12px 16px 14px 12px",borderTop:gi>0?"0.5px solid rgba(191,90,242,0.25)":"none"} : {borderTop:sep,padding:"12px 16px 14px"}}>
-                          <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                            {isSet && <span style={{flexShrink:0,marginTop:"1px",minWidth:"28px",padding:"2px 6px",borderRadius:"8px",background:"rgba(191,90,242,0.18)",color:PURPLE,fontFamily:SANS_FONT,fontSize:"13px",fontWeight:700,textAlign:"center"}}>{setLetter}{gi+1}</span>}
-                            <textarea rows={1} placeholder="Exercise, e.g. bench press" value={ex.name||''} ref={growText} onInput={(e)=>growText(e.target)}
-                              onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} onFocus={scrollInputIntoView}
-                              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                              style={{...bareArea,fontWeight:600}} />
-                            <button aria-label="Remove exercise" onClick={()=>removeExercise(dayKey,ex.id)} style={{background:"none",border:"none",cursor:"pointer",color:ter,fontSize:"18px",padding:"0 2px",lineHeight:1.2,flexShrink:0}}>×</button>
-                          </div>
-                          <div style={{display:"flex",gap:"8px",marginTop:"10px"}}>
-                            {numField('Sets', ex.sets, e=>updateExercise(dayKey,ex.id,'sets',e.target.value))}
-                            {numField('Reps', ex.reps, e=>updateExercise(dayKey,ex.id,'reps',e.target.value))}
-                            {numField('kg', ex.weight, e=>updateExercise(dayKey,ex.id,'weight',e.target.value), "decimal")}
-                          </div>
-                          <div style={{display:"flex",gap:"8px",marginTop:"10px",flexWrap:"wrap"}}>
-                            {chip('Drop set', !!ex.dropSet, ()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet), BLUE)}
-                            {chip('To failure', !!ex.toFailure, ()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure), RED)}
-                            {chip(ex.supersetWithNext ? 'Superset ↓' : 'Superset', !!ex.supersetWithNext, ()=>toggleSuperset(dayKey,ex.id), PURPLE)}
-                          </div>
-                          {(ex.notes !== undefined && ex.notes !== '') ? (
-                            <textarea rows={1} placeholder="Notes (form cues, RPE…)" value={ex.notes.trim() === '' ? '' : ex.notes} ref={growText} onInput={(e)=>growText(e.target)}
-                              onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value === '' ? ' ' : e.target.value)} onFocus={scrollInputIntoView}
-                              style={{...bareArea,fontSize:"15px",color:"rgba(235,235,245,0.85)",marginTop:"10px"}} />
-                          ) : (
-                            <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{...textBtn(BLUE),fontSize:"15px",marginTop:"10px"}}>Add note</button>
-                          )}
-                        </div>
-                      );
-                      if (!isSet) return renderEx(group[0], 0);
-                      return (
-                        <div key={'ss_' + group[0].id} style={{borderTop:sep,padding:"10px 12px 12px"}}>
-                          <div style={{border:"0.5px solid rgba(191,90,242,0.35)",borderLeft:`3px solid ${PURPLE}`,borderRadius:"14px",background:"rgba(191,90,242,0.06)",overflow:"hidden"}}>
-                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"9px 16px 0 12px"}}>
-                              <span style={{fontSize:"13px",fontWeight:700,color:PURPLE,fontFamily:SANS_FONT,letterSpacing:"0.2px",textTransform:"uppercase"}}>{setLabel} {setLetter}</span>
-                              <span style={{fontSize:"12px",color:sec,fontFamily:SANS_FONT}}>Back-to-back, rest after {setLetter}{group.length}</span>
-                            </div>
-                            {group.map((ex, gi) => renderEx(ex, gi))}
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    <div style={{display:"flex",gap:"18px",padding:exerciseList.length ? "10px 14px 12px 50px" : "0 14px 12px 50px",borderTop:exerciseList.length ? sep : "none"}}>
-                      <button onClick={()=>addExercise(dayKey)} style={{...textBtn(BLUE),fontSize:"15px"}}>+ {exerciseList.length ? 'Exercise' : 'Exercise details'}</button>
-                      {exerciseList.length > 0 && (
-                        <button onClick={()=>addSuperset(dayKey)} style={{...textBtn(PURPLE),fontSize:"15px"}}>+ Superset</button>
-                      )}
-                    </div>
-                    </>)}
-                  </div>
-                );
-              })}
+              {renderDayCards(DAY_KEYS)}
               </div>
 
-              <button onClick={copyWeekForward} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Copy Week {currentWeek} to Week {(currentWeek % 4) + 1}</button>
-              <button onClick={() => {
-                if (!window.confirm(`Clear everything in Week ${currentWeek}? Your Overview and training history are kept. This can't be undone.`)) return;
-                setWorkoutPlan(prev => { const next = {...(prev||{weeks:{},stepsGoal:10000})}; next.weeks = {...(next.weeks||{})}; delete next.weeks[currentWeek]; return next; });
-              }} style={{...textBtn(RED),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Clear Week {currentWeek}</button>
+              <button onClick={copyWeekForward} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Copy {weekName.toLowerCase()} to the week after</button>
             </>
           )}
         </div>
