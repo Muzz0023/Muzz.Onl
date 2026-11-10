@@ -47773,26 +47773,30 @@ function MuzzApp() {
     return (((weeks % 4) + 4) % 4) + 1;
   };
   useEffect(() => { if (activeView === 'gymworkout') setWorkoutSubWeek(mzPlanWeekNow(workoutPlan && workoutPlan.anchor)); }, [activeView]);
-  // The plan feeds the Overview: a workout written on today or earlier counts as trained, a rest day as rest (unless changed by hand)
+  // The plan feeds the Overview, and what it shows for past days is saved by date so clearing a week never wipes history:
+  // rest days from the last 4 weeks are saved as rest; a workout written this week (today or earlier) is saved as trained.
   useEffect(() => {
     if (!dataLoaded || !workoutPlan) return;
-    const wk = (workoutPlan.weeks || {})[mzPlanWeekNow(workoutPlan.anchor)] || {};
+    const weeks = workoutPlan.weeks || {};
     const now = new Date(); now.setHours(0, 0, 0, 0);
-    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-    const todayIso = localISODate(now);
+    const thisMon = new Date(now); thisMon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const nowWeek = mzPlanWeekNow(workoutPlan.anchor);
     const keys = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const add = {};
-    keys.forEach((k, i) => {
-      const d0 = new Date(mon); d0.setDate(mon.getDate() + i); const iso = localISODate(d0);
-      if (iso > todayIso) return;
-      const day = wk[k]; if (!day) return;
+    for (let back = 0; back < 28; back++) {
+      const d0 = new Date(now); d0.setDate(now.getDate() - back);
+      const iso = localISODate(d0);
+      if ((gymLog || {})[iso] !== undefined) continue;
+      const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+      const wOff = Math.round((mon - thisMon) / (7 * 86400000));
+      const w = ((((nowWeek - 1 + wOff) % 4) + 4) % 4) + 1;
+      const day = (weeks[w] || {})[keys[(d0.getDay() + 6) % 7]]; if (!day) continue;
       const note = typeof day.note === 'string' ? day.note : [day.name || '', typeof day.exercises === 'string' ? day.exercises : ''].join(' ');
       const hasEx = Array.isArray(day.exercises) && day.exercises.some(e => e && String(e.name || '').trim());
       const isRest = day.rest === true || /^\s*rest( day)?\s*$/i.test(note);
-      if ((gymLog || {})[iso] !== undefined) return;
       if (isRest) add[iso] = 'rest';
-      else if (note.trim() || hasEx) add[iso] = 'trained';
-    });
+      else if (wOff === 0 && (note.trim() || hasEx)) add[iso] = 'trained';
+    }
     if (Object.keys(add).length) setGymLog(prev => ({ ...(prev || {}), ...add }));
   }, [workoutPlan, dataLoaded, gymLog]);
   const [tasksShowDone, setTasksShowDone] = useState({}); // per-list: show completed tasks
@@ -68011,7 +68015,7 @@ function MuzzApp() {
 
               <button onClick={copyWeekForward} style={{...textBtn(BLUE),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Copy Week {currentWeek} to Week {(currentWeek % 4) + 1}</button>
               <button onClick={() => {
-                if (!window.confirm(`Clear everything in Week ${currentWeek}? This can't be undone.`)) return;
+                if (!window.confirm(`Clear everything in Week ${currentWeek}? Your Overview and training history are kept. This can't be undone.`)) return;
                 setWorkoutPlan(prev => { const next = {...(prev||{weeks:{},stepsGoal:10000})}; next.weeks = {...(next.weeks||{})}; delete next.weeks[currentWeek]; return next; });
               }} style={{...textBtn(RED),alignSelf:"center",marginTop:"6px",fontSize:"15px"}}>Clear Week {currentWeek}</button>
             </>
