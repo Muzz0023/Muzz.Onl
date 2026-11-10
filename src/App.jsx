@@ -51466,7 +51466,7 @@ function MuzzApp() {
             </div>
           </div>
 
-          {/* TILES — chosen and ordered in Edit dashboard; empty ones stay out of the way */}
+          {/* TILES — empty ones stay out of the way */}
           {(() => {
             const nb = billsDueSoon[0];
             const upcoming = [nextBday && { kind: 'bday', ...nextBday }, nextReminder && { kind: 'rem', ...nextReminder }].filter(Boolean).sort((a, b) => a.diff - b.diff)[0];
@@ -51507,34 +51507,6 @@ function MuzzApp() {
                       </button>
                     ); })}
                   </div>
-                )}
-                <div style={{display:"flex",justifyContent:"flex-end",marginTop:"8px"}}>
-                  <button onClick={() => setDashEditOpen(true)} style={{background:"none",border:"none",padding:"4px 4px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px",cursor:"pointer"}}>Edit dashboard</button>
-                </div>
-                {dashEditOpen && (
-                  <Sheet onClose={() => setDashEditOpen(false)}>
-                    <div style={{padding:"4px 16px 24px"}}>
-                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
-                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>Edit dashboard</span>
-                        <button onClick={() => setDashEditOpen(false)} style={{background:"none",border:"none",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,cursor:"pointer"}}>Done</button>
-                      </div>
-                      <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,marginBottom:"12px"}}>Choose which tiles show and their order. Tiles with nothing in them stay hidden until there is.</div>
-                      <div style={{...glass,overflow:"hidden"}}>
-                        {order.map((k, i) => { const t = TILES[k]; const on = !(dashLayout.hidden || []).includes(k); const Ic = t.icon; return (
-                          <div key={k} style={{display:"flex",alignItems:"center",gap:"12px",minHeight:"52px",padding:"0 12px 0 16px",borderTop:i?"0.5px solid rgba(255,255,255,0.1)":"none"}}>
-                            <Ic size={18} strokeWidth={1.75} color={txt.secondary} />
-                            <span style={{flex:1,fontSize:"17px",color:on?txt.primary:txt.tertiary,fontFamily:SANS_FONT}}>{t.label}{!t.show && on ? <span style={{fontSize:"12px",color:txt.tertiary}}> · nothing yet</span> : null}</span>
-                            <button aria-label="Move up" disabled={i === 0} onClick={() => move(k, -1)} style={{background:"none",border:"none",color:i===0?txt.tertiary:txt.secondary,fontSize:"18px",cursor:"pointer",padding:"6px"}}>↑</button>
-                            <button aria-label="Move down" disabled={i === order.length - 1} onClick={() => move(k, 1)} style={{background:"none",border:"none",color:i===order.length-1?txt.tertiary:txt.secondary,fontSize:"18px",cursor:"pointer",padding:"6px"}}>↓</button>
-                            <button role="switch" aria-checked={on} aria-label={`Show ${t.label}`} onClick={() => toggle(k)}
-                              style={{width:"51px",height:"31px",borderRadius:"999px",border:"none",background:on?"#30D158":"rgba(120,120,128,0.36)",position:"relative",cursor:"pointer",flexShrink:0,transition:"background 0.2s"}}>
-                              <span style={{position:"absolute",top:"2px",left:on?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",transition:"left 0.2s",boxShadow:"0 2px 4px rgba(0,0,0,0.3)"}} />
-                            </button>
-                          </div>
-                        ); })}
-                      </div>
-                    </div>
-                  </Sheet>
                 )}
               </>
             );
