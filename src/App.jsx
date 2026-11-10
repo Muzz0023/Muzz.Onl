@@ -1079,6 +1079,33 @@ const MZ_ASSETS_TOUR = [
 
 // ---------- iPhone links: share sheet, PDF, Face ID ----------
 // A native plugin by name, or null when running on the website.
+// SHA-256 as hex — Apple gets the hashed nonce, Supabase gets the raw one
+const mzSha256Hex = async (str) => {
+  try {
+    if (window.crypto && window.crypto.subtle) {
+      const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+  } catch (e) {}
+  // Small fallback for web views without crypto.subtle
+  const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  const bytes = Array.from(new TextEncoder().encode(str)); const l = bytes.length * 8;
+  bytes.push(0x80); while (bytes.length % 64 !== 56) bytes.push(0);
+  for (let i = 7; i >= 0; i--) bytes.push(i >= 4 ? 0 : (l >>> (i * 8)) & 0xff);
+  let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const r = (x, n) => (x >>> n) | (x << (32 - n));
+  for (let o = 0; o < bytes.length; o += 64) {
+    const w = new Array(64);
+    for (let i = 0; i < 16; i++) w[i] = (bytes[o+i*4] << 24) | (bytes[o+i*4+1] << 16) | (bytes[o+i*4+2] << 8) | bytes[o+i*4+3];
+    for (let i = 16; i < 64; i++) { const s0 = r(w[i-15],7) ^ r(w[i-15],18) ^ (w[i-15] >>> 3), s1 = r(w[i-2],17) ^ r(w[i-2],19) ^ (w[i-2] >>> 10); w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0; }
+    let [a,b,c,d,e,f,g,h] = H;
+    for (let i = 0; i < 64; i++) { const t1 = (h + (r(e,6) ^ r(e,11) ^ r(e,25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0, t2 = ((r(a,2) ^ r(a,13) ^ r(a,22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0; h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0; }
+    H = H.map((v, i) => (v + [a,b,c,d,e,f,g,h][i]) | 0);
+  }
+  return H.map(v => (v >>> 0).toString(16).padStart(8, '0')).join('');
+};
+const mzRandomNonce = () => { const a = new Uint8Array(24); (window.crypto || {}).getRandomValues ? window.crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.floor(Math.random() * 256); }); return Array.from(a).map(b => b.toString(16).padStart(2, '0')).join(''); };
+
 const mzPlugin = (name) => {
   if (typeof window === 'undefined') return null;
   const C = window.Capacitor;
@@ -2417,6 +2444,21 @@ const supabase = {
     return d;
   },
   
+  async signInWithApple(idToken, nonce) {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+      method: 'POST',
+      headers: this.headers(false),
+      body: JSON.stringify({ provider: 'apple', id_token: idToken, nonce })
+    });
+    const d = await r.json();
+    if (d.access_token) {
+      this.token = d.access_token;
+      this.user = d.user;
+      localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, refreshToken: d.refresh_token, user: d.user }));
+    }
+    return d;
+  },
+
   signOut() {
     this.token = null;
     this.user = null;
@@ -2599,13 +2641,35 @@ function AuthProvider({ children }) {
     return result;
   };
 
+  const appleSignIn = async () => {
+    const A = mzPlugin('SignInWithApple');
+    if (!A) return { error_description: 'Sign in with Apple works in the Muzz iPhone app.' };
+    const raw = mzRandomNonce();
+    const hashed = await mzSha256Hex(raw);
+    let res;
+    try {
+      res = await A.authorize({ clientId: 'com.muzz.app', redirectURI: 'https://muzz.onl', scopes: 'email name', nonce: hashed });
+    } catch (e) {
+      const m = String((e && (e.message || e.code)) || '');
+      if (/cancel|1001/i.test(m)) return { cancelled: true };
+      return { error_description: 'Apple sign in did not finish. Please try again.' };
+    }
+    const tok = res && res.response && res.response.identityToken;
+    if (!tok) return { error_description: 'Apple did not return a sign in token.' };
+    const given = res.response.givenName;
+    if (given) { try { localStorage.setItem('mz_apple_given_name', given); } catch (e) {} }
+    const result = await supabase.signInWithApple(tok, raw);
+    if (result.user) setUser(result.user);
+    return result;
+  };
+
   const signOut = () => {
     supabase.signOut();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, appleSignIn }}>
       {children}
     </AuthContext.Provider>
   );
@@ -2633,7 +2697,16 @@ const signupGreetings = [
 ];
 
 function AuthScreen() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, appleSignIn } = useAuth();
+  const canApple = !!mzPlugin('SignInWithApple');
+  const handleApple = async () => {
+    setError(''); setSuccessMessage(''); setLoading(true);
+    try {
+      const r = await appleSignIn();
+      if (r && !r.cancelled && !r.user && (r.error || r.error_description || r.msg)) setError(r.error_description || r.msg || (r.error && r.error.message) || 'Apple sign in failed');
+    } catch (e) { setError('Network error. Please try again.'); }
+    setLoading(false);
+  };
   const [isLogin, setIsLogin] = useState(true);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -2767,6 +2840,21 @@ function AuthScreen() {
           </div>
 
           {error && <div style={{padding:'10px 14px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'10px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{error}</div>}
+
+          {canApple && (
+            <>
+              <button type="button" onClick={handleApple} disabled={loading}
+                style={{width:'100%',height:'50px',display:'flex',alignItems:'center',justifyContent:'center',gap:'8px',background:'#FFFFFF',color:'#000000',border:'none',borderRadius:'12px',fontFamily:"-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",fontSize:'17px',fontWeight:600,cursor:'pointer',opacity:loading?0.6:1}}>
+                <svg width="17" height="20" viewBox="0 0 17 20" aria-hidden="true"><path fill="#000" d="M14.2 10.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.8-1-2.8-4zM11.7 3c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></svg>
+                {isLogin ? 'Sign in with Apple' : 'Sign up with Apple'}
+              </button>
+              <div style={{display:'flex',alignItems:'center',gap:'10px',margin:'16px 0'}}>
+                <span style={{flex:1,height:'0.5px',background:'rgba(148,163,184,0.25)'}} />
+                <span style={{fontSize:'10px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1px'}}>OR WITH EMAIL</span>
+                <span style={{flex:1,height:'0.5px',background:'rgba(148,163,184,0.25)'}} />
+              </div>
+            </>
+          )}
 
           <form onSubmit={handleSubmit} autoComplete="on" noValidate={false}>
           <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'16px'}}>
@@ -49317,6 +49405,7 @@ function MuzzApp() {
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
+          else { try { const g = localStorage.getItem('mz_apple_given_name'); if (g) setEliteName(g); } catch (e) {} }
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           if (d.timetableHours && isFinite(d.timetableHours.start) && isFinite(d.timetableHours.end)) setTimetableHours(d.timetableHours);
           if (Array.isArray(d.billsHistory)) setBillsHistory(d.billsHistory);
