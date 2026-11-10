@@ -294,11 +294,14 @@ const MZ_BILLS_TOUR = [
 ];
 
 const MZ_GYM_TOUR = [
-  { icon: '🏋️', title: 'Every day, its own workout', body: 'In Week, write what you trained each day, like "3 shoulders, 2 biceps". Use ‹ › to move between weeks. Muzz adds up your sets per muscle.' },
+  { icon: '🗓️', title: 'Your training week', body: 'The Week tab shows this week with real dates. Use ‹ › to look back at past weeks or plan ahead.' },
+  { icon: '✍️', title: 'Just write it', body: 'Type what you trained on a day, like "3 shoulders, 2 biceps". As soon as you write it, that day counts as trained. No need to tick anything.' },
   { icon: '👆', title: 'Tap instead of typing', body: 'Tap Quick add under a day, then tap a muscle to add a set. Tap Shoulders three times and it writes "3 shoulders".' },
-  { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or copy a whole week to the week after, so your routine is set up in seconds.' },
-  { icon: '✅', title: 'Linked to the calendar', body: 'Anything you write on a day shows on the Overview calendar as trained, and rest days show as zzz. Tap any day on the calendar to open it.' },
-  { icon: '📊', title: 'Your overview', body: 'Overview shows a calendar for each month, sessions and rest days, your year at a glance, and history month by month and year by year. Nothing is ever wiped.' },
+  { icon: '🏋️', title: 'Go into detail', body: 'Tap + Exercise details to log each exercise with sets, reps, weight, drop sets, to failure and supersets.' },
+  { icon: '😴', title: 'Rest days', body: 'Tap Rest day on any day and it shows as zzz on your calendar. Skipped a day you planned? Untick it.' },
+  { icon: '📋', title: 'Copy it over', body: 'Copy a day to the next day, or a whole week to the week after, so your routine is set up in seconds.' },
+  { icon: '📊', title: 'Overview', body: 'See each month as a calendar, your sessions, rest days and best week, your year at a glance, and history month by month and year by year. Tap any day to open it.' },
+  { icon: '👟', title: 'Steps', body: 'Keep track of this week\'s steps against your daily goal.' },
 ];
 
 const MZ_DATES_TOUR = [
@@ -47640,6 +47643,14 @@ function MuzzApp() {
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
+  // Steps: only this week and last week are kept (Apple Health holds the long-term history)
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const cut = new Date(now); cut.setDate(now.getDate() - ((now.getDay() + 6) % 7) - 7); // last week's Monday
+    const cutIso = localISODate(cut);
+    setDailySteps(prev => { const keys = Object.keys(prev || {}); if (!keys.some(k => k < cutIso)) return prev; const next = {}; keys.forEach(k => { if (k >= cutIso) next[k] = prev[k]; }); return next; });
+  }, [dataLoaded, dailySteps]);
   const [gymLog, setGymLog] = useState({}); // { 'YYYY-MM-DD': 'trained' | 'rest' | 'skip' } ticks / rest set by hand
   const [gymDays, setGymDays] = useState({}); // { 'YYYY-MM-DD': { note, exercises, rest } } each day's workout
   const [gymWeekOffset, setGymWeekOffset] = useState(0); // Week view: 0 = this week, -1 = last week…
