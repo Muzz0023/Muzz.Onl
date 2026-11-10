@@ -244,14 +244,14 @@ const MzDoneLog = ({ log, initialKind = 'all', onClose }) => {
     <Sheet onClose={onClose}>
       <div style={{ padding: '4px 16px 20px', display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: SANS_FONT }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '20px', fontWeight: 700, color: '#FFFFFF' }}>Done history</span>
+          <span style={{ fontSize: '20px', fontWeight: 700, color: '#FFFFFF' }}>{initialKind === 'task' ? 'Task history' : initialKind === 'reminder' ? 'Reminder history' : 'Done history'}</span>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--mz-accent,#0A84FF)', fontFamily: SANS_FONT, fontSize: '17px', fontWeight: 600, padding: 0 }}>Done</button>
         </div>
-        <Segmented value={kind} onChange={setKind} options={[{ id: 'all', label: 'All' }, { id: 'task', label: 'Tasks' }, { id: 'reminder', label: 'Reminders' }]} />
+        {initialKind === 'all' && <Segmented value={kind} onChange={setKind} options={[{ id: 'all', label: 'All' }, { id: 'task', label: 'Tasks' }, { id: 'reminder', label: 'Reminders' }]} />}
         <div style={{ display: 'flex', gap: '8px' }}>{stat(count(startWeek), 'This week')}{stat(count(startMonth), 'This month')}{stat(count(startYear), 'This year')}</div>
         <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 12px', borderRadius: '12px', background: 'rgba(118,118,128,0.24)' }}>
           <SearchIcon size={16} strokeWidth={2.2} style={{ color: 'rgba(235,235,245,0.6)', flexShrink: 0 }} />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search everything done" style={{ flex: 1, minWidth: 0, background: 'transparent', border: 'none', outline: 'none', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '16px' }} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={initialKind === 'task' ? 'Search finished tasks' : initialKind === 'reminder' ? 'Search finished reminders' : 'Search everything done'} style={{ flex: 1, minWidth: 0, background: 'transparent', border: 'none', outline: 'none', color: '#FFFFFF', fontFamily: SANS_FONT, fontSize: '16px' }} />
         </label>
         {groups.length === 0 && <div style={{ fontSize: '15px', color: 'rgba(235,235,245,0.6)', padding: '12px 2px', lineHeight: 1.45 }}>{q ? 'Nothing matches that search.' : 'Nothing ticked off yet. Everything you complete from now on is saved here.'}</div>}
         {groups.map(g => (
@@ -261,7 +261,7 @@ const MzDoneLog = ({ log, initialKind = 'all', onClose }) => {
               <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 2px', borderBottom: '0.5px solid rgba(255,255,255,0.08)' }}>
                 <CheckCircle size={18} strokeWidth={2.2} style={{ color: 'var(--mz-accent,#0A84FF)', flexShrink: 0 }} />
                 <span style={{ flex: 1, minWidth: 0, fontSize: '16px', color: '#FFFFFF', overflowWrap: 'anywhere' }}>{e.text}</span>
-                <span style={{ fontSize: '13px', color: 'rgba(235,235,245,0.5)', flexShrink: 0 }}>{e.kind === 'task' ? 'Task' : 'Reminder'} · {new Date(e.at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}</span>
+                <span style={{ fontSize: '13px', color: 'rgba(235,235,245,0.5)', flexShrink: 0 }}>{kind === 'all' ? `${e.kind === 'task' ? 'Task' : 'Reminder'} · ` : ''}{new Date(e.at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}</span>
               </div>
             ))}
           </div>
@@ -310,7 +310,7 @@ const MZ_DATES_TOUR = [
   { icon: '🎁', title: 'Gift ideas & history', body: 'Jot gift ideas for anniversaries too, and log what you gave each year so you never double up.' },
 ];
 const MZ_BDAYS_TOUR = [
-  { icon: '🎂', title: 'Birthdays', body: 'Keep everyone\'s birthday here, sorted by whose is next, each with a countdown.' },
+  { icon: '🎂', title: 'Birthdays', body: 'Keep everyone\'s birthday here, sorted by whose is next, each with a countdown. Sort them into Family, Friends and Pets, and pets show how old they\'re turning 🐾.' },
   { icon: '📸', title: 'Faces, not just names', body: 'Add a photo from your camera or library, or tap Import from Contacts to bring in birthdays and photos in one go.' },
   { icon: '🎁', title: 'Gift ideas', body: 'Open someone and jot gift ideas or notes, like "loves Lego, size M", so you\'re ready before the day.' },
   { icon: '🗓️', title: 'Gift history', body: 'Log what you gave each year. Next time, you\'ll see what you gave before and never double up.' },
@@ -47639,6 +47639,7 @@ function MuzzApp() {
   const logDone = (kind, text) => setDoneLog(prev => [...prev, { id: Date.now() + Math.random(), kind, text: String(text || '').trim() || 'Untitled', at: new Date().toISOString() }]);
   const [doneLogOpen, setDoneLogOpen] = useState(null); // null | 'all' | 'task' | 'reminder'
   const [remTourOpen, setRemTourOpen] = useState(null); // null | 'reminders' | 'birthdays'
+  const [bdayFilter, setBdayFilter] = useState('all'); // Birthdays: all | family | friend | pet
   const [groceries, setGroceries] = useState([]);
   const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
   const [dailyMeals, setDailyMeals] = useState({});
@@ -49314,6 +49315,7 @@ function MuzzApp() {
   // REMINDERS VIEW
   if (activeView === 'reminders') {
     const addBirthday = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'friend' }]); setEditingBdayId(id); };
+    const addPet = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'pet' }]); setEditingBdayId(id); };
     const addImportantDate = () => { const id = Date.now(); setBirthdays(prev => [...prev, { id, name: '', date: '', category: 'family', type: 'anniversary' }]); setEditingBdayId(id); };
     // Pull birthdays (and photos) from the iPhone's Contacts, skipping names already in Muzz
     const canImportContacts = !!mzPlugin('Contacts');
@@ -49452,7 +49454,7 @@ function MuzzApp() {
       <span style={{width:px,height:px,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",fontFamily:SANS_FONT,fontSize:Math.round(parseInt(px)*0.45)+"px",fontWeight:600,color:"#FFFFFF",background:bday.photo?"#000":(bday.category==='family'?"linear-gradient(135deg,#FF375F,#BF5AF2)":"linear-gradient(135deg,var(--mz-accent,#0A84FF),#5E5CE6)")}}>
         {bday.photo
           ? <img src={bday.photo} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
-          : ((bday.name||'?').trim().charAt(0).toUpperCase() || '?')}
+          : bday.category === 'pet' ? '🐾' : ((bday.name||'?').trim().charAt(0).toUpperCase() || '?')}
       </span>
     );
     const newRow = (label, onClick) => (
@@ -49634,7 +49636,7 @@ function MuzzApp() {
         <SwipeRow style={{...rowCard,border:diff===0?"0.5px solid rgba(var(--mz-accent-rgb,10,132,255),0.6)":rowCard.border}} disabled={isEditing} onDelete={() => undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted')}
           menu={[
             { label: 'Edit', onSelect: () => setEditingBdayId(bday.id) },
-            { label: bday.category === 'family' ? 'Move to Friends' : 'Move to Family', onSelect: () => update({category: bday.category === 'family' ? 'friend' : 'family'}) },
+            ...['family', 'friend', 'pet'].filter(c => (bday.category || 'friend') !== c).map(c => ({ label: `Move to ${c === 'family' ? 'Family' : c === 'friend' ? 'Friends' : 'Pets'}`, onSelect: () => update({category: c}) })),
             { label: 'Delete', destructive: true, onSelect: () => undoableRemove(setBirthdays, b => b.id === bday.id, 'Birthday deleted') },
           ]}>
 
@@ -49648,6 +49650,7 @@ function MuzzApp() {
                   {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}
                   {(() => { if (!bday.type || bday.type === 'birthday' || !bday.date) return ''; const y = parseInt(String(bday.date).slice(0, 4)); const yrs = new Date().getFullYear() - y; return y > 1900 && y !== 2000 && yrs > 0 ? `, ${yrs} year${yrs === 1 ? '' : 's'}` : ''; })()}
                   {bday.category === 'family' && (!bday.type || bday.type === 'birthday') ? ', family' : ''}
+                  {bday.category === 'pet' && (!bday.type || bday.type === 'birthday') ? (() => { const y = parseInt(String(bday.date || '').slice(0, 4)); if (!(y > 1900) || y === 2000) return ' · 🐾 pet'; const nb = new Date(); const next = new Date(nb.getFullYear(), parseInt(String(bday.date).slice(5, 7)) - 1, parseInt(String(bday.date).slice(8, 10))); if (next < new Date(nb.getFullYear(), nb.getMonth(), nb.getDate())) next.setFullYear(nb.getFullYear() + 1); return ` · 🐾 turns ${next.getFullYear() - y}`; })() : ''}
                   {(bday.giftNotes || (bday.gifts || []).length) ? ' · 🎁' : ''}
                 </div>
               </div>
@@ -49673,7 +49676,7 @@ function MuzzApp() {
               </div>
               {(bday.type === 'anniversary' || bday.type === 'other') && <Segmented value={bday.type} onChange={(t) => update({type: t})} options={[{id:'anniversary',label:'Anniversary'},{id:'other',label:'Other date'}]} />}
               <textarea rows={1} autoFocus={!bday.name} value={bday.name}
-                placeholder={bday.type === 'anniversary' ? "e.g. Mum & Dad's anniversary" : bday.type === 'other' ? 'e.g. Started my apprenticeship' : 'Name'}
+                placeholder={bday.type === 'anniversary' ? "e.g. Mum & Dad's anniversary" : bday.type === 'other' ? 'e.g. Started my apprenticeship' : bday.category === 'pet' ? "Pet's name" : 'Name'}
                 ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
                 onChange={(e) => update({name: e.target.value})} style={bareText} />
@@ -49681,10 +49684,10 @@ function MuzzApp() {
                 <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>{bday.type === 'anniversary' ? 'Anniversary' : bday.type === 'other' ? 'Date' : 'Birthday'}</span>
                 <input type="date" value={bday.date||''} onFocus={scrollInputIntoView} onChange={(e) => update({date: e.target.value})} style={datePill} />
               </div>
-              <Segmented value={bday.category||'friend'} onChange={(cat) => update({category: cat})} options={[{id:'friend',label:'Friend'},{id:'family',label:'Family'}]} />
+              <Segmented value={bday.category||'friend'} onChange={(cat) => update({category: cat})} options={(bday.type === 'anniversary' || bday.type === 'other') ? [{id:'friend',label:'Friend'},{id:'family',label:'Family'}] : [{id:'friend',label:'Friend'},{id:'family',label:'Family'},{id:'pet',label:'Pet'}]} />
               <div>
                 <div style={{fontSize:"13px",fontWeight:600,color:sec,fontFamily:SANS_FONT,marginBottom:"6px",display:"flex",alignItems:"center",gap:"6px"}}><Gift size={14} strokeWidth={2.2} /> Gift ideas & notes</div>
-                <textarea rows={2} value={bday.giftNotes || ''} placeholder="e.g. Loves Lego, size M, no chocolate"
+                <textarea rows={2} value={bday.giftNotes || ''} placeholder={bday.category === 'pet' ? 'e.g. New collar, chicken treats' : 'e.g. Loves Lego, size M, no chocolate'}
                   ref={growText} onInput={(e) => growText(e.target)} onFocus={scrollInputIntoView}
                   onChange={(e) => update({giftNotes: e.target.value})}
                   style={{...bareText,fontSize:"16px",background:"rgba(255,255,255,0.06)",borderRadius:"12px",padding:"10px 12px",width:"100%",boxSizing:"border-box"}} />
@@ -49876,10 +49879,29 @@ function MuzzApp() {
                 );
               })()}
 
-              {bdayList.length > 0 && (
-                <div style={rowList}>{bdayList.map((b, i) => renderBirthdayRow(b, i === bdayList.length - 1))}</div>
-              )}
-              {bdayList.length > 0 && newRow('New birthday', addBirthday)}
+              {bdayList.length > 0 && (() => {
+                const counts = { all: bdayList.length, family: bdayList.filter(b => b.category === 'family').length, friend: bdayList.filter(b => (b.category || 'friend') === 'friend').length, pet: bdayList.filter(b => b.category === 'pet').length };
+                const shown = bdayFilter === 'all' ? bdayList : bdayList.filter(b => (b.category || 'friend') === bdayFilter);
+                return (
+                  <>
+                    <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+                      {[['all','All'],['family','Family'],['friend','Friends'],['pet','🐾 Pets']].map(([id, label]) => {
+                        const on = bdayFilter === id;
+                        return (
+                          <button key={id} onClick={() => setBdayFilter(id)} aria-pressed={on}
+                            style={{padding:"7px 13px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,color:"#FFFFFF",border:on?"none":"0.5px solid rgba(255,255,255,0.16)",background:on?"var(--mz-accent,#0A84FF)":"rgba(255,255,255,0.08)"}}>
+                            {label}{counts[id] ? ` ${counts[id]}` : ''}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {shown.length > 0
+                      ? <div style={rowList}>{shown.map((b, i) => renderBirthdayRow(b, i === shown.length - 1))}</div>
+                      : <MzEmpty icon={Gift} title={bdayFilter === 'pet' ? 'No pets yet' : bdayFilter === 'family' ? 'No family yet' : 'No friends yet'} body={bdayFilter === 'pet' ? 'Add your pets so you never miss their birthday.' : 'Add someone, then set them as ' + (bdayFilter === 'family' ? 'Family.' : 'Friend.')} action={bdayFilter === 'pet' ? 'Add a pet' : null} onAction={addPet} />}
+                  </>
+                );
+              })()}
+              {bdayList.length > 0 && newRow(bdayFilter === 'pet' ? 'New pet' : 'New birthday', bdayFilter === 'pet' ? addPet : addBirthday)}
               {canImportContacts && (
                 <button onClick={importBirthdaysFromContacts} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",padding:"10px 2px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                   <span style={{width:"24px",height:"24px",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--mz-accent,#0A84FF)"}}><Contact size={20} strokeWidth={2} /></span>
