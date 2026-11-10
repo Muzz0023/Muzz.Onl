@@ -47556,6 +47556,10 @@ function MuzzApp() {
 
   const [futureStocks, setFutureStocks] = useState([]); // Future portfolio
   const [futureResearch, setFutureResearch] = useState([]); // Future research
+  const [investTrades, setInvestTrades] = useState([]); // [{ id, ticker, side: 'buy'|'sell', shares, price, date, currency }]
+  const [investHistory, setInvestHistory] = useState([]); // [{ m: 'YYYY-MM', total, positions: { TICKER: shares } }]
+  const [tradeSheet, setTradeSheet] = useState(null); // null | { side, ticker, shares, price, date }
+  const [investHistOpen, setInvestHistOpen] = useState(null); // null | 'trades' | 'holdings'
   const [futureResearchColumns, setFutureResearchColumns] = useState([]);
   const [investmentSettings, setInvestmentSettings] = useState({
     yearlyContribution: '',
@@ -48598,6 +48602,8 @@ function MuzzApp() {
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
           if (d.futureStocks) setFutureStocks(d.futureStocks);
           if (d.futureResearch) setFutureResearch(d.futureResearch);
+          if (Array.isArray(d.investTrades)) setInvestTrades(d.investTrades);
+          if (Array.isArray(d.investHistory)) setInvestHistory(d.investHistory);
           if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
           if (d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
           if (d.investmentBigGoals) setInvestmentBigGoals(d.investmentBigGoals);
@@ -48733,6 +48739,8 @@ function MuzzApp() {
           holdingsResearch,
           futureStocks,
           futureResearch,
+          investTrades,
+          investHistory,
           futureResearchColumns,
           investmentSmallGoals,
           investmentBigGoals,
@@ -48798,7 +48806,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investTrades, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -48922,6 +48930,53 @@ function MuzzApp() {
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
   const histBillsMonthly = totalMonthly, histIncomeMonthly = salaryNum; // used by the Bills page history tiles
+  // Investments history: one snapshot per month of what you hold and its value (AUD)
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const held = (stocks || []).filter(x => x && x.name && String(x.name).trim() && ((parseFloat(x.shares) || 0) > 0 || (parseFloat(x.currentValue) || 0) > 0));
+    if (!held.length) return;
+    const positions = {};
+    held.forEach(x => { positions[String(x.name).trim().toUpperCase()] = parseFloat(x.shares) || 0; });
+    const entry = { m: mzMonthKey(), total: Math.round(totalStocks * 100) / 100, positions };
+    setInvestHistory(prev => {
+      const list = Array.isArray(prev) ? prev : [];
+      const last = list[list.length - 1];
+      if (last && last.m === entry.m) return (last.total === entry.total && JSON.stringify(last.positions) === JSON.stringify(entry.positions)) ? list : [...list.slice(0, -1), entry];
+      return [...list, entry];
+    });
+  }, [stocks, totalStocks, dataLoaded]);
+  // Watchlist: remember when each ticker was added and its price then
+  const watchSeen = useRef(false);
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const first = !watchSeen.current; watchSeen.current = true;
+    const todayIso = localISODate();
+    setFutureResearch(prev => {
+      if (!Array.isArray(prev)) return prev;
+      let changed = false;
+      const next = prev.map(f => {
+        if (!f || !String(f.ticker || '').trim()) return f;
+        let nf = f;
+        if (!f.addedAt) { nf = { ...nf, addedAt: todayIso, ...(first ? { addedEstimated: true } : {}) }; changed = true; }
+        const t = String(f.ticker).trim().toUpperCase();
+        const lp = livePrices[t] && livePrices[t].c;
+        if (!(f.addedPrice > 0) && lp > 0) { nf = { ...nf, addedPrice: lp, addedCurrency: livePrices[t].currency || 'USD' }; changed = true; }
+        return nf;
+      });
+      return changed ? next : prev;
+    });
+  }, [dataLoaded, futureResearch, livePrices]);
+  // Fetch live prices for watchlist tickers that don't have one yet
+  const watchFetching = useRef(false);
+  useEffect(() => {
+    if (!dataLoaded || watchFetching.current) return;
+    const missing = Array.from(new Set((futureResearch || []).map(f => String((f && f.ticker) || '').trim().toUpperCase()).filter(t => t && !(livePrices[t] && livePrices[t].c > 0))));
+    if (!missing.length) return;
+    watchFetching.current = true;
+    fetch(api('/api/stocks'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tickers: missing }) })
+      .then(r => r.json()).then(data => { if (data && data.prices) setLivePrices(prev => ({ ...prev, ...data.prices })); })
+      .catch(() => {}).finally(() => { setTimeout(() => { watchFetching.current = false; }, 60000); });
+  }, [dataLoaded, futureResearch, livePrices]);
   // Goal timeline: remember when each goal was set and when it was first hit
   const goalsSeen = useRef(false);
   useEffect(() => {
@@ -49644,13 +49699,13 @@ function MuzzApp() {
               style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
               {bdayAvatar(bday, "42px")}
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || (bday.type === 'anniversary' ? 'New anniversary' : bday.type === 'other' ? 'New date' : 'New birthday')}</div>
+                <div style={{fontFamily:SANS_FONT,fontSize:"17px",color:bday.name?"#FFFFFF":sec,letterSpacing:"-0.2px",lineHeight:1.35,whiteSpace:"pre-wrap",wordBreak:"break-word",overflowWrap:"anywhere"}}>{bday.name || (bday.type === 'anniversary' ? 'New anniversary' : bday.type === 'other' ? 'New date' : bday.category === 'pet' ? 'New pet' : 'New birthday')}</div>
                 <div style={{fontFamily:SANS_FONT,fontSize:"15px",color:sec,marginTop:"2px"}}>
                   {bday.type === 'anniversary' ? '💍 ' : bday.type === 'other' ? '⭐ ' : ''}
                   {bday.date ? new Date(bday.date).toLocaleDateString('en-AU',{day:'numeric',month:'long'}) : 'No date'}
                   {(() => { if (!bday.type || bday.type === 'birthday' || !bday.date) return ''; const y = parseInt(String(bday.date).slice(0, 4)); const yrs = new Date().getFullYear() - y; return y > 1900 && y !== 2000 && yrs > 0 ? `, ${yrs} year${yrs === 1 ? '' : 's'}` : ''; })()}
                   {bday.category === 'family' && (!bday.type || bday.type === 'birthday') ? ', family' : ''}
-                  {bday.category === 'pet' && (!bday.type || bday.type === 'birthday') ? (() => { const y = parseInt(String(bday.date || '').slice(0, 4)); if (!(y > 1900) || y === 2000) return ' · 🐾 pet'; const nb = new Date(); const next = new Date(nb.getFullYear(), parseInt(String(bday.date).slice(5, 7)) - 1, parseInt(String(bday.date).slice(8, 10))); if (next < new Date(nb.getFullYear(), nb.getMonth(), nb.getDate())) next.setFullYear(nb.getFullYear() + 1); return ` · 🐾 turns ${next.getFullYear() - y}`; })() : ''}
+                  {bday.category === 'pet' && (!bday.type || bday.type === 'birthday') ? (() => { const y = parseInt(String(bday.date || '').slice(0, 4)); if (!(y > 1900) || y === 2000) return ' · pet'; const nb = new Date(); const next = new Date(nb.getFullYear(), parseInt(String(bday.date).slice(5, 7)) - 1, parseInt(String(bday.date).slice(8, 10))); if (next < new Date(nb.getFullYear(), nb.getMonth(), nb.getDate())) next.setFullYear(nb.getFullYear() + 1); return ` · turns ${next.getFullYear() - y}`; })() : ''}
                   {(bday.giftNotes || (bday.gifts || []).length) ? ' · 🎁' : ''}
                 </div>
               </div>
@@ -49885,7 +49940,7 @@ function MuzzApp() {
                 return (
                   <>
                     <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-                      {[['all','All'],['family','Family'],['friend','Friends'],['pet','🐾 Pets']].map(([id, label]) => {
+                      {[['all','All'],['family','Family'],['friend','Friends'],['pet','Pets']].map(([id, label]) => {
                         const on = bdayFilter === id;
                         return (
                           <button key={id} onClick={() => setBdayFilter(id)} aria-pressed={on}
@@ -50303,7 +50358,8 @@ function MuzzApp() {
     if (dataLoaded && Object.keys(livePrices).length === 0 && !pricesLoading) {
       const trackedTickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
       const holdingTickers = stocks.filter(s => s && s.name && s.name.trim() !== '').map(s => s.name.toUpperCase());
-      const tickers = Array.from(new Set([...trackedTickers, ...holdingTickers]));
+      const watchTickers = (futureResearch || []).filter(f => f && f.ticker && String(f.ticker).trim()).map(f => String(f.ticker).trim().toUpperCase());
+      const tickers = Array.from(new Set([...trackedTickers, ...holdingTickers, ...watchTickers]));
       if (tickers.length > 0) {
         setPricesLoading(true);
         fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) })
@@ -54074,6 +54130,128 @@ function MuzzApp() {
 
           {investmentsSubTab === 'portfolio' && (
             <>
+              {/* Log a trade + history */}
+              <div style={{display:"flex",gap:"10px"}}>
+                <button onClick={() => setTradeSheet({ side: 'buy', ticker: '', shares: '', price: '', date: localISODate() })}
+                  style={{flex:1,padding:"12px",borderRadius:"999px",border:"none",background:"var(--mz-accent,#0A84FF)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",fontWeight:600,cursor:"pointer"}}>Buy / Sell</button>
+                <button onClick={() => setInvestHistOpen('trades')}
+                  style={{flex:1,padding:"12px",borderRadius:"999px",border:"0.5px solid rgba(255,255,255,0.18)",background:"rgba(255,255,255,0.1)",color:"#FFFFFF",fontFamily:SANS_FONT,fontSize:"16px",cursor:"pointer"}}>History</button>
+              </div>
+              {tradeSheet && (() => {
+                const ts = tradeSheet;
+                const set = (u) => setTradeSheet(prev => ({ ...prev, ...u }));
+                const T = String(ts.ticker || '').trim().toUpperCase();
+                const lp = livePrices[T] && livePrices[T].c;
+                const held = stocks.find(x => x && String(x.name || '').trim().toUpperCase() === T);
+                const heldShares = held ? (parseFloat(held.shares) || 0) : 0;
+                const n = parseFloat(ts.shares) || 0, p = parseFloat(ts.price) || 0;
+                const canSave = T && n > 0 && p > 0 && ts.date && (ts.side === 'buy' || n <= heldShares + 1e-9);
+                const save = () => {
+                  if (!canSave) return;
+                  const cur = (livePrices[T] && livePrices[T].currency) || (held && held.currency) || 'USD';
+                  setInvestTrades(prev => [...(prev || []), { id: Date.now(), ticker: T, side: ts.side, shares: n, price: p, date: ts.date, currency: cur }]);
+                  setStocks(prev => {
+                    const list = [...(prev || [])];
+                    const i = list.findIndex(x => x && String(x.name || '').trim().toUpperCase() === T);
+                    const live = lp > 0 ? lp : p;
+                    if (i === -1) {
+                      if (ts.side === 'sell') return list;
+                      list.push({ id: Date.now(), name: T, shares: n, sharesStr: String(n), avgCost: p, avgCostStr: String(p), invested: n * p, investedStr: String(n * p), currentValue: n * live, currentValueStr: (n * live).toFixed(2), currency: cur, industry: '' });
+                      return list;
+                    }
+                    const h = list[i]; const s0 = parseFloat(h.shares) || 0; const a0 = parseFloat(h.avgCost) || 0;
+                    const s1 = ts.side === 'buy' ? s0 + n : Math.max(0, s0 - n);
+                    const a1 = ts.side === 'buy' ? (s1 > 0 ? (s0 * a0 + n * p) / s1 : p) : a0;
+                    const a1r = Math.round(a1 * 10000) / 10000;
+                    list[i] = { ...h, shares: s1, sharesStr: String(s1), avgCost: a1r, avgCostStr: String(a1r), invested: s1 * a1r, investedStr: String(Math.round(s1 * a1r * 100) / 100), currentValue: s1 * live, currentValueStr: (s1 * live).toFixed(2) };
+                    return list;
+                  });
+                  mzUndo(`${ts.side === 'buy' ? 'Bought' : 'Sold'} ${n} ${T}`, null);
+                  setTradeSheet(null);
+                };
+                const field = (label, child) => (<div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"10px 0",borderBottom:"0.5px solid rgba(255,255,255,0.1)"}}><span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT}}>{label}</span>{child}</div>);
+                const inp = { background:"rgba(255,255,255,0.08)", border:"none", borderRadius:"10px", color:"#FFFFFF", fontFamily:SANS_FONT, fontSize:"16px", padding:"8px 10px", width:"150px", textAlign:"right", colorScheme:"dark" };
+                return (
+                  <Sheet onClose={() => setTradeSheet(null)}>
+                    <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>Log a trade</span>
+                        <button onClick={() => setTradeSheet(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,fontSize:"16px"}}>Cancel</button>
+                      </div>
+                      <Segmented value={ts.side} onChange={(v) => set({ side: v })} options={[{ id: 'buy', label: 'Buy' }, { id: 'sell', label: 'Sell' }]} />
+                      <div>
+                        {field('Ticker', <>
+                          <input list="mz-held-tickers" value={ts.ticker} placeholder="e.g. GOOG" autoCapitalize="characters" onChange={(e) => set({ ticker: e.target.value.toUpperCase() })}
+                            onBlur={() => { if (!ts.price && lp > 0) set({ price: String(lp) }); }} style={inp} />
+                          <datalist id="mz-held-tickers">{stocks.filter(x => x && x.name).map(x => <option key={x.name} value={String(x.name).trim().toUpperCase()} />)}</datalist>
+                        </>)}
+                        {field('Shares', <input type="text" inputMode="decimal" value={ts.shares} placeholder="0" onChange={(e) => set({ shares: e.target.value })} style={inp} />)}
+                        {field('Price per share', <input type="text" inputMode="decimal" value={ts.price} placeholder={lp > 0 ? String(lp) : '0.00'} onFocus={() => { if (!ts.price && lp > 0) set({ price: String(lp) }); }} onChange={(e) => set({ price: e.target.value })} style={inp} />)}
+                        {field('Date', <input type="date" value={ts.date} max={localISODate()} onChange={(e) => set({ date: e.target.value })} style={inp} />)}
+                      </div>
+                      <div style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,lineHeight:1.45}}>
+                        {T && held ? `You hold ${heldShares} ${T}. ` : ''}
+                        {ts.side === 'sell' && T && n > heldShares ? `You can't sell more than you hold. ` : ''}
+                        {n > 0 && p > 0 ? `Total ${ts.side === 'buy' ? 'cost' : 'value'}: $${(n * p).toLocaleString(undefined, { maximumFractionDigits: 2 })}. ` : ''}
+                        This updates your holding and saves the trade to History.
+                      </div>
+                      <button onClick={save} disabled={!canSave}
+                        style={{padding:"13px",borderRadius:"999px",border:"none",background:canSave?"var(--mz-accent,#0A84FF)":"rgba(255,255,255,0.12)",color:canSave?"#FFFFFF":"rgba(235,235,245,0.4)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,cursor:canSave?"pointer":"default"}}>
+                        {ts.side === 'buy' ? 'Save buy' : 'Save sell'}
+                      </button>
+                    </div>
+                  </Sheet>
+                );
+              })()}
+              {investHistOpen && (() => {
+                const trades = (investTrades || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || (b.id - a.id));
+                const byYear = {};
+                trades.forEach(t => { const y = String(t.date).slice(0, 4); (byYear[y] = byYear[y] || []).push(t); });
+                const hist = (investHistory || []).filter(h => h && h.m);
+                const yearEnd = {};
+                hist.forEach(h => { yearEnd[h.m.slice(0, 4)] = h; });
+                const fmt$ = (v) => `$${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                return (
+                  <Sheet onClose={() => setInvestHistOpen(null)}>
+                    <div style={{padding:"4px 16px 20px",display:"flex",flexDirection:"column",gap:"12px",fontFamily:SANS_FONT}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF"}}>Investment history</span>
+                        <button onClick={() => setInvestHistOpen(null)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600}}>Done</button>
+                      </div>
+                      <Segmented value={investHistOpen} onChange={setInvestHistOpen} options={[{ id: 'trades', label: 'Buys & sells' }, { id: 'holdings', label: 'What I held' }]} />
+                      {investHistOpen === 'trades' && (trades.length === 0
+                        ? <div style={{fontSize:"15px",color:"rgba(235,235,245,0.6)",lineHeight:1.45}}>No trades yet. Tap Buy / Sell whenever you buy or sell, and every trade is saved here with its date and price.</div>
+                        : Object.keys(byYear).sort().reverse().map(y => (
+                          <div key={y}>
+                            <div style={{fontSize:"13px",fontWeight:600,color:"rgba(235,235,245,0.6)",margin:"4px 2px 6px"}}>{y} · {byYear[y].filter(t => t.side === 'buy').length} buys, {byYear[y].filter(t => t.side === 'sell').length} sells</div>
+                            {byYear[y].map(t => (
+                              <div key={t.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"9px 2px",borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
+                                <span style={{fontSize:"12px",fontWeight:700,padding:"3px 8px",borderRadius:"999px",color:"#FFFFFF",background:t.side === 'buy' ? "rgba(48,209,88,0.8)" : "rgba(255,69,58,0.8)",flexShrink:0}}>{t.side === 'buy' ? 'BUY' : 'SELL'}</span>
+                                <span style={{flex:1,minWidth:0,fontSize:"16px",color:"#FFFFFF"}}>{t.shares} {t.ticker} @ {fmt$(t.price)}</span>
+                                <span style={{fontSize:"13px",color:"rgba(235,235,245,0.55)",flexShrink:0}}>{new Date(t.date + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )))}
+                      {investHistOpen === 'holdings' && (<>
+                        <MzHistoryView points={hist.map(h => ({ m: h.m, v: h.total }))} color={themeHex} money={(v) => `$${Math.round(v).toLocaleString()}`}
+                          emptyText="Muzz saves what you hold each month. Your history starts this month." />
+                        {Object.keys(yearEnd).length > 0 && (
+                          <div>
+                            <div style={{fontSize:"15px",fontWeight:700,color:"#FFFFFF",margin:"4px 2px 6px"}}>What you held</div>
+                            {Object.keys(yearEnd).sort().reverse().map(y => (
+                              <div key={y} style={{padding:"9px 2px",borderBottom:"0.5px solid rgba(255,255,255,0.08)"}}>
+                                <div style={{fontSize:"14px",fontWeight:600,color:"var(--mz-accent,#0A84FF)"}}>{y} <span style={{color:"rgba(235,235,245,0.5)",fontWeight:400}}>· as of {mzMonthLabel(yearEnd[y].m)}</span></div>
+                                <div style={{fontSize:"15px",color:"#FFFFFF",marginTop:"2px",lineHeight:1.5}}>{Object.entries(yearEnd[y].positions || {}).map(([t, sh]) => `${t}${sh ? ` (${sh})` : ''}`).join(' · ') || '—'}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>)}
+                    </div>
+                  </Sheet>
+                );
+              })()}
 
               {/* Live prices — merged into Holdings (was a separate tab) */}
               {(() => {
@@ -54791,6 +54969,20 @@ function MuzzApp() {
                           <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.55)"}}>
                             {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}
                           </div>
+                          {holding?.ticker && holding?.addedAt && (() => {
+                            const t = String(holding.ticker).trim().toUpperCase();
+                            const now = livePrices[t] && livePrices[t].c;
+                            const was = holding.addedPrice;
+                            const when = new Date(holding.addedAt + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+                            const pct = was > 0 && now > 0 ? ((now - was) / was) * 100 : null;
+                            const fmtP = (v) => `$${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                            return (
+                              <div style={{fontFamily:SANS_FONT,fontSize:"13px",color:"rgba(235,235,245,0.6)"}}>
+                                {holding.addedEstimated ? 'Watching since' : 'Added'} {when}{was > 0 ? ` at ${fmtP(was)}` : ''}
+                                {now > 0 && was > 0 && <> · now {fmtP(now)} <span style={{color: pct >= 0 ? "#30D158" : "#FF453A", fontWeight: 600}}>({pct >= 0 ? '+' : ''}{pct.toFixed(1)}%)</span></>}
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
                           {planned > 0 && (
