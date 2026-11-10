@@ -305,6 +305,31 @@ const MZ_BDAYS_TOUR = [
   { icon: '🗓️', title: 'Gift history', body: 'Log what you gave each year. Next time, you\'ll see what you gave before and never double up.' },
 ];
 
+// Time between two dates in words: "1 year, 2 months" or "12 days"
+const mzSpan = (fromIso, toIso) => {
+  const a = new Date(fromIso), b = toIso ? new Date(toIso) : new Date();
+  if (isNaN(a) || isNaN(b) || b < a) return '';
+  let y = b.getFullYear() - a.getFullYear(), m = b.getMonth() - a.getMonth(), d = b.getDate() - a.getDate();
+  if (d < 0) { m -= 1; d += new Date(b.getFullYear(), b.getMonth(), 0).getDate(); }
+  if (m < 0) { y -= 1; m += 12; }
+  const w = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  if (y || m) return [y ? w(y, 'year') : '', m ? w(m, 'month') : ''].filter(Boolean).join(', ');
+  return d ? w(d, 'day') : 'less than a day';
+};
+const mzShortDate = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); };
+// Timeline line under a goal: when it was set, when it was hit, how long it took
+const MzGoalTimeline = ({ goal }) => {
+  if (!goal || !goal.createdAt) return null;
+  const hit = !!goal.reachedAt;
+  return (
+    <div style={{ marginTop: '8px', fontSize: '13px', fontFamily: SANS_FONT, color: hit ? '#30D158' : 'rgba(235,235,245,0.55)', fontWeight: hit ? 600 : 400, lineHeight: 1.4 }}>
+      {hit
+        ? (goal.reachedEstimated ? '🎉 Goal hit' : `🎉 Hit ${mzShortDate(goal.reachedAt)} · took ${goal.createdEstimated ? 'at least ' : ''}${mzSpan(goal.createdAt, goal.reachedAt)}`)
+        : `${goal.createdEstimated ? 'Tracking since' : 'Set'} ${mzShortDate(goal.createdAt)} · ${mzSpan(goal.createdAt)} so far`}
+    </div>
+  );
+};
+
 // ---------- Assets: how long owned, history charts ----------
 // "6 years, 10 months, 9 days" between a YYYY-MM-DD date and today (or null if no/future date)
 const mzOwnedFor = (iso, short = false) => {
@@ -48837,6 +48862,32 @@ function MuzzApp() {
   const salaryNum = dashBucket ? (parseFloat(dashBucket.incomeStr) || 0) : (parseFloat(monthlySalary) || 0);
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
   const histBillsMonthly = totalMonthly, histIncomeMonthly = salaryNum; // used by the Bills page history tiles
+  // Goal timeline: remember when each goal was set and when it was first hit
+  const goalsSeen = useRef(false);
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const firstPass = !goalsSeen.current;
+    goalsSeen.current = true;
+    const nowIso = new Date().toISOString();
+    const stamp = (prev) => {
+      if (!Array.isArray(prev)) return prev;
+      let changed = false;
+      const next = prev.map(g => {
+        if (!g) return g;
+        let ng = g;
+        if (!g.createdAt) { ng = { ...ng, createdAt: nowIso, ...(firstPass ? { createdEstimated: true } : {}) }; changed = true; }
+        const target = parseFloat(g.target) || 0, current = parseFloat(g.current) || 0;
+        if (!g.reachedAt && target > 0 && current >= target) {
+          ng = { ...ng, reachedAt: nowIso, ...(firstPass && !g.createdAt ? { reachedEstimated: true } : {}) }; changed = true;
+          if (!firstPass && g.name) mzUndo(`🎉 Goal hit: ${g.name}`, null);
+        }
+        return ng;
+      });
+      return changed ? next : prev;
+    };
+    setSmallGoals(stamp); setBigGoals(stamp); setBillSmallGoals(stamp); setBillBigGoals(stamp);
+    setInvestmentSmallGoals(stamp); setInvestmentBigGoals(stamp);
+  }, [dataLoaded, smallGoals, bigGoals, billSmallGoals, billBigGoals, investmentSmallGoals, investmentBigGoals]);
   // Bills & income history: one point per month (latest value seen that month)
   useEffect(() => {
     if (!dataLoaded || !(totalMonthly > 0 || salaryNum > 0)) return;
@@ -50864,6 +50915,7 @@ function MuzzApp() {
                 </div>)
               : moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
           </div>
+          <MzGoalTimeline goal={goal} />
           {target > 0 && (
             <div style={{marginTop:"12px"}}>
               <div style={{height:"6px",background:"rgba(255,255,255,0.1)",borderRadius:"999px",overflow:"hidden"}}>
@@ -52381,6 +52433,7 @@ function MuzzApp() {
                 </div>)
               : moneyTile('Saved', goal?.currentStr, (e)=>set({current: parseFloat(e.target.value) || 0, currentStr: e.target.value}))}
           </div>
+          <MzGoalTimeline goal={goal} />
           {target > 0 && (
             <div style={{marginTop:"12px"}}>
               <div style={{height:"6px",background:"rgba(255,255,255,0.1)",borderRadius:"999px",overflow:"hidden"}}>
