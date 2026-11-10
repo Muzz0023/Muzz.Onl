@@ -48161,6 +48161,8 @@ function MuzzApp() {
     yearsToProject: '10'
   });
   const [smallGoals, setSmallGoals] = useState([]);
+  const [dashLayout, setDashLayout] = useState({ order: [], hidden: [] }); // dashboard tiles: order + hidden
+  const [dashEditOpen, setDashEditOpen] = useState(false);
   const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
   const [assetsSheet, setAssetsSheet] = useState(null); // 'networth' | 'why' | null
   const [assetHistOpen, setAssetHistOpen] = useState(false);
@@ -49306,6 +49308,7 @@ function MuzzApp() {
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.healthWorkouts) setHealthWorkouts(d.healthWorkouts);
+          if (d.dashLayout && typeof d.dashLayout === 'object') setDashLayout({ order: Array.isArray(d.dashLayout.order) ? d.dashLayout.order : [], hidden: Array.isArray(d.dashLayout.hidden) ? d.dashLayout.hidden : [] });
           if (Array.isArray(d.bodyWeight)) setBodyWeight(d.bodyWeight);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.gymLog && typeof d.gymLog === 'object') setGymLog(d.gymLog);
@@ -49444,6 +49447,7 @@ function MuzzApp() {
           dailySteps,
           healthWorkouts,
           bodyWeight,
+          dashLayout,
           workoutPlan,
           gymLog,
           gymDays,
@@ -49479,7 +49483,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, healthWorkouts, bodyWeight, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, netWorthMonthly, doneLog, timetableHours, billsHistory, gymLog, gymDays, investHistory, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, healthWorkouts, bodyWeight, dashLayout, workoutPlan, appTheme, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -51054,6 +51058,59 @@ function MuzzApp() {
       return best;
     })();
 
+    // ---- Dashboard figures ----
+    // Net worth change this month (vs the last saved month before this one)
+    const nwMonthChange = (() => {
+      const ym = today.slice(0, 7);
+      const prevs = (netWorthMonthly || []).filter(p => p && p.m && p.m < ym && p.v > 0).sort((a, b) => a.m.localeCompare(b.m));
+      if (!prevs.length) return null;
+      return Math.round(netWorth - prevs[prevs.length - 1].v);
+    })();
+    // Portfolio move today, weighted by each holding's value in AUD
+    const portfolioToday = (() => {
+      let w = 0, sum = 0;
+      (stocks || []).forEach(st => {
+        const t = st && st.name ? String(st.name).trim().toUpperCase() : '';
+        const p = t && livePrices[t];
+        if (!p || !p.c || !p.pc) return;
+        const v = toAUD(parseFloat(st.currentValue) || 0, p.currency || st.currency || 'USD');
+        if (!(v > 0)) return;
+        w += v; sum += v * ((p.c - p.pc) / p.pc);
+      });
+      return w > 0 ? (sum / w) * 100 : null;
+    })();
+    // Gym this week
+    const gymWeek = (() => {
+      let trained = 0;
+      const mon = new Date(); mon.setHours(0, 0, 0, 0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+      Array.from({ length: 7 }, (_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return localISODate(d); }).forEach(iso => { const l = (gymLog || {})[iso]; const g = (gymDays || {})[iso];
+        if (iso > today) return;
+        const note = g ? (typeof g.note === 'string' ? g.note : [g.name || '', typeof g.exercises === 'string' ? g.exercises : ''].join(' ')) : '';
+        const rest = g && (g.rest === true || /^\s*rest( day)?\s*$/i.test(note));
+        if (l === 'trained') trained++;
+        else if (l !== 'skip' && l !== 'rest' && !rest && g && (note.trim() || (Array.isArray(g.exercises) && g.exercises.length))) trained++;
+      });
+      return trained;
+    })();
+    const stepsToday = (dailySteps || {})[today] || 0;
+    // Next reminder with a date (not done, not pinned)
+    const nextReminder = (() => {
+      const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+      let best = null;
+      (reminders || []).forEach(r => {
+        if (!r || r.done || !r.date || !/^\d{4}-\d{2}-\d{2}/.test(r.date)) return;
+        const d = new Date(r.date.slice(0, 10) + 'T00:00:00'); const diff = Math.round((d - t0) / 86400000);
+        if (diff < 0) return;
+        if (!best || diff < best.diff) best = { name: r.title || r.text || 'Reminder', next: d, diff };
+      });
+      return best;
+    })();
+    const remDueNow = (reminders || []).filter(r => r && !r.done && r.date && /^\d{4}-\d{2}-\d{2}/.test(r.date) && r.date.slice(0, 10) <= today).length;
+    const remThisWeek = (reminders || []).filter(r => { if (!r || r.done || !r.date || !/^\d{4}-\d{2}-\d{2}/.test(r.date)) return false; const d = Math.round((new Date(r.date.slice(0, 10) + 'T00:00:00') - new Date(today + 'T00:00:00')) / 86400000); return d >= 0 && d <= 7; }).length;
+    const todayDayShort = new Date().toLocaleDateString('en-AU', { weekday: 'short' }).slice(0, 3);
+    const ttToday = (timetableBlocks || []).filter(b => b && b.day === todayDayShort).length;
+    const whenText = (d, diff) => `${d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })} · ${diff === 0 ? 'today' : diff === 1 ? 'tomorrow' : `in ${diff} days`}`;
+
     // Auto-fetch stock prices on dashboard load (from trackedStocks AND stocks holdings)
     const todayPriceKey = localISODate();
     if (dataLoaded && Object.keys(livePrices).length === 0 && !pricesLoading) {
@@ -51334,9 +51391,19 @@ function MuzzApp() {
     const glassHover = "var(--mz-glass-hover, rgba(44,44,46,0.7))";
     const txt = { primary:"#FFFFFF", secondary:"rgba(235,235,245,0.6)", tertiary:"rgba(235,235,245,0.3)" };
     const groupLabel = {fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600,margin:"0 4px 10px"};
+    const sectionHint = (id) => {
+      if (id === 'tasks') { const left = weekTaskItems.length - weekTasksDone; return weekTaskItems.length ? (left ? `${left} left` : 'All done') : ''; }
+      if (id === 'reminders') return remDueNow ? `${remDueNow} due` : remThisWeek ? `${remThisWeek} this week` : '';
+      if (id === 'gymworkout') return gymWeek ? `${gymWeek} this week` : '';
+      if (id === 'timetable') return ttToday ? `${ttToday} today` : '';
+      if (id === 'varied') return totalMonthly > 0 ? `$${Math.round(totalMonthly).toLocaleString()}/mo` : '';
+      if (id === 'assets') { const n = (assets || []).filter(a => a && a.value > 0).length; return n ? `${n} assets` : ''; }
+      if (id === 'investments') return portfolioToday !== null ? `${portfolioToday >= 0 ? '+' : ''}${portfolioToday.toFixed(2)}%` : '';
+      return '';
+    };
     const sectionItems = navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite));
     // One row of a grouped list: transparent line icon, label, chevron, inset hairline
-    const ListRow = ({ icon: Icon, label, onClick, last, danger, center, chevron = true, as = "button", children }) => {
+    const ListRow = ({ icon: Icon, label, onClick, last, danger, center, chevron = true, as = "button", children, detail, detailColor }) => {
       const Tag = as;
       return (
         <Tag onClick={onClick} onMouseEnter={onRowIn} onMouseLeave={onRowOut}
@@ -51344,7 +51411,10 @@ function MuzzApp() {
           {Icon && <Icon size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />}
           <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:center?"center":"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
             <span style={{fontSize:"17px",color:danger?"#FF453A":txt.primary,letterSpacing:"-0.4px"}}>{label}</span>
-            {chevron && !center && <ChevronRight size={18} color={txt.tertiary} strokeWidth={2.25} />}
+            <span style={{display:"flex",alignItems:"center",gap:"6px"}}>
+              {detail && <span style={{fontSize:"15px",color:detailColor||txt.secondary,letterSpacing:"-0.2px",whiteSpace:"nowrap"}}>{detail}</span>}
+              {chevron && !center && <ChevronRight size={18} color={txt.tertiary} strokeWidth={2.25} />}
+            </span>
           </span>
           {children}
         </Tag>
@@ -51381,13 +51451,13 @@ function MuzzApp() {
         <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 16px 0"}}>
 
           {/* HERO — net worth */}
-          <div style={{...glass,padding:"20px 20px 16px"}}>
+          <div role="button" tabIndex={0} onClick={() => setActiveView('assets')} style={{...glass,padding:"20px 20px 16px",cursor:"pointer"}}>
             <div style={{fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:500}}>Net worth</div>
             <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap",marginTop:"4px"}}>
               <RollingValue value={Math.round(netWorth)} prefix="$" fmt={(v) => Math.round(v).toLocaleString()} style={{fontSize:isWide?"46px":"40px",color:txt.primary,fontFamily:SANS_FONT,fontWeight:700,letterSpacing:"-1px",lineHeight:1}} />
-              {nwDelta7d !== null && (
-                <span style={{fontSize:"15px",fontWeight:600,fontFamily:SANS_FONT,color:nwDelta7d>=0?"#30D158":"#FF453A"}}>
-                  {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% this week
+              {nwMonthChange !== null && nwMonthChange !== 0 && (
+                <span style={{fontSize:"15px",fontWeight:600,fontFamily:SANS_FONT,color:nwMonthChange>=0?"#30D158":"#FF453A"}}>
+                  {nwMonthChange>=0?"+":"-"}${Math.abs(nwMonthChange).toLocaleString()} this month
                 </span>
               )}
             </div>
@@ -51396,33 +51466,87 @@ function MuzzApp() {
             </div>
           </div>
 
-          {/* SUMMARY GRID — four tappable cards */}
-          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
-            {[
-              { label:"Investments (AUD)", value:`$${Math.round(totalStocks).toLocaleString()}`, view:"investments" },
-              { label:"Savings rate", value:`${Math.round(savingsRate)}%`, view:"varied" },
-              { label:"Tasks this week", value:`${weekTasksDone}/${weekTaskItems.length}`, view:"tasks", onOpen:() => setTasksSubTab('weekly') },
-              nextBday
-                ? { label:"Next birthday", value: nextBday.name, sub: `${nextBday.next.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · ${nextBday.diff === 0 ? 'today 🎉' : nextBday.diff === 1 ? 'tomorrow' : `in ${nextBday.diff} days`}`, view:"reminders", onOpen:() => setRemindersSubTab('birthdays') }
-                : { label:"Next birthday", value:"Add one", sub:"No birthdays yet", view:"reminders", onOpen:() => setRemindersSubTab('birthdays') },
-            ].map(card => (
-              <button key={card.label} onClick={() => { if (card.onOpen) card.onOpen(); setActiveView(card.view); }}
-                style={{...glass,padding:"14px 16px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",position:"relative"}}
-                onMouseEnter={onIn} onMouseLeave={onOut}>
-                <ChevronRight size={16} color={txt.tertiary} strokeWidth={2.5} style={{position:"absolute",top:"14px",right:"12px"}} />
-                <div style={{fontSize:"13px",color:txt.secondary,fontWeight:500}}>{card.label}</div>
-                <div style={{fontSize:"24px",color:txt.primary,fontWeight:700,letterSpacing:"-0.5px",marginTop:"8px",lineHeight:1.1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{card.value}</div>
-                {card.sub && <div style={{fontSize:"13px",color:txt.secondary,marginTop:"4px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{card.sub}</div>}
-              </button>
-            ))}
-          </div>
+          {/* TILES — chosen and ordered in Edit dashboard; empty ones stay out of the way */}
+          {(() => {
+            const nb = billsDueSoon[0];
+            const upcoming = [nextBday && { kind: 'bday', ...nextBday }, nextReminder && { kind: 'rem', ...nextReminder }].filter(Boolean).sort((a, b) => a.diff - b.diff)[0];
+            const TILES = {
+              investments: { label: 'Investments', icon: TrendingUp, view: 'investments', show: totalStocks > 0,
+                value: `$${Math.round(totalStocks).toLocaleString()}`,
+                sub: portfolioToday !== null ? <span style={{color: portfolioToday >= 0 ? '#30D158' : '#FF453A', fontWeight: 600}}>{portfolioToday >= 0 ? '+' : ''}{portfolioToday.toFixed(2)}% today</span> : 'AUD' },
+              bill: { label: 'Next bill', icon: Wallet, view: 'varied', show: !!nb,
+                value: nb ? nb.name : '', sub: nb ? `$${Math.round(nb.amount).toLocaleString()} · ${nb.days === 0 ? 'today' : nb.days === 1 ? 'tomorrow' : `in ${nb.days} days`}` : '' },
+              gym: { label: 'Gym this week', icon: Dumbbell, view: 'gymworkout', show: gymWeek > 0 || stepsToday > 0 || Object.keys(gymDays || {}).length > 0,
+                value: `${gymWeek} trained`, sub: stepsToday > 0 ? `${stepsToday.toLocaleString()} steps today` : 'No steps yet today' },
+              upcoming: { label: 'Coming up', icon: Calendar, view: 'reminders', show: !!upcoming,
+                onOpen: () => setRemindersSubTab(upcoming && upcoming.kind === 'bday' ? 'birthdays' : 'reminders'),
+                value: upcoming ? (upcoming.kind === 'bday' ? `${upcoming.name}'s birthday` : upcoming.name) : '', sub: upcoming ? whenText(upcoming.next, upcoming.diff) : '' },
+              tasks: { label: 'Tasks this week', icon: CheckCircle2, view: 'tasks', show: weekTaskItems.length > 0, onOpen: () => setTasksSubTab('weekly'),
+                value: `${weekTasksDone} of ${weekTaskItems.length}`, sub: weekTasksDone === weekTaskItems.length ? 'All done' : `${weekTaskItems.length - weekTasksDone} left` },
+              savings: { label: 'Savings rate', icon: DollarSign, view: 'varied', show: salaryNum > 0,
+                value: `${Math.round(savingsRate)}%`, sub: 'kept after bills' },
+            };
+            const DEFAULT = ['investments', 'bill', 'gym', 'upcoming', 'tasks', 'savings'];
+            const order = [...(dashLayout.order || []).filter(k => TILES[k]), ...DEFAULT.filter(k => !(dashLayout.order || []).includes(k))];
+            const visible = order.filter(k => !(dashLayout.hidden || []).includes(k) && TILES[k].show);
+            const move = (k, dir) => setDashLayout(l => { const o = [...order]; const i = o.indexOf(k), j = i + dir; if (j < 0 || j >= o.length) return l; [o[i], o[j]] = [o[j], o[i]]; return { ...l, order: o }; });
+            const toggle = (k) => setDashLayout(l => { const h = l.hidden || []; return { ...l, order, hidden: h.includes(k) ? h.filter(x => x !== k) : [...h, k] }; });
+            return (
+              <>
+                {visible.length > 0 && (
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"12px",marginTop:"12px"}}>
+                    {visible.map(k => { const t = TILES[k]; const Ic = t.icon; return (
+                      <button key={k} onClick={() => { if (t.onOpen) t.onOpen(); setActiveView(t.view); }}
+                        style={{...glass,padding:"14px 16px 15px",textAlign:"left",cursor:"pointer",fontFamily:SANS_FONT,transition:"background 0.15s",minWidth:0}}
+                        onMouseEnter={onIn} onMouseLeave={onOut}>
+                        <div style={{display:"flex",alignItems:"center",gap:"6px",fontSize:"13px",color:txt.secondary,fontWeight:500}}>
+                          <Ic size={14} strokeWidth={2} color={txt.secondary} />{t.label}
+                        </div>
+                        <div style={{fontSize:"20px",color:txt.primary,fontWeight:700,letterSpacing:"-0.4px",marginTop:"10px",lineHeight:1.15,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.value}</div>
+                        {t.sub && <div style={{fontSize:"13px",color:txt.secondary,marginTop:"3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sub}</div>}
+                      </button>
+                    ); })}
+                  </div>
+                )}
+                <div style={{display:"flex",justifyContent:"flex-end",marginTop:"8px"}}>
+                  <button onClick={() => setDashEditOpen(true)} style={{background:"none",border:"none",padding:"4px 4px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"15px",cursor:"pointer"}}>Edit dashboard</button>
+                </div>
+                {dashEditOpen && (
+                  <Sheet onClose={() => setDashEditOpen(false)}>
+                    <div style={{padding:"4px 16px 24px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                        <span style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT}}>Edit dashboard</span>
+                        <button onClick={() => setDashEditOpen(false)} style={{background:"none",border:"none",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",fontWeight:600,cursor:"pointer"}}>Done</button>
+                      </div>
+                      <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,marginBottom:"12px"}}>Choose which tiles show and their order. Tiles with nothing in them stay hidden until there is.</div>
+                      <div style={{...glass,overflow:"hidden"}}>
+                        {order.map((k, i) => { const t = TILES[k]; const on = !(dashLayout.hidden || []).includes(k); const Ic = t.icon; return (
+                          <div key={k} style={{display:"flex",alignItems:"center",gap:"12px",minHeight:"52px",padding:"0 12px 0 16px",borderTop:i?"0.5px solid rgba(255,255,255,0.1)":"none"}}>
+                            <Ic size={18} strokeWidth={1.75} color={txt.secondary} />
+                            <span style={{flex:1,fontSize:"17px",color:on?txt.primary:txt.tertiary,fontFamily:SANS_FONT}}>{t.label}{!t.show && on ? <span style={{fontSize:"12px",color:txt.tertiary}}> · nothing yet</span> : null}</span>
+                            <button aria-label="Move up" disabled={i === 0} onClick={() => move(k, -1)} style={{background:"none",border:"none",color:i===0?txt.tertiary:txt.secondary,fontSize:"18px",cursor:"pointer",padding:"6px"}}>↑</button>
+                            <button aria-label="Move down" disabled={i === order.length - 1} onClick={() => move(k, 1)} style={{background:"none",border:"none",color:i===order.length-1?txt.tertiary:txt.secondary,fontSize:"18px",cursor:"pointer",padding:"6px"}}>↓</button>
+                            <button role="switch" aria-checked={on} aria-label={`Show ${t.label}`} onClick={() => toggle(k)}
+                              style={{width:"51px",height:"31px",borderRadius:"999px",border:"none",background:on?"#30D158":"rgba(120,120,128,0.36)",position:"relative",cursor:"pointer",flexShrink:0,transition:"background 0.2s"}}>
+                              <span style={{position:"absolute",top:"2px",left:on?"22px":"2px",width:"27px",height:"27px",borderRadius:"50%",background:"#FFFFFF",transition:"left 0.2s",boxShadow:"0 2px 4px rgba(0,0,0,0.3)"}} />
+                            </button>
+                          </div>
+                        ); })}
+                      </div>
+                    </div>
+                  </Sheet>
+                )}
+              </>
+            );
+          })()}
 
           {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
             <div style={groupLabel}>Sections</div>
             <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
               {sectionItems.map((item, i) => (
-                <ListRow key={item.id} icon={item.icon} label={item.label} onClick={() => setActiveView(item.id)} last={i === sectionItems.length - 1} />
+                <ListRow key={item.id} icon={item.icon} label={item.label} onClick={() => setActiveView(item.id)} last={i === sectionItems.length - 1}
+                  detail={sectionHint(item.id)} detailColor={item.id === 'investments' && portfolioToday !== null ? (portfolioToday >= 0 ? '#30D158' : '#FF453A') : (item.id === 'reminders' && remDueNow > 0 ? '#FF9F0A' : undefined)} />
               ))}
             </div>
 
