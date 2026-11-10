@@ -335,6 +335,29 @@ const mzFinancials = (bd) => {
   };
 };
 
+// Every year-by-year line in a company's Coverage numbers, grouped by statement
+const mzAllLines = (bd) => {
+  const out = { income: [], balance: [], cash: [], more: [] };
+  const n = bd && bd.numbers; if (!n || typeof n !== 'object') return out;
+  const sectionOf = (k) => k === 'incomeStatement' ? 'income' : k === 'balanceSheet' ? 'balance' : k === 'cashFlow' ? 'cash' : 'more';
+  const norm = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const seen = new Set();
+  const take = (sec, id, o) => {
+    const series = (o.series || []).filter(p => p && typeof p.value === 'number' && isFinite(p.value) && p.year != null).map(p => ({ year: Number(p.year), value: p.value }));
+    if (!series.length || seen.has(sec + id)) return;
+    seen.add(sec + id);
+    out[sec].push({ id, label: o.label || id, unit: typeof o.unit === 'string' && o.unit.length < 20 ? o.unit : '', series, note: typeof o.note === 'string' ? o.note : '' });
+  };
+  const walk = (o, sec, path, depth) => {
+    if (!o || typeof o !== 'object' || depth > 4) return;
+    if (Array.isArray(o)) { o.forEach(it => { if (it && Array.isArray(it.series)) take(sec, 'l:' + norm(it.label), it); else walk(it, sec, path, depth + 1); }); return; }
+    if (Array.isArray(o.series)) { take(sec, path.replace(/\.netSales$/, '.totalRevenue').replace(/\.revenue$/, '.totalRevenue'), o); return; }
+    Object.keys(o).forEach(k => walk(o[k], depth === 0 ? sectionOf(k) : sec, path ? path + '.' + k : k, depth + 1));
+  };
+  walk(n, 'more', '', 0);
+  return out;
+};
+
 function MzCompare({ companies, onClose }) {
   const list = (companies || []).filter(c => c && c.ticker).slice().sort((a, b) => String(a.name).localeCompare(String(b.name)));
   const has = (t) => list.some(c => c.ticker === t);
@@ -342,6 +365,8 @@ function MzCompare({ companies, onClose }) {
   const [b, setB] = useState(has('PEP') ? 'PEP' : (list[1] && list[1].ticker) || '');
   const [live, setLive] = useState({});
   const [openText, setOpenText] = useState(null);
+  const [view, setView] = useState('summary');
+  const [openLine, setOpenLine] = useState(null);
   useEffect(() => {
     [a, b].forEach(t => {
       if (!t || live[t]) return;
@@ -520,6 +545,17 @@ function MzCompare({ companies, onClose }) {
           {sel(a, setA)}{sel(b, setB)}
         </div>
 
+        <div style={{marginBottom:'14px'}}>
+          <Segmented value={view} onChange={(v) => { setView(v); setOpenLine(null); }} options={[{id:'summary',label:'Summary'},{id:'business',label:'Business'},{id:'moat',label:'Moat'},{id:'risks',label:'Risks'}]} />
+          <div style={{marginTop:'8px'}}>
+            <Segmented value={['income','balance','cash','more'].includes(view) ? view : ''} onChange={(v) => { setView(v); setOpenLine(null); }} options={[{id:'income',label:'Income'},{id:'balance',label:'Balance'},{id:'cash',label:'Cash flow'},{id:'more',label:'People'}]} />
+          </div>
+        </div>
+        {view === 'business' && <MzCompareText key={a + b + 'b'} a={a} b={b} oa={{ ...((ca.breakdown || {}).overview || {}), ...(((ca.breakdown || {}).brands) ? { brands: ca.breakdown.brands } : {}), ...(((ca.breakdown || {}).thesis) ? { thesis: ca.breakdown.thesis } : {}) }} ob={{ ...((cb.breakdown || {}).overview || {}), ...(((cb.breakdown || {}).brands) ? { brands: cb.breakdown.brands } : {}), ...(((cb.breakdown || {}).thesis) ? { thesis: cb.breakdown.thesis } : {}) }} />}
+        {view === 'moat' && <MzCompareText key={a + b + 'm'} a={a} b={b} oa={(ca.breakdown || {}).moat} ob={(cb.breakdown || {}).moat} />}
+        {view === 'risks' && <MzCompareText key={a + b + 'r'} a={a} b={b} oa={(ca.breakdown || {}).risks} ob={(cb.breakdown || {}).risks} />}
+        {['income','balance','cash','more'].includes(view) && <MzCompareLines a={a} b={b} la={mzAllLines(ca.breakdown)[view]} lb={mzAllLines(cb.breakdown)[view]} openLine={openLine} setOpenLine={setOpenLine} />}
+        {view === 'summary' && (<>
         {/* Scorecard */}
         {(hasNums(fa) && hasNums(fb)) && (
           <div style={{...card,padding:'14px'}}>
@@ -594,11 +630,178 @@ function MzCompare({ companies, onClose }) {
           {(live[a] === 'loading' || live[b] === 'loading') && <div style={{padding:'0 14px 10px',fontSize:'12px',color:sec,fontFamily:F}}>Loading prices…</div>}
         </div>
 
+        </>)}
         <div style={{fontSize:'12px',color:'rgba(235,235,245,0.4)',fontFamily:F,lineHeight:1.5}}>
           Green marks the stronger number. Business and moat come from your Biggest Disruptors note. Prices from Yahoo Finance, may be delayed. Not financial advice.
         </div>
       </div>
     </Sheet>
+  );
+}
+
+// Turn any Coverage write-up section into readable lines (headings start with §)
+const mzHuman = (k) => String(k).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').replace(/^./, c => c.toUpperCase());
+const mzFlatten = (o, depth = 0, out = []) => {
+  if (out.length > 400 || o == null || depth > 5) return out;
+  if (typeof o === 'string') { if (o.trim()) out.push(o.trim()); return out; }
+  if (typeof o === 'number' || typeof o === 'boolean') { out.push(String(o)); return out; }
+  if (Array.isArray(o)) {
+    o.forEach(it => {
+      if (it && typeof it === 'object' && !Array.isArray(it)) {
+        if (Array.isArray(it.series)) return;
+        const lead = it.name || it.label || it.title || it.brand || it.company || it.category || '';
+        const prims = Object.keys(it).filter(k => !['name','label','title','brand','company','category','color','icon','id','highlight','accent','emoji','number'].includes(k) && (typeof it[k] === 'string' || typeof it[k] === 'number'));
+        const txt = prims.map(k => (/^(text|desc|description|detail|note|body|value|why)$/.test(k) ? '' : mzHuman(k) + ': ') + it[k]).join(' · ');
+        if (lead || txt) out.push(lead && txt ? `${lead} — ${txt}` : (lead || txt));
+        Object.keys(it).filter(k => it[k] && typeof it[k] === 'object').forEach(k => mzFlatten(it[k], depth + 1, out));
+      } else mzFlatten(it, depth + 1, out);
+    });
+    return out;
+  }
+  if (typeof o === 'object') {
+    if (Array.isArray(o.series)) return out;
+    Object.keys(o).forEach(k => {
+      const v = o[k];
+      if (['color','icon','id','accent','highlight','emoji'].includes(k)) return;
+      if (typeof v === 'string' || typeof v === 'number') out.push(/^(preamble|note|text|summary|description|intro|body|label|title|headline)$/.test(k) ? String(v) : `${mzHuman(k)}: ${v}`);
+      else if (v && typeof v === 'object' && !(Array.isArray(v.series))) { if (depth > 0) out.push('§' + mzHuman(k)); mzFlatten(v, depth + 1, out); }
+    });
+  }
+  return out;
+};
+
+function MzCompareText({ a, b, oa, ob }) {
+  const [open, setOpen] = useState(null);
+  const F = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif";
+  const sec = 'rgba(235,235,245,0.6)';
+  const keys = [...Object.keys(oa || {}), ...Object.keys(ob || {}).filter(k => !(oa && k in oa))]
+    .filter(k => { const t = (o) => o && o[k] != null && mzFlatten(o[k]).length; return t(oa) || t(ob); });
+  if (!keys.length) return <div style={{padding:'20px 4px',fontSize:'14px',color:sec,fontFamily:F}}>Neither company has this written up in Coverage yet.</div>;
+  const block = (t, col, o, k, isOpen) => {
+    const lines = o && o[k] != null ? mzFlatten(o[k]) : [];
+    const shown = isOpen ? lines : lines.slice(0, 3);
+    return (
+      <div style={{marginTop:'8px'}}>
+        <div style={{fontSize:'12px',fontWeight:700,color:col,fontFamily:F,marginBottom:'2px'}}>{t}{lines.length > 3 && !isOpen ? ` · ${lines.length} points` : ''}</div>
+        {!lines.length ? <div style={{fontSize:'13px',color:'rgba(235,235,245,0.4)',fontFamily:F}}>Not covered</div> :
+          shown.map((l, i) => l.startsWith('§')
+            ? <div key={i} style={{fontSize:'13px',fontWeight:600,color:sec,fontFamily:F,marginTop:'6px'}}>{l.slice(1)}</div>
+            : <div key={i} style={{fontSize:'14px',color:'rgba(235,235,245,0.88)',fontFamily:F,lineHeight:1.45,marginTop:'3px',paddingLeft:'10px',borderLeft:`2px solid ${col}33`}}>{l}</div>)}
+      </div>
+    );
+  };
+  return (
+    <div style={{background:'rgba(255,255,255,0.05)',border:'0.5px solid rgba(255,255,255,0.14)',borderRadius:'16px',overflow:'hidden',marginBottom:'14px'}}>
+      {keys.map((k, i) => {
+        const isOpen = open === k;
+        return (
+          <button key={k} onClick={() => setOpen(isOpen ? null : k)} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',borderTop: i ? '0.5px solid rgba(255,255,255,0.08)' : 'none',padding:'12px 14px',cursor:'pointer'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <span style={{fontSize:'16px',fontWeight:600,color:'#FFFFFF',fontFamily:F}}>{k === 'preamble' ? 'In short' : mzHuman(k)}</span>
+              <span style={{color:'rgba(235,235,245,0.4)',fontSize:'13px',fontFamily:F}}>{isOpen ? 'Less' : 'More'}</span>
+            </div>
+            {block(a, '#0A84FF', oa, k, isOpen)}
+            {block(b, '#FF9F0A', ob, k, isOpen)}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MzCompareLines({ a, b, la, lb, openLine, setOpenLine }) {
+  const F = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif";
+  const sec = 'rgba(235,235,245,0.6)';
+  const ok = (n) => typeof n === 'number' && isFinite(n);
+  const byId = (arr) => { const m = {}; (arr || []).forEach(l => { m[l.id] = l; }); return m; };
+  const A = byId(la), B = byId(lb);
+  const ids = [...(la || []).map(l => l.id), ...(lb || []).map(l => l.id).filter(id => !A[id])];
+  const fmt = (v, unit) => {
+    if (!ok(v)) return '—';
+    const u = unit || '';
+    const m = u.match(/^([MBK]) ([A-Z]{3})$/);
+    if (m) {
+      const sym = m[2] === 'USD' ? '$' : m[2] === 'AUD' ? 'A$' : m[2] === 'EUR' ? '€' : '';
+      const base = v * (m[1] === 'B' ? 1e9 : m[1] === 'K' ? 1e3 : 1e6), x = Math.abs(base);
+      const t = x >= 1e12 ? (x / 1e12).toFixed(2) + 'T' : x >= 1e9 ? (x / 1e9).toFixed(1) + 'B' : x >= 1e6 ? (x / 1e6).toFixed(0) + 'M' : x >= 1e3 ? (x / 1e3).toFixed(0) + 'K' : x.toFixed(0);
+      return `${base < 0 ? '-' : ''}${sym}${t}`;
+    }
+    if (u === '%') return `${v.toFixed(1)}%`;
+    if (u === 'x' || u === '×' || u === 'x per year') return `${v.toFixed(2)}×`;
+    if (/per share$/.test(u)) return `${u.startsWith('AUD') ? 'A$' : '$'}${v.toFixed(2)}`;
+    if (u === 'M shares') return `${Math.round(v).toLocaleString()}M`;
+    if (u === 'days') return `${Math.round(v)} days`;
+    if (u === 'USD') return `$${Math.round(v).toLocaleString()}`;
+    return Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : v.toFixed(2);
+  };
+  const lastOf = (s) => s && s.length ? s.slice().sort((x, y) => x.year - y.year)[s.length - 1] : null;
+  if (!ids.length) return <div style={{padding:'20px 4px',fontSize:'14px',color:sec,fontFamily:F}}>Neither company has numbers here in Coverage yet.</div>;
+  return (
+    <div style={{background:'rgba(255,255,255,0.05)',border:'0.5px solid rgba(255,255,255,0.14)',borderRadius:'16px',overflow:'hidden',marginBottom:'14px'}}>
+      <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)',gap:'8px',padding:'10px 14px',fontSize:'13px',fontWeight:700,fontFamily:F}}>
+        <span style={{color:sec,fontWeight:600}}>{ids.length} lines · latest year</span>
+        <span style={{textAlign:'right',color:'#0A84FF'}}>{a}</span>
+        <span style={{textAlign:'right',color:'#FF9F0A'}}>{b}</span>
+      </div>
+      {ids.map(id => {
+        const x = A[id], y = B[id], meta = x || y, isOpen = openLine === id;
+        const lx = lastOf(x && x.series), ly = lastOf(y && y.series);
+        const years = [...new Set([...(x ? x.series : []), ...(y ? y.series : [])].map(p => p.year))].sort((p, q) => p - q);
+        const val = (l, yr) => { const p = l && l.series.find(q => q.year === yr); return p ? p.value : null; };
+        const sameUnit = x && y && x.unit === y.unit;
+        // chart: actual values when units match, otherwise each line indexed to its first year
+        const pts = (l) => {
+          if (!l) return [];
+          const first = l.series.slice().sort((p, q) => p.year - q.year)[0];
+          return years.map(yr => { const v = val(l, yr); if (!ok(v)) return null; return sameUnit || !x || !y ? v : (first.value ? v / first.value * 100 : null); });
+        };
+        const PA = pts(x), PB = pts(y), all = [...PA, ...PB].filter(ok);
+        const W = 300, H = 110, P = 8, lo = all.length ? Math.min(...all) : 0, hi = all.length ? Math.max(...all) : 1;
+        const X = (i) => P + (years.length > 1 ? i / (years.length - 1) : 0.5) * (W - 2 * P);
+        const Y = (v) => H - P - ((v - lo) / ((hi - lo) || 1)) * (H - 2 * P);
+        const path = (arr) => { let d = '', pen = false; arr.forEach((v, i) => { if (ok(v)) { d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)} `; pen = true; } else pen = false; }); return d; };
+        return (
+          <div key={id} style={{borderTop:'0.5px solid rgba(255,255,255,0.08)'}}>
+            <button onClick={() => setOpenLine(isOpen ? null : id)} style={{display:'grid',gridTemplateColumns:'minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)',gap:'8px',alignItems:'center',width:'100%',textAlign:'left',background:'none',border:'none',padding:'10px 14px',cursor:'pointer'}}>
+              <span style={{fontSize:'14px',color:'rgba(235,235,245,0.85)',fontFamily:F,lineHeight:1.3}}>{meta.label}</span>
+              <span style={{textAlign:'right',fontSize:'14px',fontWeight:600,color:'#FFFFFF',fontFamily:F,fontVariantNumeric:'tabular-nums'}}>{lx ? fmt(lx.value, x.unit) : '—'}{lx && <span style={{display:'block',fontSize:'11px',fontWeight:400,color:'rgba(235,235,245,0.4)'}}>{lx.year}</span>}</span>
+              <span style={{textAlign:'right',fontSize:'14px',fontWeight:600,color:'#FFFFFF',fontFamily:F,fontVariantNumeric:'tabular-nums'}}>{ly ? fmt(ly.value, y.unit) : '—'}{ly && <span style={{display:'block',fontSize:'11px',fontWeight:400,color:'rgba(235,235,245,0.4)'}}>{ly.year}</span>}</span>
+            </button>
+            {isOpen && (
+              <div style={{padding:'0 14px 14px'}}>
+                {all.length > 1 && (
+                  <>
+                    <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block'}}>
+                      <path d={path(PA)} fill="none" stroke="#0A84FF" strokeWidth="2.5" strokeLinejoin="round" />
+                      <path d={path(PB)} fill="none" stroke="#FF9F0A" strokeWidth="2.5" strokeLinejoin="round" />
+                    </svg>
+                    {!sameUnit && x && y && <div style={{fontSize:'11px',color:'rgba(235,235,245,0.4)',fontFamily:F}}>Different units, so each line starts at 100</div>}
+                  </>
+                )}
+                <div style={{marginTop:'8px'}}>
+                  {years.slice().reverse().map(yr => {
+                    const va = val(x, yr), vb = val(y, yr);
+                    return (
+                      <div key={yr} style={{display:'grid',gridTemplateColumns:'minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)',gap:'8px',padding:'4px 0',fontSize:'13px',fontFamily:F,fontVariantNumeric:'tabular-nums'}}>
+                        <span style={{color:sec}}>{yr}</span>
+                        <span style={{textAlign:'right',color:'#FFFFFF'}}>{x ? fmt(va, x.unit) : ''}</span>
+                        <span style={{textAlign:'right',color:'#FFFFFF'}}>{y ? fmt(vb, y.unit) : ''}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                {[[a, x, '#0A84FF'], [b, y, '#FF9F0A']].filter(([, l]) => l && l.note).map(([t, l, col]) => (
+                  <div key={t} style={{display:'flex',gap:'8px',marginTop:'10px'}}>
+                    <span style={{fontSize:'12px',fontWeight:700,color:col,fontFamily:F,minWidth:'44px'}}>{t}</span>
+                    <span style={{fontSize:'13px',color:'rgba(235,235,245,0.85)',fontFamily:F,lineHeight:1.45}}>{l.note}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
