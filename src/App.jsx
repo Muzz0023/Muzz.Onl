@@ -287,7 +287,7 @@ const MZ_TIMETABLE_TOUR = [
 ];
 const MZ_BILLS_TOUR = [
   { icon: '🧾', title: 'All your bills in one place', body: 'Add each bill with its amount and how often it\'s paid. Muzz works out what it costs you per month, per year and per pay.' },
-  { icon: '📂', title: 'Sections', body: 'Keep bills in sections like Personal, Home or Car. Each section can have its own income.' },
+  { icon: '📂', title: 'Categories', body: 'Give each bill a category: Personal, House, Car or Business. Tap a category at the top of your bills to see just those, with what they cost you a month and a year.' },
   { icon: '📈', title: 'Bills & income over time', body: 'Muzz saves your monthly bills and income every month, so you can see things like "Bills up $40 a month since last year" or "Income up 22%".' },
   { icon: '🎯', title: 'Goals', body: 'Set goals like an emergency fund. Link a goal to an asset and it fills itself as your savings grow.' },
   { icon: '📅', title: 'Forecast & calendar', body: 'See what\'s coming up and when each bill is due, so nothing catches you out.' },
@@ -1105,6 +1105,14 @@ const mzSha256Hex = async (str) => {
   return H.map(v => (v >>> 0).toString(16).padStart(8, '0')).join('');
 };
 const mzRandomNonce = () => { const a = new Uint8Array(24); (window.crypto || {}).getRandomValues ? window.crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.floor(Math.random() * 256); }); return Array.from(a).map(b => b.toString(16).padStart(2, '0')).join(''); };
+
+// Bill categories — picked per bill, Muzz groups them automatically
+const MZ_BILL_CATS = [
+  { id: 'personal', label: 'Personal' },
+  { id: 'house',    label: 'House' },
+  { id: 'car',      label: 'Car' },
+  { id: 'business', label: 'Business' },
+];
 
 const mzPlugin = (name) => {
   if (typeof window === 'undefined') return null;
@@ -48135,6 +48143,7 @@ function MuzzApp() {
   // User-configurable bill buckets. Each bucket has its own income + bills.
   // Seeded on first load from legacy subscriptions / businessSubscriptions / monthlySalary.
   const [billBuckets, setBillBuckets] = useState(null); // null = not yet hydrated; [] = empty
+  const [billCatFilter, setBillCatFilter] = useState('all'); // Bills: all | personal | house | car | business
   const [activeBucketId, setActiveBucketId] = useState(null);
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [funnyGreetings, setFunnyGreetings] = useState(false);
@@ -49438,6 +49447,22 @@ function MuzzApp() {
   useEffect(() => {
     setDataLoaded(false);
   }, [userId]);
+
+  // One list of bills: bills from other sections move into the main list, tagged with a category
+  useEffect(() => {
+    if (!dataLoaded || !Array.isArray(billBuckets) || billBuckets.length < 2) return;
+    const main = billBuckets.find(b => b.id === 'bucket_personal') || billBuckets[0];
+    const others = billBuckets.filter(b => b.id !== main.id && (b.bills || []).some(x => x && (x.name || x.monthly)));
+    if (!others.length) { if (activeBucketId !== main.id) setActiveBucketId(main.id); return; }
+    const catFor = (b) => b.id === 'bucket_business' ? 'business' : b.id === 'bucket_home' ? 'house' : /house|home|rent|mortgage/i.test(b.name || '') ? 'house' : /car|vehicle/i.test(b.name || '') ? 'car' : /business|work/i.test(b.name || '') ? 'business' : 'personal';
+    setBillBuckets(prev => {
+      const m = prev.find(b => b.id === main.id); if (!m) return prev;
+      const moved = [];
+      prev.forEach(b => { if (b.id !== main.id) (b.bills || []).forEach(x => { if (x && (x.name || x.monthly)) moved.push({ ...x, cat: x.cat || catFor(b) }); }); });
+      return prev.map(b => b.id === main.id ? { ...b, bills: [...(b.bills || []), ...moved] } : { ...b, bills: [] });
+    });
+    setActiveBucketId(main.id);
+  }, [dataLoaded, billBuckets, activeBucketId]);
 
   // Migration: seed billBuckets from legacy subscriptions/businessSubscriptions on first load.
   // Runs once after data loads; if user already has buckets we skip.
@@ -51770,7 +51795,7 @@ function MuzzApp() {
 
     const addBillToBucket = (bucketId) => {
       const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
-      const newBills = [...(b.bills||[]), { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '', freq: 'monthly', dateAdded: new Date().toISOString() }];
+      const newBills = [...(b.bills||[]), { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '', freq: 'monthly', cat: billCatFilter !== 'all' ? billCatFilter : 'personal', dateAdded: new Date().toISOString() }];
       updateBucketBills(bucketId, newBills);
       setEditingBillIdx(newBills.length - 1);
     };
@@ -51786,6 +51811,7 @@ function MuzzApp() {
       else if (field === 'weekday') bills[idx] = { ...bills[idx], weekday: value };
       else if (field === 'fortnightAnchor') bills[idx] = { ...bills[idx], fortnightAnchor: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
+      else if (field === 'cat') bills[idx] = { ...bills[idx], cat: value };
       updateBucketBills(bucketId, bills);
     };
     const removeBillFromBucket = (bucketId, idx) => {
@@ -52050,17 +52076,10 @@ function MuzzApp() {
                   </div>
                 </Sheet>
               )}
-              {/* Sections (Personal, Home, Business…) */}
-              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                <div style={{flex:1,minWidth:0}}>
-                  {bucketSwitcher || (activeBucket && <div style={{...groupLabel,fontSize:"15px"}}>{activeBucket.name}</div>)}
-                </div>
-                <button aria-label="New section" onClick={addBucket} style={{...roundPlus,width:"36px",height:"36px",fontSize:"22px"}}>+</button>
-              </div>
 
               {!activeBucket && (
                 <div style={{padding:"30px 16px",textAlign:"center",fontFamily:SANS_FONT,color:sec,fontSize:"15px"}}>
-                  No sections yet. Tap + to create your first one.
+                  <button onClick={() => { const nb = { id: 'bucket_personal', name: 'Personal', icon: '', color: '#3b82f6', incomeStr: '', incomeLabel: 'Monthly income', bills: [] }; setBillBuckets([nb]); setActiveBucketId(nb.id); }} style={{...textBtn(BLUE),fontSize:"17px"}}>Start tracking bills</button>
                 </div>
               )}
 
@@ -52125,7 +52144,7 @@ function MuzzApp() {
                   const useTemplate = () => updateBucketBills(activeBucket.id, samples.map(s => ({ id: Date.now() + Math.random(), name: s.name, monthly: s.monthly, monthlyStr: String(s.monthly), dueDate: s.dueDate, freq: 'monthly', dateAdded: new Date().toISOString() })));
                   return (
                     <div style={{...card,padding:"18px"}}>
-                      <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Track your {activeBucket.name.toLowerCase()} bills</div>
+                      <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Track your bills</div>
                       <div style={{fontSize:"15px",color:sec,fontFamily:SANS_FONT,lineHeight:1.45,marginTop:"4px"}}>Add what each bill costs and when it's due, and see where your {isBusinessBucket ? 'revenue' : 'income'} goes. For example:</div>
                       <div style={{display:"flex",flexDirection:"column",gap:"10px",margin:"16px 0 18px"}}>
                         {samples.map((s, i) => (
@@ -52147,14 +52166,44 @@ function MuzzApp() {
                 {currentSubs.length > 0 && (
                   <div>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",margin:"4px 4px 8px"}}>
-                      <span style={groupLabel}>{activeBucket.name} bills</span>
-                      <span style={{display:"flex",gap:"16px"}}>
-                        <button onClick={() => renameBucket(activeBucket.id)} style={{...textBtn(BLUE),fontSize:"15px"}}>Rename</button>
-                        <button onClick={() => deleteBucket(activeBucket.id)} style={{...textBtn(RED),fontSize:"15px"}}>Delete</button>
-                      </span>
+                      <span style={groupLabel}>Bills</span>
                     </div>
+                    {(() => {
+                      const catOf = (x) => (x && x.cat) || 'personal';
+                      const counts = { all: currentSubs.filter(x => x && (x.name || x.monthly)).length };
+                      MZ_BILL_CATS.forEach(c => { counts[c.id] = currentSubs.filter(x => x && (x.name || x.monthly) && catOf(x) === c.id).length; });
+                      const inCat = billCatFilter === 'all' ? [] : currentSubs.filter(x => x && x.monthly > 0 && catOf(x) === billCatFilter);
+                      const catMonthly = inCat.reduce((t, x) => t + monthlyEquivalent(x), 0);
+                      const catLabel = (MZ_BILL_CATS.find(c => c.id === billCatFilter) || {}).label || '';
+                      return (
+                        <>
+                          <div className="mz-noscroll" style={{display:"flex",gap:"6px",flexWrap:"nowrap",overflowX:"auto",margin:"0 -16px 10px",padding:"0 16px",WebkitOverflowScrolling:"touch"}}>
+                            {[{ id: 'all', label: 'All' }, ...MZ_BILL_CATS].map(c => {
+                              const on = billCatFilter === c.id;
+                              return (
+                                <button key={c.id} onClick={() => setBillCatFilter(c.id)} aria-pressed={on}
+                                  style={{flexShrink:0,padding:"7px 12px",borderRadius:"999px",cursor:"pointer",fontFamily:SANS_FONT,fontSize:"14px",fontWeight:500,color:"#FFFFFF",whiteSpace:"nowrap",border:on?"none":"0.5px solid rgba(255,255,255,0.16)",background:on?"var(--mz-accent,#0A84FF)":"rgba(255,255,255,0.08)"}}>
+                                  {c.label}{counts[c.id] ? ` ${counts[c.id]}` : ''}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {billCatFilter !== 'all' && (
+                            <div style={{...card,padding:"14px 16px",marginBottom:"10px",display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:"8px"}}>
+                              {[[`${catLabel} a month`, money(catMonthly)], ['A year', money(catMonthly * 12)], [salaryNum > 0 ? 'Of income' : 'Of all bills', salaryNum > 0 ? `${((catMonthly / salaryNum) * 100).toFixed(0)}%` : (totalMonthly > 0 ? `${((catMonthly / totalMonthly) * 100).toFixed(0)}%` : '0%')]].map(([k, v]) => (
+                                <div key={k} style={{minWidth:0}}>
+                                  <div style={{fontSize:"13px",color:sec,fontFamily:SANS_FONT,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k}</div>
+                                  <div style={{fontSize:"20px",fontWeight:700,color:"#FFFFFF",fontFamily:SANS_FONT,marginTop:"2px"}}>{v}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                     <div style={rowList}>
                       {currentSubs.map((sub, origIndex) => ({ sub, origIndex, nd: computeNextDue(sub) }))
+                        .filter(({ sub }) => billCatFilter === 'all' || !sub || (!sub.name && !sub.monthly) || ((sub.cat || 'personal') === billCatFilter))
                         .sort((a, b) => {
                           if (a.nd && !b.nd) return -1;
                           if (!a.nd && b.nd) return 1;
@@ -52166,7 +52215,7 @@ function MuzzApp() {
                         const freq = sub?.freq || 'monthly';
                         const monthlyEq = monthlyEquivalent(sub);
                         const daysAway = nd ? nd.daysAway : null;
-                        const sub1 = [FREQ_LABEL[freq], nd ? `due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''].filter(Boolean).join(', ');
+                        const sub1 = [billCatFilter === 'all' ? ((MZ_BILL_CATS.find(c => c.id === (sub?.cat || 'personal')) || {}).label) : '', FREQ_LABEL[freq], nd ? `due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''].filter(Boolean).join(' · ');
                         return (
                           <React.Fragment key={sub?.id || index}>
                           <SwipeRow style={rowCard} disabled={isEditing} onDelete={() => removeBillFromBucket(activeBucket.id, index)}
@@ -52195,6 +52244,10 @@ function MuzzApp() {
                                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
                                   onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
                                   style={{...bareArea,padding:"10px 0",borderBottom:sep}} />
+                                <div style={{padding:"10px 0",borderBottom:sep}}>
+                                  <div style={{...formLabel,marginBottom:"8px"}}>Category</div>
+                                  <Segmented value={sub?.cat || 'personal'} onChange={(c) => updateBillInBucket(activeBucket.id, index, 'cat', c)} options={MZ_BILL_CATS.map(c => ({ id: c.id, label: c.label }))} />
+                                </div>
                                 <label style={{...formRow,borderBottom:sep,cursor:"text"}}>
                                   <span style={formLabel}>Cost</span>
                                   <span style={{display:"flex",alignItems:"baseline",gap:"2px",minWidth:0}}>
