@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, Contact, Flag, Inbox, CalendarDays, RefreshCw, Gift, History as HistoryIcon, Search as SearchIcon } from 'lucide-react';
+import { Settings as SettingsIcon, ChevronLeft, X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart, ChevronRight, FileText, Eye as EyeIcon, BookOpen, Layers, Globe, Crown, Calculator, GraduationCap, Palette, Clock, Pin, CheckCircle, ListChecks, Share as ShareIcon, Contact, Flag, Inbox, CalendarDays, RefreshCw, Gift, History as HistoryIcon, Search as SearchIcon } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -48251,6 +48251,8 @@ function MuzzApp() {
   const [smallGoals, setSmallGoals] = useState([]);
   const [dashLayout, setDashLayout] = useState({ order: [], hidden: [] }); // dashboard tiles: order + hidden
   const [dashEditOpen, setDashEditOpen] = useState(false);
+  const [dashSettings, setDashSettings] = useState(false); // Settings page on the dashboard
+  const [dashSummaryOpen, setDashSummaryOpen] = useState(() => { try { return localStorage.getItem('mz_dash_summary') === '1'; } catch (e) { return false; } });
   const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
   const [assetsSheet, setAssetsSheet] = useState(null); // 'networth' | 'why' | null
   const [assetHistOpen, setAssetHistOpen] = useState(false);
@@ -51527,9 +51529,15 @@ function MuzzApp() {
           <div className="max-w-4xl mx-auto">
             <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
               <div>
+                {dashSettings ? (
+                  <button onClick={() => setDashSettings(false)} style={{display:"inline-flex",alignItems:"center",gap:"2px",background:"none",border:"none",padding:0,marginLeft:"-6px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer"}}>
+                    <ChevronLeft size={24} strokeWidth={2.25} />Dashboard
+                  </button>
+                ) : (
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
+                )}
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
-                  <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                  <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{dashSettings ? 'Settings' : eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
                   {isElite && !FREE_FOR_EVERYONE && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0.5px rgba(0,0,0,0.45)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
@@ -51538,6 +51546,48 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 16px 0"}}>
+          {dashSettings ? (<>
+          {/* SETTINGS — name, appearance, account and data in one place */}
+          <div style={{marginTop:"4px"}}>
+            <div style={groupLabel}>General</div>
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} last />
+            </div>
+            {FREE_FOR_EVERYONE && (
+              <>
+                <div style={groupLabel}>Name</div>
+                <div style={{...glass,overflow:"hidden"}}>
+                  <input value={eliteName} onChange={e => setEliteName(e.target.value)} placeholder="Your name" onFocus={scrollInputIntoView}
+                    style={{display:"block",width:"100%",boxSizing:"border-box",minHeight:"50px",padding:"0 16px",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.4px"}} />
+                </div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Shown in your greeting at the top.</div>
+              </>
+            )}
+
+            <div style={groupLabel}>Account</div>
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              {!FREE_FOR_EVERYONE && (
+                <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
+              )}
+              <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
+              <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
+              <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
+                <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
+              </ListRow>
+            </div>
+
+            <div style={groupLabel}>Legal</div>
+            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              <ListRow icon={Lock} label="Privacy policy" onClick={() => window.open('https://muzz.onl/privacy.html', '_blank', 'noopener')} />
+              <ListRow icon={FileText} label="Terms of use" onClick={() => window.open('https://muzz.onl/terms.html', '_blank', 'noopener')} last />
+            </div>
+
+            <div style={{...glass,overflow:"hidden"}}>
+              <ListRow label="Sign out" danger center onClick={signOut} />
+              <ListRow label="Delete account" danger center last onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }} />
+            </div>
+          </div>
+          </>) : (<>
 
           {/* HERO — net worth */}
           <div role="button" tabIndex={0} onClick={() => setActiveView('assets')} style={{...glass,padding:"20px 20px 16px",cursor:"pointer"}}>
@@ -51555,6 +51605,16 @@ function MuzzApp() {
             </div>
           </div>
 
+          {/* SUMMARY — tucked away until you want it */}
+          <div style={{display:"flex",justifyContent:"center",marginTop:"12px"}}>
+            <button onClick={() => setDashSummaryOpen(o => { const n = !o; try { localStorage.setItem('mz_dash_summary', n ? '1' : '0'); } catch (e) {} return n; })}
+              aria-expanded={dashSummaryOpen}
+              style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"8px 16px",borderRadius:"999px",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",color:txt.primary,fontFamily:SANS_FONT,fontSize:"15px",fontWeight:500,cursor:"pointer"}}>
+              {dashSummaryOpen ? 'Hide summary' : 'Summary'}
+              {dashSummaryOpen ? <ChevronUp size={16} strokeWidth={2.25} color={txt.secondary} /> : <ChevronDown size={16} strokeWidth={2.25} color={txt.secondary} />}
+            </button>
+          </div>
+          {dashSummaryOpen && (<>
           {/* TILES — empty ones stay out of the way */}
           {(() => {
             const nb = billsDueSoon[0];
@@ -51600,13 +51660,14 @@ function MuzzApp() {
               </>
             );
           })()}
+          </>)}
 
           {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
             <div style={groupLabel}>Sections</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(8,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:isWide?"14px":"12px 10px",marginBottom:"28px"}}>
-              {[...sectionItems, { id: 'appearance', label: 'Appearance', icon: Palette }].map(item => { const Ic = item.icon; return (
-                <button key={item.id} onClick={() => setActiveView(item.id)}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(8,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:isWide?"14px":"12px 10px",marginBottom:"8px"}}>
+              {[...sectionItems, { id: 'settings', label: 'Settings', icon: SettingsIcon }].map(item => { const Ic = item.icon; return (
+                <button key={item.id} onClick={() => { if (item.id === 'settings') { setDashSettings(true); window.scrollTo(0, 0); } else setActiveView(item.id); }}
                   style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"7px",background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:SANS_FONT,minWidth:0}}>
                   <span onMouseEnter={onIn} onMouseLeave={onOut}
                     style={{...glass,width:"100%",aspectRatio:"1 / 1",maxWidth:"84px",borderRadius:"22px",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s, transform 0.1s"}}>
@@ -51617,39 +51678,7 @@ function MuzzApp() {
               ); })}
             </div>
 
-            {FREE_FOR_EVERYONE && (
-              <>
-                <div style={groupLabel}>Name</div>
-                <div style={{...glass,overflow:"hidden"}}>
-                  <input value={eliteName} onChange={e => setEliteName(e.target.value)} placeholder="Your name" onFocus={scrollInputIntoView}
-                    style={{display:"block",width:"100%",boxSizing:"border-box",minHeight:"50px",padding:"0 16px",background:"transparent",border:"none",outline:"none",boxShadow:"none",WebkitAppearance:"none",appearance:"none",borderRadius:0,color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",letterSpacing:"-0.4px"}} />
-                </div>
-                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Shown in your greeting at the top.</div>
-              </>
-            )}
 
-            <div style={groupLabel}>Account</div>
-            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
-              {!FREE_FOR_EVERYONE && (
-                <ListRow icon={Award} label={isElite ? 'Elite status' : 'Upgrade to Elite'} onClick={() => setActiveView('upgrade')} />
-              )}
-              <ListRow icon={MessageCircle} label="Feedback & support" onClick={() => setActiveView('feedback')} />
-              <ListRow icon={Download} label="Export data" onClick={doExport} chevron={false} />
-              <ListRow icon={Upload} label="Import data" as="label" chevron={false} last>
-                <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
-              </ListRow>
-            </div>
-
-            <div style={groupLabel}>Legal</div>
-            <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
-              <ListRow icon={Lock} label="Privacy policy" onClick={() => window.open('https://muzz.onl/privacy.html', '_blank', 'noopener')} />
-              <ListRow icon={FileText} label="Terms of use" onClick={() => window.open('https://muzz.onl/terms.html', '_blank', 'noopener')} last />
-            </div>
-
-            <div style={{...glass,overflow:"hidden"}}>
-              <ListRow label="Sign out" danger center onClick={signOut} />
-              <ListRow label="Delete account" danger center last onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }} />
-            </div>
           </div>
 
           {/* QUOTE — quiet footer */}
@@ -51661,6 +51690,7 @@ function MuzzApp() {
           )}
 
 
+          </>)}
         </div>
 
       </div>
