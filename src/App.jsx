@@ -51605,16 +51605,6 @@ function MuzzApp() {
             </div>
           </div>
 
-          {/* SUMMARY — tucked away until you want it */}
-          <div style={{display:"flex",justifyContent:"center",marginTop:"12px"}}>
-            <button onClick={() => setDashSummaryOpen(o => { const n = !o; try { localStorage.setItem('mz_dash_summary', n ? '1' : '0'); } catch (e) {} return n; })}
-              aria-expanded={dashSummaryOpen}
-              style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"8px 16px",borderRadius:"999px",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.14)",color:txt.primary,fontFamily:SANS_FONT,fontSize:"15px",fontWeight:500,cursor:"pointer"}}>
-              {dashSummaryOpen ? 'Hide summary' : 'Summary'}
-              {dashSummaryOpen ? <ChevronUp size={16} strokeWidth={2.25} color={txt.secondary} /> : <ChevronDown size={16} strokeWidth={2.25} color={txt.secondary} />}
-            </button>
-          </div>
-          {dashSummaryOpen && (<>
           {/* TILES — empty ones stay out of the way */}
           {(() => {
             const nb = billsDueSoon[0];
@@ -51660,7 +51650,6 @@ function MuzzApp() {
               </>
             );
           })()}
-          </>)}
 
           {/* QUICK-LAUNCH NAV — grouped lists, Settings-style */}
           <div style={{marginTop:"22px"}}>
