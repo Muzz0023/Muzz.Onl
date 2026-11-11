@@ -52480,7 +52480,7 @@ function MuzzApp() {
               return `M 110 110 L ${110 + 80 * Math.cos(r0)} ${110 + 80 * Math.sin(r0)} A 80 80 0 ${pct > 50 ? 1 : 0} 1 ${110 + 80 * Math.cos(r1)} ${110 + 80 * Math.sin(r1)} Z`;
             };
             return (
-              <details open style={card}>
+              <details style={card}>
                 <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                   <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>By category</span>
                   <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
@@ -52491,8 +52491,8 @@ function MuzzApp() {
                       ? <circle cx="110" cy="110" r="80" fill={data[0].col} />
                       : data.map((d, i) => <path key={i} d={arc(d.monthly)} fill={d.col} />)}
                     <circle cx="110" cy="110" r="52" fill="#1C1C1E" />
-                    <text x="110" y="112" textAnchor="middle" style={{fontSize:"22px",fontWeight:700,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{money(total)}</text>
-                    <text x="110" y="132" textAnchor="middle" style={{fontSize:"13px",fill:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>a month</text>
+                    <text x="110" y="112" textAnchor="middle" style={{fontSize:"22px",fontWeight:700,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{money(total * 12)}</text>
+                    <text x="110" y="132" textAnchor="middle" style={{fontSize:"13px",fill:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>a year</text>
                   </svg>
                   <div style={{display:"flex",flexDirection:"column",width:"100%"}}>
                     {data.map((d, i) => (
@@ -52502,7 +52502,7 @@ function MuzzApp() {
                         <span style={{flex:1,minWidth:0,fontSize:"17px",color:"#FFFFFF"}}>{d.label}<span style={{fontSize:"13px",color:sec}}> · {d.n} {d.n === 1 ? 'bill' : 'bills'}</span></span>
                         <span style={{textAlign:"right"}}>
                           <span style={{display:"block",fontSize:"17px",color:"#FFFFFF",fontWeight:600}}>{Math.round((d.monthly / total) * 100)}%</span>
-                          <span style={{display:"block",fontSize:"13px",color:sec}}>{money(d.monthly)} a month</span>
+                          <span style={{display:"block",fontSize:"13px",color:sec}}>{money(d.monthly * 12)} a year</span>
                         </span>
                       </button>
                     ))}
