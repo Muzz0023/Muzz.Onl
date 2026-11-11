@@ -48274,7 +48274,7 @@ function MuzzApp() {
   const [memberNo, setMemberNo] = useState(() => { try { const c = JSON.parse(localStorage.getItem('mz_member_no') || 'null'); return c && c.uid && c.n ? c : null; } catch (e) { return null; } });
   useEffect(() => {
     const uid = userId; if (!uid) return;
-    if (memberNo && memberNo.uid === uid) return;
+    // Show the saved number straight away, but always re-check in case numbers were tidied up
     supabase.memberNumber().then(n => { if (n) { const v = { uid, n }; setMemberNo(v); try { localStorage.setItem('mz_member_no', JSON.stringify(v)); } catch (e) {} } });
   }, [userId]);
   const myMemberNo = memberNo && userId && memberNo.uid === userId ? memberNo.n : null;
