@@ -2452,6 +2452,16 @@ const supabase = {
     return d;
   },
   
+  async memberNumber() {
+    if (!this.token) return null;
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/muzz_member_number`, { method: 'POST', headers: this.headers(true), body: '{}' });
+      if (!r.ok) return null;
+      const n = await r.json();
+      return Number.isFinite(Number(n)) && Number(n) > 0 ? Number(n) : null;
+    } catch (e) { return null; }
+  },
+
   async signInWithApple(idToken, nonce) {
     const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
       method: 'POST',
@@ -48261,6 +48271,14 @@ function MuzzApp() {
   const [dashLayout, setDashLayout] = useState({ order: [], hidden: [] }); // dashboard tiles: order + hidden
   const [dashEditOpen, setDashEditOpen] = useState(false);
   const [dashSettings, setDashSettings] = useState(false); // Settings page on the dashboard
+  const [memberNo, setMemberNo] = useState(() => { try { const c = JSON.parse(localStorage.getItem('mz_member_no') || 'null'); return c && c.uid && c.n ? c : null; } catch (e) { return null; } });
+  useEffect(() => {
+    const uid = userId; if (!uid) return;
+    if (memberNo && memberNo.uid === uid) return;
+    supabase.memberNumber().then(n => { if (n) { const v = { uid, n }; setMemberNo(v); try { localStorage.setItem('mz_member_no', JSON.stringify(v)); } catch (e) {} } });
+  }, [userId]);
+  const myMemberNo = memberNo && userId && memberNo.uid === userId ? memberNo.n : null;
+  const [badgeOpen, setBadgeOpen] = useState(false);
   const [dashSummaryOpen, setDashSummaryOpen] = useState(() => { try { return localStorage.getItem('mz_dash_summary') === '1'; } catch (e) { return false; } });
   const [netWorthMonthly, setNetWorthMonthly] = useState([]); // [{ m: 'YYYY-MM', v }] one point per month
   const [assetsSheet, setAssetsSheet] = useState(null); // 'networth' | 'why' | null
@@ -51563,6 +51581,11 @@ function MuzzApp() {
                 )}
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
                   <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{dashSettings ? 'Settings' : eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                  {!dashSettings && myMemberNo && (
+                    <button onClick={() => setBadgeOpen(true)} aria-label={`Member number ${myMemberNo}`} style={{display:"inline-flex",alignItems:"center",gap:"4px",fontSize:"13px",fontWeight:600,color:"#FFFFFF",background:myMemberNo <= 50 ? "rgba(255,214,10,0.14)" : "rgba(255,255,255,0.1)",border:myMemberNo <= 50 ? "0.5px solid rgba(255,214,10,0.45)" : "0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",padding:"4px 10px",fontFamily:SANS_FONT,letterSpacing:"-0.1px",cursor:"pointer"}}>
+                      <Award size={13} strokeWidth={2.25} color={myMemberNo <= 50 ? "#FFD60A" : "#FFFFFF"} />#{myMemberNo.toLocaleString()}
+                    </button>
+                  )}
                   {isElite && !FREE_FOR_EVERYONE && <span style={{fontSize:"12px",fontWeight:600,color:"rgba(235,235,245,0.85)",background:"rgba(255,255,255,0.08)",border:"0.5px solid rgba(255,255,255,0.25)",backdropFilter:"blur(30px) saturate(180%)",WebkitBackdropFilter:"blur(30px) saturate(180%)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0.5px rgba(0,0,0,0.45)",borderRadius:"999px",padding:"2px 10px",fontFamily:SANS_FONT}}>Elite</span>}
                 </div>
               </div>
@@ -51571,9 +51594,43 @@ function MuzzApp() {
         </div>
 
         <div className="max-w-4xl mx-auto" style={{padding:isWide?"18px 24px 0":"18px 16px 0"}}>
+          {badgeOpen && myMemberNo && (() => {
+            const n = myMemberNo, founding = n <= 50;
+            const ord = (n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({1:'st',2:'nd',3:'rd'}[n % 10] || 'th');
+            return (
+              <Sheet onClose={() => setBadgeOpen(false)}>
+                <div style={{padding:"8px 20px 28px",textAlign:"center",fontFamily:SANS_FONT}}>
+                  <div style={{display:"flex",justifyContent:"flex-end"}}>
+                    <button onClick={() => setBadgeOpen(false)} style={{background:"none",border:"none",color:"var(--mz-accent,#0A84FF)",fontSize:"17px",fontWeight:600,cursor:"pointer",fontFamily:SANS_FONT}}>Done</button>
+                  </div>
+                  <div style={{width:"84px",height:"84px",borderRadius:"50%",margin:"4px auto 0",display:"flex",alignItems:"center",justifyContent:"center",background:founding?"rgba(255,214,10,0.14)":"rgba(255,255,255,0.1)",border:founding?"1px solid rgba(255,214,10,0.5)":"0.5px solid rgba(255,255,255,0.2)"}}>
+                    <Award size={40} strokeWidth={1.6} color={founding ? "#FFD60A" : "#FFFFFF"} />
+                  </div>
+                  <div style={{fontSize:"34px",fontWeight:700,color:"#FFFFFF",letterSpacing:"-0.6px",marginTop:"14px"}}>Member #{n.toLocaleString()}</div>
+                  {founding && <div style={{display:"inline-block",marginTop:"8px",fontSize:"13px",fontWeight:600,color:"#FFD60A",background:"rgba(255,214,10,0.12)",borderRadius:"999px",padding:"4px 12px"}}>Founding member</div>}
+                  <div style={{fontSize:"17px",color:"rgba(235,235,245,0.85)",lineHeight:1.5,marginTop:"16px"}}>
+                    You were the {n.toLocaleString()}{ord} person to join Muzz.
+                  </div>
+                  <div style={{fontSize:"15px",color:"rgba(235,235,245,0.6)",lineHeight:1.55,marginTop:"10px"}}>
+                    Muzz is built by one person, and every member means a lot. Thank you for being here and helping it grow. Your number is yours for good and never changes.
+                  </div>
+                </div>
+              </Sheet>
+            );
+          })()}
           {dashSettings ? (<>
           {/* SETTINGS — name, appearance, account and data in one place */}
           <div style={{marginTop:"4px"}}>
+            {myMemberNo && (
+              <button onClick={() => setBadgeOpen(true)} style={{...glass,width:"100%",textAlign:"left",cursor:"pointer",padding:"16px",marginBottom:"26px",display:"flex",alignItems:"center",gap:"14px"}}>
+                <span style={{width:"44px",height:"44px",borderRadius:"50%",background:myMemberNo <= 50 ? "rgba(255,214,10,0.14)" : "rgba(255,255,255,0.1)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Award size={22} color={myMemberNo <= 50 ? "#FFD60A" : txt.primary} strokeWidth={1.75} /></span>
+                <span style={{flex:1,minWidth:0}}>
+                  <span style={{display:"block",fontSize:"17px",color:txt.primary,fontWeight:600,fontFamily:SANS_FONT}}>Member #{myMemberNo.toLocaleString()}{myMemberNo <= 50 ? ' · Founding member' : ''}</span>
+                  <span style={{display:"block",fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,marginTop:"2px"}}>Thank you for being part of Muzz.</span>
+                </span>
+                <ChevronRight size={18} color={txt.tertiary} strokeWidth={2.25} />
+              </button>
+            )}
             <div style={groupLabel}>General</div>
             <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
               <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} last />
