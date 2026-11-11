@@ -52464,220 +52464,48 @@ function MuzzApp() {
                     </details>
                   );
                 })()}
-          {/* Branch Graph — Radial constellation layout, collapsible */}
-          {activeBucket && (activeBucket.bills || []).some(x => x?.name && x.monthly > 0) && (() => {
-            const bucket = activeBucket;
-            const bills = (bucket.bills || []).filter(x => x?.name && x.monthly > 0);
-            const accent = '#0A84FF';
-            const sortedBills = [...bills].map(s => ({ s, nd: computeNextDue(s), mEq: monthlyEquivalent(s) }))
-              .sort((a,b) => b.mEq - a.mEq);
-            const bucketTotal = sortedBills.reduce((sum, {mEq}) => sum + mEq, 0);
-            const maxBillEq = Math.max(...sortedBills.map(b => b.mEq), 1);
-
-            // Radial geometry — bucket at center, bills around it
-            const N = sortedBills.length;
-            // Canvas size scales with bill count
-            // Mobile: bigger canvas that scales hard with bill count to prevent overlap
-            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : Math.min(560, 320 + N * 22);
-            const cx = canvasSize / 2;
-            const cy = canvasSize / 2;
-            const bucketRadius = isWide ? 90 : 60;
-            const cardW = isWide ? 150 : 95;
-            const cardH = isWide ? 70 : 56;
-            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 55;
-
-            // Position each bill on the ring — start from top (-90deg), distribute evenly
-            const nodes = sortedBills.map((b, i) => {
-              const angle = (-Math.PI / 2) + (i / N) * Math.PI * 2;
-              const x = cx + Math.cos(angle) * ringRadius;
-              const y = cy + Math.sin(angle) * ringRadius;
-              // Path endpoint slightly closer in than card centre (so it connects to card edge, not centre)
-              const pathR = ringRadius - cardH / 2;
-              const px = cx + Math.cos(angle) * pathR;
-              const py = cy + Math.sin(angle) * pathR;
-              // Bucket exit point — on the edge of the bucket node, pointing toward this bill
-              const bx = cx + Math.cos(angle) * bucketRadius;
-              const by = cy + Math.sin(angle) * bucketRadius;
-              return { ...b, angle, x, y, px, py, bx, by };
-            });
-
+          {/* By category — pie of each category's share of all bills */}
+          {filledSubs.length > 0 && (() => {
+            const CAT_COL = { personal: '#0A84FF', house: '#30D158', car: '#FF9F0A', business: '#BF5AF2' };
+            const data = MZ_BILL_CATS.map(c => {
+              const list = filledSubs.filter(x => (x.cat || 'personal') === c.id);
+              return { ...c, n: list.length, monthly: list.reduce((t, x) => t + monthlyEquivalent(x), 0), col: CAT_COL[c.id] };
+            }).filter(d => d.monthly > 0).sort((a, b) => b.monthly - a.monthly);
+            const total = data.reduce((t, d) => t + d.monthly, 0) || 1;
+            let cum = 0;
+            const arc = (v) => {
+              const pct = (v / total) * 100;
+              const a0 = (cum / 100) * 360; cum += pct; const a1 = Math.min((cum / 100) * 360, 359.999);
+              const r0 = (a0 - 90) * Math.PI / 180, r1 = (a1 - 90) * Math.PI / 180;
+              return `M 110 110 L ${110 + 80 * Math.cos(r0)} ${110 + 80 * Math.sin(r0)} A 80 80 0 ${pct > 50 ? 1 : 0} 1 ${110 + 80 * Math.cos(r1)} ${110 + 80 * Math.sin(r1)} Z`;
+            };
             return (
-              <details style={{...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",overflow:"hidden"}}>
+              <details open style={card}>
                 <summary className="mz-disclosure" style={{padding:"14px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>Constellation</span>
-                  <ChevronRight className="mz-chev" size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />
+                  <span style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"-0.2px"}}>By category</span>
+                  <ChevronRight className="mz-chev" size={18} color={ter} strokeWidth={2.25} />
                 </summary>
-                <div style={{padding:"8px 12px 20px"}}>
-                  {isWide ? (
-                  /* DESKTOP — Radial canvas */
-                  <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
-                    {/* SVG layer — flowing paths from bucket to each bill */}
-                    <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
-                      <defs>
-                        <radialGradient id={`bg-glow-${bucket.id}`} cx="50%" cy="50%" r="50%">
-                          <stop offset="0%" stopColor={accent} stopOpacity="0.08"/>
-                          <stop offset="70%" stopColor={accent} stopOpacity="0.02"/>
-                          <stop offset="100%" stopColor={accent} stopOpacity="0"/>
-                        </radialGradient>
-                        <filter id={`glow2-${bucket.id}`} x="-50%" y="-50%" width="200%" height="200%">
-                          <feGaussianBlur stdDeviation="2.5" result="b"/>
-                          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                        </filter>
-                      </defs>
-                      {/* Background radial glow */}
-                      <circle cx={cx} cy={cy} r={ringRadius + 30} fill={`url(#bg-glow-${bucket.id})`}/>
-                      {/* Subtle ring guide */}
-                      <circle cx={cx} cy={cy} r={ringRadius} fill="none" stroke={accent} strokeWidth="0.4" strokeDasharray="2 6" opacity="0.18"/>
-                      {/* Connecting lines bucket -> bills */}
-                      {nodes.map((n, i) => (
-                        <g key={i}>
-                          {/* Glow underlay */}
-                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="3" opacity="0.12" filter={`url(#glow2-${bucket.id})`}/>
-                          {/* Main line */}
-                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="1" opacity="0.6"/>
-                          {/* Endpoint dot at bill */}
-                          <circle cx={n.px} cy={n.py} r="3" fill={accent} opacity="0.95"/>
-                          <circle cx={n.px} cy={n.py} r="6" fill="none" stroke={accent} strokeWidth="0.4" opacity="0.5"/>
-                        </g>
-                      ))}
-                      {/* Animated pulse traveling outward along each line */}
-                      {nodes.map((n, i) => (
-                        <circle key={`p-${i}`} r="2.5" fill={accent} opacity="0">
-                          <animate attributeName="cx" from={n.bx} to={n.px} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                          <animate attributeName="cy" from={n.by} to={n.py} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                          <animate attributeName="opacity" values="0;1;1;0" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                        </circle>
-                      ))}
-                    </svg>
-
-                    {/* Bucket node — centre */}
-                    <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:isWide?"150px":"120px",position:"relative"}}>
-                        <span style={{fontSize:isWide?"12px":"11px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name}</span>
-                        <span style={{fontSize:isWide?"18px":"15px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600,letterSpacing:"0"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:isWide?"13px":"12px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                        <span style={{fontSize:isWide?"11px":"10px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{N} bill{N!==1?'s':''}, ${(bucketTotal*12).toFixed(0)} a year</span>
-                      </div>
-                    </div>
-
-                    {/* Bill nodes — arranged on the ring */}
-                    {nodes.map(({s, nd, mEq, x, y}, idx) => {
-                      const freq = s.freq || 'monthly';
-                      const widthPct = (mEq / maxBillEq) * 100;
-                      const isToday = nd && nd.daysAway === 0;
-                      const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
-                      const dotColor = isToday ? '#FF453A' : isSoon ? '#FF9F0A' : accent;
-                      return (
-                        <div key={s.id || idx} style={{position:"absolute",left:x,top:y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
-                          <div style={{padding:isWide?"8px 10px":"6px 8px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden",minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-                            {/* Bar showing relative size */}
-                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(var(--mz-accent-rgb,10,132,255),0.12)",pointerEvents:"none"}}/>
-                            <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,flexShrink:0}}/>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"13px":"12px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
-                              </div>
-                              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                <span style={{fontFamily:SANS_FONT,fontSize:isWide?"13px":"13px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"10px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
-                              </div>
-                              {nd && (
-                                <div style={{paddingLeft:"10px"}}>
-                                  <span style={{fontFamily:SANS_FONT,fontSize:"10px",color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.4)",letterSpacing:"0",fontWeight:600}}>
-                                    {nd.daysAway===0?'Today':nd.daysAway===1?'Tomorrow':`In ${nd.daysAway} days`}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  ) : (
-                  /* MOBILE — Vertical spine layout: bucket at top, bills alternating left-right */
-                  (() => {
-                    const billsForSpine = sortedBills;
-                    return (
-                      <div style={{position:"relative",maxWidth:"100%"}}>
-                        {/* Bucket node — top centre */}
-                        <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
-                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.22)",borderRadius:"20px",minWidth:"160px",position:"relative"}}>
-                            <span style={{fontSize:"12px",color:"rgba(235,235,245,0.7)",fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"3px",fontWeight:600}}>{bucket.name}</span>
-                            <span style={{fontSize:"18px",color:"#FFFFFF",fontFamily:SANS_FONT,fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
-                            <span style={{fontSize:"11px",color:"rgba(235,235,245,0.55)",fontFamily:SANS_FONT,letterSpacing:"0",marginTop:"2px"}}>{billsForSpine.length} bill{billsForSpine.length!==1?'s':''}, ${(bucketTotal*12).toFixed(0)} a year</span>
-                          </div>
-                        </div>
-
-                        {/* Vertical spine container */}
-                        <div style={{position:"relative",paddingTop:"4px"}}>
-                          <div style={{position:"absolute",left:"50%",top:0,bottom:"20px",width:"1px",background:`linear-gradient(180deg, ${accent}, ${accent}30 90%, transparent)`,transform:"translateX(-50%)",zIndex:0}}/>
-                          {billsForSpine.map(({s, nd, mEq}, idx) => {
-                            const freq = s.freq || 'monthly';
-                            const widthPct = (mEq / maxBillEq) * 100;
-                            const isToday = nd && nd.daysAway === 0;
-                            const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
-                            const dotColor = isToday ? '#FF453A' : isSoon ? '#FF9F0A' : accent;
-                            const left = idx % 2 === 0;
-                            return (
-                              <div key={s.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
-                                <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
-                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent}}/>
-                                <div style={{width:"46%",padding:"8px 10px",...LIQUID_GLASS,border:"0.5px solid rgba(255,255,255,0.14)",borderRadius:"20px",position:"relative",overflow:"hidden"}}>
-                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:"rgba(var(--mz-accent-rgb,10,132,255),0.12)",pointerEvents:"none"}}/>
-                                  <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
-                                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,flexShrink:0}}/>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:"#FFFFFF",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
-                                    </div>
-                                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"12px",color:"rgba(235,235,245,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                      <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"11px",color:"rgba(235,235,245,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
-                                    </div>
-                                    {nd && (
-                                      <div style={{paddingLeft:"10px"}}>
-                                        <span style={{fontFamily:SANS_FONT,fontSize:"11px",color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.45)",letterSpacing:"0",fontWeight:600}}>
-                                          {nd.daysAway===0?'Today':nd.daysAway===1?'Tomorrow':`In ${nd.daysAway} days`}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()
-                  )}
-
-                  {/* Detail list below — full bill data, since absolute-positioned cards can't expand cleanly */}
-                  <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
-                    <div style={{fontSize:"12px",color:`${accent}99`,fontFamily:SANS_FONT,letterSpacing:"0",marginBottom:"8px"}}>Bill details</div>
-                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
-                      {sortedBills.map(({s, nd, mEq}, idx) => {
-                        const freq = s.freq || 'monthly';
-                        const isToday = nd && nd.daysAway === 0;
-                        const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
-                        return (
-                          <div key={s.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"10px",fontFamily:SANS_FONT,fontSize:"13px"}}>
-                            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                              <span style={{color:"#FFFFFF",fontWeight:600}}>{s.name}</span>
-                              <span style={{color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(2)}{FREQ_SHORT[freq]}</span>
-                            </div>
-                            <div style={{display:"flex",justifyContent:"space-between",color:"rgba(235,235,245,0.55)",fontSize:"12px"}}>
-                              <span>{FREQ_LABEL[freq]}{freq !== 'monthly' ? `, about $${mEq.toFixed(2)} a month` : ''}</span>
-                              <span>${(mEq*12).toFixed(0)} a year, {bucketTotal>0?((mEq/bucketTotal)*100).toFixed(1):'0'}%</span>
-                            </div>
-                            {nd && (
-                              <div style={{color:isToday?"#FF453A":isSoon?"#FF9F0A":"rgba(235,235,245,0.45)",fontSize:"12px",marginTop:"2px"}}>
-                                Next due {nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}, {nd.daysAway===0?'today':nd.daysAway===1?'tomorrow':`in ${nd.daysAway} days`}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div style={{padding:"6px 16px 16px",display:"flex",flexDirection:isWide?"row":"column",alignItems:"center",gap:"20px"}}>
+                  <svg width="200" height="200" viewBox="0 0 220 220" style={{flexShrink:0}}>
+                    {data.length === 1
+                      ? <circle cx="110" cy="110" r="80" fill={data[0].col} />
+                      : data.map((d, i) => <path key={i} d={arc(d.monthly)} fill={d.col} />)}
+                    <circle cx="110" cy="110" r="52" fill="#1C1C1E" />
+                    <text x="110" y="112" textAnchor="middle" style={{fontSize:"22px",fontWeight:700,fill:"#FFFFFF",fontFamily:SANS_FONT}}>{money(total)}</text>
+                    <text x="110" y="132" textAnchor="middle" style={{fontSize:"13px",fill:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT}}>a month</text>
+                  </svg>
+                  <div style={{display:"flex",flexDirection:"column",width:"100%"}}>
+                    {data.map((d, i) => (
+                      <button key={d.id} onClick={() => setBillCatFilter(d.id)}
+                        style={{display:"flex",alignItems:"center",gap:"10px",width:"100%",padding:"10px 0",background:"none",border:"none",borderTop:i?sep:"none",cursor:"pointer",fontFamily:SANS_FONT,textAlign:"left"}}>
+                        <span style={{width:"10px",height:"10px",borderRadius:"50%",background:d.col,flexShrink:0}} />
+                        <span style={{flex:1,minWidth:0,fontSize:"17px",color:"#FFFFFF"}}>{d.label}<span style={{fontSize:"13px",color:sec}}> · {d.n} {d.n === 1 ? 'bill' : 'bills'}</span></span>
+                        <span style={{textAlign:"right"}}>
+                          <span style={{display:"block",fontSize:"17px",color:"#FFFFFF",fontWeight:600}}>{Math.round((d.monthly / total) * 100)}%</span>
+                          <span style={{display:"block",fontSize:"13px",color:sec}}>{money(d.monthly)} a month</span>
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </details>
