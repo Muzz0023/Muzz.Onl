@@ -49258,6 +49258,7 @@ function MuzzApp() {
 
   // Check Stripe subscription on load
   useEffect(() => {
+    if (FREE_FOR_EVERYONE) return; // Muzz is free: no subscription check needed
     if (!userEmail || isVIP) return;
     if (isNative) return; // iOS uses RevenueCat, not Stripe
     const checkSub = async () => {
