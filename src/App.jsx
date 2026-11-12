@@ -2395,7 +2395,7 @@ const api = (path) => `${API_BASE}${path}`;
 // SUPABASE & GEMINI CONFIGURATION
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
+const SUPABASE_KEY = 'sb_publishable_l9nkgSip8nkF5k8TcnTxsQ__Mu6pqSK';
 
 // VIP Users - Always Elite, no subscription needed
 
@@ -2565,7 +2565,7 @@ const supabase = {
     const API = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform() ? 'https://muzz.onl' : '';
     const r = await fetch(`${API}/api/delete-account`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(this.token ? { 'Authorization': `Bearer ${this.token}` } : {}) },
       body: JSON.stringify({ userId })
     });
     // Clear all local storage
