@@ -2721,11 +2721,17 @@ function AuthScreen() {
     setError(''); setSuccessMessage(''); setLoading(true);
     try {
       const r = await appleSignIn();
-      if (r && !r.cancelled && !r.user && (r.error || r.error_description || r.msg)) setError(r.error_description || r.msg || (r.error && r.error.message) || 'Apple sign in failed');
+      if (r && !r.cancelled && !r.user && (r.error || r.error_description || r.msg)) setError(inviteOnlyMsg(r.error_description || r.msg || (r.error && r.error.message) || 'Apple sign in failed'));
     } catch (e) { setError('Network error. Please try again.'); }
     setLoading(false);
   };
   const [isLogin, setIsLogin] = useState(true);
+  // Muzz is invite only: new people request access; approved people create their account
+  const [requestMode, setRequestMode] = useState(true);
+  const [reqName, setReqName] = useState('');
+  const [reqNote, setReqNote] = useState('');
+  const [reqTrap, setReqTrap] = useState(''); // hidden field — bots fill it, people don't
+  const [reqDone, setReqDone] = useState(null); // 'pending' | 'approved'
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -2751,11 +2757,31 @@ function AuthScreen() {
         : await signUp(email, password);
       
       if (result.error || result.error_description || result.msg) {
-        setError(result.error?.message || result.error_description || result.msg || 'Authentication failed');
+        setError(inviteOnlyMsg(result.error?.message || result.error_description || result.msg || 'Authentication failed'));
       }
     } catch (err) {
       setError('Network error. Please try again.');
     }
+    setLoading(false);
+  };
+
+  const inviteOnlyMsg = (m) => /invite only|not allowed|signups? (are )?(not allowed|disabled)/i.test(String(m || ''))
+    ? 'Muzz is invite only. Request access first, and you can create your account once you’re approved.' : m;
+
+  const handleRequest = async (e) => {
+    e.preventDefault();
+    setError(''); setSuccessMessage('');
+    const em = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { setError('Please enter a valid email address'); return; }
+    if (!reqName.trim()) { setError('Please enter your name'); return; }
+    if (!reqNote.trim()) { setError('Please say how you know about Muzz'); return; }
+    setLoading(true);
+    try {
+      const r = await fetch(api('/api/waitlist-request'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, name: reqName.trim(), note: reqNote.trim(), website: reqTrap }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) setError(d.error || 'Could not send your request. Please try again.');
+      else setReqDone(d.status === 'approved' ? 'approved' : 'pending');
+    } catch (err) { setError('Network error. Please try again.'); }
     setLoading(false);
   };
 
@@ -2854,11 +2880,47 @@ function AuthScreen() {
         {/* Panel */}
         <div style={{background:'rgba(5,12,24,0.9)',border:'0.5px solid rgba(0,200,255,0.15)',borderRadius:'6px',padding:'28px',backdropFilter:'blur(20px)'}}>
           <div style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'0.8px',borderLeft:'2px solid #00c8ff',paddingLeft:'10px',marginBottom:'20px'}}>
-            {isLogin ? '// AUTHENTICATE' : '// CREATE ACCOUNT'}
+            {isLogin ? '// AUTHENTICATE' : requestMode ? '// REQUEST ACCESS' : '// CREATE ACCOUNT'}
           </div>
 
           {error && <div style={{padding:'10px 14px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'10px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{error}</div>}
 
+          {!isLogin && requestMode ? (
+            reqDone ? (
+              <div style={{textAlign:'center',padding:'8px 0 4px'}}>
+                <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',letterSpacing:'0.5px',marginBottom:'10px'}}>{reqDone === 'approved' ? 'YOU’RE ALREADY APPROVED' : 'YOU’RE ON THE LIST'}</div>
+                <div style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',lineHeight:1.6}}>
+                  {reqDone === 'approved' ? 'Create your account with this email.' : 'Thanks for your interest. Muzz is invite only — you’ll get an email when you’re approved.'}
+                </div>
+                {reqDone === 'approved' && (
+                  <button onClick={() => { setRequestMode(false); setReqDone(null); }} style={{marginTop:'16px',width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'10px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'2px',cursor:'pointer'}}>CREATE ACCOUNT →</button>
+                )}
+              </div>
+            ) : (
+            <form onSubmit={handleRequest} autoComplete="on">
+              <div style={{fontSize:'11px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.6,marginBottom:'16px'}}>Muzz is invite only. Tell us who you are and we’ll be in touch.</div>
+              <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'16px'}}>
+                <div>
+                  <label style={labelStyle}>NAME</label>
+                  <input type="text" name="name" autoComplete="name" value={reqName} maxLength={60} onChange={(e) => setReqName(e.target.value)} placeholder="Your name" style={{...inputStyle,paddingLeft:'12px'}} />
+                </div>
+                <div style={{position:'relative'}}>
+                  <label style={labelStyle}>EMAIL ADDRESS</label>
+                  <Mail style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
+                  <input type="email" name="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" value={email} maxLength={120} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" style={inputStyle} />
+                </div>
+                <div>
+                  <label style={labelStyle}>HOW DO YOU KNOW ABOUT MUZZ?</label>
+                  <textarea value={reqNote} maxLength={300} rows={3} onChange={(e) => setReqNote(e.target.value)} placeholder="e.g. Sarah's mate from work" style={{...inputStyle,paddingLeft:'12px',resize:'none',lineHeight:1.5}} />
+                </div>
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" value={reqTrap} onChange={(e) => setReqTrap(e.target.value)} aria-hidden="true" style={{position:'absolute',left:'-9999px',width:'1px',height:'1px',opacity:0}} />
+              </div>
+              <button type="submit" disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'10px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'2px',cursor:'pointer',marginBottom:'16px'}}>
+                {loading ? 'PLEASE WAIT...' : 'REQUEST ACCESS →'}
+              </button>
+            </form>
+            )
+          ) : (<>
           {canApple && (
             <>
               <button type="button" onClick={handleApple} disabled={loading}
@@ -2896,13 +2958,19 @@ function AuthScreen() {
             {loading ? 'PLEASE WAIT...' : (isLogin ? 'SIGN IN →' : 'CREATE ACCOUNT →')}
           </button>
           </form>
+          </>)}
 
           <div style={{display:'flex',flexDirection:'column',gap:'10px',alignItems:'center'}}>
             {isLogin && (
               <button onClick={() => { setShowResetPassword(true); setError(''); }} style={{fontSize:'10px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>Forgot password?</button>
             )}
-            <button onClick={() => { setIsLogin(!isLogin); setError(''); }} style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>
-              {isLogin ? 'NO ACCOUNT? SIGN UP →' : 'HAVE AN ACCOUNT? SIGN IN →'}
+            {!isLogin && (
+              <button onClick={() => { setRequestMode(!requestMode); setReqDone(null); setError(''); }} style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>
+                {requestMode ? 'ALREADY APPROVED? CREATE YOUR ACCOUNT →' : 'NOT APPROVED YET? REQUEST ACCESS →'}
+              </button>
+            )}
+            <button onClick={() => { setIsLogin(!isLogin); setRequestMode(true); setReqDone(null); setError(''); }} style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>
+              {isLogin ? 'NEW TO MUZZ? REQUEST ACCESS →' : 'HAVE AN ACCOUNT? SIGN IN →'}
             </button>
           </div>
         </div>
