@@ -2964,7 +2964,7 @@ function AuthScreen() {
             {isLogin && (
               <button onClick={() => { setShowResetPassword(true); setError(''); }} style={{fontSize:'10px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>Forgot password?</button>
             )}
-            {!isLogin && (
+            {!isLogin && reqDone !== 'approved' && (
               <button onClick={() => { setRequestMode(!requestMode); setReqDone(null); setError(''); }} style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>
                 {requestMode ? 'ALREADY APPROVED? CREATE YOUR ACCOUNT →' : 'NOT APPROVED YET? REQUEST ACCESS →'}
               </button>
