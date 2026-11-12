@@ -2777,7 +2777,7 @@ function AuthScreen() {
     if (!reqNote.trim()) { setError('Please say how you know about Muzz'); return; }
     setLoading(true);
     try {
-      const r = await fetch(api('/api/waitlist-request'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, name: reqName.trim(), note: reqNote.trim(), website: reqTrap }) });
+      const r = await fetch(api('/api/waitlist'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, name: reqName.trim(), note: reqNote.trim(), website: reqTrap }) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) setError(d.error || 'Could not send your request. Please try again.');
       else setReqDone(d.status === 'approved' ? 'approved' : 'pending');
