@@ -1230,6 +1230,24 @@ const mzBuildNotifications = ({ prefs, birthdays = [], reminders = [], bills = [
   return out.slice(0, MZ_NOTIF_MAX).map((x, i) => ({ ...x, id: i + 1 }));
 };
 
+// Settings → Notifications pieces. Kept outside the app so they stay the same
+// between redraws (otherwise iOS closes the time picker as soon as it opens).
+const MzNotifSwitch = ({ on, onToggle, label, disabled }) => (
+  <button role="switch" aria-checked={on} aria-label={label} onClick={disabled ? undefined : onToggle} className="mz-switch"
+    style={{position:"relative",width:"63px",height:"28px",borderRadius:"999px",border:"none",padding:0,cursor:disabled?"default":"pointer",flexShrink:0,opacity:disabled?0.4:1,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",WebkitTapHighlightColor:"transparent"}}>
+    <span className="mz-knob" style={{position:"absolute",top:"2px",left:on?"24px":"2px",width:"37px",height:"24px",borderRadius:"999px",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.32s cubic-bezier(0.34,1.4,0.64,1), transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease"}} />
+  </button>
+);
+const MzNotifRow = ({ label, sub, children, last }) => (
+  <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"0 14px 0 16px",minHeight:"54px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
+    <div style={{flex:1,minWidth:0,padding:"10px 0"}}>
+      <div style={{fontSize:"17px",color:"#FFFFFF",fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{label}</div>
+      {sub && <div style={{fontSize:"13px",color:"rgba(235,235,245,0.6)",fontFamily:SANS_FONT,marginTop:"2px"}}>{sub}</div>}
+    </div>
+    {children}
+  </div>
+);
+
 // Hand a file to the iPhone share sheet (Save to Files / iCloud Drive, AirDrop, Messages, Print).
 // On the website it uses the browser's share sheet if it has one, otherwise downloads the file.
 const mzShareFile = async ({ filename, data, mime, base64 = false, title }) => {
@@ -51868,21 +51886,6 @@ function MuzzApp() {
             const native = !!mzPlugin('LocalNotifications');
             const P = notifPrefs;
             const setP = (k, v) => setNotifPrefs(p => ({ ...p, [k]: v }));
-            const Sw = ({ on, onToggle, label, disabled }) => (
-              <button role="switch" aria-checked={on} aria-label={label} onClick={disabled ? undefined : onToggle} className="mz-switch"
-                style={{position:"relative",width:"63px",height:"28px",borderRadius:"999px",border:"none",padding:0,cursor:disabled?"default":"pointer",flexShrink:0,opacity:disabled?0.4:1,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",WebkitTapHighlightColor:"transparent"}}>
-                <span className="mz-knob" style={{position:"absolute",top:"2px",left:on?"24px":"2px",width:"37px",height:"24px",borderRadius:"999px",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.32s cubic-bezier(0.34,1.4,0.64,1), transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease"}} />
-              </button>
-            );
-            const Row = ({ label, sub, children, last }) => (
-              <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"0 14px 0 16px",minHeight:"54px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
-                <div style={{flex:1,minWidth:0,padding:"10px 0"}}>
-                  <div style={{fontSize:"17px",color:txt.primary,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{label}</div>
-                  {sub && <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,marginTop:"2px"}}>{sub}</div>}
-                </div>
-                {children}
-              </div>
-            );
             const off = !native || !P.on;
             const leads = [5, 10, 15, 30, 60];
             return (
@@ -51898,9 +51901,9 @@ function MuzzApp() {
                   </div>
                 )}
                 <div style={{...glass,overflow:"hidden"}}>
-                  <Row label="Allow notifications" last>
-                    <Sw label="Allow notifications" on={native && P.on} disabled={!native} onToggle={() => P.on ? setP('on', false) : enableNotifications()} />
-                  </Row>
+                  <MzNotifRow label="Allow notifications" last>
+                    <MzNotifSwitch label="Allow notifications" on={native && P.on} disabled={!native} onToggle={() => P.on ? setP('on', false) : enableNotifications()} />
+                  </MzNotifRow>
                 </div>
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>
                   {native && P.on && notifCount > 0 ? `${notifCount} coming up. Open Muzz every week or so to keep them topped up.` : 'Reminders for what’s coming up, straight to your lock screen.'}
@@ -51908,37 +51911,37 @@ function MuzzApp() {
 
                 <div style={groupLabel}>Morning overview</div>
                 <div style={{...glass,overflow:"hidden"}}>
-                  <Row label="Morning overview" sub="Your day in one notification">
-                    <Sw label="Morning overview" on={P.morning} disabled={off} onToggle={() => setP('morning', !P.morning)} />
-                  </Row>
-                  <Row label="Time" last>
+                  <MzNotifRow label="Morning overview" sub="Your day in one notification">
+                    <MzNotifSwitch label="Morning overview" on={P.morning} disabled={off} onToggle={() => setP('morning', !P.morning)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Time" last>
                     <input type="time" value={P.time} disabled={off || !P.morning} onChange={e => e.target.value && setP('time', e.target.value)}
                       style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"8px",color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",padding:"6px 10px",colorScheme:"dark",outline:"none",opacity:(off || !P.morning)?0.4:1}} />
-                  </Row>
+                  </MzNotifRow>
                 </div>
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Birthdays, bills, reminders, timetable and tasks for the day, at the time you wake up.</div>
 
                 <div style={groupLabel}>Alerts</div>
                 <div style={{...glass,overflow:"hidden"}}>
-                  <Row label="Bills" sub="9am the day before">
-                    <Sw label="Bills" on={P.bills} disabled={off} onToggle={() => setP('bills', !P.bills)} />
-                  </Row>
-                  <Row label="Birthdays & dates" sub="A week before and on the day, 9am">
-                    <Sw label="Birthdays" on={P.birthdays} disabled={off} onToggle={() => setP('birthdays', !P.birthdays)} />
-                  </Row>
-                  <Row label="Reminders" sub="9am on the day">
-                    <Sw label="Reminders" on={P.reminders} disabled={off} onToggle={() => setP('reminders', !P.reminders)} />
-                  </Row>
-                  <Row label="Timetable" sub="Before each block starts" last={!P.timetable}>
-                    <Sw label="Timetable" on={P.timetable} disabled={off} onToggle={() => setP('timetable', !P.timetable)} />
-                  </Row>
+                  <MzNotifRow label="Bills" sub="9am the day before">
+                    <MzNotifSwitch label="Bills" on={P.bills} disabled={off} onToggle={() => setP('bills', !P.bills)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Birthdays & dates" sub="A week before and on the day, 9am">
+                    <MzNotifSwitch label="Birthdays" on={P.birthdays} disabled={off} onToggle={() => setP('birthdays', !P.birthdays)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Reminders" sub="9am on the day">
+                    <MzNotifSwitch label="Reminders" on={P.reminders} disabled={off} onToggle={() => setP('reminders', !P.reminders)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Timetable" sub="Before each block starts" last={!P.timetable}>
+                    <MzNotifSwitch label="Timetable" on={P.timetable} disabled={off} onToggle={() => setP('timetable', !P.timetable)} />
+                  </MzNotifRow>
                   {P.timetable && (
-                    <Row label="Remind me" last>
+                    <MzNotifRow label="Remind me" last>
                       <select value={P.ttLead} disabled={off} onChange={e => setP('ttLead', parseInt(e.target.value))}
                         style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"8px",color:txt.primary,fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 10px",colorScheme:"dark",outline:"none",opacity:off?0.4:1}}>
                         {leads.map(m => <option key={m} value={m}>{m < 60 ? `${m} min before` : '1 hour before'}</option>)}
                       </select>
-                    </Row>
+                    </MzNotifRow>
                   )}
                 </div>
               </div>
