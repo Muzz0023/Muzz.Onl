@@ -1248,6 +1248,29 @@ const mzBuildNotifications = ({ prefs, birthdays = [], reminders = [], bills = [
   return out.slice(0, MZ_NOTIF_MAX).map((x, i) => ({ ...x, id: i + 1 }));
 };
 
+// One row of a grouped settings list: line icon, label, chevron, inset hairline.
+// Lives outside the app so the row isn't rebuilt on every redraw (that made taps
+// land on the wrong row). Hover highlight is for a mouse only, so it can't stick on iPhone.
+const mzRowIn = (e) => { if (e.pointerType === 'mouse') e.currentTarget.style.background = "rgba(255,255,255,0.06)"; };
+const mzRowOut = (e) => { e.currentTarget.style.background = "transparent"; };
+const MzListRow = ({ icon: Icon, label, onClick, last, danger, center, chevron = true, as = "button", children, detail, detailColor }) => {
+  const Tag = as;
+  return (
+    <Tag onClick={onClick} onPointerEnter={mzRowIn} onPointerLeave={mzRowOut}
+      style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,boxSizing:"border-box",transition:"background 0.15s"}}>
+      {Icon && <Icon size={20} color="rgba(235,235,245,0.6)" strokeWidth={1.75} style={{flexShrink:0}} />}
+      <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:center?"center":"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
+        <span style={{fontSize:"17px",color:danger?"#FF453A":"#FFFFFF",letterSpacing:"-0.4px"}}>{label}</span>
+        <span style={{display:"flex",alignItems:"center",gap:"6px"}}>
+          {detail && <span style={{fontSize:"15px",color:detailColor||"rgba(235,235,245,0.6)",letterSpacing:"-0.2px",whiteSpace:"nowrap"}}>{detail}</span>}
+          {chevron && !center && <ChevronRight size={18} color="rgba(235,235,245,0.3)" strokeWidth={2.25} />}
+        </span>
+      </span>
+      {children}
+    </Tag>
+  );
+};
+
 // Settings → Notifications pieces. Kept outside the app so they stay the same
 // between redraws (otherwise iOS closes the time picker as soon as it opens).
 const MzNotifSwitch = ({ on, onToggle, label, disabled }) => (
@@ -51818,27 +51841,9 @@ function MuzzApp() {
     };
     const sectionItems = navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite));
     // One row of a grouped list: transparent line icon, label, chevron, inset hairline
-    const ListRow = ({ icon: Icon, label, onClick, last, danger, center, chevron = true, as = "button", children, detail, detailColor }) => {
-      const Tag = as;
-      return (
-        <Tag onClick={onClick} onMouseEnter={onRowIn} onMouseLeave={onRowOut}
-          style={{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"0 0 0 16px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:SANS_FONT,boxSizing:"border-box",transition:"background 0.15s"}}>
-          {Icon && <Icon size={20} color={txt.secondary} strokeWidth={1.75} style={{flexShrink:0}} />}
-          <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:center?"center":"space-between",minHeight:"50px",paddingRight:"14px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
-            <span style={{fontSize:"17px",color:danger?"#FF453A":txt.primary,letterSpacing:"-0.4px"}}>{label}</span>
-            <span style={{display:"flex",alignItems:"center",gap:"6px"}}>
-              {detail && <span style={{fontSize:"15px",color:detailColor||txt.secondary,letterSpacing:"-0.2px",whiteSpace:"nowrap"}}>{detail}</span>}
-              {chevron && !center && <ChevronRight size={18} color={txt.tertiary} strokeWidth={2.25} />}
-            </span>
-          </span>
-          {children}
-        </Tag>
-      );
-    };
+    const ListRow = MzListRow; // defined outside the app so rows stay put between redraws
     const onIn = (e) => { e.currentTarget.style.background = glassHover; };
     const onOut = (e) => { e.currentTarget.style.background = glass.background; };
-    const onRowIn = (e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; };
-    const onRowOut = (e) => { e.currentTarget.style.background = "transparent"; };
 
     return (
       <div className="min-h-screen bg-transparent pb-24 mz-num" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
