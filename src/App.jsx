@@ -1121,6 +1121,115 @@ const mzPlugin = (name) => {
   try { return (C.Plugins && C.Plugins[name]) || (C.registerPlugin ? C.registerPlugin(name) : null); } catch (e) { return null; }
 };
 
+// ============================================
+// NOTIFICATIONS — scheduled on the phone (no server)
+// ============================================
+const MZ_NOTIF_DEFAULTS = { on: false, morning: true, time: '07:00', bills: true, birthdays: true, reminders: true, timetable: true, ttLead: 15 };
+const MZ_NOTIF_ALERT_HOUR = 9;   // bills, birthdays and reminders go off at 9am
+const MZ_NOTIF_MAX = 60;         // iPhone keeps at most 64 waiting; leave room
+const MZ_TT_DAYS = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 };
+
+const mzFmtHour = (h) => { const hr = Math.floor(h); const min = Math.round((h - hr) * 60); const p = hr < 12 ? 'am' : 'pm'; const d = hr === 0 ? 12 : hr > 12 ? hr - 12 : hr; return min ? `${d}:${String(min).padStart(2, '0')}${p}` : `${d}${p}`; };
+const mzMoney = (n) => `$${(Math.round(n * 100) / 100).toLocaleString('en-AU', { maximumFractionDigits: 2 })}`;
+
+// Day + month of a birthday or date. Accepts YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY or DD/MM.
+const mzDayMonth = (str) => {
+  const s = String(str || '').trim(); let m;
+  if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return { d: +m[3], m: +m[2] };
+  if ((m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.]\d{2,4})?$/))) return { d: +m[1], m: +m[2] };
+  return null;
+};
+
+// Does a bill fall due on this day?
+const mzBillDueOn = (bill, day, firstFortnight) => {
+  const freq = bill.freq || 'monthly';
+  if (freq === 'weekly' || freq === 'fortnightly') {
+    const wd = parseInt(bill.weekday);
+    if (isNaN(wd) || (day.getDay() + 6) % 7 !== wd) return false;
+    if (freq === 'weekly') return true;
+    if (bill.anchor) {
+      const a = new Date(bill.anchor);
+      if (!isNaN(a)) { a.setHours(0, 0, 0, 0); return Math.round((day - a) / 86400000) % 14 === 0; }
+    }
+    return !firstFortnight.v || Math.round((day - firstFortnight.v) / 86400000) % 14 === 0;
+  }
+  if (freq === 'monthly') {
+    const want = parseInt(String(bill.dueDate || '').replace(/[^0-9]/g, ''));
+    if (!want) return false;
+    const last = new Date(day.getFullYear(), day.getMonth() + 1, 0).getDate();
+    return day.getDate() === Math.min(want, last);
+  }
+  const dates = (bill.dueDates && bill.dueDates.length) ? bill.dueDates : (bill.dueDate ? [bill.dueDate] : []);
+  return dates.some(s => { const m = String(s).match(/^(\d{1,2})[\/\-.](\d{1,2})$/); return m && +m[1] === day.getDate() && +m[2] === day.getMonth() + 1; });
+};
+
+// Build every notification for the next few weeks. Pure, so it can be tested.
+// Returns [{ id, title, body, at: Date, extra: { view, sub } }], soonest first.
+const mzBuildNotifications = ({ prefs, birthdays = [], reminders = [], bills = [], blocks = [], dailyItems = [], name = '', now = new Date() }) => {
+  const p = { ...MZ_NOTIF_DEFAULTS, ...(prefs || {}) };
+  if (!p.on) return [];
+  const out = [];
+  const today = new Date(now); today.setHours(0, 0, 0, 0);
+  const dayN = (n) => { const d = new Date(today); d.setDate(d.getDate() + n); return d; };
+  const at = (day, h, m = 0) => { const d = new Date(day); d.setHours(h, m, 0, 0); return d; };
+  const add = (when, title, body, extra) => { if (when.getTime() > now.getTime() + 30000) out.push({ title, body, at: when, extra: extra || {} }); };
+  const DAYS = 30;
+
+  // What's on each day (used by the alerts and the morning overview)
+  const billsOn = [], bdaysOn = [], remsOn = [], ttOn = [];
+  const goodBills = (bills || []).filter(b => b && String(b.name || '').trim() && (parseFloat(b.monthly) || 0) > 0);
+  const fortnight = new Map(goodBills.map(b => [b, { v: null }]));
+  for (let n = 0; n <= DAYS; n++) {
+    const d = dayN(n);
+    billsOn[n] = goodBills.filter(b => { const f = fortnight.get(b); const hit = mzBillDueOn(b, d, f); if (hit && !f.v) f.v = d; return hit; });
+    bdaysOn[n] = (birthdays || []).filter(b => { const dm = b && String(b.name || '').trim() && mzDayMonth(b.date); return dm && dm.d === d.getDate() && dm.m === d.getMonth() + 1; });
+    remsOn[n] = (reminders || []).filter(r => r && !r.permanent && String(r.title || '').trim() && r.date && String(r.date).slice(0, 10) === localISODate(d));
+    ttOn[n] = (blocks || []).filter(b => b && String(b.title || '').trim() && MZ_TT_DAYS[b.day] === d.getDay()).sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
+  }
+  const bdayLabel = (b) => b.type === 'anniversary' ? b.name.trim() : `${b.name.trim()}'s birthday`;
+
+  // ☀️ Morning overview
+  if (p.morning) {
+    const [hh, mm] = String(p.time || '07:00').split(':').map(x => parseInt(x) || 0);
+    const openTasks = (dailyItems || []).filter(i => i && String(i.text || '').trim() && !i.checked).length;
+    for (let n = 0; n < 14; n++) {
+      const parts = [];
+      bdaysOn[n].forEach(b => parts.push(`🎂 ${bdayLabel(b)}`));
+      if (billsOn[n].length) parts.push(`💸 ${billsOn[n].map(b => `${b.name.trim()} ${mzMoney(parseFloat(b.monthly))}`).join(', ')} due`);
+      if (remsOn[n].length) parts.push(`🔔 ${remsOn[n].map(r => r.title.trim()).join(', ')}`);
+      if (ttOn[n].length) parts.push(`📅 ${ttOn[n][0].title.trim()} at ${mzFmtHour(ttOn[n][0].startHour || 0)}${ttOn[n].length > 1 ? ` +${ttOn[n].length - 1} more` : ''}`);
+      if (openTasks) parts.push(`✅ ${openTasks} task${openTasks === 1 ? '' : 's'} on your list`);
+      const next7 = []; for (let k = 1; k <= 7; k++) bdaysOn[n + k] && bdaysOn[n + k].forEach(b => next7.push(`${bdayLabel(b)} in ${k} day${k === 1 ? '' : 's'}`));
+      if (next7.length) parts.push(`Coming up: ${next7.slice(0, 2).join(', ')}`);
+      const first = String(name || '').trim().split(' ')[0];
+      add(at(dayN(n), hh, mm), `Good morning${first ? `, ${first}` : ''}`, parts.length ? parts.join('\n') : 'Nothing due today. Have a good one.', { view: 'home' });
+    }
+  }
+
+  // 💸 Bills — 9am the day before
+  if (p.bills) for (let n = 1; n <= DAYS; n++) billsOn[n].forEach(b =>
+    add(at(dayN(n - 1), MZ_NOTIF_ALERT_HOUR), `💸 ${b.name.trim()} due tomorrow`, `${mzMoney(parseFloat(b.monthly))}`, { view: 'varied' }));
+
+  // 🎂 Birthdays — a week before and on the day
+  if (p.birthdays) for (let n = 0; n <= DAYS; n++) bdaysOn[n].forEach(b => {
+    add(at(dayN(n), MZ_NOTIF_ALERT_HOUR), `🎂 ${bdayLabel(b)} is today`, b.type === 'anniversary' ? 'Today' : b.category === 'pet' ? 'Give them a treat 🐾' : 'Send them a message 🎉', { view: 'reminders', sub: 'birthdays' });
+    if (n >= 7) add(at(dayN(n - 7), MZ_NOTIF_ALERT_HOUR), `🎂 ${bdayLabel(b)} is in a week`, b.type === 'anniversary' ? 'One week to go' : b.category === 'pet' ? 'One week to go 🐾' : 'Time to sort a gift 🎁', { view: 'reminders', sub: 'birthdays' });
+  });
+
+  // 🔔 Reminders — 9am on the day
+  if (p.reminders) for (let n = 0; n <= DAYS; n++) remsOn[n].forEach(r =>
+    add(at(dayN(n), MZ_NOTIF_ALERT_HOUR), `🔔 ${r.title.trim()}`, String(r.notes || '').trim() || 'Due today', { view: 'reminders', sub: 'reminders' }));
+
+  // 📅 Timetable — a few minutes before each block
+  if (p.timetable) for (let n = 0; n < 14; n++) ttOn[n].forEach(b => {
+    const start = at(dayN(n), 0); start.setMinutes(Math.round((b.startHour || 0) * 60) - (parseInt(p.ttLead) || 0));
+    add(start, `📅 ${b.title.trim()} at ${mzFmtHour(b.startHour || 0)}`, String(b.location || '').trim() || `Starts in ${parseInt(p.ttLead) || 0} min`, { view: 'timetable' });
+  });
+
+  out.sort((a, b) => a.at - b.at);
+  return out.slice(0, MZ_NOTIF_MAX).map((x, i) => ({ ...x, id: i + 1 }));
+};
+
 // Hand a file to the iPhone share sheet (Save to Files / iCloud Drive, AirDrop, Messages, Print).
 // On the website it uses the browser's share sheet if it has one, otherwise downloads the file.
 const mzShareFile = async ({ filename, data, mime, base64 = false, title }) => {
@@ -48339,6 +48448,13 @@ function MuzzApp() {
   const [dashLayout, setDashLayout] = useState({ order: [], hidden: [] }); // dashboard tiles: order + hidden
   const [dashEditOpen, setDashEditOpen] = useState(false);
   const [dashSettings, setDashSettings] = useState(false); // Settings page on the dashboard
+  const [notifOpen, setNotifOpen] = useState(false); // Notifications page inside Settings
+  // Notification choices live on this phone (each device asks its own permission)
+  const [notifPrefs, setNotifPrefs] = useState(() => { try { return { ...MZ_NOTIF_DEFAULTS, ...(JSON.parse(localStorage.getItem('mz_notif') || '{}')) }; } catch (e) { return { ...MZ_NOTIF_DEFAULTS }; } });
+  const [notifBlocked, setNotifBlocked] = useState(false); // iPhone Settings has notifications off for Muzz
+  const [notifCount, setNotifCount] = useState(0);
+  useEffect(() => { try { localStorage.setItem('mz_notif', JSON.stringify(notifPrefs)); } catch (e) {} }, [notifPrefs]);
+  useEffect(() => { if (!dashSettings) setNotifOpen(false); }, [dashSettings]);
   const [memberNo, setMemberNo] = useState(() => { try { const c = JSON.parse(localStorage.getItem('mz_member_no') || 'null'); return c && c.uid && c.n ? c : null; } catch (e) { return null; } });
   useEffect(() => {
     const uid = userId; if (!uid) return;
@@ -49770,6 +49886,66 @@ function MuzzApp() {
   const totalMonthly = dashBills.filter(s => s && parseFloat(s.monthly) > 0)
     .reduce((sum, s) => sum + (parseFloat(s.monthly) || 0) * (DASH_FREQ_MULT[s.freq || 'monthly'] || 1), 0);
   const totalMonthlyBusiness = businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
+
+  // NOTIFICATIONS — rebuild the phone's schedule whenever the data or choices change
+  const notifInput = (() => {
+    let dailyItems = [];
+    try { const a = JSON.parse(dailyNote || '[]'); if (Array.isArray(a)) dailyItems = a.map(i => ({ text: i && i.text, checked: !!(i && i.checked) })); } catch (e) {}
+    return JSON.stringify({
+      prefs: notifPrefs, name: eliteName, dailyItems,
+      birthdays: (birthdays || []).map(b => b && ({ name: b.name, date: b.date, type: b.type, category: b.category })),
+      reminders: (reminders || []).map(r => r && ({ title: r.title, date: r.date, notes: r.notes, permanent: r.permanent })),
+      bills: (dashBills || []).map(b => b && ({ name: b.name, monthly: b.monthly, freq: b.freq, dueDate: b.dueDate, dueDates: b.dueDates, weekday: b.weekday, anchor: b.anchor })),
+      blocks: (timetableBlocks || []).map(b => b && ({ title: b.title, day: b.day, startHour: b.startHour, location: b.location })),
+      day: localISODate(),
+    });
+  })();
+  useEffect(() => {
+    const LN = mzPlugin('LocalNotifications');
+    if (!LN || !dataLoaded) return;
+    const t = setTimeout(async () => {
+      try {
+        const pending = await LN.getPending();
+        if (pending && pending.notifications && pending.notifications.length) await LN.cancel({ notifications: pending.notifications.map(n => ({ id: n.id })) });
+        if (!notifPrefs.on) { setNotifCount(0); return; }
+        const perm = await LN.checkPermissions();
+        if (!perm || perm.display !== 'granted') { setNotifBlocked(true); setNotifCount(0); return; }
+        setNotifBlocked(false);
+        const list = mzBuildNotifications({ ...JSON.parse(notifInput), now: new Date() });
+        if (list.length) await LN.schedule({ notifications: list.map(n => ({ id: n.id, title: n.title, body: n.body, schedule: { at: n.at, allowWhileIdle: true }, extra: n.extra })) });
+        setNotifCount(list.length);
+      } catch (e) { console.log('Notification schedule error:', e); }
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [notifInput, dataLoaded]);
+
+  // Tapping a notification opens the right page
+  useEffect(() => {
+    const LN = mzPlugin('LocalNotifications');
+    if (!LN || !LN.addListener) return;
+    let handle;
+    try {
+      const h = LN.addListener('localNotificationActionPerformed', (e) => {
+        const x = (e && e.notification && e.notification.extra) || {};
+        if (x.view) { setDashSettings(false); setActiveView(x.view); }
+        if (x.sub) setRemindersSubTab(x.sub);
+      });
+      if (h && h.then) h.then(v => { handle = v; }); else handle = h;
+    } catch (e) {}
+    return () => { try { handle && handle.remove && handle.remove(); } catch (e) {} };
+  }, []);
+
+  // Turn notifications on: ask the iPhone for permission first
+  const enableNotifications = async () => {
+    const LN = mzPlugin('LocalNotifications');
+    if (!LN) return;
+    try {
+      let perm = await LN.checkPermissions();
+      if (perm.display !== 'granted') perm = await LN.requestPermissions();
+      if (perm.display === 'granted') { setNotifBlocked(false); setNotifPrefs(p => ({ ...p, on: true })); }
+      else { setNotifBlocked(true); }
+    } catch (e) { setNotifBlocked(true); }
+  };
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
   // Always in AUD — each holding is converted from its own currency (live feed, saved, or USD)
   const toAUD = (amount, fromCurrency) => {
@@ -51642,14 +51818,14 @@ function MuzzApp() {
             <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
               <div>
                 {dashSettings ? (
-                  <button onClick={() => setDashSettings(false)} style={{display:"inline-flex",alignItems:"center",gap:"2px",background:"none",border:"none",padding:0,marginLeft:"-6px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer"}}>
-                    <ChevronLeft size={24} strokeWidth={2.25} />Dashboard
+                  <button onClick={() => { if (notifOpen) setNotifOpen(false); else setDashSettings(false); }} style={{display:"inline-flex",alignItems:"center",gap:"2px",background:"none",border:"none",padding:0,marginLeft:"-6px",color:"var(--mz-accent,#0A84FF)",fontFamily:SANS_FONT,fontSize:"17px",cursor:"pointer"}}>
+                    <ChevronLeft size={24} strokeWidth={2.25} />{notifOpen ? 'Settings' : 'Dashboard'}
                   </button>
                 ) : (
                 <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,fontWeight:600}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}</div>
                 )}
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"2px"}}>
-                  <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{dashSettings ? 'Settings' : eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
+                  <div style={{fontSize:"clamp(28px,6vw,34px)",color:txt.primary,fontWeight:700,fontFamily:SANS_FONT,letterSpacing:"-0.5px",lineHeight:1.15}}>{dashSettings ? (notifOpen ? 'Notifications' : 'Settings') : eliteName ? `${greeting}, ${eliteName}` : greeting}</div>
                   {!dashSettings && myMemberNo && (
                     <button onClick={() => setBadgeOpen(true)} aria-label={`Member number ${myMemberNo}`} style={{display:"inline-flex",alignItems:"center",gap:"4px",fontSize:"13px",fontWeight:600,color:"#FFFFFF",background:myMemberNo <= 50 ? "rgba(255,214,10,0.14)" : "rgba(255,255,255,0.1)",border:myMemberNo <= 50 ? "0.5px solid rgba(255,214,10,0.45)" : "0.5px solid rgba(255,255,255,0.18)",borderRadius:"999px",padding:"4px 10px",fontFamily:SANS_FONT,letterSpacing:"-0.1px",cursor:"pointer"}}>
                       <Award size={13} strokeWidth={2.25} color={myMemberNo <= 50 ? "#FFD60A" : "#FFFFFF"} />#{myMemberNo.toLocaleString()}
@@ -51687,7 +51863,87 @@ function MuzzApp() {
               </Sheet>
             );
           })()}
-          {dashSettings ? (<>
+          {dashSettings && notifOpen ? (() => {
+            // NOTIFICATIONS — on/off, morning overview time, and which alerts
+            const native = !!mzPlugin('LocalNotifications');
+            const P = notifPrefs;
+            const setP = (k, v) => setNotifPrefs(p => ({ ...p, [k]: v }));
+            const Sw = ({ on, onToggle, label, disabled }) => (
+              <button role="switch" aria-checked={on} aria-label={label} onClick={disabled ? undefined : onToggle} className="mz-switch"
+                style={{position:"relative",width:"63px",height:"28px",borderRadius:"999px",border:"none",padding:0,cursor:disabled?"default":"pointer",flexShrink:0,opacity:disabled?0.4:1,background:on?"#30D158":"rgba(120,120,128,0.36)",transition:"background 0.25s",WebkitTapHighlightColor:"transparent"}}>
+                <span className="mz-knob" style={{position:"absolute",top:"2px",left:on?"24px":"2px",width:"37px",height:"24px",borderRadius:"999px",background:"#FFFFFF",boxShadow:"0 2px 6px rgba(0,0,0,0.25)",transition:"left 0.32s cubic-bezier(0.34,1.4,0.64,1), transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease"}} />
+              </button>
+            );
+            const Row = ({ label, sub, children, last }) => (
+              <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"0 14px 0 16px",minHeight:"54px",borderBottom:last?"none":"0.5px solid rgba(255,255,255,0.1)"}}>
+                <div style={{flex:1,minWidth:0,padding:"10px 0"}}>
+                  <div style={{fontSize:"17px",color:txt.primary,fontFamily:SANS_FONT,letterSpacing:"-0.4px"}}>{label}</div>
+                  {sub && <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,marginTop:"2px"}}>{sub}</div>}
+                </div>
+                {children}
+              </div>
+            );
+            const off = !native || !P.on;
+            const leads = [5, 10, 15, 30, 60];
+            return (
+              <div style={{marginTop:"4px"}}>
+                {!native && (
+                  <div style={{...glass,padding:"14px 16px",marginBottom:"26px",fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,lineHeight:1.4}}>
+                    Notifications work in the Muzz iPhone app. Turn them on there.
+                  </div>
+                )}
+                {native && notifBlocked && (
+                  <div style={{...glass,padding:"14px 16px",marginBottom:"26px",fontSize:"15px",color:txt.secondary,fontFamily:SANS_FONT,lineHeight:1.4}}>
+                    Notifications are off for Muzz on this iPhone. Open <span style={{color:txt.primary}}>Settings → Notifications → Muzz</span> and turn on Allow Notifications.
+                  </div>
+                )}
+                <div style={{...glass,overflow:"hidden"}}>
+                  <Row label="Allow notifications" last>
+                    <Sw label="Allow notifications" on={native && P.on} disabled={!native} onToggle={() => P.on ? setP('on', false) : enableNotifications()} />
+                  </Row>
+                </div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>
+                  {native && P.on && notifCount > 0 ? `${notifCount} coming up. Open Muzz every week or so to keep them topped up.` : 'Reminders for what’s coming up, straight to your lock screen.'}
+                </div>
+
+                <div style={groupLabel}>Morning overview</div>
+                <div style={{...glass,overflow:"hidden"}}>
+                  <Row label="Morning overview" sub="Your day in one notification">
+                    <Sw label="Morning overview" on={P.morning} disabled={off} onToggle={() => setP('morning', !P.morning)} />
+                  </Row>
+                  <Row label="Time" last>
+                    <input type="time" value={P.time} disabled={off || !P.morning} onChange={e => e.target.value && setP('time', e.target.value)}
+                      style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"8px",color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",padding:"6px 10px",colorScheme:"dark",outline:"none",opacity:(off || !P.morning)?0.4:1}} />
+                  </Row>
+                </div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Birthdays, bills, reminders, timetable and tasks for the day, at the time you wake up.</div>
+
+                <div style={groupLabel}>Alerts</div>
+                <div style={{...glass,overflow:"hidden"}}>
+                  <Row label="Bills" sub="9am the day before">
+                    <Sw label="Bills" on={P.bills} disabled={off} onToggle={() => setP('bills', !P.bills)} />
+                  </Row>
+                  <Row label="Birthdays & dates" sub="A week before and on the day, 9am">
+                    <Sw label="Birthdays" on={P.birthdays} disabled={off} onToggle={() => setP('birthdays', !P.birthdays)} />
+                  </Row>
+                  <Row label="Reminders" sub="9am on the day">
+                    <Sw label="Reminders" on={P.reminders} disabled={off} onToggle={() => setP('reminders', !P.reminders)} />
+                  </Row>
+                  <Row label="Timetable" sub="Before each block starts" last={!P.timetable}>
+                    <Sw label="Timetable" on={P.timetable} disabled={off} onToggle={() => setP('timetable', !P.timetable)} />
+                  </Row>
+                  {P.timetable && (
+                    <Row label="Remind me" last>
+                      <select value={P.ttLead} disabled={off} onChange={e => setP('ttLead', parseInt(e.target.value))}
+                        style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"8px",color:txt.primary,fontFamily:SANS_FONT,fontSize:"15px",padding:"6px 10px",colorScheme:"dark",outline:"none",opacity:off?0.4:1}}>
+                        {leads.map(m => <option key={m} value={m}>{m < 60 ? `${m} min before` : '1 hour before'}</option>)}
+                      </select>
+                    </Row>
+                  )}
+                </div>
+              </div>
+            );
+          })() : dashSettings ? (<>
           {/* SETTINGS — name, appearance, account and data in one place */}
           <div style={{marginTop:"4px"}}>
             {myMemberNo && (
@@ -51702,6 +51958,7 @@ function MuzzApp() {
             )}
             <div style={groupLabel}>General</div>
             <div style={{...glass,overflow:"hidden",marginBottom:"26px"}}>
+              <ListRow icon={Bell} label="Notifications" detail={mzPlugin('LocalNotifications') ? (notifPrefs.on ? 'On' : 'Off') : ''} onClick={() => { setNotifOpen(true); window.scrollTo && window.scrollTo(0, 0); }} />
               <ListRow icon={Palette} label="Appearance" onClick={() => setActiveView('appearance')} last />
             </div>
             {FREE_FOR_EVERYONE && (
