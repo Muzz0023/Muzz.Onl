@@ -1124,8 +1124,8 @@ const mzPlugin = (name) => {
 // ============================================
 // NOTIFICATIONS — scheduled on the phone (no server)
 // ============================================
-const MZ_NOTIF_DEFAULTS = { on: false, morning: true, time: '07:00', bills: true, birthdays: true, reminders: true, timetable: true, ttLead: 15 };
-const MZ_NOTIF_ALERT_HOUR = 9;   // bills, birthdays and reminders go off at 9am
+const MZ_NOTIF_DEFAULTS = { on: false, morning: true, time: '07:00', ovBills: true, ovReminders: true, ovBirthdays: true, ovTimetable: true, ovTasks: true, birthdays: true, timetable: true, ttLead: 15 };
+const MZ_NOTIF_ALERT_HOUR = 9;   // birthday alerts go off at 9am
 const MZ_NOTIF_MAX = 60;         // iPhone keeps at most 64 waiting; leave room
 const MZ_TT_DAYS = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 };
 
@@ -1173,7 +1173,7 @@ const mzBuildNotifications = ({ prefs, birthdays = [], reminders = [], bills = [
   const dayN = (n) => { const d = new Date(today); d.setDate(d.getDate() + n); return d; };
   const at = (day, h, m = 0) => { const d = new Date(day); d.setHours(h, m, 0, 0); return d; };
   const add = (when, title, body, extra) => { if (when.getTime() > now.getTime() + 30000) out.push({ title, body, at: when, extra: extra || {} }); };
-  const DAYS = 30;
+  const DAYS = 75; // look this far ahead to find the next bill or reminder
 
   // What's on each day (used by the alerts and the morning overview)
   const billsOn = [], bdaysOn = [], remsOn = [], ttOn = [];
@@ -1188,37 +1188,55 @@ const mzBuildNotifications = ({ prefs, birthdays = [], reminders = [], bills = [
   }
   const bdayLabel = (b) => b.type === 'anniversary' ? b.name.trim() : `${b.name.trim()}'s birthday`;
 
-  // ☀️ Morning overview
+  // "tomorrow", "Wednesday", or "Wed 25 Nov" — how far day k is from day n
+  const whenLabel = (n, k) => {
+    const d = dayN(k), gap = k - n;
+    if (gap === 1) return 'tomorrow';
+    if (gap < 7) return d.toLocaleDateString('en-AU', { weekday: 'long' });
+    return d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  };
+  const nextAfter = (arr, n) => { for (let k = n + 1; k <= DAYS; k++) if (arr[k] && arr[k].length) return k; return -1; };
+  const billTxt = (b) => `${b.name.trim()} ${mzMoney(parseFloat(b.monthly))}`;
+  const list = (xs, max) => xs.length > max ? `${xs.slice(0, max).join(', ')} +${xs.length - max} more` : xs.join(', ');
+  const whenTxt = (n, k) => k - n === 1 ? 'tomorrow' : `on ${whenLabel(n, k)}`;
+
+  // ☀️ Morning overview — a proper debrief of the day and what's next
   if (p.morning) {
     const [hh, mm] = String(p.time || '07:00').split(':').map(x => parseInt(x) || 0);
-    const openTasks = (dailyItems || []).filter(i => i && String(i.text || '').trim() && !i.checked).length;
+    const openTasks = (dailyItems || []).filter(i => i && String(i.text || '').trim() && !i.checked);
+    const first = String(name || '').trim().split(' ')[0];
     for (let n = 0; n < 14; n++) {
-      const parts = [];
-      bdaysOn[n].forEach(b => parts.push(`🎂 ${bdayLabel(b)}`));
-      if (billsOn[n].length) parts.push(`💸 ${billsOn[n].map(b => `${b.name.trim()} ${mzMoney(parseFloat(b.monthly))}`).join(', ')} due`);
-      if (remsOn[n].length) parts.push(`🔔 ${remsOn[n].map(r => r.title.trim()).join(', ')}`);
-      if (ttOn[n].length) parts.push(`📅 ${ttOn[n][0].title.trim()} at ${mzFmtHour(ttOn[n][0].startHour || 0)}${ttOn[n].length > 1 ? ` +${ttOn[n].length - 1} more` : ''}`);
-      if (openTasks) parts.push(`✅ ${openTasks} task${openTasks === 1 ? '' : 's'} on your list`);
-      const next7 = []; for (let k = 1; k <= 7; k++) bdaysOn[n + k] && bdaysOn[n + k].forEach(b => next7.push(`${bdayLabel(b)} in ${k} day${k === 1 ? '' : 's'}`));
-      if (next7.length) parts.push(`Coming up: ${next7.slice(0, 2).join(', ')}`);
-      const first = String(name || '').trim().split(' ')[0];
-      add(at(dayN(n), hh, mm), `Good morning${first ? `, ${first}` : ''}`, parts.length ? parts.join('\n') : 'Nothing due today. Have a good one.', { view: 'home' });
+      const lines = [];
+      if (p.ovBills) {
+        const nk = nextAfter(billsOn, n);
+        const next = nk >= 0 ? `Next: ${list(billsOn[nk].map(billTxt), 2)} ${whenTxt(n, nk)}` : '';
+        if (billsOn[n].length) lines.push(`💸 Due today: ${list(billsOn[n].map(billTxt), 3)}${next ? ` · ${next}` : ''}`);
+        else if (next) lines.push(`💸 No bills today · ${next}`);
+      }
+      if (p.ovReminders) {
+        const nk = nextAfter(remsOn, n);
+        const next = nk >= 0 ? `Next: ${list(remsOn[nk].map(r => r.title.trim()), 2)} ${whenTxt(n, nk)}` : '';
+        if (remsOn[n].length) lines.push(`🔔 Today: ${list(remsOn[n].map(r => r.title.trim()), 3)}${next ? ` · ${next}` : ''}`);
+        else if (next) lines.push(`🔔 ${next}`);
+      }
+      if (p.ovBirthdays) {
+        const nk = nextAfter(bdaysOn, n);
+        const next = (nk >= 0 && nk - n <= 30) ? `${list(bdaysOn[nk].map(bdayLabel), 2)} ${nk - n === 1 ? 'tomorrow' : `${whenTxt(n, nk)} (${nk - n} days)`}` : '';
+        if (bdaysOn[n].length) lines.push(`🎂 Today: ${list(bdaysOn[n].map(bdayLabel), 2)}${next ? ` · Next: ${next}` : ''}`);
+        else if (next) lines.push(`🎂 ${next}`);
+      }
+      if (p.ovTimetable && ttOn[n].length) lines.push(`📅 ${list(ttOn[n].map(b => `${b.title.trim()} ${mzFmtHour(b.startHour || 0)}`), 3)}`);
+      if (p.ovTasks && openTasks.length) lines.push(`✅ ${openTasks.length} task${openTasks.length === 1 ? '' : 's'}: ${list(openTasks.map(i => String(i.text).trim()), 2)}`);
+      add(at(dayN(n), hh, mm), `Good morning${first ? `, ${first}` : ''} ☀️`, lines.length ? lines.join('\n') : 'Nothing on today. Have a good one.', { view: 'home' });
     }
   }
 
-  // 💸 Bills — 9am the day before
-  if (p.bills) for (let n = 1; n <= DAYS; n++) billsOn[n].forEach(b =>
-    add(at(dayN(n - 1), MZ_NOTIF_ALERT_HOUR), `💸 ${b.name.trim()} due tomorrow`, `${mzMoney(parseFloat(b.monthly))}`, { view: 'varied' }));
-
   // 🎂 Birthdays — a week before and on the day
-  if (p.birthdays) for (let n = 0; n <= DAYS; n++) bdaysOn[n].forEach(b => {
+  if (p.birthdays) for (let n = 0; n <= 31; n++) bdaysOn[n].forEach(b => {
     add(at(dayN(n), MZ_NOTIF_ALERT_HOUR), `🎂 ${bdayLabel(b)} is today`, b.type === 'anniversary' ? 'Today' : b.category === 'pet' ? 'Give them a treat 🐾' : 'Send them a message 🎉', { view: 'reminders', sub: 'birthdays' });
+    if (n >= 1) add(at(dayN(n - 1), MZ_NOTIF_ALERT_HOUR), `🎂 ${bdayLabel(b)} is tomorrow`, b.type === 'anniversary' ? 'Tomorrow' : b.category === 'pet' ? 'Tomorrow 🐾' : 'Last chance to sort a gift 🎁', { view: 'reminders', sub: 'birthdays' });
     if (n >= 7) add(at(dayN(n - 7), MZ_NOTIF_ALERT_HOUR), `🎂 ${bdayLabel(b)} is in a week`, b.type === 'anniversary' ? 'One week to go' : b.category === 'pet' ? 'One week to go 🐾' : 'Time to sort a gift 🎁', { view: 'reminders', sub: 'birthdays' });
   });
-
-  // 🔔 Reminders — 9am on the day
-  if (p.reminders) for (let n = 0; n <= DAYS; n++) remsOn[n].forEach(r =>
-    add(at(dayN(n), MZ_NOTIF_ALERT_HOUR), `🔔 ${r.title.trim()}`, String(r.notes || '').trim() || 'Due today', { view: 'reminders', sub: 'reminders' }));
 
   // 📅 Timetable — a few minutes before each block
   if (p.timetable) for (let n = 0; n < 14; n++) ttOn[n].forEach(b => {
@@ -51919,18 +51937,31 @@ function MuzzApp() {
                       style={{background:"rgba(255,255,255,0.1)",border:"0.5px solid rgba(255,255,255,0.16)",borderRadius:"8px",color:txt.primary,fontFamily:SANS_FONT,fontSize:"17px",padding:"6px 10px",colorScheme:"dark",outline:"none",opacity:(off || !P.morning)?0.4:1}} />
                   </MzNotifRow>
                 </div>
-                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>Birthdays, bills, reminders, timetable and tasks for the day, at the time you wake up.</div>
+                <div style={{fontSize:"13px",color:txt.secondary,fontFamily:SANS_FONT,margin:"8px 4px 26px"}}>What’s on today and what’s coming next, at the time you wake up.</div>
+
+                <div style={groupLabel}>In your overview</div>
+                <div style={{...glass,overflow:"hidden",marginBottom:"26px",opacity:(off || !P.morning)?0.5:1}}>
+                  <MzNotifRow label="Bills" sub="Due today, and the next one after">
+                    <MzNotifSwitch label="Bills in overview" on={P.ovBills} disabled={off || !P.morning} onToggle={() => setP('ovBills', !P.ovBills)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Reminders" sub="Today’s, and the next one coming up">
+                    <MzNotifSwitch label="Reminders in overview" on={P.ovReminders} disabled={off || !P.morning} onToggle={() => setP('ovReminders', !P.ovReminders)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Birthdays & dates" sub="Today’s, and the next one coming up">
+                    <MzNotifSwitch label="Birthdays in overview" on={P.ovBirthdays} disabled={off || !P.morning} onToggle={() => setP('ovBirthdays', !P.ovBirthdays)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Timetable" sub="What’s on today">
+                    <MzNotifSwitch label="Timetable in overview" on={P.ovTimetable} disabled={off || !P.morning} onToggle={() => setP('ovTimetable', !P.ovTimetable)} />
+                  </MzNotifRow>
+                  <MzNotifRow label="Tasks" sub="Your daily list" last>
+                    <MzNotifSwitch label="Tasks in overview" on={P.ovTasks} disabled={off || !P.morning} onToggle={() => setP('ovTasks', !P.ovTasks)} />
+                  </MzNotifRow>
+                </div>
 
                 <div style={groupLabel}>Alerts</div>
                 <div style={{...glass,overflow:"hidden"}}>
-                  <MzNotifRow label="Bills" sub="9am the day before">
-                    <MzNotifSwitch label="Bills" on={P.bills} disabled={off} onToggle={() => setP('bills', !P.bills)} />
-                  </MzNotifRow>
-                  <MzNotifRow label="Birthdays & dates" sub="A week before and on the day, 9am">
+                  <MzNotifRow label="Birthdays & dates" sub="A week before, the day before and on the day, 9am">
                     <MzNotifSwitch label="Birthdays" on={P.birthdays} disabled={off} onToggle={() => setP('birthdays', !P.birthdays)} />
-                  </MzNotifRow>
-                  <MzNotifRow label="Reminders" sub="9am on the day">
-                    <MzNotifSwitch label="Reminders" on={P.reminders} disabled={off} onToggle={() => setP('reminders', !P.reminders)} />
                   </MzNotifRow>
                   <MzNotifRow label="Timetable" sub="Before each block starts" last={!P.timetable}>
                     <MzNotifSwitch label="Timetable" on={P.timetable} disabled={off} onToggle={() => setP('timetable', !P.timetable)} />
