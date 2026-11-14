@@ -1122,6 +1122,64 @@ const mzPlugin = (name) => {
 };
 
 // ============================================
+// KEYBOARD — keep what you're typing in above the iPhone keyboard
+// ============================================
+// Sets --mz-kb to the keyboard's height (0 when closed). Sheets sit on top of it,
+// pages get room to scroll, and the box you tapped scrolls into view.
+if (typeof window !== 'undefined' && typeof document !== 'undefined' && !window.__mzKeyboard) {
+  window.__mzKeyboard = true;
+  const root = document.documentElement;
+  let kbNative = 0;                  // height iOS says the keyboard is
+  let baseH = window.innerHeight;    // page height with the keyboard closed
+  const isField = (el) => el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable)
+    && !/^(checkbox|radio|button|submit|range|color|file)$/i.test(el.type || '');
+  const reveal = (kb) => {
+    const el = document.activeElement;
+    if (!isField(el)) return;
+    const r = el.getBoundingClientRect();
+    const visible = window.innerHeight - kb;
+    if (r.bottom <= visible - 16 && r.top >= 70) return;
+    // Inside a sheet: the sheet already sits above the keyboard, so centre it there
+    if (el.closest('.mz-num') && getComputedStyle(el.closest('.mz-num')).position === 'fixed') {
+      try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { el.scrollIntoView(); }
+      return;
+    }
+    // On a page: centre it in the space above the keyboard
+    window.scrollBy(0, Math.round(r.top - Math.max(70, (visible - r.height) / 2)));
+  };
+  const apply = () => {
+    let kb = 0;
+    if (kbNative > 0) {
+      // If the app view already shrank for the keyboard, only lift by what's left
+      kb = Math.max(0, Math.round(kbNative - Math.max(0, baseH - window.innerHeight)));
+    } else if (window.visualViewport) {
+      const vv = window.visualViewport;
+      kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+      if (kb < 80) kb = 0; // ignore small changes like the address bar
+    }
+    root.style.setProperty('--mz-kb', kb + 'px');
+    if (document.body) document.body.classList.toggle('mz-kb-open', kb > 0);
+    // Wait a frame so the extra room under the page exists before scrolling
+    if (kb > 0) requestAnimationFrame(() => reveal(kb));
+  };
+  window.addEventListener('resize', () => { if (!kbNative) baseH = Math.max(baseH, window.innerHeight); apply(); });
+  window.addEventListener('orientationchange', () => { setTimeout(() => { if (!kbNative) baseH = window.innerHeight; apply(); }, 300); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', apply);
+  // Moving between boxes while the keyboard is up: bring the new one into view
+  document.addEventListener('focusin', (e) => { if (isField(e.target)) setTimeout(apply, 320); });
+  const KB = mzPlugin('Keyboard');
+  if (KB && KB.addListener) {
+    try {
+      KB.addListener('keyboardWillShow', (info) => { kbNative = (info && info.keyboardHeight) || 0; apply(); setTimeout(apply, 350); });
+      KB.addListener('keyboardDidShow', (info) => { kbNative = (info && info.keyboardHeight) || kbNative; apply(); });
+      KB.addListener('keyboardWillHide', () => { kbNative = 0; apply(); });
+      // Show the iOS bar with Done above the keyboard (the number pad has no return key)
+      if (KB.setAccessoryBarVisible) KB.setAccessoryBarVisible({ isVisible: true }).catch(() => {});
+    } catch (e) {}
+  }
+}
+
+// ============================================
 // NOTIFICATIONS — scheduled on the phone (no server)
 // ============================================
 const MZ_NOTIF_DEFAULTS = { on: false, morning: true, time: '07:00', ovBills: true, ovReminders: true, ovBirthdays: true, ovTimetable: true, ovTasks: true, birthdays: true, timetable: true, ttLead: 15 };
@@ -1601,10 +1659,10 @@ const Sheet = ({ onClose, children }) => {
   }, []);
   if (typeof document === 'undefined') return null;
   return createPortal(
-    <div className="mz-num" style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+    <div className="mz-num" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 'var(--mz-kb, 0px)', transition: 'bottom 0.25s ease', zIndex: 1000, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
       <style>{`@keyframes mzSheetUp{from{transform:translateY(100%)}to{transform:none}}@keyframes mzDimIn{from{opacity:0}to{opacity:1}}`}</style>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', animation: 'mzDimIn 0.2s ease both' }} />
-      <div style={{ position: 'relative', width: '100%', maxWidth: '640px', margin: '0 auto', maxHeight: '88vh', overflowY: 'auto', WebkitOverflowScrolling: 'touch', background: '#1C1C1E', backdropFilter: 'blur(30px) saturate(180%)', WebkitBackdropFilter: 'blur(30px) saturate(180%)', borderTop: '0.5px solid rgba(255,255,255,0.14)', borderRadius: '16px 16px 0 0', paddingBottom: 'calc(12px + env(safe-area-inset-bottom))', animation: 'mzSheetUp 0.32s cubic-bezier(0.2,0.8,0.2,1) both' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '640px', margin: '0 auto', maxHeight: 'min(88vh, calc(100% - env(safe-area-inset-top) - 12px))', overflowY: 'auto', WebkitOverflowScrolling: 'touch', background: '#1C1C1E', backdropFilter: 'blur(30px) saturate(180%)', WebkitBackdropFilter: 'blur(30px) saturate(180%)', borderTop: '0.5px solid rgba(255,255,255,0.14)', borderRadius: '16px 16px 0 0', paddingBottom: 'calc(12px + env(safe-area-inset-bottom))', animation: 'mzSheetUp 0.32s cubic-bezier(0.2,0.8,0.2,1) both' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 4px' }}>
           <span style={{ width: '36px', height: '5px', borderRadius: '3px', background: 'rgba(235,235,245,0.3)' }} />
         </div>
@@ -1771,6 +1829,9 @@ const StarryBackground = ({ children }) => {
 
         /* iOS 26/27 switch: pill knob turns to glass while pressed */
         .mz-switch:active .mz-knob { transform: scale(1.18, 1.25); background: rgba(255,255,255,0.28) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 1px rgba(255,255,255,0.25), 0 3px 10px rgba(0,0,0,0.3) !important; backdrop-filter: blur(3px) saturate(180%); -webkit-backdrop-filter: blur(3px) saturate(180%); }
+
+        /* Keyboard open: give pages room to scroll the box you're typing in above it */
+        body.mz-kb-open { padding-bottom: var(--mz-kb, 0px) !important; }
 
         /* ── iPhone-style touch feedback (Muzz pages only) ── */
         .mz-num button, .mz-num summary, .mz-num label, .mz-num [role="button"] {
@@ -48394,12 +48455,8 @@ function MuzzApp() {
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [funnyGreetings, setFunnyGreetings] = useState(false);
 
-  // Scroll input into view when keyboard opens (for mobile)
-  const scrollInputIntoView = (e) => {
-    setTimeout(() => {
-      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-  };
+  // Inputs used to scroll themselves here; the KEYBOARD block at the top of the file now does it for every box
+  const scrollInputIntoView = () => {};
 
   // Currency symbol lookup for stock prices (Yahoo Finance returns currency in ISO 4217)
   const currencySymbol = (code) => {
@@ -49412,24 +49469,6 @@ function MuzzApp() {
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
-
-  // Global keyboard fix — pushes content up when keyboard opens on iOS
-  useEffect(() => {
-    if (!isNative) return;
-    const handleResize = () => {
-      if (window.visualViewport) {
-        const keyboardHeight = window.innerHeight - window.visualViewport.height;
-        document.body.style.paddingBottom = keyboardHeight > 0 ? `${keyboardHeight}px` : '';
-        if (keyboardHeight > 0 && document.activeElement) {
-          setTimeout(() => {
-            document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 100);
-        }
-      }
-    };
-    window.visualViewport?.addEventListener('resize', handleResize);
-    return () => window.visualViewport?.removeEventListener('resize', handleResize);
-  }, []);
 
   // Check Stripe subscription on load
   useEffect(() => {
@@ -54790,7 +54829,7 @@ function MuzzApp() {
             { id: '5y',  label:'5Y' }, { id: 'max', label:'MAX' },
           ];
           return (
-            <div style={{position:"fixed",inset:0,zIndex:900,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(12px)",overflow:"auto"}}>
+            <div style={{position:"fixed",inset:0,zIndex:900,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(12px)",overflow:"auto",paddingBottom:"var(--mz-kb, 0px)"}}>
               <div style={{maxWidth:"1100px",margin:"0 auto",padding:"24px 20px 40px"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"20px",gap:"12px",flexWrap:"wrap"}}>
                   <button onClick={() => setDetailTicker(null)} style={{fontSize:"12px",color:"rgba(var(--mz-accent-rgb,10,132,255),0.7)",fontFamily:SANS_FONT,letterSpacing:"0",background:"rgba(var(--mz-accent-rgb,10,132,255),0.08)",border:"0.5px solid rgba(255,255,255,0.14)",padding:"7px 14px",cursor:"pointer",borderRadius:"10px",fontWeight:600}}>← BACK</button>
